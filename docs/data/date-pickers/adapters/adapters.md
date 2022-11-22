@@ -29,8 +29,7 @@ The Date and Time Pickers currently support the following date libraries:
 - [Moment.js](https://momentjs.com/)
 
 :::info
-If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_ or _Hijri_ calendars),
-please refer to the [Support for other calendar systems](#support-for-other-calendar-systems) section.
+If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_ or _Hijri_ calendars)—please refer to the [Support for other calendar systems](#support-for-other-calendar-systems) section.
 :::
 
 ### Recommended library
