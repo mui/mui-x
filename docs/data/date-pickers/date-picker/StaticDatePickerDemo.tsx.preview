@@ -1,9 +1,1 @@
-<StaticDatePicker
-  displayStaticWrapperAs="desktop"
-  openTo="year"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
-/>
+<StaticNextDatePicker displayStaticWrapperAs="desktop" />

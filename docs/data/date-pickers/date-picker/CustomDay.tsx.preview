@@ -1,13 +1,5 @@
-<StaticDatePicker
+<StaticNextDatePicker
   displayStaticWrapperAs="desktop"
-  label="Week picker"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  components={{
-    Day,
-  }}
-  renderInput={(params) => <TextField {...params} />}
-  inputFormat="'Week of' MMM d"
+  defaultValue={dayjs('2022-04-07')}
+  components={{ Day }}
 />

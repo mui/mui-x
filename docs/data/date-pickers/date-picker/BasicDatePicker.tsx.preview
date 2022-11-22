@@ -1,8 +1,1 @@
-<DatePicker
-  label="Basic example"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
-/>
+<NextDatePicker label="Basic date picker" />

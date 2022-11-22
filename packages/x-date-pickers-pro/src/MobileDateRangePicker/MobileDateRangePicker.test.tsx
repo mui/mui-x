@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -52,11 +52,11 @@ describe('<MobileDateRangePicker />', () => {
     }),
   );
 
-  describeValidation(MobileDateRangePicker, () => ({
+  describeRangeValidation(MobileDateRangePicker, () => ({
     render,
     clock,
-    isLegacyPicker: true,
-    withDate: true,
+    componentFamily: 'legacy-picker',
+    views: ['day'],
   }));
 
   describe('picker state', () => {

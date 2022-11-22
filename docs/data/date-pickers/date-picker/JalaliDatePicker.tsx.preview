@@ -1,6 +1,1 @@
-<DatePicker
-  mask="____/__/__"
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-  renderInput={(params) => <TextField {...params} />}
-/>
+<NextDatePicker defaultValue={new Date(2022, 3, 7)} />

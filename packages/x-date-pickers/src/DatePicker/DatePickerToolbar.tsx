@@ -6,14 +6,13 @@ import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 import {
   DatePickerToolbarClasses,
   getDatePickerToolbarUtilityClass,
 } from './datePickerToolbarClasses';
 
-export interface DatePickerToolbarProps<TDate>
-  extends BaseToolbarProps<TDate | null, CalendarPickerView> {
+export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
 }
 
@@ -69,7 +68,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const classes = useUtilityClasses(props);
 
   const dateText = React.useMemo(() => {
@@ -81,11 +80,11 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
       return utils.formatByString(value, toolbarFormat);
     }
 
-    if (isYearOnlyView(views as CalendarPickerView[])) {
+    if (isYearOnlyView(views as DateView[])) {
       return utils.format(value, 'year');
     }
 
-    if (isYearAndMonthViews(views as CalendarPickerView[])) {
+    if (isYearAndMonthViews(views as DateView[])) {
       return utils.format(value, 'month');
     }
 

@@ -13,7 +13,7 @@ import { WrapperVariantContext } from '../internals/components/wrappers/WrapperV
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { ClockClasses, getClockUtilityClass } from './clockClasses';
 
 export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
@@ -21,7 +21,7 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
   ampmInClock: boolean;
   autoFocus?: boolean;
   children: readonly React.ReactNode[];
-  isTimeDisabled: (timeValue: number, type: ClockPickerView) => boolean;
+  isTimeDisabled: (timeValue: number, type: TimeView) => boolean;
   minutesStep?: number;
   onChange: (value: number, isFinish?: PickerSelectionState) => void;
   /**
@@ -29,7 +29,7 @@ export interface ClockProps<TDate> extends ReturnType<typeof useMeridiemMode> {
    * Should only be `undefined` on the server
    */
   selectedId: string | undefined;
-  type: ClockPickerView;
+  type: TimeView;
   /**
    * The numeric value of the current view.
    */
@@ -202,7 +202,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);

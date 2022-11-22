@@ -1,9 +1,4 @@
-<StaticDatePicker
+<StaticNextDatePicker
   orientation="landscape"
-  openTo="day"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
+  defaultValue={dayjs('2022-04-07')}
 />

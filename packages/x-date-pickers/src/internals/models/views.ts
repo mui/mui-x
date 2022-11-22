@@ -1,8 +1,3 @@
-// TODO: Rename DateView
-export type CalendarPickerView = 'year' | 'month' | 'day';
-
-// TODO: Rename TimeView
-export type ClockPickerView = 'hours' | 'minutes' | 'seconds';
-
-// TODO: Rename DateOrTimeView
-export type CalendarOrClockPickerView = CalendarPickerView | ClockPickerView;
+export type DateView = 'year' | 'month' | 'day';
+export type TimeView = 'hours' | 'minutes' | 'seconds';
+export type DateOrTimeView = DateView | TimeView;

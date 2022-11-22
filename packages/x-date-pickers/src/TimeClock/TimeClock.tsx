@@ -16,7 +16,7 @@ import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internal
 import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
@@ -86,22 +86,22 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   /**
    * Controlled open view.
    */
-  view?: ClockPickerView;
+  view?: TimeView;
   /**
    * Views for calendar picker.
    * @default ['hours', 'minutes']
    */
-  views?: readonly ClockPickerView[];
+  views?: readonly TimeView[];
   /**
    * Callback fired on view change.
-   * @param {ClockPickerView} view The new view.
+   * @param {TimeView} view The new view.
    */
-  onViewChange?: (view: ClockPickerView) => void;
+  onViewChange?: (view: TimeView) => void;
   /**
    * Initially open view.
    * @default 'hours'
    */
-  openTo?: ClockPickerView;
+  openTo?: TimeView;
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -160,7 +160,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     components,
     componentsProps,
     value,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
     disableFuture,
@@ -179,7 +179,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
@@ -204,7 +204,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   );
 
   const isTimeDisabled = React.useCallback(
-    (rawValue: number, viewType: ClockPickerView) => {
+    (rawValue: number, viewType: TimeView) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
@@ -496,7 +496,7 @@ TimeClock.propTypes = {
   onChange: PropTypes.func.isRequired,
   /**
    * Callback fired on view change.
-   * @param {ClockPickerView} view The new view.
+   * @param {TimeView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -512,7 +512,7 @@ TimeClock.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

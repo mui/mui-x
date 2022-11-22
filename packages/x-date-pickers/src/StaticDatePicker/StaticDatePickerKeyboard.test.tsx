@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
-import { CalendarPickerView } from '../internals/models/views';
+import { DateView } from '../internals/models/views';
 
 describe('<StaticDatePicker /> keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -194,7 +194,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
     });
   });
 
-  const viewsToTest: { view: CalendarPickerView; textSelector: string }[] = [
+  const viewsToTest: { view: DateView; textSelector: string }[] = [
     { view: 'day', textSelector: '13' },
     { view: 'month', textSelector: 'Aug' },
     { view: 'year', textSelector: '2020' },

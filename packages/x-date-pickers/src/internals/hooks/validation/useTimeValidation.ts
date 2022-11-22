@@ -30,7 +30,7 @@ export const validateTime: Validator<
     maxTime,
     minutesStep,
     shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
   } = props;
@@ -93,4 +93,4 @@ export const isSameTimeError = (a: unknown, b: unknown) => a === b;
  */
 export const useTimeValidation = <TDate>(
   props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,
-): TimeValidationError => useValidation(props, validateTime, isSameTimeError);
+): TimeValidationError => useValidation(props, validateTime, isSameTimeError, null);

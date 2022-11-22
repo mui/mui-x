@@ -10,7 +10,7 @@ import {
   wrapPickerMount,
   createPickerRenderer,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -21,7 +21,7 @@ describe('<DateCalendar />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    skip: ['textField'],
+    componentFamily: 'calendar',
   }));
 
   describeConformance(<DateCalendar defaultValue={adapterToUse.date()} />, () => ({
@@ -161,6 +161,20 @@ describe('<DateCalendar />', () => {
     ['Su.', 'Mo.', 'Tu.', 'We.', 'Th.', 'Fr.', 'Sa.'].forEach((formattedDay) => {
       expect(screen.getByText(formattedDay)).toBeVisible();
     });
+  });
+
+  it('should render week number when `displayWeekNumber=true`', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <DateCalendar
+          value={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          displayWeekNumber
+        />
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getAllByRole('rowheader').length).to.equal(5);
   });
 
   describe('view: day', () => {
