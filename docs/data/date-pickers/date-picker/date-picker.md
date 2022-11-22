@@ -32,7 +32,7 @@ The date picker is rendered as a modal dialog on mobile, and a textbox with a po
 
 ## Uncontrolled vs. Controlled
 
-The component can be controlled or uncontrolled
+The component can be uncontrolled or controlled
 
 {{"demo": "DatePickerValue.js"}}
 
