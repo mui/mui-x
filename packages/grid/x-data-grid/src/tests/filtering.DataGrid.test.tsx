@@ -5,8 +5,14 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
+  getGridBooleanOperators,
+  getGridDateOperators,
+  getGridNumericOperators,
+  getGridSingleSelectOperators,
+  getGridStringOperators,
   GridColDef,
   GridFilterItem,
+  GridFilterOperator,
   GridPreferencePanelsValue,
   GridToolbar,
 } from '@mui/x-data-grid';
@@ -1102,6 +1108,103 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+  });
+
+  describe('customized value displaying in the filter button tooltip works', () => {
+    it('should displayed filter button tooltip text matches getValueAsString call', () => {
+      const isMatch = (
+        item: GridFilterItem,
+        getValueAsString: NonNullable<GridFilterOperator['getValueAsString']>,
+      ) => {
+        const { value } = item;
+        const setFuncToOperator = (operator: GridFilterOperator) => ({
+          ...operator,
+          getValueAsString,
+        });
+
+        const { unmount } = render(
+          <TestCase
+            rows={[
+              {
+                id: 1,
+                brand: 'NIKE',
+                year: 1964,
+                status: 'offline',
+                isPublished: true,
+                lastOnline: new Date(2023, 1, 30),
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'string',
+                filterOperators: getGridStringOperators().map(setFuncToOperator),
+              },
+              {
+                field: 'year',
+                type: 'number',
+                filterOperators: getGridNumericOperators().map(setFuncToOperator),
+              },
+              {
+                field: 'status',
+                type: 'singleSelect',
+                filterOperators: getGridSingleSelectOperators().map(setFuncToOperator),
+              },
+              {
+                field: 'isPublished',
+                type: 'boolean',
+                filterOperators: getGridBooleanOperators().map(setFuncToOperator),
+              },
+              {
+                field: 'lastOnline',
+                type: 'dateTime',
+                filterOperators: getGridDateOperators().map(setFuncToOperator),
+              },
+            ]}
+            filterModel={{
+              items: [item],
+            }}
+          />,
+        );
+
+        const filterButton = document.querySelector('button[aria-label="Show filters"]');
+        fireEvent.mouseEnter(filterButton);
+
+        const match = screen.findByText(getValueAsString(value)) !== null;
+        unmount();
+
+        return match;
+      };
+
+      expect(
+        isMatch(
+          { field: 'brand', operator: 'equals', value: 'NIKE' },
+          (value: string) => `«${value}»`,
+        ),
+      ).to.equal(true);
+      expect(
+        isMatch(
+          { field: 'year', operator: '=', value: 1964 },
+          (value: number) => `Formed in ${value} year`,
+        ),
+      ).to.equal(true);
+      expect(
+        isMatch(
+          { field: 'status', operator: 'is', value: 'offline' },
+          (value: string) => `Admin is ${value}`,
+        ),
+      ).to.equal(true);
+      expect(
+        isMatch({ field: 'isPublished', operator: 'is', value: true }, (value: boolean) =>
+          value ? 'yes' : 'no',
+        ),
+      ).to.equal(true);
+      expect(
+        isMatch({ field: 'lastOnline', operator: 'is', value: '2023-01-30' }, (value: string) =>
+          value.replace(/-/g, ' '),
+        ),
+      ).to.equal(true);
     });
   });
 
