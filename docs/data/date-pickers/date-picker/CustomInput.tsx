@@ -10,7 +10,7 @@ type BrowserInputProps = TextFieldProps & {
   ownerState?: any;
 };
 
-const BrowserInput = (props: BrowserInputProps) => {
+function BrowserInput(props: BrowserInputProps) {
   const { inputProps, InputProps, ownerState, ...other } = props;
 
   return (
@@ -19,7 +19,7 @@ const BrowserInput = (props: BrowserInputProps) => {
       {InputProps?.endAdornment}
     </Box>
   );
-};
+}
 
 export default function CustomInput() {
   return (
