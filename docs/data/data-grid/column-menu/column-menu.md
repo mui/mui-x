@@ -20,9 +20,9 @@ By default, each column header has the column menu enabled. To disable the colum
 
 {{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
 
-## Customise column menu
+## Customize column menu
 
-You can customise column menu either by passing `slots` in default component or by passing your own component for slot `ColumnMenu`, you can blend existing menu items with your custom components for a custom look and feel.
+You can customize the column menu either by passing `slots` to the column menu component or by overriding the `ColumnMenu` slot of the data grid component.
 
 ### Hide/reorder some column menu items
 
