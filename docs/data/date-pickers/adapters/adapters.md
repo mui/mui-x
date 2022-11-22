@@ -9,7 +9,7 @@ title: Library to manipulate dates
 ## Why do you need a library ?
 
 Like most pickers—the MUI Date and Time Pickers need a library to manipulate the dates.
-It will be used to format, parse and mutate the date inside all pickers.
+It will be used to format, parse, and mutate the date inside all pickers.
 
 MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
 This lets you pick the library you already use in your application, without adding an extra one in your bundle.
