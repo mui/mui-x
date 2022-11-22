@@ -15,7 +15,7 @@
   "include": [
     "pages/**/*.ts*",
     "data/**/*",
-    "../node_modules/@mui/monorepo/packages/mui-material/src/themeCssVarsAugmentation"
+    "../node_modules/@mui/material/themeCssVarsAugmentation"
   ],
   "exclude": ["docs/.next", "docs/export"]
 }

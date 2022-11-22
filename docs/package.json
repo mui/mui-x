@@ -30,7 +30,7 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.9",
     "@mui/joy": "^5.0.0-alpha.52",
-    "@mui/material": "^5.10.12",
+    "@mui/material": "^5.10.15",
     "@mui/styles": "^5.10.10",
     "@mui/utils": "^5.10.9",
     "@trendmicro/react-interpolate": "^0.5.5",

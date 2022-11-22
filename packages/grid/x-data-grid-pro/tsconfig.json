@@ -7,6 +7,6 @@
   "include": [
     "src/**/*",
     "../../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
-    "../../../node_modules/@mui/monorepo/packages/mui-material/src/themeCssVarsAugmentation"
+    "../../../node_modules/@mui/material/themeCssVarsAugmentation"
   ]
 }
