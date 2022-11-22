@@ -9,8 +9,7 @@ const parseObjectValue = (value: unknown) => {
     return value;
   }
 
-  // TODO v6: use uknnown instead of any?
-  return (value as { value: any }).value;
+  return (value as { value: unknown }).value;
 };
 
 export const getGridSingleSelectQuickFilterFn = (
@@ -23,7 +22,7 @@ export const getGridSingleSelectQuickFilterFn = (
   }
   const { valueOptions, valueFormatter, field } = column;
 
-  const potentialValues = [parseObjectValue(value).toString()];
+  const potentialValues = [parseObjectValue(value)?.toString()];
 
   const iterableColumnValues =
     typeof valueOptions === 'function' ? valueOptions({ field }) : valueOptions || [];
@@ -55,7 +54,7 @@ export const getGridSingleSelectQuickFilterFn = (
 
   return ({ value: columnValue }: GridCellParams): boolean => {
     return columnValue != null
-      ? potentialValues.includes(parseObjectValue(columnValue).toString())
+      ? potentialValues.includes(parseObjectValue(columnValue)?.toString())
       : false;
   };
 };
