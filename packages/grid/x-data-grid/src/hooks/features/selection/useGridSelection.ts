@@ -333,7 +333,9 @@ export const useGridSelection = (
         return;
       }
 
-      const field = event.target.closest('.MuiDataGrid-row')['data-field'];
+      const field = (event.target as HTMLDivElement)
+        .closest('.MuiDataGrid-cell')
+        ?.getAttribute('data-field');
 
       if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
