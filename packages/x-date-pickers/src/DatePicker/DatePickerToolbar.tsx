@@ -68,7 +68,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const classes = useUtilityClasses(props);
 
   const dateText = React.useMemo(() => {

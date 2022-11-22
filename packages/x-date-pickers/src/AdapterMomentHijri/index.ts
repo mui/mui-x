@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import BaseAdapterMomentHijri from '@date-io/hijri';
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
@@ -81,5 +82,9 @@ export class AdapterMomentHijri
       .replace('iM', 'M')
       .replace('iD', 'D')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.iWeek();
   };
 }
