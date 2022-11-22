@@ -4,7 +4,7 @@ title: Date and Time pickers - Localization
 
 # Date and Time pickers - Localization
 
-<p class="description">Date and Time pickers allow to support translations from different languages.</p>
+<p class="description">Date and Time pickers supports translations from different languages.</p>
 
 As the rest of MUI components, you can modify text and translations.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
