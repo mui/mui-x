@@ -151,10 +151,15 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/date-picker',
         title: 'Date components',
-        scopePathnames: ['/x/react-date-pickers/date-picker', '/x/react-date-pickers/date-field'],
+        scopePathnames: [
+          '/x/react-date-pickers/date-picker',
+          '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/legacy-date-picker',
+        ],
         children: [
-          { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker' },
+          { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker', newFeature: true },
           { pathname: '/x/react-date-pickers/date-field', title: 'Date Field', newFeature: true },
+          { pathname: '/x/react-date-pickers/legacy-date-picker', title: 'Legacy Date Picker' },
         ],
       },
       {

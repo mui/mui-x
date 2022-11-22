@@ -163,6 +163,20 @@ describe('<DateCalendar />', () => {
     });
   });
 
+  it('should render week number when `displayWeekNumber=true`', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <DateCalendar
+          value={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          displayWeekNumber
+        />
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getAllByRole('rowheader').length).to.equal(5);
+  });
+
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);

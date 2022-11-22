@@ -1,12 +1,8 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticDatePicker
+  <StaticNextDatePicker
     displayStaticWrapperAs="desktop"
     openTo="day"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} />}
+    defaultValue={dayjs('2022-04-07')}
     showDaysOutsideCurrentMonth
     fixedWeekNumber={6}
   />
