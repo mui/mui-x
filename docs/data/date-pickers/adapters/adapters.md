@@ -34,7 +34,7 @@ If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_
 
 ### Recommended library
 
-If you are already using one of these libraries in your application, you can keep using it for the Date and Time Pickers as well.
+If you are already using one of these libraries in your application—you can keep using it for the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
 If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`,
