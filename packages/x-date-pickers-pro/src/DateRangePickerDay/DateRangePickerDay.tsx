@@ -228,8 +228,10 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.isHighlighting &&
     !ownerState.isDragging && {
-      '&:hover': {
-        border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
+      '@media (pointer: fine)': {
+        '&:hover': {
+          border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
+        },
       },
     }),
   ...(!ownerState.selected &&
