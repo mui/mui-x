@@ -44,7 +44,7 @@ import {
   GridSearchIcon,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { ErrorOverlay } from '../components/ErrorOverlay';
+import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
@@ -92,7 +92,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay,
+  ErrorOverlay: GridErrorOverlay,
   Footer: GridFooter,
   Header: GridHeader,
   Toolbar: null,

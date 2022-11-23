@@ -128,17 +128,19 @@ const DateRangePickerDayRoot = styled('div', {
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...startBorderStyle,
-    borderLeftColor: theme.palette.divider,
+    borderLeftColor: (theme.vars || theme).palette.divider,
   },
   [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...endBorderStyle,
-    borderRightColor: theme.palette.divider,
+    borderRightColor: (theme.vars || theme).palette.divider,
   },
   ...(ownerState.isHighlighting &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      color: theme.palette.primary.contrastText,
-      backgroundColor: alpha(theme.palette.primary.light, 0.6),
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
+        : alpha(theme.palette.primary.light, 0.6),
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
     }),
@@ -181,15 +183,15 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
   ...(ownerState.isPreviewing &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      border: `2px dashed ${theme.palette.divider}`,
+      border: `2px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       ...((ownerState.isStartOfPreviewing || ownerState.isStartOfMonth) && {
-        borderLeftColor: theme.palette.divider,
+        borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
       }),
       ...((ownerState.isEndOfPreviewing || ownerState.isEndOfMonth) && {
-        borderRightColor: theme.palette.divider,
+        borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
       }),
     }),
@@ -227,7 +229,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(!ownerState.isHighlighting &&
     !ownerState.isDragging && {
       '&:hover': {
-        border: `1px solid ${theme.palette.grey[500]}`,
+        border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
       },
     }),
   ...(!ownerState.selected &&
