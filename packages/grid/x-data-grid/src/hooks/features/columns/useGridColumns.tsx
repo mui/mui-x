@@ -349,16 +349,16 @@ export function useGridColumns(
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, { column, slots }) => {
+    (columnMenuItems, column) => {
       if (props.disableColumnSelector) {
         return columnMenuItems;
       }
 
       if (column.hideable === false) {
-        return [...columnMenuItems, slots.ColumnMenuColumnsItem];
+        return [...columnMenuItems, 'ColumnMenuColumnsItem'];
       }
 
-      return [...columnMenuItems, slots.ColumnMenuColumnsItem, slots.ColumnMenuHideItem];
+      return [...columnMenuItems, 'ColumnMenuColumnsItem', 'ColumnMenuHideItem'];
     },
     [props.disableColumnSelector],
   );

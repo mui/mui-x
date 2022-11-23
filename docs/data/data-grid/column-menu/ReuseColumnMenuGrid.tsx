@@ -1,12 +1,10 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import IconFilter from '@mui/icons-material/FilterAlt';
-import IconClose from '@mui/icons-material/Close';
 import {
   DataGrid,
   GridColumnMenuDefault,
   GridColumnMenuProps,
-  gridColumnMenuSlots,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -20,40 +18,25 @@ function CustomFilterItem(props: GridColumnMenuItemProps) {
   );
 }
 
-function CustomMenuItem(props: GridColumnMenuItemProps) {
-  const { onClick } = props;
-  return (
-    <Button sx={{ mt: 1, ml: 1 }} onClick={onClick} startIcon={<IconClose />}>
-      Close column Menu
-    </Button>
-  );
-}
-
 function CustomColumnMenu(props: GridColumnMenuProps) {
-  const slots = {
-    ...gridColumnMenuSlots,
-    ColumnMenuFilterItem: {
-      // override Filter slot
-      component: CustomFilterItem,
-      // put in start
-      displayOrder: 1,
-    },
-    ColumnMenuSortItem: {
-      ...gridColumnMenuSlots.ColumnMenuSortItem,
-      // modify `displayOrder` to put after `Filter`
-      displayOrder: 2,
-    },
-    CustomComponent: {
-      component: CustomMenuItem,
-      // place in last, after `ColumnMenuColumnsItem`
-      displayOrder: 31,
-    },
-  };
   return (
     <GridColumnMenuDefault
       {...props}
-      slots={slots}
-      initialItems={[slots.CustomComponent]}
+      slots={{
+        // Override slot for `ColumnMenuFilterItem`
+        ColumnMenuFilterItem: CustomFilterItem,
+        // Hide `ColumnMenuColumnsItem`
+        ColumnMenuColumnsItem: null,
+      }}
+      slotsProps={{
+        // Swap positions of filter and sort items
+        ColumnMenuFilterItem: {
+          displayOrder: 0, // Previously `10`
+        },
+        ColumnMenuSortItem: {
+          displayOrder: 10, // Previously `0`
+        },
+      }}
     />
   );
 }

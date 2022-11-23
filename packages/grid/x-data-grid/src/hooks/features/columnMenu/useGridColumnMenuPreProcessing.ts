@@ -11,24 +11,42 @@ const useGridColumnMenuPreProcessing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: GridColumnMenuPreProcessingProps,
 ) => {
+  const { defaultSlots, defaultSlotsProps, slots = {}, slotsProps = {} } = props;
+
+  const processedSlots = React.useMemo(
+    () => ({ ...defaultSlots, ...slots }),
+    [defaultSlots, slots],
+  );
+
+  const processedSlotsProps = React.useMemo(() => {
+    if (!slotsProps || Object.keys(slotsProps).length === 0) {
+      return defaultSlotsProps;
+    }
+    const mergedProps = {} as typeof defaultSlotsProps;
+    Object.entries(defaultSlotsProps).forEach(([key, currentSlotProps]) => {
+      mergedProps[key] = { ...currentSlotProps, ...(slotsProps[key] || {}) };
+    });
+    return mergedProps;
+  }, [defaultSlotsProps, slotsProps]);
+
   const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    props.initialItems,
-    {
-      column: props.currentColumn,
-      slots: props.slots,
-    },
+    [],
+    props.currentColumn,
   );
 
   const components = React.useMemo(() => {
-    const sorted = preProcessedItems.sort((a, b) => a.displayOrder - b.displayOrder);
-    return sorted.reduce<React.JSXElementConstructor<any>[]>((acc, item) => {
-      if (!item || !item.component) {
+    const sorted = preProcessedItems.sort(
+      (a, b) => processedSlotsProps[a].displayOrder - processedSlotsProps[b].displayOrder,
+    );
+    // Future Enhancement, pass other `slotProps` to respective components if needed
+    return sorted.reduce<React.JSXElementConstructor<any>[]>((acc, key) => {
+      if (!processedSlots[key]) {
         return acc;
       }
-      return [...acc, item.component];
+      return [...acc, processedSlots[key]!];
     }, []);
-  }, [preProcessedItems]);
+  }, [preProcessedItems, processedSlots, processedSlotsProps]);
 
   return components;
 };

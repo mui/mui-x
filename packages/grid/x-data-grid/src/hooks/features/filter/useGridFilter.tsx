@@ -98,12 +98,12 @@ export const useGridFilter = (
   }, [props.filterMode, apiRef]);
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, { column, slots }) => {
+    (columnMenuItems, column) => {
       if (column == null || column.filterable === false || props.disableColumnFilter) {
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, slots.ColumnMenuFilterItem];
+      return [...columnMenuItems, 'ColumnMenuFilterItem'];
     },
     [props.disableColumnFilter],
   );

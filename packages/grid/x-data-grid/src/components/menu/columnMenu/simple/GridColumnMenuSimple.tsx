@@ -9,23 +9,34 @@ import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
 import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 
-export const gridColumnMenuSimpleSlots = {
-  ColumnMenuSortItem: { component: GridColumnMenuSortItemSimple, displayOrder: 0 },
-  ColumnMenuFilterItem: { component: GridColumnMenuFilterItemSimple, displayOrder: 10 },
-  ColumnMenuHideItem: { component: GridColumnMenuHideItemSimple, displayOrder: 20 },
-  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItemSimple, displayOrder: 30 },
+export const COLUMN_MENU_SIMPLE_SLOTS = {
+  ColumnMenuSortItem: GridColumnMenuSortItemSimple,
+  ColumnMenuFilterItem: GridColumnMenuFilterItemSimple,
+  ColumnMenuHideItem: GridColumnMenuHideItemSimple,
+  ColumnMenuColumnsItem: GridColumnMenuColumnsItemSimple,
+};
+
+export const COLUMN_MENU_SIMPLE_SLOTS_PROPS = {
+  ColumnMenuSortItem: { displayOrder: 0 },
+  ColumnMenuFilterItem: { displayOrder: 10 },
+  ColumnMenuHideItem: { displayOrder: 20 },
+  ColumnMenuColumnsItem: { displayOrder: 30 },
 };
 
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuSimpleRoot(props, ref) {
-    const { slots = gridColumnMenuSimpleSlots, initialItems = [], ...other } = props;
+    const {
+      defaultSlots = COLUMN_MENU_SIMPLE_SLOTS,
+      defaultSlotsProps = COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+      ...other
+    } = props;
 
     const apiRef = useGridPrivateApiContext();
 
     const orderedComponents = useGridColumnMenuPreProcessing(apiRef, {
-      currentColumn: props.currentColumn,
-      slots,
-      initialItems,
+      ...other,
+      defaultSlots,
+      defaultSlotsProps,
     });
 
     return (

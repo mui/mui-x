@@ -10,23 +10,33 @@ import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
 import { GridColumnMenuSortItem } from './GridColumnMenuSortItem';
 import { useGridPrivateApiContext } from '../../../../hooks/utils/useGridPrivateApiContext';
 
-// TODO: Future enhancement: Replace with `rootProps.components.{x}`
-export const gridColumnMenuSlots = {
-  ColumnMenuSortItem: { component: GridColumnMenuSortItem, displayOrder: 0 },
-  ColumnMenuFilterItem: { component: GridColumnMenuFilterItem, displayOrder: 10 },
-  ColumnMenuHideItem: { component: GridColumnMenuHideItem, displayOrder: 20 },
-  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItem, displayOrder: 30 },
+export const COLUMN_MENU_DEFAULT_SLOTS = {
+  ColumnMenuSortItem: GridColumnMenuSortItem,
+  ColumnMenuFilterItem: GridColumnMenuFilterItem,
+  ColumnMenuHideItem: GridColumnMenuHideItem,
+  ColumnMenuColumnsItem: GridColumnMenuColumnsItem,
+};
+
+export const COLUMN_MENU_DEFAULT_SLOTS_PROPS = {
+  ColumnMenuSortItem: { displayOrder: 0 },
+  ColumnMenuFilterItem: { displayOrder: 10 },
+  ColumnMenuHideItem: { displayOrder: 20 },
+  ColumnMenuColumnsItem: { displayOrder: 30 },
 };
 
 const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuDefault(props, ref) {
-    const { slots = gridColumnMenuSlots, initialItems = [], ...other } = props;
+    const {
+      defaultSlots = COLUMN_MENU_DEFAULT_SLOTS,
+      defaultSlotsProps = COLUMN_MENU_DEFAULT_SLOTS_PROPS,
+      ...other
+    } = props;
     const apiRef = useGridPrivateApiContext();
 
     const orderedComponents = useGridColumnMenuPreProcessing(apiRef, {
-      currentColumn: props.currentColumn,
-      slots,
-      initialItems,
+      ...other,
+      defaultSlots,
+      defaultSlotsProps,
     });
 
     return (

@@ -175,7 +175,7 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, { column, slots }) => {
+    (columnMenuItems, column) => {
       if (props.disableColumnPinning) {
         return columnMenuItems;
       }
@@ -184,7 +184,7 @@ export const useGridColumnPinning = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, slots.ColumnMenuPinningItem];
+      return [...columnMenuItems, 'ColumnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );

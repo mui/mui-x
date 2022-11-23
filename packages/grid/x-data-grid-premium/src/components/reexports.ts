@@ -1,8 +1,10 @@
 export {
   GridPremiumColumnMenuDefault as GridColumnMenuDefault,
-  gridPremiumColumnMenuSlots as gridColumnMenuSlots,
+  COLUMN_MENU_DEFAULT_SLOTS_PREMIUM as COLUMN_MENU_DEFAULT_SLOTS,
+  COLUMN_MENU_DEFAULT_SLOTS_PROPS_PREMIUM as COLUMN_MENU_DEFAULT_SLOTS_PROPS,
 } from './GridPremiumColumnMenuDefault';
 export {
   GridPremiumColumnMenuSimple as GridColumnMenuSimple,
-  gridPremiumColumnMenuSimpleSlots as gridColumnMenuSimpleSlots,
+  COLUMN_MENU_SIMPLE_SLOTS_PREMIUM as COLUMN_MENU_SIMPLE_SLOTS,
+  COLUMN_MENU_SIMPLE_SLOTS_PROPS_PREMIUM as COLUMN_MENU_SIMPLE_SLOTS_PROPS,
 } from './GridPremiumColumnMenuSimple';

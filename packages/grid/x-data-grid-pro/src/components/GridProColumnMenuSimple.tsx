@@ -4,7 +4,8 @@ import Divider from '@mui/material/Divider';
 import {
   GridColumnMenuSimple,
   GridColumnMenuProps,
-  gridColumnMenuSimpleSlots,
+  COLUMN_MENU_SIMPLE_SLOTS,
+  COLUMN_MENU_SIMPLE_SLOTS_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItemSimple } from './GridColumnMenuPinningItemSimple';
@@ -16,9 +17,16 @@ const PinningWithDivider = (props: GridColumnMenuItemProps) => (
   </React.Fragment>
 );
 
-export const gridProColumnMenuSimpleSlots = {
-  ...gridColumnMenuSimpleSlots,
-  ColumnMenuPinningItem: { component: PinningWithDivider, displayOrder: 45 },
+export const COLUMN_MENU_SIMPLE_SLOTS_PRO = {
+  ...COLUMN_MENU_SIMPLE_SLOTS,
+  ColumnMenuPinningItem: PinningWithDivider,
+};
+
+export const COLUMN_MENU_SIMPLE_SLOTS_PROPS_PRO = {
+  ...COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+  ColumnMenuPinningItem: {
+    displayOrder: 35,
+  },
 };
 
 const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
@@ -27,7 +35,8 @@ const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMen
       <GridColumnMenuSimple
         ref={ref}
         {...props}
-        slots={props.slots || gridProColumnMenuSimpleSlots}
+        defaultSlots={COLUMN_MENU_SIMPLE_SLOTS_PRO}
+        defaultSlotsProps={COLUMN_MENU_SIMPLE_SLOTS_PROPS_PRO}
       />
     );
   },
