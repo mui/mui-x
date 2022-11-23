@@ -84,10 +84,21 @@ const useDragRangeEvents = <TDate>({
   onDragStart,
   onDrop,
 }: Omit<UseDragRangeParams<TDate>, 'disableDragEditing'>): UseDragRangeEvents => {
+  const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
+  React.useEffect(() => {
+    // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
+    emptyDragImgRef.current = document.createElement('img');
+    emptyDragImgRef.current.src =
+      'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  }, []);
+
   const handleDragStart = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     const newDate = resolveDateFromTarget(event.target, utils);
     if (newDate) {
+      if (emptyDragImgRef.current) {
+        event.dataTransfer.setDragImage(emptyDragImgRef.current, 0, 0);
+      }
       setRangeDragDay(newDate);
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
