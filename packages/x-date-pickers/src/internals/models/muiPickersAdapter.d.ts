@@ -4,6 +4,12 @@ import { IUtils } from '@date-io/core/IUtils';
 // TODO: Maybe we should add the same constraint.
 // @ts-ignore TDate in our codebase does not have the `ExtendableDateType` constraint.
 export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
+  isMUIAdapter: boolean;
+
+  formatTokenMap: MuiFormatTokenMap;
+
+  expandFormat: (format: string) => string;
+
   getWeekNumber: (date: TDate) => number;
 };
 
@@ -21,9 +27,3 @@ export type MuiFormatTokenMap = {
     | MuiDateSectionName
     | { sectionName: MuiDateSectionName; contentType: 'digit' | 'letter' };
 };
-
-export interface MuiPickerFieldAdapter<TDate> extends MuiPickersAdapter<TDate> {
-  formatTokenMap: MuiFormatTokenMap;
-
-  expandFormat: (format: string) => string;
-}

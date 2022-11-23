@@ -88,11 +88,23 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
       return null;
     }
 
-    return new DateAdapter({
+    const adapter = new DateAdapter({
       locale: adapterLocale,
       formats: dateFormats,
       instance: dateLibInstance,
     });
+
+    if (!adapter.isMUIAdapter) {
+      throw new Error(
+        [
+          'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
+          "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
+          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#setup',
+        ].join(`\n`),
+      );
+    }
+
+    return adapter;
   }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentUtils]);
 
   const defaultDates: MuiPickersAdapterContextNullableValue<TDate>['defaultDates'] =
