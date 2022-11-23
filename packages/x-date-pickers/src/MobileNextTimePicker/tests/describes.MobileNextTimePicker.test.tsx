@@ -45,7 +45,10 @@ describe('<MobileNextTimePicker /> - Describes', () => {
     componentFamily: 'new-picker',
     type: 'time',
     variant: 'mobile',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    values: [
+      adapterToUse.date(new Date(2018, 0, 1, 15, 30)),
+      adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
+    ],
     emptyValue: null,
     defaultProps: {
       openTo: 'minutes',
