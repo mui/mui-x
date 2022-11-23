@@ -420,7 +420,6 @@
   { "name": "gridRowGroupingNameSelector", "kind": "Variable" },
   { "name": "gridRowGroupingSanitizedModelSelector", "kind": "Variable" },
   { "name": "GridRowGroupingState", "kind": "Interface" },
-  { "name": "gridRowGroupingStateSelector", "kind": "Variable" },
   { "name": "GridRowHeightParams", "kind": "Interface" },
   { "name": "GridRowHeightReturnValue", "kind": "TypeAlias" },
   { "name": "GridRowId", "kind": "TypeAlias" },
