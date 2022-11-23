@@ -205,7 +205,7 @@ If you are not eligible to the free trial, you need to [purchase a license](http
 #### 2. `Expired package version`
 
 This error indicates that you have installed a version of the software that is outside of the maintenance plan of your license key.
-By default, purchased licenses come with one year of free access to new releases.
+By default, commercial licenses provide access to new versions released during the first year after the purchase.
 
 To solve the issue, you can [renew your license](https://mui.com/r/x-get-license/) or install an older version of the npm package that is compatible with your license key.
 
