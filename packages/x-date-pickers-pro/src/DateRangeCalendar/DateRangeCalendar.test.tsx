@@ -249,6 +249,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 29));
+        expect(document.activeElement).toHaveAccessibleName('29');
 
         // test range expansion
         executeDateDrag(
@@ -259,6 +260,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(2);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 30));
+        expect(document.activeElement).toHaveAccessibleName('30');
 
         // test range flip
         executeDateDrag(
@@ -269,6 +271,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(3);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 2));
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[0]);
+        expect(document.activeElement).toHaveAccessibleName('2');
       });
 
       it('should emit "onChange" when touch dragging end date', function test() {
@@ -330,6 +333,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(document.activeElement).toHaveAccessibleName('3');
 
         // test range expansion
         executeDateDrag(getPickerDay('3'), getPickerDay('1'));
@@ -337,6 +341,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(2);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
+        expect(document.activeElement).toHaveAccessibleName('1');
 
         // test range flip
         executeDateDrag(getPickerDay('1'), getPickerDay('22'));
@@ -344,6 +349,7 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(3);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 22));
+        expect(document.activeElement).toHaveAccessibleName('22');
       });
 
       it('should emit "onChange" when touch dragging start date', function test() {

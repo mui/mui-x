@@ -169,6 +169,8 @@ const useDragRangeEvents = <TDate>({
     event.stopPropagation();
     setIsDragging(false);
     setRangeDragDay(null);
+    // make sure the focused element is the element where drop ended
+    event.currentTarget.focus();
     if (isSameAsDraggingDate(event)) {
       return;
     }
