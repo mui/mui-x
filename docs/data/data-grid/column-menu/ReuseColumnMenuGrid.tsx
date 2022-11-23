@@ -12,10 +12,10 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { onClick } = props;
   return (
     <Button sx={{ m: 1 }} onClick={onClick} startIcon={<IconFilter />}>
-      Show {column.field} Filters
+      Show Filters
     </Button>
   );
 }

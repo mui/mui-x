@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconFilter from '@mui/icons-material/FilterAlt';
 import IconClose from '@mui/icons-material/Close';
@@ -10,13 +11,17 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props) {
-  const { column, onClick } = props;
+  const { onClick } = props;
   return (
     <Button sx={{ m: 1 }} onClick={onClick} startIcon={<IconFilter />}>
-      Show {column.field} Filters
+      Show Filters
     </Button>
   );
 }
+
+CustomFilterItem.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 
 function CustomMenuItem(props) {
   const { onClick } = props;
@@ -26,6 +31,10 @@ function CustomMenuItem(props) {
     </Button>
   );
 }
+
+CustomMenuItem.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 
 function CustomColumnMenu(props) {
   const slots = {
