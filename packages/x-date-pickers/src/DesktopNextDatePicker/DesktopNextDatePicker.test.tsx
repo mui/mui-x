@@ -248,56 +248,6 @@ describe('<DesktopNextDatePicker />', () => {
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
 
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <DesktopNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).to.equal(null);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.equal(null);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <DesktopNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      // Clear the date
-      fireEvent.click(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
     it('should not call onAccept when selecting the same date', () => {
       const onChange = spy();
       const onAccept = spy();
