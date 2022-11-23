@@ -36,7 +36,7 @@ export default function LayoutBlocks() {
         >
           <ToggleButton value={'date'}>date picker</ToggleButton>
           <ToggleButton value={'time'}>time picker</ToggleButton>
-          <ToggleButton value={'date-time'}>date range picker</ToggleButton>
+          <ToggleButton value={'date-time'}>date time picker</ToggleButton>
         </ToggleButtonGroup>
 
         {currentComponent === 'date' && (
