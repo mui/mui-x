@@ -5,7 +5,7 @@ import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
 
 export const gridProColumnMenuSlots = {
   ...gridColumnMenuSlots,
-  ColumnMenuPinningItem: { component: GridColumnMenuPinningItem, priority: 5 },
+  ColumnMenuPinningItem: { component: GridColumnMenuPinningItem, displayOrder: 5 },
 };
 
 const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(

@@ -44,8 +44,8 @@ const AggregationItem = (props: GridColumnMenuItemProps) => {
 
 export const gridPremiumColumnMenuSimpleSlots = {
   ...gridColumnMenuSimpleSlots,
-  ColumnMenuAggregationItem: { component: AggregationItem, priority: 37 },
-  ColumnMenuGroupingItem: { component: GroupingItem, priority: 33 },
+  ColumnMenuAggregationItem: { component: AggregationItem, displayOrder: 37 },
+  ColumnMenuGroupingItem: { component: GroupingItem, displayOrder: 33 },
 };
 
 const GridPremiumColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(

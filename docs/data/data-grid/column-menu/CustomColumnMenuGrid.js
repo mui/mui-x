@@ -28,7 +28,6 @@ function CustomColumnMenu(props) {
     column: props.currentColumn,
     onClick: props.hideMenu,
   };
-
   return (
     <Stack p={0.5}>
       <GridColumnMenuSortItem {...itemProps} />

@@ -12,10 +12,10 @@ import { useGridPrivateApiContext } from '../../../../hooks/utils/useGridPrivate
 
 // TODO: Future enhancement: Replace with `rootProps.components.{x}`
 export const gridColumnMenuSlots = {
-  ColumnMenuSortItem: { component: GridColumnMenuSortItem, priority: 0 },
-  ColumnMenuFilterItem: { component: GridColumnMenuFilterItem, priority: 10 },
-  ColumnMenuHideItem: { component: GridColumnMenuHideItem, priority: 20 },
-  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItem, priority: 30 },
+  ColumnMenuSortItem: { component: GridColumnMenuSortItem, displayOrder: 0 },
+  ColumnMenuFilterItem: { component: GridColumnMenuFilterItem, displayOrder: 10 },
+  ColumnMenuHideItem: { component: GridColumnMenuHideItem, displayOrder: 20 },
+  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItem, displayOrder: 30 },
 };
 
 const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
@@ -53,7 +53,7 @@ GridColumnMenuDefault.propTypes = {
   initialItems: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.elementType.isRequired,
-      priority: PropTypes.number.isRequired,
+      displayOrder: PropTypes.number.isRequired,
     }),
   ),
   labelledby: PropTypes.string,

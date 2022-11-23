@@ -10,10 +10,10 @@ import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 
 export const gridColumnMenuSimpleSlots = {
-  ColumnMenuSortItem: { component: GridColumnMenuSortItemSimple, priority: 0 },
-  ColumnMenuFilterItem: { component: GridColumnMenuFilterItemSimple, priority: 10 },
-  ColumnMenuHideItem: { component: GridColumnMenuHideItemSimple, priority: 20 },
-  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItemSimple, priority: 30 },
+  ColumnMenuSortItem: { component: GridColumnMenuSortItemSimple, displayOrder: 0 },
+  ColumnMenuFilterItem: { component: GridColumnMenuFilterItemSimple, displayOrder: 10 },
+  ColumnMenuHideItem: { component: GridColumnMenuHideItemSimple, displayOrder: 20 },
+  ColumnMenuColumnsItem: { component: GridColumnMenuColumnsItemSimple, displayOrder: 30 },
 };
 
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
@@ -49,7 +49,7 @@ GridColumnMenuSimple.propTypes = {
   initialItems: PropTypes.arrayOf(
     PropTypes.shape({
       component: PropTypes.elementType.isRequired,
-      priority: PropTypes.number.isRequired,
+      displayOrder: PropTypes.number.isRequired,
     }),
   ),
   labelledby: PropTypes.string,

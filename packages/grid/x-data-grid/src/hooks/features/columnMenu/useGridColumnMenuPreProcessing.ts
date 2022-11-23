@@ -21,7 +21,7 @@ const useGridColumnMenuPreProcessing = (
   );
 
   const components = React.useMemo(() => {
-    const sorted = preProcessedItems.sort((a, b) => a.priority - b.priority);
+    const sorted = preProcessedItems.sort((a, b) => a.displayOrder - b.displayOrder);
     return sorted.reduce<React.JSXElementConstructor<any>[]>((acc, item) => {
       if (!item || !item.component) {
         return acc;
