@@ -6,11 +6,7 @@ import {
 } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
-import {
-  gridRowCountSelector,
-  gridRowsLoadingSelector,
-} from '../../hooks/features/rows/gridRowsSelector';
+import { gridRowsLoadingSelector } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
@@ -90,34 +86,20 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   );
 }
 
+// TODO v6: Rename to GridLoadingOverlayRenderer because it only renders the loading overlay
 export function GridOverlays() {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
-  const showNoRowsOverlay = !loading && totalRowCount === 0;
-  const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
-
-  let overlay: JSX.Element | null = null;
-
-  if (showNoRowsOverlay) {
-    overlay = <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
+  if (!loading) {
+    return null;
   }
 
-  if (showNoResultsOverlay) {
-    overlay = (
-      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
-    );
-  }
-
-  if (loading) {
-    overlay = (
-      <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
-  }
+  const overlay = (
+    <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
+  );
 
   if (overlay === null) {
     return null;

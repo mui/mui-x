@@ -21,6 +21,7 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
+import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows/gridRowsSelector';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -500,6 +501,38 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return rows;
   };
 
+  const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+  const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
+  const visibleRowCount = currentPage.rows.length;
+  const { components, componentsProps } = rootProps;
+
+  const getNoRowsOrNoResultsOverlay = React.useCallback(() => {
+    if (loading) {
+      return null;
+    }
+
+    let overlay: JSX.Element | null = null;
+
+    if (totalRowCount === 0) {
+      // No rows at all
+      overlay = <components.NoRowsOverlay {...componentsProps?.noRowsOverlay} />;
+    }
+
+    if (totalRowCount > 0 && visibleRowCount === 0) {
+      // There're rows but none matching the filters
+      overlay = <components.NoResultsOverlay {...componentsProps?.noResultsOverlay} />;
+    }
+
+    return overlay;
+  }, [
+    components,
+    componentsProps?.noResultsOverlay,
+    componentsProps?.noRowsOverlay,
+    loading,
+    totalRowCount,
+    visibleRowCount,
+  ]);
+
   const needsHorizontalScrollbar = containerWidth && columnsTotalWidth > containerWidth;
 
   const contentSize = React.useMemo(() => {
@@ -558,5 +591,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }),
     getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
+    getNoRowsOrNoResultsOverlay,
   };
 };
