@@ -1,10 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { PickersActionBar } from '../../../PickersActionBar';
 import { DateOrTimeView } from '../../models/views';
-import { PickersViewLayoutProps } from './PickersViewLayout.types';
+import { PickersViewLayoutSlotOwnerState, PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
   getPickersViewLayoutUtilityClass,
   pickersViewLayoutClasses,
@@ -38,7 +39,7 @@ export const PickersViewLayoutToolbar = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1 / 4',
   gridRow: '1',
-  [`&.${pickersViewLayoutClasses['toolbar--landscape']}`]: {
+  [`&.${pickersViewLayoutClasses['landscape']}`]: {
     gridColumn: theme.direction === 'rtl' ? '3' : '1',
     gridRow: '1 / 3',
   },
@@ -57,12 +58,22 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
-    content: ['content', isLandscape && 'content--landscape'],
-    toolbar: ['toolbar', isLandscape && 'toolbar--landscape'],
-    actionbar: ['actionbar', isLandscape && 'actionbar--landscape'],
+    content: ['content', isLandscape && 'landscape'],
+    toolbar: ['toolbar', isLandscape && 'landscape'],
+    actionbar: ['actionbar', isLandscape && 'landscape'],
   };
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
+};
+
+const DefaultPickersViewLayout = (props: PickersViewLayoutSlotOwnerState<any, any>) => {
+  const { toolbar, content, actionBar, children, ...other } = props;
+
+  return (
+    <PickersViewLayoutRoot {...other}>
+      {children ?? [toolbar, content, actionBar]}
+    </PickersViewLayoutRoot>
+  );
 };
 
 type PickersViewLayoutComponent = <TValue, TView extends DateOrTimeView>(
@@ -75,9 +86,8 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
 >(inProps: PickersViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 
+  const { components, componentsProps, ...other } = props;
   const {
-    components,
-    componentsProps,
     wrapperVariant,
     children,
     onAccept,
@@ -94,8 +104,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
     readOnly,
     showToolbar,
     className,
-  } = props;
-
+  } = other;
   const classes = useUtilityClasses(props);
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
@@ -104,19 +113,9 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = components?.Toolbar;
 
-  const LayoutRoot = components?.LayoutRoot ?? PickersViewLayoutRoot;
-
-  if (view == null) {
-    return null;
-  }
-
-  return (
-    <LayoutRoot
-      className={clsx(className, classes.root)}
-      ref={ref}
-      {...componentsProps?.layoutRoot}
-    >
-      {shouldRenderToolbar && !!Toolbar && (
+  const subComponents = {
+    toolbar:
+      view && shouldRenderToolbar && !!Toolbar ? (
         <PickersViewLayoutToolbar className={classes.toolbar}>
           <Toolbar
             {...componentsProps?.toolbar}
@@ -130,11 +129,14 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
             readOnly={readOnly}
           />
         </PickersViewLayoutToolbar>
-      )}
+      ) : null,
+    content: view && (
       <PickersViewLayoutContent className={classes.content}>
         {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
       </PickersViewLayoutContent>
+    ),
+    actionBar: (
       <PickersViewLayoutActionBar className={classes.actionbar}>
         <ActionBar
           onAccept={onAccept}
@@ -145,6 +147,30 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
           {...componentsProps?.actionBar}
         />
       </PickersViewLayoutActionBar>
-    </LayoutRoot>
-  );
+    ),
+  };
+
+  const Layout = components?.Layout ?? DefaultPickersViewLayout;
+  const layoutProps = useSlotProps<
+    React.JSXElementConstructor<PickersViewLayoutSlotOwnerState<any, any>>,
+    PickersViewLayoutProps<any, any>,
+    any,
+    any
+  >({
+    elementType: Layout,
+    externalSlotProps: componentsProps?.layout,
+    additionalProps: {
+      ref,
+      className: clsx(className, classes.root),
+      ...subComponents,
+    },
+    externalForwardedProps: other,
+    ownerState: { ...props, ...subComponents },
+  });
+
+  if (view == null) {
+    return null;
+  }
+
+  return <Layout {...layoutProps} />;
 }) as PickersViewLayoutComponent;
