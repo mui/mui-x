@@ -33,11 +33,19 @@ describe('<NextDatePicker /> - Describes', () => {
         expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
     },
-    setNewValue: (value) => {
+    setNewValue: (value, isOpened) => {
       const newValue = adapterToUse.addDays(value, 1);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 5); // Update the day
-      userEvent.keyPress(input, { key: 'ArrowUp' });
+
+      if (isOpened) {
+        userEvent.mousePress(
+          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }),
+        );
+      } else {
+        const input = screen.getByRole('textbox');
+        clickOnInput(input, 5); // Update the day
+        userEvent.keyPress(input, { key: 'ArrowUp' });
+      }
+
       return newValue;
     },
   }));
