@@ -53,6 +53,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
+- The `gridRowGroupingStateSelector` selector was removed.
+- The `gridFilterStateSelector` selector was removed.
+- The `gridRowsStateSelector` selector was removed.
+- The `gridSortingStateSelector` selector was removed.
 
 ### Events
 
