@@ -256,7 +256,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       setCurrentDatePosition(nextSelection);
       onCurrentDatePositionChange?.(nextSelection);
 
-      const isFullRangeSelected = isRangeValid(utils, newRange);
+      const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
 
       setValue(newRange);
       onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
