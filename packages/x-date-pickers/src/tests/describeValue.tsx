@@ -107,6 +107,11 @@ export function describeValue<TValue>(
     const viewWrapperRole = type === 'date-range' && variant === 'desktop' ? 'tooltip' : 'dialog';
 
     describe('Pickers lifecycle', () => {
+      if (variant === 'desktop' && type === 'time') {
+        // No view to test
+        return;
+      }
+
       it('should not open on mount if `props.open` is false', () => {
         render(<ElementToTest />);
         expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
@@ -190,7 +195,7 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(1);
       });
 
-      it.only('should not call onChange and onAccept when selecting the same value', () => {
+      it('should not call onChange and onAccept when selecting the same value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
