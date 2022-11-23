@@ -195,7 +195,7 @@ describe('<DateCalendar />', () => {
       );
     });
 
-    it('should complet weeks when showDaysOutsideCurrentMonth=true', () => {
+    it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
@@ -207,7 +207,7 @@ describe('<DateCalendar />', () => {
       expect(screen.getAllByRole('gridcell', { name: '31' }).length).to.equal(2);
     });
 
-    it('should complet weeks up to match `fixedWeekNumber`', () => {
+    it('should complete weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}

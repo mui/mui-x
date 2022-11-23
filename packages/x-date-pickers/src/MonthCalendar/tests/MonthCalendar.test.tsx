@@ -8,14 +8,22 @@ import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
 
-  it('allows to pick month standalone', () => {
-    const onChangeMock = spy();
-    render(
-      <MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
-    );
+  it('allows to pick month standalone by click, `Enter` and `Space`', () => {
+    const onChange = spy();
+    render(<MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
+    const targetMonth = screen.getByRole('button', { name: 'Feb' });
 
-    fireEvent.click(screen.getByText('May', { selector: 'button' }));
-    expect((onChangeMock.args[0][0] as Date).getMonth()).to.equal(4); // month index starting from 0
+    // A native button implies Enter and Space keydown behavior
+    // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
+    // If this breaks, make sure to add tests for
+    // - fireEvent.keyDown(targetDay, { key: 'Enter' })
+    // - fireEvent.keyUp(targetDay, { key: 'Space' })
+    expect(targetMonth.tagName).to.equal('BUTTON');
+
+    fireEvent.click(targetMonth);
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {

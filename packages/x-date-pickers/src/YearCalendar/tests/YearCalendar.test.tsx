@@ -9,10 +9,8 @@ describe('<YearCalendar />', () => {
   const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
-    const onChangeMock = spy();
-    render(
-      <YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
-    );
+    const onChange = spy();
+    render(<YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
     const targetYear = screen.getByRole('button', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
@@ -24,8 +22,8 @@ describe('<YearCalendar />', () => {
 
     fireEvent.click(targetYear);
 
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(onChangeMock.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
   });
 
   it('does not allow to pick year if readOnly prop is passed', () => {
