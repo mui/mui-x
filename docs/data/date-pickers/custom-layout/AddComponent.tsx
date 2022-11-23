@@ -62,7 +62,7 @@ export default function AddComponent() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
         componentsProps={{
-          layoutRoot: {
+          layout: ({ toolbar, actionBar, content }) => ({
             sx: {
               // Keep the structure with display grid
               display: 'grid',
@@ -78,10 +78,10 @@ export default function AddComponent() {
                 gridRow: '1',
               },
             },
-          },
+            children: [toolbar, actionBar, content],
+          }),
         }}
         components={{
-          LayoutRoot: ViewLayoutRoot,
           ActionBar: ActionList,
         }}
       />
