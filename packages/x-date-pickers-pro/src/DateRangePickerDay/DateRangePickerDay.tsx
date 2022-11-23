@@ -226,7 +226,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(!ownerState.selected && {
     backgroundColor: 'transparent',
   }),
-  ...(!ownerState.isHighlighting && {
+  ...(!ownerState.isHighlighting && !ownerState.isDragging && {
     '&:hover': {
       border: `1px solid ${theme.palette.grey[500]}`,
     },
