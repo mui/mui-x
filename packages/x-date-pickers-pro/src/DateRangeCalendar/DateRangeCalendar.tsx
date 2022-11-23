@@ -26,6 +26,7 @@ import {
   WrapperVariantContext,
   PickerSelectionState,
 } from '@mui/x-date-pickers/internals';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
 import {
@@ -132,7 +133,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
-  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
+  const wrapperContext = React.useContext(WrapperVariantContext);
+  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
+  // needed as a fallback when this component is used standalone and there is no `WrapperContext`
+  const isDesktop = useMediaQuery('@media (pointer: fine)', { defaultMatches: true });
+  const isMobile = wrapperContext ? wrapperContext === 'mobile' : !isDesktop;
 
   const {
     value: valueProp,
