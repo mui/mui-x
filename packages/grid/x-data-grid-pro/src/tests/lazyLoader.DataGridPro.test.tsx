@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
-import { getColumnHeaderCell, getRow } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -110,6 +110,22 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
     const updatedAllRows = apiRef.current.state.rows.ids;
     expect(updatedAllRows.slice(4, 6)).to.deep.equal([4, 5]);
+  });
+
+  // See https://github.com/mui/mui-x/issues/6857
+  it('should update the row when `apiRef.current.updateRows` is called on lazy-loaded rows', () => {
+    render(<TestLazyLoader rowCount={5} autoHeight={isJSDOM} />);
+
+    const newRows: GridRowModel[] = [
+      { id: 4, first: 'John' },
+      { id: 5, first: 'Mac' },
+    ];
+
+    act(() => apiRef.current.unstable_replaceRows(3, newRows));
+    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John', 'Mac']);
+
+    act(() => apiRef.current.updateRows([{ id: 4, first: 'John updated' }]));
+    expect(getColumnValues(1)).to.deep.equal(['Mike', 'Jack', 'Jim', 'John updated', 'Mac']);
   });
 
   it('should update all rows accordingly when `apiRef.current.unstable_replaceRows` is called and props.getRowId is defined', () => {
