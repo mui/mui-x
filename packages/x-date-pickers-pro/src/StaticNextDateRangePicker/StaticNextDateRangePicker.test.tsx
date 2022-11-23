@@ -4,9 +4,10 @@ import { isWeekend } from 'date-fns';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
 import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 describe('<StaticNextDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<StaticNextDateRangePicker />, () => ({
     classes: {},
@@ -25,6 +26,14 @@ describe('<StaticNextDateRangePicker />', () => {
       'rootClass',
       'reactTestRenderer',
     ],
+  }));
+
+  describeRangeValidation(StaticNextDateRangePicker, () => ({
+    render,
+    clock,
+    componentFamily: 'new-static-picker',
+    views: ['day'],
+    variant: 'mobile',
   }));
 
   it('allows disabling dates', () => {
