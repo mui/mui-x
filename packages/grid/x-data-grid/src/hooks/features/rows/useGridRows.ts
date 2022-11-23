@@ -400,6 +400,10 @@ export const useGridRows = (
         updatedTree[row.id] = rowTreeNodeConfig;
       });
 
+      apiRef.current.unstable_caches.rows.idRowsLookup = updatedIdRowsLookup;
+      apiRef.current.unstable_caches.rows.idToIdLookup = updatedIdToIdLookup;
+      apiRef.current.unstable_caches.rows.ids = updatedRows;
+
       apiRef.current.setState((state) => ({
         ...state,
         rows: {
