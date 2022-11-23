@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
+import { useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -145,12 +145,10 @@ const DateRangePickerDayRoot = styled('div', {
   ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
     ...startBorderStyle,
     paddingLeft: 0,
-    marginLeft: DAY_MARGIN / 2,
   }),
   ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
     ...endBorderStyle,
     paddingRight: 0,
-    marginRight: DAY_MARGIN / 2,
   }),
 }));
 
