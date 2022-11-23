@@ -27,13 +27,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'активных фильтров';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'активных фильтра';
     } else if (lastDigit === 1) {
       pluralForm = 'активный фильтр';
     }
-
     return `${count} ${pluralForm}`;
   },
 
@@ -106,13 +104,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'активных фильтров';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'активных фильтра';
     } else if (lastDigit === 1) {
       pluralForm = 'активный фильтр';
     }
-
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Показать фильтры',
@@ -122,13 +118,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => {
     let pluralForm = 'строк выбрано';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'строки выбраны';
     } else if (lastDigit === 1) {
       pluralForm = 'строка выбрана';
     }
-
     return `${count} ${pluralForm}`;
   },
 
