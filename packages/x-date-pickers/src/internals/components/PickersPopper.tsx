@@ -10,6 +10,7 @@ import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions
 import { PickersActionBar, PickersActionBarProps } from '../../PickersActionBar';
 import { PickersSlotsComponent } from './wrappers/WrapperProps';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
+import { getActiveElement } from '../utils/utils';
 
 export interface PickersPopperSlotsComponent extends PickersSlotsComponent {}
 
@@ -275,7 +276,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
 
     if (open) {
-      lastFocusedElementRef.current = document.activeElement;
+      lastFocusedElementRef.current = getActiveElement(document);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
