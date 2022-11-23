@@ -31,31 +31,21 @@ const ActionList = (props: PickersActionBarProps) => {
   );
 };
 
-const ViewLayoutRoot = (props: React.PropsWithChildren) => {
-  const { children, ...other } = props;
-
-  return (
-    <Box
-      // Pass other props such that componentsProps.layoutRoot.sx is applied
-      {...other}
-    >
-      {/* Add an icon to place in the layout */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gridColumn: '1',
-          gridRow: '1',
-        }}
-      >
-        <RestaurantIcon />
-      </Box>
-      {/* propagate the children */}
-      {children}
-    </Box>
-  );
-};
+const RestaurantHeader = () => (
+  <Box
+    sx={{
+      // Place the element in the grid layout
+      gridColumn: '1',
+      gridRow: '1',
+      // Center the icon
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <RestaurantIcon />
+  </Box>
+);
 
 export default function AddComponent() {
   return (
@@ -78,7 +68,7 @@ export default function AddComponent() {
                 gridRow: '1',
               },
             },
-            children: [toolbar, actionBar, content],
+            children: [<RestaurantHeader />, toolbar, actionBar, content],
           }),
         }}
         components={{

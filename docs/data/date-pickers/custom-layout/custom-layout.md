@@ -56,7 +56,7 @@ Here is an overview of the structure.
 </LayoutRoot>
 ```
 
-### Moving elements
+### Element positions
 
 To move an element—the easiest way is to override it's wrapper position with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
 
@@ -65,8 +65,32 @@ Placing at the right is achieved by applying `{ gridColumn: '3', gridRow: '2' }`
 
 {{"demo": "MovingActions.js"}}
 
-### Adding components
+### Accessibility
 
-You can add components to the layout by overriding the `LayoutRoot` wrapper.
+In the demonstration above, the layout is modified thanks to CSS.
+Such modification can lead to inconsistencies between the visual aspect, and the DOM structure.
+In the previous demonstration, the tab order is broken, because the action bar appears before the calendar whereas in the DOM the action bar is still after the calendar.
+
+To reorder the DOM structure, you can use the layout callback.
+It gives you access to the main parts of the layout: `toolbar`, `content`, `actionBar` and can order them in `children` property.
+
+```jsx
+componentsProps={{
+  layout: ({toolbar, content, actionBar}) =>({
+    sx: {
+      /* CSS reordering */
+    },
+    children: [toolbar, actionBar, content ]
+  }),
+}}
+```
+
+Here is the previous demonstration with a fix for the tabulation order.
+
+{{"demo": "MovingActionsReorder.js"}}
+
+### Adding Elements
+
+You can use the strategy explained above to add extra elements in the layout.
 
 {{"demo": "AddComponent.js"}}

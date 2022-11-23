@@ -42,7 +42,7 @@ export default function MovingActions() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
         componentsProps={{
-          layoutRoot: {
+          layout: {
             sx: {
               '& .MuiPickersViewLayout-actionbar': {
                 gridColumn: '3',

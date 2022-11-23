@@ -29,19 +29,20 @@ const ActionList = (props: PickersActionBarProps) => {
   );
 };
 
-export default function MovingActions() {
+export default function MovingActionsReorder() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
         componentsProps={{
-          layout: {
+          layout: ({ toolbar, content, actionBar }) => ({
             sx: {
               '& .MuiPickersViewLayout-actionbar': {
                 gridColumn: '3',
                 gridRow: '2',
               },
             },
-          },
+            children: [toolbar, actionBar, content],
+          }),
         }}
         components={{
           ActionBar: ActionList,

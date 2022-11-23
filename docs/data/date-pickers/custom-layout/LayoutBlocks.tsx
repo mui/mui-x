@@ -47,7 +47,7 @@ export default function LayoutBlocks() {
           <StaticNextDatePicker
             orientation={orientation}
             componentsProps={{
-              layoutRoot: {
+              layout: {
                 sx: {
                   border: 'solid black 2px',
                   '& .MuiPickersViewLayout-toolbar': {
@@ -70,7 +70,7 @@ export default function LayoutBlocks() {
             <StaticNextTimePicker
               orientation={orientation}
               componentsProps={{
-                layoutRoot: {
+                layout: {
                   sx: {
                     border: 'solid black 2px',
                     '& .MuiPickersViewLayout-toolbar': {
@@ -93,7 +93,7 @@ export default function LayoutBlocks() {
           <StaticNextDateTimePicker
             orientation={orientation}
             componentsProps={{
-              layoutRoot: {
+              layout: {
                 sx: {
                   border: 'solid black 2px',
                   '& .MuiPickersViewLayout-toolbar': {
