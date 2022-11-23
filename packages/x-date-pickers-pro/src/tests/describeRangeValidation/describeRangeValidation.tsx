@@ -1,13 +1,10 @@
 /* eslint-env mocha */
 import * as React from 'react';
-// import { testDayViewRangeValidation  from './testDayViewRangeValidation';
+import { testDayViewRangeValidation } from './testDayViewRangeValidation';
 import { testTextFieldRangeValidation } from './testTextFieldRangeValidation';
 import { DescribeRangeValidationInputOptions } from './describeRangeValidation.types';
 
-const TEST_SUITES = [
-  // testDayViewRangeValidation,
-  testTextFieldRangeValidation,
-];
+const TEST_SUITES = [testDayViewRangeValidation, testTextFieldRangeValidation];
 
 /**
  * Tests various aspects of the range picker validation.

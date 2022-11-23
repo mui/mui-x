@@ -114,6 +114,8 @@ export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
   TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
   DayValidationProps,
 } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
