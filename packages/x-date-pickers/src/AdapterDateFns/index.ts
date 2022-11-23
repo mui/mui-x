@@ -2,6 +2,7 @@ import BaseAdapterDateFns from '@date-io/date-fns';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
+import getWeek from 'date-fns/getWeek';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
@@ -54,5 +55,9 @@ export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerField
     return this.expandFormat(format)
       .replace(/(aaa|aa|a)/g, '(a|p)m')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: Date) => {
+    return getWeek(date, { locale: this.locale });
   };
 }

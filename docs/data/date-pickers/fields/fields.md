@@ -24,8 +24,6 @@ The field components requires an adapter imported from `@mui/x-date-pickers` or 
 +import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 ```
 
-For now, only 4 adapters are exported: `AdapterDayjs`, `AdapterDateFns`, `AdapterLuxon` and `AdapterMoment`.
-Support for the Jalali and Hijri adapters will come in the future.
 :::
 
 ### Fields to edit a single element

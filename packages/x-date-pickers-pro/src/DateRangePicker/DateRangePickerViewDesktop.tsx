@@ -105,7 +105,7 @@ const DateRangePickerViewDesktopContainer = styled('div', {
   overridesResolver: (_, styles) => styles.container,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
-    borderRight: `2px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -162,7 +162,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     ...other
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const utils = useUtils<TDate>();
   const classes = useUtilityClasses(props);

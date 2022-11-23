@@ -114,7 +114,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
   const classes = useUtilityClasses(props);
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   React.useEffect(() => {
     if (!open) {

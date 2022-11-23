@@ -24,7 +24,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDa
     ...other
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
 

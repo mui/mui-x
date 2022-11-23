@@ -1,4 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterJalali}>
+<LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
   <DatePicker
     mask="____/__/__"
     value={value}

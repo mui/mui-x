@@ -144,7 +144,7 @@ export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
-export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
+export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';

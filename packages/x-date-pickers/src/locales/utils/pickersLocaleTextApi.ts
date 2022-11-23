@@ -28,6 +28,12 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   previousMonth: string;
   nextMonth: string;
 
+  // Calendar week number
+  calendarWeekNumberHeaderLabel: string;
+  calendarWeekNumberHeaderText: string;
+  calendarWeekNumberAriaLabelText: (weekNumber: number) => string;
+  calendarWeekNumberText: (weekNumber: number) => string;
+
   // View navigation
   openPreviousView: string;
   openNextView: string;
