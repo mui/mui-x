@@ -210,7 +210,7 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onChange and onAccept when selecting the same value', () => {
+      it('should not call onChange or onAccept when selecting the same value', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();
@@ -234,7 +234,7 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(1);
       });
 
-      it('should not call onClose and onAccept when selection a date and `props.closeOnSelect` is false', () => {
+      it('should not call onClose or onAccept when selecting a date and `props.closeOnSelect` is false', () => {
         const onChange = spy();
         const onAccept = spy();
         const onClose = spy();

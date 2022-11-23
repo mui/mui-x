@@ -7,30 +7,43 @@ import {
   expectInputValue,
   buildFieldInteractions,
 } from 'test/utils/pickers-utils';
-import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
+import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from '@mui/x-date-pickers/DesktopNextDateTimePicker';
 
-describe('<DesktopNextDatePicker /> - Describes', () => {
+describe('<DesktopNextDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock });
 
-  describeValidation(DesktopNextDatePicker, () => ({
+  describeValidation(DesktopNextDateTimePicker, () => ({
     render,
     clock,
-    views: ['year', 'month', 'day'],
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
     componentFamily: 'new-picker',
   }));
 
-  describeValue(DesktopNextDatePicker, () => ({
+  describeValue(DesktopNextDateTimePicker, () => ({
     render,
     componentFamily: 'new-picker',
-    type: 'date',
+    type: 'date-time',
     variant: 'desktop',
+    defaultProps: {
+      views: ['day'],
+      openTo: 'day',
+    },
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
+      const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
+      let expectedValueStr: string;
+      if (expectedValue == null) {
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
+      } else {
+        expectedValueStr = adapterToUse.format(
+          expectedValue,
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+        );
+      }
+
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {

@@ -9,7 +9,7 @@ import {
   buildFieldInteractions,
   wrapPickerMount,
 } from 'test/utils/pickers-utils';
-import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '@mui/x-date-pickers';
+import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '@mui/x-date-pickers/DesktopNextTimePicker';
 
 describe('<DesktopNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

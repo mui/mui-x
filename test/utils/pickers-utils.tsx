@@ -22,6 +22,7 @@ import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickerFieldAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 
 export type AdapterName =
   | 'date-fns'
@@ -185,10 +186,25 @@ export const getClockMouseEvent = (
   return event;
 };
 
-// TODO: Handle dynamic values
-export const getClockTouchEvent = (
-  { clientX, clientY }: { clientX: number; clientY: number } = { clientX: 20, clientY: 15 },
-) => {
+export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | '24hours') => {
+  // TODO: Handle 24 hours clock
+  if (view === '24hours') {
+    throw new Error('Do not support 24 hours clock yet');
+  }
+
+  let itemCount: number;
+  if (view === 'minutes') {
+    itemCount = 60;
+  } else if (view === '12hours') {
+    itemCount = 12;
+  } else {
+    itemCount = 24;
+  }
+
+  const angle = (1 / 2 - (value * 2) / itemCount) * Math.PI;
+  const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
+  const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
+
   return {
     changedTouches: [
       {

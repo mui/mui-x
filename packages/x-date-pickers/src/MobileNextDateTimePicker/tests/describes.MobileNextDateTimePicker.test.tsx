@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { describeConformance, screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
+import { screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -7,60 +6,42 @@ import {
   adapterToUse,
   expectInputValue,
   openPicker,
-  wrapPickerMount,
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
-import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
+import { Unstable_MobileNextDateTimePicker as MobileNextDateTimePicker } from '@mui/x-date-pickers/MobileNextDateTimePicker';
 
-describe('<MobileNextTimePicker /> - Describes', () => {
+describe('<MobileNextDateTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValidation(MobileNextTimePicker, () => ({
+  describeValidation(MobileNextDateTimePicker, () => ({
     render,
     clock,
-    views: ['hours', 'minutes'],
+    views: ['year', 'month', 'day'],
     componentFamily: 'new-picker',
   }));
 
-  describeConformance(<MobileNextTimePicker />, () => ({
-    classes: {},
-    muiName: 'MuiMobileTimePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
-  }));
-
-  describeValue(MobileNextTimePicker, () => ({
+  describeValue(MobileNextDateTimePicker, () => ({
     render,
     componentFamily: 'new-picker',
-    type: 'time',
+    type: 'date-time',
     variant: 'mobile',
-    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
-    emptyValue: null,
     defaultProps: {
       openTo: 'minutes',
     },
+    values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
+    emptyValue: null,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       let expectedValueStr: string;
       if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
+        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
       } else {
         expectedValueStr = adapterToUse.format(
           expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
+          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
         );
       }
+
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
