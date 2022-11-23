@@ -41,9 +41,9 @@ const PickersToolbarTextRoot = styled(Typography, {
   component?: React.ElementType;
 }>(({ theme }) => ({
   transition: theme.transitions.create('color'),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   [`&.${pickersToolbarTextClasses.selected}`]: {
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
   },
 }));
 

@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
-  overridesResolver: (props, styles) => styles.overlay,
+  overridesResolver: (_, styles) => styles.overlay,
 })(({ theme }) => ({
   width: '100%',
   height: '100%',
