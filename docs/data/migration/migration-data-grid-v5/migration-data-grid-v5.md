@@ -58,6 +58,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
+- The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
+- The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns

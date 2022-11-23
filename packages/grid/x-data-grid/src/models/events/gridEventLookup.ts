@@ -460,24 +460,6 @@ export interface GridEventLookup
    */
   cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
 
-  // Navigation
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
-   * @ignore - do not document.
-   */
-  cellNavigationKeyDown: {
-    params: GridCellParams | GridRowParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
-   * @ignore - do not document.
-   */
-  columnHeaderNavigationKeyDown: {
-    params: GridColumnHeaderParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
-
   // Scroll
   /**
    * Fired during the scroll of the grid viewport.
