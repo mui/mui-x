@@ -9,7 +9,7 @@ import {
 } from 'test/utils/pickers-utils';
 import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers';
 
-describe('<NextDatePicker /> - Describes', () => {
+describe('<DesktopNextDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock });
@@ -33,8 +33,8 @@ describe('<NextDatePicker /> - Describes', () => {
         expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
     },
-    setNewValue: (value, isOpened) => {
-      const newValue = adapterToUse.addDays(value, 1);
+    setNewValue: (value, { isOpened, applySameValue } = {}) => {
+      const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
 
       if (isOpened) {
         userEvent.mousePress(

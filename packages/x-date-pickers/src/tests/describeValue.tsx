@@ -16,7 +16,10 @@ interface DescribeValueBaseOptions<TValue> {
 type DescribeValueNonStaticPickerOptions<TValue> = DescribeValueBaseOptions<TValue> &
   OpenPickerParams & {
     componentFamily: 'new-picker';
-    setNewValue: (value: TValue, isOpened?: boolean) => TValue;
+    setNewValue: (
+      value: TValue,
+      pickerParams?: { isOpened?: boolean; applySameValue?: boolean },
+    ) => TValue;
   };
 
 interface DescribeValueOtherComponentOptions<TValue> extends DescribeValueBaseOptions<TValue> {
@@ -150,7 +153,7 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(0);
 
         // Change the value
-        const newValue = setNewValue(values[0], true);
+        const newValue = setNewValue(values[0], { isOpened: true });
         expect(onChange.callCount).to.equal(1);
         // TODO: Support range
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
@@ -179,11 +182,34 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(0);
 
         // Change the value
-        const newValue = setNewValue(values[0], true);
+        const newValue = setNewValue(values[0], { isOpened: true });
         expect(onChange.callCount).to.equal(1);
         // TODO: Support range
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
         expect(onAccept.callCount).to.equal(1);
+        expect(onClose.callCount).to.equal(1);
+      });
+
+      it.only('should not call onChange and onAccept when selecting the same value', () => {
+        const onChange = spy();
+        const onAccept = spy();
+        const onClose = spy();
+
+        render(
+          <ElementToTest
+            onChange={onChange}
+            onAccept={onAccept}
+            onClose={onClose}
+            open
+            defaultValue={values[0]}
+            closeOnSelect
+          />,
+        );
+
+        // Change the value (same value)
+        setNewValue(values[0], { isOpened: true, applySameValue: true });
+        expect(onChange.callCount).to.equal(0);
+        expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
       });
 
@@ -204,7 +230,7 @@ export function describeValue<TValue>(
         );
 
         // Change the value
-        const newValue = setNewValue(values[0], true);
+        const newValue = setNewValue(values[0], { isOpened: true });
         expect(onChange.callCount).to.equal(1);
         // TODO: Support range
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
@@ -212,7 +238,7 @@ export function describeValue<TValue>(
         expect(onClose.callCount).to.equal(0);
 
         // Change the value
-        const newValueBis = setNewValue(newValue, true);
+        const newValueBis = setNewValue(newValue, { isOpened: true });
         expect(onChange.callCount).to.equal(2);
         // TODO: Support range
         expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
@@ -237,7 +263,7 @@ export function describeValue<TValue>(
         );
 
         // Change the value (already tested)
-        const newValue = setNewValue(values[0], true);
+        const newValue = setNewValue(values[0], { isOpened: true });
 
         // Dismiss the picker
         // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
@@ -299,7 +325,7 @@ export function describeValue<TValue>(
         );
 
         // Change the value (already tested)
-        const newValue = setNewValue(values[0], true);
+        const newValue = setNewValue(values[0], { isOpened: true });
 
         // Dismiss the picker
         userEvent.mousePress(document.body);
@@ -410,7 +436,7 @@ export function describeValue<TValue>(
         );
 
         // Change the value (already tested)
-        setNewValue(values[0], true);
+        setNewValue(values[0], { isOpened: true });
 
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
@@ -463,7 +489,7 @@ export function describeValue<TValue>(
         );
 
         // Change the value (already tested)
-        setNewValue(values[0], true);
+        setNewValue(values[0], { isOpened: true });
 
         // Accept the modifications
         userEvent.mousePress(screen.getByText(/ok/i));

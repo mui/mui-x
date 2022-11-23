@@ -5,15 +5,12 @@ import {
   createPickerRenderer,
   adapterToUse,
   expectInputValue,
-  buildFieldInteractions,
   openPicker,
 } from 'test/utils/pickers-utils';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
 
-describe('<NextDatePicker /> - Describes', () => {
+describe('<MobileNextDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  const { clickOnInput } = buildFieldInteractions({ clock });
 
   describeValidation(MobileNextDatePicker, () => ({
     render,
@@ -34,13 +31,12 @@ describe('<NextDatePicker /> - Describes', () => {
         expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
     },
-    setNewValue: (value, isOpened) => {
-      const newValue = adapterToUse.addDays(value, 1);
-
+    setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {
         openPicker({ type: 'date', variant: 'mobile' });
       }
 
+      const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
       userEvent.mousePress(screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }));
 
       return newValue;
