@@ -4,13 +4,20 @@ import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { MuiRenderResult } from '@mui/monorepo/test/utils/createRenderer';
 import { openPicker, OpenPickerParams } from 'test/utils/pickers-utils';
+import {
+  BaseNextPickerProps,
+  MakeOptional,
+  UsePickerValueNonStaticProps,
+} from '@mui/x-date-pickers/internals';
 import { PickerComponentFamily } from './describe.types';
+import { PickersSlotsComponentsProps } from '../internals/components/wrappers/WrapperProps';
 
 interface DescribeValueBaseOptions<TValue> {
   render: (node: React.ReactElement) => MuiRenderResult;
   assertRenderedValue: (expectedValue: TValue) => void;
   values: [TValue, TValue];
   emptyValue: TValue;
+  defaultProps?: object;
 }
 
 type DescribeValueNonStaticPickerOptions<TValue> = DescribeValueBaseOptions<TValue> &
@@ -48,34 +55,42 @@ export function describeValue<TValue>(
     assertRenderedValue,
     setNewValue,
     componentFamily,
+    defaultProps,
     ...pickerParams
   } = getOptions();
 
-  describe.only('Pickers value', () => {
+  function Element(
+    props: MakeOptional<BaseNextPickerProps<TValue, any, any, any>, 'openTo' | 'views'> &
+      UsePickerValueNonStaticProps<TValue> & { componentsProps?: PickersSlotsComponentsProps },
+  ) {
+    return <ElementToTest {...defaultProps} {...props} />;
+  }
+
+  describe('Pickers value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
-      render(<ElementToTest defaultValue={values[0]} />);
+      render(<Element defaultValue={values[0]} />);
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if passed', () => {
-      render(<ElementToTest value={values[0]} />);
+      render(<Element value={values[0]} />);
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if both `props.defaultValue` and `props.value` are passed', () => {
-      render(<ElementToTest defaultValue={values[0]} value={values[1]} />);
+      render(<Element defaultValue={values[0]} value={values[1]} />);
       assertRenderedValue(values[1]);
     });
 
     it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
-      render(<ElementToTest />);
+      render(<Element />);
       assertRenderedValue(emptyValue);
     });
 
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
+      render(<Element defaultValue={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
       assertRenderedValue(newValue);
@@ -87,7 +102,7 @@ export function describeValue<TValue>(
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      render(<ElementToTest value={values[0]} onChange={onChange} />);
+      render(<Element value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
       expect(onChange.callCount).to.equal(1);
@@ -96,7 +111,7 @@ export function describeValue<TValue>(
     });
 
     it('should react to `props.value` update', () => {
-      const { setProps } = render(<ElementToTest value={values[0]} />);
+      const { setProps } = render(<Element value={values[0]} />);
       setProps({ value: values[1] });
       assertRenderedValue(values[1]);
     });
@@ -113,18 +128,18 @@ export function describeValue<TValue>(
       }
 
       it('should not open on mount if `props.open` is false', () => {
-        render(<ElementToTest />);
+        render(<Element />);
         expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
       });
 
       it('should open on mount if `prop.open` is true', () => {
-        render(<ElementToTest open />);
+        render(<Element open />);
         expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
       });
 
       it('should not open when `prop.disabled` is true ', () => {
         const onOpen = spy();
-        render(<ElementToTest disabled onOpen={onOpen} />);
+        render(<Element disabled onOpen={onOpen} />);
 
         openPicker(pickerParams as OpenPickerParams);
         expect(onOpen.callCount).to.equal(0);
@@ -132,7 +147,7 @@ export function describeValue<TValue>(
 
       it('should not open when `prop.readOnly` is true ', () => {
         const onOpen = spy();
-        render(<ElementToTest readOnly onOpen={onOpen} />);
+        render(<Element readOnly onOpen={onOpen} />);
 
         openPicker(pickerParams as OpenPickerParams);
         expect(onOpen.callCount).to.equal(0);
@@ -144,7 +159,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -172,7 +187,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -201,7 +216,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -213,6 +228,7 @@ export function describeValue<TValue>(
 
         // Change the value (same value)
         setNewValue(values[0], { isOpened: true, applySameValue: true });
+
         expect(onChange.callCount).to.equal(0);
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
@@ -224,7 +240,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -257,7 +273,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -291,7 +307,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -319,7 +335,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -347,7 +363,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -367,7 +383,7 @@ export function describeValue<TValue>(
         const onAccept = spy();
         const onClose = spy();
 
-        render(<ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+        render(<Element onChange={onChange} onAccept={onAccept} onClose={onClose} />);
 
         // Dismiss the picker
         userEvent.keyPress(document.body, { key: 'Escape' });
@@ -382,7 +398,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -407,7 +423,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -429,7 +445,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -458,7 +474,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -482,7 +498,7 @@ export function describeValue<TValue>(
         const onClose = spy();
 
         render(
-          <ElementToTest
+          <Element
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}

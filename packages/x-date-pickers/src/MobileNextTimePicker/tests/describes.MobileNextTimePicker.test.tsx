@@ -11,6 +11,7 @@ import {
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
+import { CLOCK_WIDTH } from '../../TimeClock/shared';
 
 describe('<MobileNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -47,6 +48,9 @@ describe('<MobileNextTimePicker /> - Describes', () => {
     variant: 'mobile',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
+    defaultProps: {
+      openTo: 'minutes',
+    },
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       let expectedValueStr: string;
@@ -65,8 +69,11 @@ describe('<MobileNextTimePicker /> - Describes', () => {
         openPicker({ type: 'time', variant: 'mobile' });
       }
 
-      const newValue = applySameValue ? value : adapterToUse.setHours(value, 11);
-      const hourClockEvent = getClockTouchEvent();
+      const newValue = applySameValue ? value : adapterToUse.setMinutes(value, 53);
+
+      const hourClockEvent = getClockTouchEvent(
+        applySameValue ? { clientX: CLOCK_WIDTH / 2, clientY: 0 } : undefined,
+      );
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 

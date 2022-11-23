@@ -186,12 +186,14 @@ export const getClockMouseEvent = (
 };
 
 // TODO: Handle dynamic values
-export const getClockTouchEvent = () => {
+export const getClockTouchEvent = (
+  { clientX, clientY }: { clientX: number; clientY: number } = { clientX: 20, clientY: 15 },
+) => {
   return {
     changedTouches: [
       {
-        clientX: 20,
-        clientY: 15,
+        clientX,
+        clientY,
       },
     ],
   };
