@@ -287,7 +287,6 @@ export function describeValue<TValue>(
         const newValue = setNewValue(values[0], { isOpened: true });
 
         // Dismiss the picker
-        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target -- don't care
         userEvent.keyPress(document.activeElement!, { key: 'Escape' });
         expect(onChange.callCount).to.equal(1);
         expect(onAccept.callCount).to.equal(1);

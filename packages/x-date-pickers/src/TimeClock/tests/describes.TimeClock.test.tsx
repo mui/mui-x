@@ -3,7 +3,7 @@ import { describeConformance } from '@mui/monorepo/test/utils';
 import { TimeClock, timeClockClasses as classes } from '@mui/x-date-pickers/TimeClock';
 import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
-describe.only('<TimeClock /> - Describes', () => {
+describe('<TimeClock /> - Describes', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(
