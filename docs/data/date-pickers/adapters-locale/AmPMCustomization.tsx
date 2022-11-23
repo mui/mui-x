@@ -18,7 +18,7 @@ export default function AmPMCustomization() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={locale}>
-      <Stack spacing={3}>
+      <Stack spacing={3} width={200}>
         <ToggleButtonGroup
           value={locale}
           exclusive
