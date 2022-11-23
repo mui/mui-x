@@ -1,33 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { act, fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
+import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<YearCalendar />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-  });
-
-  describeValidation(YearCalendar, () => ({
-    render,
-    clock,
-    views: ['year'],
-    componentFamily: 'calendar',
-  }));
-
-  describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
-    classes,
-    inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
-    render,
-    muiName: 'MuiYearCalendar',
-    refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-  }));
+  const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
     const onChangeMock = spy();

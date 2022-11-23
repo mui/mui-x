@@ -23,9 +23,6 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       ...(componentFamily !== 'calendar' && {
         renderInput: (params) => <TextField {...params} />,
         open: true,
-        views: ['year'],
-        view: 'year',
-        openTo: 'year',
         reduceAnimations: true,
         showToolbar: false,
       }),

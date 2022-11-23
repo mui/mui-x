@@ -1,23 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<MonthCalendar />', () => {
   const { render } = createPickerRenderer();
-
-  describeConformance(<MonthCalendar defaultValue={adapterToUse.date()} />, () => ({
-    classes,
-    inheritComponent: 'div',
-    render,
-    wrapMount: wrapPickerMount,
-    muiName: 'MuiMonthCalendar',
-    refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-  }));
 
   it('allows to pick month standalone', () => {
     const onChangeMock = spy();
