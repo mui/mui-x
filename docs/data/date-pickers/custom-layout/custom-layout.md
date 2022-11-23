@@ -11,18 +11,17 @@ title: Date and Time pickers - Custom layout
 
 By default, pickers are made of 3 sub elements present in the following order:
 
-- The **toolbar** displaying the selected date. Can be enforced with `showToolbar` porp.
-- The **content** that includes the current view, and the tabs to swicth between views if necessary.
-- The **action bar** allowings some interactions. Can be added with [`componentsProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) porp.
+- The **toolbar** displaying the selected date. Can be enforced with `showToolbar` prop.
+- The **content** that includes the current view, and the tabs to switch between views if necessary.
+- The **action bar** allowing some interactions. Can be added with [`componentsProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) porp.
 
-You can [customize those components](/x/react-date-pickers/custom-components/) individualy by using `components` and `componentsProps`.
+You can [customize those components](/x/react-date-pickers/custom-components/) individually by using `components` and `componentsProps`.
 
 ### Orientation
 
-The layout can be switch between two modes by using props `orientation`.
-This prop value can either be `'portrait'` or `'landscape'`.
+Toggling layout can be achieved by changing `orientation` prop value between `'portrait'` or `'landscape'`.
 
-Here is a demonstration with the 3 components highligted with color full borders
+Here is a demonstration with the 3 components outlined with color borders.
 
 {{"demo": "LayoutBlocks.js"}}
 
@@ -30,14 +29,14 @@ Here is a demonstration with the 3 components highligted with color full borders
 
 ### Understanding the structure
 
-The layout is structured as follow:
+The layout is structured as follows:
 
-A `<LayoutRoot />` component wrapp all the sub components to provide the structure.
+A `<LayoutRoot />` component wraps all the sub-components to provide the structure.
 By default it renders a `div` with `display: grid`.
 Such that all sub-components take place into a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
 
-Subcomponents are wrapped into layout helper, responsible for placing it into the grid.
-Here is an otherview of the structure.
+Subcomponents are wrapped inside layout helper, responsible for placing it into the grid.
+Here is an overview of the structure.
 
 ```jsx
 <LayoutRoot>
@@ -57,17 +56,17 @@ Here is an otherview of the structure.
 </LayoutRoot>
 ```
 
-### Moving components
+### Moving elements
 
-To move an element, the easiest way is to override it's wrapper position with properties [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row).
+To move an element—the easiest way is to override it's wrapper position with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
 
 In the next example, the action bar is replaced by a list, and placed at the right of the component.
-To place it at the right, we use style `{ gridColumn: '3', gridRow: '2' }`.
+Placing at the right is achieved by applying `{ gridColumn: '3', gridRow: '2' }` style.
 
 {{"demo": "MovingActions.js"}}
 
 ### Adding components
 
-You can add componnents to the layout by overriding the `LayoutRoot` wrapper.
+You can add components to the layout by overriding the `LayoutRoot` wrapper.
 
 {{"demo": "AddComponent.js"}}
