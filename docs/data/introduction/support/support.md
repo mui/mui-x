@@ -28,7 +28,7 @@ Support is available on multiple channels, but the recommended channels are:
 - GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
 - Email: If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com).
 
-Including your Order ID in the issue helps us prioritize the issues based on the following support levels:
+Including your Order ID (or Support key) in the issue helps us prioritize the issues based on the following support levels:
 
 1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
 2. MUI X Premium: The same as MUI X Pro, but with higher priority.
