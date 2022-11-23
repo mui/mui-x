@@ -87,43 +87,6 @@ describe('<MobileTimePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
-
-    it('should call onClose and onAccept when selecting the minutes if props.closeOnSelect = true', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextTimePicker
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          closeOnSelect
-        />,
-      );
-
-      openPicker({ type: 'time', variant: 'mobile' });
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Change the minutes (already tested)
-      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
-
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 1, 11, 53)),
-      );
-      expect(onClose.callCount).to.equal(1);
-    });
   });
 
   describe('localization', () => {
