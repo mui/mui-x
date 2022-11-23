@@ -6,6 +6,7 @@ import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/t
 import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
 import { UsePickerLayoutResponseLayoutProps } from '../../hooks/usePicker/usePickerLayout';
 import { PickersViewLayoutClasses } from './pickersViewLayoutClasses';
+import { SxProps, Theme } from '@mui/material/styles';
 
 export interface ExportedPickersViewLayoutSlotsComponent {
   /**
@@ -64,6 +65,7 @@ export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>
   extends UsePickerLayoutResponseLayoutProps<TValue, TView> {
   className?: string;
   children?: React.ReactNode;
+  sx?: SxProps<Theme>;
   classes?: Partial<PickersViewLayoutClasses>;
   /**
    * Overrideable components.
