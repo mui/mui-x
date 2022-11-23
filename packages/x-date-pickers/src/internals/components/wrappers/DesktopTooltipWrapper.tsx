@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useForkRef } from '@mui/material/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
-import { executeInTheNextEventLoopTick } from '../../utils/utils';
+import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { PickersPopper } from '../PickersPopper';
 import { InternalDesktopWrapperProps } from './DesktopWrapper';
 
@@ -28,8 +28,8 @@ export function DesktopTooltipWrapper(props: InternalDesktopWrapperProps) {
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        inputContainerRef.current?.contains(document.activeElement) ||
-        popperRef.current?.contains(document.activeElement)
+        inputContainerRef.current?.contains(getActiveElement(document)) ||
+        popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
       }
