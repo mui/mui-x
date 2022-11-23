@@ -116,5 +116,29 @@ describe('<DataGrid /> - Column Headers', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
+
+    it('should not allow to take not created row', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[]}
+            columns={[
+              { field: 'id'},
+              { field: 'brand'},
+            ]}
+          />
+        </div>,
+      );
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+
+      fireEvent.click(getColumnHeaderCell(0));
+      getColumnHeaderCell(0).focus();
+      fireEvent.keyDown(getColumnHeaderCell(0), {key: 'ArrowDown', code: 'ArrowDown', charCode: 40});
+      clock.runToLast();
+
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
   });
 });
