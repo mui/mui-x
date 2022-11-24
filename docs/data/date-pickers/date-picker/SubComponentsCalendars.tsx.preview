@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Grid container spacing={3}>
+    <Grid item xs={12} md={6}>
+      <DateCalendar defaultValue={dayjs('2022-04-07')} />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <MonthCalendar defaultValue={dayjs('2022-04-07')} />
+    </Grid>
+    <Grid item xs={12} md={6}>
+      <YearCalendar defaultValue={dayjs('2022-04-07')} />
+    </Grid>
+  </Grid>
+</LocalizationProvider>

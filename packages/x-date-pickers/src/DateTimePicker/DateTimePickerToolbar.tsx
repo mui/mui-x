@@ -109,8 +109,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   } = props;
   const ownerState = props;
   const utils = useUtils<TDate>();
+  const localeText = useLocaleText<TDate>();
   const theme = useTheme();
-  const localeText = useLocaleText();
   const classes = useUtilityClasses({ ...ownerState, theme });
 
   const formatHours = (time: TDate) =>

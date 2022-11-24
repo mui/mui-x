@@ -21,7 +21,8 @@ const locales = ['en', 'ru', 'ar-sa'];
 const ampmOptions = {
   'undefined': undefined,
   true: true,
-  false: false };
+  false: false
+};
 
 export default function LocalizedTimePicker() {
   const [locale, setLocale] = React.useState('ru');

@@ -138,7 +138,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
     ...other
   } = props;
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const theme = useTheme();
   const showAmPmControl = Boolean(ampm && !ampmInClock);

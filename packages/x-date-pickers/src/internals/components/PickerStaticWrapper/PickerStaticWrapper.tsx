@@ -87,7 +87,7 @@ const PickerStaticWrapperContent = styled('div', {
   minWidth: DIALOG_WIDTH,
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
 }));
 
 function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {

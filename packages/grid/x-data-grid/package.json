@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "6.0.0-alpha.7",
+  "version": "6.0.0-alpha.8",
   "description": "The community edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -46,7 +46,7 @@
     "directory": "packages/grid/x-data-grid"
   },
   "dependencies": {
-    "@babel/runtime": "^7.19.0",
+    "@babel/runtime": "^7.20.1",
     "@mui/utils": "^5.10.14",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
@@ -62,6 +62,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   }
 }

@@ -11,9 +11,9 @@ import {
   gridDensityRowHeightSelector,
   gridDensityFactorSelector,
 } from '../density/densitySelector';
-import { gridFilterStateSelector } from '../filter/gridFilterSelector';
+import { gridFilterModelSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
+import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
@@ -51,9 +51,9 @@ export const useGridRowsMeta = (
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
   const rowHeightFromDensity = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const filterState = useGridSelector(apiRef, gridFilterStateSelector);
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
@@ -279,7 +279,7 @@ export const useGridRowsMeta = (
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
-  }, [rowHeightFromDensity, filterState, paginationState, sortingState, hydrateRowsMeta]);
+  }, [rowHeightFromDensity, filterModel, paginationState, sortModel, hydrateRowsMeta]);
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
