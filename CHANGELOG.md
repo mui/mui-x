@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 5.17.13
-<!-- generated comparing v5.17.12..master -->
+
 _Nov 24, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
@@ -37,7 +37,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 ### Core
 
 - [core] Upgrade monorepo (#6906) @cherniavskii
-- [core] Upgrade node to v14.21 (#6939) @LukasTy
+- [core] Upgrade node to v14.21 (#6939) @piwysocki
 
 ## 5.17.12
 
