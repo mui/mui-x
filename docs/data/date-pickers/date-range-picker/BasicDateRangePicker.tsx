@@ -6,7 +6,7 @@ import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date
 export default function BasicDateRangePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDateRangePicker />
+      <NextDateRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />
     </LocalizationProvider>
   );
 }
