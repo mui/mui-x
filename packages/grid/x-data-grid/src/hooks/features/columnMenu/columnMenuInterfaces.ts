@@ -19,22 +19,22 @@ export type GridColumnMenuValue = Array<React.JSXElementConstructor<any>>;
 
 export interface GridColumnMenuRootProps {
   /**
-   * Initial `slots` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */
-  defaultSlots: { [key: string]: React.JSXElementConstructor<any> };
+  defaultComponents: { [key: string]: React.JSXElementConstructor<any> };
   /**
-   * Initial `slotsProps` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `componentsProps` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */
-  defaultSlotsProps: { [key: string]: GridColumnMenuSlotProps };
+  defaultComponentsProps: { [key: string]: GridColumnMenuSlotProps };
   /**
-   * `slots` could be used to override default column menu slots
+   * `components` could be used to override default column menu items
    */
-  slots?: { [key: string]: React.JSXElementConstructor<any> | null };
+  components?: { [key: string]: React.JSXElementConstructor<any> | null };
   /**
-   * Could be used to override props specific to a column menu slot
+   * Could be used to override props specific to a column menu component
    * e.g. `displayOrder`
    */
-  slotsProps?: { [key: string]: GridColumnMenuSlotProps };
+  componentsProps?: { [key: string]: GridColumnMenuSlotProps };
 }

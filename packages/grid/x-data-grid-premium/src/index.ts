@@ -30,9 +30,9 @@ export type { GridApi, GridInitialState, GridState } from './typeOverloads/reexp
 
 export {
   GridColumnMenuDefault,
-  COLUMN_MENU_DEFAULT_SLOTS,
-  COLUMN_MENU_DEFAULT_SLOTS_PROPS,
+  COLUMN_MENU_DEFAULT_COMPONENTS,
+  COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
   GridColumnMenuSimple,
-  COLUMN_MENU_SIMPLE_SLOTS,
-  COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+  COLUMN_MENU_SIMPLE_COMPONENTS,
+  COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
 } from './components/reexports';

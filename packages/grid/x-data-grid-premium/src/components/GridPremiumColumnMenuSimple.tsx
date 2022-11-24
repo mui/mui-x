@@ -4,8 +4,8 @@ import Divider from '@mui/material/Divider';
 import {
   GridColumnMenuSimple,
   GridColumnMenuProps,
-  COLUMN_MENU_SIMPLE_SLOTS,
-  COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+  COLUMN_MENU_SIMPLE_COMPONENTS,
+  COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
 import { GridColumnMenuAggregationItemSimple } from './GridColumnMenuAggregationItem';
@@ -43,14 +43,14 @@ function AggregationItem(props: GridColumnMenuItemProps) {
   );
 }
 
-export const COLUMN_MENU_SIMPLE_SLOTS_PREMIUM = {
-  ...COLUMN_MENU_SIMPLE_SLOTS,
+export const COLUMN_MENU_SIMPLE_COMPONENTS_PREMIUM = {
+  ...COLUMN_MENU_SIMPLE_COMPONENTS,
   ColumnMenuAggregationItem: AggregationItem,
   ColumnMenuGroupingItem: GroupingItem,
 };
 
-export const COLUMN_MENU_SIMPLE_SLOTS_PROPS_PREMIUM = {
-  ...COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+export const COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PREMIUM = {
+  ...COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
   ColumnMenuAggregationItem: { displayOrder: 37 },
   ColumnMenuGroupingItem: { displayOrder: 33 },
 };
@@ -61,8 +61,8 @@ const GridPremiumColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColum
       <GridColumnMenuSimple
         ref={ref}
         {...props}
-        defaultSlots={COLUMN_MENU_SIMPLE_SLOTS_PREMIUM}
-        defaultSlotsProps={COLUMN_MENU_SIMPLE_SLOTS_PROPS_PREMIUM}
+        defaultComponents={COLUMN_MENU_SIMPLE_COMPONENTS_PREMIUM}
+        defaultComponentsProps={COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PREMIUM}
       />
     );
   },

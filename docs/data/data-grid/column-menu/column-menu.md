@@ -22,36 +22,36 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customize column menu
 
-You can customize the column menu either by passing `slots` and `slotProps` to the column menu component or by using custom component using the `ColumnMenu` slot of the data grid component.
+You can customize the column menu either by passing `components` and `componentsProps` to the column menu component or by using custom component using the `ColumnMenu` slot of the data grid component.
 
 ### Override, hide and reorder items
 
-Column menu component accept `slots` and `slotsProps` using which you can:
+Column menu component accept `components` and `componentsProps` using which you can:
 
 - Override default items
 - Hide default items
 - Reorder items
 
-**slots**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components.
+**components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components.
 
 ```tsx
 <GridColumnMenuDefault
   {...props}
-  slots={{
-    // ovverride default slot of `Filter` item
+  components={{
+    // ovverride default component for `Filter` item
     ColumnMenuFilterItem: SomeCustomComponent,
   }}
 />
 ```
 
-Default slots supported by community package are `ColumnMenuSortItem`, `ColumnMenuFilterItem`, `ColumnMenuHideItem` and `ColumnMenuColumnsItem`. Pro package adds `ColumnMenuPinningItem` and Premium package adds `ColumnMenuAggregationItem` and `ColumnMenuGroupingItem`.
+Default components supported by community package are `ColumnMenuSortItem`, `ColumnMenuFilterItem`, `ColumnMenuHideItem` and `ColumnMenuColumnsItem`. Pro package adds `ColumnMenuPinningItem` and Premium package adds `ColumnMenuAggregationItem` and `ColumnMenuGroupingItem`.
 
-**slotsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `slotsProps`.
+**componentsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `componentsProps`.
 
 ```tsx
 <GridColumnMenuDefault
   {...props}
-  slotProps={{
+  componentsProps={{
     // change order of `Filter` item
     ColumnMenuFilterItem: { displayOrder: 25 },
   }}
@@ -60,7 +60,7 @@ Default slots supported by community package are `ColumnMenuSortItem`, `ColumnMe
 
 Here is the default order for each of the items, there are some gaps to be able to place items in between:
 
-| **Slot**                  | **Package** | **Display order (default design)** | **Display order (simple design)** |
+| **Component**             | **Package** | **Display order (default design)** | **Display order (simple design)** |
 | ------------------------- | ----------- | ---------------------------------: | --------------------------------: |
 | ColumnMenuSortItem        | Community   |                                  0 |                                 0 |
 | ColumnMenuFilterItem      | Community   |                                 10 |                                10 |
@@ -75,7 +75,7 @@ In the following demo you can see some items being overriden or reordered.
 {{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
 
 :::info
-**Tip:** To hide/remove a default item, you can simply pass the component in `slots` as `null`
+**Tip:** To hide/remove a default item, you can simply pass the component in `components` as `null`
 :::
 
 ### Custom component

@@ -9,14 +9,14 @@ import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
 import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 
-export const COLUMN_MENU_SIMPLE_SLOTS = {
+export const COLUMN_MENU_SIMPLE_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItemSimple,
   ColumnMenuFilterItem: GridColumnMenuFilterItemSimple,
   ColumnMenuHideItem: GridColumnMenuHideItemSimple,
   ColumnMenuColumnsItem: GridColumnMenuColumnsItemSimple,
 };
 
-export const COLUMN_MENU_SIMPLE_SLOTS_PROPS = {
+export const COLUMN_MENU_SIMPLE_COMPONENTS_PROPS = {
   ColumnMenuSortItem: { displayOrder: 0 },
   ColumnMenuFilterItem: { displayOrder: 10 },
   ColumnMenuHideItem: { displayOrder: 20 },
@@ -26,8 +26,8 @@ export const COLUMN_MENU_SIMPLE_SLOTS_PROPS = {
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuSimpleRoot(props, ref) {
     const {
-      defaultSlots = COLUMN_MENU_SIMPLE_SLOTS,
-      defaultSlotsProps = COLUMN_MENU_SIMPLE_SLOTS_PROPS,
+      defaultComponents = COLUMN_MENU_SIMPLE_COMPONENTS,
+      defaultComponentsProps = COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
       ...other
     } = props;
 
@@ -35,8 +35,8 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuPr
 
     const orderedComponents = useGridColumnMenuPreProcessing(apiRef, {
       ...other,
-      defaultSlots,
-      defaultSlotsProps,
+      defaultComponents,
+      defaultComponentsProps,
     });
 
     return (
@@ -54,30 +54,30 @@ GridColumnMenuSimple.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * `components` could be used to override default column menu items
+   */
+  components: PropTypes.object,
+  /**
+   * Could be used to override props specific to a column menu component
+   * e.g. `displayOrder`
+   */
+  componentsProps: PropTypes.object,
   currentColumn: PropTypes.object.isRequired,
   /**
-   * Initial `slots` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */
-  defaultSlots: PropTypes.object,
+  defaultComponents: PropTypes.object,
   /**
-   * Initial `slotsProps` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `componentsProps` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */
-  defaultSlotsProps: PropTypes.object,
+  defaultComponentsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
-  /**
-   * `slots` could be used to override default column menu slots
-   */
-  slots: PropTypes.object,
-  /**
-   * Could be used to override props specific to a column menu slot
-   * e.g. `displayOrder`
-   */
-  slotsProps: PropTypes.object,
 } as any;
 
 export { GridColumnMenuSimple };

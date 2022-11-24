@@ -22,13 +22,13 @@ function CustomColumnMenu(props) {
   return (
     <GridColumnMenuDefault
       {...props}
-      slots={{
+      components={{
         // Override slot for `ColumnMenuFilterItem`
         ColumnMenuFilterItem: CustomFilterItem,
         // Hide `ColumnMenuColumnsItem`
         ColumnMenuColumnsItem: null,
       }}
-      slotsProps={{
+      componentsProps={{
         // Swap positions of filter and sort items
         ColumnMenuFilterItem: {
           displayOrder: 0, // Previously `10`

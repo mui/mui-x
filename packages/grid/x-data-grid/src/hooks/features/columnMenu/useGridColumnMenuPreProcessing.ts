@@ -11,23 +11,28 @@ const useGridColumnMenuPreProcessing = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: GridColumnMenuPreProcessingProps,
 ) => {
-  const { defaultSlots, defaultSlotsProps, slots = {}, slotsProps = {} } = props;
+  const {
+    defaultComponents,
+    defaultComponentsProps,
+    components = {},
+    componentsProps = {},
+  } = props;
 
   const processedSlots = React.useMemo(
-    () => ({ ...defaultSlots, ...slots }),
-    [defaultSlots, slots],
+    () => ({ ...defaultComponents, ...components }),
+    [defaultComponents, components],
   );
 
   const processedSlotsProps = React.useMemo(() => {
-    if (!slotsProps || Object.keys(slotsProps).length === 0) {
-      return defaultSlotsProps;
+    if (!componentsProps || Object.keys(componentsProps).length === 0) {
+      return defaultComponentsProps;
     }
-    const mergedProps = {} as typeof defaultSlotsProps;
-    Object.entries(defaultSlotsProps).forEach(([key, currentSlotProps]) => {
-      mergedProps[key] = { ...currentSlotProps, ...(slotsProps[key] || {}) };
+    const mergedProps = {} as typeof defaultComponentsProps;
+    Object.entries(defaultComponentsProps).forEach(([key, currentComponentProps]) => {
+      mergedProps[key] = { ...currentComponentProps, ...(componentsProps[key] || {}) };
     });
     return mergedProps;
-  }, [defaultSlotsProps, slotsProps]);
+  }, [defaultComponentsProps, componentsProps]);
 
   const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
@@ -35,7 +40,7 @@ const useGridColumnMenuPreProcessing = (
     props.currentColumn,
   );
 
-  const components = React.useMemo(() => {
+  return React.useMemo(() => {
     const sorted = preProcessedItems.sort(
       (a, b) => processedSlotsProps[a].displayOrder - processedSlotsProps[b].displayOrder,
     );
@@ -47,8 +52,6 @@ const useGridColumnMenuPreProcessing = (
       return [...acc, processedSlots[key]!];
     }, []);
   }, [preProcessedItems, processedSlots, processedSlotsProps]);
-
-  return components;
 };
 
 export { useGridColumnMenuPreProcessing };
