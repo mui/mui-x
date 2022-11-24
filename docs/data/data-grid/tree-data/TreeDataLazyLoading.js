@@ -172,15 +172,6 @@ function GroupingCellWithLazyLoading(props) {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const handleKeyDown = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
-
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
@@ -194,7 +185,6 @@ function GroupingCellWithLazyLoading(props) {
           <IconButton
             size="small"
             onClick={handleClick}
-            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               rowNode.childrenExpanded

@@ -1,11 +1,11 @@
-import { ComponentsOverrides, ComponentsProps, Theme } from '@mui/material/styles';
+import { ComponentsOverrides, ComponentsProps } from '@mui/material/styles';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 
 export interface DataGridPremiumComponentsPropsList {
   MuiDataGrid: DataGridPremiumProps;
 }
 
-export interface DataGridPremiumComponents {
+export interface DataGridPremiumComponents<Theme = unknown> {
   MuiDataGrid?: {
     defaultProps?: ComponentsProps['MuiDataGrid'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDataGrid'];
@@ -14,8 +14,5 @@ export interface DataGridPremiumComponents {
 
 declare module '@mui/material/styles' {
   interface ComponentsPropsList extends DataGridPremiumComponentsPropsList {}
-}
-
-declare module '@mui/material/styles/components' {
-  interface Components extends DataGridPremiumComponents {}
+  interface Components<Theme = unknown> extends DataGridPremiumComponents<Theme> {}
 }
