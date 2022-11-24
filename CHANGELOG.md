@@ -1096,6 +1096,43 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.13
+
+_Nov 24, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Fix support of the pickers to Shadow DOM (#6971) @flaviendelangle
+- 💅 Improve DataGrid theme augmentation (#6980) @iigrik
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.13` / `@mui/x-data-grid-pro@v5.17.13` / `@mui/x-data-grid-premium@v5.17.13`
+
+#### Changes
+
+- [DataGrid] Fix `ErrorOverlay` not receiving defined input props (#6885) @banoth-ravinder
+- [DataGrid] Improve typing for `styleOverrides` (#6980) @iigrik
+- [DataGridPro] Fix lazy-loaded rows not working with `updateRows` API method (#6875) @cherniavskii
+- [l10n] Fix translation of `filterOperatorBefore` in Arabic (ar-SD) locale (#6917) @HassanGhazy
+
+### `@mui/x-date-pickers@v5.0.9` / `@mui/x-date-pickers-pro@v5.0.9`
+
+#### Changes
+
+- [pickers] Fix usage with Shadow DOM (#6971) @flaviendelangle
+
+### Docs
+
+- [docs] Add new "Expired package version" error type (#6937) @oliviertassinari
+- [docs] Enforce values for installation options in Date / Time pickers Getting Started page (#6896) @01zulfi
+- [docs] Fix live edit @oliviertassinari
+- [docs] Upgrade to Next 13 (#6911) @cherniavskii
+
+### Core
+
+- [core] Upgrade monorepo (#6906) @cherniavskii
+- [core] Upgrade node to v14.21 (#6939) @piwysocki
+
 ## 5.17.12
 
 _Nov 17, 2022_
