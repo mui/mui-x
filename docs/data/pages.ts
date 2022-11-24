@@ -258,6 +258,11 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
+            pathname: '/x/api/date-pickers/date-range-calendar',
+            title: 'DateRangeCalendar',
+            plan: 'pro',
+          },
+          {
             pathname: '/x/api/date-pickers/date-range-picker-day',
             title: 'DateRangePickerDay',
             plan: 'pro',
