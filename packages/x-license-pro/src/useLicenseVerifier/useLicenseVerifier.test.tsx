@@ -37,7 +37,7 @@ describe('useLicenseVerifier', () => {
       LicenseInfo.setLicenseKey('');
       expect(() => {
         render(<TestComponent />);
-      }).toErrorDev(['MUI: License key not found for']);
+      }).toErrorDev(['MUI: Missing license key']);
     });
   });
 });
