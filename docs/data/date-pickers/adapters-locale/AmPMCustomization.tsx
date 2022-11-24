@@ -1,7 +1,7 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import {} from 'dayjs/locale/de';
-import {} from 'dayjs/locale/en-gb';
+import 'dayjs/locale/de';
+import 'dayjs/locale/en-gb';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';

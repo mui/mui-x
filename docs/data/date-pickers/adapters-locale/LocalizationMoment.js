@@ -1,10 +1,7 @@
 import * as React from 'react';
 import moment from 'moment';
-// @ts-ignore
 import 'moment/locale/de';
-// @ts-ignore
 import 'moment/locale/en-gb';
-// @ts-ignore
 import 'moment/locale/zh-cn';
 import Stack from '@mui/material/Stack';
 import ToggleButton from '@mui/material/ToggleButton';
