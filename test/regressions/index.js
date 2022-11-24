@@ -21,8 +21,6 @@ const blacklist = [
   'docs-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
   'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
   'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
-  'docs-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
   'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
   'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
   'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
