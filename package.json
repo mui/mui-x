@@ -86,7 +86,7 @@
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
-    "@mui/utils": "^5.10.14",
+    "@mui/utils": "^5.10.15",
     "@octokit/plugin-retry": "^4.0.3",
     "@octokit/rest": "^19.0.5",
     "@playwright/test": "1.27.1",
