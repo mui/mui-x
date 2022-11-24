@@ -163,7 +163,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
       className: clsx(className, classes.root),
       ...subComponents,
     },
-    externalForwardedProps:other,
+    externalForwardedProps: other,
     ownerState: { ...props, ...subComponents },
   });
 
