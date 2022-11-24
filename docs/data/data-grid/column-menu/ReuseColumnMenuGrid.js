@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconFilter from '@mui/icons-material/FilterAlt';
 import { DataGrid, GridColumnMenuDefault } from '@mui/x-data-grid';
@@ -13,6 +14,10 @@ function CustomFilterItem(props) {
   );
 }
 
+CustomFilterItem.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
+
 function CustomColumnMenu(props) {
   return (
     <GridColumnMenuDefault
@@ -20,6 +25,8 @@ function CustomColumnMenu(props) {
       slots={{
         // Override slot for `ColumnMenuFilterItem`
         ColumnMenuFilterItem: CustomFilterItem,
+        // Hide `ColumnMenuColumnsItem`
+        ColumnMenuColumnsItem: null,
       }}
       slotsProps={{
         // Swap positions of filter and sort items

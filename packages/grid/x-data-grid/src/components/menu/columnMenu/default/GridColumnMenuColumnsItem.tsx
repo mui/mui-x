@@ -13,7 +13,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-const GridColumnMenuColumnsItem = (props: GridColumnMenuItemProps) => {
+function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -40,7 +40,7 @@ const GridColumnMenuColumnsItem = (props: GridColumnMenuItemProps) => {
       </Button>
     </StyledStack>
   );
-};
+}
 
 GridColumnMenuColumnsItem.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -5,7 +5,7 @@ import { GridColumnMenuItemProps } from '@mui/x-data-grid';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
-const GridColumnMenuPinningItemSimple: React.FC<GridColumnMenuItemProps> = (props) => {
+function GridColumnMenuPinningItemSimple(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
 
@@ -48,7 +48,7 @@ const GridColumnMenuPinningItemSimple: React.FC<GridColumnMenuItemProps> = (prop
       </MenuItem>
     </React.Fragment>
   );
-};
+}
 
 GridColumnMenuPinningItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------

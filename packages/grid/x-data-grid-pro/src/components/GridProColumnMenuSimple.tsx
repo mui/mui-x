@@ -10,12 +10,14 @@ import {
 } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItemSimple } from './GridColumnMenuPinningItemSimple';
 
-const PinningWithDivider = (props: GridColumnMenuItemProps) => (
-  <React.Fragment>
-    <Divider />
-    <GridColumnMenuPinningItemSimple {...props} />
-  </React.Fragment>
-);
+function PinningWithDivider(props: GridColumnMenuItemProps) {
+  return (
+    <React.Fragment>
+      <Divider />
+      <GridColumnMenuPinningItemSimple {...props} />
+    </React.Fragment>
+  );
+}
 
 export const COLUMN_MENU_SIMPLE_SLOTS_PRO = {
   ...COLUMN_MENU_SIMPLE_SLOTS,

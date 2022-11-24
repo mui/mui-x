@@ -20,7 +20,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
 }));
 
-const GridColumnMenuHideItem = (props: GridColumnMenuItemProps) => {
+function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -74,7 +74,7 @@ const GridColumnMenuHideItem = (props: GridColumnMenuItemProps) => {
       </StyledButton>
     </StyledStack>
   );
-};
+}
 
 GridColumnMenuHideItem.propTypes = {
   // ----------------------------- Warning --------------------------------

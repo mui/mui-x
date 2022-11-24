@@ -25,7 +25,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
 }));
 
-const GridColumnMenuFilterItem = (props: GridColumnMenuItemProps) => {
+function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -74,7 +74,7 @@ const GridColumnMenuFilterItem = (props: GridColumnMenuItemProps) => {
       ) : null}
     </StyledStack>
   );
-};
+}
 
 GridColumnMenuFilterItem.propTypes = {
   // ----------------------------- Warning --------------------------------

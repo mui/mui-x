@@ -14,9 +14,7 @@ import {
   isGroupingColumn,
 } from '../hooks/features/rowGrouping/gridRowGroupingUtils';
 
-const GridColumnMenuRowGroupItemSimple: React.FC<GridColumnMenuItemProps> = (
-  props: GridColumnMenuItemProps,
-) => {
+function GridColumnMenuRowGroupItemSimple(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -46,7 +44,7 @@ const GridColumnMenuRowGroupItemSimple: React.FC<GridColumnMenuItemProps> = (
   }
 
   return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(column.field)!);
-};
+}
 
 GridColumnMenuRowGroupItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------

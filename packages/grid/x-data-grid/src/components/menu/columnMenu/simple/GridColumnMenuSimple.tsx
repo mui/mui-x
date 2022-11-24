@@ -55,17 +55,29 @@ GridColumnMenuSimple.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   currentColumn: PropTypes.object.isRequired,
+  /**
+   * Initial `slots` - it is internal, to be overrriden by Pro or Premium packages
+   * @ignore - do not document.
+   */
+  defaultSlots: PropTypes.object,
+  /**
+   * Initial `slotsProps` - it is internal, to be overrriden by Pro or Premium packages
+   * @ignore - do not document.
+   */
+  defaultSlotsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
-  initialItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      component: PropTypes.elementType.isRequired,
-      displayOrder: PropTypes.number.isRequired,
-    }),
-  ),
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
+  /**
+   * `slots` could be used to override default column menu slots
+   */
   slots: PropTypes.object,
+  /**
+   * Could be used to override props specific to a column menu slot
+   * e.g. `displayOrder`
+   */
+  slotsProps: PropTypes.object,
 } as any;
 
 export { GridColumnMenuSimple };

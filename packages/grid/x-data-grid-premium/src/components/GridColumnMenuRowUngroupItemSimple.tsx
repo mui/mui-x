@@ -9,7 +9,7 @@ import {
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
-const GridColumnMenuRowUngroupItemSimple: React.FC<GridColumnMenuItemProps> = (props) => {
+function GridColumnMenuRowUngroupItemSimple(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
@@ -42,7 +42,7 @@ const GridColumnMenuRowUngroupItemSimple: React.FC<GridColumnMenuItemProps> = (p
   return (
     <MenuItem onClick={groupColumn}>{apiRef.current.getLocaleText('groupColumn')(name)}</MenuItem>
   );
-};
+}
 
 GridColumnMenuRowUngroupItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -34,6 +34,16 @@ Column menu component accept `slots` and `slotsProps` using which you can:
 
 **slots**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components.
 
+```tsx
+<GridColumnMenuDefault
+  {...props}
+  slots={{
+    // ovverride default slot of `Filter` item
+    ColumnMenuFilterItem: SomeCustomComponent,
+  }}
+/>
+```
+
 Default slots supported by community package are `ColumnMenuSortItem`, `ColumnMenuFilterItem`, `ColumnMenuHideItem` and `ColumnMenuColumnsItem`. Pro package adds `ColumnMenuPinningItem` and Premium package adds `ColumnMenuAggregationItem` and `ColumnMenuGroupingItem`.
 
 **slotsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `slotsProps`.
@@ -50,15 +60,15 @@ Default slots supported by community package are `ColumnMenuSortItem`, `ColumnMe
 
 Here is the default order for each of the items, there are some gaps to be able to place items in between:
 
-| **Slot**                  | **Package** | **Display order**       |
-| ------------------------- | ----------- | ----------------------- |
-| ColumnMenuSortItem        | Community   | Default: 0, Simple: 0   |
-| ColumnMenuFilterItem      | Community   | Default: 10, Simple: 10 |
-| ColumnMenuHideItem        | Community   | Default: 20, Simple: 20 |
-| ColumnMenuColumnsItem     | Community   | Default: 30, Simple: 30 |
-| ColumnMenuPinningItem     | Pro         | Default: 5, Simple: 35  |
-| ColumnMenuAggregationItem | Premium     | Default: 17, Simple: 37 |
-| ColumnMenuGroupingItem    | Premium     | Default: 13, Simple: 33 |
+| **Slot**                  | **Package** | **Display order (default design)** | **Display order (simple design)** |
+| ------------------------- | ----------- | ---------------------------------: | --------------------------------: |
+| ColumnMenuSortItem        | Community   |                                  0 |                                 0 |
+| ColumnMenuFilterItem      | Community   |                                 10 |                                10 |
+| ColumnMenuHideItem        | Community   |                                 20 |                                20 |
+| ColumnMenuColumnsItem     | Community   |                                 30 |                                30 |
+| ColumnMenuPinningItem     | Pro         |                                  5 |                                35 |
+| ColumnMenuAggregationItem | Premium     |                                 17 |                                37 |
+| ColumnMenuGroupingItem    | Premium     |                                 13 |                                33 |
 
 In the following demo you can see some items being overriden or reordered.
 
@@ -70,7 +80,7 @@ In the following demo you can see some items being overriden or reordered.
 
 ### Custom component
 
-To add more items you can opt not to use the column menu component exposed by us and pass a totally new column menu component using `ColumnMenu` grid slot.
+To customize even more like adding custom items you can opt not to use the column menu component exposed by us and pass a totally new column menu component using `ColumnMenu` grid slot.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 

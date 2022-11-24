@@ -13,7 +13,7 @@ import { isGroupingColumn } from '../hooks/features/rowGrouping';
 import { GridColumnMenuRowGroupItemSimple } from './GridColumnMenuRowGroupItemSimple';
 import { GridColumnMenuRowUngroupItemSimple } from './GridColumnMenuRowUngroupItemSimple';
 
-const GroupingItem = (props: GridColumnMenuItemProps) => {
+function GroupingItem(props: GridColumnMenuItemProps) {
   const { column } = props;
   if (isGroupingColumn(column.field)) {
     return (
@@ -32,16 +32,16 @@ const GroupingItem = (props: GridColumnMenuItemProps) => {
     );
   }
   return null;
-};
+}
 
-const AggregationItem = (props: GridColumnMenuItemProps) => {
+function AggregationItem(props: GridColumnMenuItemProps) {
   return (
     <React.Fragment>
       <Divider />
       <GridColumnMenuAggregationItemSimple {...props} />
     </React.Fragment>
   );
-};
+}
 
 export const COLUMN_MENU_SIMPLE_SLOTS_PREMIUM = {
   ...COLUMN_MENU_SIMPLE_SLOTS,

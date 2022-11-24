@@ -12,7 +12,7 @@ import { isGroupingColumn } from '../hooks/features/rowGrouping';
 import { GridColumnMenuRowGroupItem } from './GridColumnMenuRowGroupItem';
 import { GridColumnMenuRowUngroupItem } from './GridColumnMenuRowUngroupItem';
 
-const GroupingItem = (props: GridColumnMenuItemProps) => {
+function GroupingItem(props: GridColumnMenuItemProps) {
   const { column } = props;
   if (isGroupingColumn(column.field)) {
     return <GridColumnMenuRowGroupItem {...props} />;
@@ -21,7 +21,7 @@ const GroupingItem = (props: GridColumnMenuItemProps) => {
     return <GridColumnMenuRowUngroupItem {...props} />;
   }
   return null;
-};
+}
 
 export const COLUMN_MENU_DEFAULT_SLOTS_PREMIUM = {
   ...COLUMN_MENU_DEFAULT_SLOTS,

@@ -19,7 +19,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
 }));
 
-const GridColumnMenuPinningItem: React.FC<GridColumnMenuItemProps> = (props) => {
+function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -67,7 +67,7 @@ const GridColumnMenuPinningItem: React.FC<GridColumnMenuItemProps> = (props) => 
       </Stack>
     </StyledStack>
   );
-};
+}
 
 GridColumnMenuPinningItem.propTypes = {
   // ----------------------------- Warning --------------------------------

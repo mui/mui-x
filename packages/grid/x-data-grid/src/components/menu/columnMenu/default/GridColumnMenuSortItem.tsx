@@ -20,7 +20,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   fontWeight: theme.typography.fontWeightRegular,
 }));
 
-const GridColumnMenuSortItem = (props: GridColumnMenuItemProps) => {
+function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   const { column } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -74,7 +74,7 @@ const GridColumnMenuSortItem = (props: GridColumnMenuItemProps) => {
       </Stack>
     </StyledStack>
   );
-};
+}
 
 GridColumnMenuSortItem.propTypes = {
   // ----------------------------- Warning --------------------------------

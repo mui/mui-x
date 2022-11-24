@@ -23,7 +23,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   textTransform: 'none',
 }));
 
-const GridColumnMenuRowUngroupItem: React.FC<GridColumnMenuItemProps> = (props) => {
+function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -73,7 +73,7 @@ const GridColumnMenuRowUngroupItem: React.FC<GridColumnMenuItemProps> = (props) 
       </StyledButton>
     </Stack>
   );
-};
+}
 
 GridColumnMenuRowUngroupItem.propTypes = {
   // ----------------------------- Warning --------------------------------

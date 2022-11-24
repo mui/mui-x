@@ -22,7 +22,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(1, 1.5, 1, 1.5),
 }));
 
-const GridColumnMenuAggregationItemRoot: React.FC<GridColumnMenuItemProps> = (props) => {
+function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
   const { column } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -99,7 +99,7 @@ const GridColumnMenuAggregationItemRoot: React.FC<GridColumnMenuItemProps> = (pr
       </Select>
     </FormControl>
   );
-};
+}
 
 GridColumnMenuAggregationItemRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -110,11 +110,13 @@ GridColumnMenuAggregationItemRoot.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-const GridColumnMenuAggregationItem = (props: GridColumnMenuItemProps) => (
-  <StyledStack>
-    <GridColumnMenuAggregationItemRoot {...props} />
-  </StyledStack>
-);
+function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
+  return (
+    <StyledStack>
+      <GridColumnMenuAggregationItemRoot {...props} />
+    </StyledStack>
+  );
+}
 
 GridColumnMenuAggregationItem.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -127,11 +129,13 @@ GridColumnMenuAggregationItem.propTypes = {
 
 export { GridColumnMenuAggregationItem };
 
-const GridColumnMenuAggregationItemSimple = (props: GridColumnMenuItemProps) => (
-  <MenuItem disableRipple>
-    <GridColumnMenuAggregationItemRoot {...props} />
-  </MenuItem>
-);
+function GridColumnMenuAggregationItemSimple(props: GridColumnMenuItemProps) {
+  return (
+    <MenuItem disableRipple>
+      <GridColumnMenuAggregationItemRoot {...props} />
+    </MenuItem>
+  );
+}
 
 GridColumnMenuAggregationItemSimple.propTypes = {
   // ----------------------------- Warning --------------------------------
