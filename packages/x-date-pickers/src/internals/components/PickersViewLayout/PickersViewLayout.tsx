@@ -39,7 +39,7 @@ export const PickersViewLayoutToolbar = styled('div', {
 })(({ theme }) => ({
   gridColumn: '1 / 4',
   gridRow: '1',
-  [`&.${pickersViewLayoutClasses['landscape']}`]: {
+  [`&.${pickersViewLayoutClasses['toolbar--landscape']}`]: {
     gridColumn: theme.direction === 'rtl' ? '3' : '1',
     gridRow: '1 / 3',
   },
@@ -58,15 +58,15 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
-    content: ['content', isLandscape && 'landscape'],
-    toolbar: ['toolbar', isLandscape && 'landscape'],
-    actionbar: ['actionbar', isLandscape && 'landscape'],
+    content: ['content', isLandscape && 'content--landscape'],
+    toolbar: ['toolbar', isLandscape && 'toolbar--landscape'],
+    actionbar: ['actionbar', isLandscape && 'actionbar--landscape'],
   };
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
 };
 
-const DefaultPickersViewLayout = (props: PickersViewLayoutSlotOwnerState<any, any>) => {
+function DefaultPickersViewLayout(props: PickersViewLayoutSlotOwnerState<any, any>) {
   const { toolbar, content, actionBar, children, ...other } = props;
 
   return (
@@ -74,7 +74,7 @@ const DefaultPickersViewLayout = (props: PickersViewLayoutSlotOwnerState<any, an
       {children ?? [toolbar, content, actionBar]}
     </PickersViewLayoutRoot>
   );
-};
+}
 
 type PickersViewLayoutComponent = <TValue, TView extends DateOrTimeView>(
   props: PickersViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
@@ -86,10 +86,9 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
 >(inProps: PickersViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 
-  const { components, componentsProps, ...other } = props;
+  const { children, components, componentsProps, ...other } = props;
   const {
     wrapperVariant,
-    children,
     onAccept,
     onClear,
     onCancel,
