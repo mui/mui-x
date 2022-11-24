@@ -21,7 +21,7 @@ export interface ExportedPickersViewLayoutSlotsComponentsProps {
   actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
 }
 
-interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
+export interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
   extends ExportedPickersViewLayoutSlotsComponent {
   /**
    * Tabs enabling toggling between views.
@@ -34,7 +34,7 @@ interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
   Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
-interface PickersViewLayoutSlotsComponentsProps
+export interface PickersViewLayoutSlotsComponentsProps
   extends ExportedPickersViewLayoutSlotsComponentsProps {
   /**
    * Props passed down to the tabs component.
@@ -43,7 +43,7 @@ interface PickersViewLayoutSlotsComponentsProps
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedBaseToolbarProps;
+  toolbar?: ExportedBaseToolbarProps & Record<string, any>;
 }
 
 export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>

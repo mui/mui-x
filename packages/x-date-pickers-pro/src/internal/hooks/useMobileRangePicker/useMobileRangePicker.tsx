@@ -9,6 +9,7 @@ import {
   PickersViewLayout,
   PickersModalDialog,
   InferError,
+  PickersViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerParams,
@@ -153,6 +154,15 @@ export const useMobileRangePicker = <
     },
   };
 
+  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps = {
+    ...componentsProps,
+    toolbar: {
+      ...componentsProps?.toolbar,
+      currentlySelectingRangeEnd: currentDatePosition,
+      setCurrentlySelectingRangeEnd: setCurrentDatePosition,
+    },
+  };
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
@@ -174,7 +184,7 @@ export const useMobileRangePicker = <
           <PickersViewLayout
             {...layoutProps}
             components={components}
-            componentsProps={componentsProps}
+            componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
           </PickersViewLayout>

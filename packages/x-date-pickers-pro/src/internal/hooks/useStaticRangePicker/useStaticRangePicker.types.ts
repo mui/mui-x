@@ -2,14 +2,14 @@ import * as React from 'react';
 import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
-} from '../../components/PickersViewLayout';
-import { DateOrTimeView } from '../../models';
-import { BaseNextPickerProps } from '../../models/props/basePickerProps';
-import { UsePickerParams } from '../usePicker';
-import {
+  DateOrTimeView,
+  BaseNextPickerProps,
+  UsePickerParams,
   PickersSlotsComponent,
   PickersSlotsComponentsProps,
-} from '../../components/wrappers/WrapperProps';
+  ExportedBaseToolbarProps,
+} from '@mui/x-date-pickers/internals';
+import { DateRange } from '../../models/range';
 
 export interface UseStaticPickerSlotsComponent
   extends ExportedPickersViewLayoutSlotsComponent,
@@ -17,7 +17,9 @@ export interface UseStaticPickerSlotsComponent
 
 export interface UseStaticPickerSlotsComponentsProps
   extends ExportedPickersViewLayoutSlotsComponentsProps,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
+    Pick<PickersSlotsComponentsProps, 'paperContent'> {
+  toolbar?: ExportedBaseToolbarProps;
+}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -28,7 +30,7 @@ export interface StaticOnlyPickerProps {
 }
 
 export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
+  extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
@@ -47,7 +49,7 @@ export interface UseStaticPickerParams<
   TView extends DateOrTimeView,
   TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
     'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;

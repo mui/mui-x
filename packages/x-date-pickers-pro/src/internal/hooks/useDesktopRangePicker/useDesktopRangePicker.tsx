@@ -11,6 +11,7 @@ import {
   PickersPopper,
   PickersViewLayout,
   InferError,
+  PickersViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -173,6 +174,15 @@ export const useDesktopRangePicker = <
     },
   };
 
+  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps = {
+    ...componentsProps,
+    toolbar: {
+      ...componentsProps?.toolbar,
+      currentlySelectingRangeEnd: currentDatePosition,
+      setCurrentlySelectingRangeEnd: setCurrentDatePosition,
+    },
+  };
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
@@ -199,7 +209,7 @@ export const useDesktopRangePicker = <
           <PickersViewLayout
             {...layoutProps}
             components={components}
-            componentsProps={componentsProps}
+            componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
           </PickersViewLayout>

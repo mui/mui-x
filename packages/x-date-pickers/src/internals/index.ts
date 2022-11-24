@@ -42,6 +42,7 @@ export type {
 export { PickersToolbar } from './components/PickersToolbar';
 export { PickersViewLayout } from './components/PickersViewLayout';
 export type {
+  PickersViewLayoutSlotsComponentsProps,
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from './components/PickersViewLayout';
@@ -89,11 +90,15 @@ export type {
   MuiTextFieldProps,
   DateInputSlotsComponent,
 } from './components/PureDateInput';
-export type { DateInputPropsLike } from './components/wrappers/WrapperProps';
+export type {
+  DateInputPropsLike,
+  PickersSlotsComponent,
+  PickersSlotsComponentsProps,
+} from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
-export { DAY_MARGIN } from './constants/dimensions';
+export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';

@@ -14,6 +14,7 @@ import {
   UsePickerViewsNonStaticProps,
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -42,6 +43,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
   input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface DesktopRangeOnlyPickerProps<TDate>
