@@ -56,6 +56,7 @@
 - [DesktopDateTimePicker](/x/api/date-pickers/desktop-date-time-picker/)
 - [MobileDateTimePicker](/x/api/date-pickers/mobile-date-time-picker/)
 - [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker/)
+- [DateTimePickerTabs](/x/api/date-pickers/static-date-time-picker-tabs/)
 
 #### Date Range Pickers
 
@@ -73,8 +74,8 @@
 - [SingleInputDateRangeField](/x/api/date-pickers/single-input-date-range-field/)
 - [MultiInputTimeRangeField](/x/api/date-pickers/multi-input-time-range-field/)
 - [SingleInputTimeRangeField](/x/api/date-pickers/single-input-time-range-field/)
-- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field/)
 - [MultiInputDateTimeRangeField](/x/api/date-pickers/multi-input-date-time-range-field/)
+- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field/)
 
 ### Calendars
 
