@@ -13,18 +13,22 @@ import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-const GridOverlayWrapperRoot = styled('div', {
+interface GridOverlayWrapperRootOwnerState extends React.HTMLAttributes<HTMLDivElement> {
+  placeOverContent: boolean;
+}
+
+export const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
   overridesResolver: (props, styles) => styles.overlayWrapper,
-})({
+})<{ ownerState?: GridOverlayWrapperRootOwnerState }>(({ ownerState }) => ({
   position: 'sticky', // To stay in place while scrolling
   top: 0,
   left: 0,
-  width: 0, // To stay above the content instead of shifting it down
-  height: 0, // To stay above the content instead of shifting it down
-  zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
-});
+  width: ownerState?.placeOverContent ? 0 : '100%', // width=0 to stay above the content instead of shifting it down
+  height: ownerState?.placeOverContent ? 0 : '100%', // height=0 to stay above the content instead of shifting it down
+  zIndex: ownerState?.placeOverContent ? 4 : 'auto', // z-index=5 to be above pinned columns, pinned rows and detail panel
+}));
 
 const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
@@ -45,7 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
+function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlayWrapperRootOwnerState>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
@@ -72,8 +76,10 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
     return null;
   }
 
+  const ownerState = props;
+
   return (
-    <GridOverlayWrapperRoot className={clsx(classes.root)}>
+    <GridOverlayWrapperRoot className={clsx(classes.root)} ownerState={ownerState} {...props}>
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
@@ -105,5 +111,5 @@ export function GridOverlays() {
     return null;
   }
 
-  return <GridOverlayWrapper>{overlay}</GridOverlayWrapper>;
+  return <GridOverlayWrapper placeOverContent>{overlay}</GridOverlayWrapper>;
 }

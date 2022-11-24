@@ -22,6 +22,7 @@ import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { gridRowCountSelector, gridRowsLoadingSelector } from '../rows/gridRowsSelector';
+import { GridOverlayWrapperRoot } from '../../../components/base';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -506,7 +507,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const visibleRowCount = currentPage.rows.length;
   const { components, componentsProps } = rootProps;
 
-  const getNoRowsOrNoResultsOverlay = React.useCallback(() => {
+  const emptyStateOverlay = React.useMemo(() => {
     if (loading) {
       return null;
     }
@@ -523,7 +524,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       overlay = <components.NoResultsOverlay {...componentsProps?.noResultsOverlay} />;
     }
 
-    return overlay;
+    return overlay ? <GridOverlayWrapperRoot>{overlay}</GridOverlayWrapperRoot> : null;
   }, [
     components,
     componentsProps?.noResultsOverlay,
@@ -542,7 +543,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const height = Math.max(rowsMeta.currentPageTotalHeight, 1);
 
     let shouldExtendContent = false;
-    if (rootRef?.current && height <= rootRef?.current.clientHeight) {
+    if (
+      rootRef?.current &&
+      height <= rootRef?.current.clientHeight &&
+      emptyStateOverlay === null // If an overlay is displayed, it will already take the full height
+    ) {
       shouldExtendContent = true;
     }
 
@@ -553,7 +558,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     };
 
     return size;
-  }, [rootRef, columnsTotalWidth, rowsMeta.currentPageTotalHeight, needsHorizontalScrollbar]);
+  }, [
+    rowsMeta.currentPageTotalHeight,
+    emptyStateOverlay,
+    needsHorizontalScrollbar,
+    columnsTotalWidth,
+  ]);
 
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
@@ -567,7 +577,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   if (!needsHorizontalScrollbar) {
     rootStyle.overflowX = 'hidden';
   }
-  if (rootProps.autoHeight) {
+  if (rootProps.autoHeight || React.isValidElement(emptyStateOverlay)) {
     rootStyle.overflowY = 'hidden';
   }
 
@@ -591,6 +601,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }),
     getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
-    getNoRowsOrNoResultsOverlay,
+    getEmptyStateOverlay: () => emptyStateOverlay,
   };
 };
