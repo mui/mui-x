@@ -30,6 +30,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 ### Docs
 
+- [docs] Add new "Expired package version" error type (#6937) @oliviertassinari
 - [docs] Enforce values for installation options in Date / Time pickers Getting Started page (#6896) @01zulfi
 - [docs] Fix live edit @oliviertassinari
 - [docs] Upgrade to Next 13 (#6911) @cherniavskii
