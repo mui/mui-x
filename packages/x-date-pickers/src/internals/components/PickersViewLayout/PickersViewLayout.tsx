@@ -67,10 +67,10 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
 };
 
 function DefaultPickersViewLayout(props: PickersViewLayoutSlotOwnerState<any, any>) {
-  const { toolbar, content, actionBar, children, ...other } = props;
+  const { toolbar, content, actionBar, children, sx, className } = props;
 
   return (
-    <PickersViewLayoutRoot {...other}>
+    <PickersViewLayoutRoot sx={sx} className={className}>
       {children ?? [toolbar, content, actionBar]}
     </PickersViewLayoutRoot>
   );
@@ -115,7 +115,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   const subComponents = {
     toolbar:
       view && shouldRenderToolbar && !!Toolbar ? (
-        <PickersViewLayoutToolbar className={classes.toolbar}>
+        <PickersViewLayoutToolbar className={classes.toolbar} key="MUI-X_toolbar">
           <Toolbar
             {...componentsProps?.toolbar}
             isLandscape={isLandscape}
@@ -130,13 +130,13 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
         </PickersViewLayoutToolbar>
       ) : null,
     content: view && (
-      <PickersViewLayoutContent className={classes.content}>
+      <PickersViewLayoutContent className={classes.content} key="MUI-X_content">
         {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
       </PickersViewLayoutContent>
     ),
     actionBar: (
-      <PickersViewLayoutActionBar className={classes.actionbar}>
+      <PickersViewLayoutActionBar className={classes.actionbar} key="MUI-X_actionBar">
         <ActionBar
           onAccept={onAccept}
           onClear={onClear}
@@ -163,7 +163,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
       className: clsx(className, classes.root),
       ...subComponents,
     },
-    externalForwardedProps: other,
+    externalForwardedProps:other,
     ownerState: { ...props, ...subComponents },
   });
 
