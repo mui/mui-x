@@ -53,6 +53,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 ### Events
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
+- The `rowsScroll` event was renamed to `scrollPositionChange`.
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
