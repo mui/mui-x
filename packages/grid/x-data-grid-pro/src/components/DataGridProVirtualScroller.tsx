@@ -109,10 +109,10 @@ const VirtualScrollerDetailPanels = styled('div', {
   position: 'relative',
 });
 
-const darkModeBackgroundImage = `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-  '#fff',
-  getOverlayAlpha(2),
-)})`;
+const getDarkModeBackgroundImage = (theme: Theme) =>
+  theme.vars
+    ? theme.vars.overlays?.[2]
+    : `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha('#fff', getOverlayAlpha(2))})`;
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -124,6 +124,7 @@ const VirtualScrollerPinnedColumns = styled('div', {
   ],
 })<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
+  const darkModeBackgroundImage = getDarkModeBackgroundImage(theme);
   return {
     position: 'sticky',
     overflow: 'hidden',
@@ -153,6 +154,7 @@ const VirtualScrollerPinnedRows = styled('div', {
   ],
 })<{ ownerState: { position: 'top' | 'bottom' } }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
+  const darkModeBackgroundImage = getDarkModeBackgroundImage(theme);
   return {
     position: 'sticky',
     // should be above the detail panel
