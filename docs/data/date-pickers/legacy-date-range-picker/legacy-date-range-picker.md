@@ -74,23 +74,3 @@ The displayed days are customizable with the `Day` component slot.
 You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
 
 {{"demo": "CustomDateRangePickerDay.js"}}
-
-## 🚧 Pre-defined range shortcuts
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
-:::
-
-Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
-
-## 🚧 Month range Picker
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-:::
-
-Month range picker allows setting date ranges by picking months only.

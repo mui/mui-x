@@ -20,7 +20,7 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 :::
 
 :::info
-You can pass almost any prop from [DatePicker](/x/react-date-pickers/date-picker/) to the range pickers.
+You can pass almost any prop from [NextDatePicker](/x/react-date-pickers/date-picker/) to the Date Range Picker.
 :::
 
 ## Basic usage
