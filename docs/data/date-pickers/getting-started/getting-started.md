@@ -28,11 +28,55 @@ You need to install 2 different types of package to make the pickers work:
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
 2. **The date-library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
 
+{{"component": "modules/components/PickersInstallationInstructions.js"}}
+
+### Why do you need a library ?
+
+Like most pickers—the MUI Date and Time Pickers need a library to manipulate the dates.
+It will be used to format, parse, and mutate the date inside all pickers.
+
+MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
+This lets you pick the library you already use in your application, without adding an extra one in your bundle.
+
+To achieve this—both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` exports a set of **adapters** which expose the date manipulation libraries under a unified api.
+
+### Choosing a date library
+
+#### Available libraries
+
+The Date and Time Pickers currently support the following date libraries:
+
+- [Day.js](https://day.js.org/)
+- [date-fns](https://date-fns.org/)
+- [Luxon](https://moment.github.io/luxon/#/)
+- [Moment.js](https://momentjs.com/)
+
 :::info
-If you need help to choose your date-library, have a look at the [Choosing a date library](/x/react-date-pickers/adapters/#choosing-a-date-library) section.
+If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_ or _Hijri_ calendars)—please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::
 
-{{"component": "modules/components/PickersInstallationInstructions.js"}}
+#### Recommended library
+
+If you are already using one of these libraries in your application—you can keep using it for the Date and Time Pickers as well.
+This will avoid bundling two libraries.
+
+If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`—consider using `dayjs` which will have the smallest impact on the bundle size of your application.
+
+Here is the weight added to your gzipped bundle size by each of those libraries when used inside the Date and Time Pickers:
+
+| **Library**       | **Gzipped size** |
+| ----------------- | ---------------- |
+| `dayjs@1.11.5`    | 6.77kb           |
+| `date-fns@2.29.3` | 19.39kb          |
+| `luxon@3.0.4`     | 23.26kb          |
+| `moment@2.29.4`   | 20.78kb          |
+
+:::info
+The results above were obtained in October 2022 with the latest version of each library.
+The bundling strategy was taken care of by a _Create React App_ and no locale was loaded for any of the library.
+
+The results may vary in your application depending on the version of each library, the locale and the bundling strategy used.
+:::
 
 ## Code setup
 

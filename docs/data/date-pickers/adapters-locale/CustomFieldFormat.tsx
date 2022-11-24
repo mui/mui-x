@@ -17,7 +17,7 @@ export default function CustomFieldFormat() {
         />
         <NextDatePicker
           label="Date Picker"
-          format="MM - DD - YYYY"
+          format="YYYY/MM/DD"
           defaultValue={dayjs('2022-04-07')}
         />
       </Stack>

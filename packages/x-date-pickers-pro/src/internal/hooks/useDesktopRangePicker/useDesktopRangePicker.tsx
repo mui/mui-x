@@ -5,6 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
   DateOrTimeView,
   executeInTheNextEventLoopTick,
+  getActiveElement,
   usePicker,
   WrapperVariantContext,
   PickersPopper,
@@ -71,8 +72,8 @@ export const useDesktopRangePicker = <
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        fieldRef.current?.contains(document.activeElement) ||
-        popperRef.current?.contains(document.activeElement)
+        fieldRef.current?.contains(getActiveElement(document)) ||
+        popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
       }

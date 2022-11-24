@@ -21,7 +21,6 @@ interface DateViewRendererProps<TDate>
 export const renderDateView = <TDate extends unknown>(props: DateViewRendererProps<TDate>) => (
   <DateCalendar
     {...props}
-    autoFocus
     view={props.view as DateView}
     views={props.views.filter(isDatePickerView)}
     focusedView={props.focusedView as DateView | null}
@@ -38,7 +37,6 @@ interface TimeViewRendererProps<TDate>
 export const renderTimeView = <TDate extends unknown>(props: TimeViewRendererProps<TDate>) => (
   <TimeClock<TDate>
     {...props}
-    autoFocus
     views={props.views.filter(isTimePickerView)}
     view={props.view as TimeView}
     // We don't want to pass this prop to the views because it can cause proptypes warnings

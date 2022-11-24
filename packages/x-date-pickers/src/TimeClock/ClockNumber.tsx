@@ -49,21 +49,21 @@ const ClockNumberRoot = styled('span', {
   justifyContent: 'center',
   alignItems: 'center',
   borderRadius: '50%',
-  color: theme.palette.text.primary,
+  color: (theme.vars || theme).palette.text.primary,
   fontFamily: theme.typography.fontFamily,
   '&:focused': {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: (theme.vars || theme).palette.background.paper,
   },
   [`&.${clockNumberClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
+    color: (theme.vars || theme).palette.primary.contrastText,
   },
   [`&.${clockNumberClasses.disabled}`]: {
     pointerEvents: 'none',
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   ...(ownerState.inner && {
     ...theme.typography.body2,
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   }),
 }));
 

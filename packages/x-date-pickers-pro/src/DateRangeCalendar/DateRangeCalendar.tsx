@@ -60,7 +60,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
-    borderRight: `2px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 

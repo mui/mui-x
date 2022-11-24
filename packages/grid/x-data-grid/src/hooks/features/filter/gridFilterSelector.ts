@@ -8,7 +8,7 @@ import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gr
 /**
  * @category Filtering
  */
-export const gridFilterStateSelector = (state: GridStateCommunity) => state.filter;
+const gridFilterStateSelector = (state: GridStateCommunity) => state.filter;
 
 /**
  * Get the current filter model.
