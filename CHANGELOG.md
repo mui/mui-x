@@ -5,11 +5,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.0.0-alpha.9
 
-<!-- generated comparing v6.0.0-alpha.8..next -->
-
 _Nov 24, 2022_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Introduce the v6 pickers, built on top of the field components ([DatePicker](https://next.mui.com/x/react-date-pickers/date-picker/), ([TimePicker](https://next.mui.com/x/react-date-pickers/time-picker/), ([DateTimePicker](https://next.mui.com/x/react-date-pickers/date-time-picker/), ([DateRangePicker](https://next.mui.com/x/react-date-pickers/date-range-picker/)
+
+  The old (legacy) components will be removed at the end of the v6 beta.
 
 - 💅 Add support for `theme.vars` in the pickers and the DataGrid (#6784, #6778) @alexfauquette
 - ✨ Improve DataGrid theme augmentation (#5818) @iigrik
