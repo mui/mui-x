@@ -524,12 +524,22 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       overlay = <components.NoResultsOverlay {...componentsProps?.noResultsOverlay} />;
     }
 
-    return overlay ? <GridOverlayWrapperRoot>{overlay}</GridOverlayWrapperRoot> : null;
+    const style = {} as React.CSSProperties;
+    if (rootProps.autoHeight && currentPage.rows.length === 0) {
+      style.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    }
+
+    return overlay ? (
+      <GridOverlayWrapperRoot style={style}>{overlay}</GridOverlayWrapperRoot>
+    ) : null;
   }, [
+    apiRef,
     components,
     componentsProps?.noResultsOverlay,
     componentsProps?.noRowsOverlay,
+    currentPage.rows.length,
     loading,
+    rootProps.autoHeight,
     totalRowCount,
     visibleRowCount,
   ]);
@@ -568,10 +578,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   React.useEffect(() => {
     apiRef.current.publishEvent('virtualScrollerContentSizeChange');
   }, [apiRef, contentSize]);
-
-  if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    contentSize.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
-  }
 
   const rootStyle = {} as React.CSSProperties;
   if (!needsHorizontalScrollbar) {

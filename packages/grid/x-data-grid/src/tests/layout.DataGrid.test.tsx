@@ -800,17 +800,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     // See https://github.com/mui/mui-x/issues/3795#issuecomment-1028001939
-    it('should expand content height when there are no rows', () => {
+    it('should expand the overlay height when there are no rows', () => {
       render(
         <div style={{ width: 150, height: 300 }}>
           <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
         </div>,
       );
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller') as Element;
-      const virtualScrollerContent = document.querySelector(
-        '.MuiDataGrid-virtualScrollerContent',
-      ) as Element;
-      expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
+      const overlay = document.querySelector('.MuiDataGrid-overlay') as Element;
+      expect(overlay.clientHeight).to.equal(virtualScroller.clientHeight);
     });
 
     // See https://github.com/mui/mui-x/issues/4113

@@ -28,7 +28,7 @@ const GridOverlayWrapperRoot = styled('div', {
   left: 0,
   width: ownerState?.placeOverContent ? 0 : '100%', // width=0 to stay above the content instead of shifting it down
   height: ownerState?.placeOverContent ? 0 : '100%', // height=0 to stay above the content instead of shifting it down
-  zIndex: ownerState?.placeOverContent ? 4 : 'auto', // z-index=5 to be above pinned columns, pinned rows and detail panel
+  zIndex: ownerState?.placeOverContent ? 4 : 'unset', // z-index=5 to be above pinned columns, pinned rows and detail panel
 }));
 
 GridOverlayWrapperRoot.propTypes = {
