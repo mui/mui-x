@@ -32,19 +32,21 @@ function ActionList(props: PickersActionBarProps) {
 }
 
 function RestaurantHeader() {
-  return <Box
-    sx={{
-      // Place the element in the grid layout
-      gridColumn: '1',
-      gridRow: '1',
-      // Center the icon
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}
-  >
-    <RestaurantIcon />
-  </Box>
+  return (
+    <Box
+      sx={{
+        // Place the element in the grid layout
+        gridColumn: '1',
+        gridRow: '1',
+        // Center the icon
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <RestaurantIcon />
+    </Box>
+  );
 }
 
 export default function AddComponent() {
