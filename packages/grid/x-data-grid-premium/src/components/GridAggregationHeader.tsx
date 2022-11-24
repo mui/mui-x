@@ -47,7 +47,7 @@ const GridAggregationFunctionLabel = styled('div', {
     lineHeight: theme.typography.caption.fontSize,
     marginTop: `calc(-2px - ${theme.typography.caption.fontSize})`,
     fontWeight: theme.typography.fontWeightMedium,
-    color: theme.palette.primary.dark,
+    color: (theme.vars || theme).palette.primary.dark,
     textTransform: 'uppercase',
   };
 });
