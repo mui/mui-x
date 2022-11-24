@@ -28,10 +28,12 @@ const GridFooterContainerRoot = styled('div', {
   slot: 'FooterContainer',
   overridesResolver: (props, styles) => styles.footerContainer,
 })(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light'
-      ? lighten(alpha(theme.palette.divider, 1), 0.88)
-      : darken(alpha(theme.palette.divider, 1), 0.68);
+  // eslint-disable-next-line no-nested-ternary
+  const borderColor = theme.vars
+    ? theme.vars.palette.TableCell.border
+    : theme.palette.mode === 'light'
+    ? lighten(alpha(theme.palette.divider, 1), 0.88)
+    : darken(alpha(theme.palette.divider, 1), 0.68);
 
   return {
     display: 'flex',

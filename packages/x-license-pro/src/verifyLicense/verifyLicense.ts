@@ -145,7 +145,7 @@ export function verifyLicense({
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
-      return LicenseStatus.Expired;
+      return LicenseStatus.ExpiredVersion;
     }
   } else if (license.licensingModel === 'subscription') {
     if (license.expiryTimestamp < new Date().getTime()) {
