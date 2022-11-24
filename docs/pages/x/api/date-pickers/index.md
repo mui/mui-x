@@ -79,6 +79,7 @@
 ### Calendars
 
 - [DateCalendar](/x/api/date-pickers/date-calendar/)
+- [DateRangeCalendar](/x/api/date-pickers/date-range-calendar/)
 - [MonthCalendar](/x/api/date-pickers/month-calendar/)
 - [YearCalendar](/x/api/date-pickers/year-calendar/)
 
