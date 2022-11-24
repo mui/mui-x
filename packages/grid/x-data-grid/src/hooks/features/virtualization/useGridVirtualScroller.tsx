@@ -347,7 +347,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       bottomColumnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
       prevTotalWidth.current !== columnsTotalWidth;
 
-    // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(
       'scrollPositionChange',
       {
