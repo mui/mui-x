@@ -109,10 +109,10 @@ const VirtualScrollerDetailPanels = styled('div', {
   position: 'relative',
 });
 
-const getDarkModeBackgroundImage = (theme: Theme) =>
-  theme.vars
-    ? theme.vars.overlays?.[2]
-    : `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha('#fff', getOverlayAlpha(2))})`;
+const darkModeBackgroundImage = `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
+  '#fff',
+  getOverlayAlpha(2),
+)})`;
 
 const VirtualScrollerPinnedColumns = styled('div', {
   name: 'MuiDataGrid',
@@ -124,13 +124,14 @@ const VirtualScrollerPinnedColumns = styled('div', {
   ],
 })<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
-  const darkModeBackgroundImage = getDarkModeBackgroundImage(theme);
   return {
     position: 'sticky',
     overflow: 'hidden',
     zIndex: 1,
     backgroundColor: (theme.vars || theme).palette.background.default,
-    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    ...(theme.vars
+      ? { backgroundImage: theme.vars.overlays?.[2] }
+      : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
     ...(ownerState.side === GridPinnedPosition.left && {
       left: 0,
       float: 'left',
@@ -154,13 +155,14 @@ const VirtualScrollerPinnedRows = styled('div', {
   ],
 })<{ ownerState: { position: 'top' | 'bottom' } }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
-  const darkModeBackgroundImage = getDarkModeBackgroundImage(theme);
   return {
     position: 'sticky',
     // should be above the detail panel
     zIndex: 3,
     backgroundColor: (theme.vars || theme).palette.background.default,
-    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    ...(theme.vars
+      ? { backgroundImage: theme.vars.overlays?.[2] }
+      : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
     ...(ownerState.position === 'top' && {
       top: 0,
       boxShadow: `0px 3px 4px -2px ${boxShadowColor}`,
