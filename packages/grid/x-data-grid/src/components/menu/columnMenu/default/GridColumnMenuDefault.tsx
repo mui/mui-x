@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
-import { useGridColumnMenuPreProcessing } from '../../../../hooks/features/columnMenu/useGridColumnMenuPreProcessing';
+import { useGridColumnMenuComponents } from '../../../../hooks/features/columnMenu/useGridColumnMenuComponents';
 import { GridColumnMenuDefaultContainer } from './GridColumnMenuDefaultContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnMenuColumnsItem } from './GridColumnMenuColumnsItem';
@@ -10,14 +10,14 @@ import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
 import { GridColumnMenuSortItem } from './GridColumnMenuSortItem';
 import { useGridPrivateApiContext } from '../../../../hooks/utils/useGridPrivateApiContext';
 
-export const COLUMN_MENU_DEFAULT_COMPONENTS = {
+export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItem,
   ColumnMenuFilterItem: GridColumnMenuFilterItem,
   ColumnMenuHideItem: GridColumnMenuHideItem,
   ColumnMenuColumnsItem: GridColumnMenuColumnsItem,
 };
 
-export const COLUMN_MENU_DEFAULT_COMPONENTS_PROPS = {
+export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS = {
   ColumnMenuSortItem: { displayOrder: 0 },
   ColumnMenuFilterItem: { displayOrder: 10 },
   ColumnMenuHideItem: { displayOrder: 20 },
@@ -27,16 +27,20 @@ export const COLUMN_MENU_DEFAULT_COMPONENTS_PROPS = {
 const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuDefault(props, ref) {
     const {
-      defaultComponents = COLUMN_MENU_DEFAULT_COMPONENTS,
-      defaultComponentsProps = COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
+      defaultComponents = GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
+      defaultComponentsProps = GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
+      components,
+      componentsProps,
       ...other
     } = props;
     const apiRef = useGridPrivateApiContext();
 
-    const orderedComponents = useGridColumnMenuPreProcessing(apiRef, {
+    const orderedComponents = useGridColumnMenuComponents(apiRef, {
       ...other,
       defaultComponents,
       defaultComponentsProps,
+      components,
+      componentsProps,
     });
 
     return (

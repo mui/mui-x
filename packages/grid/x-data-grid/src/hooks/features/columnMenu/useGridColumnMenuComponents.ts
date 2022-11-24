@@ -3,13 +3,13 @@ import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
-interface GridColumnMenuPreProcessingProps extends GridColumnMenuRootProps {
+interface GridColumnMenuComponentsProps extends GridColumnMenuRootProps {
   currentColumn: GridColDef;
 }
 
-const useGridColumnMenuPreProcessing = (
+const useGridColumnMenuComponents = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: GridColumnMenuPreProcessingProps,
+  props: GridColumnMenuComponentsProps,
 ) => {
   const {
     defaultComponents,
@@ -18,12 +18,12 @@ const useGridColumnMenuPreProcessing = (
     componentsProps = {},
   } = props;
 
-  const processedSlots = React.useMemo(
+  const processedComponents = React.useMemo(
     () => ({ ...defaultComponents, ...components }),
     [defaultComponents, components],
   );
 
-  const processedSlotsProps = React.useMemo(() => {
+  const processedComponentsProps = React.useMemo(() => {
     if (!componentsProps || Object.keys(componentsProps).length === 0) {
       return defaultComponentsProps;
     }
@@ -42,16 +42,16 @@ const useGridColumnMenuPreProcessing = (
 
   return React.useMemo(() => {
     const sorted = preProcessedItems.sort(
-      (a, b) => processedSlotsProps[a].displayOrder - processedSlotsProps[b].displayOrder,
+      (a, b) => processedComponentsProps[a].displayOrder - processedComponentsProps[b].displayOrder,
     );
-    // Future Enhancement, pass other `slotProps` to respective components if needed
+    // Future Enhancement, pass other `componentsProps` to respective components if needed
     return sorted.reduce<React.JSXElementConstructor<any>[]>((acc, key) => {
-      if (!processedSlots[key]) {
+      if (!processedComponents[key]) {
         return acc;
       }
-      return [...acc, processedSlots[key]!];
+      return [...acc, processedComponents[key]!];
     }, []);
-  }, [preProcessedItems, processedSlots, processedSlotsProps]);
+  }, [preProcessedItems, processedComponents, processedComponentsProps]);
 };
 
-export { useGridColumnMenuPreProcessing };
+export { useGridColumnMenuComponents };

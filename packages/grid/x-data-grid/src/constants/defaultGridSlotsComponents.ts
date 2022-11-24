@@ -45,7 +45,7 @@ import {
   GridViewColumnIcon,
   GridClearIcon,
 } from '../components';
-import { GridColumnMenuDefault } from '../components/reexportable';
+import { GridColumnMenuDefault } from '../components/menu/columnMenu/default/GridColumnMenuDefault';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';

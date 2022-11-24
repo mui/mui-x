@@ -4,8 +4,8 @@ import Divider from '@mui/material/Divider';
 import {
   GridColumnMenuSimple,
   GridColumnMenuProps,
-  COLUMN_MENU_SIMPLE_COMPONENTS,
-  COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
+  GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 import { GridColumnMenuPinningItemSimple } from './GridColumnMenuPinningItemSimple';
@@ -19,13 +19,13 @@ function PinningWithDivider(props: GridColumnMenuItemProps) {
   );
 }
 
-export const COLUMN_MENU_SIMPLE_COMPONENTS_PRO = {
-  ...COLUMN_MENU_SIMPLE_COMPONENTS,
+export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PRO = {
+  ...GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
   ColumnMenuPinningItem: PinningWithDivider,
 };
 
-export const COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO = {
-  ...COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
+export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO = {
+  ...GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
   ColumnMenuPinningItem: {
     displayOrder: 35,
   },
@@ -37,8 +37,8 @@ const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMen
       <GridColumnMenuSimple
         ref={ref}
         {...props}
-        defaultComponents={COLUMN_MENU_SIMPLE_COMPONENTS_PRO}
-        defaultComponentsProps={COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO}
+        defaultComponents={GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PRO}
+        defaultComponentsProps={GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO}
       />
     );
   },

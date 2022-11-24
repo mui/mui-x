@@ -22,7 +22,7 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
 export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
-   * Overrideable Pro components.
+   * Overrideable components.
    */
   components?: Partial<GridPremiumSlotsComponent>;
 }
