@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
@@ -17,7 +18,7 @@ interface GridOverlayWrapperRootOwnerState extends React.HTMLAttributes<HTMLDivE
   placeOverContent: boolean;
 }
 
-export const GridOverlayWrapperRoot = styled('div', {
+const GridOverlayWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'OverlayWrapper',
   overridesResolver: (props, styles) => styles.overlayWrapper,
@@ -29,6 +30,16 @@ export const GridOverlayWrapperRoot = styled('div', {
   height: ownerState?.placeOverContent ? 0 : '100%', // height=0 to stay above the content instead of shifting it down
   zIndex: ownerState?.placeOverContent ? 4 : 'auto', // z-index=5 to be above pinned columns, pinned rows and detail panel
 }));
+
+GridOverlayWrapperRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.object,
+} as any;
+
+export { GridOverlayWrapperRoot };
 
 const GridOverlayWrapperInner = styled('div', {
   name: 'MuiDataGrid',
@@ -52,6 +63,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlayWrapperRootOwnerState>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const { placeOverContent, ...rest } = props;
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
@@ -76,21 +88,29 @@ function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlayWrapperRoo
     return null;
   }
 
-  const ownerState = props;
+  const ownerState = { placeOverContent };
 
   return (
-    <GridOverlayWrapperRoot className={clsx(classes.root)} ownerState={ownerState} {...props}>
+    <GridOverlayWrapperRoot className={clsx(classes.root)} ownerState={ownerState}>
       <GridOverlayWrapperInner
         className={clsx(classes.inner)}
         style={{
           height,
           width: viewportInnerSize?.width ?? 0,
         }}
-        {...props}
+        {...rest}
       />
     </GridOverlayWrapperRoot>
   );
 }
+
+GridOverlayWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  placeOverContent: PropTypes.bool.isRequired,
+} as any;
 
 // TODO v6: Rename to GridLoadingOverlayRenderer because it only renders the loading overlay
 export function GridOverlays() {
