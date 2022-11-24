@@ -126,8 +126,8 @@ export default function TreeDataDisableChildrenFiltering() {
     items: [
       {
         id: 0,
-        columnField: 'recruitmentDate',
-        operatorValue: 'before',
+        field: 'recruitmentDate',
+        operator: 'before',
         value: '2018-01-01',
       },
     ],

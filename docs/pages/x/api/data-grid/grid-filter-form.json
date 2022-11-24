@@ -7,7 +7,7 @@
     "item": {
       "type": {
         "name": "shape",
-        "description": "{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }"
+        "description": "{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }"
       },
       "required": true
     },

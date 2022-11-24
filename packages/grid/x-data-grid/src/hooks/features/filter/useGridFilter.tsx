@@ -160,9 +160,9 @@ export const useGridFilter = (
             return true;
           }
 
-          const column = apiRef.current.getColumn(item.columnField);
+          const column = apiRef.current.getColumn(item.field);
           const filterOperator = column.filterOperators?.find(
-            (operator) => operator.value === item.operatorValue,
+            (operator) => operator.value === item.operator,
           );
           const requiresFilterValue =
             typeof filterOperator?.requiresFilterValue === 'undefined'
@@ -180,17 +180,17 @@ export const useGridFilter = (
 
         let newFilterItems: GridFilterItem[];
         const filterItemOnTarget = filterItemsWithValue.find(
-          (item) => item.columnField === targetColumnField,
+          (item) => item.field === targetColumnField,
         );
 
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
+          newFilterItems = [cleanFilterItem({ field: targetColumnField }, apiRef)];
         } else {
           newFilterItems = [
             ...filterItemsWithValue,
-            cleanFilterItem({ columnField: targetColumnField }, apiRef),
+            cleanFilterItem({ field: targetColumnField }, apiRef),
           ];
         }
 
@@ -392,7 +392,7 @@ export const useGridFilter = (
     const filterModel = gridFilterModelSelector(apiRef);
     const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
-      (item) => item.columnField && filterableColumnsLookup[item.columnField],
+      (item) => item.field && filterableColumnsLookup[item.field],
     );
     if (newFilterItems.length < filterModel.items.length) {
       apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });
