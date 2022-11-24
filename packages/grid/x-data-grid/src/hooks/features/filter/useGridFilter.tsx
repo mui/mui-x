@@ -183,14 +183,24 @@ export const useGridFilter = (
           (item) => item.field === targetColumnField,
         );
 
+        const targetColumn = apiRef.current.getColumn(targetColumnField);
+
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [cleanFilterItem({ field: targetColumnField }, apiRef)];
+          newFilterItems = [
+            cleanFilterItem(
+              { field: targetColumnField, operator: targetColumn!.filterOperators![0].value! },
+              apiRef,
+            ),
+          ];
         } else {
           newFilterItems = [
             ...filterItemsWithValue,
-            cleanFilterItem({ field: targetColumnField }, apiRef),
+            cleanFilterItem(
+              { field: targetColumnField, operator: targetColumn!.filterOperators![0].value! },
+              apiRef,
+            ),
           ];
         }
 
