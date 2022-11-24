@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { adapterToUse, createPickerRenderer, withPickerControls } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 
 const WrappedStaticDateTimePicker = withPickerControls(StaticDateTimePicker)({
@@ -21,8 +21,7 @@ describe('<StaticDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    skip: ['textField'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-static-picker',
   }));
   it('should allow to select the same day and move to the next view', () => {
     const onChangeMock = spy();

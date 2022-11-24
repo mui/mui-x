@@ -7,7 +7,7 @@ import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DesktopNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -16,6 +16,7 @@ describe('<DesktopNextDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    componentFamily: 'new-picker',
   }));
 
   describe('Component slots: OpenPickerIcon', () => {

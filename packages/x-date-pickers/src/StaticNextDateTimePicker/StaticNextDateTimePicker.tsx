@@ -46,7 +46,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate | null, TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -133,6 +133,10 @@ StaticNextDateTimePicker.propTypes = {
    * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

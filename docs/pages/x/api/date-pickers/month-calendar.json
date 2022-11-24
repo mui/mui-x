@@ -24,6 +24,9 @@
   "name": "MonthCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
-  "demos": "<ul><li><a href=\"/date-pickers/date-picker/date-picker/\">Date Picker</a></li>\n<li><a href=\"/date-pickers/validation/validation/\">Validation</a></li></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/date-pickers/date-picker/date-picker/\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MonthCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "MonthCalendar" }
+  ]
 }

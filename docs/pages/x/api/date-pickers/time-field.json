@@ -1,0 +1,36 @@
+{
+  "props": {
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultValue": { "type": { "name": "any" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "format": { "type": { "name": "string" } },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "onChange": { "type": { "name": "func" } },
+    "onError": { "type": { "name": "func" } },
+    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "selectedSections": {
+      "type": {
+        "name": "union",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+      }
+    },
+    "shouldDisableTime": { "type": { "name": "func" } },
+    "value": { "type": { "name": "any" } }
+  },
+  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "name": "TimeField",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimeField" },
+  "filename": "/packages/x-date-pickers/src/TimeField/TimeField.tsx",
+  "demos": "<ul><li><a href=\"/date-pickers/fields/fields/\">Fields</a></li>\n<li><a href=\"/date-pickers/time-field/time-field/\">Time Field</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_TimeField" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_TimeField" }
+  ]
+}

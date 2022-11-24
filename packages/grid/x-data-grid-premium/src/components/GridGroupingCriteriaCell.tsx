@@ -49,6 +49,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
+      // We call event.stopPropagation to avoid unfolding the row and also scrolling to bottom
+      // TODO: Remove and add a check inside useGridKeyboardNavigation
       event.stopPropagation();
     }
     apiRef.current.publishEvent('cellKeyDown', props, event);

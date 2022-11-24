@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -15,7 +15,7 @@ describe('<DatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   describe('prop: inputRef', () => {

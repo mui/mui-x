@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
@@ -27,10 +27,11 @@ describe('<NextDateRangePicker />', () => {
     ],
   }));
 
-  describeValidation(NextDateRangePicker, () => ({
+  describeRangeValidation(NextDateRangePicker, () => ({
     render,
     clock,
-    withDate: true,
+    componentFamily: 'new-picker',
+    views: ['day'],
   }));
 
   it('should not open mobile picker dialog when clicked on input', () => {

@@ -1,0 +1,42 @@
+{
+  "props": {
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "format": { "type": { "name": "string" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
+    "onChange": { "type": { "name": "func" } },
+    "onError": { "type": { "name": "func" } },
+    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "selectedSections": {
+      "type": {
+        "name": "union",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+      }
+    },
+    "shouldDisableDate": { "type": { "name": "func" } },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
+  },
+  "slots": {
+    "Input": { "default": "TextField", "type": { "name": "elementType" } },
+    "Root": { "default": "MultiInputDateRangeFieldRoot", "type": { "name": "elementType" } },
+    "Separator": {
+      "default": "MultiInputDateRangeFieldSeparator",
+      "type": { "name": "elementType" }
+    }
+  },
+  "name": "MultiInputDateRangeField",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },
+  "filename": "/packages/x-date-pickers-pro/src/MultiInputDateRangeField/MultiInputDateRangeField.tsx",
+  "demos": "<ul><li><a href=\"/date-pickers/date-range-field/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/date-pickers/fields/fields/\">Fields</a></li></ul>",
+  "packages": [
+    {
+      "packageName": "@mui/x-date-pickers-pro",
+      "componentName": "Unstable_MultiInputDateRangeField"
+    }
+  ]
+}

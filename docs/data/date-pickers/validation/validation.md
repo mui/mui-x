@@ -1,6 +1,6 @@
 ---
 title: Date and Time Pickers - Validation
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateCalendar, MonthCalendar, YearCalendar
+components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker, NextTimePicker, DesktopNextTimePicker, MobileNextTimePicker, StaticNextTimePicker, NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker, NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker
 ---
 
 # Date and Time Pickers - Validation
