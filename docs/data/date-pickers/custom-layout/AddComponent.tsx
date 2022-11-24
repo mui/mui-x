@@ -10,7 +10,7 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 
-const ActionList = (props: PickersActionBarProps) => {
+function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
   const actions = [
     { text: 'Accept', method: onAccept },
@@ -29,10 +29,10 @@ const ActionList = (props: PickersActionBarProps) => {
       ))}
     </List>
   );
-};
+}
 
-const RestaurantHeader = () => (
-  <Box
+function RestaurantHeader() {
+  return <Box
     sx={{
       // Place the element in the grid layout
       gridColumn: '1',
@@ -45,7 +45,7 @@ const RestaurantHeader = () => (
   >
     <RestaurantIcon />
   </Box>
-);
+}
 
 export default function AddComponent() {
   return (

@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 
-const ActionList = (props: PickersActionBarProps) => {
+function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
   const actions = [
     { text: 'Accept', method: onAccept },
@@ -27,7 +27,7 @@ const ActionList = (props: PickersActionBarProps) => {
       ))}
     </List>
   );
-};
+}
 
 export default function MovingActionsReorder() {
   return (
