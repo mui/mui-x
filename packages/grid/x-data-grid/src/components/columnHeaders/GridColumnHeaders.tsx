@@ -33,6 +33,7 @@ const GridColumnHeadersRoot = styled('div', {
     : darken(alpha(theme.palette.divider, 1), 0.68);
 
   return {
+    position: 'relative',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
