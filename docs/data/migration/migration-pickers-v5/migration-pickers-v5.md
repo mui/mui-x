@@ -178,7 +178,7 @@ For instance if you want to replace the `startText` / `endText`
 
 ### Rename the `locale` prop on `LocalizationProvider`
 
-The `locale` prop of the `LocalizationProvider` component have been renamed `adapterLcoale`:
+The `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 
 ```diff
  <LocalizationProvider
@@ -238,7 +238,7 @@ Component names in the theme have changed as well:
 
 ### Rename `date` prop to `value` on view components
 
-The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock` and `DateCalendar` (components renamed in previous section):
+The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} onChange={handleMonthChange} />
@@ -310,18 +310,18 @@ Component name changes are also reflected in `themeAugmentation`:
 - The `ToolbarComponent` has been replaced by a `Toolbar` component slot. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
 
   ```diff
-  // Same on all other pickers
-  <DatePicker
+   // Same on all other pickers
+   <DatePicker
   -  ToolbarComponent: MyToolbar,
   +  components={{ Toolbar: MyToolbar }}
-  />
+   />
   ```
 
 - The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` component props slot:
 
   ```diff
-  // Same on all other pickers
-  <DatePicker
+   // Same on all other pickers
+   <DatePicker
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
   +  componentsProps={{
@@ -330,24 +330,24 @@ Component name changes are also reflected in `themeAugmentation`:
   +      toolbarFormat: "DD / MM / YYYY",
   +    }
   +  }}
-  />
+   />
   ```
 
 - The `toolbarTitle` prop has been moved to the localization object:
 
   ```diff
-  // Same on all other pickers
-  <DatePicker
+   // Same on all other pickers
+   <DatePicker
   -  toolbarTitle="Title"
   +  localeText={{ toolbarTitle: "Title" }}
-  />
+   />
   ```
 
 - The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
-  // Same on all other pickers
-  <DatePicker
+   // Same on all other pickers
+   <DatePicker
     localeText={{
   -    datePickerDefaultToolbarTitle: 'Date Picker',
   +    datePickerToolbarTitle: 'Date Picker',
@@ -361,7 +361,36 @@ Component name changes are also reflected in `themeAugmentation`:
   -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
   +    dateRangePickerToolbarTitle: 'Date Range Picker',
     }}
-  />
+   />
   ```
 
 - The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`
+
+### Replace `tabs` props
+
+- The `hideTabs`, `dateRangeIcon`, and `timeIcon` props have been moved to `tabs` component props:
+
+  ```diff
+   // Same on all other Date Time picker variations
+   <DateTimePicker
+  -  hideTabs={false}
+  -  dateRangeIcon={<LightModeIcon />}
+  -  timeIcon={<AcUnitIcon />}
+  +  componentsProps={{
+  +    tabs: {
+  +      hidden: false,
+  +      dateRangeIcon: <LightModeIcon />,
+  +      timeIcon: <AcUnitIcon />,
+  +    }
+  +  }}
+   />
+  ```
+
+- The `onChange` prop on `DateTimePickerTabs` component has been renamed to `onViewChange` to better fit its usage:
+
+  ```diff
+   <DateTimePickerTabs
+  -  onChange={() => {}}
+  +  onViewChange={() => {}}
+   />
+  ```
