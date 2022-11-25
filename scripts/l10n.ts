@@ -337,7 +337,7 @@ const generateDocReport = async (
     await fse.writeFileSync(
       path.join(workspaceRoot, documentationReportPath),
       `${JSON.stringify(
-        documentationReport.sort((a, b) => a.importName.localeCompare(b.importName)),
+        documentationReport.sort((a, b) => a.localeName.localeCompare(b.localeName)),
         null,
         2,
       )}\n`,

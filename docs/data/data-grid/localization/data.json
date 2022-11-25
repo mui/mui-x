@@ -5,7 +5,7 @@
     "localeName": "Arabic (Sudan)",
     "missingKeysNb": 13,
     "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/arSD.ts/"
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/arSD.ts/"
   },
   {
     "languageTag": "bg-BG",
@@ -13,199 +13,7 @@
     "localeName": "Bulgarian",
     "missingKeysNb": 13,
     "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/bgBG.ts/"
-  },
-  {
-    "languageTag": "cs-CZ",
-    "importName": "csCZ",
-    "localeName": "Czech",
-    "missingKeysNb": 20,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/csCZ.ts/"
-  },
-  {
-    "languageTag": "da-DK",
-    "importName": "daDK",
-    "localeName": "Danish",
-    "missingKeysNb": 13,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/daDK.ts/"
-  },
-  {
-    "languageTag": "de-DE",
-    "importName": "deDE",
-    "localeName": "German",
-    "missingKeysNb": 0,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/deDE.ts/"
-  },
-  {
-    "languageTag": "el-GR",
-    "importName": "elGR",
-    "localeName": "Greek",
-    "missingKeysNb": 36,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/elGR.ts/"
-  },
-  {
-    "languageTag": "es-ES",
-    "importName": "esES",
-    "localeName": "Spanish",
-    "missingKeysNb": 37,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/esES.ts/"
-  },
-  {
-    "languageTag": "fa-IR",
-    "importName": "faIR",
-    "localeName": "Persian",
-    "missingKeysNb": 0,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/faIR.ts/"
-  },
-  {
-    "languageTag": "fi-FI",
-    "importName": "fiFI",
-    "localeName": "Finnish",
-    "missingKeysNb": 0,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/fiFI.ts/"
-  },
-  {
-    "languageTag": "fr-FR",
-    "importName": "frFR",
-    "localeName": "French",
-    "missingKeysNb": 6,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/frFR.ts/"
-  },
-  {
-    "languageTag": "he-IL",
-    "importName": "heIL",
-    "localeName": "Hebrew",
-    "missingKeysNb": 7,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/heIL.ts/"
-  },
-  {
-    "languageTag": "hu-HU",
-    "importName": "huHU",
-    "localeName": "Hungarian",
-    "missingKeysNb": 12,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/huHU.ts/"
-  },
-  {
-    "languageTag": "it-IT",
-    "importName": "itIT",
-    "localeName": "Italian",
-    "missingKeysNb": 6,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/itIT.ts/"
-  },
-  {
-    "languageTag": "ja-JP",
-    "importName": "jaJP",
-    "localeName": "Japanese",
-    "missingKeysNb": 12,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/jaJP.ts/"
-  },
-  {
-    "languageTag": "ko-KR",
-    "importName": "koKR",
-    "localeName": "Korean",
-    "missingKeysNb": 0,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/koKR.ts/"
-  },
-  {
-    "languageTag": "nb-NO",
-    "importName": "nbNO",
-    "localeName": "Norwegian (bokmål)",
-    "missingKeysNb": 7,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/nbNO.ts/"
-  },
-  {
-    "languageTag": "nl-NL",
-    "importName": "nlNL",
-    "localeName": "Dutch",
-    "missingKeysNb": 7,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/nlNL.ts/"
-  },
-  {
-    "languageTag": "pl-PL",
-    "importName": "plPL",
-    "localeName": "Polish",
-    "missingKeysNb": 7,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/plPL.ts/"
-  },
-  {
-    "languageTag": "pt-BR",
-    "importName": "ptBR",
-    "localeName": "Portuguese (Brazil)",
-    "missingKeysNb": 6,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/ptBR.ts/"
-  },
-  {
-    "languageTag": "ro-RO",
-    "importName": "roRO",
-    "localeName": "Romanian",
-    "missingKeysNb": 6,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/roRO.ts/"
-  },
-  {
-    "languageTag": "ru-RU",
-    "importName": "ruRU",
-    "localeName": "Russian",
-    "missingKeysNb": 13,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/ruRU.ts/"
-  },
-  {
-    "languageTag": "sk-SK",
-    "importName": "skSK",
-    "localeName": "Slovak",
-    "missingKeysNb": 6,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/skSK.ts/"
-  },
-  {
-    "languageTag": "sv-SE",
-    "importName": "svSE",
-    "localeName": "Swedish",
-    "missingKeysNb": 7,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/svSE.ts/"
-  },
-  {
-    "languageTag": "tr-TR",
-    "importName": "trTR",
-    "localeName": "Turkish",
-    "missingKeysNb": 0,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/trTR.ts/"
-  },
-  {
-    "languageTag": "uk-UA",
-    "importName": "ukUA",
-    "localeName": "Ukrainian",
-    "missingKeysNb": 23,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/ukUA.ts/"
-  },
-  {
-    "languageTag": "vi-VN",
-    "importName": "viVN",
-    "localeName": "Vietnamese",
-    "missingKeysNb": 23,
-    "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/viVN.ts/"
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/bgBG.ts/"
   },
   {
     "languageTag": "zh-CN",
@@ -213,7 +21,7 @@
     "localeName": "Chinese (Simplified)",
     "missingKeysNb": 0,
     "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/zhCN.ts/"
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/zhCN.ts/"
   },
   {
     "languageTag": "zh-TW",
@@ -221,6 +29,198 @@
     "localeName": "Chinese (Taiwan)",
     "missingKeysNb": 6,
     "totalKeysNb": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/79e7ce28ef010331a8d32536f2143ee72fe4e83e/packages/grid/x-data-grid/src/locales/zhTW.ts/"
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/zhTW.ts/"
+  },
+  {
+    "languageTag": "cs-CZ",
+    "importName": "csCZ",
+    "localeName": "Czech",
+    "missingKeysNb": 20,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/csCZ.ts/"
+  },
+  {
+    "languageTag": "da-DK",
+    "importName": "daDK",
+    "localeName": "Danish",
+    "missingKeysNb": 13,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/daDK.ts/"
+  },
+  {
+    "languageTag": "nl-NL",
+    "importName": "nlNL",
+    "localeName": "Dutch",
+    "missingKeysNb": 7,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/nlNL.ts/"
+  },
+  {
+    "languageTag": "fi-FI",
+    "importName": "fiFI",
+    "localeName": "Finnish",
+    "missingKeysNb": 0,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/fiFI.ts/"
+  },
+  {
+    "languageTag": "fr-FR",
+    "importName": "frFR",
+    "localeName": "French",
+    "missingKeysNb": 6,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/frFR.ts/"
+  },
+  {
+    "languageTag": "de-DE",
+    "importName": "deDE",
+    "localeName": "German",
+    "missingKeysNb": 0,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/deDE.ts/"
+  },
+  {
+    "languageTag": "el-GR",
+    "importName": "elGR",
+    "localeName": "Greek",
+    "missingKeysNb": 36,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/elGR.ts/"
+  },
+  {
+    "languageTag": "he-IL",
+    "importName": "heIL",
+    "localeName": "Hebrew",
+    "missingKeysNb": 7,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/heIL.ts/"
+  },
+  {
+    "languageTag": "hu-HU",
+    "importName": "huHU",
+    "localeName": "Hungarian",
+    "missingKeysNb": 12,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/huHU.ts/"
+  },
+  {
+    "languageTag": "it-IT",
+    "importName": "itIT",
+    "localeName": "Italian",
+    "missingKeysNb": 6,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/itIT.ts/"
+  },
+  {
+    "languageTag": "ja-JP",
+    "importName": "jaJP",
+    "localeName": "Japanese",
+    "missingKeysNb": 12,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/jaJP.ts/"
+  },
+  {
+    "languageTag": "ko-KR",
+    "importName": "koKR",
+    "localeName": "Korean",
+    "missingKeysNb": 0,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/koKR.ts/"
+  },
+  {
+    "languageTag": "nb-NO",
+    "importName": "nbNO",
+    "localeName": "Norwegian (bokmål)",
+    "missingKeysNb": 7,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/nbNO.ts/"
+  },
+  {
+    "languageTag": "fa-IR",
+    "importName": "faIR",
+    "localeName": "Persian",
+    "missingKeysNb": 0,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/faIR.ts/"
+  },
+  {
+    "languageTag": "pl-PL",
+    "importName": "plPL",
+    "localeName": "Polish",
+    "missingKeysNb": 7,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/plPL.ts/"
+  },
+  {
+    "languageTag": "pt-BR",
+    "importName": "ptBR",
+    "localeName": "Portuguese (Brazil)",
+    "missingKeysNb": 6,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/ptBR.ts/"
+  },
+  {
+    "languageTag": "ro-RO",
+    "importName": "roRO",
+    "localeName": "Romanian",
+    "missingKeysNb": 6,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/roRO.ts/"
+  },
+  {
+    "languageTag": "ru-RU",
+    "importName": "ruRU",
+    "localeName": "Russian",
+    "missingKeysNb": 13,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/ruRU.ts/"
+  },
+  {
+    "languageTag": "sk-SK",
+    "importName": "skSK",
+    "localeName": "Slovak",
+    "missingKeysNb": 6,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/skSK.ts/"
+  },
+  {
+    "languageTag": "es-ES",
+    "importName": "esES",
+    "localeName": "Spanish",
+    "missingKeysNb": 37,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/esES.ts/"
+  },
+  {
+    "languageTag": "sv-SE",
+    "importName": "svSE",
+    "localeName": "Swedish",
+    "missingKeysNb": 7,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/svSE.ts/"
+  },
+  {
+    "languageTag": "tr-TR",
+    "importName": "trTR",
+    "localeName": "Turkish",
+    "missingKeysNb": 0,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/trTR.ts/"
+  },
+  {
+    "languageTag": "uk-UA",
+    "importName": "ukUA",
+    "localeName": "Ukrainian",
+    "missingKeysNb": 23,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/ukUA.ts/"
+  },
+  {
+    "languageTag": "vi-VN",
+    "importName": "viVN",
+    "localeName": "Vietnamese",
+    "missingKeysNb": 23,
+    "totalKeysNb": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/64bb323498757bb52e4bd7042962307fc31703cf/packages/grid/x-data-grid/src/locales/viVN.ts/"
   }
 ]
