@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { isDeepEqual } from '@mui/x-data-grid/internals';
 import {
   useGridLogger,
   useGridApiEventHandler,
@@ -17,6 +18,20 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
+enum Direction {
+  UP,
+  DOWN,
+}
+interface ScrollStateProps {
+  prevTargetId: GridRowId | null;
+  direction: Direction | null;
+}
+
+let prevPostion: { x: number; y: number } | null = null;
+let previousScrollState: ScrollStateProps = {
+  prevTargetId: null,
+  direction: null,
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -103,9 +118,25 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      if (params.id !== dragRowId) {
+      const diffrence = prevPostion && prevPostion.y - event.clientY;
+
+      if (params.id !== dragRowId && diffrence) {
         const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
-        apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+
+        let direction = previousScrollState.direction;
+        direction = diffrence > 0 ? Direction.DOWN : Direction.UP;
+        const currentScrollState: ScrollStateProps = {
+          direction,
+          prevTargetId: params.id,
+        };
+
+        if (Math.abs(diffrence) > 5 && !isDeepEqual(currentScrollState, previousScrollState)) {
+          apiRef.current.setRowIndex(dragRowId, targetRowIndex);
+          previousScrollState = currentScrollState;
+        }
+      }
+      if (!diffrence || Math.abs(diffrence) > 5) {
+        prevPostion = { x: event.clientX, y: event.clientY };
       }
     },
     [apiRef, logger, dragRowId],
@@ -140,7 +171,7 @@ export const useGridRowReorder = (
           targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
           oldIndex: originRowIndex.current!,
         };
-
+        previousScrollState.direction = null;
         apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
       }
 
