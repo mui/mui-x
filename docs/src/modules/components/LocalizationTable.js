@@ -2,8 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { alpha, styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
@@ -11,6 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Link from 'docs/src/modules/components/Link';
+import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
 const Root = styled('div')(({ theme }) => ({
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
@@ -72,27 +72,17 @@ ProgressBar.propTypes = {
 function LocalisationTable(props) {
   const { data } = props;
   return (
-    <Box
-      sx={(theme) => ({
+    <MarkdownElement
+      sx={{
         width: '100%',
         overflow: 'auto',
-        // Taken from MarkdownElement
-        ...theme.typography.caption,
-        color: theme.palette.text.primary,
-        '& code': {
-          ...theme.typography.caption,
-          fontFamily: theme.typography.fontFamilyCode,
-          fontWeight: 400,
-          WebkitFontSmoothing: 'subpixel-antialiased',
-          display: 'inline-block',
-          padding: '0 5px',
-          color: `var(--muidocs-palette-text-primary, ${theme.palette.text.primary})`,
-          backgroundColor: alpha(theme.palette.primary.light, 0.15),
-          borderRadius: 5,
-          fontSize: theme.typography.pxToRem(13),
-          direction: 'ltr /*! @noflip */',
+        '& td.progress': {
+          padding: 0,
         },
-      })}
+        '& p': {
+          margin: 0,
+        },
+      }}
     >
       <Table size="small">
         <TableHead>
@@ -119,7 +109,7 @@ function LocalisationTable(props) {
                     <code>{importName}</code>
                   </Typography>
                 </TableCell>
-                <TableCell>
+                <TableCell className="progress">
                   <ProgressBar numerator={totalKeysNb - missingKeysNb} denumerator={totalKeysNb} />
                 </TableCell>
                 <TableCell>
@@ -132,7 +122,7 @@ function LocalisationTable(props) {
           )}
         </TableBody>
       </Table>
-    </Box>
+    </MarkdownElement>
   );
 }
 
