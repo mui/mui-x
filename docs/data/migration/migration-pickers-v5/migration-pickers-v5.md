@@ -304,3 +304,64 @@ Component name changes are also reflected in `themeAugmentation`:
    },
  });
 ```
+
+### Replace `toolbar` props by slot
+
+- The `ToolbarComponent` has been replaced by a `Toolbar` component slot. You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props):
+
+  ```diff
+  // Same on all other pickers
+  <DatePicker
+  -  ToolbarComponent: MyToolbar,
+  +  components={{ Toolbar: MyToolbar }}
+  />
+  ```
+
+- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` component props slot:
+
+  ```diff
+  // Same on all other pickers
+  <DatePicker
+  -  toolbarPlaceholder="__"
+  -  toolbarFormat="DD / MM / YYYY"
+  +  componentsProps={{
+  +    toolbar: {
+  +      toolbarPlaceholder: "__",
+  +      toolbarFormat: "DD / MM / YYYY",
+  +    }
+  +  }}
+  />
+  ```
+
+- The `toolbarTitle` prop has been moved to the localization object:
+
+  ```diff
+  // Same on all other pickers
+  <DatePicker
+  -  toolbarTitle="Title"
+  +  localeText={{ toolbarTitle: "Title" }}
+  />
+  ```
+
+- The toolbar related translation keys have been renamed to better fit their usage:
+
+  ```diff
+  // Same on all other pickers
+  <DatePicker
+    localeText={{
+  -    datePickerDefaultToolbarTitle: 'Date Picker',
+  +    datePickerToolbarTitle: 'Date Picker',
+
+  -    timePickerDefaultToolbarTitle: 'Time Picker',
+  +    timePickerToolbarTitle: 'Time Picker',
+
+  -    dateTimePickerDefaultToolbarTitle: 'Date Time Picker',
+  +    dateTimePickerToolbarTitle: 'Date Time Picker',
+
+  -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
+  +    dateRangePickerToolbarTitle: 'Date Range Picker',
+    }}
+  />
+  ```
+
+- The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`
