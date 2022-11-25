@@ -24,7 +24,7 @@ export interface AutoSizerProps
    * @param {AutoSizerSize} size The grid's size.
    * @returns {React.ReactNode} The children to render.
    */
-  children: (size: AutoSizerSize) => React.ReactNode;
+  children: React.ReactNode;
   /**
    * Default height to use for initial render; useful for SSR.
    * @default null
@@ -132,33 +132,10 @@ const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function 
     };
   }, [nonce, handleResize]);
 
-  // Outer div should not force width/height since that may prevent containers from shrinking.
-  // Inner component should overflow and use calculated width/height.
-  // See issue #68 for more information.
-  const outerStyle: any = { overflow: 'visible' };
-  const childParams: any = {};
-
-  if (!disableHeight) {
-    outerStyle.height = 0;
-    childParams.height = state.height;
-  }
-
-  if (!disableWidth) {
-    outerStyle.width = 0;
-    childParams.width = state.width;
-  }
-
   const handleRef = useForkRef(rootRef, ref);
   return (
-    <div
-      ref={handleRef}
-      style={{
-        ...outerStyle,
-        ...style,
-      }}
-      {...other}
-    >
-      {state.height === null && state.width === null ? null : children(childParams)}
+    <div ref={handleRef} style={{ flex: 1, overflow: 'auto', ...style }} {...other}>
+      {state.height === null && state.width === null ? null : children}
     </div>
   );
 });
@@ -173,7 +150,7 @@ GridAutoSizer.propTypes = {
    * @param {AutoSizerSize} size The grid's size.
    * @returns {React.ReactNode} The children to render.
    */
-  children: PropTypes.func.isRequired,
+  children: PropTypes.node,
   /**
    * Default height to use for initial render; useful for SSR.
    * @default null
