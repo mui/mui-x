@@ -92,36 +92,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 
 ### Supported locales
 
-| Locale                  | BCP 47 language tag | Import name |
-| :---------------------- | :------------------ | :---------- |
-| Arabic (Sudan)          | ar-SD               | `arSD`      |
-| Bulgarian               | bg-BG               | `bgBG`      |
-| Czech                   | cs-CZ               | `csCZ`      |
-| Danish                  | da-DK               | `daDK`      |
-| Dutch                   | nl-NL               | `nlNL`      |
-| English (United States) | en-US               | `enUS`      |
-| Finnish                 | fi-FI               | `fiFI`      |
-| French                  | fr-FR               | `frFR`      |
-| German                  | de-DE               | `deDE`      |
-| Greek                   | el-GR               | `elGR`      |
-| Hebrew                  | he-IL               | `heIL`      |
-| Hungarian               | hu-HU               | `huHU`      |
-| Italian                 | it-IT               | `itIT`      |
-| Japanese                | ja-JP               | `jaJP`      |
-| Korean                  | ko-KR               | `koKR`      |
-| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
-| Persian                 | fa-IR               | `faIR`      |
-| Polish                  | pl-PL               | `plPL`      |
-| Portuguese (Brazil)     | pt-BR               | `ptBR`      |
-| Romanian                | ro-RO               | `roRO`      |
-| Russian                 | ru-RU               | `ruRU`      |
-| Slovak                  | sk-SK               | `skSK`      |
-| Spanish (Spain)         | es-ES               | `esES`      |
-| Swedish                 | sv-SE               | `svSE`      |
-| Turkish                 | tr-TR               | `trTR`      |
-| Ukraine                 | uk-UA               | `ukUA`      |
-| Simplified Chinese      | zh-CN               | `zhCN`      |
-| Traditional Chinese     | zh-TW               | `zhTW`      |
+{{"demo": "DataGridLocalisationTable.js", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 
