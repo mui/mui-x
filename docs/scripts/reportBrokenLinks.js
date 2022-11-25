@@ -10,7 +10,8 @@ function save(lines) {
   fse.writeFileSync(path.join(docsSpaceRoot, '.link-check-errors.txt'), fileContents);
 }
 
-const UNSUPPORTED_PATHS = ['/api/', '/careers/', '/store/'];
+const UNSUPPORTED_PATHS = ['/careers/', '/store/'];
+const UNSUPPORTED_ANCHORS_PATHS = ['/api/'];
 
 const buffer = [];
 
@@ -42,10 +43,17 @@ function getPageUrlFromLink(link) {
 const usedLinks = { ...usedLinksCore, ...usedLinksX };
 const availableLinks = { ...availableLinksCore, ...availableLinksX };
 
+const removeUnsuportedHash = (link) => {
+  const doNotSupportAnchors = UNSUPPORTED_ANCHORS_PATHS.some((unsupportedPath) =>
+      link.includes(unsupportedPath),
+    );
+    const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
+    return rep
+}
 write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
-  .filter((link) => !availableLinks[link])
+  .filter((link) => !availableLinks[removeUnsuportedHash(link)])
   // unstyled sections are added by scripts (can not be found in markdown)
   .filter((link) => !link.includes('#unstyled'))
   .filter((link) => UNSUPPORTED_PATHS.every((unsupportedPath) => !link.includes(unsupportedPath)))
@@ -65,4 +73,6 @@ Object.keys(usedLinks)
     );
     console.log('\n\n');
   });
+
+  console.log(Object.keys(availableLinks).filter(l => l.includes('api/button')))
 save(buffer);
