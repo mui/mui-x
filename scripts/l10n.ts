@@ -301,7 +301,6 @@ const generateDocReport = async (
 ) => {
   const workspaceRoot = path.resolve(__dirname, '../');
 
-  const lastCommitRef = await git('log -n 1 --pretty="format:%H"');
   packagesWithL10n.forEach(async ({ key: packageKey, documentationReportPath }) => {
     const documentationReport: DocumentationReportItem[] = [];
     Object.entries(missingTranslations).forEach(([importName, infoPerPackage]) => {
@@ -309,7 +308,7 @@ const generateDocReport = async (
       if (info == null) {
         return;
       }
-      const githubLink = `${SOURCE_CODE_REPO}/blob/${lastCommitRef}/${info.path}/`;
+      const githubLink = `${SOURCE_CODE_REPO}/blob/master/${info.path}/`;
 
       const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
         .slice(2)
