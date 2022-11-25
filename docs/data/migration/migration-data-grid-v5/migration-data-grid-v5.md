@@ -113,6 +113,12 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
     </details>
 
+### Filtering
+
+- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- The `GridFilterItem['operator']` is now required.
+
 ### Other exports
 
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
