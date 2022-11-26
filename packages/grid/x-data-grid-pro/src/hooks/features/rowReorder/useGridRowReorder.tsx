@@ -118,26 +118,28 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      const diffrence = prevPostion && prevPostion.y - event.clientY;
+      const diffrence = prevPostion ? prevPostion.y - event.clientY : event.clientY;
 
-      if (params.id !== dragRowId && diffrence) {
+      if (params.id !== dragRowId) {
         const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
 
         let direction = previousScrollState.direction;
         direction = diffrence > 0 ? Direction.DOWN : Direction.UP;
+
         const currentScrollState: ScrollStateProps = {
           direction,
           prevTargetId: params.id,
         };
 
-        if (Math.abs(diffrence) > 5 && !isDeepEqual(currentScrollState, previousScrollState)) {
+        if (
+          previousScrollState.direction === null ||
+          (Math.abs(diffrence) >= 1 && !isDeepEqual(currentScrollState, previousScrollState))
+        ) {
           apiRef.current.setRowIndex(dragRowId, targetRowIndex);
           previousScrollState = currentScrollState;
         }
       }
-      if (!diffrence || Math.abs(diffrence) > 5) {
-        prevPostion = { x: event.clientX, y: event.clientY };
-      }
+      prevPostion = { x: event.clientX, y: event.clientY };
     },
     [apiRef, logger, dragRowId],
   );
@@ -158,6 +160,7 @@ export const useGridRowReorder = (
 
       clearTimeout(removeDnDStylesTimeout.current);
       dragRowNode.current = null;
+      previousScrollState.direction = null;
 
       // Check if the row was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
@@ -171,7 +174,7 @@ export const useGridRowReorder = (
           targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
           oldIndex: originRowIndex.current!,
         };
-        previousScrollState.direction = null;
+
         apiRef.current.publishEvent('rowOrderChange', rowOrderChangeParams);
       }
 
