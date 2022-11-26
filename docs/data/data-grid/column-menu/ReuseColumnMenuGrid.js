@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconFilter from '@mui/icons-material/FilterAlt';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import { DataGrid, GridColumnMenuDefault } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -18,6 +19,19 @@ CustomFilterItem.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
+function CustomUserItem(props) {
+  const { myCustomHandler, myCustomValue } = props;
+  return (
+    <Button
+      sx={{ m: 1 }}
+      onClick={myCustomHandler}
+      startIcon={<SettingsApplicationsIcon />}
+    >
+      {myCustomValue}
+    </Button>
+  );
+}
+
 function CustomColumnMenu(props) {
   return (
     <GridColumnMenuDefault
@@ -27,16 +41,26 @@ function CustomColumnMenu(props) {
         ColumnMenuFilterItem: CustomFilterItem,
         // Hide `ColumnMenuColumnsItem`
         ColumnMenuColumnsItem: null,
+        // Add new item
+        ColumnMenuUserItem: CustomUserItem,
       }}
       componentsProps={{
         // Swap positions of filter and sort items
-        ColumnMenuFilterItem: {
+        columnMenuFilterItem: {
           displayOrder: 0, // Previously `10`
         },
-        ColumnMenuSortItem: {
+        columnMenuSortItem: {
           displayOrder: 10, // Previously `0`
         },
+        columnMenuUserItem: {
+          // set `displayOrder` for new item
+          displayOrder: 15,
+          // pass additional props
+          myCustomValue: 'Do custom action',
+          myCustomHandler: () => alert('Custom handler fired'),
+        },
       }}
+      initialItems={['ColumnMenuUserItem']}
     />
   );
 }

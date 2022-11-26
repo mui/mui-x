@@ -17,10 +17,10 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS = {
 };
 
 export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS = {
-  ColumnMenuSortItem: { displayOrder: 0 },
-  ColumnMenuFilterItem: { displayOrder: 10 },
-  ColumnMenuHideItem: { displayOrder: 20 },
-  ColumnMenuColumnsItem: { displayOrder: 30 },
+  columnMenuSortItem: { displayOrder: 0 },
+  columnMenuFilterItem: { displayOrder: 10 },
+  columnMenuHideItem: { displayOrder: 20 },
+  columnMenuColumnsItem: { displayOrder: 30 },
 };
 
 const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
@@ -45,8 +45,13 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuPr
 
     return (
       <GridColumnMenuSimpleContainer ref={ref} {...other}>
-        {orderedComponents.map((Component, index) => (
-          <Component key={index} onClick={props.hideMenu} column={props.currentColumn} />
+        {orderedComponents.map(([Component, extraProps], index) => (
+          <Component
+            key={index}
+            onClick={props.hideMenu}
+            column={props.currentColumn}
+            {...extraProps}
+          />
         ))}
       </GridColumnMenuSimpleContainer>
     );
@@ -59,11 +64,13 @@ GridColumnMenuSimple.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * `components` could be used to override default column menu items
+   * `components` could be used to add new and (or) override default column menu items
+   * If you register a nee component you must pass it's `displayOrder` in `componentsProps`
+   * or it will be placed in the end of the list
    */
   components: PropTypes.object,
   /**
-   * Could be used to override props specific to a column menu component
+   * Could be used to pass new props or override props specific to a column menu component
    * e.g. `displayOrder`
    */
   componentsProps: PropTypes.object,
@@ -80,6 +87,11 @@ GridColumnMenuSimple.propTypes = {
   defaultComponentsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
+  /**
+   * To initialize column menu with some custom components use `initialItems`
+   * Use custom components added with `components` prop here
+   */
+  initialItems: PropTypes.arrayOf(PropTypes.string),
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
 } as any;

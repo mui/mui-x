@@ -22,43 +22,67 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customize column menu
 
-You can customize the column menu either by passing `components` and `componentsProps` to the column menu component or by using custom component using the `ColumnMenu` slot of the data grid component.
+You can customize the column menu either by using `components`, `componentsProps` and `initialItems` supported by column menu component or by using custom component using the `ColumnMenu` slot of the data grid component.
 
-### Override, hide and reorder items
+### Add, override, hide and reorder items
 
-Column menu component accept `components` and `componentsProps` using which you can:
+Column menu component accept `components`, `componentsProps` and `initialItems` using which you can:
 
+- Add new items
 - Override default items
 - Hide default items
 - Reorder items
 
-**components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components.
-
-```tsx
-<GridColumnMenuDefault
-  {...props}
-  components={{
-    // ovverride default component for `Filter` item
-    ColumnMenuFilterItem: SomeCustomComponent,
-  }}
-/>
-```
+**components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
 
 Default components supported by community package are `ColumnMenuSortItem`, `ColumnMenuFilterItem`, `ColumnMenuHideItem` and `ColumnMenuColumnsItem`. Pro package adds `ColumnMenuPinningItem` and Premium package adds `ColumnMenuAggregationItem` and `ColumnMenuGroupingItem`.
 
-**componentsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `componentsProps`.
+**componentsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `componentsProps`. You can also use this to pass extra props to column menu components.
+
+`componentsProps` for a component uses the same key but in _camelCase_. E.g for `ColumnMenuFilterItem`, the componentsProps key will be `columnMenuFilterItem`.
+
+**initialItems**: Visibility of default items is controlled using respective feature hooks, for cutom items though, use `initialItems` to show the items added by passing to `components`. All the new items will be placed in the end (default `displayOrder: 100`), unless customized by `displayOrder`.
 
 ```tsx
-<GridColumnMenuDefault
-  {...props}
-  componentsProps={{
-    // change order of `Filter` item
-    ColumnMenuFilterItem: { displayOrder: 25 },
-  }}
-/>
+function CustomColumnMenu(props: GridColumnMenuProps) {
+  return (
+    <GridColumnMenuDefault
+      {...props}
+      components={{
+        // Override slot for `ColumnMenuFilterItem`
+        ColumnMenuFilterItem: CustomFilterItem,
+        // Hide `ColumnMenuColumnsItem`
+        ColumnMenuColumnsItem: null,
+        // Add new item
+        ColumnMenuUserItem: CustomUserItem,
+      }}
+      componentsProps={{
+        // Swap positions of filter and sort items
+        columnMenuFilterItem: {
+          displayOrder: 0, // Previously `10`
+        },
+        columnMenuSortItem: {
+          displayOrder: 10, // Previously `0`
+        },
+        columnMenuUserItem: {
+          // set `displayOrder` for new item
+          displayOrder: 15,
+          // pass additional props
+          myCustomValue: 'Do custom action',
+          myCustomHandler: () => alert('Custom handler fired'),
+        },
+      }}
+      initialItems={['ColumnMenuUserItem']}
+    />
+  );
+}
 ```
 
-Here is the default order for each of the items, there are some gaps to be able to place items in between:
+{{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
+
+#### Display orders for default items:
+
+As a reference, here is the order for each of the default items, there are some gaps to be able to place items in between:
 
 | **Component**             | **Package** | **Display order (default design)** | **Display order (simple design)** |
 | ------------------------- | ----------- | ---------------------------------: | --------------------------------: |
@@ -69,10 +93,6 @@ Here is the default order for each of the items, there are some gaps to be able 
 | ColumnMenuPinningItem     | Pro         |                                  5 |                                35 |
 | ColumnMenuAggregationItem | Premium     |                                 17 |                                37 |
 | ColumnMenuGroupingItem    | Premium     |                                 13 |                                33 |
-
-In the following demo you can see some items being overriden or reordered.
-
-{{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
 
 :::info
 **Tip:** To hide/remove a default item, you can simply pass the component in `components` as `null`

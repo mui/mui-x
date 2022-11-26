@@ -15,7 +15,7 @@ export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PRO = {
 
 export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PRO = {
   ...GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
-  ColumnMenuPinningItem: { displayOrder: 5 },
+  columnMenuPinningItem: { displayOrder: 5 },
 };
 
 const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(

@@ -26,7 +26,7 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PRO = {
 
 export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO = {
   ...GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
-  ColumnMenuPinningItem: {
+  columnMenuPinningItem: {
     displayOrder: 35,
   },
 };
