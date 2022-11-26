@@ -80,7 +80,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 
 {{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
 
-#### Display orders for default items:
+#### Display orders for default items
 
 As a reference, here is the order for each of the default items, there are some gaps to be able to place items in between:
 
