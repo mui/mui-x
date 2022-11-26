@@ -100,7 +100,7 @@ As a reference, here is the order for each of the default items, there are some 
 
 ### Custom component
 
-To customize even more like adding custom items you can opt not to use the column menu component exposed by us and pass a totally new column menu component using `ColumnMenu` grid slot.
+To customize even more like adding custom items you can opt not to use the default column menu component and pass a totally new column menu component using `ColumnMenu` grid slot.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 
