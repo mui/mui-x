@@ -162,8 +162,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Група',
-  groupColumn: name => `Групувати за ${name}`,
-  unGroupColumn: name => `Відмінити групування за ${name}`,
+  groupColumn: (name) => `Групувати за ${name}`,
+  unGroupColumn: (name) => `Відмінити групування за ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Перемикач панелі деталей',
