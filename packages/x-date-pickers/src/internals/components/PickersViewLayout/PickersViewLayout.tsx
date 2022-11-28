@@ -15,11 +15,15 @@ export const PickersViewLayoutRoot = styled('div', {
   name: 'MuiPickersViewLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
-})({
+})(({ theme }) => ({
   display: 'grid',
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
-});
+  [`&.${pickersViewLayoutClasses.landscape} .${pickersViewLayoutClasses.toolbar}`]: {
+    gridColumn: theme.direction === 'rtl' ? '3' : '1',
+    gridRow: '1 / 3',
+  },
+}));
 
 export const PickersViewLayoutContent = styled('div', {
   name: 'MuiPickersViewLayout',
@@ -36,14 +40,10 @@ export const PickersViewLayoutToolbar = styled('div', {
   name: 'MuiPickersViewLayout',
   slot: 'Toolbar',
   overridesResolver: (props, styles) => styles.toolbar,
-})(({ theme }) => ({
+})({
   gridColumn: '1 / 4',
   gridRow: '1',
-  [`&.${pickersViewLayoutClasses['toolbar--landscape']}`]: {
-    gridColumn: theme.direction === 'rtl' ? '3' : '1',
-    gridRow: '1 / 3',
-  },
-}));
+});
 
 export const PickersViewLayoutActionBar = styled('div', {
   name: 'MuiPickersViewLayout',
@@ -57,10 +57,10 @@ export const PickersViewLayoutActionBar = styled('div', {
 const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
-    root: ['root'],
-    content: ['content', isLandscape && 'content--landscape'],
-    toolbar: ['toolbar', isLandscape && 'toolbar--landscape'],
-    actionbar: ['actionbar', isLandscape && 'actionbar--landscape'],
+    root: ['root', isLandscape && 'landscape'],
+    content: ['content'],
+    toolbar: ['toolbar'],
+    actionbar: ['actionbar'],
   };
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
