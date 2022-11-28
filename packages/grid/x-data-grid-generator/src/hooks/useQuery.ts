@@ -63,18 +63,18 @@ const getFilteredRows = (
     return rows;
   }
 
-  const valueGetters = filterModel.items.map(({ columnField }) =>
+  const valueGetters = filterModel.items.map(({ field }) =>
     simplifiedValueGetter(
-      columnField,
-      columnsWithDefaultColDef.find(({ field }) => field === columnField) as any,
+      field,
+      columnsWithDefaultColDef.find((column) => column.field === field) as any,
     ),
   );
   const filterFunctions = filterModel.items.map((filterItem) => {
-    const { columnField, operatorValue } = filterItem;
-    const colDef = columnsWithDefaultColDef.find(({ field }) => field === columnField) as any;
+    const { field, operator } = filterItem;
+    const colDef = columnsWithDefaultColDef.find((column) => column.field === field) as any;
 
     const filterOperator: any = colDef.filterOperators.find(
-      ({ value }: GridFilterOperator) => operatorValue === value,
+      ({ value }: GridFilterOperator) => operator === value,
     );
 
     let parsedValue = filterItem.value;

@@ -92,7 +92,7 @@ describe('<DataGrid /> - Components', () => {
             {...baselineProps}
             hideFooter
             filterModel={{
-              items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }],
+              items: [{ field: 'brand', operator: 'contains', value: 'a' }],
             }}
             disableVirtualization
             componentsProps={{ columnHeaderFilterIconButton: { onClick } }}

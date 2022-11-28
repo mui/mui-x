@@ -77,20 +77,20 @@ export default function CustomFilterPanelContent() {
               items: [
                 {
                   id: 1,
-                  columnField: 'name',
-                  operatorValue: 'contains',
+                  field: 'name',
+                  operator: 'contains',
                   value: 'D',
                 },
                 {
                   id: 2,
-                  columnField: 'name',
-                  operatorValue: 'contains',
+                  field: 'name',
+                  operator: 'contains',
                   value: 'D',
                 },
                 {
                   id: 3,
-                  columnField: 'rating',
-                  operatorValue: '>',
+                  field: 'rating',
+                  operator: '>',
                   value: '0',
                 },
               ],
