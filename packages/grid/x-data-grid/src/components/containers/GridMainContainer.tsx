@@ -23,7 +23,7 @@ const GridMainContainerRoot = styled('div', {
   overridesResolver: (props, styles) => styles.main,
 })(() => ({
   position: 'relative',
-  flexGrow: 1,
+  flex: '1 1 0px',
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
