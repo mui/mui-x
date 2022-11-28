@@ -26,6 +26,17 @@ This is the first step towards moving to a [better implementation](https://githu
 The behavior on mobile mode is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
 
+### Drop direct `@date-io` adapters support
+
+In order to support new Date and Time pickers with [fields components](/x/react-date-pickers/fields/) we had to augment `@date-io` adapters.
+If you were using adapter from `@date-io`—you will need to update the import.
+If we do not have a specific augmented adapter you were using—there probably was a reason for it, but you can raise an issue expressing interest in it.
+
+```diff
+-import AdapterJalaali from '@date-io/jalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
+```
+
 ### Update the format of the `value` prop
 
 Previously, it was possible to provide any format that your date management library was able to parse.
