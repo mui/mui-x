@@ -45,11 +45,11 @@ const availableLinks = { ...availableLinksCore, ...availableLinksX };
 
 const removeUnsuportedHash = (link) => {
   const doNotSupportAnchors = UNSUPPORTED_ANCHORS_PATHS.some((unsupportedPath) =>
-      link.includes(unsupportedPath),
-    );
-    const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
-    return rep
-}
+    link.includes(unsupportedPath),
+  );
+  const rep = doNotSupportAnchors ? getPageUrlFromLink(link) : link;
+  return rep;
+};
 write('Broken links found by `yarn docs:link-check` that exist:\n');
 Object.keys(usedLinks)
   .filter((link) => link.startsWith('/'))
@@ -74,5 +74,5 @@ Object.keys(usedLinks)
     console.log('\n\n');
   });
 
-  console.log(Object.keys(availableLinks).filter(l => l.includes('api/button')))
+console.log(Object.keys(availableLinks).filter((l) => l.includes('api/button')));
 save(buffer);
