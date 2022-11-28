@@ -148,7 +148,7 @@ DateTimePickerTabs.propTypes = {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon: PropTypes.node,
+  dateIcon: PropTypes.node,
   /**
    * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`
