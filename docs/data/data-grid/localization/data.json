@@ -211,7 +211,7 @@
     "languageTag": "uk-UA",
     "importName": "ukUA",
     "localeName": "Ukrainian",
-    "missingKeysNb": 23,
+    "missingKeysNb": 5,
     "totalKeysNb": 93,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/ukUA.ts/"
   },

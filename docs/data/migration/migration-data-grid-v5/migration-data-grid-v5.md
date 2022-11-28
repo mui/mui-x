@@ -124,6 +124,12 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
     </details>
 
+### Filtering
+
+- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- The `GridFilterItem['operator']` is now required.
+
 ### Other exports
 
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
