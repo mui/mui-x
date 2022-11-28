@@ -2,14 +2,16 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
 import { DateRangePosition } from './DateRangeCalendar.types';
+import { DateRange } from '../internal/models';
 
 interface UseDragRangeParams<TDate> {
   disableDragEditing?: boolean;
   utils: MuiPickersAdapter<TDate>;
   setRangeDragDay: (value: TDate | null) => void;
   setIsDragging: (value: boolean) => void;
-  onDragStart: (position: DateRangePosition) => void;
+  onDatePositionChange: (position: DateRangePosition) => void;
   onDrop: (newDate: TDate) => void;
+  dateRange: DateRange<TDate>;
 }
 
 interface UseDragRangeEvents {
@@ -27,6 +29,7 @@ interface UseDragRangeEvents {
 interface UseDragRangeResponse<TDate> extends UseDragRangeEvents {
   isDragging: boolean;
   rangeDragDay: TDate | null;
+  draggingDatePosition: DateRangePosition | null;
 }
 
 const resolveDateFromTarget = <TDate>(target: EventTarget, utils: MuiPickersAdapter<TDate>) => {
@@ -81,9 +84,9 @@ const useDragRangeEvents = <TDate>({
   utils,
   setRangeDragDay,
   setIsDragging,
-  onDragStart,
+  onDatePositionChange,
   onDrop,
-}: Omit<UseDragRangeParams<TDate>, 'disableDragEditing'>): UseDragRangeEvents => {
+}: Omit<UseDragRangeParams<TDate>, 'disableDragEditing' | 'dateRange'>): UseDragRangeEvents => {
   const emptyDragImgRef = React.useRef<HTMLImageElement | null>(null);
   React.useEffect(() => {
     // Preload the image - required for Safari support: https://stackoverflow.com/a/40923520/3303436
@@ -103,8 +106,12 @@ const useDragRangeEvents = <TDate>({
       event.dataTransfer.effectAllowed = 'move';
       setIsDragging(true);
       const buttonDataset = (event.target as HTMLButtonElement).dataset;
-      event.dataTransfer.setData('draggingDate', buttonDataset.timestamp as string);
-      onDragStart(buttonDataset.position as DateRangePosition);
+      if (buttonDataset.timestamp) {
+        event.dataTransfer.setData('draggingDate', buttonDataset.timestamp);
+      }
+      if (buttonDataset.position) {
+        onDatePositionChange(buttonDataset.position as DateRangePosition);
+      }
     }
   });
   const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
@@ -118,7 +125,9 @@ const useDragRangeEvents = <TDate>({
       setIsDragging(true);
       const button = event.target as HTMLButtonElement;
       const buttonDataset = button.dataset;
-      onDragStart(buttonDataset.position as DateRangePosition);
+      if (buttonDataset.position) {
+        onDatePositionChange(buttonDataset.position as DateRangePosition);
+      }
     }
   });
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
@@ -210,8 +219,9 @@ const useDragRangeEvents = <TDate>({
 export const useDragRange = <TDate>({
   disableDragEditing,
   utils,
-  onDragStart,
+  onDatePositionChange,
   onDrop,
+  dateRange,
 }: Omit<
   UseDragRangeParams<TDate>,
   'setRangeDragDay' | 'setIsDragging'
@@ -224,16 +234,35 @@ export const useDragRange = <TDate>({
       setRangeDragDay(val);
     }
   });
+
+  const draggingDatePosition: DateRangePosition | null = React.useMemo(() => {
+    const [start, end] = dateRange;
+    if (rangeDragDay) {
+      if (start && utils.isBefore(rangeDragDay, start)) {
+        return 'start';
+      }
+      if (end && utils.isAfter(rangeDragDay, end)) {
+        return 'end';
+      }
+    }
+    return null;
+  }, [dateRange, rangeDragDay, utils]);
+
   const dragRangeEvents = useDragRangeEvents({
     utils,
-    onDragStart,
+    onDatePositionChange,
     onDrop,
     setIsDragging,
     setRangeDragDay: handleRangeDragDayChange,
   });
 
   return React.useMemo(
-    () => ({ isDragging, rangeDragDay, ...(!disableDragEditing ? dragRangeEvents : {}) }),
-    [isDragging, rangeDragDay, disableDragEditing, dragRangeEvents],
+    () => ({
+      isDragging,
+      rangeDragDay,
+      draggingDatePosition,
+      ...(!disableDragEditing ? dragRangeEvents : {}),
+    }),
+    [isDragging, rangeDragDay, draggingDatePosition, disableDragEditing, dragRangeEvents],
   );
 };

@@ -185,9 +185,80 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     state: 'currentDatePosition',
   });
 
+  const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
+    if (currentDatePosition !== position) {
+      setCurrentDatePosition(position);
+    }
+  });
+
+  const handleSelectedDayChange = useEventCallback(
+    (
+      newDate: TDate | null,
+      selectionState: PickerSelectionState | undefined,
+      allowRangeFlip: boolean = false,
+    ) => {
+      const { nextSelection, newRange } = calculateRangeChange({
+        newDate,
+        utils,
+        range: value,
+        currentlySelectingRangeEnd: currentDatePosition,
+        allowRangeFlip,
+      });
+
+      setCurrentDatePosition(nextSelection);
+      onCurrentDatePositionChange?.(nextSelection);
+
+      const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
+
+      setValue(newRange);
+      onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
+    },
+  );
+
+  const handleDrop = useEventCallback((newDate: TDate) => {
+    handleSelectedDayChange(newDate, undefined, true);
+  });
+
+  const shouldDisableDragEditing = disableDragEditing || disabled || readOnly;
+
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<DateRange<TDate>>(
+    () => [
+      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
+  const { isDragging, rangeDragDay, draggingDatePosition, ...dragEventHandlers } = useDragRange({
+    disableDragEditing: shouldDisableDragEditing,
+    onDrop: handleDrop,
+    onDatePositionChange: handleDatePositionChange,
+    utils,
+    dateRange: valueDayRange,
+  });
+
+  const draggingRange = React.useMemo<DateRange<TDate>>(() => {
+    if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
+      return [null, null];
+    }
+    const newRange = calculateRangeChange({
+      utils,
+      range: valueDayRange,
+      newDate: rangeDragDay,
+      currentlySelectingRangeEnd: currentDatePosition,
+      allowRangeFlip: true,
+    }).newRange;
+    return newRange[0] !== null && newRange[1] !== null
+      ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
+      : newRange;
+  }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
+
   const wrappedShouldDisableDate =
     shouldDisableDate &&
-    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentDatePosition));
+    ((dayToTest: TDate) =>
+      shouldDisableDate?.(dayToTest, draggingDatePosition || currentDatePosition));
 
   const {
     calendarState,
@@ -244,30 +315,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   }, [currentDatePosition, value]); // eslint-disable-line
 
-  const handleSelectedDayChange = useEventCallback(
-    (
-      newDate: TDate | null,
-      selectionState: PickerSelectionState | undefined,
-      allowRangeFlip: boolean = false,
-    ) => {
-      const { nextSelection, newRange } = calculateRangeChange({
-        newDate,
-        utils,
-        range: value,
-        currentlySelectingRangeEnd: currentDatePosition,
-        allowRangeFlip,
-      });
-
-      setCurrentDatePosition(nextSelection);
-      onCurrentDatePositionChange?.(nextSelection);
-
-      const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
-
-      setValue(newRange);
-      onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
-    },
-  );
-
   const selectNextMonth = React.useCallback(() => {
     changeMonth(utils.getNextMonth(calendarState.currentMonth));
   }, [changeMonth, calendarState.currentMonth, utils]);
@@ -312,16 +359,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [],
   );
 
-  // Range going for the start of the start day to the end of the end day.
-  // This makes sure that `isWithinRange` works with any time in the start and end day.
-  const valueDayRange = React.useMemo<DateRange<TDate>>(
-    () => [
-      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
-    ],
-    [value, utils],
-  );
-
   const previewingRange = calculateRangePreview({
     utils,
     range: valueDayRange,
@@ -336,41 +373,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       setRangePreviewDay(null);
     }
   };
-
-  const handleDragStart = useEventCallback((position: DateRangePosition) => {
-    if (position && currentDatePosition !== position) {
-      setCurrentDatePosition(position);
-    }
-  });
-
-  const handleDrop = useEventCallback((newDate: TDate) => {
-    handleSelectedDayChange(newDate, undefined, true);
-  });
-
-  const shouldDisableDragEditing = disableDragEditing || disabled || readOnly;
-
-  const { isDragging, rangeDragDay, ...dragEventHandlers } = useDragRange({
-    disableDragEditing: shouldDisableDragEditing,
-    onDrop: handleDrop,
-    onDragStart: handleDragStart,
-    utils,
-  });
-
-  const draggingRange = React.useMemo<DateRange<TDate>>(() => {
-    if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
-      return [null, null];
-    }
-    const newRange = calculateRangeChange({
-      utils,
-      range: valueDayRange,
-      newDate: rangeDragDay,
-      currentlySelectingRangeEnd: currentDatePosition,
-      allowRangeFlip: true,
-    }).newRange;
-    return newRange[0] !== null && newRange[1] !== null
-      ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
-      : newRange;
-  }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
 
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
