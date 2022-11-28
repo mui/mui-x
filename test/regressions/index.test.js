@@ -137,6 +137,7 @@ async function main() {
     });
 
     it('should position the headers matching the columns', async () => {
+      console.log({ baseUrl });
       const route = `${baseUrl}/docs-data-grid-virtualization/ColumnVirtualizationGrid`;
       const screenshotPath = path.resolve(
         screenshotDir,

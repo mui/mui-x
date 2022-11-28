@@ -92,7 +92,7 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 
 ### Supported locales
 
-{{"demo": "DataGridLocalisationTable.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "DataGridLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 
