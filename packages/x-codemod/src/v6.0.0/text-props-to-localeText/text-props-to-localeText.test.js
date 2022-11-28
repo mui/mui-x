@@ -8,66 +8,66 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('@mui/codemod', () => {
+describe.only('@mui/codemod', () => {
   describe('v5.0.0', () => {
-    describe('date-pickers-moved-to-locale', () => {
+    describe('text-props-to-localeText', () => {
       it('transforms expression props as needed', () => {
         const actual = transform(
           {
-            source: read('./date-pickers-moved-to-locale.test/actual-expression-values.js'),
+            source: read('./actual-expression-values.spec.js'),
             path: require.resolve(
-              './date-pickers-moved-to-locale.test/actual-expression-values.js',
+              './actual-expression-values.spec.js',
             ),
           },
           { jscodeshift },
           {},
         );
 
-        const expected = read('./date-pickers-moved-to-locale.test/expected-expression-values.js');
+        const expected = read('./expected-expression-values.spec.js');
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
 
       it('should be idempotent for expression', () => {
         const actual = transform(
           {
-            source: read('./date-pickers-moved-to-locale.test/expected-expression-values.js'),
+            source: read('./expected-expression-values.spec.js'),
             path: require.resolve(
-              './date-pickers-moved-to-locale.test/expected-expression-values.js',
+              './expected-expression-values.spec.js',
             ),
           },
           { jscodeshift },
           {},
         );
 
-        const expected = read('./date-pickers-moved-to-locale.test/expected-expression-values.js');
+        const expected = read('./expected-expression-values.spec.js');
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
 
       it('transforms string props as needed', () => {
         const actual = transform(
           {
-            source: read('./date-pickers-moved-to-locale.test/actual-string-values.js'),
-            path: require.resolve('./date-pickers-moved-to-locale.test/actual-string-values.js'),
+            source: read('./actual-string-values.spec.js'),
+            path: require.resolve('./actual-string-values.spec.js'),
           },
           { jscodeshift },
           {},
         );
 
-        const expected = read('./date-pickers-moved-to-locale.test/expected-string-values.js');
+        const expected = read('./expected-string-values.spec.js');
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
 
       it('should be idempotent for string', () => {
         const actual = transform(
           {
-            source: read('./date-pickers-moved-to-locale.test/expected-string-values.js'),
-            path: require.resolve('./date-pickers-moved-to-locale.test/expected-string-values.js'),
+            source: read('./expected-string-values.spec.js'),
+            path: require.resolve('./expected-string-values.spec.js'),
           },
           { jscodeshift },
           {},
         );
 
-        const expected = read('./date-pickers-moved-to-locale.test/expected-string-values.js');
+        const expected = read('./expected-string-values.spec.js');
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
     });
