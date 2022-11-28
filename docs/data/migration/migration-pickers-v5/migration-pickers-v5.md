@@ -19,6 +19,13 @@ Since v6 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v5 to v6.
 
+### Drop `clock` in desktop mode
+
+We have dropped the clock picker behavior in desktop mode for `DateTimePicker` and `TimePicker` components.
+This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
+The behavior on mobile mode is still the same.
+If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
+
 ### Update the format of the `value` prop
 
 Previously, it was possible to provide any format that your date management library was able to parse.
