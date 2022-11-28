@@ -15,9 +15,7 @@ describe.only('@mui/codemod', () => {
         const actual = transform(
           {
             source: read('./actual-expression-values.spec.js'),
-            path: require.resolve(
-              './actual-expression-values.spec.js',
-            ),
+            path: require.resolve('./actual-expression-values.spec.js'),
           },
           { jscodeshift },
           {},
@@ -31,9 +29,7 @@ describe.only('@mui/codemod', () => {
         const actual = transform(
           {
             source: read('./expected-expression-values.spec.js'),
-            path: require.resolve(
-              './expected-expression-values.spec.js',
-            ),
+            path: require.resolve('./expected-expression-values.spec.js'),
           },
           { jscodeshift },
           {},
