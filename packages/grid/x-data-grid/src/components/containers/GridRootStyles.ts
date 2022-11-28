@@ -93,6 +93,7 @@ export const GridRootStyles = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     overflowAnchor: 'none', // Keep the same scrolling position
+    overflow: 'auto',
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
