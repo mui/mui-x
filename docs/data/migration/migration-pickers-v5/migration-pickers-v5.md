@@ -394,3 +394,17 @@ Component name changes are also reflected in `themeAugmentation`:
   +  onViewChange={() => {}}
    />
   ```
+
+  ```diff
+   const CustomTabsComponent = props => (
+     <div>
+  -    <button onClick={() => props.onChange('day')}>Show day view</button>
+  +    <button onClick={() => props.onViewChange('day')}>Show day view</button>
+     </div>
+   )
+   <DateTimePicker
+     components={{
+       tabs: CustomTabsComponent
+     }}
+   />
+  ```
