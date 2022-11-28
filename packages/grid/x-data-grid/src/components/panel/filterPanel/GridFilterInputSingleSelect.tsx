@@ -49,7 +49,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
 
-  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const currentColumn = item.field ? apiRef.current.getColumn(item.field) : null;
 
   const currentValueOptions = React.useMemo(() => {
     if (currentColumn === null) {
@@ -114,7 +114,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       {...rootProps.componentsProps?.baseTextField}
     >
       {renderSingleSelectOptions(
-        apiRef.current.getColumn(item.columnField),
+        apiRef.current.getColumn(item.field),
         apiRef.current,
         isSelectNative ? 'option' : MenuItem,
       )}
@@ -136,9 +136,9 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;
