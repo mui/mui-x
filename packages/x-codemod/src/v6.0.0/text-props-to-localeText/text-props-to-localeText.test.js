@@ -8,7 +8,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe.only('@mui/codemod', () => {
+describe('@mui/codemod', () => {
   describe('v5.0.0', () => {
     describe('text-props-to-localeText', () => {
       it('transforms expression props as needed', () => {
