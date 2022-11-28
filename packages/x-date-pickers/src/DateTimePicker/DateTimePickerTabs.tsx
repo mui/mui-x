@@ -45,7 +45,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon?: React.ReactNode;
+  dateIcon?: React.ReactNode;
   /**
    * Time tab icon.
    * @default Time
@@ -93,7 +93,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
-    dateRangeIcon = <DateRange />,
+    dateIcon = <DateRange />,
     onViewChange,
     timeIcon = <Time />,
     view,
@@ -124,7 +124,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
       <Tab
         value="date"
         aria-label={localeText.dateTableLabel}
-        icon={<React.Fragment>{dateRangeIcon}</React.Fragment>}
+        icon={<React.Fragment>{dateIcon}</React.Fragment>}
       />
       <Tab
         value="time"
