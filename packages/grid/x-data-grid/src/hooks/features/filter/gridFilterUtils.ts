@@ -68,7 +68,7 @@ const filterModelMissingItemIdWarning = buildWarning(
 );
 
 const filterModelMissingItemOperatorWarning = buildWarning(
-  'MUI: The `operator` field is required on `filterModel.items`, one or more of your filtering item have no `operator` provided.',
+  'MUI: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
   'error',
 );
 
