@@ -1,6 +1,6 @@
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 
-export interface BaseTabsProps<TView extends CalendarOrClockPickerView> {
+export interface BaseTabsProps<TView extends DateOrTimeView> {
   /**
    * Currently visible picker view.
    */

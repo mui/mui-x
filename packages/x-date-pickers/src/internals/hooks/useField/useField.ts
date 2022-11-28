@@ -61,6 +61,7 @@ export const useField = <
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
+    valueManager,
     validator,
   } = params;
 
@@ -98,6 +99,10 @@ export const useField = <
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (input !== inputRef.current) {
+        return;
+      }
+
+      if (selectedSectionIndexes != null) {
         return;
       }
 
@@ -460,7 +465,8 @@ export const useField = <
   const validationError = useValidation(
     { ...internalProps, value: state.value },
     validator,
-    fieldValueManager.isSameError,
+    valueManager.isSameError,
+    valueManager.defaultErrorState,
   );
 
   const inputError = React.useMemo(

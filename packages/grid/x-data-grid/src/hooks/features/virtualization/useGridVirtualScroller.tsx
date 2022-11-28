@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useForkRef } from '@mui/material/utils';
-import { useGridApiContext } from '../../utils/useGridApiContext';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
@@ -84,7 +84,7 @@ interface UseGridVirtualScrollerProps {
 }
 
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
@@ -116,7 +116,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const getNearestIndexToRender = React.useCallback(
     (offset: number) => {
-      const lastMeasuredIndexRelativeToAllRows = apiRef.current.unstable_getLastMeasuredRowIndex();
+      const lastMeasuredIndexRelativeToAllRows = apiRef.current.getLastMeasuredRowIndex();
       let allRowsMeasured = lastMeasuredIndexRelativeToAllRows === Infinity;
       if (currentPage.range?.lastRowIndex && !allRowsMeasured) {
         // Check if all rows in this page are already measured
@@ -178,7 +178,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = firstRowToRender; i < lastRowToRender && !hasRowWithAutoHeight; i += 1) {
       const row = currentPage.rows[i];
-      hasRowWithAutoHeight = apiRef.current.unstable_rowHasAutoHeight(row.id);
+      hasRowWithAutoHeight = apiRef.current.rowHasAutoHeight(row.id);
     }
 
     if (!hasRowWithAutoHeight) {
@@ -308,7 +308,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
-    apiRef.current.publishEvent('rowsScroll', params);
+    apiRef.current.publishEvent('scrollPositionChange', params);
   }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
 
   const handleScroll = (event: React.UIEvent) => {
@@ -347,9 +347,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       bottomColumnsScrolledSincePreviousRender >= rootProps.columnThreshold ||
       prevTotalWidth.current !== columnsTotalWidth;
 
-    // TODO v6: rename event to a wider name, it's not only fired for row scrolling
     apiRef.current.publishEvent(
-      'rowsScroll',
+      'scrollPositionChange',
       {
         top: scrollTop,
         left: scrollLeft,
@@ -415,7 +414,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     if (params.rows) {
       params.rows.forEach((row) => {
         renderedRows.push(row);
-        apiRef.current.unstable_calculateColSpan({
+        apiRef.current.calculateColSpan({
           rowId: row.id,
           minFirstColumn,
           maxLastColumn,
@@ -430,7 +429,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
         renderedRows.push(row);
-        apiRef.current.unstable_calculateColSpan({
+        apiRef.current.calculateColSpan({
           rowId: row.id,
           minFirstColumn,
           maxLastColumn,
@@ -462,7 +461,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
       const lastVisibleRowIndex = firstRowToRender + i === currentPage.rows.length - 1;
-      const baseRowHeight = !apiRef.current.unstable_rowHasAutoHeight(id)
+      const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
 
@@ -542,7 +541,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return prevRenderContext.current!;
   }, []);
 
-  apiRef.current.unstable_getRenderContext = getRenderContext;
+  apiRef.current.getRenderContext = getRenderContext;
 
   return {
     renderContext,

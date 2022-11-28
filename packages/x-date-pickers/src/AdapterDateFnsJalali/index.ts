@@ -1,5 +1,7 @@
 import BaseAdapterDateFnsJalali from '@date-io/date-fns-jalali';
 import defaultLocale from 'date-fns-jalali/locale/fa-IR';
+import getWeek from 'date-fns-jalali/getWeek';
+// @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
 
@@ -16,12 +18,12 @@ const formatTokenMap: MuiFormatTokenMap = {
   LLLL: { sectionName: 'month', contentType: 'letter' },
   d: 'day',
   dd: 'day',
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  mm: 'minute',
-  ss: 'second',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  mm: 'minutes',
+  ss: 'seconds',
   a: 'meridiem',
   aa: 'meridiem',
   aaa: 'meridiem',
@@ -55,5 +57,9 @@ export class AdapterDateFnsJalali
     return this.expandFormat(format)
       .replace(/(aaa|aa|a)/g, '(a|p)m')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: Date) => {
+    return getWeek(date, { locale: this.locale });
   };
 }

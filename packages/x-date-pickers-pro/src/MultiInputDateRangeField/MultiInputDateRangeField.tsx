@@ -55,6 +55,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     maxDate,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
   } = themeProps;
 
@@ -107,6 +109,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       maxDate,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
     },
     startInputProps,
     endInputProps,
@@ -157,25 +161,40 @@ MultiInputDateRangeField.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Callback fired when the value changes.
+   * @template TValue, TError
+   * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
+   */
   onError: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
@@ -198,7 +217,7 @@ MultiInputDateRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -213,6 +232,10 @@ MultiInputDateRangeField.propTypes = {
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 

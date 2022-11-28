@@ -13,7 +13,7 @@ const GridFooterCellRoot = styled(Box, {
   overridesResolver: (_, styles) => styles.footerCell,
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
-  color: theme.palette.primary.dark,
+  color: (theme.vars || theme).palette.primary.dark,
 }));
 
 interface GridFooterCellProps extends GridRenderCellParams {
@@ -41,7 +41,6 @@ function GridFooterCell(props: GridFooterCellProps) {
     cellMode,
     row,
     api,
-    getValue,
     id,
     value,
     rowNode,

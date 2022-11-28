@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { debounce, capitalize } from '@mui/material/utils';
+import { unstable_debounce as debounce, unstable_capitalize as capitalize } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowsMetaApi } from '../../../models/api/gridRowsMetaApi';
+import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -11,9 +11,9 @@ import {
   gridDensityRowHeightSelector,
   gridDensityFactorSelector,
 } from '../density/densitySelector';
-import { gridFilterStateSelector } from '../filter/gridFilterSelector';
+import { gridFilterModelSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { gridSortingStateSelector } from '../sorting/gridSortingSelector';
+import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
@@ -51,9 +51,9 @@ export const useGridRowsMeta = (
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
   const rowHeightFromDensity = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const filterState = useGridSelector(apiRef, gridFilterStateSelector);
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const sortingState = useGridSelector(apiRef, gridSortingStateSelector);
+  const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
@@ -252,12 +252,12 @@ export const useGridRowsMeta = (
     [debouncedHydrateRowsMeta],
   );
 
-  const rowHasAutoHeight = React.useCallback<GridRowsMetaApi['unstable_rowHasAutoHeight']>((id) => {
+  const rowHasAutoHeight = React.useCallback<GridRowsMetaPrivateApi['rowHasAutoHeight']>((id) => {
     return rowsHeightLookup.current[id]?.autoHeight || false;
   }, []);
 
   const getLastMeasuredRowIndex = React.useCallback<
-    GridRowsMetaApi['unstable_getLastMeasuredRowIndex']
+    GridRowsMetaPrivateApi['getLastMeasuredRowIndex']
   >(() => {
     return lastMeasuredRowIndex.current;
   }, []);
@@ -279,14 +279,12 @@ export const useGridRowsMeta = (
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
-  }, [rowHeightFromDensity, filterState, paginationState, sortingState, hydrateRowsMeta]);
+  }, [rowHeightFromDensity, filterModel, paginationState, sortModel, hydrateRowsMeta]);
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
   const rowsMetaApi: GridRowsMetaApi = {
-    unstable_getLastMeasuredRowIndex: getLastMeasuredRowIndex,
     unstable_setLastMeasuredRowIndex: setLastMeasuredRowIndex,
-    unstable_rowHasAutoHeight: rowHasAutoHeight,
     unstable_getRowHeight: getRowHeight,
     unstable_getRowInternalSizes: getRowInternalSizes,
     unstable_setRowHeight: setRowHeight,
@@ -294,5 +292,11 @@ export const useGridRowsMeta = (
     resetRowHeights,
   };
 
+  const rowsMetaPrivateApi: GridRowsMetaPrivateApi = {
+    getLastMeasuredRowIndex,
+    rowHasAutoHeight,
+  };
+
   useGridApiMethod(apiRef, rowsMetaApi, 'public');
+  useGridApiMethod(apiRef, rowsMetaPrivateApi, 'private');
 };

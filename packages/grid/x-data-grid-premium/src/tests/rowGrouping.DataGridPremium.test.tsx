@@ -233,7 +233,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <Test
           initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
           defaultGroupingExpansionDepth={-1}
-          rowGroupingColumnMode="single"
         />,
       );
 
@@ -407,7 +406,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         <Test
           initialState={{ rowGrouping: { model: ['category2', 'category1'] } }}
           defaultGroupingExpansionDepth={-1}
-          rowGroupingColumnMode="single"
         />,
       );
 
@@ -665,7 +663,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
           groupingColDef={{
             // @ts-expect-error
             field: 'custom-field',
@@ -678,11 +675,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
 
     it('should react to groupingColDef update', () => {
       const { setProps } = render(
-        <Test
-          initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
-          groupingColDef={{}}
-        />,
+        <Test initialState={{ rowGrouping: { model: ['category1'] } }} groupingColDef={{}} />,
       );
 
       expect(getColumnHeadersTextContent()).to.deep.equal([
@@ -709,7 +702,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       render(
         <Test
           initialState={{ rowGrouping: { model: ['category1'] } }}
-          rowGroupingColumnMode="single"
           groupingColDef={{ width: 200 }}
         />,
       );
@@ -737,7 +729,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -774,7 +765,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               },
             ]}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -807,7 +797,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               },
             ]}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ leafField: 'id' }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -832,7 +821,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               headerName: 'Main category',
             }}
@@ -851,7 +839,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={(params) =>
               params.fields.includes('category1')
                 ? {
@@ -876,7 +863,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={1}
             groupingColDef={{
               valueFormatter: (params) => {
@@ -905,7 +891,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={1}
             groupingColDef={() => ({
               valueFormatter: (params) => {
@@ -936,7 +921,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ hideDescendantCount: false }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -961,7 +945,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{ hideDescendantCount: true }}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -1697,7 +1680,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               model: ['category1', 'category2'],
             },
           }}
-          rowGroupingColumnMode="single"
         />,
       );
 
@@ -1770,7 +1752,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
           />,
@@ -1795,7 +1776,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category2',
@@ -1823,7 +1803,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
             }}
@@ -1851,7 +1830,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         render(
           <Test
             initialState={{ rowGrouping: { model: ['category1', 'category2'] } }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category3',
@@ -1881,7 +1859,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           <Test
             rows={unbalancedRows}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
             groupingColDef={{ mainGroupingCriteria: 'category1', leafField: 'id' }}
@@ -1905,7 +1882,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           <Test
             rows={unbalancedRows}
             initialState={{ rowGrouping: { model: ['category1'] } }}
-            rowGroupingColumnMode="single"
             sortModel={[{ field: '__row_group_by_columns_group__', sort: 'desc' }]}
             defaultGroupingExpansionDepth={-1}
             groupingColDef={{ leafField: 'id' }}
@@ -2026,7 +2002,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2053,7 +2028,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category2',
@@ -2084,7 +2058,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
             }}
@@ -2110,7 +2083,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               preferencePanel: { open: true, openedPanelValue: GridPreferencePanelsValue.filters },
             }}
-            rowGroupingColumnMode="single"
             groupingColDef={{
               leafField: 'id',
               mainGroupingCriteria: 'category3',
@@ -2137,11 +2109,10 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'id', operatorValue: '=', value: 2 }],
+                  items: [{ field: 'id', operator: '=', value: 2 }],
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2162,7 +2133,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2182,7 +2152,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2203,7 +2172,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2224,7 +2192,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2241,15 +2208,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 filterModel: {
                   items: [
                     {
-                      columnField: 'category2',
-                      operatorValue: 'equals',
+                      field: 'category2',
+                      operator: 'equals',
                       value: 'Cat 1',
                     },
                   ],
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2268,14 +2234,14 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                   items: [
                     {
                       id: 2,
-                      columnField: 'category2',
-                      operatorValue: 'equals',
+                      field: 'category2',
+                      operator: 'equals',
                       value: 'Cat 1',
                     },
                     {
                       id: 1,
-                      columnField: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-                      operatorValue: 'equals',
+                      field: GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+                      operator: 'equals',
                       value: 'Cat A',
                     },
                   ],
@@ -2283,7 +2249,6 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 },
               },
             }}
-            rowGroupingColumnMode="single"
             defaultGroupingExpansionDepth={-1}
           />,
         );
@@ -2399,7 +2364,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
               rowGrouping: { model: ['category1', 'category2'] },
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'id', operatorValue: '=', value: 2 }],
+                  items: [{ field: 'id', operator: '=', value: 2 }],
                 },
               },
             }}
@@ -2422,8 +2387,8 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                 filterModel: {
                   items: [
                     {
-                      columnField: '__row_group_by_columns_group_category1__',
-                      operatorValue: 'equals',
+                      field: '__row_group_by_columns_group_category1__',
+                      operator: 'equals',
                       value: 'Cat A',
                     },
                   ],
@@ -2483,7 +2448,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+                items: [{ field: 'id', operator: '>=', value: '1' }],
               },
             },
           }}
@@ -2517,7 +2482,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '1' }],
+                items: [{ field: 'id', operator: '>=', value: '1' }],
               },
             },
           }}
@@ -2571,7 +2536,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '>=', value: '2' }],
+                items: [{ field: 'id', operator: '>=', value: '2' }],
               },
             },
           }}

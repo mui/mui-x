@@ -12,7 +12,7 @@ import {
   openPicker,
   expectInputValue,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DesktopNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -21,6 +21,7 @@ describe('<DesktopNextDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
+    componentFamily: 'new-picker',
   }));
 
   describe('Component slots: OpenPickerIcon', () => {

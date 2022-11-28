@@ -1,54 +1,16 @@
-import { datePickerValueManager } from '../DatePicker/shared';
 import {
-  useField,
-  FieldValueManager,
-  FieldSection,
-  splitFormatIntoSections,
-  addPositionPropertiesToSections,
-  createDateStrFromSections,
-} from '../internals/hooks/useField';
+  singleItemFieldValueManager,
+  singleItemValueManager,
+} from '../internals/utils/valueManagers';
+import { useField } from '../internals/hooks/useField';
 import {
   UseDateFieldProps,
   UseDateFieldDefaultizedProps,
   UseDateFieldParams,
 } from './DateField.types';
-import {
-  DateValidationError,
-  isSameDateError,
-  validateDate,
-} from '../internals/hooks/validation/useDateValidation';
+import { validateDate } from '../internals/hooks/validation/useDateValidation';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { useUtils, useDefaultDates } from '../internals/hooks/useUtils';
-import { getSectionOrder } from '../internals/hooks/useField/useField.utils';
-
-export const dateFieldValueManager: FieldValueManager<any, any, FieldSection, DateValidationError> =
-  {
-    updateReferenceValue: (utils, value, prevReferenceValue) =>
-      value == null || !utils.isValid(value) ? prevReferenceValue : value,
-    getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
-      addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-    getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
-    getActiveDateSections: (sections) => sections,
-    getActiveDateManager: (utils, state) => ({
-      activeDate: state.value,
-      referenceActiveDate: state.referenceValue,
-      getNewValueFromNewActiveDate: (newActiveDate) => {
-        return {
-          value: newActiveDate,
-          referenceValue:
-            newActiveDate == null || !utils.isValid(newActiveDate)
-              ? state.referenceValue
-              : newActiveDate,
-        };
-      },
-    }),
-    parseValueStr: (valueStr, referenceValue, parseDate) =>
-      parseDate(valueStr.trim(), referenceValue),
-    hasError: (error) => error != null,
-    isSameError: isSameDateError,
-    getSectionOrder: (utils, localeText, format, isRTL) =>
-      getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
-  };
 
 const useDefaultizedDateField = <TDate, AdditionalProps extends {}>(
   props: UseDateFieldProps<TDate>,
@@ -109,8 +71,8 @@ export const useDateField = <TDate, TChildProps extends {}>({
       selectedSections,
       onSelectedSectionsChange,
     },
-    valueManager: datePickerValueManager,
-    fieldValueManager: dateFieldValueManager,
+    valueManager: singleItemValueManager,
+    fieldValueManager: singleItemFieldValueManager,
     validator: validateDate,
     supportedDateSections: ['year', 'month', 'day'],
   });

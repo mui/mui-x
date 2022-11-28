@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
@@ -27,20 +28,20 @@ const formatTokenMap: MuiFormatTokenMap = {
   a: 'meridiem',
 
   // Hour
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  k: 'hour',
-  kk: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  k: 'hours',
+  kk: 'hours',
 
   // Minute
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
   // Second
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterMoment
@@ -75,5 +76,9 @@ export class AdapterMoment
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.week();
   };
 }

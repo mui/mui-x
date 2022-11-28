@@ -9,13 +9,6 @@ export {
   gridColumnsTotalWidthSelector,
   gridFilterableColumnDefinitionsSelector,
   gridFilterableColumnLookupSelector,
-  allGridColumnsFieldsSelector,
-  allGridColumnsSelector,
-  visibleGridColumnsSelector,
-  filterableGridColumnsSelector,
-  filterableGridColumnsIdsSelector,
-  visibleGridColumnsLengthSelector,
-  gridColumnsMetaSelector,
 } from './gridColumnsSelector';
 export type {
   GridColumnLookup,
@@ -23,4 +16,3 @@ export type {
   GridColumnsInitialState,
   GridColumnVisibilityModel,
 } from './gridColumnsInterfaces';
-export { getGridColDef } from './gridColumnsUtils';

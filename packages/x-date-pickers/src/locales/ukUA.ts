@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
@@ -12,11 +12,11 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'відкрити попередній вигляд',
   openNextView: 'відкрити наступний вигляд',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'річний вигляд відкрито, перейти до календарного вигляду'
       : 'календарний вигляд відкрито, перейти до річного вигляду',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `текстове поле відкрите, перейти до  ${viewType} вигляду`
       : `${viewType} вигляд наразі відкрито, перейти до текстового поля`,
@@ -45,6 +45,12 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: 'Номер тижня',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

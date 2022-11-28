@@ -148,73 +148,133 @@ const pages: MuiPage[] = [
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
-      { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker' },
+      {
+        pathname: '/x/react-date-pickers/date-picker',
+        title: 'Date components',
+        scopePathnames: [
+          '/x/react-date-pickers/date-picker',
+          '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/legacy-date-picker',
+        ],
+        children: [
+          { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker', newFeature: true },
+          { pathname: '/x/react-date-pickers/date-field', title: 'Date Field', newFeature: true },
+          { pathname: '/x/react-date-pickers/legacy-date-picker', title: 'Legacy Date Picker' },
+        ],
+      },
+      {
+        pathname: '/x/react-date-pickers/time-picker',
+        title: 'Time components',
+        scopePathnames: [
+          '/x/react-date-pickers/time-picker',
+          '/x/react-date-pickers/time-field',
+          '/x/react-date-pickers/legacy-time-picker',
+        ],
+        children: [
+          { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
+          { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
+          { pathname: '/x/react-date-pickers/legacy-time-picker', title: 'Legacy Time Picker' },
+        ],
+      },
+      {
+        pathname: '/x/react-date-pickers/date-time-picker',
+        title: 'Date Time components',
+        scopePathnames: [
+          '/x/react-date-pickers/date-time-picker',
+          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/legacy-date-time-picker',
+        ],
+        children: [
+          { pathname: '/x/react-date-pickers/date-time-picker', title: 'Date Time Picker' },
+          {
+            pathname: '/x/react-date-pickers/date-time-field',
+            title: 'Date Time Field',
+            newFeature: true,
+          },
+          {
+            pathname: '/x/react-date-pickers/legacy-date-time-picker',
+            title: 'Legacy Date Time Picker',
+          },
+        ],
+      },
       {
         pathname: '/x/react-date-pickers/date-range-picker',
-        title: 'Date Range Picker',
+        title: 'Date Range components',
         plan: 'pro',
-      },
-      { pathname: '/x/react-date-pickers/date-time-picker', title: 'Date Time Picker' },
-      { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
-      { pathname: '/x/react-date-pickers/validation' },
-      { pathname: '/x/react-date-pickers/localization' },
-      { pathname: '/x/react-date-pickers/custom-components' },
-      {
-        pathname: '/x/react-date-pickers/date-time-range-picker',
-        title: 'Date Time Range Picker 🚧',
-        plan: 'pro',
-      },
-      {
-        pathname: '/x/react-date-pickers/time-range-picker',
-        title: 'Time Range Picker 🚧',
-        plan: 'pro',
-      },
-      {
-        pathname: '/x/react-date-pickers/fields',
-        title: 'Field components',
         scopePathnames: [
-          '/x/react-date-pickers/fields',
-          '/x/react-date-pickers/date-field',
-          '/x/react-date-pickers/time-field',
-          '/x/react-date-pickers/date-time-field',
+          '/x/react-date-pickers/date-range-picker',
           '/x/react-date-pickers/date-range-field',
-          '/x/react-date-pickers/time-range-field',
-          '/x/react-date-pickers/date-time-range-field',
+          '/x/react-date-pickers/legacy-date-range-picker',
         ],
-        newFeature: true,
         children: [
-          { pathname: '/x/react-date-pickers/fields', title: 'Getting started' },
-          { pathname: '/x/react-date-pickers/date-field', title: 'Date Field' },
-          { pathname: '/x/react-date-pickers/time-field', title: 'Time Field' },
-          { pathname: '/x/react-date-pickers/date-time-field', title: 'Date Time Field' },
+          { pathname: '/x/react-date-pickers/date-range-picker', title: 'Date Range Picker' },
           {
             pathname: '/x/react-date-pickers/date-range-field',
             title: 'Date Range Field',
-            plan: 'pro',
+            newFeature: true,
           },
+          {
+            pathname: '/x/react-date-pickers/legacy-date-range-picker',
+            title: 'Legacy Date Range Picker',
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-date-pickers/time-range-picker',
+        title: 'Time Range components',
+        plan: 'pro',
+        scopePathnames: [
+          '/x/react-date-pickers/time-range-picker',
+          '/x/react-date-pickers/time-range-field',
+        ],
+        children: [
+          { pathname: '/x/react-date-pickers/time-range-picker', title: 'Time Range Picker 🚧' },
           {
             pathname: '/x/react-date-pickers/time-range-field',
             title: 'Time Range Field',
-            plan: 'pro',
+            newFeature: true,
+          },
+        ],
+      },
+      {
+        pathname: '/x/react-date-pickers/date-time-range-picker',
+        title: 'Date Time Range components',
+        plan: 'pro',
+        scopePathnames: [
+          '/x/react-date-pickers/date-time-range-picker',
+          '/x/react-date-pickers/date-time-range-field',
+        ],
+        children: [
+          {
+            pathname: '/x/react-date-pickers/date-time-range-picker',
+            title: 'Date Time Range Picker 🚧',
           },
           {
             pathname: '/x/react-date-pickers/date-time-range-field',
             title: 'Date Time Range Field',
-            plan: 'pro',
+            newFeature: true,
           },
         ],
       },
+      { pathname: '/x/react-date-pickers/validation' },
+      { pathname: '/x/react-date-pickers/localization' },
+      { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
+      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom sub-components' },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },
-          { pathname: '/x/api/date-pickers/clock-picker', title: 'ClockPicker' },
           { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
             pathname: '/x/api/date-pickers/date-range-picker',
             title: 'DateRangePicker',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/api/date-pickers/date-range-calendar',
+            title: 'DateRangeCalendar',
             plan: 'pro',
           },
           {
@@ -263,6 +323,7 @@ const pages: MuiPage[] = [
             title: 'StaticDateTimePicker',
           },
           { pathname: '/x/api/date-pickers/static-time-picker', title: 'StaticTimePicker' },
+          { pathname: '/x/api/date-pickers/time-clock', title: 'TimeClock' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
           { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
         ],

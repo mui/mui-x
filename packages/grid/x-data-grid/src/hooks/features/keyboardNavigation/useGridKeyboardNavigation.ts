@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -38,7 +38,7 @@ function enrichPageRowsWithPinnedRows(
  * @requires useGridColumnSpanning (method) - can be after
  */
 export const useGridKeyboardNavigation = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'getRowId'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -53,7 +53,7 @@ export const useGridKeyboardNavigation = (
    * @param {number} colIndex Index of the column to focus
    * @param {number} rowIndex index of the row to focus
    * @param {string} closestColumnToUse Which closest column cell to use when the cell is spanned by `colSpan`.
-   * TODO replace with apiRef.current.unstable_moveFocusToRelativeCell()
+   * TODO replace with apiRef.current.moveFocusToRelativeCell()
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
@@ -95,7 +95,7 @@ export const useGridKeyboardNavigation = (
       logger.debug(`Navigating to header col ${colIndex}`);
       apiRef.current.scrollToIndexes({ colIndex });
       const { field } = apiRef.current.getVisibleColumns()[colIndex];
-      apiRef.current.unstable_setColumnGroupHeaderFocus(field, depth, event);
+      apiRef.current.setColumnGroupHeaderFocus(field, depth, event);
     },
     [apiRef, logger],
   );
@@ -107,14 +107,236 @@ export const useGridKeyboardNavigation = (
     [currentPageRows],
   );
 
-  const handleCellNavigationKeyDown = React.useCallback<GridEventListener<'cellNavigationKeyDown'>>(
+  const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
+      const headerTitleNode = event.currentTarget.querySelector(
+        `.${gridClasses.columnHeaderTitleContainerContent}`,
+      );
+      const isFromInsideContent =
+        !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
+
+      if (isFromInsideContent && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
+        // There is one exception for the checkBoxHeader
+        return;
+      }
+
+      const dimensions = apiRef.current.getRootDimensions();
+      if (!dimensions) {
+        return;
+      }
+
+      const viewportPageSize = apiRef.current.getViewportPageSize();
+      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
+      const firstRowIndexInPage = 0;
+      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstColIndex = 0;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
+      let shouldPreventDefault = true;
+
+      switch (event.key) {
+        case 'ArrowDown': {
+          if (firstRowIndexInPage !== null) {
+            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
+          }
+          break;
+        }
+
+        case 'ArrowRight': {
+          if (colIndexBefore < lastColIndex) {
+            goToHeader(colIndexBefore + 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowLeft': {
+          if (colIndexBefore > firstColIndex) {
+            goToHeader(colIndexBefore - 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowUp': {
+          if (columnGroupMaxDepth > 0) {
+            goToGroupHeader(colIndexBefore, columnGroupMaxDepth - 1, event);
+          }
+          break;
+        }
+
+        case 'PageDown': {
+          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+            goToCell(
+              colIndexBefore,
+              getRowIdFromIndex(
+                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
+              ),
+            );
+          }
+          break;
+        }
+
+        case 'Home': {
+          goToHeader(firstColIndex, event);
+          break;
+        }
+
+        case 'End': {
+          goToHeader(lastColIndex, event);
+          break;
+        }
+
+        case 'Enter': {
+          if (event.ctrlKey || event.metaKey) {
+            apiRef.current.toggleColumnMenu(params.field);
+          }
+          break;
+        }
+
+        case ' ': {
+          // prevent Space event from scrolling
+          break;
+        }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
+      }
+    },
+    [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
+  );
+
+  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
+  const handleColumnGroupHeaderKeyDown = React.useCallback<
+    GridEventListener<'columnGroupHeaderKeyDown'>
+  >(
+    (params, event) => {
+      const dimensions = apiRef.current.getRootDimensions();
+      if (!dimensions) {
+        return;
+      }
+
+      if (focusedColumnGroup === null) {
+        return;
+      }
+      const { field: currentField, depth: currentDepth } = focusedColumnGroup;
+
+      const { fields, depth, maxDepth } = params;
+
+      const viewportPageSize = apiRef.current.getViewportPageSize();
+      const currentColIndex = apiRef.current.getColumnIndex(currentField);
+      const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
+      const firstRowIndexInPage = 0;
+      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstColIndex = 0;
+      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+
+      let shouldPreventDefault = true;
+
+      switch (event.key) {
+        case 'ArrowDown': {
+          if (depth === maxDepth - 1) {
+            goToHeader(currentColIndex, event);
+          } else {
+            goToGroupHeader(currentColIndex, currentDepth + 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowUp': {
+          if (depth > 0) {
+            goToGroupHeader(currentColIndex, currentDepth - 1, event);
+          }
+          break;
+        }
+
+        case 'ArrowRight': {
+          const remainingRightColumns = fields.length - fields.indexOf(currentField) - 1;
+          if (currentColIndex + remainingRightColumns + 1 <= lastColIndex) {
+            goToGroupHeader(currentColIndex + remainingRightColumns + 1, currentDepth, event);
+          }
+          break;
+        }
+
+        case 'ArrowLeft': {
+          const remainingLeftColumns = fields.indexOf(currentField);
+          if (currentColIndex - remainingLeftColumns - 1 >= firstColIndex) {
+            goToGroupHeader(currentColIndex - remainingLeftColumns - 1, currentDepth, event);
+          }
+          break;
+        }
+
+        case 'PageDown': {
+          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
+            goToCell(
+              colIndexBefore,
+              getRowIdFromIndex(
+                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
+              ),
+            );
+          }
+          break;
+        }
+
+        case 'Home': {
+          goToGroupHeader(firstColIndex, currentDepth, event);
+          break;
+        }
+
+        case 'End': {
+          goToGroupHeader(lastColIndex, currentDepth, event);
+          break;
+        }
+
+        case ' ': {
+          // prevent Space event from scrolling
+          break;
+        }
+
+        default: {
+          shouldPreventDefault = false;
+        }
+      }
+
+      if (shouldPreventDefault) {
+        event.preventDefault();
+      }
+    },
+    [
+      apiRef,
+      focusedColumnGroup,
+      currentPageRows.length,
+      goToHeader,
+      goToGroupHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
+  );
+
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    (params, event) => {
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as Element)) {
+        return;
+      }
+
+      // Get the most recent params because the cell mode may have changed by another listener
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+
+      if (cellParams.cellMode === GridCellModes.Edit || !isNavigationKey(event.key)) {
+        return;
+      }
+
       const dimensions = apiRef.current.getRootDimensions();
       if (currentPageRows.length === 0 || !dimensions) {
         return;
       }
 
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = (params as GridCellParams).field
         ? apiRef.current.getColumnIndex((params as GridCellParams).field)
@@ -127,9 +349,7 @@ export const useGridKeyboardNavigation = (
       let shouldPreventDefault = true;
 
       switch (event.key) {
-        case 'ArrowDown':
-        case 'Enter': {
-          // TODO v6: Remove Enter case because `cellNavigationKeyDown` is not fired by the new editing API
+        case 'ArrowDown': {
           // "Enter" is only triggered by the row / cell editing feature
           if (rowIndexBefore < lastRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore + 1));
@@ -236,237 +456,9 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows, goToCell, goToHeader, getRowIdFromIndex],
+    [apiRef, currentPageRows, getRowIdFromIndex, goToCell, goToHeader],
   );
 
-  const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
-    (params, event) => {
-      const headerTitleNode = event.currentTarget.querySelector(
-        `.${gridClasses.columnHeaderTitleContainerContent}`,
-      );
-      const isFromInsideContent =
-        !!headerTitleNode && headerTitleNode.contains(event.target as Node | null);
-
-      if (isFromInsideContent && params.field !== GRID_CHECKBOX_SELECTION_COL_DEF.field) {
-        // When focus is on a nested input, keyboard events have no effect to avoid conflicts with native events.
-        // There is one exception for the checkBoxHeader
-        return;
-      }
-
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
-      const firstRowIndexInPage = 0;
-      const lastRowIndexInPage = currentPageRows.length - 1;
-      const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
-      const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
-      let shouldPreventDefault = true;
-
-      switch (event.key) {
-        case 'ArrowDown': {
-          if (firstRowIndexInPage !== null) {
-            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
-          }
-          break;
-        }
-
-        case 'ArrowRight': {
-          if (colIndexBefore < lastColIndex) {
-            goToHeader(colIndexBefore + 1, event);
-          }
-          break;
-        }
-
-        case 'ArrowLeft': {
-          if (colIndexBefore > firstColIndex) {
-            goToHeader(colIndexBefore - 1, event);
-          }
-          break;
-        }
-
-        case 'ArrowUp': {
-          if (columnGroupMaxDepth > 0) {
-            goToGroupHeader(colIndexBefore, columnGroupMaxDepth - 1, event);
-          }
-          break;
-        }
-
-        case 'PageDown': {
-          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
-            goToCell(
-              colIndexBefore,
-              getRowIdFromIndex(
-                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
-              ),
-            );
-          }
-          break;
-        }
-
-        case 'Home': {
-          goToHeader(firstColIndex, event);
-          break;
-        }
-
-        case 'End': {
-          goToHeader(lastColIndex, event);
-          break;
-        }
-
-        case 'Enter': {
-          if (event.ctrlKey || event.metaKey) {
-            apiRef.current.toggleColumnMenu(params.field);
-          }
-          break;
-        }
-
-        case ' ': {
-          // prevent Space event from scrolling
-          break;
-        }
-
-        default: {
-          shouldPreventDefault = false;
-        }
-      }
-
-      if (shouldPreventDefault) {
-        event.preventDefault();
-      }
-    },
-    [apiRef, currentPageRows.length, goToCell, getRowIdFromIndex, goToHeader, goToGroupHeader],
-  );
-
-  const focusedColumnGroup = useGridSelector(apiRef, unstable_gridFocusColumnGroupHeaderSelector);
-  const handleColumnGroupHeaderKeyDown = React.useCallback<
-    GridEventListener<'columnGroupHeaderKeyDown'>
-  >(
-    (params, event) => {
-      const dimensions = apiRef.current.getRootDimensions();
-      if (!dimensions) {
-        return;
-      }
-
-      if (focusedColumnGroup === null) {
-        return;
-      }
-      const { field: currentField, depth: currentDepth } = focusedColumnGroup;
-
-      const { fields, depth, maxDepth } = params;
-
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
-      const currentColIndex = apiRef.current.getColumnIndex(currentField);
-      const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
-      const firstRowIndexInPage = 0;
-      const lastRowIndexInPage = currentPageRows.length - 1;
-      const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
-
-      let shouldPreventDefault = true;
-
-      switch (event.key) {
-        case 'ArrowDown': {
-          if (depth === maxDepth - 1) {
-            goToHeader(currentColIndex, event);
-          } else {
-            goToGroupHeader(currentColIndex, currentDepth + 1, event);
-          }
-          break;
-        }
-
-        case 'ArrowUp': {
-          if (depth > 0) {
-            goToGroupHeader(currentColIndex, currentDepth - 1, event);
-          }
-          break;
-        }
-
-        case 'ArrowRight': {
-          const remainingRightColumns = fields.length - fields.indexOf(currentField) - 1;
-          if (currentColIndex + remainingRightColumns + 1 <= lastColIndex) {
-            goToGroupHeader(currentColIndex + remainingRightColumns + 1, currentDepth, event);
-          }
-          break;
-        }
-
-        case 'ArrowLeft': {
-          const remainingLeftColumns = fields.indexOf(currentField);
-          if (currentColIndex - remainingLeftColumns - 1 >= firstColIndex) {
-            goToGroupHeader(currentColIndex - remainingLeftColumns - 1, currentDepth, event);
-          }
-          break;
-        }
-
-        case 'PageDown': {
-          if (firstRowIndexInPage !== null && lastRowIndexInPage !== null) {
-            goToCell(
-              colIndexBefore,
-              getRowIdFromIndex(
-                Math.min(firstRowIndexInPage + viewportPageSize, lastRowIndexInPage),
-              ),
-            );
-          }
-          break;
-        }
-
-        case 'Home': {
-          goToGroupHeader(firstColIndex, currentDepth, event);
-          break;
-        }
-
-        case 'End': {
-          goToGroupHeader(lastColIndex, currentDepth, event);
-          break;
-        }
-
-        case ' ': {
-          // prevent Space event from scrolling
-          break;
-        }
-
-        default: {
-          shouldPreventDefault = false;
-        }
-      }
-
-      if (shouldPreventDefault) {
-        event.preventDefault();
-      }
-    },
-    [
-      apiRef,
-      focusedColumnGroup,
-      currentPageRows.length,
-      goToHeader,
-      goToGroupHeader,
-      goToCell,
-      getRowIdFromIndex,
-    ],
-  );
-
-  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
-    (params, event) => {
-      // Ignore portal
-      if (!event.currentTarget.contains(event.target as Element)) {
-        return;
-      }
-
-      // Get the most recent params because the cell mode may have changed by another listener
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-
-      if (cellParams.cellMode !== GridCellModes.Edit && isNavigationKey(event.key)) {
-        apiRef.current.publishEvent('cellNavigationKeyDown', cellParams, event);
-      }
-    },
-    [apiRef],
-  );
-
-  useGridApiEventHandler(apiRef, 'cellNavigationKeyDown', handleCellNavigationKeyDown);
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);

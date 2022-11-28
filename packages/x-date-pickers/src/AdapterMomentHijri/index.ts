@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import BaseAdapterMomentHijri from '@date-io/hijri';
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
@@ -27,20 +28,20 @@ const formatTokenMap: MuiFormatTokenMap = {
   a: 'meridiem',
 
   // Hour
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  k: 'hour',
-  kk: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  k: 'hours',
+  kk: 'hours',
 
   // Minute
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
   // Second
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterMomentHijri
@@ -81,5 +82,9 @@ export class AdapterMomentHijri
       .replace('iM', 'M')
       .replace('iD', 'D')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.iWeek();
   };
 }

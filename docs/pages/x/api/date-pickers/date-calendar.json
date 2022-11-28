@@ -12,6 +12,7 @@
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
@@ -78,5 +79,8 @@
   },
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateCalendar" }
+  ]
 }

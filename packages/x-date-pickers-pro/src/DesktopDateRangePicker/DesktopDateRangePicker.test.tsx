@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -68,11 +68,11 @@ describe('<DesktopDateRangePicker />', () => {
     }),
   );
 
-  describeValidation(DesktopDateRangePicker, () => ({
+  describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
     clock,
-    isLegacyPicker: true,
-    withDate: true,
+    componentFamily: 'legacy-picker',
+    views: ['day'],
   }));
 
   // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests

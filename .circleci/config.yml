@@ -36,7 +36,7 @@ defaults: &defaults
     REACT_DIST_TAG: << parameters.react-dist-tag >>
   working_directory: /tmp/mui
   docker:
-    - image: cimg/node:14.20
+    - image: cimg/node:14.21
 # CircleCI has disabled the cache across forks for security reasons.
 # Following their official statement, it was a quick solution, they
 # are working on providing this feature back with appropriate security measures.
@@ -162,7 +162,7 @@ jobs:
       - install_js
       - run:
           name: '`yarn prettier` changes committed?'
-          command: yarn prettier check-changed
+          command: yarn prettier --check
       - run:
           name: Generate PropTypes
           command: yarn proptypes
@@ -189,7 +189,7 @@ jobs:
   test_browser:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -220,7 +220,7 @@ jobs:
   test_e2e:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -233,7 +233,7 @@ jobs:
   test_e2e_website:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -248,7 +248,7 @@ jobs:
   test_regressions:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:
@@ -264,7 +264,7 @@ jobs:
   test_performance:
     <<: *defaults
     docker:
-      - image: mcr.microsoft.com/playwright@sha256:c3c8a833254aaad31b2d336e67b0dbb9af744a12ab486e18f230033b99649c4f
+      - image: mcr.microsoft.com/playwright:v1.27.1-focal
         environment:
           NODE_ENV: development # Needed if playwright is in `devDependencies`
     steps:

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
@@ -10,8 +11,8 @@ import 'moment/locale/fr';
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   en: {
-    placeholder: 'mm/dd/yyyy hh:mm',
-    value: '05/15/2018 09:35',
+    placeholder: 'mm/dd/yyyy hh:mm (a|p)m',
+    value: '05/15/2018 09:35 AM',
   },
   fr: {
     placeholder: 'dd/mm/yyyy hh:mm',
@@ -62,5 +63,13 @@ describe('<AdapterMoment />', () => {
         expect(screen.getByRole('textbox')).to.have.value(localizedTexts[localeKey].value);
       });
     });
+  });
+
+  it('should return the correct week number', () => {
+    const adapter = new AdapterMoment({ locale: 'fr' });
+
+    const dateToTest = adapter.date(new Date(2022, 10, 10));
+
+    expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
   });
 });

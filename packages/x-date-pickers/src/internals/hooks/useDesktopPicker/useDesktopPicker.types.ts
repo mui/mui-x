@@ -3,7 +3,7 @@ import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
   BaseNextNonStaticPickerProps,
   BaseNextPickerProps,
@@ -15,15 +15,15 @@ import {
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
-  ExportedPickerViewLayoutSlotsComponent,
-  ExportedPickerViewLayoutSlotsComponentsProps,
-} from '../../components/PickerViewLayout';
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from '../../components/PickersViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
   extends PickersPopperSlotsComponent,
-    ExportedPickerViewLayoutSlotsComponent {
+    ExportedPickersViewLayoutSlotsComponent {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -55,15 +55,19 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
     >,
-    ExportedPickerViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},
-    UsePickerProps<TDate | null, any>
+    UsePickerProps<TDate | null, any, any>
   >;
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
-  openPickerButton?: SlotComponentProps<typeof IconButton, {}, UseDesktopPickerProps<TDate, any>>;
+  openPickerButton?: SlotComponentProps<
+    typeof IconButton,
+    {},
+    UseDesktopPickerProps<TDate, any, any>
+  >;
   openPickerIcon?: Record<string, any>;
 }
 
@@ -72,8 +76,8 @@ export interface DesktopOnlyPickerProps<TDate>
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {}
 
-export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPickerView>
-  extends BaseNextPickerProps<TDate | null, TDate, TView>,
+export interface UseDesktopPickerProps<TDate, TView extends DateOrTimeView, TError>
+  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
@@ -89,11 +93,11 @@ export interface UseDesktopPickerProps<TDate, TView extends CalendarOrClockPicke
 
 export interface UseDesktopPickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup'
+    'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;
   getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;

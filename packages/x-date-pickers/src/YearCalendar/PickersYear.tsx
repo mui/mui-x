@@ -1,8 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { capitalize } from '@mui/material/utils';
+import {
+  unstable_capitalize as capitalize,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   WrapperVariant,
   WrapperVariantContext,
@@ -85,23 +87,27 @@ const PickersYearButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
   },
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:disabled': {
     cursor: 'auto',
     pointerEvents: 'none',
   },
   [`&.${pickersYearClasses.disabled}`]: {
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`&.${pickersYearClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     '&:focus, &:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
 }));

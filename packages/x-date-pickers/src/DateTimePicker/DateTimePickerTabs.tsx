@@ -9,7 +9,7 @@ import {
   WrapperVariantContext,
   WrapperVariant,
 } from '../internals/components/wrappers/WrapperVariantContext';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
   DateTimePickerTabsClasses,
@@ -19,7 +19,7 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (openView: CalendarOrClockPickerView): TabValue => {
+const viewToTab = (openView: DateOrTimeView): TabValue => {
   if (['day', 'month', 'year'].includes(openView)) {
     return 'date';
   }
@@ -27,7 +27,7 @@ const viewToTab = (openView: CalendarOrClockPickerView): TabValue => {
   return 'time';
 };
 
-const tabToView = (tab: TabValue): CalendarOrClockPickerView => {
+const tabToView = (tab: TabValue): DateOrTimeView => {
   if (tab === 'date') {
     return 'day';
   }
@@ -55,7 +55,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
 
 export interface DateTimePickerTabsProps
   extends ExportedDateTimePickerTabsProps,
-    BaseTabsProps<CalendarOrClockPickerView> {
+    BaseTabsProps<DateOrTimeView> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -78,11 +78,11 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
-  boxShadow: `0 -1px 0 0 inset ${theme.palette.divider}`,
+  boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
     // TODO v6: Drop order when the old pickers are removed
     order: 1,
-    boxShadow: `0 1px 0 0 inset ${theme.palette.divider}`,
+    boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
       top: 0,

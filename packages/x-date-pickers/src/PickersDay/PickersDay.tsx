@@ -6,9 +6,9 @@ import ButtonBase, { ButtonBaseProps } from '@mui/material/ButtonBase';
 import {
   unstable_useEnhancedEffect as useEnhancedEffect,
   unstable_composeClasses as composeClasses,
+  unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
-import { useForkRef } from '@mui/material/utils';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -112,44 +112,48 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   borderRadius: '50%',
   padding: 0,
   // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: theme.palette.background.paper,
-  color: theme.palette.text.primary,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  color: (theme.vars || theme).palette.text.primary,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
     transition: theme.transitions.create('background-color', {
       duration: theme.transitions.duration.short,
     }),
     '&:hover': {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.disabled}`]: {
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
-      color: theme.palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     }),
   ...(!ownerState.disableHighlightToday &&
     ownerState.today && {
       [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${theme.palette.text.secondary}`,
+        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
       },
     }),
 });

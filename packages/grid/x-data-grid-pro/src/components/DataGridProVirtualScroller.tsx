@@ -18,7 +18,7 @@ import {
   useGridVirtualScroller,
   calculatePinnedRowsHeight,
 } from '@mui/x-data-grid/internals';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
@@ -98,7 +98,7 @@ const getOverlayAlpha = (elevation: number) => {
 };
 
 const getBoxShadowColor = (theme: Theme) => {
-  return alpha(theme.palette.common.black, 0.21);
+  return theme.vars ? `rgba(0 0 0 /  0.21)` : alpha(theme.palette.common.black, 0.21);
 };
 
 const VirtualScrollerDetailPanels = styled('div', {
@@ -128,8 +128,10 @@ const VirtualScrollerPinnedColumns = styled('div', {
     position: 'sticky',
     overflow: 'hidden',
     zIndex: 1,
-    backgroundColor: theme.palette.background.default,
-    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    backgroundColor: (theme.vars || theme).palette.background.default,
+    ...(theme.vars
+      ? { backgroundImage: theme.vars.overlays?.[2] }
+      : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
     ...(ownerState.side === GridPinnedPosition.left && {
       left: 0,
       float: 'left',
@@ -157,8 +159,10 @@ const VirtualScrollerPinnedRows = styled('div', {
     position: 'sticky',
     // should be above the detail panel
     zIndex: 3,
-    backgroundColor: theme.palette.background.default,
-    ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }),
+    backgroundColor: (theme.vars || theme).palette.background.default,
+    ...(theme.vars
+      ? { backgroundImage: theme.vars.overlays?.[2] }
+      : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
     ...(ownerState.position === 'top' && {
       top: 0,
       boxShadow: `0px 3px 4px -2px ${boxShadowColor}`,
@@ -183,7 +187,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   DataGridProVirtualScrollerProps
 >(function DataGridProVirtualScroller(props, ref) {
   const { className, disableVirtualization, ...other } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const expandedRowIds = useGridSelector(apiRef, gridDetailPanelExpandedRowIdsSelector);
@@ -305,7 +309,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       const exists = rowIndex !== undefined;
 
       if (React.isValidElement(content) && exists) {
-        const hasAutoHeight = apiRef.current.unstable_detailPanelHasAutoHeight(id);
+        const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(id);
         const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
 
         const sizes = apiRef.current.unstable_getRowInternalSizes(id);

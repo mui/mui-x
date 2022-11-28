@@ -1,14 +1,15 @@
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
 import { usePickerLayout } from './usePickerLayout';
+import { InferError } from '../validation/useValidation';
 
 export const usePicker = <
   TValue,
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UsePickerProps<TValue, TView>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UsePickerProps<TValue, TView, any>,
   TAdditionalProps extends {},
 >({
   props,
@@ -17,14 +18,17 @@ export const usePicker = <
   viewLookup,
   inputRef,
   additionalViewProps,
+  validator,
 }: UsePickerParams<TValue, TDate, TView, TExternalProps, TAdditionalProps>): UsePickerResponse<
   TValue,
-  TView
+  TView,
+  InferError<TExternalProps>
 > => {
   const pickerValueResponse = usePickerValue({
     props,
     valueManager,
     wrapperVariant,
+    validator,
   });
 
   const pickerViewsResponse = usePickerViews({

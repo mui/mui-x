@@ -4,11 +4,11 @@ import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/N
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import {
   createPickerRenderer,
-  expectInputValue,
   openPicker,
   stubMatchMedia,
+  expectInputValue,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -18,8 +18,8 @@ describe('<NextDatePicker />', () => {
   describeValidation(NextDatePicker, () => ({
     render,
     clock,
-    skip: ['textField'],
     views: ['year', 'month', 'day'],
+    componentFamily: 'new-picker',
   }));
 
   describe('prop: inputRef', () => {

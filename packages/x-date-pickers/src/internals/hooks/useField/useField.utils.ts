@@ -81,7 +81,7 @@ export const adjustDateSectionValue = <TDate>(
     case 'meridiem': {
       return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
     }
-    case 'hour': {
+    case 'hours': {
       if (isStart) {
         return utils.startOfDay(date);
       }
@@ -90,7 +90,7 @@ export const adjustDateSectionValue = <TDate>(
       }
       return utils.addHours(date, delta);
     }
-    case 'minute': {
+    case 'minutes': {
       if (isStart) {
         return utils.setMinutes(date, 0);
       }
@@ -99,7 +99,7 @@ export const adjustDateSectionValue = <TDate>(
       }
       return utils.addMinutes(date, delta);
     }
-    case 'second': {
+    case 'seconds': {
       if (isStart) {
         return utils.setSeconds(date, 0);
       }
@@ -192,7 +192,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return am;
     }
 
-    case 'hour': {
+    case 'hours': {
       let newDate: TDate;
       if (shouldSetAbsolute) {
         if (delta > 0 || isEnd) {
@@ -207,7 +207,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return utils.formatByString(newDate, section.formatValue);
     }
 
-    case 'minute': {
+    case 'minutes': {
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
@@ -220,7 +220,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return utils.formatByString(newDate, section.formatValue);
     }
 
-    case 'second': {
+    case 'seconds': {
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
@@ -320,15 +320,15 @@ const getSectionPlaceholder = <TDate>(
       return localeText.fieldDayPlaceholder();
     }
 
-    case 'hour': {
+    case 'hours': {
       return localeText.fieldHoursPlaceholder();
     }
 
-    case 'minute': {
+    case 'minutes': {
       return localeText.fieldMinutesPlaceholder();
     }
 
-    case 'second': {
+    case 'seconds': {
       return localeText.fieldSecondsPlaceholder();
     }
 
@@ -495,17 +495,17 @@ export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
           ? utils.getDaysInMonth(currentDate)
           : maxDaysInMonth,
     }),
-    hour: () => ({
+    hours: () => ({
       minimum: 0,
       // Assumption: All days have the same amount of hours
       maximum: utils.getHours(endOfYear),
     }),
-    minute: () => ({
+    minutes: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of minutes
       maximum: utils.getMinutes(endOfYear),
     }),
-    second: () => ({
+    seconds: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of seconds
       maximum: utils.getSeconds(endOfYear),
@@ -546,15 +546,15 @@ export const applySectionValueToDate = <TDate>({
   }
 
   const adapterMethods = {
-    second: {
+    seconds: {
       getter: utils.getSeconds,
       setter: utils.setSeconds,
     },
-    minute: {
+    minutes: {
       getter: utils.getMinutes,
       setter: utils.setMinutes,
     },
-    hour: {
+    hours: {
       getter: utils.getHours,
       setter: utils.setHours,
     },

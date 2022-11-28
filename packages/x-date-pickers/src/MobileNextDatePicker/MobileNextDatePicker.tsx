@@ -2,16 +2,16 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
-import { datePickerValueManager } from '../DatePicker/shared';
 import { MobileNextDatePickerProps } from './MobileNextDatePicker.types';
 import {
-  getDatePickerInputFormat,
+  getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
-import { CalendarPickerView, useLocaleText, useUtils } from '../internals';
+import { useLocaleText, useUtils, validateDate } from '../internals';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -27,7 +27,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   inProps: MobileNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers
@@ -39,7 +39,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
-    inputFormat: getDatePickerInputFormat(utils, defaultizedProps),
+    format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {
@@ -60,11 +60,12 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, CalendarPickerView, typeof props>({
+  const { renderPicker } = useMobilePicker({
     props,
-    valueManager: datePickerValueManager,
+    valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
     viewLookup: VIEW_LOOKUP,
+    validator: validateDate,
   });
 
   return renderPicker();
@@ -117,7 +118,7 @@ MobileNextDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -132,10 +133,14 @@ MobileNextDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
@@ -144,8 +149,9 @@ MobileNextDatePicker.propTypes = {
   fixedWeekNumber: PropTypes.number,
   /**
    * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  inputFormat: PropTypes.string,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */
@@ -171,23 +177,24 @@ MobileNextDatePicker.propTypes = {
    */
   localeText: PropTypes.object,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
-   * Callback fired when date is accepted @DateIOType.
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
@@ -196,16 +203,12 @@ MobileNextDatePicker.propTypes = {
    */
   onClose: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * @template TValue, TError
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
@@ -272,7 +275,7 @@ MobileNextDatePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -280,26 +283,24 @@ MobileNextDatePicker.propTypes = {
     }),
   ]),
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -321,7 +322,8 @@ MobileNextDatePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**

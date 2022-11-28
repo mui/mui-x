@@ -56,6 +56,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     shouldDisableTime,
     disableFuture,
     disablePast,
+    selectedSections,
+    onSelectedSectionsChange,
     ...other
   } = themeProps;
 
@@ -109,6 +111,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       shouldDisableTime,
       disableFuture,
       disablePast,
+      selectedSections,
+      onSelectedSectionsChange,
     },
     startInputProps,
     endInputProps,
@@ -164,7 +168,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -174,19 +178,22 @@ MultiInputTimeRangeField.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Format of the date when rendered in the input(s).
+   */
   format: PropTypes.string,
   /**
-   * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Maximal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
   /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Minimal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,
   /**
@@ -194,7 +201,19 @@ MultiInputTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Callback fired when the value changes.
+   * @template TValue, TError
+   * @param {TValue} value The new value.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   */
   onChange: PropTypes.func,
+  /**
+   * Callback fired when the error associated to the current value changes.
+   * @template TValue, TError
+   * @param {TError} error The new error.
+   * @param {TValue} value The value associated to the error.
+   */
   onError: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
@@ -217,7 +236,7 @@ MultiInputTimeRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hour', 'meridiem', 'minute', 'month', 'second', 'year']),
+    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -225,13 +244,16 @@ MultiInputTimeRangeField.propTypes = {
     }),
   ]),
   /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
+   * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value: PropTypes.arrayOf(PropTypes.any),
 } as any;
 

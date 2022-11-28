@@ -199,8 +199,8 @@ describe('<DataGrid /> - Pagination', () => {
           linkOperator: GridLinkOperator.And,
           items: [
             {
-              columnField: 'id',
-              operatorValue: '<=',
+              field: 'id',
+              operator: '<=',
               value: '3',
             },
           ],

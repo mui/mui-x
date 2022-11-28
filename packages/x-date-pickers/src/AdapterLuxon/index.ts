@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
@@ -9,16 +10,16 @@ const luxonVersionWarning = buildWarning([
 ]);
 
 const formatTokenMap: MuiFormatTokenMap = {
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
 
   a: 'meridiem',
 
@@ -63,5 +64,9 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
       return '';
     }
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: DateTime) => {
+    return date.weekNumber;
   };
 }

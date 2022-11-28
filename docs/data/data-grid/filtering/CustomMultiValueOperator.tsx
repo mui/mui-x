@@ -119,9 +119,9 @@ export default function CustomMultiValueOperator() {
     items: [
       {
         id: 1,
-        columnField: 'quantity',
+        field: 'quantity',
         value: [5000, 15000],
-        operatorValue: 'between',
+        operator: 'between',
       },
     ],
   });

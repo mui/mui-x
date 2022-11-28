@@ -9,9 +9,9 @@ import { DayCalendarSkeletonClassKey } from '../DayCalendarSkeleton';
 import {
   ClockClassKey,
   ClockNumberClassKey,
-  ClockPickerClassKey,
+  TimeClockClassKey,
   ClockPointerClassKey,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { MonthCalendarClassKey, PickersMonthClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
 import { PickersYearClassKey, YearCalendarClassKey } from '../YearCalendar';
@@ -27,13 +27,13 @@ import {
   PickersToolbarClassKey,
   PickersToolbarTextClassKey,
 } from '../internals';
+import { PickersViewLayoutClassKey } from '../internals/components/PickersViewLayout';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
   MuiCalendarOrClockPicker: CalendarOrClockPickerClassKey;
   MuiClock: ClockClassKey;
   MuiClockNumber: ClockNumberClassKey;
-  MuiClockPicker: ClockPickerClassKey;
   MuiClockPointer: ClockPointerClassKey;
   MuiDateCalendar: DateCalendarClassKey;
   MuiDateField: never;
@@ -47,14 +47,20 @@ export interface PickersComponentNameToClassKey {
   MuiDesktopDatePicker: never;
   MuiDesktopDateTimePicker: never;
   MuiDesktopNextDatePicker: never;
+  MuiDesktopNextDateTimePicker: never;
+  MuiDesktopNextTimePicker: never;
   MuiDesktopTimePicker: never;
   MuiLocalizationProvider: never;
   MuiMobileDatePicker: never;
   MuiMobileDateTimePicker: never;
   MuiMobileNextDatePicker: never;
+  MuiMobileNextDateTimePicker: never;
+  MuiMobileNextTimePicker: never;
   MuiMobileTimePicker: never;
   MuiMonthCalendar: MonthCalendarClassKey;
   MuiNextDatePicker: never;
+  MuiNextDateTimePicker: never;
+  MuiNextTimePicker: never;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;
   MuiPickersCalendarHeader: PickersCalendarHeaderClassKey;
   MuiPickersDay: PickersDayClassKey;
@@ -66,11 +72,15 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
+  MuiPickersViewLayout: PickersViewLayoutClassKey;
   MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;
   MuiStaticNextDatePicker: never;
+  MuiStaticNextDateTimePicker: never;
+  MuiStaticNextTimePicker: never;
   MuiStaticTimePicker: never;
+  MuiTimeClock: TimeClockClassKey;
   MuiTimePicker: never;
   MuiTimePickerToolbar: TimePickerToolbarClassKey;
   MuiYearCalendar: YearCalendarClassKey;

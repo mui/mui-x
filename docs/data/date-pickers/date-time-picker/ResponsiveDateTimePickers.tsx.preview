@@ -1,0 +1,16 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Stack spacing={3}>
+    <MobileNextDateTimePicker
+      label="For mobile"
+      defaultValue={dayjs('2022-04-07T15:30')}
+    />
+    <DesktopNextDateTimePicker
+      label="For desktop"
+      defaultValue={dayjs('2022-04-07T15:30')}
+    />
+    <NextDateTimePicker
+      label="Responsive"
+      defaultValue={dayjs('2022-04-07T15:30')}
+    />
+  </Stack>
+</LocalizationProvider>

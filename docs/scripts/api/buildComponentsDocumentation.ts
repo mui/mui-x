@@ -22,7 +22,13 @@ import {
 } from '@mui/monorepo/docs/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
-import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
+import {
+  DocumentedInterfaces,
+  getJsdocDefaultValue,
+  linkify,
+  getSymbolJSDocTags,
+  writePrettifiedFile,
+} from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
@@ -41,7 +47,7 @@ interface ReactApi extends ReactDocgenApi {
   styles: Styles;
   displayName: string;
   slots: Record<string, { default: string | undefined; type: { name: string | undefined } }>;
-  packages: string[];
+  packages: { packageName: string; componentName: string }[];
 }
 
 /**
@@ -244,11 +250,33 @@ const buildComponentDocumentation = async (options: {
     reactApi.styles.globalClasses[key] = globalClass;
   });
 
-  const allProjectsName = Array.from(projects.keys());
-  const projectsWithThisComponent = allProjectsName.filter(
-    (projectName) => !!projects.get(projectName)!.exports[reactApi.name],
-  );
-  reactApi.packages = projectsWithThisComponent.map((projectName) => `@mui/${projectName}`);
+  reactApi.packages = Array.from(projects.keys())
+    .map((projectName) => {
+      const currentProject = projects.get(projectName) as Project;
+
+      const symbol =
+        currentProject.exports[reactApi.name] ||
+        currentProject.exports[`Unstable_${reactApi.name}`];
+
+      if (symbol) {
+        const jsDoc = getSymbolJSDocTags(symbol);
+
+        // Do not show imports if the module is deprecated
+        if (jsDoc.deprecated) {
+          return null;
+        }
+
+        return {
+          packageName: `@mui/${projectName}`,
+          componentName: symbol.escapedName.toString(),
+        };
+      }
+
+      return null;
+    })
+    .filter((p): p is ReactApi['packages'][number] => p != null)
+    // Display the imports from the pro packages above imports from the community packages
+    .sort((a, b) => b.packageName.length - a.packageName.length);
 
   const componentApi: {
     componentDescription: string;
@@ -447,7 +475,7 @@ const buildComponentDocumentation = async (options: {
     filename: toGithubPath(reactApi.filename, project.workspaceRoot),
     inheritance: reactApi.inheritance,
     demos: generateDemoList(reactApi.demos),
-    packages: reactApi.packages.sort((a, b) => b.length - a.length), // Display the imports from the pro packages above imports from the community packages
+    packages: reactApi.packages,
   };
 
   // docs/pages/component-name.json

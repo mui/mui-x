@@ -4,14 +4,15 @@ import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersPopper } from '../../components/PickersPopper';
-import { CalendarOrClockPickerView } from '../../models/views';
+import { DateOrTimeView } from '../../models/views';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickerViewLayout } from '../../components/PickerViewLayout';
+import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { InferError } from '../validation/useValidation';
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -21,16 +22,16 @@ import { PickerViewLayout } from '../../components/PickerViewLayout';
  */
 export const useDesktopPicker = <
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
   viewLookup,
+  validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, inputFormat, readOnly, disabled, localeText } =
-    props;
+  const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -48,12 +49,13 @@ export const useDesktopPicker = <
     inputRef,
     viewLookup,
     valueManager,
+    validator,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
 
   const Field = components.Field;
-  const fieldProps: BaseFieldProps<TDate | null, unknown> = useSlotProps({
+  const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
     externalSlotProps: componentsProps?.field,
     additionalProps: {
@@ -61,7 +63,7 @@ export const useDesktopPicker = <
       readOnly,
       disabled,
       className,
-      format: inputFormat,
+      format,
     },
     ownerState: props,
   });
@@ -147,13 +149,13 @@ export const useDesktopPicker = <
           componentsProps={componentsProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickerViewLayout
+          <PickersViewLayout
             {...layoutProps}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickerViewLayout>
+          </PickersViewLayout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

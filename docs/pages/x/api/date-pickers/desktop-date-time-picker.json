@@ -28,6 +28,7 @@
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
@@ -128,5 +129,8 @@
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDateTimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDateTimePicker" }
+  ]
 }

@@ -292,17 +292,6 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(virtualScroller.scrollTop).to.equal(0);
   });
 
-  it('should toggle the detail panel when pressing Ctrl/Cmd+Enter', () => {
-    render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
-    expect(screen.queryByText('Detail')).to.equal(null);
-    const cell = getCell(1, 1);
-    userEvent.mousePress(cell);
-    fireEvent.keyDown(cell, { ctrlKey: true, key: 'Enter' });
-    expect(screen.queryByText('Detail')).not.to.equal(null);
-    fireEvent.keyDown(cell, { metaKey: true, key: 'Enter' });
-    expect(screen.queryByText('Detail')).to.equal(null);
-  });
-
   it('should toggle the detail panel when pressing Space on detail toggle cell', () => {
     render(<TestCase getDetailPanelContent={() => <div>Detail</div>} />);
     expect(screen.queryByText('Detail')).to.equal(null);
@@ -497,8 +486,24 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getRow(0)).to.have.class(gridClasses['row--detailPanelExpanded']);
   });
 
+  // See https://github.com/mui/mui-x/issues/6694
+  it('should add a bottom margin to the expanded row when using `getRowSpacing`', function test() {
+    if (isJSDOM) {
+      this.skip(); // Doesn't work with mocked window.getComputedStyle
+    }
+
+    render(
+      <TestCase
+        getDetailPanelContent={({ id }) => (id === 0 ? <div /> : null)}
+        getRowSpacing={() => ({ top: 2, bottom: 2 })}
+      />,
+    );
+    fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '502px' }); // 500px + 2px spacing
+  });
+
   describe('prop: onDetailPanelsExpandedRowIds', () => {
-    it('shoull call when a row is expanded or closed', () => {
+    it('should call when a row is expanded or closed', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
       render(
         <TestCase
@@ -516,7 +521,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal([]);
     });
 
-    it('shoull not change the open detail panels when called while detailPanelsExpandedRowIds is the same', () => {
+    it('should not change the open detail panels when called while detailPanelsExpandedRowIds is the same', () => {
       const handleDetailPanelsExpandedRowIdsChange = spy();
       render(
         <TestCase
@@ -545,7 +550,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       expect(screen.queryByText('Row 2')).to.equal(null);
     });
 
-    it("should not change the open detail panels if the prop  didn't change", () => {
+    it("should not change the open detail panels if the prop didn't change", () => {
       render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
