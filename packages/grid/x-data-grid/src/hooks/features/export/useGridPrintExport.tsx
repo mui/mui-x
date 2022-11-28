@@ -126,6 +126,7 @@ export const useGridPrintExport = (
       gridCloneViewport!.style.width = 'auto';
       gridCloneViewport!.parentElement!.style.width = 'auto';
       gridCloneViewport!.parentElement!.style.height = 'auto';
+      gridCloneViewport!.parentElement!.style.flex = '1';
 
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
