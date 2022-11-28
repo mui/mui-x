@@ -24,11 +24,5 @@ export function getPickersViewLayoutUtilityClass(slot: string) {
 
 export const pickersViewLayoutClasses = generateUtilityClasses<PickersViewLayoutClassKey>(
   'MuiPickersViewLayout',
-  [
-    'root',
-    'landscape',
-    'content',
-    'toolbar',
-    'actionbar',
-  ],
+  ['root', 'landscape', 'content', 'toolbar', 'actionbar'],
 );

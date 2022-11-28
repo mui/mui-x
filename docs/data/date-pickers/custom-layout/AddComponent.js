@@ -65,10 +65,7 @@ export default function AddComponent() {
         componentsProps={{
           layout: ({ toolbar, actionBar, content }) => ({
             sx: {
-              // Keep the structure with display grid
-              display: 'grid',
-              gridAutoColumns: 'max-content auto max-content',
-              gridAutoRows: 'max-content auto max-content',
+              // Modify DOM structure
               '& .MuiPickersViewLayout-actionbar': {
                 gridColumn: '1',
                 gridRow: '2',

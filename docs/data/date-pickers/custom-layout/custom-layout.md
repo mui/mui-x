@@ -23,7 +23,7 @@ Toggling layout can be achieved by changing `orientation` prop value between `'p
 
 Here is a demonstration with the 3 components outlined with color borders.
 
-{{"demo": "LayoutBlocks.js"}}
+{{"demo": "LayoutBlocks.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Customize layout
 
