@@ -34,7 +34,7 @@ import 'dayjs/locale/de';
 
 ### With `date-fns`
 
-For `date-fns`—you have to import the locale and pass it to `LocalizationProvider`:
+For `date-fns`, import the locale and pass it to `LocalizationProvider`:
 
 ```tsx
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
