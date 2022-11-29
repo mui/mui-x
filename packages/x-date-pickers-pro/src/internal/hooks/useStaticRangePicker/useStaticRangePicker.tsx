@@ -9,7 +9,10 @@ import {
   DIALOG_WIDTH,
   PickersViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
-import { UseStaticRangePickerParams, UseStaticRangePickerProps } from './useStaticRangePicker.types';
+import {
+  UseStaticRangePickerParams,
+  UseStaticRangePickerProps,
+} from './useStaticRangePicker.types';
 
 const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
   overflow: 'hidden',
