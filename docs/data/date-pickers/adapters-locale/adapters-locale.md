@@ -150,7 +150,7 @@ This prop takes the short name of the day provided by the date library as an inp
 The default formatter only keeps the first letter and capitalises it.
 
 :::info
-This prop is available on all components rendering a day calendar (`DateCalendar`, all the date pickers, date time pickers and date range pickers)
+This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
 The example bellow adds a dot at the end of each day in the calendar header:
