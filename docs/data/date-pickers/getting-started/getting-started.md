@@ -32,7 +32,7 @@ You need to install 2 different types of package to make the pickers work:
 
 ### Why do you need a library ?
 
-Like most pickers—the MUI Date and Time Pickers need a library to manipulate the dates.
+Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
 It will be used to format, parse, and mutate the date inside all pickers.
 
 MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
