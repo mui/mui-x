@@ -27,13 +27,13 @@ export interface UseDesktopRangePickerSlotsComponent
   Input?: React.ElementType<TextFieldProps>;
 }
 
-export interface UseDesktopRangePickerSlotsComponentsProps<TDate>
+export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
@@ -61,7 +61,7 @@ export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView,
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate>;
+  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 interface DesktopRangePickerAdditionalViewProps {
