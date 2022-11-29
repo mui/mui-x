@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { useThemeProps } from '@mui/material/styles';
+import { useThemeProps } from '@mui/system';
 import {
   DataGridProcessedProps,
   DataGridProps,
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from './defaultGridSlotsComponents';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { GridDensityTypes, GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {

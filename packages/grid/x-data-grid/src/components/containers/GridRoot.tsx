@@ -10,7 +10,6 @@ import {
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
-import { GridRootStyles } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
@@ -87,7 +86,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   }
 
   return (
-    <GridRootStyles
+    <rootProps.components.RootStyles
       ref={handleRef}
       className={clsx(className, classes.root)}
       role="grid"
@@ -99,7 +98,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
       {...other}
     >
       {children}
-    </GridRootStyles>
+    </rootProps.components.RootStyles>
   );
 });
 
