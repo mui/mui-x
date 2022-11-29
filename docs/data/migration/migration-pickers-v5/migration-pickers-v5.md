@@ -387,7 +387,7 @@ Component name changes are also reflected in `themeAugmentation`:
 
 ### Replace `tabs` props
 
-- The `hideTabs`, `dateRangeIcon`, and `timeIcon` props have been moved to `tabs` component props:
+- The `hideTabs` and `timeIcon` props have been moved to `tabs` component props. The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component props.
 
   ```diff
    // Same on all other Date Time picker variations
@@ -398,7 +398,7 @@ Component name changes are also reflected in `themeAugmentation`:
   +  componentsProps={{
   +    tabs: {
   +      hidden: false,
-  +      dateRangeIcon: <LightModeIcon />,
+  +      dateIcon: <LightModeIcon />,
   +      timeIcon: <AcUnitIcon />,
   +    }
   +  }}

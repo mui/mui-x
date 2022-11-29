@@ -35,7 +35,7 @@ export default function Tabs() {
         componentsProps={{
           tabs: {
             hidden: false,
-            dateRangeIcon: <LightModeIcon />,
+            dateIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },
         }}
