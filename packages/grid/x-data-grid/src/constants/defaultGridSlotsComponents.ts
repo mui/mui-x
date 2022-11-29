@@ -2,7 +2,6 @@ import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
-import MUIButton from '@mui/material/Button';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
@@ -47,6 +46,7 @@ import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import { DefaultGridRootStyles } from '../DataGridUnstyled/DefaultGridRootStyles';
 import { BaseCheckbox } from '../DataGridUnstyled/components/BaseCheckbox';
+import { BaseButton } from '../DataGridUnstyled/components/BaseButton';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -82,11 +82,11 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   BaseCheckbox,
+  BaseButton,
   BaseTextField: MUITextField,
   BaseFormControl: MUIFormControl,
   BaseSelect: MUISelect,
   BaseSwitch: MUISwitch,
-  BaseButton: MUIButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   Cell: GridCell,
