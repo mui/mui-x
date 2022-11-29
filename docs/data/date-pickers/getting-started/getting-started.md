@@ -33,7 +33,6 @@ You need to install two different types of packages to make the pickers work:
 ### Why do you need a date library?
 
 Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
-It will be used to format, parse, and mutate the date inside all pickers.
 
 MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
 This lets you pick the library you already use in your application, without adding an extra one in your bundle.
