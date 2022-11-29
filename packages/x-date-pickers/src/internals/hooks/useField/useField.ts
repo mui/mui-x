@@ -455,6 +455,7 @@ export const useField = <
     { ...internalProps, value: state.value },
     validator,
     valueManager.isSameError,
+    valueManager.defaultErrorState,
   );
 
   const inputError = React.useMemo(

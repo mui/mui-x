@@ -3,7 +3,7 @@ import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from '../../components/PickersViewLayout';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import {
@@ -27,8 +27,8 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
-  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
+export interface UseStaticPickerProps<TValue, TDate, TView extends DateOrTimeView, TError>
+  extends BaseNextPickerProps<TValue, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
@@ -43,11 +43,12 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
 }
 
 export interface UseStaticPickerParams<
+  TValue,
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseStaticPickerProps<TValue, TDate, TView, any>,
 > extends Pick<
-    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<TValue, TDate, TView, TExternalProps, {}>,
     'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;

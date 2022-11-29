@@ -5,7 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
-import { CalendarOrClockPickerView, useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
@@ -27,7 +27,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   inProps: MobileNextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
   const { className, sx, ...defaultizedProps } = useNextDateTimePickerDefaultizedProps<
@@ -54,11 +54,12 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
 
-  const { renderPicker } = useMobilePicker<TDate, CalendarOrClockPickerView, typeof props>({
+  const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
@@ -150,6 +151,10 @@ MobileNextDateTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
@@ -331,7 +336,7 @@ MobileNextDateTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

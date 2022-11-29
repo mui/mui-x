@@ -1,12 +1,10 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DatePicker
+  <NextDatePicker
     label="Helper text example"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
+    componentsProps={{
+      input: {
+        helperText: 'MM / DD / YYYY',
+      },
     }}
-    renderInput={(params) => (
-      <TextField {...params} helperText={params?.inputProps?.placeholder} />
-    )}
   />
 </LocalizationProvider>

@@ -1,4 +1,4 @@
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
@@ -8,7 +8,7 @@ import { InferError } from '../validation/useValidation';
 export const usePicker = <
   TValue,
   TDate,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
   TExternalProps extends UsePickerProps<TValue, TView, any>,
   TAdditionalProps extends {},
 >({
