@@ -74,5 +74,4 @@ Object.keys(usedLinks)
     console.log('\n\n');
   });
 
-console.log(Object.keys(availableLinks).filter((l) => l.includes('api/button')));
 save(buffer);
