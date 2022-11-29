@@ -257,7 +257,7 @@ Component names in the theme have changed as well:
 
 ### Rename `date` prop to `value` on view components
 
-The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`,, and `DateCalendar` (components renamed in previous section):
+The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} onChange={handleMonthChange} />
