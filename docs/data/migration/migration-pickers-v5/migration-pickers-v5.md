@@ -21,15 +21,16 @@ Below are described the steps you need to make to migrate from v5 to v6.
 
 ### Drop `clock` in desktop mode
 
-We have dropped the clock picker behavior in desktop mode for `DateTimePicker` and `TimePicker` components.
+In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
 This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
 The behavior on mobile mode is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
 
 ### Extended `@date-io` adapters
 
-In order to support new Date and Time pickers with [fields components](/x/react-date-pickers/fields/) we had to augment `@date-io` adapters.
-If you were using adapter from `@date-io`—you will need to update the import.
+In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
+In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/). 
+Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`. Otherwise, some methods will be missing.
 If you do not find the adapter you were using—there probably was a reason for it, but you can raise an issue expressing interest in it.
 
 ```diff
