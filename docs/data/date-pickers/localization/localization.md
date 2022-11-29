@@ -13,7 +13,7 @@ in the GitHub repository.
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
-This page focuses on the translations of the texts inside the Date and Time Pickers.
+This page focuses on translating the text inside the Date and Time Pickers.
 If you need to change the formatting of the text to conform to a given locale, visit the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
 :::
 
