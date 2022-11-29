@@ -11,7 +11,7 @@ title: Localized dates
 The default locale of MUI is English (United States). If you want to use other locales—follow the instructions below.
 
 :::warning
-This page focuses on the date format localization.
+This page focuses on date format localization.
 If you want to translate the texts inside the components—have a look at the [Translated components](/x/react-date-pickers/localization/) page.
 :::
 
