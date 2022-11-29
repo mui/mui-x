@@ -101,7 +101,7 @@ If you want to customize some translations on specific component, you can use th
 :::info
 This method can be combined with the ones shown above.
 
-If you pass a locale through `LocalizationProvider` or the theme and a few translation keys through the `localeText` prop of a picker—only the latter translation keys will be overridden.
+If you pass a locale through `LocalizationProvider` or the theme, and you provide translation keys through the `localeText` prop of a picker at the same time, then only the latter translation keys will be overridden.
 
 ```tsx
 <LocalizationProvider localeText={frFR}>
