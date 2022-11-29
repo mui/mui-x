@@ -128,7 +128,7 @@ The fields have a default format that depends on the picker being used, the view
 If this default format does not suit you, you can customize it using the `format` prop:
 
 :::info
-This prop is available on all the fields and all the pickers.
+This prop is available on all fields and pickers.
 :::
 
 {{"demo": "CustomFieldFormat.js"}}
