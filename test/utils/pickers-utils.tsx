@@ -205,6 +205,10 @@ export const rangeCalendarDayTouches = {
     clientX: 125,
     clientY: 125,
   },
+  '2018-01-09': {
+    clientX: 125,
+    clientY: 165,
+  },
   '2018-01-10': {
     clientX: 165,
     clientY: 165,

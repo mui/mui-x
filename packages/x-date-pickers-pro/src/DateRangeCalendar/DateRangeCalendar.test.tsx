@@ -21,9 +21,17 @@ import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
 } from '@mui/x-date-pickers-pro/DateRangeCalendar/index';
+import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+
+const dynamicShouldDisableDate = (date, position: DateRangePosition) => {
+  if (position === 'end') {
+    return adapterToUse.getDate(date) % 3 === 0;
+  }
+  return adapterToUse.getDate(date) % 5 === 0;
+};
 
 describe('<DateRangeCalendar />', () => {
   const { render, clock } = createPickerRenderer({
@@ -417,12 +425,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             defaultValue={initialValue}
-            shouldDisableDate={(date, position) => {
-              if (position === 'end') {
-                return adapterToUse.getDate(date) % 3 === 0;
-              }
-              return adapterToUse.getDate(date) % 5 === 0;
-            }}
+            shouldDisableDate={dynamicShouldDisableDate}
             calendars={1}
           />,
         );
@@ -451,12 +454,7 @@ describe('<DateRangeCalendar />', () => {
         render(
           <DateRangeCalendar
             defaultValue={initialValue}
-            shouldDisableDate={(date, position) => {
-              if (position === 'end') {
-                return adapterToUse.getDate(date) % 3 === 0;
-              }
-              return adapterToUse.getDate(date) % 5 === 0;
-            }}
+            shouldDisableDate={dynamicShouldDisableDate}
             calendars={1}
           />,
         );
@@ -467,6 +465,7 @@ describe('<DateRangeCalendar />', () => {
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
           rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-09'],
           rangeCalendarDayTouches['2018-01-10'],
         );
 
