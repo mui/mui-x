@@ -19,7 +19,7 @@ If you want to translate the texts inside the components—have a look at the [T
 
 ### With `dayjs`
 
-For `dayjs`—you have to import the locale and then pass its name to `LocalizationProvider`:
+For `dayjs`, import the locale and then pass its name to `LocalizationProvider`:
 
 ```tsx
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
