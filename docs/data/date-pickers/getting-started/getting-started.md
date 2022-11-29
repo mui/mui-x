@@ -30,7 +30,7 @@ You need to install 2 different types of package to make the pickers work:
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-### Why do you need a library ?
+### Why do you need a date library?
 
 Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
 It will be used to format, parse, and mutate the date inside all pickers.
