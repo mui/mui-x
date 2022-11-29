@@ -145,7 +145,8 @@ This prop is available on all pickers.
 
 ### Custom day of week format
 
-To customize day names in calendar header—you can use `dayOfWeekFormatter` which takes as an input the short name of the day provided by the date-library and returns it's formatted version.
+Use use `dayOfWeekFormatter` to customize day names in the calendar header.
+This prop takes the short name of the day provided by the date library as an input, and returns it's formatted version.
 The default formatter only keeps the first letter and capitalises it.
 
 :::info
