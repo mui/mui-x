@@ -104,7 +104,7 @@ function App({ children }) {
 ## 12h/24h format
 
 All the time and datetime components will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format.
-This can be overridden by using the `ampm` prop:
+You can override the default setting with the `ampm` prop:
 
 {{"demo": "AmPMCustomization.js"}}
 
