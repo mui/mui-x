@@ -140,7 +140,7 @@ describe('<DateRangeCalendar />', () => {
         return createdEvent;
       };
 
-      const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
+      const executeDateDragWithoutDrop = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
         const endDate = otherDates[otherDates.length - 1];
         fireEvent(startDate, createDragEvent('dragStart', startDate));
         fireEvent(startDate, createDragEvent('dragLeave', startDate));
@@ -151,6 +151,11 @@ describe('<DateRangeCalendar />', () => {
         });
         fireEvent(endDate, createDragEvent('dragEnter', endDate));
         fireEvent(endDate, createDragEvent('dragOver', endDate));
+      };
+
+      const executeDateDrag = (startDate: ChildNode, ...otherDates: ChildNode[]) => {
+        executeDateDragWithoutDrop(startDate, ...otherDates);
+        const endDate = otherDates[otherDates.length - 1];
         fireEvent(endDate, createDragEvent('drop', endDate));
         fireEvent(endDate, createDragEvent('dragEnd', endDate));
       };
@@ -165,12 +170,19 @@ describe('<DateRangeCalendar />', () => {
         fireTouchChangedEvent(target, type, { changedTouches: [touch] });
       };
 
-      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
-        const endTouchTarget = touchTargets[touchTargets.length - 1];
+      const executeDateTouchDragWithoutEnd = (
+        target: ChildNode,
+        ...touchTargets: TouchTarget[]
+      ) => {
         fireTouchEvent('touchstart', target, touchTargets[0]);
         touchTargets.slice(0, touchTargets.length - 1).forEach((touch) => {
           fireTouchEvent('touchmove', target, touch);
         });
+      };
+
+      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
+        const endTouchTarget = touchTargets[touchTargets.length - 1];
+        executeDateTouchDragWithoutEnd(target, ...touchTargets);
         fireTouchEvent('touchend', target, endTouchTarget);
       };
 
@@ -395,6 +407,71 @@ describe('<DateRangeCalendar />', () => {
         expect(onChange.callCount).to.equal(3);
         expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[1]);
         expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 11));
+      });
+
+      it('should dynamically update "shouldDisableDate" when flip dragging', () => {
+        const initialValue: [any, any] = [
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 7)),
+        ];
+        render(
+          <DateRangeCalendar
+            defaultValue={initialValue}
+            shouldDisableDate={(date, position) => {
+              if (position === 'end') {
+                return adapterToUse.getDate(date) % 3 === 0;
+              }
+              return adapterToUse.getDate(date) % 5 === 0;
+            }}
+            calendars={1}
+          />,
+        );
+
+        expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
+        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        // flip date range
+        executeDateDragWithoutDrop(
+          screen.getByRole('gridcell', { name: '1' }),
+          screen.getByRole('gridcell', { name: '4' }),
+          screen.getByRole('gridcell', { name: '10' }),
+        );
+
+        expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
+        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+      });
+
+      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
+        if (!document.elementFromPoint) {
+          this.skip();
+        }
+        const initialValue: [any, any] = [
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 7)),
+        ];
+        render(
+          <DateRangeCalendar
+            defaultValue={initialValue}
+            shouldDisableDate={(date, position) => {
+              if (position === 'end') {
+                return adapterToUse.getDate(date) % 3 === 0;
+              }
+              return adapterToUse.getDate(date) % 5 === 0;
+            }}
+            calendars={1}
+          />,
+        );
+
+        expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
+        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        // flip date range
+        executeDateTouchDragWithoutEnd(
+          screen.getByRole('gridcell', { name: '1' }),
+          rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-10'],
+        );
+
+        expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
+        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
       });
     });
   });
