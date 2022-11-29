@@ -123,7 +123,7 @@ Please refer to each library's documentation for the full format table:
 
 ### Custom field format
 
-The fields have a default format that depends on the picker being used, the views enabled and the 12h/24h format.
+The fields have a default format that depends on the picker being used, the views enabled, and the 12h/24h format.
 
 If this default format does not suit you, you can customize it using the `format` prop:
 
