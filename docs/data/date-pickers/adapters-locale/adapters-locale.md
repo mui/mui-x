@@ -112,7 +112,7 @@ You can override the default setting with the `ampm` prop:
 
 :::warning
 The format received by the props described below depends on the date library you are using.
-Please refer to each library documentation for the full format table:
+Please refer to each library's documentation for the full format table:
 
 - [Day.js](https://day.js.org/docs/display/format)
 - [date-fns](https://date-fns.org/docs/format)
