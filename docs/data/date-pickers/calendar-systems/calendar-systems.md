@@ -17,7 +17,7 @@ The following demo shows how to use the date-fns plugin:
 
 ## Hijri
 
-You can use the `AdapterMomentHijri` adapter which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
+You can use the `AdapterMomentHijri` adapter, which is based on [moment-hijri](https://www.npmjs.com/package/moment-hijri):
 
 {{"demo": "AdapterHijri.js"}}
 
