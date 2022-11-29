@@ -2,7 +2,7 @@
 title: Date and Time pickers - Localization
 ---
 
-# Date and Time pickers - Localization
+# Date and Time Pickers - Localization
 
 <p class="description">Date and Time Pickers support translations between languages.</p>
 
