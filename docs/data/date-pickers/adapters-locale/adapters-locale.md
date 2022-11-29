@@ -77,7 +77,7 @@ import 'moment/locale/de';
 {{"demo": "LocalizationMoment.js"}}
 
 :::warning
-Some of `moment` methods do not support scoped local.
+Some of the `moment` methods do not support scoped locales.
 To have a correct localization—you will have to manually update the global locale before updating it in `LocalizationProvider`.
 
 ```tsx
