@@ -1,4 +1,3 @@
-import MUICheckbox from '@mui/material/Checkbox';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
@@ -47,6 +46,7 @@ import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUn
 import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import { DefaultGridRootStyles } from '../DataGridUnstyled/DefaultGridRootStyles';
+import { BaseCheckbox } from '../DataGridUnstyled/components/BaseCheckbox';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -81,7 +81,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
  */
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
-  BaseCheckbox: MUICheckbox,
+  BaseCheckbox,
   BaseTextField: MUITextField,
   BaseFormControl: MUIFormControl,
   BaseSelect: MUISelect,
