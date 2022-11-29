@@ -4,7 +4,7 @@ title: Support for other calendar systems
 
 # Support for other calendar systems
 
-<p class="description">Use the Date and Time Pickers with non-gregorian calendars.</p>
+<p class="description">Use the Date and Time Pickers with non-Gregorian calendars.</p>
 
 ## Jalali
 
