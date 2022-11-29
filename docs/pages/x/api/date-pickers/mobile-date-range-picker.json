@@ -98,5 +98,7 @@
   "filename": "/packages/x-date-pickers-pro/src/MobileDateRangePicker/MobileDateRangePicker.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileDateRangePicker" }
+  ]
 }

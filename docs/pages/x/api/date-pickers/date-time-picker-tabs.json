@@ -21,5 +21,8 @@
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
+  ]
 }

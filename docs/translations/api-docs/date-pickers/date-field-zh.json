@@ -1,0 +1,24 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "components": "Overrideable components.",
+    "componentsProps": "The props used for each component slot.",
+    "defaultValue": "The default value. Use when the component is not controlled.",
+    "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
+    "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
+    "format": "Format of the date when rendered in the input(s).",
+    "maxDate": "Maximal selectable date.",
+    "minDate": "Minimal selectable date.",
+    "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TValue, The: FieldChangeHandlerContext&lt;TError&gt;) =&gt; void</code><br><em>value:</em> The new value.<br><em>The:</em> context containing the validation result of the current value.",
+    "onError": "Callback fired when the error associated to the current value changes.<br><br><strong>Signature:</strong><br><code>function(error: TError, value: TValue) =&gt; void</code><br><em>error:</em> The new error.<br><em>value:</em> The value associated to the error.",
+    "onSelectedSectionsChange": "Callback fired when the selected sections change.<br><br><strong>Signature:</strong><br><code>function(newValue: FieldSelectedSections) =&gt; void</code><br><em>newValue:</em> The new selected sections.",
+    "readOnly": "It prevents the user from changing the value of the field (not from interacting with the field).",
+    "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>MuiDateSectionName</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
+    "shouldDisableDate": "Disable specific date.<br><br><strong>Signature:</strong><br><code>function(day: TDate) =&gt; boolean</code><br><em>day:</em> The date to test.<br> <em>returns</em> (boolean): If <code>true</code> the date will be disabled.",
+    "shouldDisableMonth": "Disable specific month.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to test.<br> <em>returns</em> (boolean): If <code>true</code> the month will be disabled.",
+    "shouldDisableYear": "Disable specific year.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): If <code>true</code> the year will be disabled.",
+    "value": "The selected value. Used when the component is controlled."
+  },
+  "classDescriptions": {},
+  "slotDescriptions": { "Input": "Input rendered." }
+}

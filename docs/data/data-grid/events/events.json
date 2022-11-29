@@ -360,19 +360,19 @@
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },
   {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "rowsScroll",
-    "description": "Fired during the scroll of the grid viewport.",
-    "params": "GridScrollParams",
-    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
-  },
-  {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport.",
     "params": "GridRowScrollEndParams",
     "event": "MuiEvent<{}>",
     "componentProp": "onRowsScrollEnd"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "scrollPositionChange",
+    "description": "Fired during the scroll of the grid viewport.",
+    "params": "GridScrollParams",
+    "event": "MuiEvent<React.UIEvent | MuiBaseEvent>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

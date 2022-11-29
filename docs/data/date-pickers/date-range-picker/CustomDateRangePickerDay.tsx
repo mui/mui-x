@@ -1,16 +1,13 @@
 import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 import {
   DateRangePickerDay as MuiDateRangePickerDay,
   DateRangePickerDayProps,
 } from '@mui/x-date-pickers-pro/DateRangePickerDay';
-import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { Dayjs } from 'dayjs';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
   ({
@@ -41,23 +38,12 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 ) as React.ComponentType<DateRangePickerDayProps<Dayjs>>;
 
 export default function CustomDateRangePickerDay() {
-  const [value, setValue] = React.useState<DateRange<Dayjs>>([null, null]);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDateRangePicker
+      <StaticNextDateRangePicker
         displayStaticWrapperAs="desktop"
-        label="date range"
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
+        defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
         components={{ Day: DateRangePickerDay }}
-        renderInput={(startProps, endProps) => (
-          <React.Fragment>
-            <TextField {...startProps} />
-            <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
-          </React.Fragment>
-        )}
       />
     </LocalizationProvider>
   );

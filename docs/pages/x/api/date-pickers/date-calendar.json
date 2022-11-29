@@ -79,5 +79,8 @@
   },
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateCalendar" }
+  ]
 }
