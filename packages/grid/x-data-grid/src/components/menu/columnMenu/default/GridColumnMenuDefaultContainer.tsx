@@ -10,7 +10,7 @@ import { gridClasses } from '../../../../constants/gridClasses';
 const StyledMenuList = styled(MenuList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  minWidth: theme.typography.pxToRem(248),
+  minWidth: 248,
 }));
 
 const GridColumnMenuDefaultContainer = React.forwardRef<

@@ -9,6 +9,7 @@ export interface GridColumnMenuContainerProps extends React.HTMLAttributes<HTMLU
   id?: string;
   labelledby?: string;
 }
+
 export interface GridColumnMenuProps
   extends Partial<GridColumnMenuRootProps>,
     GridColumnMenuContainerProps {}
