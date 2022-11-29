@@ -213,7 +213,7 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName || group.groupId)),
+      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
@@ -288,7 +288,7 @@ export async function buildExcel(
   }
 
   if (includeHeaders) {
-    worksheet.addRow(columns.map((column) => column.headerName || column.field));
+    worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
   const columnsWithArrayValueOptions = columns.filter(
@@ -312,7 +312,7 @@ export async function buildExcel(
         api,
       );
       valueOptionsWorksheet.getColumn(column.field).values = [
-        column.headerName || column.field,
+        column.headerName ?? column.field,
         ...formattedValueOptions,
       ];
 
