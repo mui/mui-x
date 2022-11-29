@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   DataGridPro,
-  GridColumnMenuDefaultContainer,
+  GridColumnMenuContainer,
   GridColumnMenuSortItem,
   GridColumnMenuHideItem,
   GridColumnMenuColumnsItem,
@@ -19,7 +19,7 @@ function CustomColumnMenu(props) {
   const { hideMenu, currentColumn, color, ...other } = props;
 
   return (
-    <GridColumnMenuDefaultContainer
+    <GridColumnMenuContainer
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       {...other}
@@ -28,7 +28,7 @@ function CustomColumnMenu(props) {
       <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn} />
       <GridColumnMenuHideItem onClick={hideMenu} column={currentColumn} />
       <GridColumnMenuColumnsItem onClick={hideMenu} column={currentColumn} />
-    </GridColumnMenuDefaultContainer>
+    </GridColumnMenuContainer>
   );
 }
 

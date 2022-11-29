@@ -84,13 +84,12 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Vis Kolonner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre',
-  columnMenuHideColumn: 'Skjul',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
   columnMenuSortDesc: 'Sorter faldende',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -126,8 +125,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fastgør til venstre',
   pinToRight: 'Fastgør til højre',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Frigiv',
 
   // Tree Data

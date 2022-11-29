@@ -84,13 +84,12 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Vis kolonner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Skjul',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter ØKENDE',
   columnMenuSortDesc: 'Sorter SYNKENDE',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -126,8 +125,8 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fest til venstre',
   pinToRight: 'Fest til høyre',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Løsne',
 
   // Tree Data

@@ -61,7 +61,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           startIcon={<rootProps.components.ColumnMenuSortAscendingIcon />}
           color={sortDirection === 'asc' ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('columnMenuSortDefaultAsc')}
+          {apiRef.current.getLocaleText('columnMenuSortAscAbbrev')}
         </StyledButton>
         <StyledButton
           onClick={onSortMenuItemClick}
@@ -69,7 +69,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           startIcon={<rootProps.components.ColumnMenuSortDescendingIcon />}
           color={sortDirection === 'desc' ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('columnMenuSortDefaultDesc')}
+          {apiRef.current.getLocaleText('columnMenuSortDescAbbrev')}
         </StyledButton>
       </Stack>
     </StyledStack>

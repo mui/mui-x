@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridColumns,
   GridRowsProp,
-  GridColumnMenuDefaultContainer,
+  GridColumnMenuContainer,
   GridColumnMenuSortItem,
   GridColumnMenuHideItem,
   GridColumnMenuColumnsItem,
@@ -21,7 +21,7 @@ export function CustomColumnMenu(props: GridColumnMenuProps) {
   const { hideMenu, currentColumn, color, ...other } = props;
 
   return (
-    <GridColumnMenuDefaultContainer
+    <GridColumnMenuContainer
       hideMenu={hideMenu}
       currentColumn={currentColumn}
       {...other}
@@ -30,7 +30,7 @@ export function CustomColumnMenu(props: GridColumnMenuProps) {
       <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn} />
       <GridColumnMenuHideItem onClick={hideMenu} column={currentColumn} />
       <GridColumnMenuColumnsItem onClick={hideMenu} column={currentColumn} />
-    </GridColumnMenuDefaultContainer>
+    </GridColumnMenuContainer>
   );
 }
 

@@ -84,13 +84,12 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Afișează toate coloanele',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtru',
-  columnMenuHideColumn: 'Ascunde',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixare în stânga',
   pinToRight: 'Fixare în dreapta',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Anulare fixare',
 
   // Tree Data

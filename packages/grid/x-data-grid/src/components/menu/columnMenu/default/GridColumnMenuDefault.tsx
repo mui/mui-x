@@ -2,13 +2,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { useGridColumnMenuComponents } from '../../../../hooks/features/columnMenu/useGridColumnMenuComponents';
-import { GridColumnMenuDefaultContainer } from './GridColumnMenuDefaultContainer';
+import { GridColumnMenuContainer } from '../GridColumnMenuContainer';
 import { GridColumnMenuProps } from '../GridColumnMenuProps';
 import { GridColumnMenuColumnsItem } from './GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './GridColumnMenuFilterItem';
 import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
 import { GridColumnMenuSortItem } from './GridColumnMenuSortItem';
-import { useGridPrivateApiContext } from '../../../../hooks/utils/useGridPrivateApiContext';
 
 export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItem,
@@ -33,9 +32,8 @@ const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuP
       componentsProps,
       ...other
     } = props;
-    const apiRef = useGridPrivateApiContext();
 
-    const orderedComponents = useGridColumnMenuComponents(apiRef, {
+    const orderedComponents = useGridColumnMenuComponents({
       ...other,
       defaultComponents,
       defaultComponentsProps,
@@ -44,14 +42,14 @@ const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuP
     });
 
     return (
-      <GridColumnMenuDefaultContainer ref={ref} {...other}>
+      <GridColumnMenuContainer ref={ref} {...other}>
         {orderedComponents.map(([Component, extraProps], index: number) => (
           <div key={index}>
             <Component onClick={props.hideMenu} column={props.currentColumn} {...extraProps} />
             {index !== orderedComponents.length - 1 ? <Divider /> : null}
           </div>
         ))}
-      </GridColumnMenuDefaultContainer>
+      </GridColumnMenuContainer>
     );
   },
 );
@@ -74,6 +72,11 @@ GridColumnMenuDefault.propTypes = {
   componentsProps: PropTypes.object,
   currentColumn: PropTypes.object.isRequired,
   /**
+   * To initialize column menu with some custom components use `customItems`
+   * Use custom components added with `components` prop here
+   */
+  customItems: PropTypes.arrayOf(PropTypes.string),
+  /**
    * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */
@@ -85,11 +88,6 @@ GridColumnMenuDefault.propTypes = {
   defaultComponentsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
-  /**
-   * To initialize column menu with some custom components use `initialItems`
-   * Use custom components added with `components` prop here
-   */
-  initialItems: PropTypes.arrayOf(PropTypes.string),
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
 } as any;

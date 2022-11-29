@@ -83,13 +83,12 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
-  columnMenuHideColumn: 'Ukryj',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Anuluj sortowanie',
   columnMenuSortAsc: 'Sortuj rosnąco',
   columnMenuSortDesc: 'Sortuj malejąco',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
@@ -123,8 +122,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Przypnij do lewej',
   pinToRight: 'Przypnij do prawej',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Odepnij',
 
   // Tree Data

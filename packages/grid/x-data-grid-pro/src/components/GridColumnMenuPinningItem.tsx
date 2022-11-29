@@ -53,7 +53,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
           startIcon={<rootProps.components.ColumnMenuPinLeftIcon />}
           color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('pinToLeftDefault')}
+          {apiRef.current.getLocaleText('directionLeft')}
         </StyledButton>
         <StyledButton
           onClick={
@@ -62,7 +62,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
           startIcon={<rootProps.components.ColumnMenuPinRightIcon />}
           color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
         >
-          {apiRef.current.getLocaleText('pinToRightDefault')}
+          {apiRef.current.getLocaleText('directionRight')}
         </StyledButton>
       </Stack>
     </StyledStack>

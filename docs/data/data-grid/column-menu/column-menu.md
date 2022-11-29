@@ -22,11 +22,11 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customize column menu
 
-You can customize the column menu either by passing `components`, `componentsProps`, and `initialItems` props to the column menu component or by [passing a custom component to the `ColumnMenu` slot](/x/react-data-grid/components/#overriding-components) of the data grid component.
+You can customize the column menu either by passing `components`, `componentsProps`, and `customItems` props to the column menu component or by [passing a custom component to the `ColumnMenu` slot](/x/react-data-grid/components/#overriding-components) of the data grid component.
 
 ### Add, override, hide and reorder items
 
-Column menu component accept `components`, `componentsProps` and `initialItems` using which you can:
+Column menu component accept `components`, `componentsProps` and `customItems` using which you can:
 
 - Add new items
 - Override default items
@@ -43,7 +43,7 @@ Default components supported by community package are `ColumnMenuSortItem`, `Col
 The `components` prop uses Pascal case (`ColumnMenuFilterItem`), while `componentsProps` uses camel case (`columnMenuFilterItem`).
 :::
 
-**initialItems**: Visibility of default items is controlled using respective feature hooks, for cutom items though, use `initialItems` to show the items added by passing to `components`. All the new items will be placed in the end (default `displayOrder: 100`), unless customized by `displayOrder`.
+**customItems**: Visibility of default items is controlled using respective feature hooks, for custom items though, use `customItems` to show the items added by passing to `components`. All the new items will be placed in the end (default `displayOrder: 100`), unless customized by `displayOrder`.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -74,7 +74,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      initialItems={['ColumnMenuUserItem']}
+      customItems={['ColumnMenuUserItem']}
     />
   );
 }

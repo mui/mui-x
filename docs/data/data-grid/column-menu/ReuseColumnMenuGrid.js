@@ -60,7 +60,7 @@ function CustomColumnMenu(props) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      initialItems={['ColumnMenuUserItem']}
+      customItems={['ColumnMenuUserItem']}
     />
   );
 }

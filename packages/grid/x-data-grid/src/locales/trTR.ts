@@ -83,13 +83,12 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Sütunları göster',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre uygula',
-  columnMenuHideColumn: 'Gizle',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
@@ -123,8 +122,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Sola sabitle',
   pinToRight: 'Sağa sabitle',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Sabitlemeyi kaldır',
 
   // Tree Data

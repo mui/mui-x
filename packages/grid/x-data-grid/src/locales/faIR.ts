@@ -84,13 +84,12 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'نمایش ستون‌ها',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'فیلتر',
-  columnMenuHideColumn: 'مخفی',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌کردن صعودی',
   columnMenuSortDesc: 'مرتب‌کردن نزولی',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'سنجاق کردن به چپ',
   pinToRight: 'سنجاق کردن به راست',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'برداشتن سنجاق',
 
   // Tree Data

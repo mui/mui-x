@@ -83,13 +83,12 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: '顯示欄位',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '篩選器',
-  columnMenuHideColumn: '隱藏',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: '預設排序',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,
@@ -123,8 +122,8 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '釘選在左側',
   pinToRight: '釘選在右側',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: '取消釘選',
 
   // Tree Data

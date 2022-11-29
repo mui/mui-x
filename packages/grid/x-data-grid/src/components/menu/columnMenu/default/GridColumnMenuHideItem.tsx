@@ -70,7 +70,7 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
         startIcon={<rootProps.components.ColumnMenuHideIcon fontSize="small" />}
         color="inherit"
       >
-        {apiRef.current.getLocaleText('columnMenuHideColumnDefault')}
+        {apiRef.current.getLocaleText('columnMenuHideColumn')}
       </StyledButton>
     </StyledStack>
   );

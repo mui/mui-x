@@ -84,13 +84,12 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Näytä sarakkeet',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
-  columnMenuHideColumn: 'Piilota',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Poista järjestys',
   columnMenuSortAsc: 'Järjestä nousevasti',
   columnMenuSortDesc: 'Järjestä laskevasti',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Kiinnitä vasemmalle',
   pinToRight: 'Kiinnitä oikealle',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Irrota kiinnitys',
 
   // Tree Data

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
 interface UseGridColumnMenuComponentsProps extends GridColumnMenuRootProps {
   currentColumn: GridColDef;
@@ -17,16 +17,14 @@ const camelize = (pascalCase: string) => {
   return camelCase.join('');
 };
 
-const useGridColumnMenuComponents = (
-  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: UseGridColumnMenuComponentsProps,
-) => {
+const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) => {
+  const apiRef = useGridPrivateApiContext();
   const {
     defaultComponents,
     defaultComponentsProps,
     components = {},
     componentsProps = {},
-    initialItems = [],
+    customItems = [],
   } = props;
 
   const processedComponents = React.useMemo(
@@ -47,12 +45,13 @@ const useGridColumnMenuComponents = (
 
   const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    initialItems,
+    customItems,
     props.currentColumn,
   );
 
   return React.useMemo(() => {
-    const sorted = preProcessedItems.sort((a, b) => {
+    const uniqueItems = Array.from(new Set<string>(preProcessedItems));
+    const sorted = uniqueItems.sort((a, b) => {
       const leftItemProps = processedComponentsProps[camelize(a)];
       const rightItemProps = processedComponentsProps[camelize(b)];
       const leftDisplayOrder = Number.isFinite(leftItemProps?.displayOrder)

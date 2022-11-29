@@ -92,13 +92,12 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Показать столбцы',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фильтр',
-  columnMenuHideColumn: 'Скрыть',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -150,8 +149,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закрепить слева',
   pinToRight: 'Закрепить справа',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Открепить',
 
   // Tree Data

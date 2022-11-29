@@ -83,13 +83,12 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: '显示',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
-  columnMenuHideColumn: '隐藏',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: '恢复默认',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -124,8 +123,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '固定到左侧',
   pinToRight: '固定到右侧',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: '取消固定',
 
   // Tree Data

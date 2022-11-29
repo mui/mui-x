@@ -91,13 +91,12 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zobraziť stĺpce',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Skryť',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Zrušiť filtre',
   columnMenuSortAsc: 'Zoradiť vzostupne',
   columnMenuSortDesc: 'Zoradiť zostupne',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -154,8 +153,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Pripnúť na ľavo',
   pinToRight: 'Pripnúť na pravo',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Odopnúť',
 
   // Tree Data

@@ -83,13 +83,12 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: '列表示',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'フィルター',
-  columnMenuHideColumn: '列非表示',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'ソート解除',
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
@@ -123,8 +122,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '左側に固定',
   pinToRight: '右側に固定',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: '固定解除',
 
   // Tree Data

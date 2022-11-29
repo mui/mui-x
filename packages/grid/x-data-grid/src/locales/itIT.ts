@@ -84,13 +84,12 @@ const itITGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Mostra le colonne',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
-  columnMenuHideColumn: 'Nascondi',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: "Annulla l'ordinamento",
   columnMenuSortAsc: 'Ordinamento crescente',
   columnMenuSortDesc: 'Ordinamento decrescente',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Blocca a sinistra',
   pinToRight: 'Blocca a destra',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Sblocca',
 
   // Tree Data

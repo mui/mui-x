@@ -84,13 +84,12 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Afficher les colonnes',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrer',
-  columnMenuHideColumn: 'Cacher',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Épingler à gauche',
   pinToRight: 'Épingler à droite',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Désépingler',
 
   // Tree Data

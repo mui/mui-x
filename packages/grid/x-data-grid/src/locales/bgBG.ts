@@ -83,13 +83,12 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Покажи колоните',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Филтри',
-  columnMenuHideColumn: 'Скрий',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Отмени сортирането',
   columnMenuSortAsc: 'Сортирай по възходящ ред',
   columnMenuSortDesc: 'Сортирай по низходящ ред',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
@@ -126,8 +125,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закачи в ляво',
   pinToRight: 'Закачи в дясно',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Откачи',
 
   // Tree Data

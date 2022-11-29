@@ -7,13 +7,22 @@ import {
   GridColumnMenuDefault,
   GridColumnMenuProps,
   GridColumnMenuItemProps,
+  useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props: GridColumnMenuItemProps) {
-  const { onClick } = props;
+  const { onClick, column } = props;
+  const apiRef = useGridApiContext();
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      apiRef.current.showFilterPanel(column.field);
+      onClick(event);
+    },
+    [apiRef, column.field, onClick],
+  );
   return (
-    <Button sx={{ m: 1 }} onClick={onClick} startIcon={<IconFilter />}>
+    <Button sx={{ m: 1 }} onClick={handleClick} startIcon={<IconFilter />}>
       Show Filters
     </Button>
   );
@@ -60,7 +69,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      initialItems={['ColumnMenuUserItem']}
+      customItems={['ColumnMenuUserItem']}
     />
   );
 }

@@ -84,13 +84,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Exibir colunas',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrar',
-  columnMenuHideColumn: 'Ocultar',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Desfazer ordenação',
   columnMenuSortAsc: 'Ordenar do menor para o maior',
   columnMenuSortDesc: 'Ordenar do maior para o menor',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixar à esquerda',
   pinToRight: 'Fixar à direita',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Desafixar',
 
   // Tree Data

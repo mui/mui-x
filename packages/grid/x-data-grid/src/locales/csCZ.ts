@@ -91,13 +91,12 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zobrazit sloupce',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
-  columnMenuHideColumn: 'Skrýt',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Zrušit filtry',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -154,8 +153,8 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Připnout na levo',
   pinToRight: 'Připnout na pravo',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Odepnout',
 
   // Tree Data

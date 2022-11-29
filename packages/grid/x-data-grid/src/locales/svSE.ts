@@ -84,13 +84,12 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Visa kolumner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrera',
-  columnMenuHideColumn: 'Dölj',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Osortera',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fäst till vänster',
   pinToRight: 'Fäst till höger',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Ta bort fäste',
 
   // Tree Data

@@ -107,13 +107,12 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Показати стовпці',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фільтр',
-  columnMenuHideColumn: 'Приховати',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Скасувати сортування',
   columnMenuSortAsc: 'Сортувати за зростанням',
   columnMenuSortDesc: 'Сортувати за спаданням',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -157,8 +156,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закріпити ліворуч',
   pinToRight: 'Закріпити праворуч',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Відкріпити',
 
   // Tree Data

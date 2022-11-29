@@ -84,13 +84,12 @@ const esESGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Mostrar columnas',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtro',
-  columnMenuHideColumn: 'Ocultar',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Desordenar',
   columnMenuSortAsc: 'Ordenar ASC',
   columnMenuSortDesc: 'Ordenar DESC',
-  columnMenuSortDefaultAsc: 'ASC',
-  columnMenuSortDefaultDesc: 'DESC',
+  columnMenuSortAscAbbrev: 'ASC',
+  columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column pinning text
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   // unpin: 'Unpin',
 
   // Tree Data

@@ -84,13 +84,12 @@ const heILGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'הצג עמודות',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'סנן',
-  columnMenuHideColumn: 'הסתר',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'בטל מיון',
   columnMenuSortAsc: 'מיין בסדר עולה',
   columnMenuSortDesc: 'מיין בסדר יורד',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -126,8 +125,8 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'בטל נעיצה',
 
   // Tree Data

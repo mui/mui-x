@@ -84,13 +84,12 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Toon kolommen',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filteren',
-  columnMenuHideColumn: 'Verbergen',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links vastzetten',
   pinToRight: 'Rechts vastzetten',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Losmaken',
 
   // Tree Data

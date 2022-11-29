@@ -83,13 +83,12 @@ const elGRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
-  columnMenuHideColumn: 'Απόκρυψη',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -127,8 +126,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   // unpin: 'Unpin',
 
   // Tree Data

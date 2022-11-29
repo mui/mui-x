@@ -84,13 +84,12 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Danh sách cột',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
-  columnMenuHideColumn: 'Ẩn cột',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -126,8 +125,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Ghim cột bên trái',
   pinToRight: 'Ghim cột bên phải',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Bỏ ghim',
 
   // Tree Data

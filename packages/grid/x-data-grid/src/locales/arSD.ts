@@ -84,13 +84,12 @@ const arSDGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'إظهار الأعمدة',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
-  columnMenuHideColumn: 'إخفاء',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'الغاء الفرز',
   columnMenuSortAsc: 'الفرز تصاعدياً',
   columnMenuSortDesc: 'الفرز تنازلياً',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -126,8 +125,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'التدبيس يميناً',
   pinToRight: 'التدبيس يساراً',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'الغاء التدبيس',
 
   // Tree Data

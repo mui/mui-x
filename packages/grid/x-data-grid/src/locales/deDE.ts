@@ -84,13 +84,12 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zeige alle Spalten',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Verbergen',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Sortierung deaktivieren',
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -128,8 +127,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links anheften',
   pinToRight: 'Rechts anheften',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Loslösen',
 
   // Tree Data

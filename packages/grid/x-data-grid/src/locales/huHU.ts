@@ -83,13 +83,12 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Oszlopok megjelenítése',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Szűrők',
-  columnMenuHideColumn: 'Elrejtés',
-  // columnMenuHideColumnDefault: 'Hide column',
+  // columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Sorrend visszaállítása',
   columnMenuSortAsc: 'Növekvő sorrendbe',
   columnMenuSortDesc: 'Csökkenő sorrendbe',
-  // columnMenuSortDefaultAsc: 'ASC',
-  // columnMenuSortDefaultDesc: 'DESC',
+  // columnMenuSortAscAbbrev: 'ASC',
+  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} aktív szűrő`,
@@ -123,8 +122,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Rögzítés balra',
   pinToRight: 'Rögzítés jobbra',
-  // pinToLeftDefault: 'Left',
-  // pinToRightDefault: 'Right',
+  // directionLeft: 'Left',
+  // directionRight: 'Right',
   unpin: 'Rögzítés törlése',
 
   // Tree Data
