@@ -4,7 +4,7 @@ title: Localized dates
 
 # Localized dates
 
-<p class="description">Date and Time pickers allow to support formats from different locales.</p>
+<p class="description">Date and Time Pickers support formats from different locales.</p>
 
 ## Getting started
 
