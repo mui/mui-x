@@ -34,10 +34,10 @@ You need to install two different types of packages to make the pickers work:
 
 Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
 
-MUI Date and Time Pickers lets you choose which library **you** want to use for the date manipulation.
-This lets you pick the library you already use in your application, without adding an extra one in your bundle.
+MUI's components let you choose which library you prefer for this purpose.
+This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
 
-To achieve this—both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` exports a set of **adapters** which expose the date manipulation libraries under a unified api.
+To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` export a set of **adapters** that expose the date manipulation libraries under a unified API.
 
 ### Choosing a date library
 
@@ -51,17 +51,17 @@ The Date and Time Pickers currently support the following date libraries:
 - [Moment.js](https://momentjs.com/)
 
 :::info
-If you are using another calendar system than the _Gregorian_ one (i.e: _Jalali_ or _Hijri_ calendars)—please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
+If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::
 
 #### Recommended library
 
-If you are already using one of these libraries in your application—you can keep using it for the Date and Time Pickers as well.
+If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
-If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`—consider using `dayjs` which will have the smallest impact on the bundle size of your application.
+If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`, then we recommend using `dayjs` because it will have the smallest impact on your application's bundle size.
 
-Here is the weight added to your gzipped bundle size by each of those libraries when used inside the Date and Time Pickers:
+Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 
 | **Library**       | **Gzipped size** |
 | ----------------- | ---------------- |
@@ -72,18 +72,18 @@ Here is the weight added to your gzipped bundle size by each of those libraries 
 
 :::info
 The results above were obtained in October 2022 with the latest version of each library.
-The bundling strategy was taken care of by a _Create React App_ and no locale was loaded for any of the library.
+The bundling strategy was taken care of by a Create React App, and no locale was loaded for any of the libraries.
 
-The results may vary in your application depending on the version of each library, the locale and the bundling strategy used.
+The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
 :::
 
 ## Code setup
 
-After the installation is completed, you have to pass the adapter of your date library to `LocalizationProvider`.
-The supported adapters as well as `LocalizationProvider` are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+After installation, you have to pass your chosen date library's adapter to `LocalizationProvider`.
+The supported adapters—as well as `LocalizationProvider`—are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
 
 All the pickers rendered inside this provider will have access to the adapter through a React context.
-For that reason, we recommend you to wrap your entire application with a `LocalizationProvider` to be able to use the Date and Time Pickers everywhere.
+For this reason, we recommend that you wrap your entire application with a `LocalizationProvider` so you can use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 
