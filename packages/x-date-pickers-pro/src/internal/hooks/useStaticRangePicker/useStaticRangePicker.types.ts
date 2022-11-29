@@ -11,17 +11,17 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 
-export interface UseStaticPickerSlotsComponent
+export interface UseStaticRangePickerSlotsComponent
   extends ExportedPickersViewLayoutSlotsComponent,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
-export interface UseStaticPickerSlotsComponentsProps
+export interface UseStaticRangePickerSlotsComponentsProps
   extends ExportedPickersViewLayoutSlotsComponentsProps,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticOnlyPickerProps {
+export interface StaticRangeOnlyPickerProps {
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default "mobile"
@@ -29,25 +29,25 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
+export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError>,
-    StaticOnlyPickerProps {
+    StaticRangeOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: UseStaticPickerSlotsComponent;
+  components?: UseStaticRangePickerSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticPickerSlotsComponentsProps;
+  componentsProps?: UseStaticRangePickerSlotsComponentsProps;
 }
 
-export interface UseStaticPickerParams<
+export interface UseStaticRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
 > extends Pick<
     UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
     'valueManager' | 'viewLookup' | 'validator'

@@ -9,7 +9,7 @@ import {
   DIALOG_WIDTH,
   PickersViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
-import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticRangePicker.types';
+import { UseStaticRangePickerParams, UseStaticRangePickerProps } from './useStaticRangePicker.types';
 
 const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -24,14 +24,14 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
 export const useStaticRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
 >({
   props,
   valueManager,
   viewLookup,
   validator,
   ref,
-}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
+}: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
 
   const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
