@@ -71,7 +71,7 @@ function App({ children }) {
 }
 ```
 
-### Using `LocalizationProvider`
+### Using LocalizationProvider
 
 If you want to pass language translations without using `createTheme` and `ThemeProvider`,
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
