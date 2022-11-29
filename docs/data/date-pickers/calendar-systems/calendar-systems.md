@@ -8,7 +8,7 @@ title: Support for other calendar systems
 
 ## Jalali
 
-You can use either the `AdapterDateFnsJalali` adapter which is based on [date-fns-jalali](https://www.npmjs.com/package/date-fns-jalali)
+You can use either the `AdapterDateFnsJalali` adapter, which is based on [date-fns-jalali](https://www.npmjs.com/package/date-fns-jalali),
 or the `AdapterMomentJalaali` adapter which is based on [moment-jalaali](https://www.npmjs.com/package/moment-jalaali).
 
 The following demo shows how to use the date-fns plugin:
