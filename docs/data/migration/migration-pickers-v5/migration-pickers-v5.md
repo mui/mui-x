@@ -19,6 +19,25 @@ Since v6 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v5 to v6.
 
+### Drop `clock` in desktop mode
+
+In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
+This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
+The behavior on mobile mode is still the same.
+If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
+
+### Extended `@date-io` adapters
+
+In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
+In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
+Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`. Otherwise, some methods will be missing.
+If you do not find the adapter you were using—there probably was a reason for it, but you can raise an issue expressing interest in it.
+
+```diff
+-import AdapterJalaali from '@date-io/jalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
+```
+
 ### Update the format of the `value` prop
 
 Previously, it was possible to provide any format that your date management library was able to parse.
@@ -238,7 +257,7 @@ Component names in the theme have changed as well:
 
 ### Rename `date` prop to `value` on view components
 
-The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
+The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`,, and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} onChange={handleMonthChange} />
