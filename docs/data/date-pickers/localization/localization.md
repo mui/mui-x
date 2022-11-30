@@ -2,19 +2,19 @@
 title: Date and Time pickers - Localization
 ---
 
-# Date and Time pickers - Localization
+# Date and Time Pickers - Localization
 
-<p class="description">Date and Time pickers supports translations from different languages.</p>
+<p class="description">Date and Time Pickers support translations between languages.</p>
 
-As the rest of MUI components, you can modify text and translations.
+As with all MUI components, you can modify text and translations inside the Date and Time Pickers.
 You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/x-date-pickers/src/locales/utils/pickersLocaleTextApi.ts)
 in the GitHub repository.
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
 :::warning
-This page focuses on the translations of the texts inside the Date and Time Pickers.
-If you want to format the text based on some locale—have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+This page focuses on translating the text inside the Date and Time Pickers.
+If you need to change the formatting of the text to conform to a given locale, visit the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
 :::
 
 ## Set translations globally
@@ -71,7 +71,7 @@ function App({ children }) {
 }
 ```
 
-### Using `LocalizationProvider`
+### Using LocalizationProvider
 
 If you want to pass language translations without using `createTheme` and `ThemeProvider`,
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
@@ -101,7 +101,7 @@ If you want to customize some translations on specific component, you can use th
 :::info
 This method can be combined with the ones shown above.
 
-If you pass a locale through `LocalizationProvider` or the theme and a few translation keys through the `localeText` prop of a picker—only the latter translation keys will be overridden.
+If you pass a locale through `LocalizationProvider` or the theme, and you provide translation keys through the `localeText` prop of a picker at the same time, then only the latter translation keys will be overridden.
 
 ```tsx
 <LocalizationProvider localeText={frFR}>
