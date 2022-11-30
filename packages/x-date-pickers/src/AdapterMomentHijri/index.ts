@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import BaseAdapterMomentHijri from '@date-io/hijri';
+// @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 

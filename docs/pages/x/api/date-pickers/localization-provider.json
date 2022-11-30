@@ -17,5 +17,8 @@
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "LocalizationProvider" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "LocalizationProvider" }
+  ]
 }

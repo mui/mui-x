@@ -150,7 +150,7 @@ const getComponentPaths =
         const componentName = path.basename(file).replace('.tsx', '');
         const isExported =
           !!project.exports[componentName] ||
-          (includeUnstableComponents && !!project.exports[`Unstable_${componentName}`]);
+          (includeUnstableComponents && !!project.exports[`MuiUnstable_${componentName}`]);
         if (isExported) {
           paths.push(file);
         }
@@ -245,6 +245,7 @@ export const getTypeScriptProjects = () => {
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
@@ -261,6 +262,7 @@ export const getTypeScriptProjects = () => {
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );

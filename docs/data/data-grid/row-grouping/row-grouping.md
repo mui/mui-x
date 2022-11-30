@@ -68,6 +68,31 @@ The callback is called for each grouping column, and it receives the respective 
 
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Grouping rows with custom cell renderer
+
+By default, when rows are grouped by a column with a custom cell component (`GridColDef['renderCell']`), the same custom cell component is used in the grouping column.
+
+{{"demo": "RowGroupingCustomCell.js", "bg": "inline", "defaultCodeOpen": false}}
+
+You can opt out of this default behavior by returning `params.value` in `renderCell` for grouping rows instead:
+
+```tsx
+const ratingColDef: GridColDef = {
+  // ...
+  renderCell: (params) => {
+    if (params.rowNode.type === 'group') {
+      return params.value;
+    }
+
+    return (
+      // ...
+    );
+  },
+};
+```
+
+{{"demo": "RowGroupingCustomCellDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Show values for the leaves
 
 By default, the grouped rows display no value on their grouping columns' cells. Those cells are called "leaves."

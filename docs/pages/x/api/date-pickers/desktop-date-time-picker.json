@@ -129,5 +129,8 @@
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDateTimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDateTimePicker" }
+  ]
 }

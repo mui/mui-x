@@ -57,6 +57,7 @@ describe('<MobileDateRangePicker />', () => {
     clock,
     componentFamily: 'legacy-picker',
     views: ['day'],
+    variant: 'mobile',
   }));
 
   describe('picker state', () => {

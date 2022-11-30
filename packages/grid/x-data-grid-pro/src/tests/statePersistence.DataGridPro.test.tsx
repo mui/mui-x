@@ -60,7 +60,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   filter: {
     filterModel: {
-      items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+      items: [{ field: 'id', operator: '<', value: '5' }],
     },
   },
   pagination: {
@@ -213,7 +213,7 @@ describe('<DataGridPro /> - State Persistence', () => {
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
-          items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+          items: [{ field: 'id', operator: '<', value: '5' }],
         });
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
