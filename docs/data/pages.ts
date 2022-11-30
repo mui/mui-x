@@ -303,7 +303,7 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/date-time-field', title: 'DateTimeField' },
           {
-            pathname: '/x/api/date-pickers/static-date-time-picker-tabs',
+            pathname: '/x/api/date-pickers/date-time-picker-tabs',
             title: 'DateTimePickerTabs',
           },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
