@@ -8,7 +8,6 @@ import createDescribeableProp, {
   DescribeablePropDescriptor,
 } from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
 import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
-import { replaceComponentLinks } from '@mui/monorepo/docs/src/modules/utils/replaceUrl';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
