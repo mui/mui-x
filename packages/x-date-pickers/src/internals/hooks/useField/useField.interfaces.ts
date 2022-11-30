@@ -106,7 +106,7 @@ export interface FieldSection {
    */
   end: number;
   /**
-   * Start index of the section value in the input. 
+   * Start index of the section value in the input.
    * Consider invisible unicode characters such as \u2069 but does not include them
    */
   startInInput: number;
