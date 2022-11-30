@@ -55,6 +55,8 @@ describe.only('<MobileNextTimePicker /> - Describes', () => {
       openTo: 'minutes',
     },
     assertRenderedValue: (expectedValue: any) => {
+      console.log(screen.getByRole('textbox'))
+      return
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       let expectedValueStr: string;
       if (expectedValue == null) {
@@ -78,7 +80,10 @@ describe.only('<MobileNextTimePicker /> - Describes', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
-      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // if (!isOpened) {
+      //   // Close the picker to return to the initial state
+      //   userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+      // }
 
       return newValue;
     },

@@ -34,10 +34,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      const { debug } = render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
+      render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
-
-      debug()
 
       assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
