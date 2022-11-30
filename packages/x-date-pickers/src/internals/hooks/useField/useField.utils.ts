@@ -1,9 +1,9 @@
 import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
-import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
+import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   formatToken: string,
 ): Pick<FieldSection, 'dateSectionName' | 'contentType'> => {
   const config = utils.formatTokenMap[formatToken];
@@ -46,7 +46,7 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
 };
 
 export const adjustDateSectionValue = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   date: TDate,
   dateSectionName: MuiDateSectionName,
   keyCode: AvailableAdjustKeyCode,
@@ -114,7 +114,7 @@ export const adjustDateSectionValue = <TDate>(
 };
 
 export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
 ): string => {
@@ -275,7 +275,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 };
 
 const getSectionPlaceholder = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   sectionConfig: Pick<FieldSection, 'dateSectionName' | 'contentType'>,
   currentTokenValue: string,
@@ -320,7 +320,7 @@ const getSectionPlaceholder = <TDate>(
 };
 
 export const splitFormatIntoSections = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
@@ -400,7 +400,7 @@ export const createDateStrFromSections = (
     .join('');
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   section: TSection,
   query: string,
 ) => {
@@ -428,7 +428,7 @@ export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
 };
 
 export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
 ): FieldBoundaries<TDate, TSection> => {
   const today = utils.date()!;
 
@@ -485,7 +485,7 @@ export const applySectionValueToDate = <TDate>({
   getNumericSectionValue,
   getMeridiemSectionValue,
 }: {
-  utils: MuiPickerFieldAdapter<TDate>;
+  utils: MuiPickersAdapter<TDate>;
   dateSectionName: MuiDateSectionName;
   date: TDate;
   getNumericSectionValue: (getter: (date: TDate) => number) => number;
@@ -584,7 +584,7 @@ export const mergeDateIntoReferenceDate = <
   TDate,
   TSection extends Omit<FieldSection, 'start' | 'end'>,
 >(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   date: TDate,
   sections: TSection[],
   referenceDate: TDate,
@@ -610,7 +610,7 @@ export const mergeDateIntoReferenceDate = <
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
 export const clampDaySection = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
   boundaries: FieldBoundaries<TDate, TSection>,
   format: string,
