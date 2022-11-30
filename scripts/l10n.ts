@@ -16,6 +16,7 @@ const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
+const MAIN_BRANCH = 'next';
 
 const packagesWithL10n = [
   {
@@ -291,8 +292,8 @@ type DocumentationReportItem = {
   languageTag: string;
   importName: string;
   localeName: string;
-  missingKeysNb: number;
-  totalKeysNb: number;
+  missingKeysCount: number;
+  totalKeysCount: number;
   githubLink: string;
 };
 const generateDocReport = async (
@@ -308,7 +309,7 @@ const generateDocReport = async (
       if (info == null) {
         return;
       }
-      const githubLink = `${SOURCE_CODE_REPO}/blob/master/${info.path}/`;
+      const githubLink = `${SOURCE_CODE_REPO}/blob/${MAIN_BRANCH}/${info.path}/`;
 
       const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
         .slice(2)
@@ -318,7 +319,7 @@ const generateDocReport = async (
       if (localeName === undefined) {
         throw new Error(
           [
-            `locale tage ${languageTag} is not associated to a locale name.`,
+            `locale tag ${languageTag} is not associated to a locale name.`,
             'If this tag is correct, add its name to the file `scripts/localeNames.js`',
           ].join('\n'),
         );
@@ -327,8 +328,8 @@ const generateDocReport = async (
         languageTag,
         importName,
         localeName,
-        missingKeysNb: infoPerPackage[packageKey].missingKeys.length,
-        totalKeysNb: baseTranslationsNumber[packageKey],
+        missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
+        totalKeysCount: baseTranslationsNumber[packageKey],
         githubLink,
       });
     });

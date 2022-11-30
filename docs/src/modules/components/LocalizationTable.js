@@ -96,7 +96,14 @@ function LocalisationTable(props) {
         </TableHead>
         <TableBody>
           {data.map(
-            ({ languageTag, localeName, importName, missingKeysNb, totalKeysNb, githubLink }) => (
+            ({
+              languageTag,
+              localeName,
+              importName,
+              missingKeysCount,
+              totalKeysCount,
+              githubLink,
+            }) => (
               <TableRow key={languageTag}>
                 <TableCell>
                   <Typography variant="body2">{localeName}</Typography>
@@ -110,7 +117,10 @@ function LocalisationTable(props) {
                   </Typography>
                 </TableCell>
                 <TableCell className="progress">
-                  <ProgressBar numerator={totalKeysNb - missingKeysNb} denumerator={totalKeysNb} />
+                  <ProgressBar
+                    numerator={totalKeysCount - missingKeysCount}
+                    denumerator={totalKeysCount}
+                  />
                 </TableCell>
                 <TableCell>
                   <Link variant="body2" rel="nofollow" href={githubLink}>
