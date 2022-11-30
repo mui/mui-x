@@ -31,7 +31,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       assertRenderedValue(emptyValue);
     });
 
-    it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
+    it.only('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
       render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
