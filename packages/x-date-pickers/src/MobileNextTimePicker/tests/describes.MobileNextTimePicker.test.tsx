@@ -12,7 +12,7 @@ import {
 } from 'test/utils/pickers-utils';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
 
-describe('<MobileNextTimePicker /> - Describes', () => {
+describe.only('<MobileNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeValidation(MobileNextTimePicker, () => ({
@@ -65,13 +65,7 @@ describe('<MobileNextTimePicker /> - Describes', () => {
         );
       }
 
-      console.log('A')
-      console.log(expectedValueStr)
-
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
-
-
-      console.log('B')
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {
