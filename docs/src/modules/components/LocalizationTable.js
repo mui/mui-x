@@ -41,12 +41,13 @@ const Root = styled('div')(({ theme }) => ({
   },
 }));
 
-const Value = styled('div')({
+const Value = styled('span')({
   position: 'absolute',
-  lineHeight: '24px',
   width: '100%',
+  height: '100%',
   display: 'flex',
   justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const Bar = styled('div')({
@@ -66,8 +67,9 @@ const ProgressBar = React.memo(function ProgressBar(props) {
       })}
     >
       <Value>
+        {numerator === denumerator && '🎉 '}
         {`${numerator}/${denumerator}`}
-        {numerator === denumerator ? '🎉' : ''}
+        {numerator === denumerator && ' 🎉'}
       </Value>
       <Bar className="progress-bar" style={{ maxWidth: `${valueInPercent}%` }} />
     </Root>
