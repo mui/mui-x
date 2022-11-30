@@ -16,7 +16,6 @@ import {
 } from './useField.interfaces';
 import {
   getMonthsMatchingQuery,
-  getSectionVisibleValue,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
   applySectionValueToDate,
@@ -458,7 +457,7 @@ export const useField = <
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
       firstSelectedSection.startInInput,
-      lastSelectedSection.startInInput + getSectionVisibleValue(lastSelectedSection, true).length,
+      lastSelectedSection.endInInput,
     );
   });
 

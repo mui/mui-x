@@ -268,7 +268,7 @@ export const getSectionVisibleValue = (
 };
 
 export const cleanString = (dirtyString: string) =>
-  dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+  dirtyString.replaceAll(/\u2066|\u2067|\u2068|\u2069/g, '');
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
@@ -279,24 +279,28 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    const end =
-      position +
-      cleanString(`${getSectionVisibleValue(section, true)}${section.separator || ''}`).length;
+    const renderedValue = getSectionVisibleValue(section, true);
 
-    const endInInput =
-      positionInInput +
-      getSectionVisibleValue(section, true).length +
-      (section.separator?.length ?? 0);
+    const end = position + cleanString(`${renderedValue}${section.separator || ''}`).length;
+
+    // The ...InInput values consider the unicode characters but do include them in their indexes
+    const cleanedValue = cleanString(renderedValue);
+    const startInInput = positionInInput + renderedValue.indexOf(cleanedValue[0]);
+    const endInInput = startInInput + cleanedValue.length;
 
     newSections.push({
       ...section,
       start: position,
       end,
-      startInInput: positionInInput,
+      startInInput,
       endInInput,
     } as TSection);
     position = end;
-    positionInInput = endInInput;
+    // Move position to the end of string associated to the current section
+    positionInInput =
+      positionInInput +
+      getSectionVisibleValue(section, true).length +
+      (section.separator?.length ?? 0);
   }
 
   return newSections;
@@ -400,7 +404,7 @@ export const splitFormatIntoSections = <TDate>(
       if (section.separator !== null && section.separator.includes(' ')) {
         return {
           ...section,
-          separator: section.separator.replace(' ', '\u2069 \u2066'),
+          separator: `\u2069${section.separator}\u2066`,
           parsingSeparator: section.separator,
         };
       }
