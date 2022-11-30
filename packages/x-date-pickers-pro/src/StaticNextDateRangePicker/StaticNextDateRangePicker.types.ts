@@ -16,7 +16,7 @@ export interface StaticNextDateRangePickerSlotsComponent<TDate>
 
 export interface StaticNextDateRangePickerSlotsComponentsProps<TDate>
   extends BaseNextDateRangePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps {}
+    UseStaticPickerSlotsComponentsProps<TDate, 'day'> {}
 
 export interface StaticNextDateRangePickerProps<TDate>
   extends BaseNextDateRangePickerProps<TDate>,
