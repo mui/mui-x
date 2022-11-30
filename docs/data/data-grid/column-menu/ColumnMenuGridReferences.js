@@ -101,7 +101,7 @@ const rows = [
   {
     id: 1,
     slot: 'ColumnMenuSortItem',
-    defaultComponent: '<GridColumnMenuSortItem />',
+    defaultComponent: 'GridColumnMenuSortItem',
     design: 'Default',
     displayOrder: 0,
     plan: 'Community',
@@ -109,7 +109,7 @@ const rows = [
   {
     id: 2,
     slot: 'ColumnMenuSortItem',
-    defaultComponent: '<GridColumnMenuSortItemSimple />',
+    defaultComponent: 'GridColumnMenuSortItemSimple',
     design: 'Simple',
     displayOrder: 0,
     plan: 'Community',
@@ -117,7 +117,7 @@ const rows = [
   {
     id: 3,
     slot: 'ColumnMenuFilterItem',
-    defaultComponent: '<GridColumnMenuFilterItem />',
+    defaultComponent: 'GridColumnMenuFilterItem',
     design: 'Default',
     displayOrder: 10,
     plan: 'Community',
@@ -125,7 +125,7 @@ const rows = [
   {
     id: 4,
     slot: 'ColumnMenuFilterItem',
-    defaultComponent: '<GridColumnMenuFilterItemSimple />',
+    defaultComponent: 'GridColumnMenuFilterItemSimple',
     design: 'Simple',
     displayOrder: 10,
     plan: 'Community',
@@ -133,7 +133,7 @@ const rows = [
   {
     id: 5,
     slot: 'ColumnMenuHideItem',
-    defaultComponent: '<GridColumnMenuHideItem />',
+    defaultComponent: 'GridColumnMenuHideItem',
     design: 'Default',
     displayOrder: 20,
     plan: 'Community',
@@ -141,7 +141,7 @@ const rows = [
   {
     id: 6,
     slot: 'ColumnMenuHideItem',
-    defaultComponent: '<GridColumnMenuHideItemSimple />',
+    defaultComponent: 'GridColumnMenuHideItemSimple',
     design: 'Simple',
     displayOrder: 20,
     plan: 'Community',
@@ -149,7 +149,7 @@ const rows = [
   {
     id: 7,
     slot: 'ColumnMenuColumnsItem',
-    defaultComponent: '<GridColumnMenuColumnsItem />',
+    defaultComponent: 'GridColumnMenuColumnsItem',
     design: 'Default',
     displayOrder: 30,
     plan: 'Community',
@@ -157,7 +157,7 @@ const rows = [
   {
     id: 8,
     slot: 'ColumnMenuColumnsItem',
-    defaultComponent: '<GridColumnMenuColumnsItemSimple />',
+    defaultComponent: 'GridColumnMenuColumnsItemSimple',
     design: 'Simple',
     displayOrder: 30,
     plan: 'Community',
@@ -165,7 +165,7 @@ const rows = [
   {
     id: 9,
     slot: 'ColumnMenuPinningItem',
-    defaultComponent: '<GridColumnMenuPinningItem />',
+    defaultComponent: 'GridColumnMenuPinningItem',
     design: 'Default',
     displayOrder: 5,
     plan: 'Pro',
@@ -173,7 +173,7 @@ const rows = [
   {
     id: 10,
     slot: 'ColumnMenuPinningItem',
-    defaultComponent: '<GridColumnMenuPinningItemSimple />',
+    defaultComponent: 'GridColumnMenuPinningItemSimple',
     design: 'Simple',
     displayOrder: 35,
     plan: 'Pro',
@@ -181,7 +181,7 @@ const rows = [
   {
     id: 11,
     slot: 'ColumnMenuAggregationItem',
-    defaultComponent: '<GridColumnMenuAggregationItem />',
+    defaultComponent: 'GridColumnMenuAggregationItem',
     design: 'Default',
     displayOrder: 17,
     plan: 'Premium',
@@ -189,7 +189,7 @@ const rows = [
   {
     id: 12,
     slot: 'ColumnMenuAggregationItem',
-    defaultComponent: '<GridColumnMenuAggregationItemSimple />',
+    defaultComponent: 'GridColumnMenuAggregationItemSimple',
     design: 'Simple',
     displayOrder: 37,
     plan: 'Premium',
@@ -197,8 +197,7 @@ const rows = [
   {
     id: 13,
     slot: 'ColumnMenuGroupingItem',
-    defaultComponent:
-      '<GridColumnMenuRowGroupItem />,<GridColumnMenuRowUngroupItem />',
+    defaultComponent: 'GridColumnMenuRowGroupItem,GridColumnMenuRowUngroupItem',
     design: 'Default',
     displayOrder: 13,
     plan: 'Premium',
@@ -207,7 +206,7 @@ const rows = [
     id: 14,
     slot: 'ColumnMenuGroupingItem',
     defaultComponent:
-      '<GridColumnMenuRowGroupItemSimple />,<GridColumnMenuRowUngroupItemSimple />',
+      'GridColumnMenuRowGroupItemSimple,GridColumnMenuRowUngroupItemSimple',
     design: 'Simple',
     displayOrder: 33,
     plan: 'Premium',
