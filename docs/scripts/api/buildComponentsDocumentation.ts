@@ -200,13 +200,7 @@ function findXDemos(
   }
 
   return pagesMarkdown
-    .filter((page) => {
-      if (!page.pathname.includes('/')) {
-        return false;
-      }
-
-      return page.pathname.indexOf('/x') && page.components.includes(componentName);
-    })
+    .filter((page) => page.components.includes(componentName))
     .map((page) => {
       let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
       name = name.replace(/\[(.*)]\((.*)\)/g, '');
