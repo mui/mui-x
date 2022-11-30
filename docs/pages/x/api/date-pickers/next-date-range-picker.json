@@ -102,7 +102,7 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/NextDateRangePicker/NextDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/date-pickers/date-range-picker/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/date-pickers/localization/localization/\">Localization</a></li>\n<li><a href=\"/date-pickers/validation/validation/\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_NextDateRangePicker" }
   ]

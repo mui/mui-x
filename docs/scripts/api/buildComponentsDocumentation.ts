@@ -205,9 +205,11 @@ function findXDemos(
       let name = /^Date and Time Pickers - (.*)$/.exec(page.title)?.[1] ?? page.title;
       name = name.replace(/\[(.*)]\((.*)\)/g, '');
 
+      const pathnameMatches = /\/date-pickers\/([^/]+)\/([^/]+)/.exec(page.pathname);
+
       return {
         name,
-        demoPathname: replaceComponentLinks(`${page.pathname.replace(/^\/x/, '')}/`),
+        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}`,
       };
     });
 }

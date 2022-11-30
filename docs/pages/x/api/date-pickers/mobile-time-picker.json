@@ -83,7 +83,7 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/date-pickers/legacy-time-picker/legacy-time-picker/\">Time Picker</a></li>\n<li><a href=\"/date-pickers/time-picker/time-picker/\">Time Picker</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-time-picker\">Time Picker</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileTimePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "MobileTimePicker" }
