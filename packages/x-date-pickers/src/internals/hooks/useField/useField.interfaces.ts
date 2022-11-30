@@ -107,12 +107,12 @@ export interface FieldSection {
   end: number;
   /**
    * Start index of the section value in the input.
-   * Consider invisible unicode characters such as \u2069 but does not include them
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
    */
   startInInput: number;
   /**
    * End index of the section value in the input.
-   * Consider invisible unicode characters such as \u2069 but does not include them
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
    */
   endInInput: number;
   value: string;
@@ -270,7 +270,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @template TDate
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The translation object.
-   * @param {string} format The format from which sectiosn are computed.
+   * @param {string} format The format from which sections are computed.
    * @param {boolean} isRTL Is the field in right-to-left orientation.
    * @returns {SectionOrdering} The description of sections order from left to right.
    */
@@ -327,11 +327,11 @@ export type AvailableAdjustKeyCode =
 export type SectionNeighbors = {
   [sectionIndex: number]: {
     /**
-     * Index of the next sextion displayed on the left. `null` if it's the most on the left section.
+     * Index of the next section displayed on the left. `null` if it's the leftmost section.
      */
     leftIndex: number | null;
     /**
-     * Index of the next sextion displayed on the right. `null` if it's the most on the right section.
+     * Index of the next section displayed on the right. `null` if it's the rightmost section.
      */
     rightIndex: number | null;
   };
