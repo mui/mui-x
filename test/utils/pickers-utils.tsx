@@ -10,7 +10,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { MuiPickerFieldAdapter } from '@mui/x-date-pickers/internals/models';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import sinon from 'sinon';
 import { expect } from 'chai';
@@ -26,7 +26,7 @@ export type AdapterName =
   // | 'js-joda'
   | 'date-fns-jalali';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickerFieldAdapter<any> } = {
+const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
