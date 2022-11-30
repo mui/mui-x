@@ -13,12 +13,32 @@ import Link from 'docs/src/modules/components/Link';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
 const Root = styled('div')(({ theme }) => ({
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   position: 'relative',
   overflow: 'hidden',
   width: '100%',
   height: 26,
   borderRadius: 2,
+  '&.low': {
+    color: (theme.vars || theme).palette.error.contrastText,
+    backgroundColor: (theme.vars || theme).palette.error.light,
+    '& .progress-bar': {
+      backgroundColor: (theme.vars || theme).palette.error.dark,
+    },
+  },
+  '&.medium': {
+    color: (theme.vars || theme).palette.warning.contrastText,
+    backgroundColor: (theme.vars || theme).palette.warning.light,
+    '& .progress-bar': {
+      backgroundColor: (theme.vars || theme).palette.warning.dark,
+    },
+  },
+  '&.high': {
+    color: (theme.vars || theme).palette.success.contrastText,
+    backgroundColor: (theme.vars || theme).palette.success.light,
+    '& .progress-bar': {
+      backgroundColor: (theme.vars || theme).palette.success.dark,
+    },
+  },
 }));
 
 const Value = styled('div')({
@@ -31,15 +51,6 @@ const Value = styled('div')({
 
 const Bar = styled('div')({
   height: '100%',
-  '&.low': {
-    backgroundColor: '#f44336',
-  },
-  '&.medium': {
-    backgroundColor: '#efbb5aa3',
-  },
-  '&.high': {
-    backgroundColor: '#088208a3',
-  },
 });
 
 const ProgressBar = React.memo(function ProgressBar(props) {
@@ -47,19 +58,18 @@ const ProgressBar = React.memo(function ProgressBar(props) {
   const valueInPercent = Math.floor((numerator / denumerator) * 100);
 
   return (
-    <Root>
+    <Root
+      className={clsx({
+        low: valueInPercent < 50,
+        medium: valueInPercent >= 50 && valueInPercent <= 80,
+        high: valueInPercent > 80,
+      })}
+    >
       <Value>
         {`${numerator}/${denumerator}`}
         {numerator === denumerator ? '🎉' : ''}
       </Value>
-      <Bar
-        className={clsx({
-          low: valueInPercent < 30,
-          medium: valueInPercent >= 30 && valueInPercent <= 70,
-          high: valueInPercent > 70,
-        })}
-        style={{ maxWidth: `${valueInPercent}%` }}
-      />
+      <Bar className="progress-bar" style={{ maxWidth: `${valueInPercent}%` }} />
     </Root>
   );
 });
