@@ -64,7 +64,14 @@ describe('<MobileNextTimePicker /> - Describes', () => {
           hasMeridiem ? 'fullTime12h' : 'fullTime24h',
         );
       }
+
+      console.log('A')
+      console.log(expectedValueStr)
+
       expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+
+
+      console.log('B')
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {
