@@ -43,22 +43,22 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       // TODO: Support range
       expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
     });
-    //
-    // it('should call onChange when updating a value defined with `props.value`', () => {
-    //   const onChange = spy();
-    //
-    //   render(<ElementToTest value={values[0]} onChange={onChange} />);
-    //   const newValue = setNewValue(values[0]);
-    //
-    //   expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
-    //   // TODO: Support range
-    //   expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
-    // });
-    //
-    // it('should react to `props.value` update', () => {
-    //   const { setProps } = render(<ElementToTest value={values[0]} />);
-    //   setProps({ value: values[1] });
-    //   assertRenderedValue(values[1]);
-    // });
+
+    it('should call onChange when updating a value defined with `props.value`', () => {
+      const onChange = spy();
+
+      render(<ElementToTest value={values[0]} onChange={onChange} />);
+      const newValue = setNewValue(values[0]);
+
+      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      // TODO: Support range
+      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+    });
+
+    it('should react to `props.value` update', () => {
+      const { setProps } = render(<ElementToTest value={values[0]} />);
+      setProps({ value: values[1] });
+      assertRenderedValue(values[1]);
+    });
   });
 };

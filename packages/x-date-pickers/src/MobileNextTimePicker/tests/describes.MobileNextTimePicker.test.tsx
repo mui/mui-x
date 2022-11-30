@@ -15,30 +15,30 @@ import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-da
 describe.only('<MobileNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeValidation(MobileNextTimePicker, () => ({
-    render,
-    clock,
-    views: ['hours', 'minutes'],
-    componentFamily: 'new-picker',
-  }));
-
-  describeConformance(<MobileNextTimePicker />, () => ({
-    classes: {},
-    muiName: 'MuiMobileTimePicker',
-    wrapMount: wrapPickerMount,
-    refInstanceof: window.HTMLDivElement,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeDefaultProps',
-      'themeStyleOverrides',
-      'themeVariants',
-      'mergeClassName',
-      'propsSpread',
-      'rootClass',
-      'reactTestRenderer',
-    ],
-  }));
+  // describeValidation(MobileNextTimePicker, () => ({
+  //   render,
+  //   clock,
+  //   views: ['hours', 'minutes'],
+  //   componentFamily: 'new-picker',
+  // }));
+  //
+  // describeConformance(<MobileNextTimePicker />, () => ({
+  //   classes: {},
+  //   muiName: 'MuiMobileTimePicker',
+  //   wrapMount: wrapPickerMount,
+  //   refInstanceof: window.HTMLDivElement,
+  //   skip: [
+  //     'componentProp',
+  //     'componentsProp',
+  //     'themeDefaultProps',
+  //     'themeStyleOverrides',
+  //     'themeVariants',
+  //     'mergeClassName',
+  //     'propsSpread',
+  //     'rootClass',
+  //     'reactTestRenderer',
+  //   ],
+  // }));
 
   describeValue(MobileNextTimePicker, () => ({
     render,
