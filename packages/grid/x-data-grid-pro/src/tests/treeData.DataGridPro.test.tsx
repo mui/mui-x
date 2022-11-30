@@ -352,8 +352,8 @@ describe('<DataGridPro /> - Tree Data', () => {
           filterModel={{
             linkOperator: GridLinkOperator.Or,
             items: [
-              { columnField: 'name', operatorValue: 'endsWith', value: 'A', id: 0 },
-              { columnField: 'name', operatorValue: 'endsWith', value: 'B', id: 1 },
+              { field: 'name', operator: 'endsWith', value: 'A', id: 0 },
+              { field: 'name', operator: 'endsWith', value: 'B', id: 1 },
             ],
           }}
         />,
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ field: 'name', value: 'A', operator: 'endsWith' }] }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
@@ -454,7 +454,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ field: 'name', value: 'A', operator: 'endsWith' }] }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
@@ -466,7 +466,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <Test
           rows={[{ name: 'A' }, { name: 'A.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ field: 'name', value: 'A', operator: 'endsWith' }] }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
@@ -478,7 +478,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'B', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ field: 'name', value: 'B', operator: 'endsWith' }] }}
           disableChildrenFiltering
           defaultGroupingExpansionDepth={-1}
         />,
@@ -491,7 +491,7 @@ describe('<DataGridPro /> - Tree Data', () => {
       const { setProps } = render(
         <Test
           rows={[{ name: 'B' }, { name: 'B.A' }, { name: 'B.B' }]}
-          filterModel={{ items: [{ columnField: 'name', value: 'B', operatorValue: 'endsWith' }] }}
+          filterModel={{ items: [{ field: 'name', value: 'B', operator: 'endsWith' }] }}
           defaultGroupingExpansionDepth={-1}
         />,
       );
@@ -514,9 +514,7 @@ describe('<DataGridPro /> - Tree Data', () => {
 
     it('should set the filtered descendant count on matching nodes even if the children are collapsed', () => {
       render(
-        <Test
-          filterModel={{ items: [{ columnField: 'name', value: 'A', operatorValue: 'endsWith' }] }}
-        />,
+        <Test filterModel={{ items: [{ field: 'name', value: 'A', operator: 'endsWith' }] }} />,
       );
 
       // A has A.A but not A.B

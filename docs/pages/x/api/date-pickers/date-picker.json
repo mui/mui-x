@@ -124,5 +124,8 @@
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DatePicker" }
+  ]
 }

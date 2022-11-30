@@ -25,5 +25,8 @@
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MonthCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "MonthCalendar" }
+  ]
 }

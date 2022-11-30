@@ -25,5 +25,8 @@
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
   "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "YearCalendar" }
+  ]
 }

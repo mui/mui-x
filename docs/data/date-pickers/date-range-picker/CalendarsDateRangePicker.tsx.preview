@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Stack spacing={4}>
+    <GridItem label="1 calendar" spacing={2}>
+      <NextDateRangePicker calendars={1} />
+    </GridItem>
+    <GridItem label="2 calendars" spacing={2}>
+      <NextDateRangePicker calendars={2} />
+    </GridItem>
+    <GridItem label="3 calendars" spacing={2}>
+      <NextDateRangePicker calendars={3} />
+    </GridItem>
+  </Stack>
+</LocalizationProvider>
