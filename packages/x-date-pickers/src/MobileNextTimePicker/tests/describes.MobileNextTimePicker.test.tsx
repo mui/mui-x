@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -11,6 +11,7 @@ import {
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
+import {fireEvent} from "@testing-library/react";
 
 describe.only('<MobileNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -76,6 +77,8 @@ describe.only('<MobileNextTimePicker /> - Describes', () => {
       const hourClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
 
       return newValue;
     },

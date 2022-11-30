@@ -39,7 +39,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
       debug()
 
-      // assertRenderedValue(newValue);
+      assertRenderedValue(newValue);
       // TODO: Clean this exception or change the clock behavior
       expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
       // TODO: Support range
