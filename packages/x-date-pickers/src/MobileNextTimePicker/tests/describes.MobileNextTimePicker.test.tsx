@@ -80,10 +80,11 @@ describe.only('<MobileNextTimePicker /> - Describes', () => {
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
-      // if (!isOpened) {
-      //   // Close the picker to return to the initial state
-      //   userEvent.keyPress(document.activeElement!, { key: 'Escape' });
-      // }
+      if (!isOpened) {
+         // Close the picker to return to the initial state
+         userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+         clock.runToLast()
+      }
 
       return newValue;
     },
