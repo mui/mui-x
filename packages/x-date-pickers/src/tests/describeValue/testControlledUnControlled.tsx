@@ -38,10 +38,10 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       const newValue = setNewValue(values[0]);
 
       assertRenderedValue(newValue);
-      // // TODO: Clean this exception or change the clock behavior
-      // expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
-      // // TODO: Support range
-      // expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      // TODO: Clean this exception or change the clock behavior
+      expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
+      // TODO: Support range
+      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
     });
     //
     // it('should call onChange when updating a value defined with `props.value`', () => {
