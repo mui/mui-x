@@ -423,7 +423,7 @@ describe('<DataGrid /> - Column Spanning', () => {
             initialState={{
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                  items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
                 },
               },
             }}
@@ -545,7 +545,7 @@ describe('<DataGrid /> - Column Spanning', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
               },
             },
           }}

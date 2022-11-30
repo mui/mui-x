@@ -149,6 +149,7 @@ If you want to customize some translations on specific component, you can use th
 | Turkish                 | tr-TR               | `trTr`      |
 | Dutch                   | nl-NL               | `nlNL`      |
 | Ukrainian               | uk-UA               | `ukUA`      |
+| Urdu (Pakistan)         | ur-PK               | `urPK`      |
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 

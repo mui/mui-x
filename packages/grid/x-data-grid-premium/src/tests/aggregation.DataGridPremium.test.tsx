@@ -385,7 +385,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -399,7 +399,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -414,7 +414,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -704,7 +704,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             aggregation: { model: { id: 'sum' } },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
+                items: [{ field: 'id', operator: '!=', value: 15 }],
               },
             },
           }}

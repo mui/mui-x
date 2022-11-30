@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'GBPEUR' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'GBPEUR' }],
       },
     });
 
@@ -336,7 +336,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     // should show pinned rows even if there's no filtering results
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'whatever' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'whatever' }],
       },
     });
 

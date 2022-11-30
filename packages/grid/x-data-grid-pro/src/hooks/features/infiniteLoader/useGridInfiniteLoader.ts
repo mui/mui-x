@@ -71,13 +71,13 @@ export const useGridInfiniteLoader = (
     ],
   );
 
-  const handleGridScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
+  const handleGridScroll = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     ({ left, top }) => {
       handleRowsScrollEnd({ left, top });
     },
     [handleRowsScrollEnd],
   );
 
-  useGridApiEventHandler(apiRef, 'rowsScroll', handleGridScroll);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleGridScroll);
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };

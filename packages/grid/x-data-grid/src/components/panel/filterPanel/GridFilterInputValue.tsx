@@ -83,7 +83,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
             ...rootProps.componentsProps?.baseSelect,
           },
           children: renderSingleSelectOptions(
-            apiRef.current.getColumn(item.columnField),
+            apiRef.current.getColumn(item.field),
             apiRef.current,
             isSelectNative ? 'option' : MenuItem,
           ),
@@ -95,7 +95,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       let value = event.target.value;
       // NativeSelect casts the value to a string.
       if (type === 'singleSelect') {
-        const column = apiRef.current.getColumn(item.columnField);
+        const column = apiRef.current.getColumn(item.field);
         const columnValueOptions =
           typeof column.valueOptions === 'function'
             ? column.valueOptions({ field: column.field })
@@ -164,9 +164,9 @@ GridFilterInputValue.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;

@@ -61,6 +61,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Events
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
+- The `rowsScroll` event was renamed to `scrollPositionChange`.
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
@@ -122,6 +123,12 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `unstable_registerControlState`                   |
 
     </details>
+
+### Filtering
+
+- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- The `GridFilterItem['operator']` is now required.
 
 ### Other exports
 
