@@ -683,7 +683,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });
