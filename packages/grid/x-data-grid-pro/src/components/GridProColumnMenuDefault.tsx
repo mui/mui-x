@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  GridColumnMenuDefault,
+  GridGenericColumnMenuDefault,
   GridColumnMenuProps,
   GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
   GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
@@ -21,7 +21,7 @@ export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PRO = {
 const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridProColumnMenuDefault(props: GridColumnMenuProps, ref) {
     return (
-      <GridColumnMenuDefault
+      <GridGenericColumnMenuDefault
         ref={ref}
         defaultComponents={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PRO}
         defaultComponentsProps={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PRO}

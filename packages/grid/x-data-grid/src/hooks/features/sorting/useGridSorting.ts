@@ -117,8 +117,8 @@ export const useGridSorting = (
   );
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, column) => {
-      if (column == null || column.sortable === false) {
+    (columnMenuItems, colDef) => {
+      if (colDef == null || colDef.sortable === false) {
         return columnMenuItems;
       }
 

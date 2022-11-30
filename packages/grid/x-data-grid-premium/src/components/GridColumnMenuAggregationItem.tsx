@@ -23,7 +23,7 @@ const StyledStack = styled(Stack)(({ theme }) => ({
 }));
 
 function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
-  const { column } = props;
+  const { colDef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const id = useId();
@@ -33,20 +33,20 @@ function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
     () =>
       getAvailableAggregationFunctions({
         aggregationFunctions: rootProps.aggregationFunctions,
-        column,
+        colDef,
       }),
-    [column, rootProps.aggregationFunctions],
+    [colDef, rootProps.aggregationFunctions],
   );
 
   const selectedAggregationRule = React.useMemo(() => {
-    if (!column || !aggregationModel[column.field]) {
+    if (!colDef || !aggregationModel[colDef.field]) {
       return '';
     }
 
-    const aggregationFunctionName = aggregationModel[column.field];
+    const aggregationFunctionName = aggregationModel[colDef.field];
     if (
       canColumnHaveAggregationFunction({
-        column,
+        colDef,
         aggregationFunctionName,
         aggregationFunction: rootProps.aggregationFunctions[aggregationFunctionName],
       })
@@ -55,16 +55,16 @@ function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
     }
 
     return '';
-  }, [rootProps.aggregationFunctions, aggregationModel, column]);
+  }, [rootProps.aggregationFunctions, aggregationModel, colDef]);
 
   const handleAggregationItemChange = (event: SelectChangeEvent<string | undefined>) => {
     const newAggregationItem = event.target?.value || undefined;
     const currentModel = gridAggregationModelSelector(apiRef);
-    const { [column.field]: columnItem, ...otherColumnItems } = currentModel;
+    const { [colDef.field]: columnItem, ...otherColumnItems } = currentModel;
     const newModel: GridAggregationModel =
       newAggregationItem == null
         ? otherColumnItems
-        : { ...otherColumnItems, [column?.field]: newAggregationItem };
+        : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
   };

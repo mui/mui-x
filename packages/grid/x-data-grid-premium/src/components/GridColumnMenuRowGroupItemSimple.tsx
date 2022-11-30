@@ -15,7 +15,7 @@ import {
 } from '../hooks/features/rowGrouping/gridRowGroupingUtils';
 
 function GridColumnMenuRowGroupItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
@@ -35,15 +35,15 @@ function GridColumnMenuRowGroupItemSimple(props: GridColumnMenuItemProps) {
     );
   };
 
-  if (!column || !isGroupingColumn(column.field)) {
+  if (!colDef || !isGroupingColumn(colDef.field)) {
     return null;
   }
 
-  if (column.field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) {
+  if (colDef.field === GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD) {
     return <React.Fragment>{rowGroupingModel.map(renderUnGroupingMenuItem)}</React.Fragment>;
   }
 
-  return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(column.field)!);
+  return renderUnGroupingMenuItem(getRowGroupingCriteriaFromGroupingField(colDef.field)!);
 }
 
 GridColumnMenuRowGroupItemSimple.propTypes = {

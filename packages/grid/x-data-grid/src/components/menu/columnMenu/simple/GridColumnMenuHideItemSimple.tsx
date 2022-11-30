@@ -7,7 +7,7 @@ import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
 function GridColumnMenuHideItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const timeoutRef = React.useRef<any>();
@@ -30,10 +30,10 @@ function GridColumnMenuHideItemSimple(props: GridColumnMenuItemProps) {
       onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef.current.setColumnVisibility(column.field, false);
+        apiRef.current.setColumnVisibility(colDef.field, false);
       }, 100);
     },
-    [apiRef, column.field, onClick, disabled],
+    [apiRef, colDef.field, onClick, disabled],
   );
 
   React.useEffect(() => {
@@ -44,7 +44,7 @@ function GridColumnMenuHideItemSimple(props: GridColumnMenuItemProps) {
     return null;
   }
 
-  if (column.hideable === false) {
+  if (colDef.hideable === false) {
     return null;
   }
 

@@ -11,14 +11,14 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props) {
-  const { onClick, column } = props;
+  const { onClick, colDef } = props;
   const apiRef = useGridApiContext();
   const handleClick = React.useCallback(
     (event) => {
-      apiRef.current.showFilterPanel(column.field);
+      apiRef.current.showFilterPanel(colDef.field);
       onClick(event);
     },
-    [apiRef, column.field, onClick],
+    [apiRef, colDef.field, onClick],
   );
 
   return (
@@ -29,6 +29,7 @@ function CustomFilterItem(props) {
 }
 
 CustomFilterItem.propTypes = {
+  colDef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 

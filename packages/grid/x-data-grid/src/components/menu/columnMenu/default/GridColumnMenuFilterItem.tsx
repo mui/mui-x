@@ -26,34 +26,34 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
 
   const filtersForCurrentColumn = React.useMemo(
-    () => filterColumnLookup[column.field] ?? [],
-    [column.field, filterColumnLookup],
+    () => filterColumnLookup[colDef.field] ?? [],
+    [colDef.field, filterColumnLookup],
   );
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef.current.showFilterPanel(column.field);
+      apiRef.current.showFilterPanel(colDef.field);
     },
-    [apiRef, column.field, onClick],
+    [apiRef, colDef.field, onClick],
   );
 
   const clearFilters = React.useCallback(() => {
     if (filtersForCurrentColumn.length) {
       apiRef.current.upsertFilterItems(
-        filterModel.items.filter((item) => item.columnField !== column?.field),
+        filterModel.items.filter((item) => item.columnField !== colDef?.field),
       );
     }
-  }, [apiRef, column?.field, filterModel.items, filtersForCurrentColumn]);
+  }, [apiRef, colDef?.field, filterModel.items, filtersForCurrentColumn]);
 
-  if (rootProps.disableColumnFilter || !column?.filterable) {
+  if (rootProps.disableColumnFilter || !colDef?.filterable) {
     return null;
   }
 

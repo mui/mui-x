@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import {
-  GridColumnMenuSimple,
+  GridGenericColumnMenuSimple,
   GridColumnMenuProps,
   GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
   GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
@@ -34,7 +34,7 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PRO = {
 const GridProColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridProColumnMenuDefault(props, ref) {
     return (
-      <GridColumnMenuSimple
+      <GridGenericColumnMenuSimple
         ref={ref}
         {...props}
         defaultComponents={GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PRO}

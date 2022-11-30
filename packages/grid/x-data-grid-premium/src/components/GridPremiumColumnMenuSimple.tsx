@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import {
-  GridColumnMenuSimple,
+  GridGenericColumnMenuSimple,
   GridColumnMenuProps,
   GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
   GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
@@ -14,8 +14,8 @@ import { GridColumnMenuRowGroupItemSimple } from './GridColumnMenuRowGroupItemSi
 import { GridColumnMenuRowUngroupItemSimple } from './GridColumnMenuRowUngroupItemSimple';
 
 function GroupingItem(props: GridColumnMenuItemProps) {
-  const { column } = props;
-  if (isGroupingColumn(column.field)) {
+  const { colDef } = props;
+  if (isGroupingColumn(colDef.field)) {
     return (
       <React.Fragment>
         <Divider />
@@ -23,7 +23,7 @@ function GroupingItem(props: GridColumnMenuItemProps) {
       </React.Fragment>
     );
   }
-  if (column.groupable) {
+  if (colDef.groupable) {
     return (
       <React.Fragment>
         <Divider />
@@ -58,7 +58,7 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PREMIUM = {
 const GridPremiumColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridPremiumColumnMenuSimple(props, ref) {
     return (
-      <GridColumnMenuSimple
+      <GridGenericColumnMenuSimple
         ref={ref}
         {...props}
         defaultComponents={GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PREMIUM}

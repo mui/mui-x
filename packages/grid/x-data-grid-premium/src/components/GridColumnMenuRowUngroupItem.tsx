@@ -24,34 +24,34 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
-  if (!column.groupable) {
+  if (!colDef.groupable) {
     return null;
   }
 
   const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.removeRowGroupingCriteria(column.field);
+    apiRef.current.removeRowGroupingCriteria(colDef.field);
     onClick(event);
   };
 
   const groupColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.addRowGroupingCriteria(column.field);
+    apiRef.current.addRowGroupingCriteria(colDef.field);
     onClick(event);
   };
 
-  const name = columnsLookup[column.field].headerName ?? column.field;
+  const name = columnsLookup[colDef.field].headerName ?? colDef.field;
 
-  if (rowGroupingModel.includes(column.field)) {
+  if (rowGroupingModel.includes(colDef.field)) {
     return (
       <StyledStack>
         <StyledButton
           onClick={ungroupColumn}
-          key={column.field}
+          key={colDef.field}
           startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
           color="inherit"
         >
@@ -65,7 +65,7 @@ function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
     <Stack px={1.5} py={1} direction="row">
       <StyledButton
         onClick={groupColumn}
-        key={column.field}
+        key={colDef.field}
         startIcon={<rootProps.components.ColumnMenuGroupIcon />}
         color="inherit"
       >

@@ -7,7 +7,7 @@ import { GridColumnMenuColumnsItemSimple } from './GridColumnMenuColumnsItemSimp
 import { GridColumnMenuFilterItemSimple } from './GridColumnMenuFilterItemSimple';
 import { GridColumnMenuHideItemSimple } from './GridColumnMenuHideItemSimple';
 import { GridColumnMenuSortItemSimple } from './GridColumnMenuSortItemSimple';
-import { GridColumnMenuProps } from '../GridColumnMenuProps';
+import { GridColumnMenuProps, GridGenericColumnMenuProps } from '../GridColumnMenuProps';
 
 export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItemSimple,
@@ -23,15 +23,10 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS = {
   columnMenuColumnsItem: { displayOrder: 30 },
 };
 
-const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+const GridGenericColumnMenuSimple = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
   function GridColumnMenuSimpleRoot(props, ref) {
-    const {
-      defaultComponents = GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
-      defaultComponentsProps = GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
-      components,
-      componentsProps,
-      ...other
-    } = props;
+    const { defaultComponents, defaultComponentsProps, components, componentsProps, ...other } =
+      props;
 
     const orderedComponents = useGridColumnMenuComponents({
       ...other,
@@ -47,6 +42,19 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuPr
           <Component key={index} onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
         ))}
       </GridColumnMenuContainer>
+    );
+  },
+);
+
+const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+  function GridColumnMenuDefault(props, ref) {
+    return (
+      <GridGenericColumnMenuSimple
+        {...props}
+        ref={ref}
+        defaultComponents={GRID_COLUMN_MENU_SIMPLE_COMPONENTS}
+        defaultComponentsProps={GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS}
+      />
     );
   },
 );
@@ -68,20 +76,10 @@ GridColumnMenuSimple.propTypes = {
    * e.g. `displayOrder`
    */
   componentsProps: PropTypes.object,
-  /**
-   * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
-   * @ignore - do not document.
-   */
-  defaultComponents: PropTypes.object,
-  /**
-   * Initial `componentsProps` - it is internal, to be overrriden by Pro or Premium packages
-   * @ignore - do not document.
-   */
-  defaultComponentsProps: PropTypes.object,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
   open: PropTypes.bool.isRequired,
 } as any;
 
-export { GridColumnMenuSimple };
+export { GridColumnMenuSimple, GridGenericColumnMenuSimple };

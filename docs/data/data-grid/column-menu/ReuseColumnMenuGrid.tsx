@@ -12,14 +12,14 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function CustomFilterItem(props: GridColumnMenuItemProps) {
-  const { onClick, column } = props;
+  const { onClick, colDef } = props;
   const apiRef = useGridApiContext();
   const handleClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      apiRef.current.showFilterPanel(column.field);
+      apiRef.current.showFilterPanel(colDef.field);
       onClick(event);
     },
-    [apiRef, column.field, onClick],
+    [apiRef, colDef.field, onClick],
   );
   return (
     <Button sx={{ m: 1 }} onClick={handleClick} startIcon={<IconFilter />}>

@@ -21,31 +21,31 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
-  const { column } = props;
+  const { colDef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 
   const sortDirection = React.useMemo(() => {
-    if (!column) {
+    if (!colDef) {
       return null;
     }
-    const sortItem = sortModel.find((item) => item.field === column.field);
+    const sortItem = sortModel.find((item) => item.field === colDef.field);
     return sortItem?.sort;
-  }, [column, sortModel]);
+  }, [colDef, sortModel]);
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
-        column!,
+        colDef!,
         (direction === sortDirection ? null : direction) as GridSortDirection,
       );
     },
-    [apiRef, column, sortDirection],
+    [apiRef, colDef, sortDirection],
   );
 
-  if (!column || !column.sortable) {
+  if (!colDef || !colDef.sortable) {
     return null;
   }
 

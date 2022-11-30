@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  GridColumnMenuDefault,
+  GridGenericColumnMenuDefault,
   GridColumnMenuProps,
   GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
   GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
@@ -13,11 +13,11 @@ import { GridColumnMenuRowGroupItem } from './GridColumnMenuRowGroupItem';
 import { GridColumnMenuRowUngroupItem } from './GridColumnMenuRowUngroupItem';
 
 function GroupingItem(props: GridColumnMenuItemProps) {
-  const { column } = props;
-  if (isGroupingColumn(column.field)) {
+  const { colDef } = props;
+  if (isGroupingColumn(colDef.field)) {
     return <GridColumnMenuRowGroupItem {...props} />;
   }
-  if (column.groupable) {
+  if (colDef.groupable) {
     return <GridColumnMenuRowUngroupItem {...props} />;
   }
   return null;
@@ -38,7 +38,7 @@ export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PREMIUM = {
 const GridPremiumColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridPremiumColumnMenuDefault(props, ref) {
     return (
-      <GridColumnMenuDefault
+      <GridGenericColumnMenuDefault
         ref={ref}
         {...props}
         defaultComponents={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PREMIUM}
@@ -53,7 +53,7 @@ GridPremiumColumnMenuDefault.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  currentColumn: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;

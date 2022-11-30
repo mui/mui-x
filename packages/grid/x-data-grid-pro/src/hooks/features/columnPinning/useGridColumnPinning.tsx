@@ -175,12 +175,12 @@ export const useGridColumnPinning = (
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, column) => {
+    (columnMenuItems, colDef) => {
       if (props.disableColumnPinning) {
         return columnMenuItems;
       }
 
-      if (column.pinnable === false) {
+      if (colDef.pinnable === false) {
         return columnMenuItems;
       }
 

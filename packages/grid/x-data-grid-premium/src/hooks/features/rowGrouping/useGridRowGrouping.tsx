@@ -153,11 +153,11 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (columnMenuItems, column) => {
+    (columnMenuItems, colDef) => {
       if (props.disableRowGrouping) {
         return columnMenuItems;
       }
-      if (isGroupingColumn(column.field) || column.groupable) {
+      if (isGroupingColumn(colDef.field) || colDef.groupable) {
         return [...columnMenuItems, 'ColumnMenuGroupingItem'];
       }
       return columnMenuItems;

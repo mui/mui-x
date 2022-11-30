@@ -6,24 +6,24 @@ import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 
 function GridColumnMenuPinningItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
 
   const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.pinColumn(column.field, side);
+    apiRef.current.pinColumn(colDef.field, side);
     onClick(event);
   };
 
   const unpinColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.unpinColumn(column.field);
+    apiRef.current.unpinColumn(colDef.field);
     onClick(event);
   };
 
-  if (!column) {
+  if (!colDef) {
     return null;
   }
 
-  const side = apiRef.current.isColumnPinned(column.field);
+  const side = apiRef.current.isColumnPinned(colDef.field);
 
   if (side) {
     const otherSide =

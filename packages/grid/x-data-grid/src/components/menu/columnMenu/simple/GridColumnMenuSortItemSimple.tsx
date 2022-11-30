@@ -8,31 +8,31 @@ import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 
 function GridColumnMenuSortItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 
   const sortDirection = React.useMemo(() => {
-    if (!column) {
+    if (!colDef) {
       return null;
     }
-    const sortItem = sortModel.find((item) => item.field === column.field);
+    const sortItem = sortModel.find((item) => item.field === colDef.field);
     return sortItem?.sort;
-  }, [column, sortModel]);
+  }, [colDef, sortModel]);
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
-        column!,
+        colDef!,
         (direction === sortDirection ? null : direction) as GridSortDirection,
       );
     },
-    [apiRef, column, onClick, sortDirection],
+    [apiRef, colDef, onClick, sortDirection],
   );
 
-  if (!column || !column.sortable) {
+  if (!colDef || !colDef.sortable) {
     return null;
   }
 

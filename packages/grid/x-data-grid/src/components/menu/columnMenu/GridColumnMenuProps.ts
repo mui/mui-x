@@ -12,5 +12,9 @@ export interface GridColumnMenuContainerProps extends React.HTMLAttributes<HTMLU
 }
 
 export interface GridColumnMenuProps
-  extends Partial<GridColumnMenuRootProps>,
+  extends Pick<GridColumnMenuRootProps, 'components' | 'componentsProps'>,
+    Omit<GridColumnMenuContainerProps, 'MenuListComponent'> {}
+
+export interface GridGenericColumnMenuProps
+  extends GridColumnMenuRootProps,
     Omit<GridColumnMenuContainerProps, 'MenuListComponent'> {}

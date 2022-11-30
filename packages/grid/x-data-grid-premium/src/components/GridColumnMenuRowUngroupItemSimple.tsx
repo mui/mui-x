@@ -10,28 +10,28 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 function GridColumnMenuRowUngroupItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
 
-  if (!column.groupable) {
+  if (!colDef.groupable) {
     return null;
   }
 
   const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.removeRowGroupingCriteria(column.field);
+    apiRef.current.removeRowGroupingCriteria(colDef.field);
     onClick(event);
   };
 
   const groupColumn = (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.addRowGroupingCriteria(column.field);
+    apiRef.current.addRowGroupingCriteria(colDef.field);
     onClick(event);
   };
 
-  const name = columnsLookup[column.field].headerName ?? column.field;
+  const name = columnsLookup[colDef.field].headerName ?? colDef.field;
 
-  if (rowGroupingModel.includes(column.field)) {
+  if (rowGroupingModel.includes(colDef.field)) {
     return (
       <MenuItem onClick={ungroupColumn}>
         {apiRef.current.getLocaleText('unGroupColumn')(name)}

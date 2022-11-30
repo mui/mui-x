@@ -6,19 +6,19 @@ import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
 function GridColumnMenuFilterItemSimple(props: GridColumnMenuItemProps) {
-  const { column, onClick } = props;
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef.current.showFilterPanel(column.field);
+      apiRef.current.showFilterPanel(colDef.field);
     },
-    [apiRef, column.field, onClick],
+    [apiRef, colDef.field, onClick],
   );
 
-  if (rootProps.disableColumnFilter || !column.filterable) {
+  if (rootProps.disableColumnFilter || !colDef.filterable) {
     return null;
   }
 
