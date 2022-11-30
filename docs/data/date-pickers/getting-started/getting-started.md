@@ -20,96 +20,75 @@ packageName: '@mui/x-date-pickers'
 
 {{"demo": "MaterialUIPickers.js"}}
 
-### Setup
+## Installation
 
-#### Package installation
-
-You need to install 3 different types of package to make the pickers work:
+You need to install two different types of packages to make the pickers work:
 
 1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
-2. **The date-library** ([`moment`](https://momentjs.com/), [`dayjs`](https://day.js.org/), ...) manages the date manipulation.
-3. **The adapter** (`@mui/x-date-pickers/AdapterDateFns`) exposes your favorite **date-library** under a unified api used by **component** thanks to [`@date-io`](https://github.com/dmtrKovalenko/date-io#projects).
+2. **The date library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
 
-First you have to install the date-library you want to use to manage dates, and the component package:
+{{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-{{"demo": "InstructionsNoSnap.js", "bg": "inline", "hideToolbar": true, "disableAd": true}}
+### Why do you need a date library?
 
-Here are the supported date-libraries and their specific calendar system:
+Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
 
-- [date-fns](https://date-fns.org/): `@mui/x-date-pickers/AdapterDateFns`, adapted by `@date-io/date-fns`.
-- [Day.js](https://day.js.org/): `@mui/x-date-pickers/AdapterDayjs`, adapted by `@date-io/dayjs`.
-- [Luxon](https://moment.github.io/luxon/#/): `@mui/x-date-pickers/AdapterLuxon`, adapted by `@date-io/luxon`.
-- [Moment.js](https://momentjs.com/): `@mui/x-date-pickers/AdapterMoment`, adapted by `@date-io/moment`.
-- [date-fns-jalali](https://https://github.com/date-fns-jalali/date-fns-jalali/): `@mui/x-date-pickers/AdapterDateFnsJalali`, adapted by `@date-io/date-fns-jalali`.
-- [moment-jalaali](https://https://github.com/jalaali/moment-jalaali/): `@mui/x-date-pickers/AdapterMomentJalaali`, adapted by `@date-io/jalaali`.
-- [moment-hijri](https://https://github.com/xsoh/moment-hijri/): `@mui/x-date-pickers/AdapterMomentHijri`, adapted by `@date-io/hijri`.
+MUI's components let you choose which library you prefer for this purpose.
+This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
 
-#### Code setup
+To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` export a set of **adapters** that expose the date manipulation libraries under a unified API.
 
-After installation completed, you have to set the `dateAdapter` prop of the `LocalizationProvider` accordingly.
-The supported adapters are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
+### Choosing a date library
 
-```js
-import { LocalizationProvider } from '@mui/x-date-pickers';
+#### Available libraries
 
-// Day.js
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// or for date-fns
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-// or for Luxon
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-// or for Moment.js
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+The Date and Time Pickers currently support the following date libraries:
 
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
-If you use another library you should import the adapter directly from the `@date-io` package as follow.
-
-```jsx
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import AdapterJalaali from '@date-io/jalaali';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterJalaali}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
+- [Day.js](https://day.js.org/)
+- [date-fns](https://date-fns.org/)
+- [Luxon](https://moment.github.io/luxon/#/)
+- [Moment.js](https://momentjs.com/)
 
 :::info
-If you are using range pickers, you can import the provided and the adapter directly from `@mui/x-date-pickers-pro`:
-
-```js
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-
-function App({ children }) {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      {children}
-    </LocalizationProvider>
-  );
-}
-```
-
+If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refer to the [Support for other calendar systems](/x/react-date-pickers/calendar-systems/) page.
 :::
 
-### Unsupported libraries
+#### Recommended library
 
-To use a date-library that is not supported yet by `@date-io`, you will have to write an adapter.
-Which means writing a file containing the default formats, and the methods.
-As an example, you can look to the [`dayjs` adapter](https://github.com/dmtrKovalenko/date-io/blob/master/packages/dayjs/src/dayjs-utils.ts).
+If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
+This will avoid bundling two libraries.
 
-In such a case, don't hesitate to open a PR to get some help.
+If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`, then we recommend using `dayjs` because it will have the smallest impact on your application's bundle size.
+
+Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
+
+| **Library**       | **Gzipped size** |
+| ----------------- | ---------------- |
+| `dayjs@1.11.5`    | 6.77kb           |
+| `date-fns@2.29.3` | 19.39kb          |
+| `luxon@3.0.4`     | 23.26kb          |
+| `moment@2.29.4`   | 20.78kb          |
+
+:::info
+The results above were obtained in October 2022 with the latest version of each library.
+The bundling strategy was taken care of by a Create React App, and no locale was loaded for any of the libraries.
+
+The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
+:::
+
+## Code setup
+
+After installation, you have to pass your chosen date library's adapter to `LocalizationProvider`.
+The supported adapters—as well as `LocalizationProvider`—are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+
+All the pickers rendered inside this provider will have access to the adapter through a React context.
+For this reason, we recommend that you wrap your entire application with a `LocalizationProvider` so you can use the Date and Time Pickers everywhere.
+
+{{"component": "modules/components/PickersRenderingInstructions.js"}}
+
+:::info
+If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
+:::
 
 ## TypeScript
 
