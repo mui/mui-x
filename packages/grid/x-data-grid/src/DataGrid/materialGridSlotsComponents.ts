@@ -46,7 +46,7 @@ import {
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
-import { MaterialGridRootStyles } from './MaterialGridRootStyles';
+import { MaterialGridRootStyles } from './components/MaterialGridRootStyles';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,

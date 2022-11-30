@@ -1,6 +1,6 @@
 import { CSSInterpolation } from '@mui/system';
 import { darken, lighten, alpha, styled } from '@mui/material/styles';
-import { gridClasses } from '../constants/gridClasses';
+import { gridClasses } from '../../constants/gridClasses';
 
 export const MaterialGridRootStyles = styled('div', {
   name: 'MuiDataGrid',
