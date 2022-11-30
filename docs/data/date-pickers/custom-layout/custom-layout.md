@@ -72,7 +72,7 @@ Such modification can lead to inconsistencies between the visual aspect, and the
 In the previous demonstration, the tab order is broken, because the action bar appears before the calendar whereas in the DOM the action bar is still after the calendar.
 
 To reorder the DOM structure, you can use the layout callback.
-It gives you access to the main parts of the layout: `toolbar`, `content`, `actionBar` and can order them in `children` property.
+It gives you access to the main parts of the layout: `toolbar`, `content`, `actionBar` and you can order them in the `children` property.
 
 ```jsx
 componentsProps={{
