@@ -83,7 +83,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Покажи колоните',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Филтри',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Скрий', // outdated
   columnMenuUnsort: 'Отмени сортирането',
   columnMenuSortAsc: 'Сортирай по възходящ ред',
   columnMenuSortDesc: 'Сортирай по низходящ ред',

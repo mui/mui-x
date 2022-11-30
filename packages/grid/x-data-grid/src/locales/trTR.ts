@@ -83,7 +83,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Sütunları göster',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre uygula',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Gizle', // outdated
   columnMenuUnsort: 'Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',

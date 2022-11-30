@@ -92,7 +92,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Показать столбцы',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фильтр',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Скрыть', // outdated
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',

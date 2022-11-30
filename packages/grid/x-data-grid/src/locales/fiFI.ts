@@ -84,7 +84,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Näytä sarakkeet',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Piilota', // outdated
   columnMenuUnsort: 'Poista järjestys',
   columnMenuSortAsc: 'Järjestä nousevasti',
   columnMenuSortDesc: 'Järjestä laskevasti',

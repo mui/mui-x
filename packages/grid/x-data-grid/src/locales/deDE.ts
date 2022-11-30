@@ -84,7 +84,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zeige alle Spalten',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Verbergen', // outdated
   columnMenuUnsort: 'Sortierung deaktivieren',
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',

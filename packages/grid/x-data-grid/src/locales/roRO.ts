@@ -84,7 +84,7 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Afișează toate coloanele',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtru',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Ascunde', // outdated
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',

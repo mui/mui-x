@@ -84,7 +84,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Toon kolommen',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filteren',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Verbergen', // outdated
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',

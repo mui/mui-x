@@ -91,7 +91,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zobrazit sloupce',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Skrýt', // outdated
   columnMenuUnsort: 'Zrušit filtry',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',

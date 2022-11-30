@@ -84,7 +84,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'نمایش ستون‌ها',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'فیلتر',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'مخفی', // outdated
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌کردن صعودی',
   columnMenuSortDesc: 'مرتب‌کردن نزولی',

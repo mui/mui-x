@@ -84,7 +84,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Vis kolonner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'Skjul', // outdated
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter ØKENDE',
   columnMenuSortDesc: 'Sorter SYNKENDE',

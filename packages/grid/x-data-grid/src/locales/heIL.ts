@@ -84,7 +84,7 @@ const heILGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'הצג עמודות',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'סנן',
-  // columnMenuHideColumn: 'Hide column',
+  columnMenuHideColumn: 'הסתר', // outdated
   columnMenuUnsort: 'בטל מיון',
   columnMenuSortAsc: 'מיין בסדר עולה',
   columnMenuSortDesc: 'מיין בסדר יורד',
