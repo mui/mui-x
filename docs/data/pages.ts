@@ -395,16 +395,6 @@ const pages: MuiPage[] = [
             title: 'SingleInputDateRangeField',
             plan: 'pro',
           },
-          {
-            pathname: '/x/api/date-pickers/single-input-date-time-range-field',
-            title: 'SingleInputDateTimeRangeField',
-            plan: 'pro',
-          },
-          {
-            pathname: '/x/api/date-pickers/single-input-time-range-field',
-            title: 'SingleInputTimeRangeField',
-            plan: 'pro',
-          },
           { pathname: '/x/api/date-pickers/static-date-picker', title: 'StaticDatePicker' },
           {
             pathname: '/x/api/date-pickers/static-date-range-picker',
