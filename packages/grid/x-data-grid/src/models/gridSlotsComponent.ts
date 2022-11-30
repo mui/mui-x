@@ -132,5 +132,8 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridRow
    */
   Row: React.JSXElementConstructor<any>;
+  /**
+   * Root component that provides the default styles for each grid instance.
+   */
   RootStyles: React.ElementType;
 }
