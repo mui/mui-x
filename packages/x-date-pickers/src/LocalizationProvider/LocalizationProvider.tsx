@@ -99,7 +99,7 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
         [
           'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
           "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
-          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#setup',
+          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#installation',
         ].join(`\n`),
       );
     }
