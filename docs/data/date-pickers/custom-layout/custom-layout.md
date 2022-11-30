@@ -61,7 +61,7 @@ Here is an overview of the structure.
 To move an element—the easiest way is to override it's wrapper position with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
 
 In the next example, the action bar is replaced by a list, and placed at the right of the component.
-Placing at the right is achieved by applying `{ gridColumn: '3', gridRow: '2' }` style.
+Placing at the right is achieved by applying `{ gridColumn: 3, gridRow: 2 }` style.
 
 {{"demo": "MovingActions.js"}}
 

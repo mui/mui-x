@@ -45,8 +45,8 @@ function RestaurantHeader() {
     <Box
       sx={{
         // Place the element in the grid layout
-        gridColumn: '1',
-        gridRow: '1',
+        gridColumn: 1,
+        gridRow: 1,
         // Center the icon
         display: 'flex',
         justifyContent: 'center',
@@ -67,15 +67,20 @@ export default function AddComponent() {
             sx: {
               // Modify DOM structure
               '& .MuiPickersViewLayout-actionBar': {
-                gridColumn: '1',
-                gridRow: '2',
+                gridColumn: 1,
+                gridRow: 2,
               },
               '& .MuiPickersViewLayout-toolbar': {
-                gridColumn: '2',
-                gridRow: '1',
+                gridColumn: 2,
+                gridRow: 1,
               },
             },
-            children: [<RestaurantHeader />, toolbar, actionBar, content],
+            children: [
+              <RestaurantHeader key="header-logo" />,
+              toolbar,
+              actionBar,
+              content,
+            ],
           }),
         }}
         components={{

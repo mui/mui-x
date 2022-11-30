@@ -21,9 +21,9 @@ export const PickersViewLayoutRoot = styled('div', {
   gridAutoRows: 'max-content auto max-content',
   ...(ownerState.isLandscape && {
     [`& .${pickersViewLayoutClasses.toolbar}`]: {
-    gridColumn: theme.direction === 'rtl' ? '3' : '1',
-    gridRow: '1 / 3',
-  },
+      gridColumn: theme.direction === 'rtl' ? 3 : 1,
+      gridRow: '1 / 3',
+    },
   }),
 }));
 
@@ -32,8 +32,8 @@ export const PickersViewLayoutContent = styled('div', {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })({
-  gridColumn: '2',
-  gridRow: '2',
+  gridColumn: 2,
+  gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
 });
@@ -44,7 +44,7 @@ export const PickersViewLayoutToolbar = styled('div', {
   overridesResolver: (props, styles) => styles.toolbar,
 })({
   gridColumn: '1 / 4',
-  gridRow: '1',
+  gridRow: 1,
 });
 
 export const PickersViewLayoutActionBar = styled('div', {
@@ -53,7 +53,7 @@ export const PickersViewLayoutActionBar = styled('div', {
   overridesResolver: (props, styles) => styles.actionBar,
 })({
   gridColumn: '1 / 4',
-  gridRow: '3',
+  gridRow: 3,
 });
 
 const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
@@ -72,7 +72,7 @@ function DefaultPickersViewLayout(props: PickersViewLayoutSlotOwnerState<any, an
   const { toolbar, content, actionBar, children, sx, className, isLandscape } = props;
 
   return (
-    <PickersViewLayoutRoot sx={sx} className={className} ownerState={{isLandscape}}>
+    <PickersViewLayoutRoot sx={sx} className={className} ownerState={{ isLandscape }}>
       {children ?? [toolbar, content, actionBar]}
     </PickersViewLayoutRoot>
   );

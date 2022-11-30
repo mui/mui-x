@@ -45,8 +45,8 @@ export default function MovingActionsReorder() {
           layout: ({ toolbar, content, actionBar }) => ({
             sx: {
               '& .MuiPickersViewLayout-actionBar': {
-                gridColumn: '3',
-                gridRow: '2',
+                gridColumn: 1,
+                gridRow: 2,
               },
             },
             children: [toolbar, actionBar, content],
