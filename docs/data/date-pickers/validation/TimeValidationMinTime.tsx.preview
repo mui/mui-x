@@ -1,16 +1,6 @@
 <GridItem label="TimePicker">
-  <TimePicker
-    minTime={nineAM}
-    value={timePickerValue}
-    onChange={(newValue) => setTimePickerValue(newValue)}
-    renderInput={(params) => <TextField {...params} />}
-  />
+  <NextTimePicker defaultValue={fiveAM} minTime={nineAM} />
 </GridItem>
 <GridItem label="DateTimePicker">
-  <DateTimePicker
-    minTime={nineAM}
-    value={dateTimePickerValue}
-    onChange={(newValue) => setDateTimePickerValue(newValue)}
-    renderInput={(params) => <TextField {...params} />}
-  />
+  <NextDateTimePicker defaultValue={fiveAM} minTime={nineAM} />
 </GridItem>

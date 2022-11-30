@@ -1,10 +1,11 @@
-<DatePicker
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
+<NextDatePicker
+  defaultValue={dayjs('2022-07-12T00:00:00.000')}
   onError={(newError) => setError(newError)}
-  renderInput={(params) => (
-    <TextField {...params} helperText={errorMessage} fullWidth />
-  )}
+  componentsProps={{
+    input: {
+      helperText: errorMessage,
+    },
+  }}
   minDate={startOfQ12022}
   maxDate={endOfQ12022}
 />
