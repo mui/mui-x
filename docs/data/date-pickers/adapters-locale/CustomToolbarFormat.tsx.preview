@@ -1,0 +1,8 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <StaticNextDatePicker
+    displayStaticWrapperAs="desktop"
+    defaultValue={dayjs('2022-04-07')}
+    componentsProps={{ toolbar: { toolbarFormat: 'ddd DD MMMM' } }}
+    showToolbar
+  />
+</LocalizationProvider>
