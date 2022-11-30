@@ -1,7 +1,5 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticNextDatePicker
-    displayStaticWrapperAs="desktop"
-    defaultValue={dayjs('2022-04-07')}
-    components={{ Day }}
-  />
-</LocalizationProvider>
+<StaticNextDatePicker
+  displayStaticWrapperAs="desktop"
+  defaultValue={dayjs('2022-04-07')}
+  components={{ Day }}
+/>

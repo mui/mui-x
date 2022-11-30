@@ -1,15 +1,13 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticDatePicker
-    displayWeekNumber
-    label="Basic example"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} />}
-    localeText={{
-      calendarWeekNumberHeaderText: '#',
-      calendarWeekNumberText: (weekNumber) => `${weekNumber}.`,
-    }}
-  />
-</LocalizationProvider>
+<StaticDatePicker
+  displayWeekNumber
+  label="Basic example"
+  value={value}
+  onChange={(newValue) => {
+    setValue(newValue);
+  }}
+  renderInput={(params) => <TextField {...params} />}
+  localeText={{
+    calendarWeekNumberHeaderText: '#',
+    calendarWeekNumberText: (weekNumber) => `${weekNumber}.`,
+  }}
+/>
