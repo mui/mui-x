@@ -11,7 +11,7 @@ import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
 import { testPickerActionBar } from './testPickerActionBar';
 
-const TEST_SUITES = [testControlledUnControlled];
+const TEST_SUITES = [testControlledUnControlled, testPickerOpenCloseLifeCycle, testPickerActionBar];
 
 /**
  * Tests various aspects of the picker value.
