@@ -44,12 +44,7 @@ const GridColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuPr
     return (
       <GridColumnMenuContainer MenuListComponent={MenuList} ref={ref} {...other}>
         {orderedComponents.map(([Component, extraProps], index) => (
-          <Component
-            key={index}
-            onClick={props.hideMenu}
-            column={props.currentColumn}
-            {...extraProps}
-          />
+          <Component key={index} onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
         ))}
       </GridColumnMenuContainer>
     );
@@ -61,6 +56,7 @@ GridColumnMenuSimple.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  colDef: PropTypes.object.isRequired,
   /**
    * `components` could be used to add new and (or) override default column menu items
    * If you register a nee component you must pass it's `displayOrder` in `componentsProps`
@@ -72,7 +68,6 @@ GridColumnMenuSimple.propTypes = {
    * e.g. `displayOrder`
    */
   componentsProps: PropTypes.object,
-  currentColumn: PropTypes.object.isRequired,
   /**
    * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.

@@ -25,14 +25,14 @@ MenuCloseComponent.propTypes = {
 
 function CustomColumnMenu(props) {
   const itemProps = {
-    column: props.currentColumn,
+    colDef: props.colDef,
     onClick: props.hideMenu,
   };
   return (
     <Stack p={0.5}>
       <GridColumnMenuSortItem {...itemProps} />
       {/* Only provide filtering on desk */}
-      {itemProps.column.field === 'desk' ? (
+      {itemProps.colDef.field === 'desk' ? (
         <GridColumnMenuFilterItem {...itemProps} />
       ) : null}
       <Divider />
@@ -43,7 +43,7 @@ function CustomColumnMenu(props) {
 }
 
 CustomColumnMenu.propTypes = {
-  currentColumn: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
 

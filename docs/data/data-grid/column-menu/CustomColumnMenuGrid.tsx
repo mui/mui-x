@@ -22,14 +22,14 @@ function MenuCloseComponent(props: GridColumnMenuItemProps) {
 
 function CustomColumnMenu(props: GridColumnMenuProps) {
   const itemProps = {
-    column: props.currentColumn,
+    colDef: props.colDef,
     onClick: props.hideMenu,
   };
   return (
     <Stack p={0.5}>
       <GridColumnMenuSortItem {...itemProps} />
       {/* Only provide filtering on desk */}
-      {itemProps.column.field === 'desk' ? (
+      {itemProps.colDef.field === 'desk' ? (
         <GridColumnMenuFilterItem {...itemProps} />
       ) : null}
       <Divider />

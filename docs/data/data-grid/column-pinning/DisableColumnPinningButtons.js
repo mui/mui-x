@@ -16,25 +16,21 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function CustomColumnMenu(props) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+  const { hideMenu, colDef, color, ...other } = props;
 
   return (
-    <GridColumnMenuContainer
-      hideMenu={hideMenu}
-      currentColumn={currentColumn}
-      {...other}
-    >
-      <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnMenuHideItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnMenuColumnsItem onClick={hideMenu} column={currentColumn} />
+    <GridColumnMenuContainer hideMenu={hideMenu} colDef={colDef} {...other}>
+      <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuHideItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuColumnsItem onClick={hideMenu} colDef={colDef} />
     </GridColumnMenuContainer>
   );
 }
 
 CustomColumnMenu.propTypes = {
+  colDef: PropTypes.object.isRequired,
   color: PropTypes.string,
-  currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
 

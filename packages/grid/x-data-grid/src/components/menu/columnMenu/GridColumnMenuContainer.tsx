@@ -18,7 +18,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
     const {
       MenuListComponent = StyledMenuList,
       hideMenu,
-      currentColumn,
+      colDef,
       id,
       labelledby,
       className,
@@ -60,7 +60,7 @@ GridColumnMenuContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  currentColumn: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

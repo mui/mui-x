@@ -4,7 +4,7 @@ import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
 interface UseGridColumnMenuComponentsProps extends GridColumnMenuRootProps {
-  currentColumn: GridColDef;
+  colDef: GridColDef;
 }
 
 type UseGridColumnMenuComponentsResponse = Array<
@@ -42,11 +42,7 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
     return mergedProps;
   }, [defaultComponentsProps, componentsProps]);
 
-  const defaultItems = apiRef.current.unstable_applyPipeProcessors(
-    'columnMenu',
-    [],
-    props.currentColumn,
-  );
+  const defaultItems = apiRef.current.unstable_applyPipeProcessors('columnMenu', [], props.colDef);
 
   const userItems = React.useMemo(() => {
     const defaultComponentKeys = Object.keys(defaultComponents);

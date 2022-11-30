@@ -31,26 +31,26 @@ const StyledGridColumnMenu = styled(GridColumnMenuDefault)<{
 }));
 
 export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerState) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+  const { hideMenu, colDef, color, ...other } = props;
 
-  if (currentColumn.field === 'name') {
+  if (colDef.field === 'name') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
-        <GridColumnMenuSortItem onClick={hideMenu} column={currentColumn!} />
-        <GridColumnMenuFilterItem onClick={hideMenu} column={currentColumn!} />
+        <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef!} />
+        <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef!} />
       </StyledGridColumnMenuContainer>
     );
   }
-  if (currentColumn.field === 'stars') {
+  if (colDef.field === 'stars') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
@@ -72,7 +72,7 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
   return (
     <StyledGridColumnMenu
       hideMenu={hideMenu}
-      currentColumn={currentColumn}
+      colDef={colDef}
       ownerState={{ color }}
       {...other}
     />

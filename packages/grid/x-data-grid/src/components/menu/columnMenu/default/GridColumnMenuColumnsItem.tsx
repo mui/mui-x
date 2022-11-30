@@ -47,7 +47,7 @@ GridColumnMenuColumnsItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 } as any;
 

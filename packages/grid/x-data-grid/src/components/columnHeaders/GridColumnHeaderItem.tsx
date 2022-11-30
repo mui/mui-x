@@ -16,7 +16,7 @@ import { GridColumnHeaderEventLookup } from '../../models/events';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
-  column: GridStateColDef;
+  colDef: GridStateColDef;
   columnMenuOpen: boolean;
   headerHeight: number;
   isDragging: boolean;
@@ -38,21 +38,21 @@ type OwnerState = GridColumnHeaderItemProps & {
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { column, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
+  const { colDef, classes, isDragging, sortDirection, showRightBorder, filterItemsCounter } =
     ownerState;
 
   const isColumnSorted = sortDirection != null;
   const isColumnFiltered = filterItemsCounter != null && filterItemsCounter > 0;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-  const isColumnNumeric = column.type === 'number';
+  const isColumnNumeric = colDef.type === 'number';
 
   const slots = {
     root: [
       'columnHeader',
-      column.headerAlign === 'left' && 'columnHeader--alignLeft',
-      column.headerAlign === 'center' && 'columnHeader--alignCenter',
-      column.headerAlign === 'right' && 'columnHeader--alignRight',
-      column.sortable && 'columnHeader--sortable',
+      colDef.headerAlign === 'left' && 'columnHeader--alignLeft',
+      colDef.headerAlign === 'center' && 'columnHeader--alignCenter',
+      colDef.headerAlign === 'right' && 'columnHeader--alignRight',
+      colDef.sortable && 'columnHeader--sortable',
       isDragging && 'columnHeader--moving',
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
@@ -69,7 +69,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const {
-    column,
+    colDef,
     columnMenuOpen,
     colIndex,
     headerHeight,
@@ -97,13 +97,13 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   };
 
   const isDraggable = React.useMemo(
-    () => !rootProps.disableColumnReorder && !disableReorder && !column.disableReorder,
-    [rootProps.disableColumnReorder, disableReorder, column.disableReorder],
+    () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
+    [rootProps.disableColumnReorder, disableReorder, colDef.disableReorder],
   );
 
   let headerComponent: React.ReactNode;
-  if (column.renderHeader) {
-    headerComponent = column.renderHeader(apiRef.current.getColumnHeaderParams(column.field));
+  if (colDef.renderHeader) {
+    headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
@@ -128,11 +128,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       }
       apiRef.current.publishEvent(
         eventName,
-        apiRef.current.getColumnHeaderParams(column.field),
+        apiRef.current.getColumnHeaderParams(colDef.field),
         event as any,
       );
     },
-    [apiRef, column.field],
+    [apiRef, colDef.field],
   );
 
   const mouseEventsHandlers = React.useMemo(
@@ -178,9 +178,9 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     setShowColumnMenuIcon(false);
   }, []);
 
-  const columnMenuIconButton = !rootProps.disableColumnMenu && !column.disableColumnMenu && (
+  const columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && (
     <ColumnHeaderMenuIcon
-      column={column}
+      colDef={colDef}
       columnMenuId={columnMenuId!}
       columnMenuButtonId={columnMenuButtonId!}
       open={showColumnMenuIcon}
@@ -192,7 +192,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     <GridColumnHeaderMenu
       columnMenuId={columnMenuId!}
       columnMenuButtonId={columnMenuButtonId!}
-      field={column.field}
+      field={colDef.field}
       open={columnMenuOpen}
       target={iconButtonRef.current}
       ContentComponent={rootProps.components.ColumnMenu}
@@ -201,19 +201,19 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     />
   );
 
-  const sortingOrder: GridSortDirection[] = column.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && (
         <rootProps.components.ColumnHeaderFilterIconButton
-          field={column.field}
+          field={colDef.field}
           counter={filterItemsCounter}
           {...rootProps.componentsProps?.columnHeaderFilterIconButton}
         />
       )}
 
-      {column.sortable && !column.hideSortIcons && (
+      {colDef.sortable && !colDef.hideSortIcons && (
         <GridColumnHeaderSortIcon
           direction={sortDirection}
           index={sortIndex}
@@ -234,11 +234,11 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   }, [apiRef, hasFocus]);
 
   const headerClassName =
-    typeof column.headerClassName === 'function'
-      ? column.headerClassName({ field: column.field, colDef: column })
-      : column.headerClassName;
+    typeof colDef.headerClassName === 'function'
+      ? colDef.headerClassName({ field: colDef.field, colDef })
+      : colDef.headerClassName;
 
-  const label = column.headerName ?? column.field;
+  const label = colDef.headerName ?? colDef.field;
 
   return (
     <GridGenericColumnHeaderItem
@@ -254,15 +254,15 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       separatorSide={separatorSide}
       isDraggable={isDraggable}
       headerComponent={headerComponent}
-      description={column.description}
-      elementId={column.field}
-      width={column.computedWidth}
+      description={colDef.description}
+      elementId={colDef.field}
+      width={colDef.computedWidth}
       columnMenuIconButton={columnMenuIconButton}
       columnTitleIconButtons={columnTitleIconButtons}
       headerClassName={headerClassName}
       label={label}
-      resizable={!rootProps.disableColumnResize && !!column.resizable}
-      data-field={column.field}
+      resizable={!rootProps.disableColumnResize && !!colDef.resizable}
+      data-field={colDef.field}
       columnMenu={columnMenu}
       draggableContainerProps={draggableEventHandlers}
       columnHeaderSeparatorProps={columnHeaderSeparatorProps}
@@ -276,8 +276,8 @@ GridColumnHeaderItem.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  colDef: PropTypes.object.isRequired,
   colIndex: PropTypes.number.isRequired,
-  column: PropTypes.object.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
   extendRowFullWidth: PropTypes.bool.isRequired,
