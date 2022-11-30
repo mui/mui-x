@@ -117,6 +117,7 @@ export const useGridAggregation = (
 
     // Re-apply the column hydration to wrap / unwrap the aggregated columns
     if (!areAggregationRulesEqual(rulesOnLastColumnHydration, aggregationRules)) {
+      apiRef.current.unstable_caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
       apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
     }
   }, [apiRef, applyAggregation, props.aggregationFunctions, props.disableAggregation]);
