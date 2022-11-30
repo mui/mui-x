@@ -19,4 +19,4 @@ The installation [instructions](/x/react-data-grid/getting-started/#installation
 
 ### Date and Time Pickers
 
-The installation [instructions](/x/react-date-pickers/getting-started/#setup).
+The installation [instructions](/x/react-date-pickers/getting-started/#installation).

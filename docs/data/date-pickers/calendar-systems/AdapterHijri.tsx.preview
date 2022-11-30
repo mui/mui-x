@@ -1,0 +1,6 @@
+<LocalizationProvider dateAdapter={AdapterMomentHijri}>
+  <NextDatePicker
+    label="Date Picker"
+    defaultValue={moment(new Date(2022, 1, 1))}
+  />
+</LocalizationProvider>

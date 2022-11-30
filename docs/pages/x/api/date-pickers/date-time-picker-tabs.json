@@ -9,7 +9,7 @@
       "required": true
     },
     "classes": { "type": { "name": "object" } },
-    "dateRangeIcon": { "type": { "name": "node" }, "default": "DateRange" },
+    "dateIcon": { "type": { "name": "node" }, "default": "DateRange" },
     "hidden": {
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`"

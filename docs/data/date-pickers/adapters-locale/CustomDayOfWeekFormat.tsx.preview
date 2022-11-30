@@ -1,0 +1,7 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DateCalendar
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    dayOfWeekFormatter={(day) => `${day}.`}
+  />
+</LocalizationProvider>
