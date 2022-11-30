@@ -5,7 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_TimeField as TimeField } from '../TimeField';
 import { MobileNextTimePickerProps } from './MobileNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
-import { useLocaleText, validateTime } from '../internals';
+import { TimeView, useLocaleText, validateTime } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderTimeView } from '../internals/utils/viewRenderers';
@@ -56,7 +56,7 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker({
+  const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,

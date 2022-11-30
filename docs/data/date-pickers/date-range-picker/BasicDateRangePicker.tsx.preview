@@ -1,14 +1,1 @@
-<DateRangePicker
-  localeText={{ start: 'Check-in', end: 'Check-out' }}
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(startProps, endProps) => (
-    <React.Fragment>
-      <TextField {...startProps} />
-      <Box sx={{ mx: 2 }}> to </Box>
-      <TextField {...endProps} />
-    </React.Fragment>
-  )}
-/>
+<NextDateRangePicker localeText={{ start: 'Check-in', end: 'Check-out' }} />

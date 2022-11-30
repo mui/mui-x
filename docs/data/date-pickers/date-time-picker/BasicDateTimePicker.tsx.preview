@@ -1,8 +1,1 @@
-<DateTimePicker
-  renderInput={(props) => <TextField {...props} />}
-  label="DateTimePicker"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-/>
+<NextDateTimePicker label="Basic date time picker" />

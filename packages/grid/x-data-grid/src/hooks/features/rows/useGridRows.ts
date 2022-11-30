@@ -402,6 +402,9 @@ export const useGridRows = (
       // Removes potential remaining skeleton rows from the dataRowIds.
       const dataRowIds = rootGroupChildren.filter((childId) => tree[childId].type === 'leaf');
 
+      apiRef.current.caches.rows.dataRowIdToModelLookup = dataRowIdToModelLookup;
+      apiRef.current.caches.rows.dataRowIdToIdLookup = dataRowIdToIdLookup;
+
       apiRef.current.setState((state) => ({
         ...state,
         rows: {

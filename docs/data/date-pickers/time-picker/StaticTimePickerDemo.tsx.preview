@@ -1,8 +1,1 @@
-<StaticTimePicker
-  displayStaticWrapperAs="mobile"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
-/>
+<StaticNextTimePicker defaultValue={dayjs('2022-04-07')} />

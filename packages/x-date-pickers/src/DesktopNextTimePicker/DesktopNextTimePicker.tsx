@@ -5,7 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_TimeField as TimeField } from '../TimeField';
 import { DesktopNextTimePickerProps } from './DesktopNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
-import { useLocaleText, validateTime } from '../internals';
+import { TimeView, useLocaleText, validateTime } from '../internals';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -57,7 +57,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     },
   };
 
-  const { renderPicker } = useDesktopPicker({
+  const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,

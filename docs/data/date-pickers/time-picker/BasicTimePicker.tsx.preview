@@ -1,8 +1,1 @@
-<TimePicker
-  label="Basic example"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
-/>
+<NextTimePicker label="Basic time picker" />

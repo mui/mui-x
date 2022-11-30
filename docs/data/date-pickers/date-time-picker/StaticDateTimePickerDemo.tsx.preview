@@ -1,9 +1,4 @@
-<StaticDateTimePicker
+<StaticNextDateTimePicker
   displayStaticWrapperAs="desktop"
-  openTo="year"
-  value={value}
-  onChange={(newValue) => {
-    setValue(newValue);
-  }}
-  renderInput={(params) => <TextField {...params} />}
+  defaultValue={dayjs('2022-04-07T15:30')}
 />

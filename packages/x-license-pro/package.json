@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "6.0.0-alpha.8",
+  "version": "6.0.0-alpha.9",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -40,6 +40,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   }
 }
