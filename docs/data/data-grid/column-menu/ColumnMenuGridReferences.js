@@ -75,7 +75,7 @@ ComponentTag.propTypes = {
 const columns = [
   {
     field: 'slot',
-    headerName: 'Component',
+    headerName: 'Slot',
     width: 220,
     renderCell: (params) => <ComponentTag value={params.value} />,
   },
@@ -227,9 +227,6 @@ export default function ColumnMenuGridReferences() {
       },
       rowGrouping: {
         model: ['design'],
-      },
-      sorting: {
-        sortModel: [{ field: 'displayOrder', sort: 'asc' }],
       },
     },
   });

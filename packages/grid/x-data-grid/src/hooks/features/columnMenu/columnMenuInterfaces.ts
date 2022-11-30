@@ -41,9 +41,4 @@ export interface GridColumnMenuRootProps {
    * e.g. `displayOrder`
    */
   componentsProps?: { [key: string]: GridColumnMenuComponentProps };
-  /**
-   * To initialize column menu with some custom components use `customItems`
-   * Use custom components added with `components` prop here
-   */
-  customItems?: Array<string>;
 }

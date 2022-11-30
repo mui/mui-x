@@ -22,7 +22,7 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customize column menu
 
-You can customize the column menu either by passing `components`, `componentsProps`, and `customItems` props to the column menu component or by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component.
+You can customize the column menu either by passing `components` and `componentsProps` props to the column menu component or by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component.
 
 **components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
 
@@ -32,11 +32,9 @@ You can customize the column menu either by passing `components`, `componentsPro
 The `components` prop uses pascal case (`ColumnMenuFilterItem`), while `componentsProps` uses camel case (`columnMenuFilterItem`).
 :::
 
-**customItems**: Visibility of default items is controlled using respective feature hooks, for custom items though, use `customItems` to show the items added by passing to `components`. All the new items will be placed in the end (default `displayOrder: 100`), unless customized by `displayOrder`.
-
 ### Adding a menu item
 
-To add a new menu item, pass it to `components` prop and add it to the column menu using `customItems` prop. You can also set the `displayOrder` or pass new props to the components using `componentsProps` prop.
+To add a new menu item, pass it in `components` prop. You can also set the `displayOrder` (default `100`) or pass new props to the components using `componentsProps` prop.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -56,7 +54,6 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      customItems={['ColumnMenuUserItem']}
     />
   );
 }
@@ -72,7 +69,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
     <GridColumnMenuDefault
       {...props}
       components={{
-        // Override slot for `ColumnMenuFilterItem`
+        // Override `ColumnMenuFilterItem` component
         ColumnMenuFilterItem: CustomFilterItem,
       }}
     />
@@ -133,12 +130,12 @@ As a reference, here are the default `components` supported by each column menu 
 
 ### Custom component
 
-You can also customize column menu by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component.
+You can also customize column menu by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component. If you want some default items rendered, you can import them and use in your custom component.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 
 :::info
-<strong>Tip</strong>: In column menu components and items, you recieve a prop `colDef` corresponding to the current column, you can use this to conditionally render some items or change some logic.
+<strong>Tip</strong>: In column menu component and items, you recieve a prop `colDef` corresponding to the current column, you can use this to conditionally render some items or change some logic.
 :::
 
 ## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)

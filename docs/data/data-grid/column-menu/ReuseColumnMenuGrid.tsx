@@ -69,7 +69,6 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      customItems={['ColumnMenuUserItem']}
     />
   );
 }

@@ -66,7 +66,7 @@ function ComponentTag(props: { value?: string }) {
 const columns = [
   {
     field: 'slot',
-    headerName: 'Component',
+    headerName: 'Slot',
     width: 220,
     renderCell: (params: GridRenderCellParams<string>) => (
       <ComponentTag value={params.value} />
@@ -224,9 +224,6 @@ export default function ColumnMenuGridReferences() {
       },
       rowGrouping: {
         model: ['design'],
-      },
-      sorting: {
-        sortModel: [{ field: 'displayOrder', sort: 'asc' }],
       },
     },
   });

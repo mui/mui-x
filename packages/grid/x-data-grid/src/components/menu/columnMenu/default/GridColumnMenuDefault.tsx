@@ -72,11 +72,6 @@ GridColumnMenuDefault.propTypes = {
   componentsProps: PropTypes.object,
   currentColumn: PropTypes.object.isRequired,
   /**
-   * To initialize column menu with some custom components use `customItems`
-   * Use custom components added with `components` prop here
-   */
-  customItems: PropTypes.arrayOf(PropTypes.string),
-  /**
    * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
    * @ignore - do not document.
    */

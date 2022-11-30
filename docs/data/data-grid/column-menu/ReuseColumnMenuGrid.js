@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconFilter from '@mui/icons-material/FilterAlt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
@@ -68,7 +67,6 @@ function CustomColumnMenu(props) {
           myCustomHandler: () => alert('Custom handler fired'),
         },
       }}
-      customItems={['ColumnMenuUserItem']}
     />
   );
 }

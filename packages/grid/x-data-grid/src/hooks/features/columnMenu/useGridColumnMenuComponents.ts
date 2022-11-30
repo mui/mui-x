@@ -24,7 +24,6 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
     defaultComponentsProps,
     components = {},
     componentsProps = {},
-    customItems = [],
   } = props;
 
   const processedComponents = React.useMemo(
@@ -43,14 +42,19 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
     return mergedProps;
   }, [defaultComponentsProps, componentsProps]);
 
-  const preProcessedItems = apiRef.current.unstable_applyPipeProcessors(
+  const defaultItems = apiRef.current.unstable_applyPipeProcessors(
     'columnMenu',
-    customItems,
+    [],
     props.currentColumn,
   );
 
+  const userItems = React.useMemo(() => {
+    const defaultComponentKeys = Object.keys(defaultComponents);
+    return Object.keys(components).filter((key) => !defaultComponentKeys.includes(key));
+  }, [components, defaultComponents]);
+
   return React.useMemo(() => {
-    const uniqueItems = Array.from(new Set<string>(preProcessedItems));
+    const uniqueItems = Array.from(new Set<string>([...defaultItems, ...userItems]));
     const sorted = uniqueItems.sort((a, b) => {
       const leftItemProps = processedComponentsProps[camelize(a)];
       const rightItemProps = processedComponentsProps[camelize(b)];
@@ -73,7 +77,7 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
       }
       return [...acc, [processedComponents[key]!, {}]];
     }, []);
-  }, [preProcessedItems, processedComponents, processedComponentsProps]);
+  }, [defaultItems, processedComponents, processedComponentsProps, userItems]);
 };
 
 export { useGridColumnMenuComponents };
