@@ -245,6 +245,7 @@ export const getTypeScriptProjects = () => {
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
@@ -261,6 +262,7 @@ export const getTypeScriptProjects = () => {
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
