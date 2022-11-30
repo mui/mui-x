@@ -1,5 +1,9 @@
 ---
-title: Date and Time pickers - Localization
+product: date-pickers
+title: Date and Time Pickers - Localization
+components: LocalizationProvider
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Date and Time Pickers - Localization

@@ -5,7 +5,7 @@ import { Project } from '../getTypeScriptProjects';
 
 interface BuildSelectorsDocumentationOptions {
   project: Project;
-  documentationRoot: string;
+  apiPagesFolder: string;
 }
 
 interface Selector {
@@ -20,7 +20,7 @@ interface Selector {
 export default function buildGridSelectorsDocumentation(
   options: BuildSelectorsDocumentationOptions,
 ) {
-  const { project, documentationRoot } = options;
+  const { project, apiPagesFolder } = options;
 
   const selectors = Object.values(project.exports)
     .map((symbol): Selector | null => {
@@ -88,7 +88,7 @@ export default function buildGridSelectorsDocumentation(
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 
   writePrettifiedFile(
-    path.resolve(documentationRoot, project.documentationFolderName, `selectors.json`),
+    path.resolve(apiPagesFolder, project.documentationFolderName, `selectors.json`),
     JSON.stringify(selectors),
     project,
   );
