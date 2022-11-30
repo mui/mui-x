@@ -241,6 +241,13 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(ownerState.isDragging && {
     cursor: 'grabbing',
   }),
+  ...(ownerState.isDragging &&
+    ownerState.selected &&
+    !ownerState.isStartOfHighlighting &&
+    !ownerState.isEndOfHighlighting && {
+      // we can't override `PickersDay` background color here, because it's styles take precedence
+      opacity: '.6',
+    }),
   ...(ownerState.draggable && {
     touchAction: 'none',
   }),
