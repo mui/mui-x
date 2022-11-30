@@ -70,9 +70,10 @@ export const useField = <
 
   const syncSelectionFromDOM = () => {
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
-    const nextSectionIndex = state.sections.findIndex(
-      (section) => section.startInInput > Math.max(browserStartIndex, 1), // If 0, it starts before the first invisible character
-    );
+    const nextSectionIndex =
+      browserStartIndex <= state.sections[0].startInInput
+        ? 1 // Special case if browser index is in invisible cheracters at the begining.
+        : state.sections.findIndex((section) => section.startInInput > browserStartIndex);
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
     setSelectedSections(sectionIndex);
   };

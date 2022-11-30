@@ -57,8 +57,8 @@ describe('<DateField /> - Selection', () => {
       });
 
       expectInputValue(input, 'MM / DD / YYYY');
-      expect(input.selectionStart).to.equal(8);
-      expect(input.selectionEnd).to.equal(12);
+      expect(input.selectionStart).to.equal(9);
+      expect(input.selectionEnd).to.equal(11);
     });
 
     it('should select day on desktop', () => {

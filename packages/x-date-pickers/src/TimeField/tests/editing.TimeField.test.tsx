@@ -170,7 +170,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 0, 0, 32)),
           key: 'ArrowDown',
           expectedValue: '11:59 pm',
-          cursorPosition: 6,
+          valueToSelect: '00',
         });
       });
 
@@ -180,7 +180,7 @@ describe('<TimeField /> - Editing', () => {
           defaultValue: adapterToUse.date(new Date(2022, 5, 15, 12, 0, 32)),
           key: 'ArrowDown',
           expectedValue: '11:59 am',
-          cursorPosition: 6,
+          valueToSelect: '00',
         });
       });
     });
