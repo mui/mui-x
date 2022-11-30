@@ -1,5 +1,9 @@
 ---
-title: Support for other calendar systems
+product: date-pickers
+title: Date and Time pickers - Support for other calendar systems
+components: LocalizationProvider
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Support for other calendar systems

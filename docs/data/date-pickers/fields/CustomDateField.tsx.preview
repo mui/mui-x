@@ -1,9 +1,0 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
-  <DateField
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    variant="standard"
-  />
-</LocalizationProvider>
