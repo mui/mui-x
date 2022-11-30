@@ -48,7 +48,7 @@ export const PickersViewLayoutToolbar = styled('div', {
 export const PickersViewLayoutActionBar = styled('div', {
   name: 'MuiPickersViewLayout',
   slot: 'ActionBar',
-  overridesResolver: (props, styles) => styles.actionbar,
+  overridesResolver: (props, styles) => styles.actionBar,
 })({
   gridColumn: '1 / 4',
   gridRow: '3',
@@ -60,7 +60,7 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
     root: ['root', isLandscape && 'landscape'],
     content: ['content'],
     toolbar: ['toolbar'],
-    actionbar: ['actionbar'],
+    actionBar: ['actionBar'],
   };
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
@@ -136,7 +136,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
       </PickersViewLayoutContent>
     ),
     actionBar: (
-      <PickersViewLayoutActionBar className={classes.actionbar} key="MUI-X_actionBar">
+      <PickersViewLayoutActionBar className={classes.actionBar} key="MUI-X_actionBar">
         <ActionBar
           onAccept={onAccept}
           onClear={onClear}

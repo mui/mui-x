@@ -66,7 +66,7 @@ export default function AddComponent() {
           layout: ({ toolbar, actionBar, content }) => ({
             sx: {
               // Modify DOM structure
-              '& .MuiPickersViewLayout-actionbar': {
+              '& .MuiPickersViewLayout-actionBar': {
                 gridColumn: '1',
                 gridRow: '2',
               },

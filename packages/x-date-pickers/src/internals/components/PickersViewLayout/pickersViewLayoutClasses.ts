@@ -13,7 +13,7 @@ export interface PickersViewLayoutClasses {
   /** Styles applied to the toolbar wrapper (used to position it) */
   toolbar: string;
   /** Styles applied to the action bar wrapper (used to position it) */
-  actionbar: string;
+  actionBar: string;
 }
 
 export type PickersViewLayoutClassKey = keyof PickersViewLayoutClasses;
@@ -24,5 +24,5 @@ export function getPickersViewLayoutUtilityClass(slot: string) {
 
 export const pickersViewLayoutClasses = generateUtilityClasses<PickersViewLayoutClassKey>(
   'MuiPickersViewLayout',
-  ['root', 'landscape', 'content', 'toolbar', 'actionbar'],
+  ['root', 'landscape', 'content', 'toolbar', 'actionBar'],
 );

@@ -36,7 +36,7 @@ export default function MovingActions() {
         componentsProps={{
           layout: {
             sx: {
-              '& .MuiPickersViewLayout-actionbar': {
+              '& .MuiPickersViewLayout-actionBar': {
                 gridColumn: '3',
                 gridRow: '2',
               },

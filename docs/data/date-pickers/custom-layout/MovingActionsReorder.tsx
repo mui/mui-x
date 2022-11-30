@@ -36,7 +36,7 @@ export default function MovingActionsReorder() {
         componentsProps={{
           layout: ({ toolbar, content, actionBar }) => ({
             sx: {
-              '& .MuiPickersViewLayout-actionbar': {
+              '& .MuiPickersViewLayout-actionBar': {
                 gridColumn: '3',
                 gridRow: '2',
               },

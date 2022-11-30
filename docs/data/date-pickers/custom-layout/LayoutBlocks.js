@@ -20,7 +20,7 @@ const highlighLayout = {
     '& .MuiPickersViewLayout-content': {
       border: 'solid green 4px',
     },
-    '& .MuiPickersViewLayout-actionbar': {
+    '& .MuiPickersViewLayout-actionBar': {
       border: 'solid blue 4px',
     },
   },
