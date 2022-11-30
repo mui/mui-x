@@ -51,7 +51,7 @@ export const useStaticPicker = <
           components={components}
           componentsProps={{
             ...componentsProps,
-            actionBar: undefined
+            actionBar: undefined,
           }}
           ref={ref}
         >

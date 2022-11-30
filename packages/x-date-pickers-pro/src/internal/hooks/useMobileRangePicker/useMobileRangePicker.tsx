@@ -171,7 +171,7 @@ export const useMobileRangePicker = <
           }}
           componentsProps={{
             ...componentsProps,
-            actionBar: undefined
+            actionBar: undefined,
           }}
         >
           <PickersViewLayout

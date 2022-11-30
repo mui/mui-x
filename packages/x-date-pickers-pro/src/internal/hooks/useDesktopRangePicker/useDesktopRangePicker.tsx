@@ -195,7 +195,7 @@ export const useDesktopRangePicker = <
           }}
           componentsProps={{
             ...componentsProps,
-            actionBar: undefined
+            actionBar: undefined,
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >

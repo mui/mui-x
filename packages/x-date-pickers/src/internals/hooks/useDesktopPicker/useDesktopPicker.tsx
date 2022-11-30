@@ -148,7 +148,7 @@ export const useDesktopPicker = <
           }}
           componentsProps={{
             ...componentsProps,
-            actionBar: undefined
+            actionBar: undefined,
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
