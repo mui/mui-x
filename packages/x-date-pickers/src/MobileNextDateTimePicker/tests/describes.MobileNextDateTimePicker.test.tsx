@@ -1,4 +1,4 @@
-import { screen, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -53,6 +53,12 @@ describe('<MobileNextDateTimePicker /> - Describes', () => {
       const hourClockEvent = getClockTouchEvent(adapterToUse.getMinutes(newValue), 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
+
+      // Close the picker to return to the initial state
+      if (!isOpened) {
+        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        clock.runToLast()
+      }
 
       return newValue;
     },

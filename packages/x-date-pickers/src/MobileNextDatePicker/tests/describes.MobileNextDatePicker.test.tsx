@@ -39,6 +39,12 @@ describe('<MobileNextDatePicker /> - Describes', () => {
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
       userEvent.mousePress(screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }));
 
+      // Close the picker to return to the initial state
+      if (!isOpened) {
+        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        clock.runToLast()
+      }
+
       return newValue;
     },
   }));
