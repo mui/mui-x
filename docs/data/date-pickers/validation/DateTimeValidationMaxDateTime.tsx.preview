@@ -1,10 +1,8 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <GridItem label="DateTimePicker">
-    <DateTimePicker
-      maxDateTime={todayAt9AM}
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-      renderInput={(params) => <TextField {...params} />}
-    />
-  </GridItem>
-</LocalizationProvider>
+<GridItem label="DateTimePicker">
+  <DateTimePicker
+    maxDateTime={todayAt9AM}
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    renderInput={(params) => <TextField {...params} />}
+  />
+</GridItem>
