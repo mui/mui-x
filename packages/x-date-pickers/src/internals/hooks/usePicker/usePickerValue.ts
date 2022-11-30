@@ -267,7 +267,7 @@ export const usePickerValue = <
 
   const { isOpen, setIsOpen } = useOpenState(props);
 
-  console.log('IS OPEN', isOpen)
+  console.log('IS OPEN', isOpen);
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
     committed: value,
@@ -387,7 +387,7 @@ export const usePickerValue = <
   const handleOpen = useEventCallback(() => setIsOpen(true));
 
   const handleClose = useEventCallback(() => {
-    console.log('HANDLE CLOSE')
+    console.log('HANDLE CLOSE');
     setIsOpen(false);
   });
 

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent, fireTouchChangedEvent } from '@mui/monorepo/test/utils';
+import {
+  describeConformance,
+  screen,
+  userEvent,
+  fireTouchChangedEvent,
+} from '@mui/monorepo/test/utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
@@ -11,35 +16,34 @@ import {
   getClockTouchEvent,
 } from 'test/utils/pickers-utils';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
-import {fireEvent} from "@testing-library/react";
 
-describe.only('<MobileNextTimePicker /> - Describes', () => {
+describe('<MobileNextTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  // describeValidation(MobileNextTimePicker, () => ({
-  //   render,
-  //   clock,
-  //   views: ['hours', 'minutes'],
-  //   componentFamily: 'new-picker',
-  // }));
-  //
-  // describeConformance(<MobileNextTimePicker />, () => ({
-  //   classes: {},
-  //   muiName: 'MuiMobileTimePicker',
-  //   wrapMount: wrapPickerMount,
-  //   refInstanceof: window.HTMLDivElement,
-  //   skip: [
-  //     'componentProp',
-  //     'componentsProp',
-  //     'themeDefaultProps',
-  //     'themeStyleOverrides',
-  //     'themeVariants',
-  //     'mergeClassName',
-  //     'propsSpread',
-  //     'rootClass',
-  //     'reactTestRenderer',
-  //   ],
-  // }));
+  describeValidation(MobileNextTimePicker, () => ({
+    render,
+    clock,
+    views: ['hours', 'minutes'],
+    componentFamily: 'new-picker',
+  }));
+
+  describeConformance(<MobileNextTimePicker />, () => ({
+    classes: {},
+    muiName: 'MuiMobileTimePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: window.HTMLDivElement,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'rootClass',
+      'reactTestRenderer',
+    ],
+  }));
 
   describeValue(MobileNextTimePicker, () => ({
     render,
@@ -80,8 +84,8 @@ describe.only('<MobileNextTimePicker /> - Describes', () => {
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-         userEvent.keyPress(document.activeElement!, { key: 'Escape' });
-         clock.runToLast()
+        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        clock.runToLast();
       }
 
       return newValue;
