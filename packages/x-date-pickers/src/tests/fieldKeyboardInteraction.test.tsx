@@ -2,13 +2,13 @@ import * as React from 'react';
 import { screen, userEvent, act } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { MuiDateSectionName, MuiPickerFieldAdapter } from '../internals/models/muiPickersAdapter';
+import { MuiDateSectionName, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
 function updatedDate<TDate>(
   date: TDate,
-  adapter: MuiPickerFieldAdapter<TDate>,
+  adapter: MuiPickersAdapter<TDate>,
   sectionName: MuiDateSectionName,
   diff: number,
 ) {
