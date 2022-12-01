@@ -9,7 +9,7 @@ _Dec 1, 2022_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🌍 Improve Ukrainian (uk-UA) and Urdu (ur-PK) locales
+- 🌍 Improve Ukrainian (uk-UA) and add Urdu (ur-PK) locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
