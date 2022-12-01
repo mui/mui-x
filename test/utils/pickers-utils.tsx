@@ -195,13 +195,11 @@ export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | 
   let itemCount: number;
   if (view === 'minutes') {
     itemCount = 60;
-  } else if (view === '12hours') {
-    itemCount = 12;
   } else {
-    itemCount = 24;
+    itemCount = 12;
   }
 
-  const angle = (1 / 2 - (value * 2) / itemCount) * Math.PI;
+  const angle = Math.PI / 2 - (Math.PI * 2 * value) / itemCount;
   const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
   const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
 
