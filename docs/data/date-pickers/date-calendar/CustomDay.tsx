@@ -4,7 +4,7 @@ import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 
 dayjs.extend(isBetweenPlugin);
@@ -65,11 +65,7 @@ function Day(props: PickersDayProps<Dayjs>) {
 export default function CustomDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        displayStaticWrapperAs="desktop"
-        defaultValue={dayjs('2022-04-07')}
-        components={{ Day }}
-      />
+      <DateCalendar defaultValue={dayjs('2022-04-07')} components={{ Day }} />
     </LocalizationProvider>
   );
 }

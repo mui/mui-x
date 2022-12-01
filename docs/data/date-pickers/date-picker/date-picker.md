@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker, DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
+components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -63,21 +63,6 @@ The date picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDatePickers.js"}}
 
-## Validation
-
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
-
-## Localization
-
-Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
-See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
-
-## Jalali calendar system
-
-Install `date-fns-jalali` and use `@mui/x-date-pickers/AdapterDateFnsJalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
-
-{{"demo": "JalaliDatePicker.js"}}
-
 ## Views playground
 
 It's possible to combine `year`, `month`, and `date` selection views.
@@ -91,11 +76,11 @@ For ease of use, the date picker will automatically change the layout between po
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
-## Sub-components
+## Helper text
 
-Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported.
+You can show a helper text with the date format accepted.
 
-{{"demo": "SubComponentsCalendars.js"}}
+{{"demo": "HelperText.js"}}
 
 ## Custom input component
 
@@ -104,42 +89,21 @@ Make sure to spread `inputProps` correctly to the custom input component.
 
 {{"demo": "CustomInput.js"}}
 
-## Customized day rendering
+## Validation
 
-The displayed days are customizable with the `Day` component slot.
-You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
-{{"demo": "CustomDay.js"}}
+## Localization
 
-## Customize month layout
+Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
+See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
 
-You can customize the month layout with some props.
+## View customization
 
-### Show additional days
+The Date Picker views are using the `DateCalendar` component.
 
-To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
-
-By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
-This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.
-
-{{"demo": "CustomMonthLayout.js"}}
-
-### Display week number
-
-To display week number, use the `displayWeekNumber`.
-You can customize the calendar week header by using the localization key `localeText.calendarWeekNumberHeaderText`.
-You can also customize what's rendered as a calendar week number, using a callback for the localization key `localeText.calendarWeekNumberText`.
-
-{{"demo": "AddWeekNumber.js"}}
+You can find its documentation in the [Date Calendar page](/x/react-date-pickers/date-calendar/#customization)
 
 ## Dynamic data
 
-Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `components.Day` props.
-
-{{"demo": "ServerRequestDatePicker.js"}}
-
-## Helper text
-
-You can show a helper text with the date format accepted.
-
-{{"demo": "HelperText.js"}}
+You can find the documentation in the [Date Calendar page](/x/react-date-pickers/date-calendar/#dynamic-data)

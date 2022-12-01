@@ -1,0 +1,6 @@
+<GridItem label="YearCalendar" spacing={2}>
+  <YearCalendar />
+</GridItem>
+<GridItem label="MonthCalendar" spacing={2}>
+  <MonthCalendar />
+</GridItem>

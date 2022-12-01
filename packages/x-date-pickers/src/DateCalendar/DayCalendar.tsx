@@ -9,7 +9,6 @@ import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersSlideTransition,
   SlideDirection,
@@ -344,12 +343,12 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   );
 
   const handleDaySelect = React.useCallback(
-    (day: TDate, isFinish: PickerSelectionState = 'finish') => {
+    (day: TDate) => {
       if (readOnly) {
         return;
       }
 
-      onSelectedDaysChange(day, isFinish);
+      onSelectedDaysChange(day);
     },
     [onSelectedDaysChange, readOnly],
   );
