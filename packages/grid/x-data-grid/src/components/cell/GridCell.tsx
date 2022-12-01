@@ -241,7 +241,7 @@ function GridCell(props: GridCellProps) {
   const managesOwnFocus = column.type === 'actions';
 
   const renderChildren = () => {
-    if (children == null) {
+    if (children === undefined) {
       return <div className={classes.content}>{valueToRender?.toString()}</div>;
     }
 

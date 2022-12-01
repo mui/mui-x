@@ -28,7 +28,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   inProps: DesktopNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const utils = useUtils();
 
   // Props with the default values common to all date pickers
@@ -139,6 +139,10 @@ DesktopNextDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

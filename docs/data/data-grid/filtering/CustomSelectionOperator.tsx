@@ -31,8 +31,8 @@ export default function CustomSelectionOperator() {
     filterModel: {
       items: [
         {
-          columnField: 'col1',
-          operatorValue: 'contains',
+          field: 'col1',
+          operator: 'contains',
           value: 'lo',
         },
       ],

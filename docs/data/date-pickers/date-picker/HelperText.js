@@ -1,24 +1,18 @@
 import * as React from 'react';
-
-import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
 export default function HelperText() {
-  const [value, setValue] = React.useState(null);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
+      <NextDatePicker
         label="Helper text example"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
+        componentsProps={{
+          input: {
+            helperText: 'MM / DD / YYYY',
+          },
         }}
-        renderInput={(params) => (
-          <TextField {...params} helperText={params?.inputProps?.placeholder} />
-        )}
       />
     </LocalizationProvider>
   );

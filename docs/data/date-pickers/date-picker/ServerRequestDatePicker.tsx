@@ -1,11 +1,10 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import Badge from '@mui/material/Badge';
-import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min: number, max: number) {
@@ -55,7 +54,6 @@ export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
-  const [value, setValue] = React.useState<Dayjs | null>(initialValue);
 
   const fetchHighlightedDays = (date: Dayjs) => {
     const controller = new AbortController();
@@ -96,14 +94,10 @@ export default function ServerRequestDatePicker() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker
-        value={value}
+      <NextDatePicker
+        defaultValue={initialValue}
         loading={isLoading}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
         onMonthChange={handleMonthChange}
-        renderInput={(params) => <TextField {...params} />}
         renderLoading={() => <DayCalendarSkeleton />}
         components={{
           Day: ServerDay,

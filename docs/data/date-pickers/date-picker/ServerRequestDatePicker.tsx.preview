@@ -1,0 +1,14 @@
+<NextDatePicker
+  defaultValue={initialValue}
+  loading={isLoading}
+  onMonthChange={handleMonthChange}
+  renderLoading={() => <DayCalendarSkeleton />}
+  components={{
+    Day: ServerDay,
+  }}
+  componentsProps={{
+    day: {
+      highlightedDays,
+    } as any,
+  }}
+/>

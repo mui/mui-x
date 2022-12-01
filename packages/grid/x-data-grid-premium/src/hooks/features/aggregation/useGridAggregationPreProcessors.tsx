@@ -68,8 +68,6 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
-      apiRef.current.caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
-
       return columnsState;
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],

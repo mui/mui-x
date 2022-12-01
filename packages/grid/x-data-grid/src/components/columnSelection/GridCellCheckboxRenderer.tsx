@@ -5,7 +5,7 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
+import { isSpaceKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -76,17 +76,13 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
       }
     }, [hasFocus]);
 
-    const handleKeyDown = React.useCallback(
-      (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (isSpaceKey(event.key)) {
-          event.stopPropagation();
-        }
-        if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-        }
-      },
-      [apiRef, props],
-    );
+    const handleKeyDown = React.useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isSpaceKey(event.key)) {
+        // We call event.stopPropagation to avoid selecting the row and also scrolling to bottom
+        // TODO: Remove and add a check inside useGridKeyboardNavigation
+        event.stopPropagation();
+      }
+    }, []);
 
     if (rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
       return null;

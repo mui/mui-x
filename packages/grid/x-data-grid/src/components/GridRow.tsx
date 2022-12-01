@@ -296,7 +296,7 @@ const GridRow = React.forwardRef<
       }
 
       const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode = null;
+      let content: React.ReactNode;
 
       if (editCellState == null && column.renderCell) {
         content = column.renderCell({ ...cellParams, api: apiRef.current });

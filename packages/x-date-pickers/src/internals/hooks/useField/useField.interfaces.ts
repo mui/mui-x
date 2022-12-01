@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models';
+import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -178,7 +178,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
-    utils: MuiPickerFieldAdapter<TDate>,
+    utils: MuiPickersAdapter<TDate>,
     localeText: PickersLocaleText<TDate>,
     prevSections: TSection[] | null,
     value: TValue,
@@ -210,7 +210,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {FieldActiveDateManager<TValue, TDate>} The manager of the active date.
    */
   getActiveDateManager: (
-    utils: MuiPickerFieldAdapter<TDate>,
+    utils: MuiPickersAdapter<TDate>,
     state: UseFieldState<TValue, TSection>,
     activeSection: TSection,
   ) => FieldActiveDateManager<TValue, TDate>;
@@ -238,7 +238,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {TValue} The new reference value with no invalid date.
    */
   updateReferenceValue: (
-    utils: MuiPickerFieldAdapter<TDate>,
+    utils: MuiPickersAdapter<TDate>,
     value: TValue,
     prevReferenceValue: TValue,
   ) => TValue;
