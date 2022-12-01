@@ -77,6 +77,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The column menu items `GridFilterMenuItem`, `HideGridColMenuItem`, `GridColumnsMenuItem`, `SortGridMenuItems` have been renamed to `GridColumnMenuFilterItem`, `GridColumnMenuHideItem`, `GridColumnMenuColumnsItem`, `SortGridMenuItems`.
 - `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - The column menu items for Pro and Premium packages `GridColumnPinningMenuItems`, `GridAggregationColumnMenuItem`, `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` have been renamed to `GridColumnMenuPinningItem`, `GridColumnMenuAggregationItem`, `GridColumnMenuRowGroupItem` and `GridColumnMenuRowUngroupItem` respectively.
+- Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items hae been renamed to `colDef`
 
 ### Rows
 
@@ -147,6 +148,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
+- `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
 <!--
 ### CSS classes
