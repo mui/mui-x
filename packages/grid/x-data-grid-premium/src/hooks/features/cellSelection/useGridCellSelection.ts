@@ -162,7 +162,14 @@ export const useGridCellSelection = (
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
   const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
-    (params) => {
+    (params, event) => {
+      // Skip if the click comes from the right-button or, only on macOS, Ctrl is pressed
+      // Fix for https://github.com/mui/mui-x/pull/6567#issuecomment-1329155578
+      const isMacOs = window.navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      if (event.button !== 0 || (event.ctrlKey && isMacOs)) {
+        return;
+      }
+
       lastMouseDownCell.current = { id: params.id, field: params.field };
       apiRef.current.rootElementRef?.current?.classList.add(
         gridClasses['root--disableUserSelection'],
@@ -171,7 +178,7 @@ export const useGridCellSelection = (
     [apiRef],
   );
 
-  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseDown'>>(() => {
+  const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>(() => {
     lastMouseDownCell.current = null;
     apiRef.current.rootElementRef?.current?.classList.remove(
       gridClasses['root--disableUserSelection'],
