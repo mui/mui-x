@@ -22,7 +22,7 @@ export default function ExportCustomToolbar() {
       <DataGrid
         {...data}
         loading={loading}
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
         }}
       />

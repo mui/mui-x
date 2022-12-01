@@ -1,6 +1,6 @@
 <DataGrid
   pagination
-  components={{
+  slots={{
     Pagination: CustomPagination,
   }}
   {...data}

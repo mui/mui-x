@@ -14,7 +14,7 @@ export function GridFooterPlaceholder() {
 
   return (
     <div ref={footerRef}>
-      <rootProps.components.Footer {...rootProps.componentsProps?.footer} />
+      <rootProps.slots.Footer {...rootProps.slotsProps?.footer} />
     </div>
   );
 }

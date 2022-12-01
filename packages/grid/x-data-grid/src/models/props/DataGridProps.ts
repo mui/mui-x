@@ -86,7 +86,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  components: GridSlotsComponent;
+  slots: GridSlotsComponent;
   localeText: GridLocaleText;
 }
 
@@ -97,7 +97,7 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overrideable components.
    */
-  components?: Partial<GridSlotsComponent>;
+  slots?: Partial<GridSlotsComponent>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -740,7 +740,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * Overrideable components props dynamically passed to the component at rendering.
    */
-  componentsProps?: GridSlotsComponentsProps;
+  slotsProps?: GridSlotsComponentsProps;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

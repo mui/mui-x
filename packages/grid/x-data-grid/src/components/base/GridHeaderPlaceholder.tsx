@@ -10,7 +10,7 @@ export function GridHeaderPlaceholder() {
 
   return (
     <div ref={headerRef}>
-      <rootProps.components.Header {...rootProps.componentsProps?.header} />
+      <rootProps.slots.Header {...rootProps.slotsProps?.header} />
     </div>
   );
 }

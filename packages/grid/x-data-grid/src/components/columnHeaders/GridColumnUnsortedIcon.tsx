@@ -16,8 +16,8 @@ export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIc
 
   const Icon =
     nextSortDirection === 'asc'
-      ? rootProps.components.ColumnSortedAscendingIcon
-      : rootProps.components.ColumnSortedDescendingIcon;
+      ? rootProps.slots.ColumnSortedAscendingIcon
+      : rootProps.slots.ColumnSortedDescendingIcon;
 
   return Icon ? <Icon {...other} /> : null;
 });

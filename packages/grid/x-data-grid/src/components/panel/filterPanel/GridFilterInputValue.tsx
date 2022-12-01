@@ -71,7 +71,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const id = useId();
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
 
   const singleSelectProps: TextFieldProps =
@@ -80,7 +80,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
           select: true,
           SelectProps: {
             native: isSelectNative,
-            ...rootProps.componentsProps?.baseSelect,
+            ...rootProps.slotsProps?.baseSelect,
           },
           children: renderSingleSelectOptions(
             apiRef.current.getColumn(item.field),
@@ -130,7 +130,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
   const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.BaseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -145,7 +145,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       inputRef={focusElementRef}
       {...singleSelectProps}
       {...others}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotsProps?.baseTextField}
     />
   );
 }

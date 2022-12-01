@@ -22,15 +22,15 @@ export const GridPreferencesPanel = React.forwardRef<
   );
 
   return (
-    <rootProps.components.Panel
+    <rootProps.slots.Panel
       ref={ref}
-      as={rootProps.components.BasePopper}
+      as={rootProps.slots.BasePopper}
       open={columns.length > 0 && preferencePanelState.open}
-      {...rootProps.componentsProps?.panel}
+      {...rootProps.slotsProps?.panel}
       {...props}
-      {...rootProps.componentsProps?.basePopper}
+      {...rootProps.slotsProps?.basePopper}
     >
       {panelContent}
-    </rootProps.components.Panel>
+    </rootProps.slots.Panel>
   );
 });

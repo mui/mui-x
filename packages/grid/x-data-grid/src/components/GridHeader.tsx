@@ -7,10 +7,8 @@ export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
 
     return (
       <div ref={ref} {...props}>
-        <rootProps.components.PreferencesPanel {...rootProps.componentsProps?.preferencesPanel} />
-        {rootProps.components.Toolbar && (
-          <rootProps.components.Toolbar {...rootProps.componentsProps?.toolbar} />
-        )}
+        <rootProps.slots.PreferencesPanel {...rootProps.slotsProps?.preferencesPanel} />
+        {rootProps.slots.Toolbar && <rootProps.slots.Toolbar {...rootProps.slotsProps?.toolbar} />}
       </div>
     );
   },

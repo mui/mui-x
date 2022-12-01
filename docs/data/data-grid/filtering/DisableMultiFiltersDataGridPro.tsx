@@ -45,8 +45,8 @@ export default function DisableMultiFiltersDataGridPro() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,

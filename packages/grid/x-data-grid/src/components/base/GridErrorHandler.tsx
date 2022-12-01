@@ -20,10 +20,10 @@ function GridErrorHandler(props: { children: React.ReactNode }) {
       logger={logger}
       render={(errorProps) => (
         <GridMainContainer>
-          <rootProps.components.ErrorOverlay
+          <rootProps.slots.ErrorOverlay
             {...errorProps}
             {...errorState}
-            {...rootProps.componentsProps?.errorOverlay}
+            {...rootProps.slotsProps?.errorOverlay}
           />
         </GridMainContainer>
       )}

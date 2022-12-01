@@ -138,10 +138,10 @@ export default function StartEditButtonGrid() {
         onCellKeyDown={handleCellKeyDown}
         cellModesModel={cellModesModel}
         onCellModesModelChange={(model) => setCellModesModel(model)}
-        components={{
+        slots={{
           Toolbar: EditToolbar,
         }}
-        componentsProps={{
+        slotsProps={{
           toolbar: {
             cellMode,
             selectedCellParams,

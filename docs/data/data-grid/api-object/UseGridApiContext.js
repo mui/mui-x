@@ -27,7 +27,7 @@ export default function UseGridApiContext() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
         }}
         pageSize={10}

@@ -283,8 +283,8 @@ export default function ExcelCustomExport() {
         columns={columns}
         groupingColDef={groupingColDef}
         defaultGroupingExpansionDepth={-1}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{ toolbar: { excelOptions } }}
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{ toolbar: { excelOptions } }}
       />
     </div>
   );

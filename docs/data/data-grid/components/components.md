@@ -1,13 +1,13 @@
-# Data Grid - Components
+# Data Grid - Slots
 
-<p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
+<p class="description">The grid is highly customizable. Override components using the <code>slots</code> prop.</p>
 
 ## Overriding components
 
-As part of the customization API, the grid allows you to override internal components with the `components` prop.
+As part of the customization API, the grid allows you to override internal components with the `slots` prop.
 The prop accepts an object of type [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots).
 
-If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop.
+If you wish to pass additional props in a component slot, you can do it using the `slotsProps` prop.
 This prop is of type `GridSlotsComponentsProps`.
 
 As an example, you could override the column menu and pass additional props as below.
@@ -16,17 +16,17 @@ As an example, you could override the column menu and pass additional props as b
 <DataGrid
   rows={rows}
   columns={columns}
-  components={{
+  slots={{
     ColumnMenu: MyCustomColumnMenu,
   }}
-  componentsProps={{
+  slotsProps={{
     columnMenu: { background: 'red', counter: rows.length },
   }}
 />
 ```
 
 :::info
-The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
+The casing is different between the `slots` (ColumnMenu) and `slotsProps` (columnMenu) props.
 :::
 
 ### Interacting with the grid
@@ -148,7 +148,7 @@ As the no rows overlay, the grid allows to override the no results overlay with 
 
 ### Row
 
-The `componentsProps.row` prop can be used to pass additional props to the row component.
+The `slotsProps.row` prop can be used to pass additional props to the row component.
 One common use case might be to listen for events not exposed by [default](/x/react-data-grid/events/#catalog-of-events).
 The demo below shows a context menu when a row is right-clicked.
 
@@ -156,14 +156,14 @@ The demo below shows a context menu when a row is right-clicked.
 
 ### Cell
 
-The following demo uses the `componentsProps.cell` prop to listen for specific events emitted by the cells.
+The following demo uses the `slotsProps.cell` prop to listen for specific events emitted by the cells.
 Try it by hovering a cell with the mouse and it should display the number of characters each cell has.
 
 {{"demo": "CellWithPopover.js", "bg": "inline"}}
 
 ### Icons
 
-As any component slot, every icon can be customized. However, it is not yet possible to use the `componentsProps` with icons.
+As any component slot, every icon can be customized. However, it is not yet possible to use the `slotsProps` with icons.
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
 

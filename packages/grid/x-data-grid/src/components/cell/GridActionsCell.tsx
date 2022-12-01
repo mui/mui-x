@@ -200,7 +200,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
         >
-          <rootProps.components.MoreActionsIcon fontSize="small" />
+          <rootProps.slots.MoreActionsIcon fontSize="small" />
         </IconButton>
       )}
 

@@ -57,7 +57,7 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.components, direction, classes.icon, sortingOrder);
+  const iconElement = getIcon(rootProps.slots, direction, classes.icon, sortingOrder);
   if (!iconElement) {
     return null;
   }

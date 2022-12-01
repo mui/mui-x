@@ -51,8 +51,8 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.TreeDataCollapseIcon
-    : rootProps.components.TreeDataExpandIcon;
+    ? rootProps.slots.TreeDataCollapseIcon
+    : rootProps.slots.TreeDataExpandIcon;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);

@@ -1,5 +1,5 @@
 <DataGrid
-  components={{
+  slots={{
     NoRowsOverlay: CustomNoRowsOverlay,
   }}
   {...data}

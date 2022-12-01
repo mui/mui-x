@@ -72,7 +72,7 @@ describe('<DataGridPro /> - Filter', () => {
     ],
   };
 
-  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+  it('slotsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
       const filteredFields = currentFilters?.map((item) => item.field);
@@ -100,8 +100,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
@@ -129,8 +129,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{
           filterPanel: {
             getColumnForNewFilter,
           },
@@ -156,8 +156,8 @@ describe('<DataGridPro /> - Filter', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{
           filterPanel: {
             filterFormProps: {
               filterColumns,
