@@ -1,3 +1,1 @@
-<LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-  <NextDatePicker defaultValue={new Date(2022, 3, 7)} />
-</LocalizationProvider>
+<NextDatePicker defaultValue={new Date(2022, 3, 7)} />

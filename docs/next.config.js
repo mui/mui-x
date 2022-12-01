@@ -23,6 +23,7 @@ module.exports = withDocsInfra({
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
