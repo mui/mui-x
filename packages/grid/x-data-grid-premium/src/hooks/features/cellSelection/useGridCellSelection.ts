@@ -83,13 +83,13 @@ export const useGridCellSelection = (
     GridCellSelectionApi['unstable_setCellSelectionModel']
   >(
     (newModel) => {
-      if (!props.unstable_cellSelectionModel) {
+      if (!props.unstable_cellSelection) {
         return;
       }
       apiRef.current.setState((prevState) => ({ ...prevState, cellSelection: newModel }));
       apiRef.current.forceUpdate();
     },
-    [apiRef, props.unstable_cellSelectionModel],
+    [apiRef, props.unstable_cellSelection],
   );
 
   const selectCellRange = React.useCallback<GridCellSelectionApi['unstable_selectCellRange']>(
