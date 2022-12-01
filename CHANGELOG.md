@@ -21,6 +21,22 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
   Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value.
 
+- [DataGrid] Refactor `GridFilterItem` props (#6985) @MBilalShafi
+
+  Properties `columnField` and `operatorValue` of `GridFilterItem` are renamed `field` and `operator`. And `operator` property is now required.
+
+  ```diff
+   filterModel: {
+     items: [{
+  -    columnField: 'rating',
+  +    field: 'rating',
+  -    operatorValue: '>',
+  +    operator: '>', // required
+      value: '2.5'
+      }],
+    },
+  ```
+
 #### Changes
 
 - [DataGrid] Fix row selection when clicking blank cell (#6974) @yami03
