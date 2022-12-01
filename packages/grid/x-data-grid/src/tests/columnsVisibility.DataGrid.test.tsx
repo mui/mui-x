@@ -275,4 +275,24 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     const button = screen.getByRole('button', { name: 'Show all' });
     expect(button).to.have.attribute('disabled');
   });
+
+  it('should hide buttons in columns panel when `disableShowAllButton` and `disableHideAllButton` are true', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableShowAllButton: true,
+            disableHideAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Hide all' })).to.equal(null);
+  });
 });

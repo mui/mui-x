@@ -66,7 +66,6 @@ To disable `Hide all` or `Show all` buttons in column visibility panel, pass `di
 
 ```tsx
 <DataGrid
-  {...data}
   components={{
     Toolbar: GridToolbar,
   }}
