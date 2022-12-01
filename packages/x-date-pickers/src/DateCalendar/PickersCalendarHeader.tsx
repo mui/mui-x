@@ -5,7 +5,6 @@ import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
-import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
@@ -77,7 +76,7 @@ export interface PickersCalendarHeaderProps<TDate>
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
-  onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
+  onMonthChange: (date: TDate) => void;
   openView: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
@@ -218,8 +217,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     className: classes.switchViewIcon,
   });
 
-  const selectNextMonth = () => onMonthChange(utils.getNextMonth(month), 'left');
-  const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month), 'right');
+  const selectNextMonth = () => onMonthChange(utils.getNextMonth(month));
+  const selectPreviousMonth = () => onMonthChange(utils.getPreviousMonth(month));
 
   const isNextMonthDisabled = useNextMonthDisabled(month, {
     disableFuture,
