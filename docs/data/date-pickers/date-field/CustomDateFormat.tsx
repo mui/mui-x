@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
+import { PickersGrid } from 'docsx/src/modules/components/PickersGrid';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,7 +10,7 @@ export default function CustomDateFormat() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
+      <PickersGrid>
         <DateField
           label="Dash separator"
           value={value}
@@ -23,7 +23,7 @@ export default function CustomDateFormat() {
           onChange={(newValue) => setValue(newValue)}
           format="LL"
         />
-      </Stack>
+      </PickersGrid>
     </LocalizationProvider>
   );
 }
