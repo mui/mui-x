@@ -44,8 +44,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   <DateTimePicker
       componentsProps={{
         tabs: {
-  -      dateRangeIcon: <LightModeIcon />,
-  +      dateIcon: <LightModeIcon />,
+-        dateRangeIcon: <LightModeIcon />,
++        dateIcon: <LightModeIcon />,
       }
     }}
   />
