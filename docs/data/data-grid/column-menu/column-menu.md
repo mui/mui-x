@@ -124,7 +124,7 @@ The following demo implements adding, overriding, hiding and re-ordering of some
 
 ### Column menu components and their configurations
 
-As a reference, here are the default `components` supported by each column menu design along with the item components being used and default `displayOrder`.
+As a reference, here are the default `components` supported by each column menu design along with the default item components and `displayOrder`.
 
 {{"demo": "ColumnMenuGridReferences.js", "bg": "inline", "hideToolbar": true}}
 

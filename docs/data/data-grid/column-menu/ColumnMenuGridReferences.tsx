@@ -5,42 +5,44 @@ import {
   useKeepGroupedColumnsHidden,
   GridRenderCellParams,
 } from '@mui/x-data-grid-premium';
-import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-const getChipProperties = (plan: string) => {
+const getPlanProps = (plan: string) => {
   switch (plan.toLowerCase()) {
     case 'premium':
-      return { avatarLink: '/static/x/premium.svg', color: '#ffecc8' };
+      return {
+        href: '/x/introduction/licensing/#premium-plan',
+        className: 'plan-premium',
+        title: 'Premium plan',
+      };
     case 'pro':
-      return { avatarLink: '/static/x/pro.svg', color: '#c8e9ff' };
+      return {
+        href: '/x/introduction/licensing/#pro-plan',
+        className: 'plan-pro',
+        title: 'Pro plan',
+      };
     default:
-      return { avatarLink: undefined, color: '#c8ffdb' };
+      return null;
   }
 };
 
-function PlanTag(props: { plan?: string }) {
+function PlanIcon(props: { plan?: string }) {
   if (!props.plan) {
     return null;
   }
-  const chipPropperties = getChipProperties(props.plan);
-  const avatar = !chipPropperties.avatarLink ? undefined : (
-    <Avatar src={chipPropperties.avatarLink} />
-  );
+  const planProps = getPlanProps(props.plan);
+  if (!planProps) {
+    return null;
+  }
   return (
-    <Stack sx={{ width: '100%' }}>
-      <Chip
-        avatar={avatar}
-        sx={{ background: chipPropperties.color, color: 'rgba(0, 0, 0, 0.87)' }}
-        label={props.plan}
-      />
-    </Stack>
+    <a href={planProps.href} target="_blank" rel="noreferrer">
+      <span className={planProps.className} title={planProps.title} />
+    </a>
   );
 }
 
-function ComponentTag(props: { value?: string }) {
+function ComponentTag(props: { value?: string; plan?: string }) {
   if (!props.value) {
     return null;
   }
@@ -48,16 +50,22 @@ function ComponentTag(props: { value?: string }) {
   return (
     <Stack gap={0.5}>
       {components.map((c, key) => (
-        <Typography
-          key={key}
-          sx={{
-            borderRadius: '5px',
-            background: 'rgba(102, 178, 255, 0.15)',
-            fontSize: '0.8rem',
-          }}
-        >
-          {c}
-        </Typography>
+        <div>
+          <Typography
+            key={key}
+            sx={{
+              borderRadius: '5px',
+              background: 'rgba(102, 178, 255, 0.15)',
+              fontSize: '0.8rem',
+              fontFamily: 'Consolas, "Liberation Mono", Menlo, Courier, monospace',
+              padding: '0 5px',
+              display: 'inline-block',
+            }}
+          >
+            {c}
+          </Typography>
+          <PlanIcon plan={props.plan} />
+        </div>
       ))}
     </Stack>
   );
@@ -66,20 +74,10 @@ function ComponentTag(props: { value?: string }) {
 const columns = [
   {
     field: 'slot',
-    headerName: 'Slot',
-    width: 220,
+    headerName: 'Component',
+    width: 240,
     renderCell: (params: GridRenderCellParams<string>) => (
-      <ComponentTag value={params.value} />
-    ),
-  },
-  {
-    field: 'plan',
-    headerName: 'Plan',
-    width: 170,
-    type: 'singleSelect',
-    valueOptions: ['Premium', 'Pro', 'Community'],
-    renderCell: (params: GridRenderCellParams<string>) => (
-      <PlanTag plan={params.value} />
+      <ComponentTag value={params.value} plan={params.row.plan} />
     ),
   },
   { field: 'design', headerName: 'Menu Design' },
@@ -216,11 +214,6 @@ export default function ColumnMenuGridReferences() {
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
     initialState: {
-      columns: {
-        columnVisibilityModel: {
-          plan: false,
-        },
-      },
       rowGrouping: {
         model: ['design'],
       },
@@ -236,10 +229,7 @@ export default function ColumnMenuGridReferences() {
         hideFooter
         isGroupExpandedByDefault={(node) => node.groupingKey === 'Default'}
         groupingColDef={{
-          headerName: 'Design & Plan',
           hideDescendantCount: true,
-          leafField: 'plan',
-          width: 140,
         }}
       />
     </div>

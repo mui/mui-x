@@ -6,9 +6,6 @@
   hideFooter
   isGroupExpandedByDefault={(node) => node.groupingKey === 'Default'}
   groupingColDef={{
-    headerName: 'Design & Plan',
     hideDescendantCount: true,
-    leafField: 'plan',
-    width: 140,
   }}
 />
