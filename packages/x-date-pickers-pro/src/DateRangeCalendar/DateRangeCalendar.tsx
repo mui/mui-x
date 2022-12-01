@@ -136,8 +136,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const wrapperContext = React.useContext(WrapperVariantContext);
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   // needed as a fallback when this component is used standalone and there is no `WrapperContext`
-  const isDesktop = useMediaQuery('@media (pointer: fine)', { defaultMatches: true });
-  const isMobile = wrapperContext ? wrapperContext === 'mobile' : !isDesktop;
+  const isDesktopMediaQuery = useMediaQuery('@media (pointer: fine)', { defaultMatches: true });
+  const isDesktop = wrapperContext ? wrapperContext === 'desktop' : isDesktopMediaQuery;
 
   const {
     value: valueProp,
@@ -397,9 +397,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       }
 
       return {
-        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
-        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isPreviewing: isDesktop ? isWithinRange(utils, day, previewingRange) : false,
+        isStartOfPreviewing: isDesktop ? isStartOfRange(utils, day, previewingRange) : false,
+        isEndOfPreviewing: isDesktop ? isEndOfRange(utils, day, previewingRange) : false,
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting: isDragging
           ? isStartOfRange(utils, day, draggingRange)
