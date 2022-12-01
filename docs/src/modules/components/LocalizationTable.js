@@ -9,9 +9,10 @@ import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 const Root = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
-  width: '100%',
-  height: 26,
-  borderRadius: 2,
+  width: 'fit-content',
+  paddingLeft: theme.spacing(1),
+  paddingRight: theme.spacing(1),
+  borderRadius: 5,
   '&.low': {
     color: (theme.vars || theme).palette.error.contrastText,
     backgroundColor: (theme.vars || theme).palette.error.light,
@@ -36,16 +37,16 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 const Value = styled('span')({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  lineHeight: 1.6,
+  zIndex: 1,
+  position: 'relative',
 });
 
 const Bar = styled('div')({
-  height: '100%',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
 });
 
 const ProgressBar = React.memo(function ProgressBar(props) {
@@ -60,12 +61,8 @@ const ProgressBar = React.memo(function ProgressBar(props) {
         high: valueInPercent > 80,
       })}
     >
-      <Value>
-        {numerator === denumerator && '🎉 '}
-        {`${numerator}/${denumerator}`}
-        {numerator === denumerator && ' 🎉'}
-      </Value>
-      <Bar className="progress-bar" style={{ maxWidth: `${valueInPercent}%` }} />
+      <Bar className="progress-bar" style={{ right: `${100 - valueInPercent}%` }} />
+      <Value>{`${numerator}/${denumerator}`}</Value>
     </Root>
   );
 });
@@ -107,7 +104,7 @@ function LocalisationTable(props) {
                 <td align="left">{localeName}</td>
                 <td align="left">{languageTag}</td>
                 <td align="left">
-                    <code>{importName}</code>
+                  <code>{importName}</code>
                 </td>
                 <td className="progress">
                   <ProgressBar
