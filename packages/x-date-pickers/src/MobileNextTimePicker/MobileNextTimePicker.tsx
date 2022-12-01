@@ -24,7 +24,7 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
   inProps: MobileNextTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
   const { className, sx, ...defaultizedProps } = useNextTimePickerDefaultizedProps<
@@ -51,6 +51,7 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
@@ -246,7 +247,7 @@ MobileNextTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

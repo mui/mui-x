@@ -9,9 +9,9 @@ import { dayCalendarSkeletonClasses } from '../DayCalendarSkeleton';
 import {
   clockClasses,
   clockNumberClasses,
-  clockPickerClasses,
+  timeClockClasses,
   clockPointerClasses,
-} from '../ClockPicker';
+} from '../TimeClock';
 import { datePickerToolbarClasses } from '../DatePicker';
 import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import {
@@ -97,21 +97,6 @@ createTheme({
         root: {
           backgroundColor: 'red',
           [`&.${clockNumberClasses.selected}`]: {
-            backgroundColor: 'green',
-          },
-        },
-      },
-    },
-    MuiClockPicker: {
-      defaultProps: {
-        view: 'hours',
-        // @ts-expect-error invalid MuiClockPicker prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-          [`.${clockPickerClasses.arrowSwitcher}`]: {
             backgroundColor: 'green',
           },
         },
@@ -455,6 +440,21 @@ createTheme({
         },
       },
     },
+    MuiPickersViewLayout: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiPickersViewLayout prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        content: {
+          backgroundColor: 'red',
+        },
+      },
+    },
     MuiPickersYear: {
       defaultProps: {
         classes: { yearButton: 'test' },
@@ -505,8 +505,23 @@ createTheme({
     MuiStaticTimePicker: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiStaticDatePicker prop
+        // @ts-expect-error invalid MuiStaticTimePicker prop
         someRandomProp: true,
+      },
+    },
+    MuiTimeClock: {
+      defaultProps: {
+        view: 'hours',
+        // @ts-expect-error invalid MuiTimeCLock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${timeClockClasses.arrowSwitcher}`]: {
+            backgroundColor: 'green',
+          },
+        },
       },
     },
     MuiTimePickerToolbar: {

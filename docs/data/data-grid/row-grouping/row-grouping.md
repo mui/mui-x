@@ -7,22 +7,24 @@ title: Data Grid - Row grouping
 <p class="description">Group your rows according to some column values.</p>
 
 For when you need to group rows based on repeated column values, and/or custom functions.
-In the following example groups all movies based on their production `company`
+In the following example, movies are grouped based on their production `company`:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Set grouping criteria
+## Grouping criteria
 
 ### Initialize the row grouping
 
 The easiest way to get started with the feature is to provide its model to the `initialState` prop:
 
 ```ts
-initialState={{
+<DataGridPremium
+  initialState={{
     rowGrouping: {
-        model: ['company', 'director'],
-    }
-}}
+      model: ['company', 'director'],
+    },
+  }}
+/>
 ```
 
 The basic parameters are the columns you want to check for repeating values.
@@ -66,6 +68,31 @@ The callback is called for each grouping column, and it receives the respective 
 
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Grouping rows with custom cell renderer
+
+By default, when rows are grouped by a column with a custom cell component (`GridColDef['renderCell']`), the same custom cell component is used in the grouping column.
+
+{{"demo": "RowGroupingCustomCell.js", "bg": "inline", "defaultCodeOpen": false}}
+
+You can opt out of this default behavior by returning `params.value` in `renderCell` for grouping rows instead:
+
+```tsx
+const ratingColDef: GridColDef = {
+  // ...
+  renderCell: (params) => {
+    if (params.rowNode.type === 'group') {
+      return params.value;
+    }
+
+    return (
+      // ...
+    );
+  },
+};
+```
+
+{{"demo": "RowGroupingCustomCellDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Show values for the leaves
 
 By default, the grouped rows display no value on their grouping columns' cells. Those cells are called "leaves."
@@ -83,13 +110,13 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide the numbe
 ### Hide the grouped columns
 
 By default, the columns used to group the rows remains visible.
-For instance if you group by `"director"`, you will have two columns titled _Director_:
+For instance if you group by `"director"`, you have two columns titled **Director**:
 
 - The grouped column (the column from which you grouped the rows)
 - The grouping column on which you can toggle the groups
 
 To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
-The hook will automatically hide the columns when added to the model and show them back when removed from it.
+The hook automatically hides the columns when added to the model, and displays them when removed from it.
 
 :::warning
 This hook is not compatible with the deprecated column property `hide`.
@@ -212,6 +239,20 @@ isGroupExpandedByDefault={
 Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Customize grouping cell indent
+
+To change the default cell indent you can pass the `offsetMultiplier` prop to the `<GridTreeDataGroupingCell />` component and use it as `groupingColDef.renderCell`:
+
+```tsx
+const groupingColDef = {
+  renderCell: (params) => (
+    <GridTreeDataGroupingCell {...params} offsetMultiplier={4} />
+  ),
+};
+
+<DataGridPremium groupingColDef={groupingColDef} />;
+```
 
 ## Sorting / Filtering
 

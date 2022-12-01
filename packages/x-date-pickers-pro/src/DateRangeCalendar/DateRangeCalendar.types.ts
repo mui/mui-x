@@ -10,6 +10,8 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -19,7 +21,8 @@ export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'Day'> {
+    Omit<DayCalendarSlotsComponent<TDate>, 'Day'>,
+    PickersCalendarHeaderSlotsComponent {
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
@@ -30,7 +33,8 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'> {}
+    Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'>,
+    PickersCalendarHeaderSlotsComponentsProps<TDate> {}
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,

@@ -4,7 +4,7 @@ import { StaticNextDateTimePickerProps } from './StaticNextDateTimePicker.types'
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
 import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
 import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
 
@@ -46,7 +46,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate, CalendarOrClockPickerView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate | null, TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -133,6 +133,10 @@ StaticNextDateTimePicker.propTypes = {
    * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
@@ -259,7 +263,7 @@ StaticNextDateTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
 import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
@@ -81,5 +82,9 @@ export class AdapterMomentJalaali
       .replace('jM', 'M')
       .replace('jD', 'D')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.jWeek();
   };
 }

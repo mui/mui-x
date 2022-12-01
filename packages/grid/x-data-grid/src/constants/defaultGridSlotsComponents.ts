@@ -12,7 +12,7 @@ import {
   GridPreferencesPanel,
   GridRow,
 } from '../components';
-import { ErrorOverlay } from '../components/ErrorOverlay';
+import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
 
@@ -24,7 +24,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Cell: GridCell, // doesn't use Material UI
   SkeletonCell: GridSkeletonCell, // doesn't use Material UI
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay, // doesn't use Material UI
+  ErrorOverlay: GridErrorOverlay, // doesn't use Material UI
   Footer: GridFooter, // doesn't use Material UI
   Header: GridHeader, // doesn't use Material UI
   PreferencesPanel: GridPreferencesPanel, // doesn't use Material UI

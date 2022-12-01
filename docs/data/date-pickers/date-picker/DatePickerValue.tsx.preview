@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <Stack spacing={2} direction="row">
+    <NextDatePicker
+      label="Uncontrolled picker"
+      defaultValue={dayjs('2022-04-07')}
+    />
+    <NextDatePicker
+      label="Controlled picker"
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+    />
+  </Stack>
+</LocalizationProvider>

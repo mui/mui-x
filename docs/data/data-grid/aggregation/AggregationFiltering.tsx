@@ -42,9 +42,7 @@ export default function AggregationFiltering() {
           },
           filter: {
             filterModel: {
-              items: [
-                { columnField: 'title', operatorValue: 'equals', value: 'Titanic' },
-              ],
+              items: [{ field: 'title', operator: 'equals', value: 'Titanic' }],
             },
           },
         }}

@@ -50,8 +50,8 @@ export interface GridFilterPanelProps
 }
 
 const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
-  columnField: col.field,
-  operatorValue: col.filterOperators![0].value,
+  field: col.field,
+  operator: col.filterOperators![0].value,
   id: Math.round(Math.random() * 1e5),
 });
 
@@ -90,14 +90,12 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       let nextColumnWithOperator;
       if (getColumnForNewFilter && typeof getColumnForNewFilter === 'function') {
         // To allow override the column for default (first) filter
-        const nextColumnFieldName = getColumnForNewFilter({
+        const nextFieldName = getColumnForNewFilter({
           currentFilters: filterModel?.items || [],
           columns: filterableColumns,
         });
 
-        nextColumnWithOperator = filterableColumns.find(
-          ({ field }) => field === nextColumnFieldName,
-        );
+        nextColumnWithOperator = filterableColumns.find(({ field }) => field === nextFieldName);
       } else {
         nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
       }

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
-import { ClockPickerView } from '../ClockPicker';
+import { TimeView } from '../TimeClock';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
-  ClockPickerSlotsComponent,
-  ClockPickerSlotsComponentsProps,
-  ExportedClockPickerProps,
-} from '../ClockPicker/ClockPicker';
+  TimeClockSlotsComponent,
+  TimeClockSlotsComponentsProps,
+  ExportedTimeClockProps,
+} from '../TimeClock/TimeClock';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -18,7 +18,7 @@ import {
 } from '../TimePicker/TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 
-export interface BaseNextTimePickerSlotsComponent<TDate> extends ClockPickerSlotsComponent {
+export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default TimePickerToolbar
@@ -26,16 +26,16 @@ export interface BaseNextTimePickerSlotsComponent<TDate> extends ClockPickerSlot
   Toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
 }
 
-export interface BaseNextTimePickerSlotsComponentsProps extends ClockPickerSlotsComponentsProps {
+export interface BaseNextTimePickerSlotsComponentsProps extends TimeClockSlotsComponentsProps {
   toolbar?: ExportedTimePickerToolbarProps;
 }
 
 export interface BaseNextTimePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, ClockPickerView, TimeValidationError>,
+      BaseNextPickerProps<TDate | null, TDate, TimeView, TimeValidationError>,
       'views' | 'openTo'
     >,
-    ExportedClockPickerProps<TDate> {
+    ExportedTimeClockProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`

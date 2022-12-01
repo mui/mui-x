@@ -18,7 +18,7 @@ export default function InitialState() {
           ...data.initialState,
           filter: {
             filterModel: {
-              items: [{ columnField: 'quantity', operatorValue: '>', value: 10000 }],
+              items: [{ field: 'quantity', operator: '>', value: 10000 }],
             },
           },
           sorting: {

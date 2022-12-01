@@ -73,7 +73,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   ColumnMenu: React.JSXElementConstructor<any>;
   /**
    * Error overlay component rendered above the grid when an error is caught.
-   * @default ErrorOverlay
+   * @default GridErrorOverlay
    */
   ErrorOverlay: React.JSXElementConstructor<any>;
   /**
