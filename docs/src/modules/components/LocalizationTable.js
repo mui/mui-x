@@ -3,12 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Link from 'docs/src/modules/components/Link';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 
@@ -87,26 +81,19 @@ function LocalisationTable(props) {
     <MarkdownElement
       sx={{
         width: '100%',
-        overflow: 'auto',
-        '& td.progress': {
-          padding: 0,
-        },
-        '& p': {
-          margin: 0,
-        },
       }}
     >
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Locale</TableCell>
-            <TableCell>BCP 47 language tag</TableCell>
-            <TableCell>Import name</TableCell>
-            <TableCell>Completion</TableCell>
-            <TableCell>Related file</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+      <table>
+        <thead>
+          <tr>
+            <th align="left">Locale</th>
+            <th align="left">BCP 47 language tag</th>
+            <th align="left">Import name</th>
+            <th align="left">Completion</th>
+            <th align="left">Related file</th>
+          </tr>
+        </thead>
+        <tbody>
           {data.map(
             ({
               languageTag,
@@ -116,34 +103,28 @@ function LocalisationTable(props) {
               totalKeysCount,
               githubLink,
             }) => (
-              <TableRow key={languageTag}>
-                <TableCell>
-                  <Typography variant="body2">{localeName}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">{languageTag}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">
+              <tr key={languageTag}>
+                <td align="left">{localeName}</td>
+                <td align="left">{languageTag}</td>
+                <td align="left">
                     <code>{importName}</code>
-                  </Typography>
-                </TableCell>
-                <TableCell className="progress">
+                </td>
+                <td className="progress">
                   <ProgressBar
                     numerator={totalKeysCount - missingKeysCount}
                     denumerator={totalKeysCount}
                   />
-                </TableCell>
-                <TableCell>
+                </td>
+                <td align="left">
                   <Link variant="body2" rel="nofollow" href={githubLink}>
                     Edit
                   </Link>
-                </TableCell>
-              </TableRow>
+                </td>
+              </tr>
             ),
           )}
-        </TableBody>
-      </Table>
+        </tbody>
+      </table>
     </MarkdownElement>
   );
 }
