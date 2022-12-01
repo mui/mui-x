@@ -104,9 +104,9 @@ A cell can be deselected by also clicking it while <kbd class="key">Ctrl</kbd> i
 
 To select all cells within a range, you can use one of the interactions available:
 
-- **Mouse Drag:** Click on a cell, then drag the mouse over another cell and release it
-- **Shift + Click**: Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
-- **Shift + Arrow keys**: Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
+- **Mouse drag:** Click on a cell, then drag the mouse over another cell and release it
+- **Shift + click**: Click on a cell and, while holding <kbd class="key">Shift</kbd>, click on another cell—if a third cell is clicked the selection will restart from the last clicked cell
+- **Shift + arrow keys**: Using the arrow keys, focus on a cell, then hold <kbd class="key">Shift</kbd> and navigate to another cell—if <kbd class="key">Shift</kbd> is released and pressed again, the selection will restart from the last focused cell
 
 The following demo allows to explore the cell selection feature.
 It has row selection disabled, but it's possible to set both selections to work in parallel.
@@ -122,14 +122,10 @@ Removing the field from the object also deselects the cell.
 
 ```tsx
 // Selects the cell with field=name from row with id=1
-<DataGridPremium
-  unstable_cellSelectionModel={{ 1: { name: true } }}
-/>
+<DataGridPremium unstable_cellSelectionModel={{ 1: { name: true } }} />
 
 // Unselects the cell with field=name from row with id=1
-<DataGridPremium
-  unstable_cellSelectionModel={{ 1: { name: false } }}
-/>
+<DataGridPremium unstable_cellSelectionModel={{ 1: { name: false } }} />
 ```
 
 When a new selection is made, the callback passed to the `unstable_onCellSelectionModelChange` prop is called with the updated model.
