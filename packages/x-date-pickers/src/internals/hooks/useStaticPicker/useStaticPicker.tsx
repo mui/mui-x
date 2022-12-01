@@ -5,7 +5,7 @@ import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.t
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersViewLayout } from '../../../PickersViewLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 
 const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({

@@ -17,7 +17,7 @@ import { BaseFieldProps } from '../../models/fields';
 import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
-} from '../../components/PickersViewLayout';
+} from '../../../PickersViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 

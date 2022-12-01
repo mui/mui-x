@@ -2,11 +2,11 @@ import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { PickersViewLayout } from '@mui/x-date-pickers/PickersViewLayout';
 import {
   DateOrTimeView,
   usePicker,
   WrapperVariantContext,
-  PickersViewLayout,
   PickersModalDialog,
   InferError,
 } from '@mui/x-date-pickers/internals';

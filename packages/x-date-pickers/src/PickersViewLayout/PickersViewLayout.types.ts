@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { SxProps, Theme } from '@mui/material/styles';
-import { PickersActionBarProps } from '../../../PickersActionBar';
-import { DateOrTimeView } from '../../models/views';
-import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/toolbar';
-import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
-import { UsePickerLayoutResponseLayoutProps } from '../../hooks/usePicker/usePickerLayout';
+import { PickersActionBarProps } from '../PickersActionBar';
+import { DateOrTimeView } from '../internals/models/views';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { UsePickerLayoutResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayout';
 import { PickersViewLayoutClasses } from './pickersViewLayoutClasses';
 
 export interface ExportedPickersViewLayoutSlotsComponent {

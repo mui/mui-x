@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { PickersActionBar } from '../../../PickersActionBar';
-import { DateOrTimeView } from '../../models/views';
+import { PickersActionBar } from '../PickersActionBar';
+import { DateOrTimeView } from '../internals/models/views';
 import { PickersViewLayoutSlotOwnerState, PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
   getPickersViewLayoutUtilityClass,

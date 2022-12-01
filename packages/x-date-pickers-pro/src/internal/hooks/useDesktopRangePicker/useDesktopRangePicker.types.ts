@@ -4,6 +4,10 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersViewLayout';
+import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
@@ -12,8 +16,6 @@ import {
   PickersPopperSlotsComponentsProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';

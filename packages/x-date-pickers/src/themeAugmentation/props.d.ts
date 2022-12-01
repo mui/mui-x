@@ -26,6 +26,7 @@ import { ExportedPickersYearProps, YearCalendarProps } from '../YearCalendar';
 import { DateFieldProps } from '../DateField';
 import { LocalizationProviderProps } from '../LocalizationProvider';
 import { DesktopDatePickerProps } from '../DesktopDatePicker';
+import { PickersViewLayoutProps } from '../PickersViewLayout';
 import {
   CalendarOrClockPickerProps,
   DayCalendarProps,
@@ -38,7 +39,6 @@ import {
   ExportedPickersToolbarTextProps,
 } from '../internals';
 import { DateOrTimeView } from '../internals/models';
-import { PickersViewLayoutProps } from '../internals/components/PickersViewLayout';
 
 import { NextDatePickerProps } from '../NextDatePicker';
 import { DesktopNextDatePickerProps } from '../DesktopNextDatePicker';
