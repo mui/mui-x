@@ -238,6 +238,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
     }),
+  ...(ownerState.draggable && {
+    cursor: 'grab',
+  }),
   ...(ownerState.isDragging && {
     cursor: 'grabbing',
   }),
