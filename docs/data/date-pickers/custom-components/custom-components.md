@@ -1,6 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time pickers - Custom components
+components: DateTimePickerTabs
 ---
 
 # Custom components
@@ -103,7 +104,7 @@ You can override the icons displayed by passing props to the `tabs` within `comp
 <DateTimePicker
   componentsProps={{
     tabs: {
-      dateRangeIcon: <LightModeIcon />,
+      dateIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
     },
   }}

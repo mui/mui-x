@@ -333,7 +333,7 @@ describe('<DataGridPro /> - Events Params', () => {
   it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleRowsScrollEnd = spy();
     render(<TestEvents onRowsScrollEnd={handleRowsScrollEnd} />);
-    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
+    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
     expect(handleRowsScrollEnd.callCount).to.equal(1);
   });
 
@@ -351,7 +351,7 @@ describe('<DataGridPro /> - Events Params', () => {
         rowCount={50}
       />,
     );
-    act(() => apiRef.current.publishEvent('rowsScroll', { left: 0, top: 3 * 52 }));
+    act(() => apiRef.current.publishEvent('scrollPositionChange', { left: 0, top: 3 * 52 }));
     expect(handleFetchRows.callCount).to.equal(1);
   });
 

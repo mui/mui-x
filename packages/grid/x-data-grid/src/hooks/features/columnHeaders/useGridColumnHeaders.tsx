@@ -164,7 +164,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
   }, [renderContext, updateInnerPosition]);
 
-  const handleScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
+  const handleScroll = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     ({ left, renderContext: nextRenderContext = null }, event) => {
       if (!innerRef.current) {
         return;
@@ -235,7 +235,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
   useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
 
-  useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScroll);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {

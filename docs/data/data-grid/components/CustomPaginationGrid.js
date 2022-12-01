@@ -1,28 +1,50 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
   gridPageCountSelector,
-  gridPageSelector,
+  GridPagination,
   useGridApiContext,
   useGridSelector,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import Pagination from '@mui/material/Pagination';
+import MuiPagination from '@mui/material/Pagination';
 
-function CustomPagination() {
+function Pagination({ page, onPageChange, className }) {
   const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
-    <Pagination
+    <MuiPagination
       color="primary"
+      className={className}
       count={pageCount}
       page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+      onChange={(event, newPage) => {
+        onPageChange(event, newPage - 1);
+      }}
     />
   );
+}
+
+Pagination.propTypes = {
+  className: PropTypes.string,
+  /**
+   * Callback fired when the page is changed.
+   *
+   * @param {React.MouseEvent<HTMLButtonElement> | null} event The event source of the callback.
+   * @param {number} page The page selected.
+   */
+  onPageChange: PropTypes.func.isRequired,
+  /**
+   * The zero-based index of the current page.
+   */
+  page: PropTypes.number.isRequired,
+};
+
+function CustomPagination(props) {
+  return <GridPagination ActionsComponent={Pagination} {...props} />;
 }
 
 export default function CustomPaginationGrid() {
@@ -36,12 +58,11 @@ export default function CustomPaginationGrid() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
         components={{
           Pagination: CustomPagination,
         }}
         {...data}
+        initialState={{ ...data.initialState, pagination: { pageSize: 25 } }}
       />
     </Box>
   );

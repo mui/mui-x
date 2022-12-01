@@ -1,8 +1,12 @@
 ---
-title: Date and Time pickers - Validation
+product: date-pickers
+title: Date and Time Pickers - Validation
+components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker, NextTimePicker, DesktopNextTimePicker, MobileNextTimePicker, StaticNextTimePicker, NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker, NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
-# Date and Time pickers - Validation
+# Date and Time Pickers - Validation
 
 <p class="description">Add custom validation to user inputs.</p>
 

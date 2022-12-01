@@ -14,9 +14,9 @@ interface GridFilterModel {
 
 interface GridFilterItem {
   id?: number | string;
-  columnField: string;
+  field: string;
   value?: any;
-  operatorValue?: string;
+  operator: string;
 }
 
 enum GridLinkOperator {

@@ -82,7 +82,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getAggregationPosition": {
@@ -483,5 +483,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": ["@mui/x-data-grid-premium"]
+  "packages": [{ "packageName": "@mui/x-data-grid-premium", "componentName": "DataGridPremium" }]
 }

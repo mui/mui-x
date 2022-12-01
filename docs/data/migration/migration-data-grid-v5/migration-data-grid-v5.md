@@ -19,6 +19,10 @@ Since v6 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to make to migrate from v5 to v6.
 
+:::warning
+The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/es/blog/release/v12.22.12/).
+:::
+
 ### Renamed props
 
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
@@ -49,11 +53,18 @@ Below are described the steps you need to make to migrate from v5 to v6.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
+- The `gridRowGroupingStateSelector` selector was removed.
+- The `gridFilterStateSelector` selector was removed.
+- The `gridRowsStateSelector` selector was removed.
+- The `gridSortingStateSelector` selector was removed.
 
 ### Events
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
+- The `rowsScroll` event was renamed to `scrollPositionChange`.
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
+- The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
+- The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns
@@ -119,6 +130,12 @@ Below are described the steps you need to make to migrate from v5 to v6.
   | `unstable_registerControlState`                   |
 
     </details>
+
+### Filtering
+
+- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- The `GridFilterItem['operator']` is now required.
 
 ### Other exports
 

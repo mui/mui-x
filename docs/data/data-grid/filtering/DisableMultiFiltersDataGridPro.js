@@ -13,7 +13,7 @@ export default function DisableMultiFiltersDataGridPro() {
 
   const filterColumns = ({ field, columns, currentFilters }) => {
     // remove already filtered fields from list of columns
-    const filteredFields = currentFilters?.map((item) => item.columnField);
+    const filteredFields = currentFilters?.map((item) => item.field);
     return columns
       .filter(
         (colDef) =>
@@ -24,7 +24,7 @@ export default function DisableMultiFiltersDataGridPro() {
   };
 
   const getColumnForNewFilter = ({ currentFilters, columns }) => {
-    const filteredFields = currentFilters?.map(({ columnField }) => columnField);
+    const filteredFields = currentFilters?.map(({ field }) => field);
     const columnForNewFilter = columns
       .filter(
         (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),

@@ -18,9 +18,9 @@ function setColumnValue(columnValue: string) {
   });
 }
 
-function setOperatorValue(operatorValue: string) {
+function setOperatorValue(operator: string) {
   fireEvent.change(screen.getByRole('combobox', { name: 'Operator' }), {
-    target: { value: operatorValue },
+    target: { value: operator },
   });
 }
 
@@ -146,7 +146,7 @@ describe('<DataGrid /> - Filter panel', () => {
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
-        filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains' }] }}
+        filterModel={{ items: [{ field: 'brand', operator: 'contains' }] }}
       />,
     );
     expect(screen.getByRole('textbox', { name: 'Value' }).value).to.equal('');
@@ -160,9 +160,9 @@ describe('<DataGrid /> - Filter panel', () => {
             filterModel: {
               items: [
                 {
-                  columnField: 'brand',
+                  field: 'brand',
                   value: 'Puma',
-                  operatorValue: 'equals',
+                  operator: 'equals',
                 },
               ],
             },
@@ -193,8 +193,8 @@ describe('<DataGrid /> - Filter panel', () => {
             filterModel: {
               items: [
                 {
-                  columnField: 'brand',
-                  operatorValue: 'contains',
+                  field: 'brand',
+                  operator: 'contains',
                   value: 'Pu',
                 },
               ],
@@ -228,8 +228,8 @@ describe('<DataGrid /> - Filter panel', () => {
             filterModel: {
               items: [
                 {
-                  columnField: 'brand',
-                  operatorValue: 'contains',
+                  field: 'brand',
+                  operator: 'contains',
                   value: 'Pu',
                 },
               ],
@@ -277,7 +277,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'destination', operatorValue: 'is', value: 'UK' }],
+              items: [{ field: 'destination', operator: 'is', value: 'UK' }],
             },
           },
           preferencePanel: {
@@ -313,7 +313,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'destination', operatorValue: 'is', value: 'GE' }],
+              items: [{ field: 'destination', operator: 'is', value: 'GE' }],
             },
           },
           preferencePanel: {
@@ -351,7 +351,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
+              items: [{ field: 'destination', operator: 'isAnyOf', value: ['UK'] }],
             },
           },
           preferencePanel: {
@@ -386,7 +386,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['GE'] }],
+              items: [{ field: 'destination', operator: 'isAnyOf', value: ['GE'] }],
             },
           },
           preferencePanel: {
@@ -422,7 +422,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'destination', operatorValue: 'isAnyOf', value: ['UK'] }],
+              items: [{ field: 'destination', operator: 'isAnyOf', value: ['UK'] }],
             },
           },
           preferencePanel: {
@@ -453,7 +453,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'val', operatorValue: 'contains', value: 'UK' }],
+              items: [{ field: 'val', operator: 'contains', value: 'UK' }],
             },
           },
           preferencePanel: {
@@ -482,7 +482,7 @@ describe('<DataGrid /> - Filter panel', () => {
         initialState={{
           filter: {
             filterModel: {
-              items: [{ columnField: 'brand', operatorValue: 'isEmpty' }],
+              items: [{ field: 'brand', operator: 'isEmpty' }],
             },
           },
         }}

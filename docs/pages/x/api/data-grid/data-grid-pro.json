@@ -71,7 +71,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
@@ -459,5 +459,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>",
-  "packages": ["@mui/x-data-grid-pro"]
+  "packages": [{ "packageName": "@mui/x-data-grid-pro", "componentName": "DataGridPro" }]
 }
