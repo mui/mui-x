@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 1, 2022_
 
-We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Ukrainian (uk-UA) locale (#7035) @rettoua
 - 🐞 Bugfixes
@@ -16,7 +16,7 @@ We'd like to offer a big thanks to the 2 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix row selection when clicking blank cell (#7056) @m4theushw
+- [DataGrid] Fix row selection when clicking blank cell (#7056) @yami03
 - [DataGridPremium] Update cache before hydrating columns (#7043) @m4theushw
 - [l10n] Improve Ukrainian (uk-UA) locale (#7035) @rettoua
 
