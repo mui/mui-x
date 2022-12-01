@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import {
   gridColumnLookupSelector,
@@ -11,11 +10,6 @@ import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
-
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-  flexDirection: 'row',
-}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
@@ -48,30 +42,26 @@ function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
-      <StyledStack>
-        <StyledButton
-          onClick={ungroupColumn}
-          key={colDef.field}
-          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
-          color="inherit"
-        >
-          {apiRef.current.getLocaleText('unGroupColumn')(name)}
-        </StyledButton>
-      </StyledStack>
+      <StyledButton
+        onClick={ungroupColumn}
+        key={colDef.field}
+        startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
+        color="inherit"
+      >
+        {apiRef.current.getLocaleText('unGroupColumn')(name)}
+      </StyledButton>
     );
   }
 
   return (
-    <Stack px={1.5} py={1} direction="row">
-      <StyledButton
-        onClick={groupColumn}
-        key={colDef.field}
-        startIcon={<rootProps.components.ColumnMenuGroupIcon />}
-        color="inherit"
-      >
-        {apiRef.current.getLocaleText('groupColumn')(name)}
-      </StyledButton>
-    </Stack>
+    <StyledButton
+      onClick={groupColumn}
+      key={colDef.field}
+      startIcon={<rootProps.components.ColumnMenuGroupIcon />}
+      color="inherit"
+    >
+      {apiRef.current.getLocaleText('groupColumn')(name)}
+    </StyledButton>
   );
 }
 

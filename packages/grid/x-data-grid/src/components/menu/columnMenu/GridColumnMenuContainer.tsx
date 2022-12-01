@@ -7,9 +7,11 @@ import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
-const StyledMenuList = styled(MenuList)(() => ({
+const StyledMenuList = styled(MenuList)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  paddingTop: theme.spacing(0.5),
+  paddingBottom: theme.spacing(0.5),
   minWidth: 248,
 }));
 

@@ -1,17 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
-
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 0, 1.5),
-  flexDirection: 'row',
-}));
 
 function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
@@ -31,14 +25,9 @@ function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <StyledStack>
-      <Button
-        onClick={showColumns}
-        startIcon={<rootProps.components.ColumnMenuManageColumnsIcon />}
-      >
-        {apiRef.current.getLocaleText('columnMenuManageColumns')}
-      </Button>
-    </StyledStack>
+    <Button onClick={showColumns} startIcon={<rootProps.components.ColumnMenuManageColumnsIcon />}>
+      {apiRef.current.getLocaleText('columnMenuManageColumns')}
+    </Button>
   );
 }
 

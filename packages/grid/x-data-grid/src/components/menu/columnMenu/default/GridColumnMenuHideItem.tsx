@@ -1,18 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
-
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
@@ -63,16 +56,14 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <StyledStack>
-      <StyledButton
-        onClick={toggleColumn}
-        disabled={disabled}
-        startIcon={<rootProps.components.ColumnMenuHideIcon fontSize="small" />}
-        color="inherit"
-      >
-        {apiRef.current.getLocaleText('columnMenuHideColumn')}
-      </StyledButton>
-    </StyledStack>
+    <StyledButton
+      onClick={toggleColumn}
+      disabled={disabled}
+      startIcon={<rootProps.components.ColumnMenuHideIcon fontSize="small" />}
+      color="inherit"
+    >
+      {apiRef.current.getLocaleText('columnMenuHideColumn')}
+    </StyledButton>
   );
 }
 

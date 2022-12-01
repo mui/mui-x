@@ -9,10 +9,6 @@ import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-}));
-
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
   fontWeight: theme.typography.fontWeightRegular,
@@ -41,7 +37,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const side = apiRef.current.isColumnPinned(colDef.field);
 
   return (
-    <StyledStack>
+    <React.Fragment>
       <Typography color="text.secondary" fontSize="12px">
         Pin to
       </Typography>
@@ -65,7 +61,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
           {apiRef.current.getLocaleText('directionRight')}
         </StyledButton>
       </Stack>
-    </StyledStack>
+    </React.Fragment>
   );
 }
 

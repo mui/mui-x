@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import {
   useGridSelector,
@@ -16,11 +15,6 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
   isGroupingColumn,
 } from '../hooks/features/rowGrouping/gridRowGroupingUtils';
-
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-  flexDirection: 'row',
-}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
@@ -44,16 +38,14 @@ function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
     const name = columnsLookup[field].headerName ?? field;
 
     return (
-      <StyledStack key={field}>
-        <StyledButton
-          onClick={ungroupColumn}
-          key={field}
-          startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
-          color="inherit"
-        >
-          {apiRef.current.getLocaleText('unGroupColumn')(name)}
-        </StyledButton>
-      </StyledStack>
+      <StyledButton
+        onClick={ungroupColumn}
+        key={field}
+        startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
+        color="inherit"
+      >
+        {apiRef.current.getLocaleText('unGroupColumn')(name)}
+      </StyledButton>
     );
   };
 

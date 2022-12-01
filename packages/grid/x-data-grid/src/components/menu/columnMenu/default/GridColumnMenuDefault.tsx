@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
+import { styled } from '@mui/material/styles';
 import { useGridColumnMenuComponents } from '../../../../hooks/features/columnMenu/useGridColumnMenuComponents';
 import { GridColumnMenuContainer } from '../GridColumnMenuContainer';
 import { GridColumnMenuProps, GridGenericColumnMenuProps } from '../GridColumnMenuProps';
@@ -23,6 +24,10 @@ export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS = {
   columnMenuColumnsItem: { displayOrder: 30 },
 };
 
+const StyledDiv = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
+}));
+
 const GridGenericColumnMenuDefault = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
   function GridColumnMenuDefault(props, ref) {
     const { defaultComponents, defaultComponentsProps, components, componentsProps, ...other } =
@@ -40,7 +45,9 @@ const GridGenericColumnMenuDefault = React.forwardRef<HTMLUListElement, GridGene
       <GridColumnMenuContainer ref={ref} {...other}>
         {orderedComponents.map(([Component, extraProps], index: number) => (
           <div key={index}>
-            <Component onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
+            <StyledDiv>
+              <Component onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
+            </StyledDiv>
             {index !== orderedComponents.length - 1 ? <Divider /> : null}
           </div>
         ))}

@@ -2,12 +2,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import {
@@ -18,11 +16,7 @@ import {
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { GridAggregationModel } from '../hooks/features/aggregation/gridAggregationInterfaces';
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5, 1, 1.5),
-}));
-
-function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
+function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -72,7 +66,7 @@ function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
   return (
-    <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
+    <FormControl size="small" fullWidth sx={{ minWidth: 150, my: 0.5 }}>
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
         labelId={`${id}-label`}
@@ -101,23 +95,6 @@ function GridColumnMenuAggregationItemRoot(props: GridColumnMenuItemProps) {
   );
 }
 
-GridColumnMenuAggregationItemRoot.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  colDef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-} as any;
-
-function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
-  return (
-    <StyledStack>
-      <GridColumnMenuAggregationItemRoot {...props} />
-    </StyledStack>
-  );
-}
-
 GridColumnMenuAggregationItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -132,7 +109,7 @@ export { GridColumnMenuAggregationItem };
 function GridColumnMenuAggregationItemSimple(props: GridColumnMenuItemProps) {
   return (
     <MenuItem disableRipple>
-      <GridColumnMenuAggregationItemRoot {...props} />
+      <GridColumnMenuAggregationItem {...props} />
     </MenuItem>
   );
 }

@@ -26,16 +26,20 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
     onClick: props.hideMenu,
   };
   return (
-    <Stack p={0.5}>
-      <GridColumnMenuSortItem {...itemProps} />
-      {/* Only provide filtering on desk */}
-      {itemProps.colDef.field === 'desk' ? (
-        <GridColumnMenuFilterItem {...itemProps} />
-      ) : null}
+    <React.Fragment>
+      <Stack px={1.5} py={0.5} alignItems="flex-start">
+        <GridColumnMenuSortItem {...itemProps} />
+        {/* Only provide filtering on desk */}
+        {itemProps.colDef.field === 'desk' ? (
+          <GridColumnMenuFilterItem {...itemProps} />
+        ) : null}
+      </Stack>
       <Divider />
-      <GridColumnMenuColumnsItem {...itemProps} />
-      <MenuCloseComponent {...itemProps} />
-    </Stack>
+      <Stack px={1.5} py={0.5}>
+        <GridColumnMenuColumnsItem {...itemProps} />
+        <MenuCloseComponent {...itemProps} />
+      </Stack>
+    </React.Fragment>
   );
 }
 

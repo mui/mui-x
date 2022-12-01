@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
@@ -12,12 +11,6 @@ import {
 } from '../../../../hooks/features/filter/gridFilterSelector';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
-
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-}));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
@@ -58,7 +51,7 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <StyledStack>
+    <React.Fragment>
       <StyledButton
         onClick={showFilter}
         startIcon={<rootProps.components.ColumnMenuFilterIcon />}
@@ -72,7 +65,7 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
           <rootProps.components.ColumnMenuClearIcon />
         </IconButton>
       ) : null}
-    </StyledStack>
+    </React.Fragment>
   );
 }
 

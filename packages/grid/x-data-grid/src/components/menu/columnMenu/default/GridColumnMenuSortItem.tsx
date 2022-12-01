@@ -11,10 +11,6 @@ import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 
-const StyledStack = styled(Stack)(({ theme }) => ({
-  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
-}));
-
 const StyledButton = styled(Button)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(16),
   fontWeight: theme.typography.fontWeightRegular,
@@ -50,7 +46,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <StyledStack>
+    <React.Fragment>
       <Typography color="text.secondary" fontSize="12px">
         Sort by
       </Typography>
@@ -72,7 +68,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
           {apiRef.current.getLocaleText('columnMenuSortDescAbbrev')}
         </StyledButton>
       </Stack>
-    </StyledStack>
+    </React.Fragment>
   );
 }
 

@@ -22,7 +22,7 @@ function CustomFilterItem(props) {
   );
 
   return (
-    <Button sx={{ m: 1 }} onClick={handleClick} startIcon={<IconFilter />}>
+    <Button onClick={handleClick} startIcon={<IconFilter />}>
       Show Filters
     </Button>
   );
@@ -36,11 +36,7 @@ CustomFilterItem.propTypes = {
 function CustomUserItem(props) {
   const { myCustomHandler, myCustomValue } = props;
   return (
-    <Button
-      sx={{ m: 1 }}
-      onClick={myCustomHandler}
-      startIcon={<SettingsApplicationsIcon />}
-    >
+    <Button onClick={myCustomHandler} startIcon={<SettingsApplicationsIcon />}>
       {myCustomValue}
     </Button>
   );
