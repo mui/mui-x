@@ -617,7 +617,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       </div>,
     );
 
-    expect(getCell(0, 0)).to.have.attribute('aria-colspan', '2');
+    expect(getCell(0, 0)).to.have.attribute('aria-colspan', '20');
     expect(getCell(0, 2)).to.have.attribute('aria-colspan', '1');
   });
 

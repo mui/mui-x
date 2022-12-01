@@ -67,7 +67,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         render(<TestCase />);
         expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing-2');
       });
 
       it('should render the component given in renderEditCell', () => {
