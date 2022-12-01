@@ -50,9 +50,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Legg til filter',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLinkOperator: 'Logisk operator',
-  filterPanelOperators: 'Operatører',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operatører',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
