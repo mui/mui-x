@@ -84,7 +84,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Afficher les colonnes',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrer',
-  columnMenuHideColumn: 'Cacher', // outdated
+  columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',

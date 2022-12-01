@@ -83,7 +83,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: '显示',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
-  columnMenuHideColumn: '隐藏', // outdated
+  columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',

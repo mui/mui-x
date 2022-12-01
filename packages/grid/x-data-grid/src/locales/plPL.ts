@@ -83,7 +83,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
-  columnMenuHideColumn: 'Ukryj', // outdated
+  columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',
   columnMenuSortAsc: 'Sortuj rosnąco',
   columnMenuSortDesc: 'Sortuj malejąco',

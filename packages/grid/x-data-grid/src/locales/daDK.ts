@@ -84,7 +84,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Vis Kolonner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre',
-  columnMenuHideColumn: 'Skjul', // outdated
+  columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
   columnMenuSortDesc: 'Sorter faldende',

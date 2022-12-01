@@ -84,7 +84,7 @@ const itITGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Mostra le colonne',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
-  columnMenuHideColumn: 'Nascondi', // outdated
+  columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",
   columnMenuSortAsc: 'Ordinamento crescente',
   columnMenuSortDesc: 'Ordinamento decrescente',

@@ -83,7 +83,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: '열 표시',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '필터',
-  columnMenuHideColumn: '열 숨기기', // outdated
+  columnMenuHideColumn: '열 숨기기',
   columnMenuUnsort: '정렬 해제',
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',

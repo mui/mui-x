@@ -83,7 +83,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Oszlopok megjelenítése',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Szűrők',
-  columnMenuHideColumn: 'Elrejtés', // outdated
+  columnMenuHideColumn: 'Elrejtés',
   columnMenuUnsort: 'Sorrend visszaállítása',
   columnMenuSortAsc: 'Növekvő sorrendbe',
   columnMenuSortDesc: 'Csökkenő sorrendbe',

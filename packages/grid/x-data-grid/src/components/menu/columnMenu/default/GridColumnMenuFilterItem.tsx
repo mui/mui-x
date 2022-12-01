@@ -48,7 +48,7 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   const clearFilters = React.useCallback(() => {
     if (filtersForCurrentColumn.length) {
       apiRef.current.upsertFilterItems(
-        filterModel.items.filter((item) => item.columnField !== colDef?.field),
+        filterModel.items.filter((item) => item.field !== colDef?.field),
       );
     }
   }, [apiRef, colDef?.field, filterModel.items, filtersForCurrentColumn]);

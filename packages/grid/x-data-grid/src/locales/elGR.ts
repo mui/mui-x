@@ -83,7 +83,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Εμφάνιση στηλών',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
-  columnMenuHideColumn: 'Απόκρυψη', // outdated
+  columnMenuHideColumn: 'Απόκρυψη',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',

@@ -84,7 +84,7 @@ const esESGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Mostrar columnas',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtro',
-  columnMenuHideColumn: 'Ocultar', // outdated
+  columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',
   columnMenuSortAsc: 'Ordenar ASC',
   columnMenuSortDesc: 'Ordenar DESC',

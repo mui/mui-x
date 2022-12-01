@@ -84,7 +84,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Visa kolumner',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrera',
-  columnMenuHideColumn: 'Dölj', // outdated
+  columnMenuHideColumn: 'Dölj',
   columnMenuUnsort: 'Osortera',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',

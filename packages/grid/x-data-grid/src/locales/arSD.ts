@@ -84,7 +84,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'إظهار الأعمدة',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
-  columnMenuHideColumn: 'إخفاء', // outdated
+  columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',
   columnMenuSortAsc: 'الفرز تصاعدياً',
   columnMenuSortDesc: 'الفرز تنازلياً',

@@ -91,7 +91,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Zobraziť stĺpce',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Skryť', // outdated
+  columnMenuHideColumn: 'Skryť',
   columnMenuUnsort: 'Zrušiť filtre',
   columnMenuSortAsc: 'Zoradiť vzostupne',
   columnMenuSortDesc: 'Zoradiť zostupne',

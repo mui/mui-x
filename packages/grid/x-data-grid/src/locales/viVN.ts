@@ -84,7 +84,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Danh sách cột',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
-  columnMenuHideColumn: 'Ẩn cột', // outdated
+  columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',

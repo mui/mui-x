@@ -84,7 +84,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   columnMenuShowColumns: 'Exibir colunas',
   // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrar',
-  columnMenuHideColumn: 'Ocultar', // outdated
+  columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desfazer ordenação',
   columnMenuSortAsc: 'Ordenar do menor para o maior',
   columnMenuSortDesc: 'Ordenar do maior para o menor',
