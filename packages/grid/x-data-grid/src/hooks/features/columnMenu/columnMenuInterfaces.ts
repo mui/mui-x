@@ -17,8 +17,6 @@ export interface GridColumnMenuComponentProps {
   [key: string]: any;
 }
 
-export type GridColumnMenuValue = Array<React.JSXElementConstructor<any>>;
-
 export interface GridColumnMenuRootProps {
   /**
    * Initial `components` - it is internal, to be overrriden by Pro or Premium packages

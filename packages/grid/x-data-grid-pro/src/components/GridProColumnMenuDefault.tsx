@@ -19,7 +19,7 @@ export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PRO = {
 };
 
 const GridProColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
-  function GridProColumnMenuDefault(props: GridColumnMenuProps, ref) {
+  function GridProColumnMenuDefault(props, ref) {
     return (
       <GridGenericColumnMenuDefault
         ref={ref}
@@ -36,7 +36,7 @@ GridProColumnMenuDefault.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  currentColumn: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 } as any;
