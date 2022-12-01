@@ -70,6 +70,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const cell21 = getCell(2, 1);
       fireEvent.click(cell21, { ctrlKey: true });
       expect(cell21).to.have.class('Mui-selected');
+      expect(cell11).to.have.class('Mui-selected');
     });
 
     it('should unselect the cell if the cell is already selected', () => {

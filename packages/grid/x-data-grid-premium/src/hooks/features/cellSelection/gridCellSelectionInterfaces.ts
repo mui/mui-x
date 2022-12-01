@@ -11,7 +11,6 @@ export interface GridCellSelectionApi {
    * @param {GridRowId} id The id of the row.
    * @param {GridColDef['field']} field The field.
    * @returns {boolean} A boolean indicating if the cell is selected.
-   * @ignore - do not document.
    */
   unstable_isCellSelected: (id: GridRowId, field: GridColDef['field']) => boolean;
   /**
@@ -19,14 +18,12 @@ export interface GridCellSelectionApi {
    * The keys of the object correpond to the row IDs.
    * The value of each key is another object whose keys are the fields and values are the selection state.
    * @returns {GridCellSelectionModel} Object containing the selection state of the cells
-   * @ignore - do not document.
    */
   unstable_getCellSelectionModel: () => GridCellSelectionModel;
   /**
    * Updates the selected cells to be those passed to the `newModel` argument.
    * Any cell already selected will be unselected.
    * @param {GridCellSelectionModel} newModel The cells to select.
-   * @ignore - do not document.
    */
   unstable_setCellSelectionModel: (newModel: GridCellSelectionModel) => void;
   /**
@@ -34,7 +31,6 @@ export interface GridCellSelectionApi {
    * @param {GridCellCoordinates} start Object containg the row ID and field of the first cell to select.
    * @param {GridCellCoordinates} end Object containg the row ID and field of the last cell to select.
    * @param {boolean} keepOtherSelected Whether to keep current selected cells or discard. Default is false.
-   * @ignore - do not document.
    */
   unstable_selectCellRange: (
     start: GridCellCoordinates,
@@ -45,7 +41,6 @@ export interface GridCellSelectionApi {
    * Returns an array containg only the selected cells.
    * Each item is an object with the ID and field of the cell.
    * @returns {GridCellCoordinates[]} Array with the selected cells.
-   * @ignore - do not document.
    */
   unstable_getSelectedCellsAsArray: () => GridCellCoordinates[];
 }
