@@ -40,15 +40,15 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   The `dateRangeIcon` prop has been renamed to `dateIcon`:
 
   ```diff
-  // Same on all other Date Time Picker variations
-  <DateTimePicker
-      componentsProps={{
-        tabs: {
--        dateRangeIcon: <LightModeIcon />,
-+        dateIcon: <LightModeIcon />,
-      }
-    }}
-  />
+   // Same on all other Date Time Picker variations
+   <DateTimePicker
+       componentsProps={{
+         tabs: {
+  -        dateRangeIcon: <LightModeIcon />,
+  +        dateIcon: <LightModeIcon />,
+        }
+      }}
+   />
   ```
 
 #### Changes
