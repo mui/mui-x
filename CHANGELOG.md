@@ -17,7 +17,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 ### Breaking changes
 
-- Passing children as `null` to `<GridCell />` will not render `valueToRender` anymore
+- [DataGrid] Removes `GridCell` fallback to `valueToRender` on `null` children (#7023) @MBilalShafi
+
+  Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value.
 
 #### Changes
 
@@ -33,18 +35,20 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Breaking changes
 
-The `dateRangeIcon` prop has been renamed to `dateIcon`:
+- Rename `dateRangeIcon` to `dateIcon` (#7024) @LukasTy
+
+  The `dateRangeIcon` prop has been renamed to `dateIcon`:
 
   ```diff
-   // Same on all other Date Time picker variations
-   <DateTimePicker
+  // Same on all other Date Time Picker variations
+  <DateTimePicker
       componentsProps={{
         tabs: {
   -      dateRangeIcon: <LightModeIcon />,
   +      dateIcon: <LightModeIcon />,
-       }
-     }}
-   />
+      }
+    }}
+  />
   ```
 
 #### Changes
@@ -53,10 +57,11 @@ The `dateRangeIcon` prop has been renamed to `dateIcon`:
 - [pickers] Allow non-controlled usage of `TimeClock` (#6962) @flaviendelangle
 - [pickers] Throw error when using adapter from `@date-io` (#6972) @flaviendelangle
 - [l10n] Add Urdu (ur-PK) locale (#7007) @MBilalShafi
+- [l10n] Improve Ukrainian (uk-UA) locale (#7009) @rettoua
 
 ### Docs
 
-- [docs] Add Demos section on pickers api pages (#6909) @flaviendelangle
+- [docs] Add Demos section on the pickers API pages (#6909) @flaviendelangle
 - [docs] Add missing pickers migration docs (#7000) @LukasTy
 - [docs] Fix broken link (#7048) @flaviendelangle
 - [docs] Improve demo about customizing pagination (#6724) @m4theushw
