@@ -1172,6 +1172,23 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.14
+
+_Dec 1, 2022_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Ukrainian (uk-UA) locale (#7035) @rettoua
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.14` / `@mui/x-data-grid-pro@v5.17.14` / `@mui/x-data-grid-premium@v5.17.14`
+
+#### Changes
+
+- [DataGrid] Fix row selection when clicking blank cell (#7056) @yami03
+- [DataGridPremium] Update cache before hydrating columns (#7043) @m4theushw
+- [l10n] Improve Ukrainian (uk-UA) locale (#7035) @rettoua
+
 ## 5.17.13
 
 _Nov 24, 2022_
