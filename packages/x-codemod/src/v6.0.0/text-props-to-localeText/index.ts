@@ -90,7 +90,7 @@ export default function transformer(file, api, options) {
     };
 
     root.findJSXElements(componentName).forEach((path) => {
-      const newLocaleText = [];
+      const newLocaleText: any[] = [];
       const attributes = path.node.openingElement.attributes;
       attributes.forEach((node, index) => {
         if (node.type === 'JSXAttribute' && propsToKey[node.name.name] !== undefined) {

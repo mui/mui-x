@@ -8,64 +8,62 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('@mui/codemod', () => {
-  describe('v5.0.0', () => {
-    describe('text-props-to-localeText', () => {
-      it('transforms expression props as needed', () => {
-        const actual = transform(
-          {
-            source: read('./actual-expression-values.spec.js'),
-            path: require.resolve('./actual-expression-values.spec.js'),
-          },
-          { jscodeshift },
-          {},
-        );
+describe('v6.0.0', () => {
+  describe('localization-provider-rename-locale', () => {
+    it('transforms expression props as needed', () => {
+      const actual = transform(
+        {
+          source: read('./actual-expression-values.spec.js'),
+          path: require.resolve('./actual-expression-values.spec.js'),
+        },
+        { jscodeshift },
+        {},
+      );
 
-        const expected = read('./expected-expression-values.spec.js');
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected-expression-values.spec.js');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
 
-      it('should be idempotent for expression', () => {
-        const actual = transform(
-          {
-            source: read('./expected-expression-values.spec.js'),
-            path: require.resolve('./expected-expression-values.spec.js'),
-          },
-          { jscodeshift },
-          {},
-        );
+    it('should be idempotent for expression', () => {
+      const actual = transform(
+        {
+          source: read('./expected-expression-values.spec.js'),
+          path: require.resolve('./expected-expression-values.spec.js'),
+        },
+        { jscodeshift },
+        {},
+      );
 
-        const expected = read('./expected-expression-values.spec.js');
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected-expression-values.spec.js');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
 
-      it('transforms string props as needed', () => {
-        const actual = transform(
-          {
-            source: read('./actual-string-values.spec.js'),
-            path: require.resolve('./actual-string-values.spec.js'),
-          },
-          { jscodeshift },
-          {},
-        );
+    it('transforms string props as needed', () => {
+      const actual = transform(
+        {
+          source: read('./actual-string-values.spec.js'),
+          path: require.resolve('./actual-string-values.spec.js'),
+        },
+        { jscodeshift },
+        {},
+      );
 
-        const expected = read('./expected-string-values.spec.js');
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected-string-values.spec.js');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
+    });
 
-      it('should be idempotent for string', () => {
-        const actual = transform(
-          {
-            source: read('./expected-string-values.spec.js'),
-            path: require.resolve('./expected-string-values.spec.js'),
-          },
-          { jscodeshift },
-          {},
-        );
+    it('should be idempotent for string', () => {
+      const actual = transform(
+        {
+          source: read('./expected-string-values.spec.js'),
+          path: require.resolve('./expected-string-values.spec.js'),
+        },
+        { jscodeshift },
+        {},
+      );
 
-        const expected = read('./expected-string-values.spec.js');
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
+      const expected = read('./expected-string-values.spec.js');
+      expect(actual).to.equal(expected, 'The transformed version should be correct');
     });
   });
 });
