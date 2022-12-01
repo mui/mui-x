@@ -76,7 +76,7 @@ describe('<DesktopNextDatePicker />', () => {
     expect(handleChange.callCount).to.equal(1);
   });
 
-  it('prop `showToolbar` – renders toolbar in desktop mode', () => {
+  it.only('prop `showToolbar` – renders toolbar in desktop mode', () => {
     render(
       <DesktopNextDatePicker
         open
