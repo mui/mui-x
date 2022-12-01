@@ -40,9 +40,9 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         />,
       );
 
-      expect(screen.queryByText('2018').getAttribute('disabled')).not.to.equal(null);
-      expect(screen.queryByText('2019').getAttribute('disabled')).to.equal(null);
-      expect(screen.queryByText('2017').getAttribute('disabled')).to.equal(null);
+      expect(screen.queryByText('2018')).to.have.attribute('disabled');
+      expect(screen.queryByText('2019')).not.to.have.attribute('disabled');
+      expect(screen.queryByText('2017')).not.to.have.attribute('disabled');
     });
 
     it('should apply disablePast', function test() {
@@ -56,15 +56,15 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       const nextYear = adapterToUse.addYears(now, 1);
       const prevYear = adapterToUse.addYears(now, -1);
 
-      expect(
-        screen.queryByText(adapterToUse.format(now, 'year')).getAttribute('disabled'),
-      ).to.equal(null);
-      expect(
-        screen.queryByText(adapterToUse.format(nextYear, 'year')).getAttribute('disabled'),
-      ).to.equal(null);
-      expect(
-        screen.queryByText(adapterToUse.format(prevYear, 'year')).getAttribute('disabled'),
-      ).not.to.equal(null);
+      expect(screen.queryByText(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+        'disabled',
+      );
+      expect(screen.queryByText(adapterToUse.format(nextYear, 'year'))).not.to.have.attribute(
+        'disabled',
+      );
+      expect(screen.queryByText(adapterToUse.format(prevYear, 'year'))).to.have.attribute(
+        'disabled',
+      );
     });
 
     it('should apply disableFuture', function test() {
@@ -78,15 +78,15 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       const nextYear = adapterToUse.addYears(now, 1);
       const prevYear = adapterToUse.addYears(now, -1);
 
-      expect(
-        screen.queryByText(adapterToUse.format(now, 'year')).getAttribute('disabled'),
-      ).to.equal(null);
-      expect(
-        screen.queryByText(adapterToUse.format(nextYear, 'year')).getAttribute('disabled'),
-      ).not.to.equal(null);
-      expect(
-        screen.queryByText(adapterToUse.format(prevYear, 'year')).getAttribute('disabled'),
-      ).to.equal(null);
+      expect(screen.queryByText(adapterToUse.format(now, 'year'))).not.to.have.attribute(
+        'disabled',
+      );
+      expect(screen.queryByText(adapterToUse.format(nextYear, 'year'))).to.have.attribute(
+        'disabled',
+      );
+      expect(screen.queryByText(adapterToUse.format(prevYear, 'year'))).not.to.have.attribute(
+        'disabled',
+      );
     });
 
     it('should apply minDate', function test() {
