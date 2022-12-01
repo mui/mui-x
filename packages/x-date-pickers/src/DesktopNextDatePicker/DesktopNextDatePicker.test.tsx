@@ -9,7 +9,7 @@ import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
 
 describe('<DesktopNextDatePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('Component slots: OpenPickerIcon', () => {
     it('should render custom component', () => {
@@ -76,7 +76,7 @@ describe('<DesktopNextDatePicker />', () => {
     expect(handleChange.callCount).to.equal(1);
   });
 
-  it.only('prop `showToolbar` – renders toolbar in desktop mode', () => {
+  it('prop `showToolbar` – renders toolbar in desktop mode', () => {
     render(
       <DesktopNextDatePicker
         open
@@ -85,7 +85,7 @@ describe('<DesktopNextDatePicker />', () => {
       />,
     );
 
-    // expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
   it('switches between views uncontrolled', () => {
