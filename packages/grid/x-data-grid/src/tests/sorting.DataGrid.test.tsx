@@ -57,7 +57,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(header).to.have.attribute('aria-sort', 'none');
 
     fireEvent.click(header);
-    expect(header).to.have.attribute('aria-sort', 'descending');
+    expect(header).to.have.attribute('aria-sort', 'ascending');
 
     fireEvent.click(header);
     expect(header).to.have.attribute('aria-sort', 'descending');

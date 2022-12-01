@@ -27,10 +27,7 @@ const expectAriaCoordinate = (
   { colIndex, rowIndex }: { colIndex: number; rowIndex: number },
 ) => {
   expect(element).to.have.attribute('aria-colindex', colIndex.toString());
-  expect(element?.closest('[role="row"]')).to.have.attribute(
-    'aria-rowindex-test',
-    rowIndex.toString(),
-  );
+  expect(element?.closest('[role="row"]')).to.have.attribute('aria-rowindex', rowIndex.toString());
 };
 
 describe('<DataGrid /> - Keyboard', () => {

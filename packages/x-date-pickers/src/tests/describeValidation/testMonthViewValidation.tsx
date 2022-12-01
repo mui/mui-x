@@ -33,7 +33,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(screen.getByText('Apr')).to.have.attribute('disabled1');
+      expect(screen.getByText('Apr')).to.have.attribute('disabled');
       expect(screen.getByText('Jan')).not.to.have.attribute('disabled');
       expect(screen.getByText('May')).not.to.have.attribute('disabled');
     });
