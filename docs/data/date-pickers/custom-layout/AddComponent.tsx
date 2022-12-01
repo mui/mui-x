@@ -9,6 +9,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -57,11 +58,11 @@ export default function AddComponent() {
           layout: ({ toolbar, actionBar, content }) => ({
             sx: {
               // Modify DOM structure
-              '& .MuiPickersViewLayout-actionBar': {
+              [`.${pickersViewLayoutClasses.actionBar}`]: {
                 gridColumn: 1,
                 gridRow: 2,
               },
-              '& .MuiPickersViewLayout-toolbar': {
+              [`.${pickersViewLayoutClasses.toolbar}`]: {
                 gridColumn: 2,
                 gridRow: 1,
               },

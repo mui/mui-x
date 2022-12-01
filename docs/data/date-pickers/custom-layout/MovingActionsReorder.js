@@ -8,6 +8,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 
+import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
+
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
   const actions = [
@@ -44,7 +46,7 @@ export default function MovingActionsReorder() {
         componentsProps={{
           layout: ({ toolbar, content, actionBar }) => ({
             sx: {
-              '& .MuiPickersViewLayout-actionBar': {
+              [`.${pickersViewLayoutClasses.actionBar}`]: {
                 gridColumn: 1,
                 gridRow: 2,
               },
