@@ -3,19 +3,11 @@ import { expect } from 'chai';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { createPickerRenderer, openPicker, stubMatchMedia } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<NextDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(NextDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
-  }));
+  const { render } = createPickerRenderer();
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {

@@ -1,6 +1,16 @@
 import * as React from 'react';
-import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import {
+  createRenderer,
+  screen,
+  RenderOptions,
+  userEvent,
+  act,
+  fireEvent,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,9 +22,7 @@ import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import sinon from 'sinon';
-import { expect } from 'chai';
-import { unstable_useControlled as useControlled } from '@mui/utils';
+import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
 
 export type AdapterName =
   | 'date-fns'
@@ -131,7 +139,7 @@ export function createPickerRenderer({
   };
 }
 
-type OpenPickerParams =
+export type OpenPickerParams =
   | {
       type: 'date' | 'date-time' | 'time';
       variant: 'mobile' | 'desktop';
@@ -178,13 +186,28 @@ export const getClockMouseEvent = (
   return event;
 };
 
-// TODO: Handle dynamic values
-export const getClockTouchEvent = () => {
+export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | '24hours') => {
+  // TODO: Handle 24 hours clock
+  if (view === '24hours') {
+    throw new Error('Do not support 24 hours clock yet');
+  }
+
+  let itemCount: number;
+  if (view === 'minutes') {
+    itemCount = 60;
+  } else {
+    itemCount = 12;
+  }
+
+  const angle = Math.PI / 2 - (Math.PI * 2 * value) / itemCount;
+  const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
+  const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
+
   return {
     changedTouches: [
       {
-        clientX: 20,
-        clientY: 15,
+        clientX,
+        clientY,
       },
     ],
   };
@@ -246,5 +269,38 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 
-export const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/\u200e|\u2068|\u2069/g, '')).to.equal(expectedValue);
+export const expectInputValue = (
+  input: HTMLInputElement,
+  expectedValue: string,
+  shouldRemoveDashSpaces: boolean = false,
+) => {
+  let value = input.value.replace(/\u200e|\u2068|\u2069/g, '');
+  if (shouldRemoveDashSpaces) {
+    value = value.replace(/ \/ /g, '/');
+  }
+
+  return expect(value).to.equal(expectedValue);
+};
+
+export const buildFieldInteractions = ({
+  clock,
+}: {
+  // TODO: Export `Clock` from monorepo
+  clock: ReturnType<typeof createRenderer>['clock'];
+}) => {
+  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      fireEvent.click(input);
+
+      clock.runToLast();
+    });
+  };
+
+  return { clickOnInput };
+};
