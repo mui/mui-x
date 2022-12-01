@@ -1,0 +1,14 @@
+<GridItem label="DatePicker">
+  <NextDatePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day']}
+  />
+</GridItem>
+<GridItem label="DateTimePicker">
+  <NextDateTimePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day', 'hours', 'minutes']}
+  />
+</GridItem>
