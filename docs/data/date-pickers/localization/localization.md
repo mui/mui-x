@@ -1,5 +1,9 @@
 ---
-title: Date and Time pickers - Localization
+product: date-pickers
+title: Date and Time Pickers - Localization
+components: LocalizationProvider
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Date and Time Pickers - Localization
@@ -118,25 +122,7 @@ If you pass a locale through `LocalizationProvider` or the theme, and you provid
 
 ## Supported locales
 
-| Locale                  | BCP 47 language tag | Import name |
-| :---------------------- | :------------------ | :---------- |
-| English (United States) | en-US               | `enUS`      |
-| Finnish                 | fi-FI               | `fiFI`      |
-| French                  | fr-FR               | `frFR`      |
-| German                  | de-DE               | `deDE`      |
-| Icelandic               | is-IS               | `isIS`      |
-| Italian                 | it-IT               | `itIT`      |
-| Japanese                | ja-JP               | `jaJP`      |
-| Korean                  | ko-KR               | `koKR`      |
-| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
-| Persian                 | fa-IR               | `faIR`      |
-| Polish                  | pl-PL               | `plPL`      |
-| Spanish                 | es-ES               | `esES`      |
-| Swedish                 | sv-SE               | `svSE`      |
-| Turkish                 | tr-TR               | `trTr`      |
-| Dutch                   | nl-NL               | `nlNL`      |
-| Ukrainian               | uk-UA               | `ukUA`      |
-| Urdu (Pakistan)         | ur-PK               | `urPK`      |
+{{"demo": "PickersLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/x-date-pickers/src/locales) in the GitHub repository.
 

@@ -10,6 +10,7 @@
     "defaultValue": "The default value. Used when the component is not controlled.",
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
+    "disableDragEditing": "If <code>true</code>, editing dates by dragging is disabled.",
     "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",

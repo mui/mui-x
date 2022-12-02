@@ -77,12 +77,6 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Footer: React.JSXElementConstructor<any>;
   /**
-   * Header component rendered above the grid column header bar.
-   * Prefer using the `Toolbar` slot. You should never need to use this slot.
-   * @default GridHeader
-   */
-  Header: React.JSXElementConstructor<any>; // TODO remove.
-  /**
    * Toolbar component rendered inside the Header component.
    * @default null
    */

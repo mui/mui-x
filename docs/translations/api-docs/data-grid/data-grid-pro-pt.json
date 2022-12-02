@@ -663,7 +663,6 @@
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
-    "Header": "Header component rendered above the grid column header bar.\nPrefer using the <code>Toolbar</code> slot. You should never need to use this slot.",
     "Toolbar": "Toolbar component rendered inside the Header component.",
     "PreferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "LoadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",

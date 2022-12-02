@@ -765,7 +765,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
-    expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+    expect(screen.getByRole('grid')).to.have.attribute('aria-rowcount', `${rowCount + 1}`); // +1 for header row
   });
 
   // https://github.com/mui/mui-x/issues/5845
@@ -775,7 +775,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
     );
 
-    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
-    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(0)!).to.have.class(className);
+    expect(getRowById(1)!).to.have.class(className);
   });
 });

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import useControlled from '@mui/utils/useControlled';
-import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
   FieldSection,
@@ -40,7 +39,7 @@ export const useFieldState = <
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
-  const utils = useUtils<TDate>() as MuiPickersAdapter<TDate>;
+  const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
   const theme = useTheme();

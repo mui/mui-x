@@ -8,19 +8,11 @@ import {
   stubMatchMedia,
   expectInputValue,
 } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<NextDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(NextDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
-  }));
+  const { render } = createPickerRenderer();
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
