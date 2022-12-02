@@ -15,13 +15,17 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
   describe('month view:', () => {
     const defaultProps = {
       onChange: () => {},
-      renderInput: (params) => <TextField {...params} />,
-      open: true,
-      views: ['month'],
-      view: 'month',
-      openTo: 'month',
-      reduceAnimations: true,
-      showToolbar: false,
+      ...(views.length > 1 && {
+        views: ['month'],
+        view: 'month',
+        openTo: 'month',
+      }),
+      ...(componentFamily !== 'calendar' && {
+        renderInput: (params) => <TextField {...params} />,
+        open: true,
+        reduceAnimations: true,
+        showToolbar: false,
+      }),
     };
 
     it('should apply shouldDisableMonth', function test() {

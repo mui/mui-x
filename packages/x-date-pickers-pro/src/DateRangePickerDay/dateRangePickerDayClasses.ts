@@ -28,6 +28,8 @@ export interface DateRangePickerDayClasses {
   dayInsideRangeInterval: string;
   /** Styles applied to the day element if `selected=false`. */
   notSelectedDate: string;
+  /** Styles applied to the day element if `isDragging=true`. */
+  dayDragging: string;
 }
 
 export type DateRangePickerDayClassKey = keyof DateRangePickerDayClasses;
@@ -51,5 +53,6 @@ export const dateRangePickerDayClasses: DateRangePickerDayClasses = generateUtil
     'dayOutsideRangeInterval',
     'dayInsideRangeInterval',
     'notSelectedDate',
+    'dayDragging',
   ],
 );

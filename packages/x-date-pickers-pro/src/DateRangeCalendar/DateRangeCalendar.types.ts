@@ -112,11 +112,16 @@ export interface DateRangeCalendarProps<TDate>
    * @default 2
    */
   calendars?: 1 | 2 | 3;
+  /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing?: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
-  'reduceAnimations' | 'calendars' | keyof BaseDateValidationProps<TDate>
+  'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
 >;
 
 export type ExportedDateRangeCalendarProps<TDate> = Omit<

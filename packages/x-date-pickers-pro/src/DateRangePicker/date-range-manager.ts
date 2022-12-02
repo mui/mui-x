@@ -6,6 +6,17 @@ interface CalculateRangeChangeOptions<TDate> {
   range: DateRange<TDate>;
   newDate: TDate | null;
   currentlySelectingRangeEnd: 'start' | 'end';
+  /**
+   * Should allow flipping range `start` and `end` dates if the `newDate` would result in a new range creation.
+   *
+   * It is used to allow dragging range `start` date past `end` date essentially becoming the new `end` date and vice versa.
+   */
+  allowRangeFlip?: boolean;
+}
+
+interface CalculateRangeChangeResponse<TDate> {
+  nextSelection: 'start' | 'end';
+  newRange: DateRange<TDate>;
 }
 
 export function calculateRangeChange<TDate>({
@@ -13,20 +24,24 @@ export function calculateRangeChange<TDate>({
   range,
   newDate: selectedDate,
   currentlySelectingRangeEnd,
-}: CalculateRangeChangeOptions<TDate>): {
-  nextSelection: 'start' | 'end';
-  newRange: DateRange<TDate>;
-} {
+  allowRangeFlip = false,
+}: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
 
   if (currentlySelectingRangeEnd === 'start') {
+    const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
+      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
+      : { nextSelection: 'end', newRange: [selectedDate, null] };
     return Boolean(end) && utils.isAfter(selectedDate!, end!)
-      ? { nextSelection: 'end', newRange: [selectedDate, null] }
+      ? truthyResult
       : { nextSelection: 'end', newRange: [selectedDate, end] };
   }
 
+  const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
+    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
+    : { nextSelection: 'end', newRange: [selectedDate, null] };
   return Boolean(start) && utils.isBefore(selectedDate!, start!)
-    ? { nextSelection: 'end', newRange: [selectedDate, null] }
+    ? truthyResult
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }
 

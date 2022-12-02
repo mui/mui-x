@@ -1,5 +1,5 @@
-import { expect } from 'chai';
 import * as React from 'react';
+import { expect } from 'chai';
 import { screen } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
@@ -23,9 +23,6 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
       ...(componentFamily !== 'calendar' && {
         renderInput: (params) => <TextField {...params} />,
         open: true,
-        views: ['year'],
-        view: 'year',
-        openTo: 'year',
         reduceAnimations: true,
         showToolbar: false,
       }),
