@@ -9,7 +9,7 @@ import {
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
-describe('<DateTimeField /> - Describes', () => {
+describe.only('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const { clickOnInput } = buildFieldInteractions({ clock });
@@ -43,7 +43,7 @@ describe('<DateTimeField /> - Describes', () => {
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 5); // Update the day
+      clickOnInput(input, 10); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;
     },
