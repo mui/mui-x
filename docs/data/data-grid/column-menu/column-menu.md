@@ -26,7 +26,7 @@ You can customize the column menu either by passing `components` and `components
 
 **components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
 
-**componentsProps**: Every item has a `displayOrder` based which it will be placed before or after other items in the menu. It can be overriden using `componentsProps`. You can also use this to pass extra props to custom column menu components.
+**componentsProps**: Use this prop to override or pass [`displayOrder`](/x/react-data-grid/column-menu/#reordering-menu-items) for column menu items. You can also use this to pass extra props to custom column menu components.
 
 :::warning
 The `components` prop uses pascal case (`ColumnMenuFilterItem`), while `componentsProps` uses camel case (`columnMenuFilterItem`).
@@ -99,7 +99,11 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 
 ### Reordering menu items
 
-You can pass `displayOrder` for the specific item in `componentsProps` to re-order.
+Every item is assigned a `displayOrder` based on which it is shown before or after other items. It works in ascending order, the smaller the number is, the item is earlier in the list. For new items default value for `displayOrder` is **100**.
+
+You can override `displayOrder` for the default or new items in `componentsProps` to re-order.
+
+Check [this table](/x/react-data-grid/column-menu/#column-menu-components-and-their-configurations) to see default `displayOrder` for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {

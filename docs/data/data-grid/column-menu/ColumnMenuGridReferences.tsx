@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  DataGridPremium,
-  useGridApiRef,
-  useKeepGroupedColumnsHidden,
-  GridRenderCellParams,
-} from '@mui/x-data-grid-premium';
+import { DataGridPremium, GridRenderCellParams } from '@mui/x-data-grid-premium';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -80,11 +76,10 @@ const columns = [
       <ComponentTag value={params.value} plan={params.row.plan} />
     ),
   },
-  { field: 'design', headerName: 'Menu Design' },
   {
     field: 'defaultComponent',
     headerName: 'Default Components',
-    width: 280,
+    width: 300,
     renderCell: (params: GridRenderCellParams<string>) => (
       <ComponentTag value={params.value} />
     ),
@@ -92,12 +87,12 @@ const columns = [
   { field: 'displayOrder', headerName: 'Display Order', width: 140, type: 'number' },
 ];
 
-const rows = [
+const allRows = [
   {
     id: 1,
     slot: 'ColumnMenuSortItem',
     defaultComponent: 'GridColumnMenuSortItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 0,
     plan: 'Community',
   },
@@ -105,7 +100,7 @@ const rows = [
     id: 2,
     slot: 'ColumnMenuSortItem',
     defaultComponent: 'GridColumnMenuSortItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 0,
     plan: 'Community',
   },
@@ -113,7 +108,7 @@ const rows = [
     id: 3,
     slot: 'ColumnMenuFilterItem',
     defaultComponent: 'GridColumnMenuFilterItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 10,
     plan: 'Community',
   },
@@ -121,7 +116,7 @@ const rows = [
     id: 4,
     slot: 'ColumnMenuFilterItem',
     defaultComponent: 'GridColumnMenuFilterItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 10,
     plan: 'Community',
   },
@@ -129,7 +124,7 @@ const rows = [
     id: 5,
     slot: 'ColumnMenuHideItem',
     defaultComponent: 'GridColumnMenuHideItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 20,
     plan: 'Community',
   },
@@ -137,7 +132,7 @@ const rows = [
     id: 6,
     slot: 'ColumnMenuHideItem',
     defaultComponent: 'GridColumnMenuHideItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 20,
     plan: 'Community',
   },
@@ -145,7 +140,7 @@ const rows = [
     id: 7,
     slot: 'ColumnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 30,
     plan: 'Community',
   },
@@ -153,7 +148,7 @@ const rows = [
     id: 8,
     slot: 'ColumnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 30,
     plan: 'Community',
   },
@@ -161,7 +156,7 @@ const rows = [
     id: 9,
     slot: 'ColumnMenuPinningItem',
     defaultComponent: 'GridColumnMenuPinningItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 5,
     plan: 'Pro',
   },
@@ -169,7 +164,7 @@ const rows = [
     id: 10,
     slot: 'ColumnMenuPinningItem',
     defaultComponent: 'GridColumnMenuPinningItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 35,
     plan: 'Pro',
   },
@@ -177,7 +172,7 @@ const rows = [
     id: 11,
     slot: 'ColumnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 17,
     plan: 'Premium',
   },
@@ -185,7 +180,7 @@ const rows = [
     id: 12,
     slot: 'ColumnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 37,
     plan: 'Premium',
   },
@@ -193,7 +188,7 @@ const rows = [
     id: 13,
     slot: 'ColumnMenuGroupingItem',
     defaultComponent: 'GridColumnMenuRowGroupItem,GridColumnMenuRowUngroupItem',
-    design: 'Default',
+    design: 'default',
     displayOrder: 13,
     plan: 'Premium',
   },
@@ -202,35 +197,49 @@ const rows = [
     slot: 'ColumnMenuGroupingItem',
     defaultComponent:
       'GridColumnMenuRowGroupItemSimple,GridColumnMenuRowUngroupItemSimple',
-    design: 'Simple',
+    design: 'simple',
     displayOrder: 33,
     plan: 'Premium',
   },
 ];
 
 export default function ColumnMenuGridReferences() {
-  const apiRef = useGridApiRef();
+  const [menuDesign, setMenuDesign] = React.useState<'default' | 'simple'>(
+    'default',
+  );
 
-  const initialState = useKeepGroupedColumnsHidden({
-    apiRef,
-    initialState: {
-      rowGrouping: {
-        model: ['design'],
-      },
-    },
-  });
+  const rows = React.useMemo(
+    () => allRows.filter((row) => row.design === menuDesign),
+    [menuDesign],
+  );
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ width: '100%' }}>
+      <Stack
+        sx={{ width: '100%', mb: 1 }}
+        direction="row"
+        alignItems="flex-start"
+        columnGap={1}
+      >
+        <Chip
+          label="Default Menu"
+          onClick={() => setMenuDesign('default')}
+          variant="outlined"
+          color={menuDesign === 'default' ? 'primary' : undefined}
+        />
+        <Chip
+          label="Simple Menu"
+          onClick={() => setMenuDesign('simple')}
+          variant="outlined"
+          color={menuDesign === 'simple' ? 'primary' : undefined}
+        />
+      </Stack>
       <DataGridPremium
         columns={columns}
         rows={rows}
-        initialState={initialState}
         disableColumnMenu
+        autoHeight
         hideFooter
-        isGroupExpandedByDefault={(node) => node.groupingKey === 'Default'}
-        groupingColDef={{
-          hideDescendantCount: true,
-        }}
       />
     </div>
   );
