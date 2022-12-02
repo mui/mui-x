@@ -112,17 +112,17 @@ npx @mui/x-codemod v6.0.0/text-props-to-localeText <path>
 If you were always using the same text value in all your components, consider moving those translation from the component to the `LocalizationProvider` by hand.
 
 ```diff
-<LocalizationProvider
-  dateAdapter={AdapterDayjs}
+ <LocalizationProvider
+   dateAdapter={AdapterDayjs}
 + localeText={{ cancelButtonLabel: "Cancelar" }}
->
- <DatePicker
--  localeText={{ cancelButtonLabel: "Cancelar" }}
- />
- <DateTimePicker
--  localeText={{ cancelButtonLabel: "Cancelar" }}
- />
-</LocalizationProvider>
+ >
+   <DatePicker
+-    localeText={{ cancelButtonLabel: "Cancelar" }}
+   />
+   <DateTimePicker
+-    localeText={{ cancelButtonLabel: "Cancelar" }}
+   />
+ </LocalizationProvider>
 ```
 
 You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#rename-the-locale-prop-on-localizationprovider).
