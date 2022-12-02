@@ -49,6 +49,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
+      // We call event.stopPropagation to avoid unfolding the row and also scrolling to bottom
+      // TODO: Remove and add a check inside useGridKeyboardNavigation
       event.stopPropagation();
     }
     apiRef.current.publishEvent('cellKeyDown', props, event);
@@ -61,6 +63,17 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   };
 
   const marginLeft = rootProps.rowGroupingColumnMode === 'multiple' ? 0 : rowNode.depth * 2;
+
+  let cellContent: React.ReactNode;
+
+  const colDef = apiRef.current.getColumn(rowNode.groupingField!);
+  if (typeof colDef.renderCell === 'function') {
+    cellContent = colDef.renderCell(props);
+  } else if (typeof formattedValue !== 'undefined') {
+    cellContent = <span>{formattedValue}</span>;
+  } else {
+    cellContent = <span>{rowNode.groupingKey}</span>;
+  }
 
   return (
     <Box className={classes.root} sx={{ ml: marginLeft }}>
@@ -81,10 +94,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
           </IconButton>
         )}
       </div>
-      <span>
-        {formattedValue === undefined ? rowNode.groupingKey : formattedValue}
-        {!hideDescendantCount && filteredDescendantCount > 0 ? ` (${filteredDescendantCount})` : ''}
-      </span>
+      {cellContent}
+      {!hideDescendantCount && filteredDescendantCount > 0 ? (
+        <span style={{ whiteSpace: 'pre' }}> ({filteredDescendantCount})</span>
+      ) : null}
     </Box>
   );
 }

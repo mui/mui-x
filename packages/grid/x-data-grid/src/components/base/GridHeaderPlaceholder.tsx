@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { GridHeader } from '../GridHeader';
 
 export function GridHeaderPlaceholder() {
-  const rootProps = useGridRootProps();
-
   return (
     <div>
-      <rootProps.components.Header {...rootProps.componentsProps?.header} />
+      <GridHeader />
     </div>
   );
 }

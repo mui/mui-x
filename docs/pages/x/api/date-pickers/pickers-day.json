@@ -30,6 +30,9 @@
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers/src/PickersDay/PickersDay.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersDay" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "PickersDay" }
+  ]
 }

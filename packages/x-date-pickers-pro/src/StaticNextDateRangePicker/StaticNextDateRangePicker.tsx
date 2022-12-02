@@ -6,6 +6,7 @@ import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/s
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { renderDateRangeView } from '../internal/utils/views';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRange } from '../internal/models';
 
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -36,7 +37,7 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker({
+  const { renderPicker } = useStaticPicker<DateRange<TDate>, TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -99,6 +100,11 @@ StaticNextDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
+  /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
@@ -118,6 +124,10 @@ StaticNextDateRangePicker.propTypes = {
    * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

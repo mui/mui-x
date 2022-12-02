@@ -114,6 +114,8 @@ export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
   TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
   DayValidationProps,
 } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
@@ -144,7 +146,7 @@ export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
-export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
+export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';

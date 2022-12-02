@@ -54,13 +54,13 @@ describe('<DataGrid /> - Sorting', () => {
       </div>,
     );
     const header = getColumnHeaderCell(0);
-    expect(header.getAttribute('aria-sort')).to.equal('none');
+    expect(header).to.have.attribute('aria-sort', 'none');
 
     fireEvent.click(header);
-    expect(header.getAttribute('aria-sort')).to.equal('ascending');
+    expect(header).to.have.attribute('aria-sort', 'ascending');
 
     fireEvent.click(header);
-    expect(header.getAttribute('aria-sort')).to.equal('descending');
+    expect(header).to.have.attribute('aria-sort', 'descending');
   });
 
   it('should update the order server side', () => {

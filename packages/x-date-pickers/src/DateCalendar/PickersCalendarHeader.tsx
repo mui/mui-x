@@ -171,7 +171,7 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
  * @ignore - do not document.
  */
 export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps<TDate>) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });

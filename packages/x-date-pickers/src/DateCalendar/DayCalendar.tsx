@@ -6,7 +6,7 @@ import { styled, useTheme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
-import { useUtils, useNow } from '../internals/hooks/useUtils';
+import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
@@ -60,6 +60,10 @@ export interface ExportedDayCalendarProps<TDate>
    */
   dayOfWeekFormatter?: (day: string) => string;
   /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber?: boolean;
+  /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
    * @default undefined
@@ -104,6 +108,8 @@ const useUtilityClasses = (ownerState: DayCalendarProps<any>) => {
     slideTransition: ['slideTransition'],
     monthContainer: ['monthContainer'],
     weekContainer: ['weekContainer'],
+    weekNumberLabel: ['weekNumberLabel'],
+    weekNumber: ['weekNumber'],
   };
 
   return composeClasses(slots, getDayCalendarUtilityClass, classes);
@@ -135,7 +141,39 @@ const PickersCalendarWeekDayLabel = styled(Typography, {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
+}));
+
+const PickersCalendarWeekNumberLabel = styled(Typography, {
+  name: 'MuiDayPicker',
+  slot: 'WeekNumberLabel',
+  overridesResolver: (_, styles) => styles.weekNumberLabel,
+})(({ theme }) => ({
+  width: 36,
+  height: 40,
+  margin: '0 2px',
+  textAlign: 'center',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  color: theme.palette.text.disabled,
+}));
+
+const PickersCalendarWeekNumber = styled(Typography, {
+  name: 'MuiDayPicker',
+  slot: 'WeekNumber',
+  overridesResolver: (_, styles) => styles.weekNumber,
+})(({ theme }) => ({
+  ...theme.typography.caption,
+  width: DAY_SIZE,
+  height: DAY_SIZE,
+  padding: 0,
+  margin: `0 ${DAY_MARGIN}px`,
+  color: theme.palette.text.disabled,
+  fontSize: '0.75rem',
+  alignItems: 'center',
+  justifyContent: 'center',
+  display: 'inline-flex',
 }));
 
 const PickersCalendarLoadingContainer = styled('div', {
@@ -223,6 +261,8 @@ function WrappedDay<TDate extends unknown>({
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       selectedDays,
+      // it is used in date range dragging logic by accessing `dataset.timestamp`
+      'data-timestamp': utils.toJsDate(day).valueOf(),
     },
     ownerState: { ...parentProps, day },
   });
@@ -276,6 +316,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     hasFocus,
     onFocusedViewChange,
     gridLabelId,
+    displayWeekNumber,
     fixedWeekNumber,
   } = props;
 
@@ -288,6 +329,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     disablePast,
     disableFuture,
   });
+
+  const localeText = useLocaleText<TDate>();
 
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,
@@ -462,6 +505,16 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   return (
     <div role="grid" aria-labelledby={gridLabelId}>
       <PickersCalendarDayHeader role="row" className={classes.header}>
+        {displayWeekNumber && (
+          <PickersCalendarWeekNumberLabel
+            variant="caption"
+            role="columnheader"
+            aria-label={localeText.calendarWeekNumberHeaderLabel}
+            className={classes.weekNumberLabel}
+          >
+            {localeText.calendarWeekNumberHeaderText}
+          </PickersCalendarWeekNumberLabel>
+        )}
         {utils.getWeekdays().map((day, i) => (
           <PickersCalendarWeekDayLabel
             key={day + i.toString()}
@@ -501,6 +554,17 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
               >
+                {displayWeekNumber && (
+                  <PickersCalendarWeekNumber
+                    className={classes.weekNumber}
+                    role="rowheader"
+                    aria-label={localeText.calendarWeekNumberAriaLabelText(
+                      utils.getWeekNumber(week[0]),
+                    )}
+                  >
+                    {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
+                  </PickersCalendarWeekNumber>
+                )}
                 {week.map((day) => (
                   <WrappedDay
                     key={(day as any).toString()}

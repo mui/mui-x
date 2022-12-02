@@ -1,0 +1,9 @@
+<MobileNextDatePicker
+  label="For mobile"
+  defaultValue={dayjs('2022-04-07')}
+/>
+<DesktopNextDatePicker
+  label="For desktop"
+  defaultValue={dayjs('2022-04-07')}
+/>
+<NextDatePicker label="Responsive" defaultValue={dayjs('2022-04-07')} />

@@ -91,6 +91,11 @@ NextDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
+  /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
@@ -110,6 +115,10 @@ NextDateRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

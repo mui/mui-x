@@ -1,0 +1,6 @@
+<DatePicker
+  mask="____/__/__"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  renderInput={(params) => <TextField {...params} />}
+/>
