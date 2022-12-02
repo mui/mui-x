@@ -1,21 +1,18 @@
-// import { urPK as urPKCore } from '@mui/material/locale';
+import { urPK as urPKCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-// import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
-// TODO Uncomment commented lines after https://github.com/mui/material-ui/pull/35154 is merged
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const urPKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'کوئی قطاریں نہیں',
   noResultsOverlayLabel: 'کوئی نتائج نہیں',
-  errorOverlayDefaultLabel: 'ایک مسئلہ ہو گیا',
 
   // Density selector toolbar button text
   toolbarDensity: 'کثافت',
   toolbarDensityLabel: 'کثافت',
-  // toolbarDensityCompact: 'Compact',
-  // toolbarDensityStandard: 'Standard',
-  // toolbarDensityComfortable: 'Comfortable',
+  toolbarDensityCompact: 'تنگ',
+  toolbarDensityStandard: 'درمیانہ',
+  toolbarDensityComfortable: 'مناسب',
 
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
@@ -51,10 +48,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
   filterPanelDeleteIconLabel: 'ختم کریں',
-  // filterPanelLinkOperator: 'Logic operator',
-  // filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
-  // filterPanelOperatorAnd: 'And',
-  // filterPanelOperatorOr: 'Or',
+  filterPanelLogicOperator: 'لاجک آپریٹر',
+  filterPanelOperator: 'آپریٹر',
+  filterPanelOperatorAnd: 'اور',
+  filterPanelOperatorOr: 'یا',
   filterPanelColumns: 'کالمز',
   filterPanelInputLabel: 'ویلیو',
   filterPanelInputPlaceholder: 'ویلیو کو فلٹر کریں',
@@ -82,6 +79,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'مینیو',
   columnMenuShowColumns: 'کالم دکھائیں',
+  columnMenuManageColumns: 'کالم مینج کریں',
   columnMenuFilter: 'فلٹر',
   columnMenuHideColumn: 'چھپائیں',
   columnMenuUnsort: 'sort ختم کریں',
@@ -92,7 +90,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} فعال فلٹرز` : `${count} فلٹرز فعال`,
   columnHeaderFiltersLabel: 'فلٹرز دکھائیں',
-  // columnHeaderSortIconLabel: 'Sort',
+  columnHeaderSortIconLabel: 'Sort',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -106,7 +104,7 @@ const urPKGrid: Partial<GridLocaleText> = {
     `${totalCount.toLocaleString()} میں سے ${visibleCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
+  checkboxSelectionHeaderName: 'چیک باکس منتخب کریں',
   checkboxSelectionSelectAllRows: 'تمام قطاریں منتخب کریں',
   checkboxSelectionUnselectAllRows: 'تمام قطاریں نامنتخب کریں ',
   checkboxSelectionSelectRow: 'قطار منتخب کریں',
@@ -135,23 +133,20 @@ const urPKGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} سے گروپ ختم کریں`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'ڈیٹیل پینل کھولیں / بند کریں',
   expandDetailPanel: 'پھیلائیں',
   collapseDetailPanel: 'تنگ کریں',
-
-  // Used core components translation keys
-  MuiTablePagination: {},
 
   // Row reordering text
   rowReorderingHeaderName: 'قطاروں کی ترتیب تبدیل کریں',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'size',
 };
 
-// export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
+export const urPK: Localization = getGridLocalization(urPKGrid, urPKCore);
