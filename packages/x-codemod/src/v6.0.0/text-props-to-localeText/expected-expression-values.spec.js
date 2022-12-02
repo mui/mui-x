@@ -240,7 +240,7 @@
     }} />
 
   {/* Stand alone */}
-  <CalendarPicker
+  <LocalizationProvider
     localeText={{
       cancelButtonLabel: custom_cancelText,
       okButtonLabel: custom_okText,
@@ -253,8 +253,8 @@
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
       nextMonth: custom_rightArrowButtonText
-    }} />
-  <ClockPicker
+    }}><CalendarPicker /></LocalizationProvider>
+  <LocalizationProvider
     localeText={{
       cancelButtonLabel: custom_cancelText,
       okButtonLabel: custom_okText,
@@ -267,5 +267,5 @@
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
       openNextView: custom_rightArrowButtonText
-    }} />
+    }}><ClockPicker /></LocalizationProvider>
 </div>;

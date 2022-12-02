@@ -42,6 +42,11 @@ const isViewSwitchComponent = {
   DesktopDateTimePicker: true,
 };
 
+const needsWrapper = {
+  ClockPicker: true,
+  CalendarPicker: true,
+};
+
 const impactedComponents = [
   'DateRangePicker',
   'CalendarPicker',
@@ -109,12 +114,31 @@ export default function transformer(file, api, options) {
         }
       });
       if (newLocaleText.length > 0) {
-        attributes.push(
-          j.jsxAttribute(
-            j.jsxIdentifier('localeText'),
-            j.jsxExpressionContainer(j.objectExpression(newLocaleText)),
-          ),
-        );
+        if (needsWrapper[componentName]) {
+          // From : https://www.codeshiftcommunity.com/docs/react/#wrapping-components
+
+          // Create a new JSXElement called "LocalizationProvider" and use the original component as children
+          const wrappedComponent = j.jsxElement(
+            j.jsxOpeningElement(j.jsxIdentifier('LocalizationProvider'), [
+              // Add the new localeText prop
+              j.jsxAttribute(
+                j.jsxIdentifier('localeText'),
+                j.jsxExpressionContainer(j.objectExpression(newLocaleText)),
+              ),
+            ]),
+            j.jsxClosingElement(j.jsxIdentifier('LocalizationProvider')),
+            [path.value], // Pass in the original component as children
+          );
+
+          j(path).replaceWith(wrappedComponent);
+        } else {
+          attributes.push(
+            j.jsxAttribute(
+              j.jsxIdentifier('localeText'),
+              j.jsxExpressionContainer(j.objectExpression(newLocaleText)),
+            ),
+          );
+        }
       }
     });
   });
