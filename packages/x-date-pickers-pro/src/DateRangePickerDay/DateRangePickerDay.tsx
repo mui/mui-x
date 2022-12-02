@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
+import { useUtils } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -393,6 +393,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
   onDaySelect: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -402,10 +403,6 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
-  /**
-   * Currently selected days.
-   */
-  selectedDays: PropTypes.array.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
@@ -418,21 +415,6 @@ DateRangePickerDayRaw.propTypes = {
   today: PropTypes.bool,
 } as any;
 
-const propsAreEqual = (
-  prevProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-  nextProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-) => {
-  return (
-    prevProps.isHighlighting === nextProps.isHighlighting &&
-    prevProps.isEndOfHighlighting === nextProps.isEndOfHighlighting &&
-    prevProps.isStartOfHighlighting === nextProps.isStartOfHighlighting &&
-    prevProps.isPreviewing === nextProps.isPreviewing &&
-    prevProps.isEndOfPreviewing === nextProps.isEndOfPreviewing &&
-    prevProps.isStartOfPreviewing === nextProps.isStartOfPreviewing &&
-    areDayPropsEqual(prevProps, nextProps)
-  );
-};
-
 /**
  *
  * Demos:
@@ -443,7 +425,4 @@ const propsAreEqual = (
  *
  * - [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)
  */
-export const DateRangePickerDay = React.memo(
-  DateRangePickerDayRaw,
-  propsAreEqual,
-) as DateRangePickerDayComponent;
+export const DateRangePickerDay = React.memo(DateRangePickerDayRaw) as DateRangePickerDayComponent;

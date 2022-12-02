@@ -114,6 +114,7 @@ const useDragRangeEvents = <TDate>({
       }
     }
   });
+
   const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
     if (!target) {
@@ -130,12 +131,14 @@ const useDragRangeEvents = <TDate>({
       }
     }
   });
+
   const handleDragEnter = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
     setRangeDragDay(resolveDateFromTarget(event.target, utils));
   });
+
   const handleTouchMove = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     const target = resolveElementFromTouch(event);
     if (!target) {
@@ -146,15 +149,18 @@ const useDragRangeEvents = <TDate>({
       setRangeDragDay(newDate);
     }
   });
+
   const handleDragLeave = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
   });
+
   const handleDragOver = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = 'move';
   });
+
   const handleTouchEnd = useEventCallback((event: React.TouchEvent<HTMLButtonElement>) => {
     setRangeDragDay(null);
     setIsDragging(false);
@@ -169,12 +175,14 @@ const useDragRangeEvents = <TDate>({
       onDrop(newDate);
     }
   });
+
   const handleDragEnd = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
     setIsDragging(false);
     setRangeDragDay(null);
   });
+
   const handleDrop = useEventCallback((event: React.DragEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -190,30 +198,18 @@ const useDragRangeEvents = <TDate>({
       onDrop(newDate);
     }
   });
-  return React.useMemo(
-    () => ({
-      onDragStart: handleDragStart,
-      onDragEnter: handleDragEnter,
-      onDragLeave: handleDragLeave,
-      onDragOver: handleDragOver,
-      onDragEnd: handleDragEnd,
-      onDrop: handleDrop,
-      onTouchStart: handleTouchStart,
-      onTouchMove: handleTouchMove,
-      onTouchEnd: handleTouchEnd,
-    }),
-    [
-      handleDragEnd,
-      handleDragEnter,
-      handleDragLeave,
-      handleDragOver,
-      handleDragStart,
-      handleDrop,
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-    ],
-  );
+
+  return {
+    onDragStart: handleDragStart,
+    onDragEnter: handleDragEnter,
+    onDragLeave: handleDragLeave,
+    onDragOver: handleDragOver,
+    onDragEnd: handleDragEnd,
+    onDrop: handleDrop,
+    onTouchStart: handleTouchStart,
+    onTouchMove: handleTouchMove,
+    onTouchEnd: handleTouchEnd,
+  };
 };
 
 export const useDragRange = <TDate>({

@@ -361,13 +361,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     currentlySelectingRangeEnd: currentDatePosition,
   });
 
-  const handlePreviewDayChange = (newPreviewRequest: TDate) => {
-    if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
-      setRangePreviewDay(newPreviewRequest);
-    } else {
-      setRangePreviewDay(null);
-    }
-  };
+  const handleDayMouseEnter = useEventCallback(
+    (event: React.MouseEvent<HTMLDivElement>, newPreviewRequest: TDate) => {
+      if (!isWithinRange(utils, newPreviewRequest, valueDayRange)) {
+        setRangePreviewDay(newPreviewRequest);
+      } else {
+        setRangePreviewDay(null);
+      }
+    },
+  );
 
   const componentsForDayCalendar = {
     Day: DateRangePickerDay,
@@ -402,7 +404,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         isEndOfHighlighting: isDragging
           ? isEndOfRange(utils, day, draggingRange)
           : isSelectedEndDate,
-        onMouseEnter: () => handlePreviewDayChange(day),
+        onMouseEnter: handleDayMouseEnter,
         isDragging,
         onDragStart: isElementDraggable ? onDragStart : undefined,
         onTouchStart: isElementDraggable ? onTouchStart : undefined,
@@ -416,6 +418,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
 
+  const visibleMonths = React.useMemo(
+    () =>
+      Array.from({ length: calendars }).map((_, index) =>
+        utils.setMonth(
+          calendarState.currentMonth,
+          utils.getMonth(calendarState.currentMonth) + index,
+        ),
+      ),
+    [utils, calendarState.currentMonth, calendars],
+  );
+
   return (
     <DateRangeCalendarRoot
       ref={ref}
@@ -424,71 +437,67 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       {...other}
     >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-      {Array.from({ length: calendars }).map((_, index) => {
-        const monthOnIteration = utils.setMonth(
-          calendarState.currentMonth,
-          utils.getMonth(calendarState.currentMonth) + index,
-        );
-
-        return (
-          <DateRangeCalendarMonthContainer key={index} className={classes.monthContainer}>
-            {calendars === 1 ? (
-              <PickersCalendarHeader
-                views={['day']}
-                openView={'day'}
-                currentMonth={calendarState.currentMonth}
-                onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
-                minDate={minDateWithDisabled}
-                maxDate={maxDateWithDisabled}
-                disabled={disabled}
-                disablePast={disablePast}
-                disableFuture={disableFuture}
-                reduceAnimations={reduceAnimations}
-                components={components}
-                componentsProps={componentsProps}
-              />
-            ) : (
-              <DateRangeCalendarArrowSwitcher
-                onGoToPrevious={selectPreviousMonth}
-                onGoToNext={selectNextMonth}
-                isPreviousHidden={index !== 0}
-                isPreviousDisabled={isPreviousMonthDisabled}
-                previousLabel={localeText.previousMonth}
-                isNextHidden={index !== calendars - 1}
-                isNextDisabled={isNextMonthDisabled}
-                nextLabel={localeText.nextMonth}
-                components={components}
-                componentsProps={componentsProps}
-              >
-                {utils.format(monthOnIteration, 'monthAndYear')}
-              </DateRangeCalendarArrowSwitcher>
-            )}
-
-            <DayCalendarForRange<TDate>
-              key={index}
-              {...calendarState}
-              {...baseDateValidationProps}
-              {...commonViewProps}
-              onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
-              onFocusedDayChange={changeFocusedDay}
+      {visibleMonths.map((month, index) => (
+        <DateRangeCalendarMonthContainer
+          key={(month as any).toString()}
+          className={classes.monthContainer}
+        >
+          {calendars === 1 ? (
+            <PickersCalendarHeader
+              views={['day']}
+              openView={'day'}
+              currentMonth={calendarState.currentMonth}
+              onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
+              minDate={minDateWithDisabled}
+              maxDate={maxDateWithDisabled}
+              disabled={disabled}
+              disablePast={disablePast}
+              disableFuture={disableFuture}
               reduceAnimations={reduceAnimations}
-              selectedDays={value}
-              onSelectedDaysChange={handleSelectedDayChange}
-              currentMonth={monthOnIteration}
-              TransitionProps={CalendarTransitionProps}
-              shouldDisableDate={wrappedShouldDisableDate}
-              showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
-              dayOfWeekFormatter={dayOfWeekFormatter}
-              loading={loading}
-              renderLoading={renderLoading}
-              components={componentsForDayCalendar}
-              componentsProps={componentsPropsForDayCalendar}
-              autoFocus={autoFocus}
-              fixedWeekNumber={fixedWeekNumber}
+              components={components}
+              componentsProps={componentsProps}
             />
-          </DateRangeCalendarMonthContainer>
-        );
-      })}
+          ) : (
+            <DateRangeCalendarArrowSwitcher
+              onGoToPrevious={selectPreviousMonth}
+              onGoToNext={selectNextMonth}
+              isPreviousHidden={index !== 0}
+              isPreviousDisabled={isPreviousMonthDisabled}
+              previousLabel={localeText.previousMonth}
+              isNextHidden={index !== calendars - 1}
+              isNextDisabled={isNextMonthDisabled}
+              nextLabel={localeText.nextMonth}
+              components={components}
+              componentsProps={componentsProps}
+            >
+              {utils.format(month, 'monthAndYear')}
+            </DateRangeCalendarArrowSwitcher>
+          )}
+
+          <DayCalendarForRange<TDate>
+            key={index}
+            {...calendarState}
+            {...baseDateValidationProps}
+            {...commonViewProps}
+            onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
+            onFocusedDayChange={changeFocusedDay}
+            reduceAnimations={reduceAnimations}
+            selectedDays={value}
+            onSelectedDaysChange={handleSelectedDayChange}
+            currentMonth={month}
+            TransitionProps={CalendarTransitionProps}
+            shouldDisableDate={wrappedShouldDisableDate}
+            showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+            dayOfWeekFormatter={dayOfWeekFormatter}
+            loading={loading}
+            renderLoading={renderLoading}
+            components={componentsForDayCalendar}
+            componentsProps={componentsPropsForDayCalendar}
+            autoFocus={autoFocus}
+            fixedWeekNumber={fixedWeekNumber}
+          />
+        </DateRangeCalendarMonthContainer>
+      ))}
     </DateRangeCalendarRoot>
   );
 }) as DateRangeCalendarComponent;
