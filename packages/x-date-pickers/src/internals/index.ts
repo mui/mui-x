@@ -100,7 +100,9 @@ export type { WrapperVariant } from './components/wrappers/WrapperVariantContext
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export { useMaskedInput } from './hooks/useMaskedInput';
+export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';

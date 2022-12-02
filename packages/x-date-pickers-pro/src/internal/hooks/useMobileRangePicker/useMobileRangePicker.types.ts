@@ -7,14 +7,12 @@ import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
-  BaseNextNonStaticPickerProps,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
-  UsePickerValueNonStaticProps,
-  UsePickerViewsNonStaticProps,
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
+  MobileOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -46,10 +44,7 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate>
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface MobileRangeOnlyPickerProps<TDate>
-  extends UsePickerValueNonStaticProps<DateRange<TDate>>,
-    UsePickerViewsNonStaticProps,
-    BaseNextNonStaticPickerProps {}
+export interface MobileRangeOnlyPickerProps<TDate> extends MobileOnlyPickerProps<TDate> {}
 
 export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, TError>
   extends MobileRangeOnlyPickerProps<TDate>,

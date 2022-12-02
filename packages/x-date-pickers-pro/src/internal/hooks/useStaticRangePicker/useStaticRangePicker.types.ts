@@ -8,6 +8,7 @@ import {
   PickersSlotsComponent,
   PickersSlotsComponentsProps,
   ExportedBaseToolbarProps,
+  StaticOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 
@@ -21,13 +22,7 @@ export interface UseStaticRangePickerSlotsComponentsProps
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticRangeOnlyPickerProps {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default "mobile"
-   */
-  displayStaticWrapperAs: 'desktop' | 'mobile';
-}
+export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
 
 export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError>,
