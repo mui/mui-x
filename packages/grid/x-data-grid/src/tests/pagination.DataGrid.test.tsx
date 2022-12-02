@@ -477,10 +477,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // make sure there is no more pages.
       const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-      expect(nextPageBtn!.getAttribute('disabled')).not.to.equal(
-        null,
-        'next page should be disabled.',
-      );
+      expect(nextPageBtn!).not.to.have.attribute('disabled', 'false'); // next page should be disabled
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
