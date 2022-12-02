@@ -201,13 +201,14 @@ const useDragRangeEvents = <TDate>({
       return;
     }
 
+    setRangeDragDay(null);
+    setIsDragging(false);
+
     const target = resolveElementFromTouch(event, true);
     if (!target) {
       return;
     }
 
-    setRangeDragDay(null);
-    setIsDragging(false);
     // make sure the focused element is the element where touch ended
     target.focus();
     const newDate = resolveDateFromTarget(target, utils);

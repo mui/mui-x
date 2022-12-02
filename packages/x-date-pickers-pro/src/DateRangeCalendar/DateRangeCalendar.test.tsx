@@ -443,7 +443,7 @@ describe('<DateRangeCalendar />', () => {
         expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
       });
 
-      it.only('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
+      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
         if (!document.elementFromPoint) {
           this.skip();
         }
