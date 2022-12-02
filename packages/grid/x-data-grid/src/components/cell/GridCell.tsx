@@ -17,11 +17,9 @@ import {
 } from '../../models';
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridEventListener } from '../../models/events';
 import { FocusElement } from '../../models/params/gridCellParams';
 
 export interface GridCellProps<V = any, F = V> {
@@ -128,27 +126,6 @@ function GridCell(props: GridCellProps) {
   const rootProps = useGridRootProps();
   const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>(
-    (params) => {
-      if (params.id === rowId && params.field === field && cellRef.current) {
-        const rect = cellRef.current.getBoundingClientRect();
-
-        const isInViewPort =
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <= (window.innerHeight || cellRef.current.clientHeight) &&
-          rect.right <= (window.innerWidth || cellRef.current.clientWidth);
-
-        if (!isInViewPort) {
-          cellRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }
-    },
-    [rowId, field, cellRef],
-  );
-
-  useGridApiEventHandler(apiRef, 'cellFocusIn', handleCellFocusIn);
 
   const publishMouseUp = React.useCallback(
     (eventName: GridEvents) => (event: React.MouseEvent<HTMLDivElement>) => {
