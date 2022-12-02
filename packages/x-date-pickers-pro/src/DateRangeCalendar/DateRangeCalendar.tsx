@@ -26,7 +26,6 @@ import {
   WrapperVariantContext,
   PickerSelectionState,
 } from '@mui/x-date-pickers/internals';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
 import {
@@ -133,11 +132,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
-  const wrapperContext = React.useContext(WrapperVariantContext);
-  // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
-  // needed as a fallback when this component is used standalone and there is no `WrapperContext`
-  const isDesktopMediaQuery = useMediaQuery('@media (pointer: fine)', { defaultMatches: true });
-  const isDesktop = wrapperContext ? wrapperContext === 'desktop' : isDesktopMediaQuery;
+  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
 
   const {
     value: valueProp,
@@ -397,9 +392,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       }
 
       return {
-        isPreviewing: isDesktop ? isWithinRange(utils, day, previewingRange) : false,
-        isStartOfPreviewing: isDesktop ? isStartOfRange(utils, day, previewingRange) : false,
-        isEndOfPreviewing: isDesktop ? isEndOfRange(utils, day, previewingRange) : false,
+        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
+        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
+        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting: isDragging
           ? isStartOfRange(utils, day, draggingRange)
