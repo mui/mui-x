@@ -4,6 +4,8 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   file.source = transformLocalizationProviderRenameLocale(file, api, options);
+
+  // Should be run before the renaming of components such as `ClockPicker` to `TimeClock`.
   file.source = transformTextPropsToLocaleText(file, api, options);
 
   return file.source;
