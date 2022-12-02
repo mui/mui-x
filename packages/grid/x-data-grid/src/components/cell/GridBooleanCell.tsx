@@ -49,9 +49,8 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Icon = React.useMemo(
-    () =>
-      value ? rootProps.components.BooleanCellTrueIcon : rootProps.components.BooleanCellFalseIcon,
-    [rootProps.components.BooleanCellFalseIcon, rootProps.components.BooleanCellTrueIcon, value],
+    () => (value ? rootProps.slots.BooleanCellTrueIcon : rootProps.slots.BooleanCellFalseIcon),
+    [rootProps.slots.BooleanCellFalseIcon, rootProps.slots.BooleanCellTrueIcon, value],
   );
 
   return (

@@ -59,7 +59,7 @@ export default function InfiniteLoadingGrid() {
         loading={loading}
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}
-        components={{
+        slots={{
           LoadingOverlay: LinearProgress,
         }}
       />

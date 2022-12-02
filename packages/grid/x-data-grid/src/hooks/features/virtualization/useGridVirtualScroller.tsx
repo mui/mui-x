@@ -473,7 +473,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       }
 
       rows.push(
-        <rootProps.components.Row
+        <rootProps.slots.Row
           key={id}
           row={model}
           rowId={id}
@@ -491,7 +491,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           isLastVisible={lastVisibleRowIndex}
           position={position}
           {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
-          {...rootProps.componentsProps?.row}
+          {...rootProps.slotsProps?.row}
         />,
       );
     }

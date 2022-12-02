@@ -141,7 +141,7 @@ export default function CatalogOfEventsNoSnap() {
       getRowHeight={() => 'auto'}
       disableRowSelection
       hideFooter
-      components={{
+      slots={{
         Toolbar,
       }}
       sx={{

@@ -13,7 +13,7 @@ import {
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';
 
-describe('<DataGridPro/> - Components', () => {
+describe('<DataGridPro/> - slots', () => {
   const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -41,7 +41,7 @@ describe('<DataGridPro/> - Components', () => {
     });
   });
 
-  describe('components', () => {
+  describe('slots', () => {
     (
       [
         ['onClick', 'cellClick'],
@@ -52,10 +52,10 @@ describe('<DataGridPro/> - Components', () => {
         ['onDragOver', 'cellDragOver'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.cell`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase componentsProps={{ cell: { [prop]: propHandler } }} />);
+        render(<TestCase slotsProps={{ cell: { [prop]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);
@@ -76,10 +76,10 @@ describe('<DataGridPro/> - Components', () => {
       });
     });
 
-    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in components.cell`, () => {
+    it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, () => {
       const propHandler = spy();
       const eventHandler = spy();
-      render(<TestCase componentsProps={{ cell: { onKeyDown: propHandler } }} />);
+      render(<TestCase slotsProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef!.current.subscribeEvent('cellKeyDown', eventHandler);
 
       expect(propHandler.callCount).to.equal(0);
@@ -99,10 +99,10 @@ describe('<DataGridPro/> - Components', () => {
         ['onDoubleClick', 'rowDoubleClick'],
       ] as const
     ).forEach(([prop, event]) => {
-      it(`should still publish the '${event}' event when overriding the '${prop}' prop in components.row`, () => {
+      it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
         const propHandler = spy();
         const eventHandler = spy();
-        render(<TestCase componentsProps={{ row: { [prop]: propHandler } }} />);
+        render(<TestCase slotsProps={{ row: { [prop]: propHandler } }} />);
         apiRef!.current.subscribeEvent(event, eventHandler);
 
         expect(propHandler.callCount).to.equal(0);

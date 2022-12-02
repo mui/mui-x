@@ -341,7 +341,7 @@ const GridRow = React.forwardRef<
           : -1;
 
       return (
-        <rootProps.components.Cell
+        <rootProps.slots.Cell
           key={column.field}
           value={cellParams.value}
           field={column.field}
@@ -359,10 +359,10 @@ const GridRow = React.forwardRef<
           className={clsx(classNames)}
           colSpan={cellProps.colSpan}
           disableDragEvents={disableDragEvents}
-          {...rootProps.componentsProps?.cell}
+          {...rootProps.slotsProps?.cell}
         >
           {content}
-        </rootProps.components.Cell>
+        </rootProps.slots.Cell>
       );
     },
     [
@@ -466,7 +466,7 @@ const GridRow = React.forwardRef<
         const contentWidth = Math.round(randomNumber());
 
         cells.push(
-          <rootProps.components.SkeletonCell
+          <rootProps.slots.SkeletonCell
             key={column.field}
             width={width}
             contentWidth={contentWidth}

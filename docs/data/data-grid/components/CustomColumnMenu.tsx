@@ -120,10 +120,10 @@ export default function CustomColumnMenu() {
               default: 'Enterprise',
             },
           ]}
-          components={{
+          slots={{
             ColumnMenu: CustomColumnMenuComponent,
           }}
-          componentsProps={{
+          slotsProps={{
             columnMenu: { color },
           }}
         />

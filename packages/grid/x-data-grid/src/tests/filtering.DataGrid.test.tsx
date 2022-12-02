@@ -1142,7 +1142,7 @@ describe('<DataGrid /> - Filter', () => {
                 },
               ],
             }}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
           />

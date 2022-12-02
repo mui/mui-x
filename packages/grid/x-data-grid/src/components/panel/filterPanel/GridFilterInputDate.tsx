@@ -47,7 +47,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   }, [item.value]);
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.BaseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -68,7 +68,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         },
       }}
       {...other}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotsProps?.baseTextField}
     />
   );
 }

@@ -34,8 +34,8 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     [themedProps.localeText],
   );
 
-  const components = React.useMemo<GridSlotsComponent>(() => {
-    const overrides = themedProps.components;
+  const slots = React.useMemo<GridSlotsComponent>(() => {
+    const overrides = themedProps.slots;
 
     if (!overrides) {
       return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
@@ -50,16 +50,16 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     });
 
     return mergedComponents;
-  }, [themedProps.components]);
+  }, [themedProps.slots]);
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
-      components,
+      slots,
       signature: 'DataGridPremium',
     }),
-    [themedProps, localeText, components],
+    [themedProps, localeText, slots],
   );
 };

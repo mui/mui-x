@@ -38,7 +38,7 @@ describe('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbar', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase components={{ Toolbar: GridToolbar }} />);
+      render(<TestCase slots={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -51,8 +51,8 @@ describe('<DataGrid /> - Export', () => {
     it('should apply custom csvOptions', async () => {
       render(
         <TestCase
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
+          slots={{ Toolbar: GridToolbar }}
+          slotsProps={{ toolbar: { csvOptions: { delimiter: ';' } } }}
         />,
       );
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
@@ -67,8 +67,8 @@ describe('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', () => {
       render(
         <TestCase
-          components={{ Toolbar: GridToolbar }}
-          componentsProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
+          slots={{ Toolbar: GridToolbar }}
+          slotsProps={{ toolbar: { csvOptions: { disableToolbarButton: true } } }}
         />,
       );
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
@@ -80,7 +80,7 @@ describe('<DataGrid /> - Export', () => {
 
   describe('component: GridToolbarExport', () => {
     it('should export with the default csvOptions', async () => {
-      render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
+      render(<TestCase slots={{ Toolbar: () => <GridToolbarExport /> }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
@@ -93,7 +93,7 @@ describe('<DataGrid /> - Export', () => {
     it('should apply custom csvOptions', async () => {
       render(
         <TestCase
-          components={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
+          slots={{ Toolbar: () => <GridToolbarExport csvOptions={{ delimiter: ';' }} /> }}
         />,
       );
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
@@ -108,7 +108,7 @@ describe('<DataGrid /> - Export', () => {
     it('should disable csv export when passing `csvOptions.disableToolbarButton`', async () => {
       render(
         <TestCase
-          components={{
+          slots={{
             Toolbar: () => <GridToolbarExport csvOptions={{ disableToolbarButton: true }} />,
           }}
         />,

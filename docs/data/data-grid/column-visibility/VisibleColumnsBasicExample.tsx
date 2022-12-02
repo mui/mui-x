@@ -26,7 +26,7 @@ export default function VisibleColumnsBasicExample() {
           { field: 'desk' },
         ]}
         rows={rows}
-        components={{
+        slots={{
           Toolbar: GridToolbar,
         }}
       />

@@ -77,7 +77,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const inputRef = React.useRef<any>();
   const [open, setOpen] = React.useState(initialOpen);
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
   let valueOptionsFormatted: Array<ValueOptions>;
@@ -138,7 +138,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   }, [hasFocus]);
 
   return (
-    <rootProps.components.BaseSelect
+    <rootProps.slots.BaseSelect
       ref={ref}
       inputRef={inputRef}
       value={value}
@@ -152,12 +152,12 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       native={isSelectNative}
       fullWidth
       {...other}
-      {...rootProps.componentsProps?.baseSelect}
+      {...rootProps.slotsProps?.baseSelect}
     >
       {valueOptionsFormatted.map((valueOptions) =>
         renderSingleSelectOptions(valueOptions, isSelectNative ? 'option' : MenuItem),
       )}
-    </rootProps.components.BaseSelect>
+    </rootProps.slots.BaseSelect>
   );
 }
 

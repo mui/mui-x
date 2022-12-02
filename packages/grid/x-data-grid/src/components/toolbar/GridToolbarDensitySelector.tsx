@@ -29,17 +29,17 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     const densityOptions: GridDensityOption[] = [
       {
-        icon: <rootProps.components.DensityCompactIcon />,
+        icon: <rootProps.slots.DensityCompactIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityCompact'),
         value: GridDensityTypes.Compact,
       },
       {
-        icon: <rootProps.components.DensityStandardIcon />,
+        icon: <rootProps.slots.DensityStandardIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityStandard'),
         value: GridDensityTypes.Standard,
       },
       {
-        icon: <rootProps.components.DensityComfortableIcon />,
+        icon: <rootProps.slots.DensityComfortableIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
         value: GridDensityTypes.Comfortable,
       },
@@ -48,11 +48,11 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     const startIcon = React.useMemo<React.ReactElement>(() => {
       switch (densityValue) {
         case GridDensityTypes.Compact:
-          return <rootProps.components.DensityCompactIcon />;
+          return <rootProps.slots.DensityCompactIcon />;
         case GridDensityTypes.Comfortable:
-          return <rootProps.components.DensityComfortableIcon />;
+          return <rootProps.slots.DensityComfortableIcon />;
         default:
-          return <rootProps.components.DensityStandardIcon />;
+          return <rootProps.slots.DensityStandardIcon />;
       }
     }, [densityValue, rootProps]);
 
@@ -102,7 +102,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
 
     return (
       <React.Fragment>
-        <rootProps.components.BaseButton
+        <rootProps.slots.BaseButton
           ref={handleRef}
           size="small"
           startIcon={startIcon}
@@ -113,10 +113,10 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           id={densityButtonId}
           {...other}
           onClick={handleDensitySelectorOpen}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarDensity')}
-        </rootProps.components.BaseButton>
+        </rootProps.slots.BaseButton>
         <GridMenu
           open={open}
           target={buttonRef.current}

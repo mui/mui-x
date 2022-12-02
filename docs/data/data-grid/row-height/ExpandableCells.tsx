@@ -81,7 +81,7 @@ export default function ExpandableCells() {
         columns={columns}
         getEstimatedRowHeight={() => 100}
         getRowHeight={() => 'auto'}
-        components={{ Toolbar: GridToolbar }}
+        slots={{ Toolbar: GridToolbar }}
         sx={{
           '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': {
             py: 1,

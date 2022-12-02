@@ -20,7 +20,7 @@ export default function CustomLocaleTextGrid() {
           toolbarDensityStandard: 'Medium',
           toolbarDensityComfortable: 'Large',
         }}
-        components={{
+        slots={{
           Toolbar: GridToolbar,
         }}
       />

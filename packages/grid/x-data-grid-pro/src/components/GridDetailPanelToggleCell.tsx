@@ -32,8 +32,8 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const hasContent = React.isValidElement(contentCache[id]);
 
   const Icon = isExpanded
-    ? rootProps.components.DetailPanelCollapseIcon
-    : rootProps.components.DetailPanelExpandIcon;
+    ? rootProps.slots.DetailPanelCollapseIcon
+    : rootProps.slots.DetailPanelExpandIcon;
 
   return (
     <IconButton

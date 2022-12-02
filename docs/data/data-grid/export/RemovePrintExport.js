@@ -21,7 +21,7 @@ export default function RemovePrintExport() {
       <DataGrid
         {...data}
         loading={loading}
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
         }}
       />

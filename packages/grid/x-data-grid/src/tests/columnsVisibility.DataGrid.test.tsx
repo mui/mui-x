@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     it('should update the visible columns when props.onColumnVisibilityModelChange and props.columnVisibilityModel are not defined', () => {
       render(
         <TestDataGrid
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
         />,
@@ -63,7 +63,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
@@ -84,7 +84,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
           columnVisibilityModel={{ idBis: false }}
@@ -107,7 +107,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
           columnVisibilityModel={{ idBis: false }}
@@ -133,7 +133,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     it('should not hide non hideable columns when toggling all columns', () => {
       render(
         <TestDataGrid
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
           columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
@@ -206,7 +206,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
               columnVisibilityModel: { idBis: false },
             },
           }}
-          components={{
+          slots={{
             Toolbar: GridToolbar,
           }}
         />,
@@ -222,10 +222,10 @@ describe('<DataGridPro /> - Columns Visibility', () => {
   it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
     render(
       <TestDataGrid
-        components={{
+        slots={{
           Toolbar: GridToolbar,
         }}
-        componentsProps={{
+        slotsProps={{
           columnsPanel: {
             autoFocusSearchField: false,
           },

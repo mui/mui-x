@@ -908,7 +908,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
             localeText={{ toolbarDensity: 'Size' }}
@@ -1020,7 +1020,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ NoRowsOverlay }} {...props} />
         </div>
       );
     }
@@ -1035,7 +1035,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+          <DataGrid {...baselineProps} slots={{ NoRowsOverlay }} {...props} />
         </div>
       );
     }

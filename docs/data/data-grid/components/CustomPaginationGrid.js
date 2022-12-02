@@ -58,7 +58,7 @@ export default function CustomPaginationGrid() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         pagination
-        components={{
+        slots={{
           Pagination: CustomPagination,
         }}
         {...data}

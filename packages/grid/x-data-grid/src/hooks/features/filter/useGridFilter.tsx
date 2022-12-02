@@ -60,8 +60,8 @@ export const useGridFilter = (
     | 'onFilterModelChange'
     | 'filterMode'
     | 'disableMultipleColumnsFiltering'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotsProps'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -340,13 +340,13 @@ export const useGridFilter = (
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.filters) {
-        const FilterPanel = props.components.FilterPanel;
-        return <FilterPanel {...props.componentsProps?.filterPanel} />;
+        const FilterPanel = props.slots.FilterPanel;
+        return <FilterPanel {...props.slotsProps?.filterPanel} />;
       }
 
       return initialValue;
     },
-    [props.components.FilterPanel, props.componentsProps?.filterPanel],
+    [props.slots.FilterPanel, props.slotsProps?.filterPanel],
   );
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(

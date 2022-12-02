@@ -40,7 +40,7 @@ describe('<DataGrid /> - Quick Filter', () => {
   function TestCase(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...baselineProps} components={{ Toolbar: GridToolbarQuickFilter }} {...props} />
+        <DataGrid {...baselineProps} slots={{ Toolbar: GridToolbarQuickFilter }} {...props} />
       </div>
     );
   }
@@ -64,7 +64,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       render(
         <TestCase
           onFilterModelChange={onFilterModelChange}
-          componentsProps={{
+          slotsProps={{
             toolbar: {
               quickFilterParser: (searchInput: string) =>
                 searchInput.split(',').map((value) => value.trim()),
@@ -123,7 +123,7 @@ describe('<DataGrid /> - Quick Filter', () => {
     it('should allow to customize input formatting', () => {
       const { setProps } = render(
         <TestCase
-          componentsProps={{
+          slotsProps={{
             toolbar: {
               quickFilterFormatter: (quickFilterValues: string[]) => quickFilterValues.join(', '),
             },

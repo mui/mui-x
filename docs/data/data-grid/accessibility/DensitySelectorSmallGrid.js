@@ -26,7 +26,7 @@ export default function DensitySelectorSmallGrid() {
       <DataGrid
         {...data}
         density="compact"
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
         }}
       />

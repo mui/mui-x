@@ -15,12 +15,12 @@ export default function CustomFilterPanelContent() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPro
         {...data}
-        components={{
+        slots={{
           Toolbar: GridToolbar,
           // Use custom FilterPanel only for deep modification
           // FilterPanel: MyCustomFilterPanel,
         }}
-        componentsProps={{
+        slotsProps={{
           filterPanel: {
             // Force usage of "And" operator
             linkOperators: [GridLinkOperator.And],

@@ -70,12 +70,12 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <rootProps.components.BaseTooltip
+    <rootProps.slots.BaseTooltip
       title={description || tooltip}
-      {...rootProps.componentsProps?.baseTooltip}
+      {...rootProps.slotsProps?.baseTooltip}
     >
       <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
-    </rootProps.components.BaseTooltip>
+    </rootProps.slots.BaseTooltip>
   );
 }
 

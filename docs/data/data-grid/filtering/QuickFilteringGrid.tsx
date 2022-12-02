@@ -26,8 +26,8 @@ export default function QuickFilteringGrid() {
         disableColumnSelector
         disableDensitySelector
         columns={columns}
-        components={{ Toolbar: GridToolbar }}
-        componentsProps={{
+        slots={{ Toolbar: GridToolbar }}
+        slotsProps={{
           toolbar: {
             showQuickFilter: true,
             quickFilterProps: { debounceMs: 500 },

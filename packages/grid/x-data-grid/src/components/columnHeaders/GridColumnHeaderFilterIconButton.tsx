@@ -71,19 +71,19 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       size="small"
       tabIndex={-1}
     >
-      <rootProps.components.ColumnFilteredIcon className={classes.icon} fontSize="small" />
+      <rootProps.slots.ColumnFilteredIcon className={classes.icon} fontSize="small" />
     </IconButton>
   );
 
   return (
-    <rootProps.components.BaseTooltip
+    <rootProps.slots.BaseTooltip
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement
       }
       enterDelay={1000}
-      {...rootProps.componentsProps?.baseTooltip}
+      {...rootProps.slotsProps?.baseTooltip}
     >
       <GridIconButtonContainer>
         {counter > 1 && (
@@ -94,7 +94,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
 
         {counter === 1 && iconButton}
       </GridIconButtonContainer>
-    </rootProps.components.BaseTooltip>
+    </rootProps.slots.BaseTooltip>
   );
 }
 

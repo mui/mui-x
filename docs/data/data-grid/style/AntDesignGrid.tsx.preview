@@ -2,7 +2,7 @@
   checkboxSelection
   pageSize={5}
   rowsPerPageOptions={[5]}
-  components={{
+  slots={{
     Pagination: CustomPagination,
   }}
   {...data}

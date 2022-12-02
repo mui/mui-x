@@ -23,9 +23,9 @@ function GridCustomToolbar({ syncState }) {
       <GridToolbarDensitySelector />
       <Button
         size="small"
-        startIcon={<rootProps.components.ColumnSelectorIcon />}
+        startIcon={<rootProps.slots.ColumnSelectorIcon />}
         onClick={() => syncState(apiRef.current.exportState())}
-        {...rootProps.componentsProps?.baseButton}
+        {...rootProps.slotsProps?.baseButton}
       >
         Recreate the 2nd grid
       </Button>
@@ -63,8 +63,8 @@ export default function RestoreStateInitialState() {
         <DataGridPro
           {...data}
           loading={loading}
-          components={{ Toolbar: GridCustomToolbar }}
-          componentsProps={{ toolbar: { syncState } }}
+          slots={{ Toolbar: GridCustomToolbar }}
+          slotsProps={{ toolbar: { syncState } }}
         />
       </Box>
       <Box sx={{ height: 300 }}>

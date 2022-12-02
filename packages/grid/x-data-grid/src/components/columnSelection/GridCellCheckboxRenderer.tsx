@@ -95,7 +95,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
     );
 
     return (
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.BaseCheckbox
         ref={handleRef}
         tabIndex={tabIndex}
         checked={isChecked}
@@ -105,7 +105,7 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridRender
         onKeyDown={handleKeyDown}
         disabled={!isSelectable}
         touchRippleRef={rippleRef}
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotsProps?.baseCheckbox}
         {...other}
       />
     );

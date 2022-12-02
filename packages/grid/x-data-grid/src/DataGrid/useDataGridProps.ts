@@ -87,8 +87,8 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.localeText],
   );
 
-  const components = React.useMemo<GridSlotsComponent>(() => {
-    const overrides = themedProps.components;
+  const slots = React.useMemo<GridSlotsComponent>(() => {
+    const overrides = themedProps.slots;
 
     if (!overrides) {
       return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
@@ -103,16 +103,16 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     });
 
     return mergedComponents;
-  }, [themedProps.components]);
+  }, [themedProps.slots]);
 
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({
       ...DATA_GRID_PROPS_DEFAULT_VALUES,
       ...themedProps,
       localeText,
-      components,
+      slots,
       ...DATA_GRID_FORCED_PROPS,
     }),
-    [themedProps, localeText, components],
+    [themedProps, localeText, slots],
   );
 };

@@ -169,8 +169,8 @@ function GroupingCellWithLazyLoading(props) {
   const classes = useUtilityClasses({ classes: rootProps.classes });
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.TreeDataCollapseIcon
-    : rootProps.components.TreeDataExpandIcon;
+    ? rootProps.slots.TreeDataCollapseIcon
+    : rootProps.slots.TreeDataExpandIcon;
 
   const handleClick = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);

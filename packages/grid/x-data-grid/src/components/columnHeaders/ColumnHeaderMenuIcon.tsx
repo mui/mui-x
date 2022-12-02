@@ -61,7 +61,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         aria-controls={columnMenuId}
         id={columnMenuButtonId}
       >
-        <rootProps.components.ColumnMenuIcon fontSize="small" />
+        <rootProps.slots.ColumnMenuIcon fontSize="small" />
       </IconButton>
     </div>
   );

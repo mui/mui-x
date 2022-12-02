@@ -53,7 +53,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
@@ -80,7 +80,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
             rowHeight={rowHeight}
@@ -157,7 +157,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
           />
@@ -177,7 +177,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
           />
@@ -207,7 +207,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
             initialState={{
@@ -230,7 +230,7 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
           />
@@ -271,10 +271,10 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             columns={customColumns}
-            components={{
+            slots={{
               Toolbar: GridToolbar,
             }}
-            componentsProps={{
+            slotsProps={{
               columnsPanel: {
                 searchPredicate: columnSearchPredicate,
               },

@@ -42,18 +42,18 @@ const GridToolbarFilterListRoot = styled('ul', {
 }));
 
 export interface GridToolbarFilterButtonProps
-  extends Omit<TooltipProps, 'title' | 'children' | 'componentsProps'> {
+  extends Omit<TooltipProps, 'title' | 'children' | 'slotsProps'> {
   /**
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps?: { button?: ButtonProps };
+  slotsProps?: { button?: ButtonProps };
 }
 
 const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarFilterButtonProps>(
   function GridToolbarFilterButton(props, ref) {
-    const { componentsProps = {}, ...other } = props;
-    const buttonProps = componentsProps.button || {};
+    const { slotsProps = {}, ...other } = props;
+    const buttonProps = slotsProps.button || {};
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
@@ -111,28 +111,28 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     }
 
     return (
-      <rootProps.components.BaseTooltip
+      <rootProps.slots.BaseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
         {...other}
-        {...rootProps.componentsProps?.baseTooltip}
+        {...rootProps.slotsProps?.baseTooltip}
       >
-        <rootProps.components.BaseButton
+        <rootProps.slots.BaseButton
           ref={ref}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
             <Badge badgeContent={activeFilters.length} color="primary">
-              <rootProps.components.OpenFilterButtonIcon />
+              <rootProps.slots.OpenFilterButtonIcon />
             </Badge>
           }
           {...buttonProps}
           onClick={toggleFilter}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotsProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
-        </rootProps.components.BaseButton>
-      </rootProps.components.BaseTooltip>
+        </rootProps.slots.BaseButton>
+      </rootProps.slots.BaseTooltip>
     );
   },
 );
@@ -146,7 +146,9 @@ GridToolbarFilterButton.propTypes = {
    * The props used for each slot inside.
    * @default {}
    */
-  componentsProps: PropTypes.object,
+  slotsProps: PropTypes.shape({
+    button: PropTypes.object,
+  }),
 } as any;
 
 export { GridToolbarFilterButton };

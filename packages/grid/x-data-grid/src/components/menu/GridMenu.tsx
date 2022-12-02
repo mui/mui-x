@@ -98,14 +98,14 @@ function GridMenu(props: GridMenuProps) {
 
   return (
     <GridMenuRoot
-      as={rootProps.components.BasePopper}
+      as={rootProps.slots.BasePopper}
       className={clsx(className, classes.root)}
       open={open}
       anchorEl={target as any}
       transition
       placement={position}
       {...other}
-      {...rootProps.componentsProps?.basePopper}
+      {...rootProps.slotsProps?.basePopper}
     >
       {({ TransitionProps, placement }) => (
         <ClickAwayListener onClickAway={onClickAway} mouseEvent="onMouseDown">

@@ -356,12 +356,12 @@ export default function PopularFeaturesDemo() {
         autoHeight
         disableRowSelectionOnClick
         onRowClick={onRowClick}
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
           DetailPanelExpandIcon: ArrowDown,
           DetailPanelCollapseIcon: ArrowUp,
         }}
-        componentsProps={{
+        slotsProps={{
           toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
         getDetailPanelContent={getDetailPanelContent}

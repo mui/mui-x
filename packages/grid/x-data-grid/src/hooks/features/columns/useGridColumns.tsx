@@ -72,8 +72,8 @@ export function useGridColumns(
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
     | 'columnTypes'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotsProps'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
@@ -338,13 +338,13 @@ export function useGridColumns(
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.columns) {
-        const ColumnsPanel = props.components.ColumnsPanel;
-        return <ColumnsPanel {...props.componentsProps?.columnsPanel} />;
+        const ColumnsPanel = props.slots.ColumnsPanel;
+        return <ColumnsPanel {...props.slotsProps?.columnsPanel} />;
       }
 
       return initialValue;
     },
-    [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
+    [props.slots.ColumnsPanel, props.slotsProps?.columnsPanel],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);

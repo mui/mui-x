@@ -2,8 +2,8 @@
   <DataGridPro
     {...data}
     loading={loading}
-    components={{ Toolbar: GridCustomToolbar }}
-    componentsProps={{ toolbar: { syncState } }}
+    slots={{ Toolbar: GridCustomToolbar }}
+    slotsProps={{ toolbar: { syncState } }}
   />
 </Box>
 <Box sx={{ height: 300 }}>

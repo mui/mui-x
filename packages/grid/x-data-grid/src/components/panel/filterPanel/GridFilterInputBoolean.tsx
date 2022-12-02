@@ -9,7 +9,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
 
@@ -27,7 +27,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
   }, [item.value]);
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.BaseTextField
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       value={filterValueState}
       onChange={onFilterChange}
@@ -36,14 +36,14 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       SelectProps={{
         native: isSelectNative,
         displayEmpty: true,
-        ...rootProps.componentsProps?.baseSelect,
+        ...rootProps.slotsProps?.baseSelect,
       }}
       InputLabelProps={{
         shrink: true,
       }}
       inputRef={focusElementRef}
       {...others}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotsProps?.baseTextField}
     >
       <OptionComponent value="">{apiRef.current.getLocaleText('filterValueAny')}</OptionComponent>
       <OptionComponent value="true">
@@ -52,6 +52,6 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       <OptionComponent value="false">
         {apiRef.current.getLocaleText('filterValueFalse')}
       </OptionComponent>
-    </rootProps.components.BaseTextField>
+    </rootProps.slots.BaseTextField>
   );
 }

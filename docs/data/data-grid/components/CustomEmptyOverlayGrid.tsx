@@ -85,7 +85,7 @@ export default function CustomEmptyOverlayGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        components={{
+        slots={{
           NoRowsOverlay: CustomNoRowsOverlay,
         }}
         {...data}

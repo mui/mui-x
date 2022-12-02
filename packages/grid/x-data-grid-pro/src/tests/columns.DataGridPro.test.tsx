@@ -355,7 +355,7 @@ describe('<DataGridPro /> - Columns', () => {
         privateApi = useGridPrivateApiContext();
         return null;
       }
-      render(<Test checkboxSelection components={{ Footer }} />);
+      render(<Test checkboxSelection slots={{ Footer }} />);
 
       act(() => apiRef.current.setColumnWidth('brand', 300));
       expect(gridColumnLookupSelector(apiRef).brand.computedWidth).to.equal(300);
@@ -373,7 +373,7 @@ describe('<DataGridPro /> - Columns', () => {
         <Test
           checkboxSelection
           columns={[{ field: 'id' }, { field: 'brand' }]}
-          components={{ Footer }}
+          slots={{ Footer }}
         />,
       );
 
@@ -390,7 +390,7 @@ describe('<DataGridPro /> - Columns', () => {
         privateApi = useGridPrivateApiContext();
         return null;
       }
-      render(<Test checkboxSelection components={{ Footer }} />);
+      render(<Test checkboxSelection slots={{ Footer }} />);
 
       act(() => apiRef.current.updateColumns([{ field: 'id' }]));
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);

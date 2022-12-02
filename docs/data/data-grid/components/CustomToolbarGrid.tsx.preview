@@ -1,6 +1,6 @@
 <DataGrid
   {...data}
-  components={{
+  slots={{
     Toolbar: CustomToolbar,
   }}
 />

@@ -135,14 +135,6 @@ DataGridProRaw.propTypes = {
    */
   columnVisibilityModel: PropTypes.object,
   /**
-   * Overrideable components.
-   */
-  components: PropTypes.object,
-  /**
-   * Overrideable components props dynamically passed to the component at rendering.
-   */
-  componentsProps: PropTypes.object,
-  /**
    * If above 0, the row children will be expanded up to this depth.
    * If equal to -1, all the row children will be expanded.
    * @default 0
@@ -852,6 +844,90 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   showColumnRightBorder: PropTypes.bool,
+  /**
+   * Overrideable components.
+   */
+  slots: PropTypes.shape({
+    BaseButton: PropTypes.elementType.isRequired,
+    BaseCheckbox: PropTypes.elementType.isRequired,
+    BaseFormControl: PropTypes.elementType.isRequired,
+    BasePopper: PropTypes.elementType.isRequired,
+    BaseSelect: PropTypes.elementType.isRequired,
+    BaseSwitch: PropTypes.elementType.isRequired,
+    BaseTextField: PropTypes.elementType.isRequired,
+    BaseTooltip: PropTypes.elementType.isRequired,
+    BooleanCellFalseIcon: PropTypes.elementType.isRequired,
+    BooleanCellTrueIcon: PropTypes.elementType.isRequired,
+    Cell: PropTypes.elementType.isRequired,
+    ColumnFilteredIcon: PropTypes.elementType.isRequired,
+    ColumnHeaderFilterIconButton: PropTypes.elementType.isRequired,
+    ColumnMenu: PropTypes.elementType.isRequired,
+    ColumnMenuIcon: PropTypes.elementType.isRequired,
+    ColumnResizeIcon: PropTypes.elementType.isRequired,
+    ColumnSelectorIcon: PropTypes.elementType.isRequired,
+    ColumnSortedAscendingIcon: PropTypes.func,
+    ColumnSortedDescendingIcon: PropTypes.func,
+    ColumnsPanel: PropTypes.elementType.isRequired,
+    ColumnUnsortedIcon: PropTypes.func,
+    DensityComfortableIcon: PropTypes.elementType.isRequired,
+    DensityCompactIcon: PropTypes.elementType.isRequired,
+    DensityStandardIcon: PropTypes.elementType.isRequired,
+    DetailPanelCollapseIcon: PropTypes.elementType.isRequired,
+    DetailPanelExpandIcon: PropTypes.elementType.isRequired,
+    ErrorOverlay: PropTypes.elementType.isRequired,
+    ExportIcon: PropTypes.elementType.isRequired,
+    FilterPanel: PropTypes.elementType.isRequired,
+    FilterPanelDeleteIcon: PropTypes.elementType.isRequired,
+    Footer: PropTypes.elementType.isRequired,
+    GroupingCriteriaCollapseIcon: PropTypes.elementType.isRequired,
+    GroupingCriteriaExpandIcon: PropTypes.elementType.isRequired,
+    Header: PropTypes.elementType.isRequired,
+    LoadingOverlay: PropTypes.elementType.isRequired,
+    MoreActionsIcon: PropTypes.elementType.isRequired,
+    NoResultsOverlay: PropTypes.elementType.isRequired,
+    NoRowsOverlay: PropTypes.elementType.isRequired,
+    OpenFilterButtonIcon: PropTypes.elementType.isRequired,
+    Pagination: PropTypes.func,
+    Panel: PropTypes.elementType.isRequired,
+    PreferencesPanel: PropTypes.elementType.isRequired,
+    QuickFilterClearIcon: PropTypes.elementType.isRequired,
+    QuickFilterIcon: PropTypes.elementType.isRequired,
+    Row: PropTypes.elementType.isRequired,
+    RowReorderIcon: PropTypes.elementType.isRequired,
+    SkeletonCell: PropTypes.elementType.isRequired,
+    Toolbar: PropTypes.func,
+    TreeDataCollapseIcon: PropTypes.elementType.isRequired,
+    TreeDataExpandIcon: PropTypes.elementType.isRequired,
+  }),
+  /**
+   * Overrideable components props dynamically passed to the component at rendering.
+   */
+  slotsProps: PropTypes.shape({
+    baseButton: PropTypes.any,
+    baseCheckbox: PropTypes.any,
+    baseFormControl: PropTypes.any,
+    basePopper: PropTypes.any,
+    baseSelect: PropTypes.any,
+    baseSwitch: PropTypes.any,
+    baseTextField: PropTypes.any,
+    baseTooltip: PropTypes.any,
+    cell: PropTypes.any,
+    columnHeaderFilterIconButton: PropTypes.any,
+    columnMenu: PropTypes.any,
+    columnsPanel: PropTypes.any,
+    errorOverlay: PropTypes.any,
+    filterPanel: PropTypes.any,
+    footer: PropTypes.any,
+    header: PropTypes.any,
+    loadingOverlay: PropTypes.any,
+    noResultsOverlay: PropTypes.any,
+    noRowsOverlay: PropTypes.any,
+    pagination: PropTypes.any,
+    panel: PropTypes.any,
+    preferencesPanel: PropTypes.any,
+    row: PropTypes.any,
+    toolbar: PropTypes.any,
+  }),
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

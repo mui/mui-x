@@ -40,7 +40,7 @@ export default function UseGridSelector() {
         pagination
         pageSize={10}
         hideFooter
-        components={{
+        slots={{
           Toolbar,
         }}
       />

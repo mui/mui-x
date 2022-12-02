@@ -129,7 +129,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     );
 
     return (
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.BaseCheckbox
         ref={ref}
         indeterminate={isIndeterminate}
         checked={isChecked}
@@ -138,7 +138,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         inputProps={{ 'aria-label': label }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotsProps?.baseCheckbox}
         {...other}
       />
     );

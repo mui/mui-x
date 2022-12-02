@@ -48,7 +48,7 @@ export default function VariableRowHeightGrid() {
 
           return null;
         }}
-        components={{
+        slots={{
           Toolbar: CustomToolbar,
         }}
       />

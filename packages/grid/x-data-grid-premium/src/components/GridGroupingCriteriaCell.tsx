@@ -44,8 +44,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.components.GroupingCriteriaCollapseIcon
-    : rootProps.components.GroupingCriteriaExpandIcon;
+    ? rootProps.slots.GroupingCriteriaCollapseIcon
+    : rootProps.slots.GroupingCriteriaExpandIcon;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {

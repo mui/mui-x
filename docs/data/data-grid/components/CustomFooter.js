@@ -39,10 +39,10 @@ export default function CustomFooter() {
       <Box sx={{ height: 350, width: '100%', mb: 1 }}>
         <DataGrid
           {...data}
-          components={{
+          slots={{
             Footer: CustomFooterStatusComponent,
           }}
-          componentsProps={{
+          slotsProps={{
             footer: { status },
           }}
         />

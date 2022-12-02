@@ -25,7 +25,7 @@ export default function ControlledFilters() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
+        slots={{
           Toolbar: GridToolbar,
         }}
         filterModel={filterModel}
