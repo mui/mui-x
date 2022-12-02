@@ -84,13 +84,15 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    cursor: 'grabbing',
     [`& .${dayClasses.dayOutsideRangeInterval}`]: {
       '@media (pointer: fine)': {
         '&:hover': {
           border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
         },
       },
+    },
+    [`& .${dayClasses.day}`]: {
+      cursor: 'grabbing',
     },
     [`& .${dayClasses.root}:not(.${dayClasses.rangeIntervalDayHighlightStart}):not(.${dayClasses.rangeIntervalDayHighlightEnd}) .${dayClasses.day}:not(.${dayClasses.notSelectedDate})`]:
       {

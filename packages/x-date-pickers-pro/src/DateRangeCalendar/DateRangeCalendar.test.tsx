@@ -443,13 +443,13 @@ describe('<DateRangeCalendar />', () => {
         expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
       });
 
-      it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
+      it.only('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
         if (!document.elementFromPoint) {
           this.skip();
         }
         const initialValue: [any, any] = [
           adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 2)),
+          adapterToUse.date(new Date(2018, 0, 7)),
         ];
         render(
           <DateRangeCalendar
@@ -464,7 +464,7 @@ describe('<DateRangeCalendar />', () => {
         // flip date range
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
-          rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-01'],
           rangeCalendarDayTouches['2018-01-09'],
           rangeCalendarDayTouches['2018-01-10'],
         );
