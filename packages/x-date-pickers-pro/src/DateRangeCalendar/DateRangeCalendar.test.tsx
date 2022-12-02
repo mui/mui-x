@@ -449,7 +449,7 @@ describe('<DateRangeCalendar />', () => {
         }
         const initialValue: [any, any] = [
           adapterToUse.date(new Date(2018, 0, 1)),
-          adapterToUse.date(new Date(2018, 0, 7)),
+          adapterToUse.date(new Date(2018, 0, 2)),
         ];
         render(
           <DateRangeCalendar

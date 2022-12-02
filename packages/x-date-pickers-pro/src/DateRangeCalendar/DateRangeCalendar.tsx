@@ -270,10 +270,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       : newRange;
   }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
 
-  const wrappedShouldDisableDate =
-    shouldDisableDate &&
-    ((dayToTest: TDate) =>
-      shouldDisableDate?.(dayToTest, draggingDatePosition || currentDatePosition));
+  const wrappedShouldDisableDate = React.useMemo(() => {
+    if (!shouldDisableDate) {
+      return undefined;
+    }
+
+    return (dayToTest: TDate) =>
+      shouldDisableDate(dayToTest, draggingDatePosition || currentDatePosition);
+  }, [shouldDisableDate, currentDatePosition, draggingDatePosition]);
 
   const {
     calendarState,
