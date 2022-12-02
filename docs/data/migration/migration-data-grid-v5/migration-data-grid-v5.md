@@ -140,7 +140,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
-- `filterPanelOperators` translation key was renamed to `filterPanelOperator`
+- The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
 <!--
 ### CSS classes
