@@ -229,7 +229,6 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
-    "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
     "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "NoResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
