@@ -5,7 +5,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
 } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
@@ -27,7 +27,7 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridColumnHeaders}
             VirtualScrollerComponent={DataGridVirtualScroller}

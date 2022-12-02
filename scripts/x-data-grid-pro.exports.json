@@ -292,7 +292,6 @@
   { "name": "GridGroupNode", "kind": "TypeAlias" },
   { "name": "GridHeader", "kind": "Variable" },
   { "name": "GridHeaderCheckbox", "kind": "Variable" },
-  { "name": "GridHeaderPlaceholder", "kind": "Function" },
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "GridIconSlotsComponent", "kind": "Interface" },
   { "name": "GridInitialState", "kind": "TypeAlias" },
