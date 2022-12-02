@@ -422,7 +422,7 @@ export const createDateStrFromSections = (
   sections: FieldSection[],
   willBeRenderedInInput: boolean,
 ) => {
-  const formatedArray = sections.map((section) => {
+  const formattedArray = sections.map((section) => {
     let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
 
     const separator = willBeRenderedInInput
@@ -442,9 +442,9 @@ export const createDateStrFromSections = (
     // \u2068: start first strong character isolation
     // \u2069: pop isolation
     // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-    return `\u2066${formatedArray.join('')}\u2069`;
+    return `\u2066${formattedArray.join('')}\u2069`;
   }
-  return formatedArray.join('');
+  return formattedArray.join('');
 };
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
