@@ -10,7 +10,7 @@ title: Data Grid - Column menu
 
 Each column header comes with a column menu with quickly accessible grid features like column visibility, sorting, filtering, and others.
 
-It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or focusing a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd>.
+It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or when focusing on a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd>.
 
 {{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
@@ -22,7 +22,7 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Customize column menu
 
-You can customize the column menu either by passing `components` and `componentsProps` props to the column menu component or by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component.
+You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component or the entire menu by [passing a custom component](/x/react-data-grid/column-menu/#custom-component) to the `ColumnMenu` slot of the data grid component.
 
 **components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
 
@@ -99,9 +99,9 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 
 ### Reordering menu items
 
-Every item is assigned a `displayOrder` based on which it is shown before or after other items. It works in ascending order, the smaller the number is, the item is earlier in the list. For new items default value for `displayOrder` is **100**.
+Every item is assigned a `displayOrder` based on which it is shown before or after other items. It works in ascending order; the smaller the number is, the earlier it is displayed on the list. For new items default value for `displayOrder` is **100**.
 
-You can override `displayOrder` for the default or new items in `componentsProps` to re-order.
+You can override `displayOrder` for the default or new items in `componentsProps`.
 
 Check [this table](/x/react-data-grid/column-menu/#column-menu-components-and-their-configurations) to see default `displayOrder` for each menu item.
 
@@ -124,7 +124,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-The following demo implements adding, overriding, hiding and re-ordering of some column menu items.
+The following demo implements adding, overriding, hiding, and re-ordering of column menu items.
 
 {{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
 
@@ -136,17 +136,17 @@ As a reference, here are the default `components` supported by each column menu 
 
 ### Custom component
 
-You can also customize column menu by [passing a custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the data grid component. If you want some default items rendered, you can import them and use in your custom component.
+You can also customize and replace the column menu by [passing a fully custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the Data Grid. If you want to add some of the default menu items to your custom component, you can import and re-use them.
 
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 
 :::info
-<strong>Tip</strong>: In column menu component and items, you recieve a prop `colDef` corresponding to the current column, you can use this to conditionally render some items or change some logic.
+<strong>Tip</strong>: In the `ColumnMenu` component and its items, you receive the prop `colDef` corresponding to the current column; you can use this to conditionally render some items or change some logic.
 :::
 
 ## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-When using `DataGridPro` or `DataGridPremium` components, the column menu contains additional menu items related to Pro and Premium features:
+In the following demo, you can see in action all the additional menu items related to the commercial features.
 
 {{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
 
