@@ -14,12 +14,6 @@ It can be accessed by clicking on the 3-dots icon that appears on hover on a hea
 
 {{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
-## Disable column menu
-
-By default, each column header has the column menu enabled. To disable the column menu, set the prop `disableColumnMenu={true}`.
-
-{{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
-
 ## Customize column menu
 
 You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component or the entire menu by [passing a custom component](/x/react-data-grid/column-menu/#custom-component) to the `ColumnMenu` slot of the data grid component.
@@ -155,6 +149,12 @@ In the following demo, you can see in action all the additional menu items relat
 You can replace the default column menu with a simplified one using the `GridColumnMenuSimple` component.
 
 {{"demo": "SimpleColumnMenuGrid.js", "bg": "inline"}}
+
+## Disable column menu
+
+By default, each column header has the column menu enabled. To disable the column menu, set the prop `disableColumnMenu={true}`.
+
+{{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
 
 ## API
 
