@@ -36,7 +36,11 @@ export interface DayCalendarSlotsComponent<TDate> {
 }
 
 export interface DayCalendarSlotsComponentsProps<TDate> {
-  day?: SlotComponentProps<typeof PickersDay, {}, DayCalendarProps<TDate> & { day: TDate }>;
+  day?: SlotComponentProps<
+    typeof PickersDay,
+    {},
+    DayCalendarProps<TDate> & { day: TDate; selected: boolean }
+  >;
 }
 
 export interface ExportedDayCalendarProps<TDate>
@@ -265,7 +269,7 @@ function WrappedDay<TDate extends unknown>({
       // it is used in date range dragging logic by accessing `dataset.timestamp`
       'data-timestamp': utils.toJsDate(day).valueOf(),
     },
-    ownerState: { ...parentProps, day },
+    ownerState: { ...parentProps, day, selected: isSelected },
   });
 
   const isDisabled = React.useMemo(

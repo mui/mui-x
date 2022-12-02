@@ -119,6 +119,10 @@ export interface DateRangeCalendarProps<TDate>
   disableDragEditing?: boolean;
 }
 
+export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
+  isDragging: boolean;
+}
+
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
   'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
