@@ -94,33 +94,33 @@ npx @mui/x-codemod v6.0.0/localization-provider-rename-locale <path>
 
 #### `text-props-to-localeText`
 
-Replace props used for translation such as `cancelText` to their corresponding `localeText` key.
+Replace props used for localization such as `cancelText` to their corresponding `localeText` key.
 
 ```diff
  <DatePicker
--  cancelText="Cancel"
+-  cancelText="Cancelar"
 +  localeText={{
-+    cancelButtonLabel: "Cancel"
++    cancelButtonLabel: "Cancelar"
 +  }}
  />
 ```
 
 ```sh
-npx @mui/x-codemod v6.0.0/localization-provider-rename-locale <path>
+npx @mui/x-codemod v6.0.0/text-props-to-localeText <path>
 ```
 
-If you were using always the same text value in all your components, consider moving those translation from the component to the `LocalizationProvider` by hand.
+If you were always using the same text value in all your components, consider moving those translation from the component to the `LocalizationProvider` by hand.
 
 ```diff
 <LocalizationProvider
   dateAdapter={AdapterDayjs}
-+ localeText={{ cancelButtonLabel: "Cancel" }}
++ localeText={{ cancelButtonLabel: "Cancelar" }}
 >
  <DatePicker
--  localeText={{ cancelButtonLabel: "Cancel" }}
+-  localeText={{ cancelButtonLabel: "Cancelar" }}
  />
  <DateTimePicker
--  localeText={{ cancelButtonLabel: "Cancel" }}
+-  localeText={{ cancelButtonLabel: "Cancelar" }}
  />
 </LocalizationProvider>
 ```
