@@ -261,7 +261,7 @@
       end: custom_endText,
       start: custom_startText,
       clockLabelText: custom_getClockLabelText,
-      hoursClockNumberText: custom_getHoursClockNumberText,
+      hoursClockNumberText: (hour) => `${hour}:00`,
       minutesClockNumberText: custom_getMinutesClockNumberText,
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,

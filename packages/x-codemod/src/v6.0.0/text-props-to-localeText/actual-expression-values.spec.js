@@ -213,7 +213,7 @@
     getViewSwitchingButtonText={custom_getViewSwitchingButtonText}
     leftArrowButtonText={custom_leftArrowButtonText}
     rightArrowButtonText={custom_rightArrowButtonText}
-  />
+  />  
 
   {/* Stand alone */}
   <CalendarPicker
@@ -235,7 +235,7 @@
     endText={custom_endText}
     startText={custom_startText}
     getClockLabelText={custom_getClockLabelText}
-    getHoursClockNumberText={custom_getHoursClockNumberText}
+    getHoursClockNumberText={(hour) => `${hour}:00`}
     getMinutesClockNumberText={custom_getMinutesClockNumberText}
     getSecondsClockNumberText={custom_getSecondsClockNumberText}
     getViewSwitchingButtonText={custom_getViewSwitchingButtonText}
