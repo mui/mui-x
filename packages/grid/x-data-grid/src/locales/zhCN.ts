@@ -49,7 +49,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: '添加筛选器',
   filterPanelDeleteIconLabel: '删除',
   filterPanelLinkOperator: '逻辑操作器',
-  filterPanelOperator: '操作器',
+  filterPanelOperators: '操作器',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: '与',
   filterPanelOperatorOr: '或',
   filterPanelColumns: '列',

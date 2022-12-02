@@ -50,7 +50,9 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Filter toevoegen',
   filterPanelDeleteIconLabel: 'Verwijderen',
   filterPanelLinkOperator: 'Logische operator',
-  filterPanelOperator: 'Operatoren',
+  filterPanelOperators: 'Operatoren',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
   filterPanelColumns: 'Kolommen',

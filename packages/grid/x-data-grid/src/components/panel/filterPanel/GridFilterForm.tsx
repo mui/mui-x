@@ -469,11 +469,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
         >
           <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
-            {apiRef.current.getLocaleText('filterPanelOperator')}
+            {apiRef.current.getLocaleText('filterPanelOperators')}
           </InputLabel>
           <rootProps.components.BaseSelect
             labelId={operatorSelectLabelId}
-            label={apiRef.current.getLocaleText('filterPanelOperator')}
+            label={apiRef.current.getLocaleText('filterPanelOperators')}
             id={operatorSelectId}
             value={item.operator}
             onChange={changeOperator}

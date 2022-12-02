@@ -50,7 +50,9 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLinkOperator: 'عامل منطقي',
-  filterPanelOperator: 'عامل',
+  filterPanelOperators: 'عامل',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',
   filterPanelColumns: 'الأعمدة',

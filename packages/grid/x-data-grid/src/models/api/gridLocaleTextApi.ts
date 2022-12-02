@@ -51,7 +51,7 @@ export interface GridLocaleText {
   filterPanelAddFilter: React.ReactNode;
   filterPanelDeleteIconLabel: string;
   filterPanelLinkOperator: string;
-  filterPanelOperator: React.ReactNode;
+  filterPanelOperators: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
   filterPanelColumns: React.ReactNode;
