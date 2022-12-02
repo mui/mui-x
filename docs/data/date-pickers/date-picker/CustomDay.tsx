@@ -72,11 +72,11 @@ export default function CustomDay() {
         value={value}
         onChange={(newValue) => setValue(newValue)}
         components={{ Day }}
-        componentsProps={
-          {
+        componentsProps={{
+          day: {
             selectedDay: value,
-          } as any
-        }
+          } as any,
+        }}
       />
     </LocalizationProvider>
   );

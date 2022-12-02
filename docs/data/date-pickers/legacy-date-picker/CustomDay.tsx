@@ -76,11 +76,11 @@ export default function CustomDay() {
           setValue(newValue);
         }}
         components={{ Day }}
-        componentsProps={
-          {
+        componentsProps={{
+          day: {
             selectedDay: value,
-          } as any
-        }
+          } as any,
+        }}
         renderInput={(params) => <TextField {...params} />}
         inputFormat="'Week of' MMM d"
       />

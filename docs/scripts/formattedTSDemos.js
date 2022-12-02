@@ -106,7 +106,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
           'currentColumn',
           'colDef',
           'row',
-          'selectedDays',
+          'selectedDay',
           'day',
         ];
         if (propsToNotResolve.includes(name)) {
