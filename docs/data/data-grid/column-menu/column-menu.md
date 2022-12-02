@@ -10,7 +10,7 @@ title: Data Grid - Column menu
 
 Each column header comes with a column menu with quickly accessible grid features like column visibility, sorting, filtering, and others.
 
-It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell.
+It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or focusing a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd>.
 
 {{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
@@ -34,7 +34,8 @@ The `components` prop uses pascal case (`ColumnMenuFilterItem`), while `componen
 
 ### Adding a menu item
 
-To add a new menu item, pass it in `components` prop. You can also set the `displayOrder` (default `100`) or pass new props to the components using `componentsProps` prop.
+To add a new menu item, pass it to the `components` prop.
+You can also set the `displayOrder` (default `100`) or pass new props to the components using `componentsProps` prop.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -47,9 +48,9 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
       }}
       componentsProps={{
         columnMenuUserItem: {
-          // set `displayOrder` for new item
+          // set `displayOrder` for the new item
           displayOrder: 15,
-          // pass additional props
+          // Additional props
           myCustomValue: 'Do custom action',
           myCustomHandler: () => alert('Custom handler fired'),
         },
@@ -79,7 +80,8 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 
 ### Hiding a menu item
 
-To hide a menu item, you can set the component in `components` as `null`.
+To hide a menu item, you can set its respective slot in `components` to `null`.
+Check [this table](/x/react-data-grid/column-menu/#column-menu-components-and-their-configurations) to know the slot name for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
