@@ -213,7 +213,7 @@
     getViewSwitchingButtonText={custom_getViewSwitchingButtonText}
     leftArrowButtonText={custom_leftArrowButtonText}
     rightArrowButtonText={custom_rightArrowButtonText}
-  />  
+  />
 
   {/* Stand alone */}
   <CalendarPicker
