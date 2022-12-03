@@ -404,11 +404,7 @@ export default function ApiPage(props) {
         {Object.keys(componentStyles.classes).length ? (
           <React.Fragment>
             <Heading hash="css" />
-            <ClassesTable
-              componentName={componentName}
-              componentStyles={componentStyles}
-              classDescriptions={classDescriptions}
-            />
+            <ClassesTable componentStyles={componentStyles} classDescriptions={classDescriptions} />
             <br />
             <span dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStyles') }} />
             <span
