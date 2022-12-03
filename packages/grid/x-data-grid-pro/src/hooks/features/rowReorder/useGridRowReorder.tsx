@@ -52,6 +52,19 @@ export const useGridRowReorder = (
     };
   }, []);
 
+  // In case React event failed to trigger "rowDragEnd", this function will trigger it.
+  const publishRowDragEnd = React.useCallback(
+    (event: any) => {
+      event.preventDefault();
+      const { cell } = apiRef.current.state.focus;
+      if (cell) {
+        const param = apiRef.current.getRowParams(cell.id);
+        apiRef.current.publishEvent('rowDragEnd', param, event);
+      }
+    },
+    [apiRef],
+  );
+
   // TODO: remove sortModel check once row reorder is sorting compatible
   // remove treeDepth once row reorder is tree compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
@@ -81,8 +94,11 @@ export const useGridRowReorder = (
       });
 
       originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+
+      event.currentTarget.addEventListener('dragend', publishRowDragEnd);
+      apiRef.current.setCellFocus(params.id, '__reorder__');
     },
-    [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
+    [isRowReorderDisabled, classes.rowDragging, logger, apiRef, publishRowDragEnd],
   );
 
   const handleDragOver = React.useCallback<GridEventListener<'cellDragOver' | 'rowDragOver'>>(
@@ -128,6 +144,8 @@ export const useGridRowReorder = (
       clearTimeout(removeDnDStylesTimeout.current);
       dragRowNode.current = null;
 
+      event.currentTarget.removeEventListener('dragend', publishRowDragEnd);
+
       // Check if the row was dropped outside the grid.
       if (event.dataTransfer.dropEffect === 'none') {
         // Accessing params.field may contain the wrong field as header elements are reused
@@ -146,7 +164,7 @@ export const useGridRowReorder = (
 
       setDragRowId('');
     },
-    [isRowReorderDisabled, logger, apiRef, dragRowId],
+    [isRowReorderDisabled, logger, apiRef, dragRowId, publishRowDragEnd],
   );
 
   useGridApiEventHandler(apiRef, 'rowDragStart', handleDragStart);
