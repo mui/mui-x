@@ -52,7 +52,7 @@ export const useGridRowReorder = (
     };
   }, []);
 
-  // In case React event failed to trigger "rowDragEnd", this function will trigger it.
+  // In case React event failed to trigger "rowDragEnd".This function will make sure it's triggered..
   const publishRowDragEnd = React.useCallback(
     (event: any) => {
       event.preventDefault();
