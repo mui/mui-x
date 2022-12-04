@@ -74,9 +74,20 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Column menu
 
 - The `GridColumnMenu` component was renamed to `GridColumnMenuDefault` with the new column menu design. For previous design, use `GridColumnMenuSimple`.
-- The column menu items `GridFilterMenuItem`, `HideGridColMenuItem`, `GridColumnsMenuItem`, `SortGridMenuItems` have been renamed to `GridColumnMenuFilterItem`, `GridColumnMenuHideItem`, `GridColumnMenuColumnsItem`, `GridColumnMenuSortItem`.
+- The column menu components have been renamed with the new design for consistency and API improvemennt, the renamed components are following:
+
+  | Old name                          | New name                        |
+  | --------------------------------- | ------------------------------- |
+  | `GridFilterMenuItem`              | `GridColumnMenuFilterItem`      |
+  | `HideGridColMenuItem`             | `GridColumnMenuHideItem`        |
+  | `GridColumnsMenuItem`             | `GridColumnMenuColumnsItem`     |
+  | `SortGridMenuItems`               | `GridColumnMenuSortItem`        |
+  | `GridColumnPinningMenuItems`      | `GridColumnMenuPinningItem`     |
+  | `GridAggregationColumnMenuItem`   | `GridColumnMenuAggregationItem` |
+  | `GridRowGroupingColumnMenuItems`  | `GridColumnMenuRowGroupItem`    |
+  | `GridRowGroupableColumnMenuItems` | `GridColumnMenuRowUngroupItem`  |
+
 - `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
-- The column menu items for Pro and Premium packages `GridColumnPinningMenuItems`, `GridAggregationColumnMenuItem`, `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` have been renamed to `GridColumnMenuPinningItem`, `GridColumnMenuAggregationItem`, `GridColumnMenuRowGroupItem` and `GridColumnMenuRowUngroupItem`, respectively.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
 
 ### Rows
