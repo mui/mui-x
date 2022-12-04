@@ -73,13 +73,13 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. Change `null` -> `undefined` to fall back to default formatted value.
 
   ```diff
-  const renderCell = () => {
+   const renderCell = () => {
     if (condition) {
       return <CustomComponent />;
     }
   - return null;
   + return undefined;
-  }
+   }
   ```
 
 ### Rows
