@@ -26,13 +26,11 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobrazit filtry',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
-
     return `${count} ${pluralForm}`;
   },
 
@@ -59,9 +57,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Přidat filtr',
   filterPanelDeleteIconLabel: 'Odstranit',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operátory',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
   filterPanelColumns: 'Sloupce',
@@ -100,13 +96,11 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
-
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
@@ -115,13 +109,11 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'vybraných záznamů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'vybrané záznamy';
     } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
-
     return `${count} ${pluralForm}`;
   },
 

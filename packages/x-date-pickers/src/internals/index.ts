@@ -23,6 +23,16 @@ export type {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
+export { PickersModalDialog } from './components/PickersModalDialog';
+export type {
+  PickersModalDialogSlotsComponent,
+  PickersModalDialogSlotsComponentsProps,
+} from './components/PickersModalDialog';
+export { PickersPopper } from './components/PickersPopper';
+export type {
+  PickersPopperSlotsComponent,
+  PickersPopperSlotsComponentsProps,
+} from './components/PickersPopper';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
@@ -30,6 +40,11 @@ export type {
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
+export { PickersViewLayout } from './components/PickersViewLayout';
+export type {
+  ExportedPickersViewLayoutSlotsComponent,
+  ExportedPickersViewLayoutSlotsComponentsProps,
+} from './components/PickersViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {
@@ -82,13 +97,25 @@ export { DAY_MARGIN } from './constants/dimensions';
 
 export { useMaskedInput } from './hooks/useMaskedInput';
 export { usePickerState } from './hooks/usePickerState';
+export { usePicker } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
+export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
+export { useStaticPicker } from './hooks/useStaticPicker';
+export type {
+  StaticOnlyPickerProps,
+  UseStaticPickerSlotsComponent,
+  UseStaticPickerSlotsComponentsProps,
+} from './hooks/useStaticPicker';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
   TimeValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
   DayValidationProps,
 } from './hooks/validation/models';
 export { useValidation } from './hooks/validation/useValidation';
@@ -96,6 +123,7 @@ export type {
   ValidationCommonProps,
   ValidationProps,
   Validator,
+  InferError,
 } from './hooks/validation/useValidation';
 export { validateDate } from './hooks/validation/useDateValidation';
 export { validateTime } from './hooks/validation/useTimeValidation';
@@ -105,20 +133,22 @@ export type { TimeValidationError } from './hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BasePickerProps } from './models/props/basePickerProps';
+export type { BaseFieldProps } from './models/fields';
+export type {
+  BasePickerProps,
+  BaseNextPickerProps,
+  BaseNextNonStaticPickerProps,
+} from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type {
-  CalendarOrClockPickerView,
-  CalendarPickerView,
-  ClockPickerView,
-} from './models/views';
+export type { DateOrTimeView, DateView, TimeView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
-export { executeInTheNextEventLoopTick, onSpaceOrEnter } from './utils/utils';
+export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
+export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';
 
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';

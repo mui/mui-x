@@ -28,7 +28,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
 import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
@@ -46,7 +46,7 @@ export interface DateCalendarSlotsComponent<TDate>
     DayCalendarSlotsComponent<TDate> {}
 
 export interface DateCalendarSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps,
+  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
     DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface DateCalendarProps<TDate>
@@ -101,14 +101,14 @@ export interface DateCalendarProps<TDate>
   disabled?: boolean;
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
-  onViewChange?: (view: CalendarPickerView) => void;
+  onViewChange?: (view: DateView) => void;
   /**
    * Initially open view.
    * @default 'day'
    */
-  openTo?: CalendarPickerView;
+  openTo?: DateView;
   /**
    * Make picker read only.
    * @default false
@@ -128,12 +128,12 @@ export interface DateCalendarProps<TDate>
   /**
    * Controlled open view.
    */
-  view?: CalendarPickerView;
+  view?: DateView;
   /**
    * Views for calendar picker.
    * @default ['year', 'day']
    */
-  views?: readonly CalendarPickerView[];
+  views?: readonly DateView[];
   /**
    * Callback firing on year change @DateIOType.
    * @template TDate
@@ -147,8 +147,8 @@ export interface DateCalendarProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  focusedView?: CalendarPickerView | null;
-  onFocusedViewChange?: (view: CalendarPickerView) => (newHasFocus: boolean) => void;
+  focusedView?: DateView | null;
+  onFocusedViewChange?: (view: DateView) => (newHasFocus: boolean) => void;
 }
 
 export type ExportedDateCalendarProps<TDate> = Omit<
@@ -285,6 +285,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     componentsProps,
     loading,
     renderLoading,
+    displayWeekNumber,
     sx,
   } = props;
 
@@ -422,7 +423,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
   const gridLabelId = `${id}-grid-label`;
 
-  const [internalFocusedView, setInternalFocusedView] = useControlled<CalendarPickerView | null>({
+  const [internalFocusedView, setInternalFocusedView] = useControlled<DateView | null>({
     name: 'DateCalendar',
     state: 'focusedView',
     controlled: focusedView,
@@ -432,7 +433,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
   const hasFocus = internalFocusedView !== null;
 
   const handleFocusedViewChange = useEventCallback(
-    (eventView: CalendarPickerView) => (newHasFocus: boolean) => {
+    (eventView: DateView) => (newHasFocus: boolean) => {
       if (onFocusedViewChange) {
         // Use the calendar or clock logic
         onFocusedViewChange(eventView)(newHasFocus);
@@ -449,17 +450,17 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
 
   const prevOpenViewRef = React.useRef(openView);
   React.useEffect(() => {
-    if (openView && openView !== focusedView) {
-      handleFocusedViewChange(openView)(true);
-    }
-
-    // Set focus to the button when switching from a view to another
+    // If the view change and the focus was on the previouse view
+    // Then we update the focus.
     if (prevOpenViewRef.current === openView) {
       return;
     }
+
+    if (focusedView === prevOpenViewRef.current) {
+      handleFocusedViewChange(openView)(true);
+    }
     prevOpenViewRef.current = openView;
-    handleFocusedViewChange(openView)(true);
-  }, [openView, handleFocusedViewChange]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [focusedView, handleFocusedViewChange, openView]);
 
   return (
     <DateCalendarRoot
@@ -538,6 +539,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
+              displayWeekNumber={displayWeekNumber}
               components={components}
               componentsProps={componentsProps}
               loading={loading}
@@ -605,6 +607,10 @@ DateCalendar.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
    * @default undefined
@@ -642,7 +648,7 @@ DateCalendar.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**

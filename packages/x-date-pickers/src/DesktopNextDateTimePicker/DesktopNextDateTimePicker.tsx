@@ -5,7 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { DesktopNextDateTimePickerProps } from './DesktopNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
-import { CalendarOrClockPickerView, useLocaleText, validateDateTime } from '../internals';
+import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
 import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -28,7 +28,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   inProps: DesktopNextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
   const { className, sx, ...defaultizedProps } = useNextDateTimePickerDefaultizedProps<
@@ -56,11 +56,12 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
 
-  const { renderPicker } = useDesktopPicker<TDate, CalendarOrClockPickerView, typeof props>({
+  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
@@ -152,6 +153,10 @@ DesktopNextDateTimePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
@@ -333,7 +338,7 @@ DesktopNextDateTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

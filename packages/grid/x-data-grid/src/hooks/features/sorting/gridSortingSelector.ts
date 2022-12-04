@@ -7,7 +7,7 @@ import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
  * @category Sorting
  * @ignore - do not document.
  */
-export const gridSortingStateSelector = (state: GridStateCommunity) => state.sorting;
+const gridSortingStateSelector = (state: GridStateCommunity) => state.sorting;
 
 /**
  * Get the id of the rows after the sorting process.

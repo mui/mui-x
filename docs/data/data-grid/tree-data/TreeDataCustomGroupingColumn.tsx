@@ -29,15 +29,6 @@ function CustomGridTreeDataGroupingCell(props: GridRenderCellParams) {
   );
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
-  const handleKeyDown: ButtonProps['onKeyDown'] = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
-
   const handleClick: ButtonProps['onClick'] = (event) => {
     if (rowNode.type !== 'group') {
       return;
@@ -52,12 +43,7 @@ function CustomGridTreeDataGroupingCell(props: GridRenderCellParams) {
     <Box sx={{ ml: rowNode.depth * 4 }}>
       <div>
         {filteredDescendantCount > 0 ? (
-          <Button
-            onClick={handleClick}
-            onKeyDown={handleKeyDown}
-            tabIndex={-1}
-            size="small"
-          >
+          <Button onClick={handleClick} tabIndex={-1} size="small">
             See {filteredDescendantCount} employees
           </Button>
         ) : (

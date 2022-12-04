@@ -261,7 +261,7 @@ DesktopTimePicker.propTypes = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {ClockPickerView} view The new view.
+   * @param {TimeView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -307,7 +307,7 @@ DesktopTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

@@ -24,6 +24,7 @@ import {
   usePreviousMonthDisabled,
   useUtils,
   WrapperVariantContext,
+  PickerSelectionState,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { getDateRangeCalendarUtilityClass } from './dateRangeCalendarClasses';
@@ -42,6 +43,7 @@ import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internal/utils/valueManagers';
+import { useDragRange } from './useDragRange';
 
 const releaseInfo = getReleaseInfo();
 
@@ -60,7 +62,7 @@ const DateRangeCalendarMonthContainer = styled('div', {
   overridesResolver: (_, styles) => styles.monthContainer,
 })(({ theme }) => ({
   '&:not(:last-of-type)': {
-    borderRight: `2px solid ${theme.palette.divider}`,
+    borderRight: `2px solid ${(theme.vars || theme).palette.divider}`,
   },
 }));
 
@@ -101,6 +103,7 @@ function useDateRangeCalendarDefaultizedProps<TDate>(
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     calendars: themeProps.calendars ?? 2,
+    disableDragEditing: themeProps.disableDragEditing ?? false,
   };
 }
 
@@ -157,9 +160,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     dayOfWeekFormatter,
     disableAutoMonthSwitching,
-    sx,
     autoFocus,
-    classes: propClasses,
+    fixedWeekNumber,
+    disableDragEditing,
     ...other
   } = props;
 
@@ -177,9 +180,80 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     state: 'currentDatePosition',
   });
 
+  const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
+    if (currentDatePosition !== position) {
+      setCurrentDatePosition(position);
+    }
+  });
+
+  const handleSelectedDayChange = useEventCallback(
+    (
+      newDate: TDate | null,
+      selectionState: PickerSelectionState | undefined,
+      allowRangeFlip: boolean = false,
+    ) => {
+      const { nextSelection, newRange } = calculateRangeChange({
+        newDate,
+        utils,
+        range: value,
+        currentlySelectingRangeEnd: currentDatePosition,
+        allowRangeFlip,
+      });
+
+      setCurrentDatePosition(nextSelection);
+      onCurrentDatePositionChange?.(nextSelection);
+
+      const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
+
+      setValue(newRange);
+      onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
+    },
+  );
+
+  const handleDrop = useEventCallback((newDate: TDate) => {
+    handleSelectedDayChange(newDate, undefined, true);
+  });
+
+  const shouldDisableDragEditing = disableDragEditing || disabled || readOnly;
+
+  // Range going for the start of the start day to the end of the end day.
+  // This makes sure that `isWithinRange` works with any time in the start and end day.
+  const valueDayRange = React.useMemo<DateRange<TDate>>(
+    () => [
+      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
+      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
+    ],
+    [value, utils],
+  );
+
+  const { isDragging, rangeDragDay, draggingDatePosition, ...dragEventHandlers } = useDragRange({
+    disableDragEditing: shouldDisableDragEditing,
+    onDrop: handleDrop,
+    onDatePositionChange: handleDatePositionChange,
+    utils,
+    dateRange: valueDayRange,
+  });
+
+  const draggingRange = React.useMemo<DateRange<TDate>>(() => {
+    if (!valueDayRange[0] || !valueDayRange[1] || !rangeDragDay) {
+      return [null, null];
+    }
+    const newRange = calculateRangeChange({
+      utils,
+      range: valueDayRange,
+      newDate: rangeDragDay,
+      currentlySelectingRangeEnd: currentDatePosition,
+      allowRangeFlip: true,
+    }).newRange;
+    return newRange[0] !== null && newRange[1] !== null
+      ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
+      : newRange;
+  }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
+
   const wrappedShouldDisableDate =
     shouldDisableDate &&
-    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, currentDatePosition));
+    ((dayToTest: TDate) =>
+      shouldDisableDate?.(dayToTest, draggingDatePosition || currentDatePosition));
 
   const {
     calendarState,
@@ -236,23 +310,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     }
   }, [currentDatePosition, value]); // eslint-disable-line
 
-  const handleSelectedDayChange = useEventCallback((newDate: TDate | null) => {
-    const { nextSelection, newRange } = calculateRangeChange({
-      newDate,
-      utils,
-      range: value,
-      currentlySelectingRangeEnd: currentDatePosition,
-    });
-
-    setCurrentDatePosition(nextSelection);
-    onCurrentDatePositionChange?.(nextSelection);
-
-    const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
-
-    setValue(newRange);
-    onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
-  });
-
   const selectNextMonth = React.useCallback(() => {
     changeMonth(utils.getNextMonth(calendarState.currentMonth));
   }, [changeMonth, calendarState.currentMonth, utils]);
@@ -297,16 +354,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [],
   );
 
-  // Range going for the start of the start day to the end of the end day.
-  // This makes sure that `isWithinRange` works with any time in the start and end day.
-  const valueDayRange = React.useMemo<DateRange<TDate>>(
-    () => [
-      value[0] == null || !utils.isValid(value[0]) ? value[0] : utils.startOfDay(value[0]),
-      value[1] == null || !utils.isValid(value[1]) ? value[1] : utils.endOfDay(value[1]),
-    ],
-    [value, utils],
-  );
-
   const previewingRange = calculateRangePreview({
     utils,
     range: valueDayRange,
@@ -331,15 +378,39 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
+      const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
+      const isSelectedEndDate = isEndOfRange(utils, day, valueDayRange);
+      const shouldInitDragging = !shouldDisableDragEditing && valueDayRange[0] && valueDayRange[1];
+      const isElementDraggable = shouldInitDragging && (isSelectedStartDate || isSelectedEndDate);
+      const { onDragStart, onTouchStart, onTouchMove, onTouchEnd, ...otherDragHandlers } =
+        dragEventHandlers;
+      let datePosition: DateRangePosition | undefined;
+      if (isSelectedStartDate) {
+        datePosition = 'start';
+      } else if (isSelectedEndDate) {
+        datePosition = 'end';
+      }
 
       return {
         isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
         isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
         isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
-        isHighlighting: isWithinRange(utils, day, valueDayRange),
-        isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
-        isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
+        isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
+        isStartOfHighlighting: isDragging
+          ? isStartOfRange(utils, day, draggingRange)
+          : isSelectedStartDate,
+        isEndOfHighlighting: isDragging
+          ? isEndOfRange(utils, day, draggingRange)
+          : isSelectedEndDate,
         onMouseEnter: () => handlePreviewDayChange(day),
+        isDragging,
+        onDragStart: isElementDraggable ? onDragStart : undefined,
+        onTouchStart: isElementDraggable ? onTouchStart : undefined,
+        onTouchMove: isElementDraggable ? onTouchMove : undefined,
+        onTouchEnd: isElementDraggable ? onTouchEnd : undefined,
+        'data-position': datePosition,
+        ...(shouldInitDragging ? otherDragHandlers : {}),
+        draggable: isElementDraggable ? true : undefined,
         ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
@@ -350,7 +421,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       ref={ref}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
-      sx={sx}
       {...other}
     >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
@@ -361,11 +431,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         );
 
         return (
-          <DateRangeCalendarMonthContainer
-            key={index}
-            className={classes.monthContainer}
-            {...other}
-          >
+          <DateRangeCalendarMonthContainer key={index} className={classes.monthContainer}>
             {calendars === 1 ? (
               <PickersCalendarHeader
                 views={['day']}
@@ -418,6 +484,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               components={componentsForDayCalendar}
               componentsProps={componentsPropsForDayCalendar}
               autoFocus={autoFocus}
+              fixedWeekNumber={fixedWeekNumber}
             />
           </DateRangeCalendarMonthContainer>
         );
@@ -477,6 +544,11 @@ DateRangeCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
+  /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
@@ -491,6 +563,10 @@ DateRangeCalendar.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

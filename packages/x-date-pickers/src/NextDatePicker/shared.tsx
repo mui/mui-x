@@ -11,7 +11,7 @@ import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, CalendarPickerView, MuiPickersAdapter } from '../internals';
+import { BaseDateValidationProps, DateView, MuiPickersAdapter } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -34,7 +34,7 @@ export interface BaseNextDatePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDatePickerProps<TDate>
   extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, CalendarPickerView, DateValidationError>,
+      BaseNextPickerProps<TDate | null, TDate, DateView, DateValidationError>,
       'views' | 'openTo'
     >,
     ExportedDateCalendarProps<TDate> {
@@ -60,7 +60,7 @@ type UseNextDatePickerDefaultizedProps<
 
 export const getDatePickerFieldFormat = (
   utils: MuiPickersAdapter<any>,
-  { format, views }: { format?: string; views: readonly CalendarPickerView[] },
+  { format, views }: { format?: string; views: readonly DateView[] },
 ) => {
   if (format != null) {
     return format;

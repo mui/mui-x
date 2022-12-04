@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
+import { DateView, MuiPickersAdapter } from '../internals/models';
 import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
@@ -42,20 +42,20 @@ export interface BaseDatePickerProps<TDate>
     ExportedDateInputProps<TDate> {
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
-  onViewChange?: (view: CalendarPickerView) => void;
+  onViewChange?: (view: DateView) => void;
   /**
    * First view to show.
    * Must be a valid option from `views` list
    * @default 'day'
    */
-  openTo?: CalendarPickerView;
+  openTo?: DateView;
   /**
    * Array of views to show.
    * @default ['year', 'day']
    */
-  views?: readonly CalendarPickerView[];
+  views?: readonly DateView[];
   /**
    * Overrideable components.
    * @default {}
@@ -69,7 +69,7 @@ export interface BaseDatePickerProps<TDate>
 }
 
 const getFormatAndMaskByViews = <TDate>(
-  views: readonly CalendarPickerView[],
+  views: readonly DateView[],
   utils: MuiPickersAdapter<TDate>,
 ): { disableMaskedInput?: boolean; inputFormat: string; mask?: string } => {
   if (isYearOnlyView(views)) {

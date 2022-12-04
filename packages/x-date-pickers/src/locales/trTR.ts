@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const trTRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +10,11 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'sonraki görünüm',
   openNextView: 'önceki görünüm',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `metin girişi görünümü açık, şuraya gidin: ${viewType} görünümü`
       : `${viewType} görünüm açık, metin girişi görünümüne gidin`,
@@ -43,6 +43,12 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} saat`,
   minutesClockNumberText: (minutes) => `${minutes} dakika`,
   secondsClockNumberText: (seconds) => `${seconds} saniye`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

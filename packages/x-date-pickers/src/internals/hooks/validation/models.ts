@@ -1,4 +1,4 @@
-import { ClockPickerView } from '../../models/views';
+import { TimeView } from '../../models/views';
 
 interface FutureAndPastValidationProps {
   /**
@@ -41,10 +41,10 @@ export interface TimeValidationProps<TDate> {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
-  shouldDisableTime?: (timeValue: number, view: ClockPickerView) => boolean;
+  shouldDisableTime?: (timeValue: number, view: TimeView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false

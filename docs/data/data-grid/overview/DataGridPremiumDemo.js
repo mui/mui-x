@@ -27,7 +27,6 @@ export default function DataGridPremiumDemo() {
       'incoTerm',
     ],
   });
-
   const apiRef = useGridApiRef();
 
   const initialState = useKeepGroupedColumnsHidden({

@@ -293,7 +293,7 @@ const GridRow = React.forwardRef<
       }
 
       const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode = null;
+      let content: React.ReactNode;
 
       if (editCellState == null && column.renderCell) {
         content = column.renderCell({ ...cellParams, api: apiRef.current });
@@ -414,7 +414,13 @@ const GridRow = React.forwardRef<
 
   if (sizes?.spacingBottom) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    style[property] = sizes.spacingBottom;
+    let propertyValue = style[property];
+    // avoid overriding existing value
+    if (typeof propertyValue !== 'number') {
+      propertyValue = parseInt(propertyValue || '0', 10);
+    }
+    propertyValue += sizes.spacingBottom;
+    style[property] = propertyValue;
   }
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);

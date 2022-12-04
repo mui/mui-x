@@ -133,6 +133,19 @@ describe('<DataGrid /> - Cells', () => {
     expect(getCell(0, 0)).to.have.text('0');
   });
 
+  it('should render nothing in cell when renderCell returns a `null` value', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          autoHeight={isJSDOM}
+          columns={[{ field: 'brand', renderCell: () => null }]}
+          rows={[{ id: 1, brand: 'Nike' }]}
+        />
+      </div>,
+    );
+    expect(getCell(0, 0)).to.have.text('');
+  });
+
   it('should call the valueFormatter with the correct params', () => {
     const valueFormatter = spy(({ value }) => (value ? 'Yes' : 'No'));
     render(

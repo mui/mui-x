@@ -10,6 +10,7 @@ import {
   adapterToUse,
   withPickerControls,
 } from 'test/utils/pickers-utils';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>
@@ -23,7 +24,7 @@ const WrappedStaticDateTimePicker = withPickerControls(StaticDateRangePicker)({
 });
 
 describe('<StaticDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <StaticDateRangePicker
@@ -50,6 +51,14 @@ describe('<StaticDateRangePicker />', () => {
       ],
     }),
   );
+
+  describeRangeValidation(StaticDateRangePicker, () => ({
+    render,
+    clock,
+    componentFamily: 'legacy-static-picker',
+    views: ['day'],
+    variant: 'mobile',
+  }));
 
   it('allows disabling dates', () => {
     render(

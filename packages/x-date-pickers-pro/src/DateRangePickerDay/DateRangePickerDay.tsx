@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
+import { useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -34,17 +34,21 @@ export interface DateRangePickerDayProps<TDate>
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerDayClasses>;
+  /**
+   * Indicates if the day is currently being dragged.
+   */
+  isDragging?: boolean;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
@@ -62,6 +66,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isEndOfPreviewing,
     selected,
     classes,
+    isDragging,
   } = ownerState;
 
   const slots = {
@@ -82,6 +87,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       !selected && 'notSelectedDate',
       !isHighlighting && 'dayOutsideRangeInterval',
       !selected && isHighlighting && 'dayInsideRangeInterval',
+      isDragging && 'dayDragging',
     ],
   };
 
@@ -114,34 +120,37 @@ const DateRangePickerDayRoot = styled('div', {
       [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
         styles.rangeIntervalDayHighlightEnd,
     },
+    {
+      [`&.${dateRangePickerDayClasses.dayDragging}`]: styles.dayDragging,
+    },
     styles.root,
   ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...startBorderStyle,
-    borderLeftColor: theme.palette.divider,
+    borderLeftColor: (theme.vars || theme).palette.divider,
   },
   [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...endBorderStyle,
-    borderRightColor: theme.palette.divider,
+    borderRightColor: (theme.vars || theme).palette.divider,
   },
   ...(ownerState.isHighlighting &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      color: theme.palette.primary.contrastText,
-      backgroundColor: alpha(theme.palette.primary.light, 0.6),
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
+        : alpha(theme.palette.primary.light, 0.6),
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
     }),
   ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
     ...startBorderStyle,
     paddingLeft: 0,
-    marginLeft: DAY_MARGIN / 2,
   }),
   ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
     ...endBorderStyle,
     paddingRight: 0,
-    marginRight: DAY_MARGIN / 2,
   }),
 }));
 
@@ -174,15 +183,15 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
   ...(ownerState.isPreviewing &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      border: `2px dashed ${theme.palette.divider}`,
+      border: `2px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       ...((ownerState.isStartOfPreviewing || ownerState.isStartOfMonth) && {
-        borderLeftColor: theme.palette.divider,
+        borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
       }),
       ...((ownerState.isEndOfPreviewing || ownerState.isEndOfMonth) && {
-        borderRightColor: theme.palette.divider,
+        borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
       }),
     }),
@@ -203,6 +212,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
     { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
     { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
     { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
+    { [`&.${dateRangePickerDayClasses.dayDragging}`]: styles.dayDragging },
     styles.day,
   ],
 })<{
@@ -216,15 +226,34 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(!ownerState.selected && {
     backgroundColor: 'transparent',
   }),
-  ...(!ownerState.isHighlighting && {
-    '&:hover': {
-      border: `1px solid ${theme.palette.grey[500]}`,
-    },
-  }),
+  ...(!ownerState.isHighlighting &&
+    !ownerState.isDragging && {
+      '@media (pointer: fine)': {
+        '&:hover': {
+          border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
+        },
+      },
+    }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
     }),
+  ...(ownerState.draggable && {
+    cursor: 'grab',
+  }),
+  ...(ownerState.isDragging && {
+    cursor: 'grabbing',
+  }),
+  ...(ownerState.isDragging &&
+    ownerState.selected &&
+    !ownerState.isStartOfHighlighting &&
+    !ownerState.isEndOfHighlighting && {
+      // we can't override `PickersDay` background color here, because it's styles take precedence
+      opacity: '.6',
+    }),
+  ...(ownerState.draggable && {
+    touchAction: 'none',
+  }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => JSX.Element;
@@ -250,6 +279,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfPreviewing,
     selected = false,
     sx,
+    isDragging,
+    draggable,
     ...other
   } = props;
 
@@ -267,10 +298,14 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected,
     isStartOfMonth,
     isEndOfMonth,
+    isDragging,
+    draggable,
   };
 
   const classes = useUtilityClasses(ownerState);
 
+  // apply selected styling to the dragging start or end day
+  const isSelected = selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting));
   return (
     <DateRangePickerDayRoot
       data-mui-test={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
@@ -288,11 +323,12 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           ref={ref}
           disableMargin
           day={day}
-          selected={selected}
+          selected={isSelected}
           outsideCurrentMonth={outsideCurrentMonth}
           data-mui-test="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
+          draggable={draggable}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>
@@ -329,11 +365,15 @@ DateRangePickerDayRaw.propTypes = {
   disableMargin: PropTypes.bool,
   isAnimating: PropTypes.bool,
   /**
+   * Indicates if the day is currently being dragged.
+   */
+  isDragging: PropTypes.bool,
+  /**
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -349,7 +389,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
   onDaySelect: PropTypes.func.isRequired,

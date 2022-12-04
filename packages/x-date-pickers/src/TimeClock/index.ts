@@ -13,4 +13,4 @@ export { clockPointerClasses } from './clockPointerClasses';
 export type { ClockPointerClasses, ClockPointerClassKey } from './clockPointerClasses';
 export type { ClockPointerProps } from './ClockPointer';
 
-export type { ClockPickerView } from '../internals/models';
+export type { TimeView } from '../internals/models';

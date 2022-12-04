@@ -2,7 +2,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useControlled as useControlled,
+  unstable_useId as useId,
+} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -13,10 +18,10 @@ import {
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
+import { useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
@@ -75,33 +80,42 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
-  value: TDate | null;
+  value?: TDate | null;
   /**
-   * On change callback @DateIOType.
+   * The default selected value.
+   * Used when the component is not controlled.
    */
-  onChange: PickerOnChangeFn<TDate>;
+  defaultValue?: TDate | null;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   */
+  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
   showViewSwitcher?: boolean;
   /**
    * Controlled open view.
    */
-  view?: ClockPickerView;
+  view?: TimeView;
   /**
    * Views for calendar picker.
    * @default ['hours', 'minutes']
    */
-  views?: readonly ClockPickerView[];
+  views?: readonly TimeView[];
   /**
    * Callback fired on view change.
-   * @param {ClockPickerView} view The new view.
+   * @param {TimeView} view The new view.
    */
-  onViewChange?: (view: ClockPickerView) => void;
+  onViewChange?: (view: TimeView) => void;
   /**
    * Initially open view.
    * @default 'hours'
    */
-  openTo?: ClockPickerView;
+  openTo?: TimeView;
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -148,6 +162,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const localeText = useLocaleText<TDate>();
+
   const props = useThemeProps({
     props: inProps,
     name: 'MuiTimeClock',
@@ -159,8 +175,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    value,
-    disableIgnoringDatePartForTimeValidation,
+    value: valueProp,
+    disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
     disableFuture,
@@ -169,6 +185,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     shouldDisableTime,
     showViewSwitcher,
     onChange,
+    defaultValue,
     view,
     views = ['hours', 'minutes'],
     openTo,
@@ -179,14 +196,26 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
   } = props;
 
-  const localeText = useLocaleText();
+  const [value, setValue] = useControlled({
+    name: 'DateCalendar',
+    state: 'value',
+    controlled: valueProp,
+    default: defaultValue ?? null,
+  });
+
+  const handleValueChange = useEventCallback(
+    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+      setValue(newValue);
+      onChange?.(newValue, selectionState);
+    },
+  );
 
   const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
     view,
     views,
     openTo,
     onViewChange,
-    onChange,
+    onChange: handleValueChange,
   });
 
   const now = useNow<TDate>();
@@ -204,7 +233,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   );
 
   const isTimeDisabled = React.useCallback(
-    (rawValue: number, viewType: ClockPickerView) => {
+    (rawValue: number, viewType: TimeView) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
@@ -456,6 +485,11 @@ TimeClock.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -491,12 +525,15 @@ TimeClock.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * On change callback @DateIOType.
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {ClockPickerView} view The new view.
+   * @param {TimeView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -512,7 +549,7 @@ TimeClock.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
@@ -526,7 +563,8 @@ TimeClock.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**

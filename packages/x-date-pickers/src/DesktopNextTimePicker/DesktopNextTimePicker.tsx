@@ -5,7 +5,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_TimeField as TimeField } from '../TimeField';
 import { DesktopNextTimePickerProps } from './DesktopNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
-import { useLocaleText, validateTime } from '../internals';
+import { TimeView, useLocaleText, validateTime } from '../internals';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
@@ -24,7 +24,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
   inProps: DesktopNextTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
   const { className, sx, ...defaultizedProps } = useNextTimePickerDefaultizedProps<
@@ -52,11 +52,12 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
         sx,
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
+        ampm: defaultizedProps.ampm,
       }),
     },
   };
 
-  const { renderPicker } = useDesktopPicker({
+  const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
@@ -247,7 +248,7 @@ DesktopNextTimePicker.propTypes = {
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} view The clock type of the timeValue.
+   * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,

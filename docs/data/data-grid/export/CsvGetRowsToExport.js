@@ -78,9 +78,7 @@ export default function CsvGetRowsToExport() {
           filter: {
             ...data.initialState?.filter,
             filterModel: {
-              items: [
-                { columnField: 'quantity', operatorValue: '>', value: '20000' },
-              ],
+              items: [{ field: 'quantity', operator: '>', value: '20000' }],
             },
           },
         }}

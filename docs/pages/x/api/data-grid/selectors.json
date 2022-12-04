@@ -103,13 +103,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridFilterStateSelector",
-    "returnType": "GridFilterState",
-    "category": "Filtering",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridFilteredSortedRowEntriesSelector",
     "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
     "category": "Filtering",

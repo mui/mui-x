@@ -50,9 +50,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'افزودن فیلتر',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLinkOperator: 'عملگر منطقی',
-  filterPanelOperators: 'عملگرها',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
   filterPanelColumns: 'ستون‌ها',

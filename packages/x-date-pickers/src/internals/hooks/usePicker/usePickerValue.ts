@@ -17,7 +17,7 @@ export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
 }
 
-export type PickerChangeHandler = <TValue, TError>(
+export type PickerChangeHandler<TValue, TError> = (
   value: TValue,
   context: PickerChangeHandlerContext<TError>,
 ) => void;
@@ -100,7 +100,7 @@ export interface UsePickerValueBaseProps<TValue, TError> {
    * @param {TValue} value The new value.
    * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
-  onChange?: PickerChangeHandler;
+  onChange?: PickerChangeHandler<TValue, TError>;
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -243,22 +243,28 @@ export const usePickerValue = <
     onSelectedSectionsChange,
   } = props;
 
-  const [value, setValue] = useControlled({
+  const utils = useUtils<TDate>();
+  const adapter = useLocalizationContext<TDate>();
+
+  const [rawValue, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'value',
   });
+
+  const value = React.useMemo(
+    () => valueManager.cleanValue(utils, rawValue),
+    [valueManager, utils, rawValue],
+  );
 
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'selectedSections',
   });
 
-  const utils = useUtils<TDate>();
-  const adapter = useLocalizationContext<TDate>();
   const { isOpen, setIsOpen } = useOpenState(props);
 
   const [dateState, setDateState] = React.useState<UsePickerValueState<TValue>>(() => ({
@@ -267,7 +273,12 @@ export const usePickerValue = <
     resetFallback: value,
   }));
 
-  useValidation({ ...props, value }, validator, valueManager.isSameError);
+  useValidation(
+    { ...props, value },
+    validator,
+    valueManager.isSameError,
+    valueManager.defaultErrorState,
+  );
 
   const setDate = useEventCallback((params: UsePickerValueAction<TValue, TError>) => {
     setDateState((prev) => {

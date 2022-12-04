@@ -12,7 +12,7 @@ import {
   getClockTouchEvent,
   withPickerControls,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
   components: { MobileTransition: FakeTransitionComponent },
@@ -29,7 +29,7 @@ describe('<MobileDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   it('prop: open – overrides open state', () => {
@@ -174,7 +174,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(3);
@@ -183,8 +183,9 @@ describe('<MobileDateTimePicker />', () => {
       );
 
       // Change the minutes
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', getClockTouchEvent());
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', getClockTouchEvent());
+      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date(new Date(2010, 0, 15, 11, 53)),
@@ -217,12 +218,12 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
       // Change the minutes (already tested)
-      const minuteClockEvent = getClockTouchEvent();
+      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
 
@@ -258,7 +259,7 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
@@ -295,7 +296,7 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
