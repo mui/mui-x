@@ -211,8 +211,8 @@ function GridCell(props: GridCellProps) {
       if (isNotInRow) {
         return;
       }
-      const type = current.getRowNode(rowId)!.type;
-      if (hasFocus && type !== 'pinnedRow') {
+      const rowNode = current.getRowNode(rowId);
+      if (hasFocus && rowNode && rowNode.type !== 'pinnedRow') {
         current.publishEvent('cellFocusUnmount', <GridCell {...props} isNotInRow />);
       }
     };
