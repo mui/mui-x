@@ -56,11 +56,6 @@ export type TimeRangeValidationError = [
   TimeRangeValidationErrorValue,
 ];
 
-export const isSameTimeRangeError = (
-  a: TimeRangeValidationError,
-  b: TimeRangeValidationError | null,
-) => b !== null && a[1] === b[1] && a[0] === b[0];
-
 export const useDateRangeValidation = <TDate>(
   props: ValidationProps<
     TimeRangeValidationError,
