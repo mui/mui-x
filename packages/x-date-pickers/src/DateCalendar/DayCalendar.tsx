@@ -260,6 +260,8 @@ function WrappedDay<TDate extends unknown>({
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       selectedDays,
+      // it is used in date range dragging logic by accessing `dataset.timestamp`
+      'data-timestamp': utils.toJsDate(day).valueOf(),
     },
     ownerState: { ...parentProps, day },
   });
