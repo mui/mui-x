@@ -14,9 +14,9 @@ It can be accessed by clicking on the 3-dots icon that appears on hover on a hea
 
 {{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
-## Customize column menu
+## Customize column menu items
 
-You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component or the entire menu by [passing a custom component](/x/react-data-grid/column-menu/#custom-component) to the `ColumnMenu` slot of the data grid component.
+You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component.
 
 **components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
 
@@ -129,7 +129,7 @@ As a reference, here are the default `components` supported by each column menu 
 
 {{"demo": "ColumnMenuGridReferences.js", "bg": "inline", "hideToolbar": true}}
 
-### Custom component
+## Custom menu component
 
 You can also customize and replace the column menu by [passing a fully custom component](/x/react-data-grid/components/#overriding-components) to the `ColumnMenu` slot of the Data Grid. If you want to add some of the default menu items to your custom component, you can import and re-use them.
 
