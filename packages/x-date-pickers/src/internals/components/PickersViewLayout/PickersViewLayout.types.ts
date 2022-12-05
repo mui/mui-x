@@ -37,7 +37,7 @@ export interface ExportedPickersViewLayoutSlotsComponentsProps<
   >;
 }
 
-interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
+export interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
   extends ExportedPickersViewLayoutSlotsComponent {
   /**
    * Tabs enabling toggling between views.
@@ -50,7 +50,7 @@ interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
   Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
-interface PickersViewLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView>
+export interface PickersViewLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView>
   extends ExportedPickersViewLayoutSlotsComponentsProps<TValue, TView> {
   /**
    * Props passed down to the tabs component.

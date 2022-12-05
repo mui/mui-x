@@ -19,6 +19,7 @@
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableDragEditing": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
@@ -87,7 +88,7 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileNextDateRangePicker/MobileNextDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
   "packages": [
     {
       "packageName": "@mui/x-date-pickers-pro",

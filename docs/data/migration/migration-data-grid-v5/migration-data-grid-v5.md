@@ -39,6 +39,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
+- The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
 
 ### State access
 
@@ -140,6 +141,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
+- The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
 <!--
 ### CSS classes

@@ -1,6 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time pickers - Custom components
+components: DateTimePickerTabs
 ---
 
 # Custom components
