@@ -19,8 +19,8 @@ export const renderDateRangeView = <TDate extends unknown>({
   reduceAnimations,
   onMonthChange,
   defaultCalendarMonth,
-  currentDatePosition,
-  onCurrentDatePositionChange,
+  rangePosition,
+  onRangePositionChange,
   calendars,
   components,
   componentsProps,
@@ -50,8 +50,8 @@ export const renderDateRangeView = <TDate extends unknown>({
     reduceAnimations={reduceAnimations}
     onMonthChange={onMonthChange}
     defaultCalendarMonth={defaultCalendarMonth}
-    currentDatePosition={currentDatePosition}
-    onCurrentDatePositionChange={onCurrentDatePositionChange}
+    rangePosition={rangePosition}
+    onRangePositionChange={onRangePositionChange}
     calendars={calendars}
     components={components}
     componentsProps={componentsProps}
