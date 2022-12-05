@@ -26,11 +26,17 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Pokaż filtry',
   toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Wyszukaj…',
+  toolbarQuickFilterLabel: 'Szukaj',
+  toolbarQuickFilterDeleteIconLabel: 'Wyczyść',
+
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
   toolbarExportLabel: 'Eksportuj',
   toolbarExportCSV: 'Pobierz jako plik CSV',
   toolbarExportPrint: 'Drukuj',
+  toolbarExportExcel: 'Pobierz jako plik Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Znajdź kolumnę',
@@ -43,9 +49,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
   filterPanelLinkOperator: 'Operator logiczny',
-  filterPanelOperators: 'Operator',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
   filterPanelColumns: 'Kolumny',
@@ -126,8 +130,20 @@ const plPLGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Rozgrupuj ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Rozwiń',
   collapseDetailPanel: 'Zwiń',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Porządkowanie wierszy',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const plPL: Localization = getGridLocalization(plPLGrid, plPLCore);

@@ -2,44 +2,84 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
-import { GridFilterItem } from '../../../models/gridFilterItem';
+import { unstable_useId as useId } from '@mui/utils';
 import { getValueFromOption } from './filterPanelUtils';
-import type { GridApiCommon } from '../../../models/api/gridApiCommon';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
+import { GridFilterInputValueProps } from './GridFilterInputValueProps';
+import type { ValueOptions } from '../../../models/colDef/gridColDef';
 
-export type GridFilterInputMultipleSingleSelectProps = {
-  item: GridFilterItem;
-  applyValue: (value: GridFilterItem) => void;
-  apiRef: React.MutableRefObject<GridApiCommon>;
-  focusElementRef?: React.Ref<any>;
+export interface GridFilterInputMultipleSingleSelectProps
+  extends Omit<
+      AutocompleteProps<ValueOptions, true, false, true>,
+      | 'options'
+      | 'renderInput'
+      | 'onChange'
+      | 'value'
+      | 'id'
+      | 'filterOptions'
+      | 'isOptionEqualToValue'
+      | 'limitTags'
+      | 'multiple'
+      | 'color'
+    >,
+    GridFilterInputValueProps {
   type?: 'singleSelect';
-} & Omit<AutocompleteProps<any[], true, false, true>, 'options' | 'renderInput'>;
+}
 
-const isOptionEqualToValue: GridFilterInputMultipleSingleSelectProps['isOptionEqualToValue'] = (
-  option,
-  value,
-) => getValueFromOption(option) === getValueFromOption(value);
+const isOptionEqualToValue: AutocompleteProps<
+  ValueOptions,
+  true,
+  false,
+  true
+>['isOptionEqualToValue'] = (option, value) =>
+  getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
 function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingleSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...other } = props;
-  const id = useId();
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    color,
+    error,
+    helperText,
+    size,
+    variant = 'standard',
+    ...other
+  } = props;
+  const TextFieldProps = {
+    color,
+    error,
+    helperText,
+    size,
+    variant,
+  };
 
-  const resolvedColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const id = useId();
+  const rootProps = useGridRootProps();
+
+  const resolvedColumn = item.field ? apiRef.current.getColumn(item.field) : null;
   const resolvedValueOptions = React.useMemo(() => {
-    return typeof resolvedColumn?.valueOptions === 'function'
-      ? resolvedColumn.valueOptions({ field: resolvedColumn.field })
-      : resolvedColumn?.valueOptions;
+    if (!resolvedColumn?.valueOptions) {
+      return [];
+    }
+
+    if (typeof resolvedColumn.valueOptions === 'function') {
+      return resolvedColumn.valueOptions({ field: resolvedColumn.field });
+    }
+
+    return resolvedColumn.valueOptions;
   }, [resolvedColumn]);
   const resolvedFormattedValueOptions = React.useMemo(() => {
     return resolvedValueOptions?.map(getValueFromOption);
   }, [resolvedValueOptions]);
 
-  const { valueFormatter, field } = apiRef.current.getColumn(item.columnField);
+  const { valueFormatter, field } = apiRef.current.getColumn(item.field);
 
-  const filterValueOptionFormatter = (option: any) => {
+  const filterValueOptionFormatter = (option: ValueOptions) => {
     if (typeof option === 'object') {
       return option.label;
     }
@@ -56,7 +96,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
     if (resolvedValueOptions !== undefined) {
       const itemValueIndexes = item.value.map((element) => {
-        // get the index matching between values and valueoptions
+        // get the index matching between values and valueOptions
         const formattedElement = getValueFromOption(element);
         const index =
           resolvedFormattedValueOptions?.findIndex(
@@ -80,7 +120,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }, [item, filterValues, applyValue]);
 
-  const handleChange = React.useCallback(
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
+  >(
     (event, value) => {
       applyValue({ ...item, value: [...value.map(getValueFromOption)] });
     },
@@ -88,18 +130,17 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   );
 
   return (
-    <Autocomplete
+    <Autocomplete<ValueOptions, true, false, true>
       multiple
-      freeSolo={false}
       limitTags={1}
-      options={resolvedValueOptions as any} // TODO: avoid `any`?
+      options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
       value={filterValues}
       onChange={handleChange}
-      renderTags={(value: any[], getTagProps) =>
-        value.map((option: string, index: number) => (
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
           <Chip
             variant="outlined"
             size="small"
@@ -109,7 +150,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
         ))
       }
       renderInput={(params) => (
-        <TextField
+        <rootProps.components.BaseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -118,8 +159,9 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
             shrink: true,
           }}
           inputRef={focusElementRef}
-          type={'singleSelect'}
-          variant="standard"
+          type="singleSelect"
+          {...TextFieldProps}
+          {...rootProps.componentsProps?.baseTextField}
         />
       )}
       {...other}
@@ -141,9 +183,9 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   type: PropTypes.oneOf(['singleSelect']),

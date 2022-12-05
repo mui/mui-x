@@ -1,5 +1,6 @@
 {
-  "version": "5.8.0",
   "npmClient": "yarn",
-  "useWorkspaces": true
+  "useWorkspaces": true,
+  "version": "independent",
+  "useNx": false
 }

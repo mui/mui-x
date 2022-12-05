@@ -3,22 +3,33 @@ import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { createPickerRenderer, adapterToUse } from '../../../../test/utils/pickers-utils';
+import { createPickerRenderer, adapterToUse, withPickerControls } from 'test/utils/pickers-utils';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
+
+const WrappedStaticDatePicker = withPickerControls(StaticDatePicker)({
+  renderInput: (params) => <TextField {...params} />,
+});
 
 describe('<StaticDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(StaticDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'legacy-static-picker',
+  }));
 
   it('render proper month', () => {
     render(
       <StaticDatePicker
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
 
-    expect(screen.getByText('January')).toBeVisible();
-    expect(screen.getByText('2019')).toBeVisible();
+    expect(screen.getByText('January 2019')).toBeVisible();
     expect(screen.getAllByMuiTest('day')).to.have.length(31);
   });
 
@@ -26,13 +37,13 @@ describe('<StaticDatePicker />', () => {
     render(
       <StaticDatePicker
         reduceAnimations
-        value={adapterToUse.date('2019-01-01T00:00:00.000')}
+        value={adapterToUse.date(new Date(2019, 0, 1))}
         onChange={() => {}}
         renderInput={(params) => <TextField {...params} />}
       />,
     );
 
-    expect(screen.getByMuiTest('calendar-month-text')).to.have.text('January');
+    expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('January 2019');
 
     const nextMonth = screen.getByLabelText('Next month');
     const previousMonth = screen.getByLabelText('Previous month');
@@ -43,28 +54,19 @@ describe('<StaticDatePicker />', () => {
     fireEvent.click(previousMonth);
     fireEvent.click(previousMonth);
 
-    expect(screen.getByMuiTest('calendar-month-text')).to.have.text('December');
+    expect(screen.getByMuiTest('calendar-month-and-year-text')).to.have.text('December 2018');
   });
 
-  it('prop `shouldDisableYear` – disables years dynamically', () => {
-    render(
-      <StaticDatePicker
-        renderInput={(params) => <TextField {...params} />}
-        openTo="year"
-        onChange={() => {}}
-        // getByRole() with name attribute is too slow, so restrict the number of rendered years
-        minDate={adapterToUse.date('2025-01-01T00:00:00.000')}
-        maxDate={adapterToUse.date('2035-01-01T00:00:00.000')}
-        value={adapterToUse.date('2018-01-01T00:00:00.000')}
-        shouldDisableYear={(year) => adapterToUse.getYear(year) === 2030}
-      />,
-    );
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticDatePicker
+          initialValue={null}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
 
-    const getYearButton = (year: number) =>
-      screen.getByText(year.toString(), { selector: 'button' });
-
-    expect(getYearButton(2029)).not.to.have.attribute('disabled');
-    expect(getYearButton(2030)).to.have.attribute('disabled');
-    expect(getYearButton(2031)).not.to.have.attribute('disabled');
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

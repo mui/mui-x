@@ -1,28 +1,10 @@
----
-title: Data Grid - Editing
----
-
 # Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
-> ⚠️ This page refers to the new editing API, which is not enabled by default.
-> To use it, add the following flag:
->
-> ```tsx
-> <DataGrid experimentalFeatures={{ newEditingApi: true }} />
-> ```
->
-> This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
-> To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
->
-> If you are looking for the documentation for the default editing API, visit [this page](/components/data-grid/editing-legacy/).
-> Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
-> Although it says "experimental," you can consider it stable.
-
 ## Making a column editable
 
-You can make a column editable by enabling the `editable` property in its [column definition](/api/data-grid/grid-col-def/):
+You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -51,7 +33,7 @@ Users can start editing a cell (or row if `editMode="row"`) with any of the foll
   apiRef.current.startCellEditMode({ id: 1, field: 'name' });
   ```
 
-- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`)
+- Calling `apiRef.current.startRowEditMode` passing the ID of the row (only available if `editMode="row"`).
 
   ```tsx
   apiRef.current.startRowEditMode({ id: 1 });
@@ -96,7 +78,7 @@ When a cell is in edit mode, the user can stop editing with any of the following
 
 The `editable` property controls which cells are editable at the column level.
 You can use the `isCellEditable` callback prop to define which individual cells the user can edit in a given row.
-It is called with a [`GridCellParams`](/api/data-grid/grid-cell-params/) object and must return `true` if the cell is editable, or `false` if not.
+It is called with a [`GridCellParams`](/x/api/data-grid/grid-cell-params/) object and must return `true` if the cell is editable, or `false` if not.
 
 In the following demo, only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
@@ -110,7 +92,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: GridCellValue, params: GridCellParams) => {
+    valueParser: (value: any, params: GridCellParams) => {
       return value.toLowerCase();
     },
   },
@@ -140,7 +122,7 @@ The `valueParser` capitalizes the value entered, and the `valueSetter` splits th
 
 ## Events
 
-The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) cell editing do so by triggering the `'cellEditStart'` and `'cellEditStop'` [events](/components/data-grid/events/), respectively.
+The mouse and keyboard interactions that [start](#start-editing) and [stop](#stop-editing) cell editing do so by triggering the `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
 For row editing, the events are `'rowEditStart'` and `'rowEditStop'`.
 You can control how these events are handled to customize editing behavior.
 
@@ -156,18 +138,61 @@ The object also contains a `reason` param that specifies which type of interacti
 
 The following demo shows how to prevent the user from exiting edit mode when clicking outside of a cell.
 To do this, the `onCellEditStop` prop is used to check if the `reason` is `'cellFocusOut'`.
-If that condition is true, it [disables](/components/data-grid/events/#disabling-the-default-behavior) the default event behavior.
-In this scenario, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
+If that condition is true, it [disables](/x/react-data-grid/events/#disabling-the-default-behavior) the default event behavior.
+In this context, the user can only stop editing a cell by pressing <kbd class="key">Enter</kbd>, <kbd class="key">Escape</kbd> or <kbd class="key">Tab</kbd>.
 
 {{"demo": "DisableStopEditModeOnFocusOut.js", "bg": "inline"}}
 
-### Disabling default start and stop behavior
+## Controlled mode
 
-The following demo shows how external buttons can be used to start and stop edit mode.
-To do this, the default behavior of the `onCellEditXXX` events is disabled.
-To edit a cell, click on it, then click **Edit**.
+Each cell and row has two modes: `edit` and `view`.
+You can control the active mode using the props `cellModesModel` and `rowModesModel` (only works if `editMode="row"`).
+
+The `cellModesModel` prop accepts an object containing the `mode` (and additional options) for a given column field, in a given row, as in the following example.
+The options accepted are the same available in [`apiRef.current.startCellEditMode`](#start-editing) and [`apiRef.current.stopCellEditMode`](#stop-editing).
+
+```tsx
+// Changes the mode of field=name from row with id=1 to "edit"
+<DataGrid
+  cellModesModel={{ 1: { name: { mode: GridCellModes.Edit } } }}
+/>
+
+// Changes the mode of field=name from row with id=1 to "view", ignoring modifications made
+<DataGrid
+  cellModesModel={{ 1: { name: { mode: GridCellModes.View, ignoreModifications: true } } }}
+/>
+```
+
+For row editing, the `rowModesModel` props work in a similar manner.
+The options accepted are the same available in [`apiRef.current.startRowEditMode`](#start-editing) and [`apiRef.current.stopRowEditMode`](#stop-editing).
+
+```tsx
+// Changes the mode of the row with id=1 to "edit"
+<DataGrid
+  editMode="row"
+  rowModesModel={{ 1: { mode: GridRowModes.Edit } }}
+/>
+
+// Changes the mode of the row with id=1 to "view", ignoring modifications made
+<DataGrid
+  editMode="row"
+  rowModesModel={{ 1: { mode: GridRowModes.View, ignoreModifications: true } }}
+/>
+```
+
+Additionally, the callback props `onCellModesModelChange` and `onRowModesModelChange` (only works if `editMode="row"`) are available.
+Use them to update the respective prop.
+
+In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
+For an example using row editing check the [full-featured CRUD component](#full-featured-crud-component).
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+The options passed to both model props only take effect when `mode` changes.
+Updating the params of a cell or row, but keeping the same `mode`, makes the cell or row to stay in the same mode.
+Also, removing one field or row ID from the object will not cause the missing cell or row to go to `"view"` mode.
+:::
 
 ## Validation
 
@@ -197,7 +222,9 @@ const columns: GridColDef[] = [
 ];
 ```
 
-> ⚠ Changing `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
+:::warning
+Changing `props.value` inside the callback has no effect. To pre-process it, use a [value parser](#value-parser-and-value-setter).
+:::
 
 The demo below contains an example of server-side data validation.
 In this case, the callback returns a promise that resolves to the modified props.
@@ -205,10 +232,6 @@ Note that the value passed to `props.error` is passed directly to the edit compo
 While the promise is not resolved, the edit component will receive an `isProcessingProps` prop with value equal to `true`.
 
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
-
-> ⚠ If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-> To avoid this, it is important to communicate to users when the processing is still occurring.
-> You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
 
 ## Persistence
 
@@ -256,14 +279,14 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...} />;
 }
 
 const columns: GridColDef[] = [
   {
     field: 'firstName',
     renderEditCell: (params: GridRenderEditCellParams) => (
-      return <CustomEditComponent {...params} />;
+      <CustomEditComponent {...params} />
     ),
   },
 ];
@@ -286,16 +309,16 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value; // The new value entered by the user
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onChange={handleChange}>;
+  return <input type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 
-The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/components/rating) component from `@mui/material`, for the **Rating** column.
+The following demo implements a custom edit component, based on the [`Rating`](https://mui.com/material-ui/react-rating/) component from `@mui/material`, for the **Rating** column.
 
 {{"demo": "CustomEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -333,8 +356,8 @@ Modify the edit component to enable this feature:
 +    setValue(valueProp);
 +  }, [valueProp]);
 +
-   return <input type="text" value={value} onChange={handleChange}>;
-}
+   return <input type="text" value={value} onChange={handleChange} />;
+ }
 ```
 
 ### With auto-stop
@@ -362,12 +385,14 @@ const handleChange = async (event: SelectChangeEvent) => {
 };
 ```
 
-The following demo implements an edit component with auto-stop, based on a native [`Select`](https://mui.com/components/selects) component for the **Role** column.
+The following demo implements an edit component with auto-stop, based on a native [`Select`](/material-ui/react-select/) component for the **Role** column.
 
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
-> Instead, use the provided interactions to exit edit mode.
+:::warning
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Instead, use the provided interactions to exit edit mode.
+:::
 
 ## Row editing
 
@@ -384,36 +409,30 @@ The user can [start](#start-editing) and [stop](#stop-editing) editing a row usi
 
 {{"demo": "BasicRowEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-> ⚠ By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
-> This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
-> If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
+:::warning
+By design, when changing the value of a cell all `preProcessEditCellProps` callbacks from other columns are also called.
+This lets you apply conditional validation where the value of a cell impacts the validation status of another cell in the same row.
+If you only want to run validation when the value has changed, check if the `hasChanged` param is `true`.
+:::
 
-### Conditional validation
-
-When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
-To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
-When the callback is called, it will have an additional `otherFieldsProps` param containing the props from the other fields in the same row.
-Use this param to check if the value from the current column is valid or not.
-Return the modified `props` containing the error as you would for cell editing.
-Once at the least one field has the `error` attribute set to a truthy value, the row will not exit edit mode.
-
-The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
-
-{{"demo": "ConditionalValidationGrid.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
-
-### Full-featured CRUD component [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+### Full-featured CRUD component
 
 Row editing makes it possible to create a full-featured CRUD (Create, Read, Update, Delete) component similar to those found in enterprise applications.
 In the following demo, the typical ways to start and stop editing are all disabled.
 Instead, use the buttons available in each row or in the toolbar.
 
-{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "disableAd": true, "defaultCodeOpen": false}}
+{{"demo": "FullFeaturedCrudGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/material-ui-pro/)
+## Advanced use cases
+
+See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
+
+## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

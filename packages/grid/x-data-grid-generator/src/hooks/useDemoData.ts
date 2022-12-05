@@ -1,10 +1,11 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
-import { GridColumnVisibilityModel } from '@mui/x-data-grid-pro';
+import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
 import { GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import asyncWorker from '../services/asyncWorker';
+import { GridColDefGenerator } from '../services/gridColDefGenerator';
 import {
   AddPathToDemoDataOptions,
   DemoTreeDataValue,
@@ -87,45 +88,60 @@ const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
+export interface ColumnsOptions
+  extends Pick<UseDemoDataOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+
+export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
+  let columns =
+    options.dataSet === 'Commodity' ? getCommodityColumns(options.editable) : getEmployeeColumns();
+
+  if (options.visibleFields) {
+    columns = columns.map((col) =>
+      options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
+    );
+  }
+  if (options.maxColumns) {
+    columns = columns.slice(0, options.maxColumns);
+  }
+  return columns;
+};
+
+export const getInitialState = (options: UseDemoDataOptions, columns: GridColDefGenerator[]) => {
+  const columnVisibilityModel: GridColumnVisibilityModel = {};
+  columns.forEach((col) => {
+    if (col.hide) {
+      columnVisibilityModel[col.field] = false;
+    }
+  });
+
+  const groupingField = options.treeData?.groupingField;
+  if (groupingField) {
+    columnVisibilityModel![groupingField] = false;
+  }
+
+  return { columns: { columnVisibilityModel } };
+};
+
 export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => {
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
-  const getColumns = React.useCallback(() => {
-    let columns =
-      options.dataSet === 'Commodity'
-        ? getCommodityColumns(options.editable)
-        : getEmployeeColumns();
-
-    if (options.visibleFields) {
-      columns = columns.map((col) =>
-        options.visibleFields?.includes(col.field) ? col : { ...col, hide: true },
-      );
-    }
-    if (options.maxColumns) {
-      columns = columns.slice(0, options.maxColumns);
-    }
-
-    return columns;
+  const columns = React.useMemo(() => {
+    return getColumnsFromOptions({
+      dataSet: options.dataSet,
+      editable: options.editable,
+      maxColumns: options.maxColumns,
+      visibleFields: options.visibleFields,
+    });
   }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
 
   const [data, setData] = React.useState<DemoTreeDataValue>(() => {
-    const columns = getColumns();
-
-    // TODO v6: Stop using `GridColDef.hide`
-    const columnVisibilityModel: GridColumnVisibilityModel = {};
-    columns.forEach((col) => {
-      if (col.hide) {
-        columnVisibilityModel[col.field] = false;
-      }
-    });
-
     return addTreeDataOptionsToDemoData(
       {
         columns,
         rows: [],
-        initialState: { columns: { columnVisibilityModel } },
+        initialState: getInitialState(options, columns),
       },
       options.treeData,
     );
@@ -150,10 +166,10 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
 
       let newData: DemoTreeDataValue;
       if (rowLength > 1000) {
-        newData = await getRealGridData(1000, getColumns());
+        newData = await getRealGridData(1000, columns);
         newData = await extrapolateSeed(rowLength, newData);
       } else {
-        newData = await getRealGridData(rowLength, getColumns());
+        newData = await getRealGridData(rowLength, columns);
       }
 
       if (!active) {
@@ -187,7 +203,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
     index,
-    getColumns,
+    columns,
   ]);
 
   return {

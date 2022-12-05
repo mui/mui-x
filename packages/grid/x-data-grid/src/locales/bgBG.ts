@@ -26,11 +26,17 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search…',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Изтегли',
   toolbarExportLabel: 'Изтегли',
   toolbarExportCSV: 'Изтегли като CSV',
   toolbarExportPrint: 'Принтиране',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
@@ -43,9 +49,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Добави Филтър',
   filterPanelDeleteIconLabel: 'Изтрий',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Оператори',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Колони',
@@ -93,7 +97,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} избран ред`,
 
   // Total row amount footer text
-  footerTotalRows: 'Общо Rедове:',
+  footerTotalRows: 'Общо Редове:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -129,8 +133,20 @@ const bgBGGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Спри групиране по ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Разгъване',
   collapseDetailPanel: 'Свиване',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

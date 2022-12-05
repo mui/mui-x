@@ -1,4 +1,4 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { GridColDef } from '@mui/x-data-grid-premium';
 
 export interface GridDataGeneratorContext {
   /**
@@ -19,4 +19,8 @@ export interface GridColDefGenerator extends GridColDef {
    * @default false
    */
   dataGeneratorUniquenessEnabled?: boolean;
+  /**
+   * If `true`, the column will be marked as hidden in the `columnVisibilityModel`.
+   */
+  hide?: boolean;
 }

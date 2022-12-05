@@ -27,11 +27,17 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'חיפוש…',
+  toolbarQuickFilterLabel: 'חיפוש',
+  toolbarQuickFilterDeleteIconLabel: 'ניקוי',
+
   // Export selector toolbar button text
   toolbarExport: 'ייצוא',
   toolbarExportLabel: 'ייצוא',
-  toolbarExportCSV: 'הורדה כ- CSV',
+  toolbarExportCSV: 'ייצוא ל- CSV',
   toolbarExportPrint: 'הדפסה',
+  toolbarExportExcel: 'ייצוא ל- Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'חפש עמודה',
@@ -43,10 +49,8 @@ const heILGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'אופרטור',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'אופרטור לוגי',
+  filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
   filterPanelColumns: 'עמודות',
@@ -129,8 +133,20 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'סידור שורות',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

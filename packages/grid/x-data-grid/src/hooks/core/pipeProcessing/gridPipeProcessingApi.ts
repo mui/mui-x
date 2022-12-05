@@ -1,33 +1,42 @@
 import * as React from 'react';
-import { GridCellIndexCoordinates, GridScrollParams } from '../../../models';
+import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import { GridColDef } from '../../../models/colDef/gridColDef';
 import {
+  GridExportStateParams,
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
 import { GridHydrateColumnsValue } from '../../features/columns/gridColumnsInterfaces';
-import { GridRowEntry } from '../../../models/gridRows';
+import { GridRowEntry, GridRowId } from '../../../models/gridRows';
+import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
 import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
+  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
   };
-  scrollToIndexes: {
-    value: Partial<GridScrollParams>;
-    context: Partial<GridCellIndexCoordinates>;
+  hydrateRows: {
+    value: GridHydrateRowsValue;
   };
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
-  exportState: { value: GridInitialStateCommunity };
+  exportMenu: { value: { component: React.ReactElement; componentName: string }[]; context: any };
+  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
   restoreState: {
     value: GridRestoreStatePreProcessingValue;
     context: GridRestoreStatePreProcessingContext<GridInitialStateCommunity>;
   };
   rowHeight: { value: Record<string, number>; context: GridRowEntry };
-  preferencePanel: { value: React.ReactNode; context: GridPreferencePanelsValue };
+  scrollToIndexes: {
+    value: Partial<GridScrollParams>;
+    context: Partial<GridCellIndexCoordinates>;
+  };
+  rowClassName: {
+    value: string[];
+    context: GridRowId;
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
@@ -48,19 +57,6 @@ type GridPipeProcessorsApplier = <P extends GridPipeProcessorGroup>(
 
 export interface GridPipeProcessingApi {
   /**
-   * Register a pre-processor and emit an event to notify the agents to re-apply the pre-processors.
-   * @param {GridPipeProcessorGroup} group The group on which this processor should be applied.
-   * @param {number} id An unique and static identifier of the processor.
-   * @param {GridPipeProcessor} processor The processor to register.
-   * @returns {() => void} A function to unregister the processor.
-   * @ignore - do not document.
-   */
-  unstable_registerPipeProcessor: <G extends GridPipeProcessorGroup>(
-    processorName: GridPipeProcessorGroup,
-    id: string,
-    callback: GridPipeProcessor<G>,
-  ) => () => void;
-  /**
    * Run all the processors registered for the given group.
    * @template T
    * @param {GridPipeProcessorGroup} group The group from which we want to apply the processors.
@@ -70,4 +66,39 @@ export interface GridPipeProcessingApi {
    * @ignore - do not document.
    */
   unstable_applyPipeProcessors: GridPipeProcessorsApplier;
+}
+
+export interface GridPipeProcessingPrivateApi {
+  /**
+   * Register a processor and run all the appliers of the group.
+   * @param {GridPipeProcessorGroup} group The group on which this processor should be applied.
+   * @param {string} id An unique and static identifier of the processor.
+   * @param {GridPipeProcessor} processor The processor to register.
+   * @returns {() => void} A function to unregister the processor.
+   */
+  registerPipeProcessor: <G extends GridPipeProcessorGroup>(
+    group: GridPipeProcessorGroup,
+    id: string,
+    processor: GridPipeProcessor<G>,
+  ) => () => void;
+  /**
+   * Register an applier.
+   * @param {GridPipeProcessorGroup} group The group of this applier
+   * @param {string} id An unique and static identifier of the applier.
+   * @param {() => void} applier The applier to register.
+   * @returns {() => void} A function to unregister the applier.
+   */
+  registerPipeApplier: (
+    group: GridPipeProcessorGroup,
+    id: string,
+    applier: () => void,
+  ) => () => void;
+  /**
+   * Imperatively run all the appliers of a group.
+   * Most of the time, the applier should run because a processor is re-registered,
+   * but sometimes we want to re-apply the processing even if the processor deps have not changed.
+   * This may occur when the change requires a `isDeepEqual` check.
+   * @param {GridPipeProcessorGroup} group The group to apply.
+   */
+  requestPipeProcessorsApplication: (group: GridPipeProcessorGroup) => void;
 }

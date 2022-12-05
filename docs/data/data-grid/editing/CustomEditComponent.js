@@ -10,7 +10,8 @@ function renderRating(params) {
 
 renderRating.propTypes = {
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.number,
 };
@@ -54,23 +55,20 @@ RatingEditInputCell.propTypes = {
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.number,
 };
 
-function renderRatingEditInputCell(params) {
+const renderRatingEditInputCell = (params) => {
   return <RatingEditInputCell {...params} />;
-}
+};
 
 export default function CustomEditComponent() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

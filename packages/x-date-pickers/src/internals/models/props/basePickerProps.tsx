@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { BaseToolbarProps } from './baseToolbarProps';
+import { Theme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import { UsePickerBaseProps } from '../../hooks/usePicker';
+import { PickerStateProps } from '../../hooks/usePickerState';
+import { DateOrTimeView } from '../views';
+import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface BasePickerProps<TInputValue, TDateValue> {
+export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
   /**
    * className applied to the root component.
    */
   className?: string;
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
-   */
-  disableCloseOnSelect?: boolean;
-  /**
    * If `true`, the picker and text field are disabled.
+   * @default false
    */
   disabled?: boolean;
   /**
@@ -20,36 +21,12 @@ export interface BasePickerProps<TInputValue, TDateValue> {
    */
   inputFormat?: string;
   /**
-   * Callback fired when date is accepted @DateIOType.
-   * @param {TDateValue} date The date that was just accepted.
-   */
-  onAccept?: (date: TDateValue) => void;
-  /**
-   * Callback fired when the value (the selected date) changes @DateIOType.
-   * @param {DateRange<TDate>} date The new parsed date.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
-   */
-  onChange: (date: TDateValue, keyboardInputValue?: string) => void;
-  /**
-   * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
-   */
-  onClose?: () => void;
-  /**
-   * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
-   */
-  onOpen?: () => void;
-  /**
    * Force rendering in particular orientation.
    */
   orientation?: 'portrait' | 'landscape';
   /**
-   * Control the popup or dialog open state.
-   */
-  open?: boolean;
-  /**
    * Make picker read only.
+   * @default false
    */
   readOnly?: boolean;
   /**
@@ -57,24 +34,59 @@ export interface BasePickerProps<TInputValue, TDateValue> {
    */
   showToolbar?: boolean;
   /**
-   * Component that will replace default toolbar renderer.
+   * Locale for components texts
    */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDateValue>>;
+  localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all pickers.
+ */
+export interface BaseNextPickerProps<TValue, TDate, TView extends DateOrTimeView, TError>
+  extends UsePickerBaseProps<TValue, TView, TError> {
   /**
-   * Date format, that is displaying in toolbar.
+   * Class name applied to the root element.
    */
-  toolbarFormat?: string;
+  className?: string;
   /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  toolbarPlaceholder?: React.ReactNode;
+  sx?: SxProps<Theme>;
   /**
-   * Prop forwarded to the ToolbarComponent.
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
    */
-  toolbarTitle?: React.ReactNode;
+  showToolbar?: boolean;
   /**
-   * The value of the picker.
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
-  value: TInputValue;
+  localeText?: PickersInputComponentLocaleText<TDate>;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerProps {
+  /**
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
+   */
+  format?: string;
+}
+
+/**
+ * Props common to all non-static pickers.
+ * These props are handled by each component, not by the headless wrappers.
+ */
+export interface BaseNextNonStaticPickerExternalProps {
+  /**
+   * The label content.
+   */
+  label?: React.ReactNode;
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
 }

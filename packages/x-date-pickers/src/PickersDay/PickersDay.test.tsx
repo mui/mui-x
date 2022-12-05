@@ -3,11 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { describeConformance, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { PickersDay, pickersDayClasses as classes } from '@mui/x-date-pickers/PickersDay';
-import {
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from '../../../../test/utils/pickers-utils';
+import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<PickersDay />', () => {
   const { render } = createPickerRenderer();
@@ -18,6 +14,7 @@ describe('<PickersDay />', () => {
       outsideCurrentMonth={false}
       selected
       onDaySelect={() => {}}
+      selectedDays={[]}
     />,
     () => ({
       classes,
@@ -35,10 +32,15 @@ describe('<PickersDay />', () => {
   it('selects the date on click, Enter and Space', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
-    render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
-    const targetDay = screen.getByRole('button', {
-      name: `${adapterToUse.format(day, 'fullDate')}`,
-    });
+    render(
+      <PickersDay
+        day={day}
+        outsideCurrentMonth={false}
+        onDaySelect={handleDaySelect}
+        selectedDays={[]}
+      />,
+    );
+    const targetDay = screen.getByRole('button', { name: adapterToUse.format(day, 'dayOfMonth') });
 
     // A native button implies Enter and Space keydown behavior
     // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
@@ -59,14 +61,13 @@ describe('<PickersDay />', () => {
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         onDaySelect={() => {}}
         outsideCurrentMonth={false}
+        selectedDays={[]}
       />,
     );
 
     const day = screen.getByRole('button');
-    // TODO: This can be disorienting if the accessible name is not the same as the visible label
-    // Investigate if we can drop `aria-label` and let screenreaders announce the full date in a calendar picker.
     expect(day).to.have.text('2');
-    expect(day).toHaveAccessibleName('Feb 2, 2020');
+    expect(day).toHaveAccessibleName('2');
   });
 
   it('should render children instead of the day of the month when children prop is present', () => {
@@ -75,6 +76,7 @@ describe('<PickersDay />', () => {
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         outsideCurrentMonth={false}
         onDaySelect={() => {}}
+        selectedDays={[]}
       >
         2 (free)
       </PickersDay>,

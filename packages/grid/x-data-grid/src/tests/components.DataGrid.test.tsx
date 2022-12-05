@@ -1,6 +1,11 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  ErrorBoundary,
+  fireEvent,
+  screen,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
@@ -38,7 +43,9 @@ describe('<DataGrid /> - Components', () => {
     });
 
     it('should hide custom footer if prop hideFooter is set', () => {
-      const CustomFooter = () => <div className="customFooter">Custom Footer</div>;
+      function CustomFooter() {
+        return <div className="customFooter">Custom Footer</div>;
+      }
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} hideFooter components={{ Footer: CustomFooter }} />
@@ -85,7 +92,7 @@ describe('<DataGrid /> - Components', () => {
             {...baselineProps}
             hideFooter
             filterModel={{
-              items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }],
+              items: [{ field: 'brand', operator: 'contains', value: 'a' }],
             }}
             disableVirtualization
             componentsProps={{ columnHeaderFilterIconButton: { onClick } }}
@@ -149,7 +156,8 @@ describe('<DataGrid /> - Components', () => {
         </ErrorBoundary>,
       );
     }).toErrorDev([
-      'MUI: useGridRootProps should only be used inside the DataGrid/DataGridPro component.',
+      'MUI: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
+      'MUI: useGridRootProps should only be used inside the DataGrid, DataGridPro or DataGridPremium component.',
       'The above error occurred in the <ForwardRef(GridOverlay)> component',
     ]);
   });

@@ -1,6 +1,12 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -11,9 +17,11 @@ import {
   GridActionsCellItem,
   GridRowIdGetter,
   GridRowClassNameParams,
+  GridRowModel,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
-import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -43,7 +51,7 @@ describe('<DataGrid /> - Rows', () => {
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
-  describe('props: getRowId', () => {
+  describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
       render(
@@ -51,19 +59,21 @@ describe('<DataGrid /> - Rows', () => {
           <DataGrid {...baselineProps} getRowId={getRowId} />
         </div>,
       );
-      expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
+      expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
     });
   });
 
-  describe('props: rows', () => {
+  describe('prop: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getBasicGridData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} disableVirtualization />
-        </div>
-      );
+      function Test(props: Pick<DataGridProps, 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} columns={columns} disableVirtualization />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
@@ -74,12 +84,16 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should ignore events coming from a portal in the cell', () => {
     const handleRowClick = spy();
-    const InputCell = () => <input type="text" name="input" />;
-    const PortalCell = () => (
-      <Portal>
-        <input type="text" name="portal-input" />
-      </Portal>
-    );
+    function InputCell() {
+      return <input type="text" name="input" />;
+    }
+    function PortalCell() {
+      return (
+        <Portal>
+          <input type="text" name="portal-input" />
+        </Portal>
+      );
+    }
 
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -121,7 +135,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
-      const { rows, columns } = getData(4, 2);
+      const { rows, columns } = getBasicGridData(4, 2);
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
@@ -146,16 +160,19 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    const TestCase = ({
+    function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) => {
+    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
             rows={[{ id: 1 }]}
             columns={[
+              {
+                field: 'id',
+              },
               {
                 field: 'actions',
                 type: 'actions',
@@ -166,7 +183,7 @@ describe('<DataGrid /> - Rows', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should throw an error if getActions is missing', function test() {
       if (!isJSDOM) {
@@ -175,6 +192,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(() => {
         render(<TestCase />);
       }).toErrorDev([
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
         'MUI: Missing the `getActions` property in the `GridColDef`.',
         'The above error occurred in the <GridActionsCell> component',
         'MUI: GridErrorHandler - An unexpected error occurred.',
@@ -197,14 +215,14 @@ describe('<DataGrid /> - Rows', () => {
           ]}
         />,
       );
-      expect(screen.queryByRole('button', { name: 'delete' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
       expect(screen.queryByText('print')).to.equal(null);
     });
 
     it('should show in a menu the actions marked as showInMenu', async () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
       expect(screen.queryByText('print')).to.equal(null);
-      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
     });
 
@@ -212,9 +230,9 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: 'print' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -223,18 +241,18 @@ describe('<DataGrid /> - Rows', () => {
           getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
         />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: 'more' }));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when opening the menu', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
-      expect(getRow(0).className).not.to.contain('Mui-selected');
-      fireEvent.click(screen.getByRole('button', { name: 'more' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should close other menus before opening a new one', () => {
@@ -244,46 +262,161 @@ describe('<DataGrid /> - Rows', () => {
           getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
         />,
       );
-      expect(screen.queryAllByRole('menu')).to.have.length(0);
+      expect(screen.queryAllByRole('menu')).to.have.length(2);
 
-      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[0]);
+      const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+      fireEvent.mouseDown(more1);
+      fireEvent.click(more1);
       clock.runToLast();
-      expect(screen.queryAllByRole('menu')).to.have.length(1);
+      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
 
-      fireEvent.click(screen.getAllByRole('button', { name: 'more' })[1]);
+      const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+      fireEvent.mouseDown(more2);
+      fireEvent.click(more2);
       clock.runToLast();
-      expect(screen.queryAllByRole('menu')).to.have.length(1);
+      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
     });
 
     it('should allow to move focus to another cell with the arrow keys', () => {
       render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={[{ id: 1, name: 'John' }]}
-            columns={[
-              { field: 'name' },
-              {
-                field: 'actions',
-                type: 'actions',
-                getActions: () => [<GridActionsCellItem icon={<span />} label="print" />],
-              },
-            ]}
-          />
-        </div>,
+        <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
       const firstCell = getCell(0, 0);
-      fireEvent.mouseUp(firstCell);
-      fireEvent.click(firstCell);
-
+      firstCell.focus();
       expect(getActiveCell()).to.equal('0-0');
+
       fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
-      expect(getActiveCell()).to.equal('0-1');
+      const printButton = screen.queryByRole('menuitem', { name: 'print' });
+      expect(printButton).toHaveFocus();
 
-      const button = screen.queryByRole('button', { name: 'print' });
-      button.focus();
-      fireEvent.keyDown(button, { key: 'ArrowLeft' });
-
+      fireEvent.keyDown(printButton, { key: 'ArrowLeft' });
       expect(getActiveCell()).to.equal('0-0');
+    });
+
+    it('should focus the first item when opening the menu', () => {
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" showInMenu />,
+            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+          ]}
+        />,
+      );
+      const moreButton = screen.getByRole('menuitem', { name: 'more' });
+      userEvent.mousePress(moreButton);
+
+      const printButton = screen.queryByRole('menuitem', { name: 'print' });
+      expect(printButton).toHaveFocus();
+    });
+
+    it('should allow to navigate between actions using the arrow keys', () => {
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" />,
+            <GridActionsCellItem icon={<span />} label="delete" />,
+          ]}
+        />,
+      );
+      const firstCell = getCell(0, 0);
+      firstCell.focus();
+      expect(getActiveCell()).to.equal('0-0');
+
+      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      const printButton = screen.getByRole('menuitem', { name: 'print' });
+      expect(printButton).toHaveFocus();
+
+      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+      expect(deleteButton).toHaveFocus();
+
+      fireEvent.keyDown(deleteButton, { key: 'ArrowLeft' });
+      expect(printButton).toHaveFocus();
+
+      fireEvent.keyDown(printButton, { key: 'ArrowLeft' });
+      expect(firstCell).toHaveFocus();
+    });
+
+    it('should not move focus to first item when clicking in another item', () => {
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" />,
+            <GridActionsCellItem icon={<span />} label="delete" />,
+          ]}
+        />,
+      );
+      const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+      fireEvent.click(deleteButton);
+      expect(deleteButton).toHaveFocus();
+    });
+
+    it('should set the correct tabIndex to the focused button', () => {
+      render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" />,
+            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+          ]}
+        />,
+      );
+      const firstCell = getCell(0, 0);
+      const secondCell = getCell(0, 1);
+      firstCell.focus();
+
+      fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+      expect(secondCell).to.have.property('tabIndex', -1);
+
+      const printButton = screen.getByRole('menuitem', { name: 'print' });
+      const menuButton = screen.getByRole('menuitem', { name: 'more' });
+      expect(printButton).to.have.property('tabIndex', 0);
+      expect(menuButton).to.have.property('tabIndex', -1);
+
+      fireEvent.keyDown(printButton, { key: 'ArrowRight' });
+      expect(printButton).to.have.property('tabIndex', -1);
+      expect(menuButton).to.have.property('tabIndex', 0);
+    });
+
+    it('should focus the last button if the clicked button removes itself', () => {
+      let canDelete = true;
+      function Test() {
+        return (
+          <TestCase
+            getActions={() =>
+              canDelete
+                ? [
+                    <GridActionsCellItem icon={<span />} label="print" />,
+                    <GridActionsCellItem
+                      icon={<span />}
+                      label="delete"
+                      onClick={() => {
+                        canDelete = false;
+                      }}
+                    />,
+                  ]
+                : [<GridActionsCellItem icon={<span />} label="print" />]
+            }
+          />
+        );
+      }
+      render(<Test />);
+      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' }));
+      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+    });
+
+    it('should focus the last button if the currently focused button is removed', () => {
+      const { setProps } = render(
+        <TestCase
+          getActions={() => [
+            <GridActionsCellItem icon={<span />} label="print" />,
+            <GridActionsCellItem icon={<span />} label="delete" />,
+          ]}
+        />,
+      );
+      fireEvent.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
+      expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+      setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
     });
   });
 
@@ -295,95 +428,475 @@ describe('<DataGrid /> - Rows', () => {
       }
     });
 
-    const ROW_HEIGHT = 52;
-    const TestCase = (props: Partial<DataGridProps>) => {
-      const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
-        </div>
-      );
-    };
+    describe('static row height', () => {
+      const ROW_HEIGHT = 52;
+      function TestCase(props: Partial<DataGridProps>) {
+        const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
+          </div>
+        );
+      }
 
-    it('should set each row height whe rowHeight prop is used', () => {
-      const { setProps } = render(<TestCase />);
+      it('should set each row height whe rowHeight prop is used', () => {
+        const { setProps } = render(<TestCase />);
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
 
-      setProps({ rowHeight: 30 });
+        setProps({ rowHeight: 30 });
 
-      expect(getRow(0).clientHeight).to.equal(30);
-      expect(getRow(1).clientHeight).to.equal(30);
-      expect(getRow(2).clientHeight).to.equal(30);
+        expect(getRow(0).clientHeight).to.equal(30);
+        expect(getRow(1).clientHeight).to.equal(30);
+        expect(getRow(2).clientHeight).to.equal(30);
+      });
+
+      it('should set the second row to have a different row height than the others', () => {
+        render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+      });
+
+      it('should set density to all but the row with variable row height', () => {
+        const { setProps } = render(
+          <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+        );
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+        setProps({ density: 'compact' });
+
+        expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
+      });
+
+      it('should set the correct rowHeight and variable row height', () => {
+        const { setProps } = render(
+          <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
+        );
+
+        expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+
+        setProps({ rowHeight: 30 });
+
+        expect(getRow(0).clientHeight).to.equal(30);
+        expect(getRow(1).clientHeight).to.equal(100);
+        expect(getRow(2).clientHeight).to.equal(30);
+      });
     });
 
-    it('should set the second row to have a different row height than the others', () => {
-      render(<TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />);
+    describe('dynamic row height', () => {
+      function ResizeObserverMock(
+        callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
+      ) {
+        let timeout: NodeJS.Timeout;
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
-    });
+        return {
+          observe: (element: HTMLElement) => {
+            // Simulates the async behavior of the native ResizeObserver
+            timeout = setTimeout(() => {
+              callback([{ borderBoxSize: [{ blockSize: element.clientHeight }] }]);
+            });
+          },
+          disconnect: () => {
+            clearTimeout(timeout);
+          },
+        };
+      }
 
-    it('should set density to all but the row with variable row height', () => {
-      const { setProps } = render(
-        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
-      );
+      const originalResizeObserver = window.ResizeObserver;
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+      beforeEach(() => {
+        const { userAgent } = window.navigator;
 
-      setProps({ density: 'compact' });
+        if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
+          // Only use the mock in non-headless Chrome
+          window.ResizeObserver = ResizeObserverMock as any;
+        }
+      });
 
-      expect(getRow(0).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(Math.floor(ROW_HEIGHT * COMPACT_DENSITY_FACTOR));
-    });
+      afterEach(() => {
+        window.ResizeObserver = originalResizeObserver;
+      });
 
-    it('should set the correct rowHeight and variable row height', () => {
-      const { setProps } = render(
-        <TestCase getRowHeight={({ id }) => (id === 'c2' ? 100 : null)} />,
-      );
+      function TestCase(
+        props: Partial<DataGridProps> & {
+          getBioContentHeight: (row: GridRowModel) => number;
+          height?: number;
+          width?: number;
+        },
+      ) {
+        const { getBioContentHeight, width = 300, height = 300, ...other } = props;
 
-      expect(getRow(0).clientHeight).to.equal(ROW_HEIGHT);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(ROW_HEIGHT);
+        const customCellRenderer = React.useCallback(
+          ({ row }: GridRenderCellParams) => (
+            <div style={{ width: 100, height: getBioContentHeight(row) }} />
+          ),
+          [getBioContentHeight],
+        );
 
-      setProps({ rowHeight: 30 });
+        const columns = React.useMemo(
+          () => [{ field: 'clientId' }, { field: 'bio', renderCell: customCellRenderer }],
+          [customCellRenderer],
+        );
 
-      expect(getRow(0).clientHeight).to.equal(30);
-      expect(getRow(1).clientHeight).to.equal(100);
-      expect(getRow(2).clientHeight).to.equal(30);
+        return (
+          <div style={{ width, height }}>
+            <DataGrid
+              {...baselineProps}
+              columns={columns}
+              getRowId={(row) => `${row.clientId}`}
+              hideFooter
+              {...other}
+            />
+          </div>
+        );
+      }
+
+      it('should measure all rows and update the content size', async () => {
+        const border = 1;
+        const contentHeight = 100;
+        render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const expectedHeight = baselineProps.rows.length * (contentHeight + border);
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
+      });
+
+      it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        const defaultRowHeight = 52;
+        const measuredRowHeight = 101;
+        render(
+          <TestCase
+            headerHeight={headerHeight}
+            height={headerHeight + 20 + border * 2} // Force to only measure the first row
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const expectedHeight =
+          measuredRowHeight +
+          border + // Measured rows also include the border
+          (baselineProps.rows.length - 1) * defaultRowHeight;
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
+      });
+
+      it('should use the value from getEstimatedRowHeight to estimate the content size', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        const measuredRowHeight = 100;
+        const estimatedRowHeight = 90;
+        render(
+          <TestCase
+            headerHeight={headerHeight}
+            height={headerHeight + 20 + border * 2} // Force to only measure the first row
+            getBioContentHeight={() => measuredRowHeight}
+            getEstimatedRowHeight={() => estimatedRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
+        const expectedHeight =
+          firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${expectedHeight}px`,
+        });
+      });
+
+      it('should recalculate the content size when the rows prop changes', async () => {
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={(row) => (row.expanded ? 200 : 100)}
+            rows={[{ clientId: 'c1', expanded: false }]}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        );
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '101px',
+        });
+        setProps({ rows: [{ clientId: 'c1', expanded: true }] });
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: '201px',
+        });
+      });
+
+      it('should set minHeight to "auto" in all rows with dynamic row height', () => {
+        render(
+          <TestCase
+            getBioContentHeight={() => 50}
+            getRowHeight={({ id }) => (id === 'c3' ? 100 : 'auto')}
+            rowBuffer={0}
+          />,
+        );
+        expect(getRow(0)).toHaveInlineStyle({ minHeight: 'auto' });
+        expect(getRow(1)).toHaveInlineStyle({ minHeight: 'auto' });
+        expect(getRow(2)).toHaveInlineStyle({ minHeight: '100px' });
+      });
+
+      it('should not virtualize columns if a row has auto height', () => {
+        render(
+          <TestCase
+            rows={baselineProps.rows.slice(0, 1)}
+            getBioContentHeight={() => 100}
+            getRowHeight={() => 'auto'}
+            columnBuffer={0}
+            columnThreshold={0}
+            width={100}
+          />,
+        );
+        expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
+      });
+
+      it('should measure rows while scrolling', async () => {
+        const headerHeight = 50;
+        const border = 1;
+        render(
+          <TestCase
+            getBioContentHeight={() => 100}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            height={headerHeight + 52 + border * 2}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
+      });
+
+      it('should allow to mix rows with dynamic row height and default row height', async () => {
+        const headerHeight = 50;
+        const densityFactor = 1.3;
+        const rowHeight = 52;
+        const border = 1;
+        const measuredRowHeight = 100;
+        const expectedHeight = measuredRowHeight + border + rowHeight * densityFactor;
+        render(
+          <TestCase
+            getBioContentHeight={({ clientId }) => (clientId === 'c1' ? measuredRowHeight : 0)}
+            getRowHeight={({ id }) => (id === 'c1' ? 'auto' : null)}
+            density="comfortable"
+            rows={baselineProps.rows.slice(0, 2)}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+          />,
+        );
+        const virtualScrollerContent = document.querySelector(
+          '.MuiDataGrid-virtualScrollerContent',
+        )!;
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${Math.floor(expectedHeight)}px`,
+        });
+      });
+
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // FIXME: We need a waitFor that works with fake clock
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            {...data}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+        setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // In Chrome non-headless and Edge this test is flacky
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={25}
+            rowsPerPageOptions={[10, 25]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+
+        setProps({ pageSize: 10 });
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
     });
   });
 
   describe('prop: getRowSpacing', () => {
-    const { rows, columns } = getData(4, 2);
+    const { rows, columns } = getBasicGridData(4, 2);
 
-    const TestCase = (props: Partial<DataGridProps>) => {
+    function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid rows={rows} columns={columns} {...props} />
         </div>
       );
-    };
+    }
 
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
       render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
-
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
+        indexRelativeToCurrentPage: 0,
         id: 0,
         model: rows[0],
       });
       expect(getRowSpacing.args[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
+        indexRelativeToCurrentPage: 1,
         id: 1,
         model: rows[1],
       });
@@ -394,12 +907,14 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,
+        indexRelativeToCurrentPage: 0,
         id: 2,
         model: rows[2],
       });
       expect(getRowSpacing.args[1][0]).to.deep.equal({
         isFirstVisible: false,
         isLastVisible: true,
+        indexRelativeToCurrentPage: 1,
         id: 3,
         model: rows[3],
       });

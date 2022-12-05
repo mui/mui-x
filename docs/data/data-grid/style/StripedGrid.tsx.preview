@@ -1,0 +1,7 @@
+<StripedDataGrid
+  loading={loading}
+  {...data}
+  getRowClassName={(params) =>
+    params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+  }
+/>

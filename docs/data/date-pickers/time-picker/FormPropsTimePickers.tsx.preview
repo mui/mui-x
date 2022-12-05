@@ -1,0 +1,2 @@
+<NextTimePicker label="disabled" disabled />
+<NextTimePicker label="readOnly" readOnly />

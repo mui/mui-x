@@ -17,8 +17,8 @@ function RatingInputValue(props) {
     },
   }));
 
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
+  const handleFilterChange = (event, newValue) => {
+    applyValue({ ...item, value: newValue });
   };
 
   return (
@@ -55,7 +55,7 @@ RatingInputValue.propTypes = {
     /**
      * The column from which we want to filter the rows.
      */
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     /**
      * Must be unique.
      * Only useful when the model contains several items.
@@ -63,9 +63,8 @@ RatingInputValue.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     /**
      * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
      */
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     /**
      * The filtering value.
      * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -79,11 +78,7 @@ const ratingOnlyOperators = [
     label: 'Above',
     value: 'above',
     getApplyFilterFn: (filterItem) => {
-      if (
-        !filterItem.columnField ||
-        !filterItem.value ||
-        !filterItem.operatorValue
-      ) {
+      if (!filterItem.field || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
@@ -126,13 +121,14 @@ export default function CustomRatingOperator() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {
                   id: 1,
-                  columnField: 'rating',
+                  field: 'rating',
                   value: '3.5',
-                  operatorValue: 'above',
+                  operator: 'above',
                 },
               ],
             },

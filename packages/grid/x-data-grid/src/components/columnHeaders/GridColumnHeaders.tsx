@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -26,6 +26,7 @@ const GridColumnHeadersRoot = styled('div', {
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
 })(({ theme }) => {
+  // eslint-disable-next-line no-nested-ternary
   const borderColor = getBorderColor(theme);
 
   return {
@@ -43,12 +44,12 @@ const GridColumnHeadersRoot = styled('div', {
 });
 
 interface GridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
-  innerRef?: React.Ref<HTMLDivElement>;
+  sx?: SxProps<Theme>;
 }
 
 export const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
-    const { innerRef, className, ...other } = props;
+    const { className, ...other } = props;
     const rootProps = useGridRootProps();
 
     const ownerState = { classes: rootProps.classes };

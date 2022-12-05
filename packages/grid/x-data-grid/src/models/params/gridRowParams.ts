@@ -17,14 +17,6 @@ export interface GridRowParams<R extends GridValidRowModel = any> {
    * All grid columns.
    */
   columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: (id: GridRowId, field: string) => any;
 }
 
 interface GridRowVisibilityParams {
@@ -36,6 +28,11 @@ interface GridRowVisibilityParams {
    * Whether this row is the last visible or not.
    */
   isLastVisible: boolean;
+  /**
+   * Index of the row in the current page.
+   * If the pagination is disabled, it will be the index relative to all filtered rows.
+   */
+  indexRelativeToCurrentPage: number;
 }
 
 /**
@@ -58,7 +55,7 @@ export interface GridRowHeightParams extends GridRowEntry {
 /**
  * The getRowHeight return value.
  */
-export type GridRowHeightReturnValue = number | null | undefined;
+export type GridRowHeightReturnValue = number | null | undefined | 'auto';
 
 enum GridRowEditStartReasons {
   enterKeyDown = 'enterKeyDown',
@@ -74,14 +71,16 @@ export interface GridRowEditStartParams<R extends GridValidRowModel = any>
   extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridRowEditStopReasons {
@@ -95,12 +94,10 @@ enum GridRowEditStopReasons {
 export interface GridRowEditStopParams<R extends GridValidRowModel = any> extends GridRowParams<R> {
   /**
    * Which field triggered this event.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   field?: string;
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridRowEditStopReasons;
 }

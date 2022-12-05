@@ -1,10 +1,12 @@
 {
   "buildCommand": "build:codesandbox",
-  "node": "12",
+  "installCommand": "install:codesandbox",
+  "node": "14",
   "packages": [
     "packages/x-license-pro",
     "packages/grid/x-data-grid",
     "packages/grid/x-data-grid-pro",
+    "packages/grid/x-data-grid-premium",
     "packages/grid/x-data-grid-generator",
     "packages/x-date-pickers",
     "packages/x-date-pickers-pro"
@@ -13,6 +15,7 @@
     "@mui/x-license-pro": "packages/x-license-pro/build",
     "@mui/x-data-grid": "packages/grid/x-data-grid/build",
     "@mui/x-data-grid-pro": "packages/grid/x-data-grid-pro/build",
+    "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",
     "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build",
     "@mui/x-date-pickers": "packages/x-date-pickers/build",
     "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build"

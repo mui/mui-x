@@ -1,23 +1,28 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 import { DateRangePickerDay as MuiDateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
-  ({ theme, isHighlighting, isStartOfHighlighting, isEndOfHighlighting }) => ({
-    ...(isHighlighting && {
-      borderRadius: 0,
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.common.white,
-      '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.dark,
-      },
-    }),
+  ({
+    theme,
+    isHighlighting,
+    isStartOfHighlighting,
+    isEndOfHighlighting,
+    outsideCurrentMonth,
+  }) => ({
+    ...(!outsideCurrentMonth &&
+      isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+        '&:hover, &:focus': {
+          backgroundColor: theme.palette.primary.dark,
+        },
+      }),
     ...(isStartOfHighlighting && {
       borderTopLeftRadius: '50%',
       borderBottomLeftRadius: '50%',
@@ -30,27 +35,12 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 );
 
 export default function CustomDateRangePickerDay() {
-  const [value, setValue] = React.useState([null, null]);
-
-  const renderWeekPickerDay = (date, dateRangePickerDayProps) => {
-    return <DateRangePickerDay {...dateRangePickerDayProps} />;
-  };
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDateRangePicker
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StaticNextDateRangePicker
         displayStaticWrapperAs="desktop"
-        label="date range"
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-        renderDay={renderWeekPickerDay}
-        renderInput={(startProps, endProps) => (
-          <React.Fragment>
-            <TextField {...startProps} />
-            <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
-          </React.Fragment>
-        )}
+        defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+        components={{ Day: DateRangePickerDay }}
       />
     </LocalizationProvider>
   );

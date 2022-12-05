@@ -9,8 +9,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   errorOverlayDefaultLabel: '오류가 발생했습니다.',
 
   // Density selector toolbar button text
-  toolbarDensity: '라인 간격',
-  toolbarDensityLabel: '라인 간격',
+  toolbarDensity: '행 간격',
+  toolbarDensityLabel: '행 간격',
   toolbarDensityCompact: '좁게',
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
@@ -26,11 +26,17 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: '필터 표시',
   toolbarFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: '검색…',
+  toolbarQuickFilterLabel: '검색',
+  toolbarQuickFilterDeleteIconLabel: '초기화',
+
   // Export selector toolbar button text
   toolbarExport: '내보내기',
   toolbarExportLabel: '내보내기',
-  toolbarExportCSV: 'CSV다운로드',
+  toolbarExportCSV: 'CSV로 내보내기',
   toolbarExportPrint: '프린트',
+  toolbarExportExcel: 'Excel로 내보내기',
 
   // Columns panel text
   columnsPanelTextFieldLabel: '열 검색',
@@ -42,10 +48,8 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
   filterPanelDeleteIconLabel: '삭제',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: '연산자',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: '논리 연산자',
+  filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',
   filterPanelColumns: '목록',
@@ -98,10 +102,10 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: '선택',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: '모든 행 선택',
+  checkboxSelectionUnselectAllRows: '모든 행 선택 해제',
+  checkboxSelectionSelectRow: '행 선택',
+  checkboxSelectionUnselectRow: '행 선택 해제',
 
   // Boolean cell text
   booleanCellTrueLabel: '참',
@@ -111,9 +115,9 @@ const koKRGrid: Partial<GridLocaleText> = {
   actionsCellMore: '더보기',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: '왼쪽에 고정',
+  pinToRight: '오른쪽에 고정',
+  unpin: '고정 해제',
 
   // Tree Data
   treeDataGroupingHeaderName: '그룹',
@@ -121,13 +125,25 @@ const koKRGrid: Partial<GridLocaleText> = {
   treeDataCollapse: '하위노드 접기',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: '그룹',
+  groupColumn: (name) => `${name} 값으로 그룹 생성`,
+  unGroupColumn: (name) => `${name} 값으로 그룹 해제`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: '상세 패널 토글',
+  expandDetailPanel: '열기',
+  collapseDetailPanel: '접기',
+
+  // Row reordering text
+  rowReorderingHeaderName: '행 재배치',
+
+  // Aggregation
+  aggregationMenuItemHeader: '총계',
+  aggregationFunctionLabelSum: '합',
+  aggregationFunctionLabelAvg: '평균',
+  aggregationFunctionLabelMin: '최소값',
+  aggregationFunctionLabelMax: '최대값',
+  aggregationFunctionLabelSize: '크기',
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid, koKRCore);

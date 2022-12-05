@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -10,14 +11,14 @@ export default function DataGridProDemo() {
   });
 
   return (
-    <div style={{ height: 520, width: '100%' }}>
+    <Box sx={{ height: 520, width: '100%' }}>
       <DataGridPro
         {...data}
         loading={data.rows.length === 0}
         rowHeight={38}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
       />
-    </div>
+    </Box>
   );
 }

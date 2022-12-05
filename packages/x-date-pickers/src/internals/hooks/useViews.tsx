@@ -1,38 +1,39 @@
 import * as React from 'react';
-import { useControlled } from '@mui/material/utils';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
 import { PickerSelectionState } from './usePickerState';
-import { CalendarOrClockPickerView } from '../models';
+import { DateOrTimeView } from '../models';
 
 export type PickerOnChangeFn<TDate> = (
   date: TDate | null,
   selectionState?: PickerSelectionState,
 ) => void;
 
-interface UseViewsOptions<TDate, View extends CalendarOrClockPickerView> {
-  onChange: PickerOnChangeFn<TDate>;
+interface UseViewsOptions<TValue, View extends DateOrTimeView> {
+  onChange: (value: TValue, selectionState?: PickerSelectionState) => void;
   onViewChange?: (newView: View) => void;
   openTo?: View;
   view: View | undefined;
   views: readonly View[];
 }
 
-export function useViews<TDate, View extends CalendarOrClockPickerView>({
+export function useViews<TValue, View extends DateOrTimeView>({
   onChange,
   onViewChange,
   openTo,
   view,
   views,
-}: UseViewsOptions<TDate, View>) {
-  const [openView, setOpenView] = useControlled<View>({
+}: UseViewsOptions<TValue, View>) {
+  const [openView, setOpenView] = useControlled({
     name: 'Picker',
     state: 'view',
     controlled: view,
     default: openTo && arrayIncludes(views, openTo) ? openTo : views[0],
   });
 
-  const previousView: View | null = views[views.indexOf(openView) - 1] ?? null;
-  const nextView: View | null = views[views.indexOf(openView) + 1] ?? null;
+  const openViewIndex = views.indexOf(openView);
+  const previousView: View | null = views[openViewIndex - 1] ?? null;
+  const nextView: View | null = views[openViewIndex + 1] ?? null;
 
   const changeView = React.useCallback(
     (newView: View) => {
@@ -51,15 +52,15 @@ export function useViews<TDate, View extends CalendarOrClockPickerView>({
     }
   }, [nextView, changeView]);
 
-  const handleChangeAndOpenNext = React.useCallback<PickerOnChangeFn<TDate>>(
-    (date, currentViewSelectionState) => {
+  const handleChangeAndOpenNext = React.useCallback(
+    (value: TValue, currentViewSelectionState?: PickerSelectionState) => {
       const isSelectionFinishedOnCurrentView = currentViewSelectionState === 'finish';
       const globalSelectionState =
         isSelectionFinishedOnCurrentView && Boolean(nextView)
           ? 'partial'
           : currentViewSelectionState;
 
-      onChange(date, globalSelectionState);
+      onChange(value, globalSelectionState);
       if (isSelectionFinishedOnCurrentView) {
         openNext();
       }

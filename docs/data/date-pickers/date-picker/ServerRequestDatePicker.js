@@ -1,12 +1,12 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import Badge from '@mui/material/Badge';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { CalendarPickerSkeleton } from '@mui/x-date-pickers/CalendarPickerSkeleton';
-import getDaysInMonth from 'date-fns/getDaysInMonth';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
 function getRandomNumber(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -19,7 +19,7 @@ function getRandomNumber(min, max) {
 function fakeFetch(date, { signal }) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      const daysInMonth = getDaysInMonth(date);
+      const daysInMonth = date.daysInMonth();
       const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
 
       resolve({ daysToHighlight });
@@ -32,13 +32,41 @@ function fakeFetch(date, { signal }) {
   });
 }
 
-const initialValue = new Date();
+const initialValue = dayjs('2022-04-07');
+
+function ServerDay(props) {
+  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+
+  const isSelected =
+    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) > 0;
+
+  return (
+    <Badge
+      key={props.day.toString()}
+      overlap="circular"
+      badgeContent={isSelected ? '🌚' : undefined}
+    >
+      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+    </Badge>
+  );
+}
+
+ServerDay.propTypes = {
+  /**
+   * The date to show.
+   */
+  day: PropTypes.object.isRequired,
+  highlightedDays: PropTypes.arrayOf(PropTypes.number),
+  /**
+   * If `true`, day is outside of month and will be hidden.
+   */
+  outsideCurrentMonth: PropTypes.bool.isRequired,
+};
 
 export default function ServerRequestDatePicker() {
   const requestAbortController = React.useRef(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
-  const [value, setValue] = React.useState(initialValue);
 
   const fetchHighlightedDays = (date) => {
     const controller = new AbortController();
@@ -78,30 +106,19 @@ export default function ServerRequestDatePicker() {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        value={value}
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <NextDatePicker
+        defaultValue={initialValue}
         loading={isLoading}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
         onMonthChange={handleMonthChange}
-        renderInput={(params) => <TextField {...params} />}
-        renderLoading={() => <CalendarPickerSkeleton />}
-        renderDay={(day, _value, DayComponentProps) => {
-          const isSelected =
-            !DayComponentProps.outsideCurrentMonth &&
-            highlightedDays.indexOf(day.getDate()) > 0;
-
-          return (
-            <Badge
-              key={day.toString()}
-              overlap="circular"
-              badgeContent={isSelected ? '🌚' : undefined}
-            >
-              <PickersDay {...DayComponentProps} />
-            </Badge>
-          );
+        renderLoading={() => <DayCalendarSkeleton />}
+        components={{
+          Day: ServerDay,
+        }}
+        componentsProps={{
+          day: {
+            highlightedDays,
+          },
         }}
       />
     </LocalizationProvider>

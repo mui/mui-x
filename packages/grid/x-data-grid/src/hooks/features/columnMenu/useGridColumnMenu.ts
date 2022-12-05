@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridEvents } from '../../../models/events';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../utils';
 import { gridColumnMenuSelector } from './columnMenuSelector';
-import { GridColumnMenuApi } from '../../../models';
+import { GridColumnMenuApi, GridEventListener } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridClasses } from '../../../constants/gridClasses';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -15,7 +15,9 @@ export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridColumnResize (event)
  * @requires useGridInfiniteLoader (event)
  */
-export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
+export const useGridColumnMenu = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnMenu');
 
   /**
@@ -29,6 +31,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
         }
 
         logger.debug('Opening Column Menu');
+
         return {
           ...state,
           columnMenu: { open: true, field },
@@ -50,6 +53,7 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
       }
 
       logger.debug('Hiding Column Menu');
+
       return {
         ...state,
         columnMenu: { ...state.columnMenu, open: false, field: undefined },
@@ -80,11 +84,37 @@ export const useGridColumnMenu = (apiRef: React.MutableRefObject<GridApiCommunit
     toggleColumnMenu,
   };
 
-  useGridApiMethod(apiRef, columnMenuApi, 'GridColumnMenuApi');
+  useGridApiMethod(apiRef, columnMenuApi, 'public');
 
   /**
    * EVENTS
    */
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, hideColumnMenu);
-  useGridApiEventHandler(apiRef, GridEvents.rowsScroll, hideColumnMenu);
+  const handleColumnHeaderFocus = React.useCallback<GridEventListener<'columnHeaderFocus'>>(
+    (params, event) => {
+      // Check if the column menu button received focus
+      if (!event.target.classList.contains(gridClasses.menuIconButton)) {
+        return;
+      }
+
+      // Check if there's an element which lost focus
+      if (!event.relatedTarget) {
+        return;
+      }
+
+      // `true` if the focus was on the column menu itself, not on any item
+      const columnMenuLostFocus = event.relatedTarget.classList.contains(gridClasses.menuList);
+      // `true` if the focus was on an item from the column menu
+      const columnMenuItemLostFocus = event.relatedTarget.getAttribute('role') === 'menuitem';
+
+      if (columnMenuLostFocus || columnMenuItemLostFocus) {
+        apiRef.current.setColumnHeaderFocus(params.field);
+      }
+    },
+    [apiRef],
+  );
+
+  useGridApiEventHandler(apiRef, 'columnResizeStart', hideColumnMenu);
+  useGridApiEventHandler(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
+  useGridApiEventHandler(apiRef, 'virtualScrollerWheel', apiRef.current.hideColumnMenu);
+  useGridApiEventHandler(apiRef, 'virtualScrollerTouchMove', apiRef.current.hideColumnMenu);
 };

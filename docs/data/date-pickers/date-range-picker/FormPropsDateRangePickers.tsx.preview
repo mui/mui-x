@@ -1,0 +1,6 @@
+<GridItem label="disabled" spacing={2}>
+  <NextDateRangePicker disabled />
+</GridItem>
+<GridItem label="readOnly" spacing={2}>
+  <NextDateRangePicker readOnly />
+</GridItem>

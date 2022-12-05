@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { styled, alpha } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
@@ -7,7 +10,6 @@ import {
   useGridSelector,
   useGridApiEventHandler,
   gridVisibleColumnFieldsSelector,
-  GridEvents,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
@@ -77,14 +79,21 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   height: '100%',
   zIndex: 1,
   display: 'flex',
+  flexDirection: 'column',
   boxShadow: theme.shadows[2],
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && {
-    backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-      '#fff',
-      getOverlayAlpha(2),
-    )})`,
-  }),
+  backgroundColor: (theme.vars || theme).palette.background.default,
+  ...(theme.vars
+    ? {
+        backgroundImage: theme.vars.overlays?.[2],
+      }
+    : {
+        ...(theme.palette.mode === 'dark' && {
+          backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
+            '#fff',
+            getOverlayAlpha(2),
+          )})`,
+        }),
+      }),
   ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
 }));
@@ -103,21 +112,19 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
 
-  const handleContentSizeChange = React.useCallback(() => {
-    if (!apiRef.current.windowRef?.current) {
+  const handleContentSizeChange = useEventCallback(() => {
+    const rootDimensions = apiRef.current.getRootDimensions();
+    if (!rootDimensions) {
       return;
     }
-    // TODO expose scrollbar size on getRootDimensions
-    const newScrollbarSize =
-      apiRef.current.windowRef.current.offsetWidth - apiRef.current.windowRef.current.clientWidth;
-    setScrollbarSize(newScrollbarSize);
-  }, [apiRef]);
 
-  useGridApiEventHandler(
-    apiRef,
-    GridEvents.virtualScrollerContentSizeChange,
-    handleContentSizeChange,
-  );
+    const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
+    if (scrollbarSize !== newScrollbarSize) {
+      setScrollbarSize(newScrollbarSize);
+    }
+  });
+
+  useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
@@ -125,10 +132,10 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const {
     isDragging,
     renderContext,
-    updateInnerPosition,
     getRootProps,
     getInnerProps,
-    getColumns,
+    getColumnHeaders,
+    getColumnGroupHeaders,
   } = useGridColumnHeaders({
     innerRef,
     minColumnIndex: leftPinnedColumns.length,
@@ -136,12 +143,6 @@ export const DataGridProColumnHeaders = React.forwardRef<
 
   const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  React.useEffect(() => {
-    if (renderContext) {
-      updateInnerPosition(renderContext);
-    }
-  }, [renderContext, updateInnerPosition]);
 
   const leftRenderContext =
     renderContext && leftPinnedColumns.length
@@ -161,14 +162,26 @@ export const DataGridProColumnHeaders = React.forwardRef<
         }
       : null;
 
+  const innerProps = getInnerProps();
+
+  const pinnedColumnHeadersProps = {
+    role: innerProps.role,
+  };
+
   return (
     <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
           ownerState={{ side: GridPinnedPosition.left }}
+          {...pinnedColumnHeadersProps}
         >
-          {getColumns(
+          {getColumnGroupHeaders({
+            renderContext: leftRenderContext,
+            minFirstColumn: leftRenderContext.firstColumnIndex,
+            maxLastColumn: leftRenderContext.lastColumnIndex,
+          })}
+          {getColumnHeaders(
             {
               renderContext: leftRenderContext,
               minFirstColumn: leftRenderContext.firstColumnIndex,
@@ -178,8 +191,13 @@ export const DataGridProColumnHeaders = React.forwardRef<
           )}
         </GridColumnHeadersPinnedColumnHeaders>
       )}
-      <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
-        {getColumns({
+      <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
+        {getColumnGroupHeaders({
+          renderContext,
+          minFirstColumn: leftPinnedColumns.length,
+          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
+        })}
+        {getColumnHeaders({
           renderContext,
           minFirstColumn: leftPinnedColumns.length,
           maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
@@ -190,8 +208,14 @@ export const DataGridProColumnHeaders = React.forwardRef<
           ownerState={{ side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
+          {...pinnedColumnHeadersProps}
         >
-          {getColumns(
+          {getColumnGroupHeaders({
+            renderContext: rightRenderContext,
+            minFirstColumn: rightRenderContext.firstColumnIndex,
+            maxLastColumn: rightRenderContext.lastColumnIndex,
+          })}
+          {getColumnHeaders(
             {
               renderContext: rightRenderContext,
               minFirstColumn: rightRenderContext.firstColumnIndex,

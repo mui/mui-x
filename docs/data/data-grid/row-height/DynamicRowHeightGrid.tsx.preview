@@ -1,0 +1,10 @@
+<DataGrid
+  rows={rows}
+  columns={columns}
+  getRowHeight={() => 'auto'}
+  sx={{
+    [`& .${gridClasses.cell}`]: {
+      py: 1,
+    },
+  }}
+/>

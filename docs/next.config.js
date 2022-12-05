@@ -1,52 +1,30 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
+const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
+const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
+const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
-const FEATURE_TOGGLE = require('./src/featureToggle');
 
 const workspaceRoot = path.join(__dirname, '../');
 
-/**
- * https://github.com/zeit/next.js/blob/287961ed9142a53f8e9a23bafb2f31257339ea98/packages/next/next-server/server/config.ts#L10
- * @typedef {'legacy' | 'blocking' | 'concurrent'} ReactRenderMode
- * legacy - ReactDOM.render(<App />)
- * legacy-strict - ReactDOM.render(<React.StrictMode><App /></React.StrictMode>, Element)
- * blocking - ReactDOM.createSyncRoot(Element).render(<App />)
- * concurrent - ReactDOM.createRoot(Element).render(<App />)
- * @type {ReactRenderMode | 'legacy-strict'}
- */
-const reactStrictMode = true;
-if (reactStrictMode) {
-  // eslint-disable-next-line no-console
-  console.log(`Using React.StrictMode.`);
-}
-
-module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    // Motivated by https://github.com/zeit/next.js/issues/7687
-    ignoreDevErrors: true,
-    ignoreBuildErrors: true,
-  },
+module.exports = withDocsInfra({
+  // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
   env: {
-    COMMIT_REF: process.env.COMMIT_REF,
-    CONTEXT: process.env.CONTEXT,
     ENABLE_AD: process.env.ENABLE_AD,
-    GITHUB_AUTH: process.env.GITHUB_AUTH,
     LIB_VERSION: pkg.version,
-    PULL_REQUEST: process.env.PULL_REQUEST === 'true',
-    REACT_STRICT_MODE: reactStrictMode,
-    // Set by Netlify
-    GRID_EXPERIMENTAL_ENABLED: process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
+    DATA_GRID_VERSION: dataGridPkg.version,
+    DATE_PICKERS_VERSION: datePickersPkg.version,
+    FEEDBACK_URL: process.env.FEEDBACK_URL,
+    SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
     // #default-branch-switch
-    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/master',
+    SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
-  webpack5: true,
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
 
@@ -68,6 +46,14 @@ module.exports = {
     return {
       ...config,
       plugins,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          docs: path.resolve(__dirname, '../node_modules/@mui/monorepo/docs'),
+          docsx: path.resolve(__dirname, '../docs'),
+        },
+      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([
@@ -77,7 +63,7 @@ module.exports = {
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('../node_modules/@mui/monorepo/docs/packages/markdown/loader'),
+                use: require.resolve('@mui/monorepo/docs/packages/markdown/loader'),
               },
             ],
           },
@@ -104,7 +90,6 @@ module.exports = {
       },
     };
   },
-  trailingSlash: true,
   // Next.js provides a `defaultPathMap` argument, we could simplify the logic.
   // However, we don't in order to prevent any regression in the `findPages()` method.
   exportPathMap: () => {
@@ -144,35 +129,18 @@ module.exports = {
 
     return map;
   },
-  reactStrictMode,
-  async rewrites() {
+  rewrites: async () => {
     return [
       { source: `/:lang(${LANGUAGES.join('|')})?/:rest*`, destination: '/:rest*' },
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
   // redirects only take effect in the development, not production (because of `next export`).
-  redirects: async () => {
-    const redirects = [];
-    if (process.env.NODE_ENV !== 'production') {
-      redirects.push({
-        source: '/',
-        destination: '/components/data-grid/',
-        permanent: false,
-      });
-    }
-    if (FEATURE_TOGGLE.enable_redirects) {
-      redirects.push({
-        source: '/components/data-grid/:path*',
-        destination: '/x/react-data-grid/:path*',
-        permanent: false,
-      });
-      redirects.push({
-        source: '/api/data-grid/:path*',
-        destination: '/x/api/data-grid/:path*',
-        permanent: false,
-      });
-    }
-    return redirects;
-  },
-};
+  redirects: async () => [
+    {
+      source: '/',
+      destination: '/x/introduction/',
+      permanent: false,
+    },
+  ],
+});

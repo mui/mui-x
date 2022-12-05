@@ -1,41 +1,58 @@
 import {
   useValidation,
-  ValidationProps,
   Validator,
-  DateValidationProps,
   DateValidationError,
   validateDate,
-  ExportedDateValidationProps,
+  BaseDateValidationProps,
+  ValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../../utils/date-utils';
-import { RangeInput } from '../../models';
+import { DateRange, DayRangeValidationProps } from '../../models';
+import { rangeValueManager } from '../../utils/valueManagers';
 
-export interface DateRangeValidationProps<TDate>
-  extends ExportedDateValidationProps<TDate>,
-    ValidationProps<DateRangeValidationError, RangeInput<TDate>> {}
+export interface DateRangeComponentValidationProps<TDate>
+  extends DayRangeValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>> {}
 
-export const validateDateRange: Validator<any, DateRangeValidationProps<any>> = (
-  utils,
-  value,
-  dateValidationProps,
-) => {
+export const validateDateRange: Validator<
+  DateRange<any>,
+  any,
+  DateRangeValidationError,
+  DateRangeComponentValidationProps<any>
+> = ({ props, value, adapter }) => {
   const [start, end] = value;
 
-  // for partial input
-  if (start === null || end === null) {
-    return [null, null];
-  }
+  const { shouldDisableDate, ...otherProps } = props;
 
   const dateValidations: [DateRangeValidationErrorValue, DateRangeValidationErrorValue] = [
-    validateDate(utils, start, dateValidationProps as DateValidationProps<any>),
-    validateDate(utils, end, dateValidationProps as DateValidationProps<any>),
+    validateDate({
+      adapter,
+      value: start,
+      props: {
+        ...otherProps,
+        shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'start'),
+      },
+    }),
+    validateDate({
+      adapter,
+      value: end,
+      props: {
+        ...otherProps,
+        shouldDisableDate: (day) => !!shouldDisableDate?.(day, 'end'),
+      },
+    }),
   ];
 
   if (dateValidations[0] || dateValidations[1]) {
     return dateValidations;
   }
 
-  if (!isRangeValid(utils, [utils.date(start), utils.date(end)])) {
+  // for partial input
+  if (start === null || end === null) {
+    return [null, null];
+  }
+
+  if (!isRangeValid(adapter.utils, value)) {
     return ['invalidRange', 'invalidRange'];
   }
 
@@ -48,12 +65,17 @@ export type DateRangeValidationError = [
   DateRangeValidationErrorValue,
   DateRangeValidationErrorValue,
 ];
-
-const isSameDateRangeError = (a: DateRangeValidationError, b: DateRangeValidationError | null) =>
-  b !== null && a[1] === b[1] && a[0] === b[0];
-
 export const useDateRangeValidation = <TDate>(
-  props: DateRangeValidationProps<TDate>,
+  props: ValidationProps<
+    DateRangeValidationError,
+    DateRange<TDate>,
+    DateRangeComponentValidationProps<TDate>
+  >,
 ): DateRangeValidationError => {
-  return useValidation(props, validateDateRange, isSameDateRangeError);
+  return useValidation(
+    props,
+    validateDateRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 };

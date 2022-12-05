@@ -25,20 +25,20 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: Partial<User>) =>
-      new Promise<Partial<User>>((resolve, reject) =>
+      new Promise<Partial<User>>((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject(new Error("Error while saving user: name can't be empty."));
           } else {
             resolve({ ...user, name: user.name?.toUpperCase() });
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };
 
-export default function CellEditServerSidePersistence() {
+export default function ServerSidePersistence() {
   const mutateRow = useFakeMutation();
 
   const [snackbar, setSnackbar] = React.useState<Pick<
@@ -69,7 +69,6 @@ export default function CellEditServerSidePersistence() {
         columns={columns}
         processRowUpdate={processRowUpdate}
         onProcessRowUpdateError={handleProcessRowUpdateError}
-        experimentalFeatures={{ newEditingApi: true }}
       />
       {!!snackbar && (
         <Snackbar

@@ -1,57 +1,63 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import Dialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
+import Fade from '@mui/material/Fade';
+import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
+import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
+import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
+import { PickersActionBar } from '../../PickersActionBar';
+import { PickerStateWrapperProps } from '../hooks/usePickerState';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 
-export interface ExportedPickerModalProps {
+export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
   /**
-   * Ok button text.
-   * @default 'OK'
+   * Custom component for the dialog inside which the views are rendered on mobile.
+   * @default PickersModalDialogRoot
    */
-  okText?: React.ReactNode;
+  Dialog?: React.ElementType<MuiDialogProps>;
   /**
-   * Cancel text message.
-   * @default 'Cancel'
+   * Custom component for the paper rendered inside the mobile picker's Dialog.
+   * @default Paper from @mui/material
    */
-  cancelText?: React.ReactNode;
+  MobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
-   * Clear text message.
-   * @default 'Clear'
+   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
+   * @default Fade from @mui/material
    */
-  clearText?: React.ReactNode;
-  /**
-   * Today text message.
-   * @default 'Today'
-   */
-  todayText?: React.ReactNode;
-  /**
-   * If `true`, it shows the clear action in the picker dialog.
-   * @default false
-   */
-  clearable?: boolean;
-  /**
-   * If `true`, the today button is displayed. **Note** that `showClearButton` has a higher priority.
-   * @default false
-   */
-  showTodayButton?: boolean;
-  /**
-   * Props applied to the [`Dialog`](/api/dialog/) element.
-   */
-  DialogProps?: Partial<MuiDialogProps>;
+  MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogProps extends ExportedPickerModalProps {
-  onAccept: () => void;
-  onClear: () => void;
-  onDismiss: () => void;
-  onSetToday: () => void;
-  open: boolean;
+export interface PickersModalDialogSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar'> {
+  /**
+   * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
+   */
+  dialog?: Partial<MuiDialogProps>;
+  /**
+   * Props passed down to the mobile [Paper](https://mui.com/material-ui/api/paper/) component.
+   */
+  mobilePaper?: Partial<MuiPaperProps>;
+  /**
+   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions) component.
+   */
+  mobileTransition?: Partial<MuiTransitionProps>;
 }
 
-const PickersModalDialogRoot = styled(Dialog)({
+export interface PickersModalDialogProps extends PickerStateWrapperProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: PickersModalDialogSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: PickersModalDialogSlotsComponentsProps;
+}
+
+const PickersModalDialogRoot = styled(MuiDialog)({
   [`& .${dialogClasses.container}`]: {
     outline: 0,
   },
@@ -67,55 +73,42 @@ const PickersModalDialogContent = styled(DialogContent)({
   },
 });
 
-const PickersModalDialogActions = styled(DialogActions)<{
-  ownerState: PickersModalDialogProps;
-}>(({ ownerState }) => ({
-  ...((ownerState.clearable || ownerState.showTodayButton) && {
-    // set justifyContent to default value to fix IE11 layout bug
-    // see https://github.com/mui-org/material-ui-pickers/pull/267
-    justifyContent: 'flex-start',
-    '& > *:first-of-type': {
-      marginRight: 'auto',
-    },
-  }),
-}));
-
-export const PickersModalDialog = (props: React.PropsWithChildren<PickersModalDialogProps>) => {
+export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
   const {
-    cancelText = 'Cancel',
     children,
-    clearable = false,
-    clearText = 'Clear',
-    DialogProps = {},
-    okText = 'OK',
     onAccept,
     onClear,
     onDismiss,
+    onCancel,
     onSetToday,
     open,
-    showTodayButton = false,
-    todayText = 'Today',
+    components,
+    componentsProps,
   } = props;
 
-  const ownerState = props;
+  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const Dialog = components?.Dialog ?? PickersModalDialogRoot;
+  const Transition = components?.MobileTransition ?? Fade;
 
   return (
-    <PickersModalDialogRoot open={open} onClose={onDismiss} {...DialogProps}>
+    <Dialog
+      open={open}
+      onClose={onDismiss}
+      {...componentsProps?.dialog}
+      TransitionComponent={Transition}
+      TransitionProps={componentsProps?.mobileTransition}
+      PaperComponent={components?.MobilePaper}
+      PaperProps={componentsProps?.mobilePaper}
+    >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
-      <PickersModalDialogActions ownerState={ownerState}>
-        {clearable && (
-          <Button data-mui-test="clear-action-button" onClick={onClear}>
-            {clearText}
-          </Button>
-        )}
-        {showTodayButton && (
-          <Button data-mui-test="today-action-button" onClick={onSetToday}>
-            {todayText}
-          </Button>
-        )}
-        {cancelText && <Button onClick={onDismiss}>{cancelText}</Button>}
-        {okText && <Button onClick={onAccept}>{okText}</Button>}
-      </PickersModalDialogActions>
-    </PickersModalDialogRoot>
+      <ActionBar
+        onAccept={onAccept}
+        onClear={onClear}
+        onCancel={onCancel}
+        onSetToday={onSetToday}
+        actions={['cancel', 'accept']}
+        {...componentsProps?.actionBar}
+      />
+    </Dialog>
   );
-};
+}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
+import Rating, { RatingProps } from '@mui/material/Rating';
 import {
   DataGrid,
   GridFilterInputValueProps,
@@ -20,8 +20,8 @@ function RatingInputValue(props: GridFilterInputValueProps) {
     },
   }));
 
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
+  const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
+    applyValue({ ...item, value: newValue });
   };
 
   return (
@@ -84,10 +84,9 @@ export default function CustomInputComponent() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
-              items: [
-                { id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' },
-              ],
+              items: [{ id: 1, field: 'rating', value: '3.5', operator: '>=' }],
             },
           },
         }}

@@ -1,7 +1,10 @@
+import type { GridEditCellMeta } from './api/gridEditingApi';
+
 export interface GridEditCellProps<V = any> {
-  value: V | undefined;
+  value?: V | undefined;
   isValidating?: boolean;
   isProcessingProps?: boolean;
+  changeReason?: GridEditCellMeta['changeReason'];
   [prop: string]: any;
 }
 

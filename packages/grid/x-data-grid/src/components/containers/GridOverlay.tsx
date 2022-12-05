@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme, alpha, styled } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -27,14 +27,17 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
-  overridesResolver: (props, styles) => styles.overlay,
+  overridesResolver: (_, styles) => styles.overlay,
 })(({ theme }) => ({
-  display: 'flex',
+  width: '100%',
   height: '100%',
+  display: 'flex',
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
+  backgroundColor: theme.vars
+    ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
+    : alpha(theme.palette.background.default, theme.palette.action.disabledOpacity),
 }));
 
 const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(

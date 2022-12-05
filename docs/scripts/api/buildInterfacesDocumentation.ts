@@ -36,20 +36,20 @@ interface ParsedProperty {
 }
 
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
-  'GridSelectionApi',
+  'GridRowSelectionApi',
+  'GridRowMultiSelectionApi',
   'GridFilterApi',
   'GridSortApi',
   'GridPaginationApi',
   'GridCsvExportApi',
   'GridScrollApi',
   'GridEditingApi',
-  'GridOldEditingApi',
-  'GridNewEditingApi',
   'GridRowGroupingApi',
   'GridColumnPinningApi',
   'GridDetailPanelApi',
   'GridPrintExportApi',
   'GridDisableVirtualizationApi',
+  'GridExcelExportApi',
 ];
 
 const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
@@ -61,16 +61,21 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowParams',
   'GridRowClassNameParams',
   'GridRowSpacingParams',
+  'GridExportStateParams',
 
   // Others
   'GridColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
+  'GridExcelExportOptions',
 
   // Filters
   'GridFilterModel',
   'GridFilterItem',
   'GridFilterOperator',
+
+  // Aggregation
+  'GridAggregationFunction',
 ];
 
 const parseProperty = (propertySymbol: ts.Symbol, project: Project): ParsedProperty => ({
@@ -185,7 +190,10 @@ function generateMarkdownFromProperties(
       planImg = '';
     } else if (property.projects.includes('x-data-grid-pro')) {
       planImg =
-        ' [<span class="plan-pro" title="Pro plan"></span>](https://mui.com/store/items/material-ui-pro/)';
+        ' [<span class="plan-pro" title="Pro plan"></span>](/x/introduction/licensing/#pro-plan)';
+    } else if (property.projects.includes('x-data-grid-premium')) {
+      planImg =
+        ' [<span class="plan-premium" title="Premium plan"></span>](/x/introduction/licensing/#premium-plan)';
     } else {
       throw new Error(`No valid plan found for ${property.name} property in ${object.name}`);
     }
@@ -221,7 +229,7 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
       const objectsInProject = objects.filter((object) => {
         // TODO: Remove after opening the apiRef on the community plan
         if (
-          ['GridApiCommunity', 'GridApiPro', 'GridApi'].includes(object.name) &&
+          ['GridApiCommunity', 'GridApi'].includes(object.name) &&
           project.name === 'x-data-grid'
         ) {
           return false;
@@ -273,11 +281,11 @@ function generateMarkdown(
 
 interface BuildInterfacesDocumentationOptions {
   projects: Projects;
-  documentationRoot: string;
+  apiPagesFolder: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { projects, documentationRoot } = options;
+  const { projects, apiPagesFolder } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
@@ -319,7 +327,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         })),
       };
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.json`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
       );
@@ -328,19 +336,19 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.md`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.md`),
         markdown,
         project,
       );
 
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.js`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
-    import { demos, docs, demoComponents } from './${slug}.md?@mui/markdown';
+    import * as pageProps from './${slug}.md?@mui/markdown';
 
     export default function Page() {
-      return <MarkdownDocs demos={demos} docs={docs} demoComponents={demoComponents} />;
+      return <MarkdownDocs {...pageProps} />;
     }
         `,
         project,

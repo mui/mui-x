@@ -1,64 +1,36 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
 export default function ViewsDatePicker() {
-  const [value, setValue] = React.useState(new Date());
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
-        <DatePicker
-          views={['year']}
+        <NextDatePicker
           label="Year only"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
+          views={['year']}
+          defaultValue={dayjs('2022-04-07')}
         />
-        <DatePicker
-          views={['year', 'month']}
+        <NextDatePicker
           label="Year and Month"
-          minDate={new Date('2012-03-01')}
-          maxDate={new Date('2023-06-01')}
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
+          views={['year', 'month']}
+          defaultValue={dayjs('2022-04-07')}
         />
-        <DatePicker
+        <NextDatePicker
+          label="Year, month and date"
           openTo="year"
           views={['year', 'month', 'day']}
-          label="Year, month and date"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
+          defaultValue={dayjs('2022-04-07')}
         />
-        <DatePicker
-          views={['day', 'month', 'year']}
+        <NextDatePicker
           label="Invert the order of views"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
+          views={['day', 'month', 'year']}
+          defaultValue={dayjs('2022-04-07')}
         />
-        <DatePicker
-          views={['day']}
-          label="Just date"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} helperText={null} />}
-        />
+        <NextDatePicker label="Just date" views={['day']} />
       </Stack>
     </LocalizationProvider>
   );

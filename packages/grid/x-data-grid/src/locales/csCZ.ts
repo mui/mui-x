@@ -26,21 +26,25 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobrazit filtry',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
-
     return `${count} ${pluralForm}`;
   },
+
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search…',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Stáhnout jako CSV',
   toolbarExportPrint: 'Vytisknout',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Najít sloupec',
@@ -53,9 +57,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Přidat filtr',
   filterPanelDeleteIconLabel: 'Odstranit',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operátory',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
   filterPanelColumns: 'Sloupce',
@@ -94,13 +96,11 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktivních filtrů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'aktivní filtry';
     } else if (count === 1) {
       pluralForm = 'aktivní filtr';
     }
-
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobrazit filtry',
@@ -109,13 +109,11 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Rows selected footer text
   footerRowSelected: (count) => {
     let pluralForm = 'vybraných záznamů';
-
     if (count > 1 && count < 5) {
       pluralForm = 'vybrané záznamy';
     } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
-
     return `${count} ${pluralForm}`;
   },
 
@@ -163,8 +161,20 @@ const csCZGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Přestat zoskupovat podle ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid, csCZCore);

@@ -8,7 +8,7 @@ export * from './gridFilterModel';
 export * from './gridRootContainerRef';
 export * from './gridRenderContextProps';
 export * from './gridRows';
-export * from './gridSelectionModel';
+export * from './gridRowSelectionModel';
 export * from './params';
 export * from './gridCellClass';
 export * from './gridCell';
@@ -18,9 +18,19 @@ export * from './gridIconSlotsComponent';
 export * from './gridSlotsComponent';
 export * from './gridSlotsComponentsProps';
 export * from './gridDensity';
-export * from './gridExport';
 export * from './logger';
 export * from './muiEvent';
 export * from './events';
 export * from './gridSortModel';
+export * from './gridColumnGrouping';
+
+// Do not export GridExportFormat and GridExportExtension which are override in pro package
+export type {
+  GridExportOptions,
+  GridFileExportOptions,
+  GridGetRowsToExportParams,
+  GridCsvGetRowsToExportParams,
+  GridCsvExportOptions,
+  GridPrintExportOptions,
+} from './gridExport';
 export * from './gridFilterOperator';

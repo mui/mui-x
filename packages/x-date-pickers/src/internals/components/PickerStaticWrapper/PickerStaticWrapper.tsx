@@ -1,60 +1,183 @@
 import * as React from 'react';
-import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import PropTypes from 'prop-types';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import clsx from 'clsx';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
-import { WrapperVariantContext, IsStaticVariantContext } from '../wrappers/WrapperVariantContext';
-
+import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
 import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
+import { PickersActionBar } from '../../../PickersActionBar';
+import { PickerStateWrapperProps } from '../../hooks/usePickerState';
+import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
 
-const useUtilityClasses = (ownerState: PickerStaticWrapperProps) => {
+const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
+    content: ['content'],
   };
 
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
 
-export interface PickerStaticWrapperProps {
+export interface PickersStaticWrapperSlotsComponent
+  extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {}
+
+export interface PickersStaticWrapperSlotsComponentsProps
+  extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {}
+
+export interface ExportedPickerStaticWrapperProps {
+  /**
+   * Force static wrapper inner components to be rendered in mobile or desktop mode.
+   * @default "mobile"
+   */
+  displayStaticWrapperAs?: 'desktop' | 'mobile';
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+}
+
+export interface PickerStaticWrapperProps<TDate>
+  extends PickerStateWrapperProps,
+    ExportedPickerStaticWrapperProps {
+  className?: string;
   children?: React.ReactNode;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<PickerStaticWrapperClasses>;
   /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
+   * Overrideable components.
+   * @default {}
    */
-  displayStaticWrapperAs: 'desktop' | 'mobile';
+  components?: PickersStaticWrapperSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: PickersStaticWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
 const PickerStaticWrapperRoot = styled('div', {
   name: 'MuiPickerStaticWrapper',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
+})({
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const PickerStaticWrapperContent = styled('div', {
+  name: 'MuiPickerStaticWrapper',
+  slot: 'Content',
+  overridesResolver: (props, styles) => styles.content,
 })(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
 }));
 
-export function PickerStaticWrapper(inProps: PickerStaticWrapperProps) {
+function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
-  const { displayStaticWrapperAs, ...other } = props;
+  const {
+    displayStaticWrapperAs = 'mobile',
+    onAccept,
+    onClear,
+    onCancel,
+    onSetToday,
+    children,
+    onDismiss,
+    open,
+    components,
+    componentsProps,
+    localeText,
+    className,
+    ...other
+  } = props;
 
   const classes = useUtilityClasses(props);
 
-  const isStatic = true;
+  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
-    <IsStaticVariantContext.Provider value={isStatic}>
+    <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticWrapperRoot className={classes.root} {...other} />
+        <PickerStaticWrapperRoot className={clsx(classes.root, className)} {...other}>
+          <PickerStaticWrapperContent className={classes.content}>
+            <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
+          </PickerStaticWrapperContent>
+          <ActionBar
+            onAccept={onAccept}
+            onClear={onClear}
+            onCancel={onCancel}
+            onSetToday={onSetToday}
+            actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
+            {...componentsProps?.actionBar}
+          />
+        </PickerStaticWrapperRoot>
       </WrapperVariantContext.Provider>
-    </IsStaticVariantContext.Provider>
+    </LocalizationProvider>
   );
 }
+
+PickerStaticWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps: PropTypes.object,
+  /**
+   * Force static wrapper inner components to be rendered in mobile or desktop mode.
+   * @default "mobile"
+   */
+  displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
+  /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
+  onAccept: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
+  onDismiss: PropTypes.func.isRequired,
+  onSetToday: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+export { PickerStaticWrapper };

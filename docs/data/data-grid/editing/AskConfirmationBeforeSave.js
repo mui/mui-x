@@ -16,15 +16,15 @@ import Alert from '@mui/material/Alert';
 const useFakeMutation = () => {
   return React.useCallback(
     (user) =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject();
           } else {
             resolve(user);
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };
@@ -90,7 +90,6 @@ export default function AskConfirmationBeforeSave() {
     // the dialog is fully open.
     // noButtonRef.current?.focus();
   };
-
   const renderConfirmDialog = () => {
     if (!promiseArguments) {
       return null;
@@ -122,12 +121,7 @@ export default function AskConfirmationBeforeSave() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       {renderConfirmDialog()}
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdate}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} processRowUpdate={processRowUpdate} />
       {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
           <Alert {...snackbar} onClose={handleCloseSnackbar} />

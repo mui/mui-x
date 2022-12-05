@@ -1,6 +1,10 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface TimePickerToolbarClasses {
+  root: string;
   separator: string;
   hourMinuteLabel: string;
   hourMinuteLabelLandscape: string;
@@ -8,18 +12,18 @@ export interface TimePickerToolbarClasses {
   ampmSelection: string;
   ampmLandscape: string;
   ampmLabel: string;
-  penIconLandscape: string;
 }
 
 export type TimePickerToolbarClassKey = keyof TimePickerToolbarClasses;
 
 export function getTimePickerToolbarUtilityClass(slot: string) {
-  return generateUtilityClass('PrivateTimePickerToolbar', slot);
+  return generateUtilityClass('MuiTimePickerToolbar', slot);
 }
 
 export const timePickerToolbarClasses: TimePickerToolbarClasses = generateUtilityClasses(
-  'PrivateTimePickerToolbar',
+  'MuiTimePickerToolbar',
   [
+    'root',
     'separator',
     'hourMinuteLabel',
     'hourMinuteLabelLandscape',
@@ -27,6 +31,5 @@ export const timePickerToolbarClasses: TimePickerToolbarClasses = generateUtilit
     'ampmSelection',
     'ampmLandscape',
     'ampmLabel',
-    'penIconLandscape',
   ],
 );

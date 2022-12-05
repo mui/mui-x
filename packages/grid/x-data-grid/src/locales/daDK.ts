@@ -27,11 +27,17 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive filtre` : `${count} aktivt filter`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search…',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   // toolbarExport: 'Export',
   toolbarExportLabel: 'Eksporter',
   toolbarExportCSV: 'Download som CSV',
   toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find kolonne',
@@ -44,9 +50,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
   filterPanelLinkOperator: 'Logisk operator',
-  filterPanelOperators: 'Operatorer',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operatorer',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonne',
@@ -129,8 +133,20 @@ const daDKGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Fjern gruppéring efter ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Udvid',
   collapseDetailPanel: 'Kollaps',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid, daDKCore);

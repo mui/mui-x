@@ -11,6 +11,7 @@ import {
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
   GridCell,
+  GridSkeletonCell,
   GridCheckIcon,
   GridCloseIcon,
   GridColumnIcon,
@@ -20,7 +21,6 @@ import {
   GridFilterListIcon,
   GridFilterPanel,
   GridFooter,
-  GridHeader,
   GridLoadingOverlay,
   GridNoRowsOverlay,
   GridPagination,
@@ -38,10 +38,12 @@ import {
   GridKeyboardArrowRight,
   GridAddIcon,
   GridRemoveIcon,
+  GridDragIcon,
   GridColumnHeaderFilterIconButton,
+  GridSearchIcon,
 } from '../components';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { ErrorOverlay } from '../components/ErrorOverlay';
+import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
@@ -67,6 +69,9 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   GroupingCriteriaExpandIcon: GridKeyboardArrowRight,
   DetailPanelExpandIcon: GridAddIcon,
   DetailPanelCollapseIcon: GridRemoveIcon,
+  RowReorderIcon: GridDragIcon,
+  QuickFilterIcon: GridSearchIcon,
+  QuickFilterClearIcon: GridCloseIcon,
 };
 
 /**
@@ -83,11 +88,11 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   Cell: GridCell,
+  SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay,
+  ErrorOverlay: GridErrorOverlay,
   Footer: GridFooter,
-  Header: GridHeader,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,

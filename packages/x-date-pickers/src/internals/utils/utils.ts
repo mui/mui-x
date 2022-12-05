@@ -10,10 +10,13 @@ export function arrayIncludes<T>(array: T[] | readonly T[], itemOrItems: T | T[]
 }
 
 export const onSpaceOrEnter =
-  (innerFn: () => void, onFocus?: (event: React.KeyboardEvent<any>) => void) =>
+  (
+    innerFn: (ev: React.MouseEvent<any> | React.KeyboardEvent<any>) => void,
+    onFocus?: (event: React.KeyboardEvent<any>) => void,
+  ) =>
   (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      innerFn();
+      innerFn(event);
 
       // prevent any side effects
       event.preventDefault();
@@ -25,30 +28,21 @@ export const onSpaceOrEnter =
     }
   };
 
-/* Quick untyped helper to improve function composition readability */
-export const pipe = (...fns: Array<(...args: any[]) => any>) =>
-  fns.reduceRight(
-    (prevFn, nextFn) =>
-      (...args) =>
-        nextFn(prevFn(...args)),
-    (value) => value,
-  );
-
 export const executeInTheNextEventLoopTick = (fn: () => void) => {
   setTimeout(fn, 0);
 };
 
-export function createDelegatedEventHandler<TEvent>(
-  fn: (event: TEvent) => void,
-  onEvent?: (event: TEvent) => void,
-) {
-  return (event: TEvent) => {
-    fn(event);
+// https://www.abeautifulsite.net/posts/finding-the-active-element-in-a-shadow-root/
+export const getActiveElement = (root: Document | ShadowRoot = document): Element | null => {
+  const activeEl = root.activeElement;
 
-    if (onEvent) {
-      onEvent(event);
-    }
-  };
-}
+  if (!activeEl) {
+    return null;
+  }
 
-export const doNothing = () => {};
+  if (activeEl.shadowRoot) {
+    return getActiveElement(activeEl.shadowRoot);
+  }
+
+  return activeEl;
+};

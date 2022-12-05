@@ -8,6 +8,20 @@ export const GridRootStyles = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => [
     { [`&.${gridClasses.autoHeight}`]: styles.autoHeight },
+    { [`&.${gridClasses.aggregationColumnHeader}`]: styles.aggregationColumnHeader },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignLeft']}`]:
+        styles['aggregationColumnHeader--alignLeft'],
+    },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignCenter']}`]:
+        styles['aggregationColumnHeader--alignCenter'],
+    },
+    {
+      [`&.${gridClasses['aggregationColumnHeader--alignRight']}`]:
+        styles['aggregationColumnHeader--alignRight'],
+    },
+    { [`&.${gridClasses.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
@@ -18,6 +32,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.cell}`]: styles.cell },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
+    { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
     { [`& .${gridClasses.checkboxInput}`]: styles.checkboxInput },
     { [`& .${gridClasses['columnHeader--alignCenter']}`]: styles['columnHeader--alignCenter'] },
     { [`& .${gridClasses['columnHeader--alignLeft']}`]: styles['columnHeader--alignLeft'] },
@@ -42,7 +57,11 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.menuList}`]: styles.menuList },
     { [`& .${gridClasses['row--editable']}`]: styles['row--editable'] },
     { [`& .${gridClasses['row--editing']}`]: styles['row--editing'] },
+    { [`& .${gridClasses['row--dragging']}`]: styles['row--dragging'] },
     { [`& .${gridClasses.row}`]: styles.row },
+    { [`& .${gridClasses.rowReorderCellPlaceholder}`]: styles.rowReorderCellPlaceholder },
+    { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
+    { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
     { [`& .${gridClasses.withBorder}`]: styles.withBorder },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -55,6 +74,7 @@ export const GridRootStyles = styled('div', {
     styles.root,
   ],
 })(({ theme }) => {
+  // eslint-disable-next-line no-nested-ternary
   const borderColor = getBorderColor(theme);
 
   const gridStyle: CSSInterpolation = {
@@ -63,12 +83,13 @@ export const GridRootStyles = styled('div', {
     position: 'relative',
     border: `1px solid ${borderColor}`,
     borderRadius: theme.shape.borderRadius,
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    overflowAnchor: 'none', // Keep the same scrolling position
     [`&.${gridClasses.autoHeight}`]: {
       height: 'auto',
       [`& .${gridClasses['row--lastVisible']} .${gridClasses.cell}`]: {
@@ -86,7 +107,11 @@ export const GridRootStyles = styled('div', {
       boxSizing: 'border-box',
     },
     [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
-      outline: `solid ${alpha(theme.palette.primary.main, 0.5)} 1px`,
+      outline: `solid ${
+        theme.vars
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
+          : alpha(theme.palette.primary.main, 0.5)
+      } 1px`,
       outlineWidth: 1,
       outlineOffset: -1,
     },
@@ -132,6 +157,19 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
     },
+    [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
+      borderBottom: `solid ${borderColor} 1px`,
+      boxSizing: 'border-box',
+    },
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
+      {
+        borderBottom: `none`,
+      },
+    [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
+      {
+        borderBottom: `solid ${borderColor} 1px`,
+        boxSizing: 'border-box',
+      },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
       fontSize: 'inherit',
     },
@@ -156,7 +194,7 @@ export const GridRootStyles = styled('div', {
         marginLeft: -10,
       },
     [`& .${gridClasses['columnHeader--moving']}`]: {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: (theme.vars || theme).palette.action.hover,
     },
     [`& .${gridClasses.columnSeparator}`]: {
       position: 'absolute',
@@ -176,14 +214,17 @@ export const GridRootStyles = styled('div', {
       cursor: 'col-resize',
       touchAction: 'none',
       '&:hover': {
-        color: theme.palette.text.primary,
+        color: (theme.vars || theme).palette.text.primary,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           color: borderColor,
         },
       },
       [`&.${gridClasses['columnSeparator--resizing']}`]: {
-        color: theme.palette.text.primary,
+        color: (theme.vars || theme).palette.text.primary,
+      },
+      '& svg': {
+        pointerEvents: 'none',
       },
     },
     [`& .${gridClasses.iconSeparator}`]: {
@@ -216,25 +257,30 @@ export const GridRootStyles = styled('div', {
       width: 'fit-content',
       breakInside: 'avoid', // Avoid the row to be broken in two different print pages.
       '&:hover, &.Mui-hovered': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: (theme.vars || theme).palette.action.hover,
         // Reset on touch devices, it doesn't add specificity
         '@media (hover: none)': {
           backgroundColor: 'transparent',
         },
       },
       '&.Mui-selected': {
-        backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        backgroundColor: theme.vars
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         '&:hover, &.Mui-hovered': {
-          backgroundColor: alpha(
-            theme.palette.primary.main,
-            theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
-          ),
+          backgroundColor: theme.vars
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
+                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
+              })`
+            : alpha(
+                theme.palette.primary.main,
+                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+              ),
           // Reset on touch devices, it doesn't add specificity
           '@media (hover: none)': {
-            backgroundColor: alpha(
-              theme.palette.primary.main,
-              theme.palette.action.selectedOpacity,
-            ),
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
           },
         },
       },
@@ -242,9 +288,11 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
+      borderBottom: `1px solid ${borderColor}`,
+    },
+    [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
       whiteSpace: 'nowrap',
-      borderBottom: `1px solid ${borderColor}`,
     },
     [`& .${gridClasses.cellContent}`]: {
       overflow: 'hidden',
@@ -254,9 +302,9 @@ export const GridRootStyles = styled('div', {
       padding: 1,
       display: 'flex',
       boxShadow: theme.shadows[2],
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: (theme.vars || theme).palette.background.paper,
       '&:focus-within': {
-        outline: `solid ${theme.palette.primary.main} 1px`,
+        outline: `solid ${(theme.vars || theme).palette.primary.main} 1px`,
         outlineOffset: '-1px',
       },
     },
@@ -265,7 +313,7 @@ export const GridRootStyles = styled('div', {
     },
     [`& .${gridClasses['row--editing']} .${gridClasses.cell}`]: {
       boxShadow: theme.shadows[0],
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: (theme.vars || theme).palette.background.paper,
     },
     [`& .${gridClasses.editBooleanCell}`]: {
       display: 'flex',
@@ -275,15 +323,30 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
     },
     [`& .${gridClasses.booleanCell}[data-value="true"]`]: {
-      color: theme.palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     },
     [`& .${gridClasses.booleanCell}[data-value="false"]`]: {
-      color: theme.palette.text.disabled,
+      color: (theme.vars || theme).palette.text.disabled,
     },
     [`& .${gridClasses.actionsCell}`]: {
       display: 'inline-flex',
       alignItems: 'center',
       gridGap: theme.spacing(1),
+    },
+    [`& .${gridClasses.rowReorderCell}`]: {
+      display: 'inline-flex',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['rowReorderCell--draggable']}`]: {
+      cursor: 'move',
+      opacity: 1,
+    },
+    [`& .${gridClasses.rowReorderCellContainer}`]: {
+      padding: 0,
+      alignItems: 'stretch',
     },
     [`& .${gridClasses.withBorder}`]: {
       borderColor,
@@ -308,12 +371,26 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.columnHeaderDraggableContainer}`]: {
       display: 'flex',
       width: '100%',
+      height: '100%',
     },
-    [`& .${gridClasses['columnHeader--dragging']}`]: {
-      background: theme.palette.background.paper,
+    [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+      display: 'none',
+    },
+    [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
+      background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
       borderRadius: theme.shape.borderRadius,
-      opacity: theme.palette.action.disabledOpacity,
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+    },
+    [`& .${gridClasses['row--dragging']}`]: {
+      background: (theme.vars || theme).palette.background.paper,
+      padding: '0 12px',
+      borderRadius: theme.shape.borderRadius,
+      opacity: (theme.vars || theme).palette.action.disabledOpacity,
+
+      [`& .${gridClasses.rowReorderCellPlaceholder}`]: {
+        display: 'flex',
+      },
     },
     [`& .${gridClasses.treeDataGroupingCell}`]: {
       display: 'flex',

@@ -1,4 +1,4 @@
-import { GridExportFormat } from '../models/gridExport';
+import { GridExportExtension } from '../models/gridExport';
 
 /**
  * I have hesitated to use https://github.com/eligrey/FileSaver.js.
@@ -10,10 +10,11 @@ import { GridExportFormat } from '../models/gridExport';
  * https://unpkg.com/browse/@progress/kendo-file-saver@1.0.7/dist/es/save-as.js
  * https://github.com/ag-grid/ag-grid/blob/9565c219b6210aa85fa833c929d0728f9d163a91/community-modules/csv-export/src/csvExport/downloader.ts
  */
-export function exportAs(
+
+export function exportAs<ExtraExtensions extends string>(
   blob: Blob,
-  extension: GridExportFormat = 'csv',
-  filename: string = document.title,
+  extension: GridExportExtension | ExtraExtensions = 'csv',
+  filename: string = document.title || 'untitled',
 ): void {
   const fullName = `${filename}.${extension}`;
 

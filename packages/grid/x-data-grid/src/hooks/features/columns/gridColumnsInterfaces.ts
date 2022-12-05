@@ -11,15 +11,12 @@ export type GridColumnRawLookup = {
 };
 
 export interface GridColumnsState {
-  /**
-   * TODO v6: Rename `all` to `orderedFields`
-   */
-  all: string[];
+  orderedFields: string[];
   lookup: GridColumnLookup;
   columnVisibilityModel: GridColumnVisibilityModel;
 }
 
-export type GridColumnDimensions = Pick<GridStateColDef, GridColumnDimensionProperties>;
+export type GridColumnDimensions = { [key in GridColumnDimensionProperties]?: number };
 
 export interface GridColumnsInitialState {
   columnVisibilityModel?: GridColumnVisibilityModel;
@@ -31,6 +28,6 @@ export type GridColumnsRawState = Omit<GridColumnsState, 'lookup'> & {
   lookup: GridColumnRawLookup;
 };
 
-export type GridHydrateColumnsValue = Omit<GridColumnsRawState, 'columnVisibilityModel'>;
+export type GridHydrateColumnsValue = GridColumnsRawState;
 
 export type GridColumnVisibilityModel = Record<GridRowId, boolean>;

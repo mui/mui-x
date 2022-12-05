@@ -109,7 +109,7 @@ const DEMO_INITIAL_STATE = {
   activeViewId: null,
 };
 
-const ViewListItem = (props) => {
+function ViewListItem(props) {
   const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
@@ -128,7 +128,7 @@ const ViewListItem = (props) => {
       </IconButton>
     </MenuItem>
   );
-};
+}
 
 ViewListItem.propTypes = {
   onDelete: PropTypes.func.isRequired,
@@ -167,9 +167,6 @@ ViewListItem.propTypes = {
          */
         openedPanelValue: PropTypes.oneOf(['columns', 'filters']),
       }),
-      rowGrouping: PropTypes.shape({
-        model: PropTypes.arrayOf(PropTypes.string),
-      }),
       sorting: PropTypes.shape({
         sortModel: PropTypes.arrayOf(PropTypes.object),
       }),
@@ -178,7 +175,7 @@ ViewListItem.propTypes = {
   viewId: PropTypes.string.isRequired,
 };
 
-const NewViewListButton = (props) => {
+function NewViewListButton(props) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
@@ -224,7 +221,7 @@ const NewViewListButton = (props) => {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
 NewViewListButton.propTypes = {
   isValid: PropTypes.bool.isRequired,
@@ -233,7 +230,7 @@ NewViewListButton.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
   const [state, dispatch] = React.useReducer(demoReducer, DEMO_INITIAL_STATE);
 
@@ -244,8 +241,8 @@ const CustomToolbar = () => {
     });
   };
 
-  const handleNewViewLabelChange = (e) => {
-    dispatch({ type: 'setNewViewLabel', label: e.target.value });
+  const handleNewViewLabelChange = (event) => {
+    dispatch({ type: 'setNewViewLabel', label: event.target.value });
   };
 
   const handleDeleteView = React.useCallback((viewId) => {
@@ -310,6 +307,7 @@ const CustomToolbar = () => {
           role={undefined}
           transition
           placement="bottom-start"
+          sx={{ zIndex: 'modal' }}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
@@ -344,7 +342,7 @@ const CustomToolbar = () => {
       />
     </GridToolbarContainer>
   );
-};
+}
 
 export default function RestoreStateApiRef() {
   const apiRef = useGridApiRef();
@@ -354,7 +352,7 @@ export default function RestoreStateApiRef() {
   });
 
   return (
-    <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         components={{ Toolbar: CustomToolbar }}
         loading={loading}

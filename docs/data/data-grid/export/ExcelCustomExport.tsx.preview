@@ -1,0 +1,10 @@
+<DataGridPremium
+  treeData
+  getTreeDataPath={(row) => row.path}
+  rows={rows}
+  columns={columns}
+  groupingColDef={groupingColDef}
+  defaultGroupingExpansionDepth={-1}
+  components={{ Toolbar: GridToolbar }}
+  componentsProps={{ toolbar: { excelOptions } }}
+/>

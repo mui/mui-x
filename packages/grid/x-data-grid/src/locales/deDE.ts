@@ -27,11 +27,17 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Suchen…',
+  toolbarQuickFilterLabel: 'Suchen',
+  toolbarQuickFilterDeleteIconLabel: 'Löschen',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportieren',
   toolbarExportLabel: 'Exportieren',
   toolbarExportCSV: 'Download als CSV',
   toolbarExportPrint: 'Drucken',
+  toolbarExportExcel: 'Download als Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Finde Spalte',
@@ -43,10 +49,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operatoren',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'Logische Operatoren',
+  filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
   filterPanelColumns: 'Spalten',
@@ -66,7 +70,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'ist am oder vor',
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'ist einer der Werte',
 
   // Filter values text
   filterValueAny: 'Beliebig',
@@ -131,8 +135,20 @@ const deDEGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Gruppierung nach ${name} aufheben`,
 
   // Master/detail
+  detailPanelToggle: 'Detailansicht Kippschalter',
   expandDetailPanel: 'Aufklappen',
   collapseDetailPanel: 'Zuklappen',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Reihen neu ordnen',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'Summe',
+  aggregationFunctionLabelAvg: 'Mittelwert',
+  aggregationFunctionLabelMin: 'Minimum',
+  aggregationFunctionLabelMax: 'Maximum',
+  aggregationFunctionLabelSize: 'Anzahl',
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid, deDECore);

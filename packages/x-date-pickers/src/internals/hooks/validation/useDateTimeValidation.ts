@@ -2,45 +2,58 @@ import { useValidation, ValidationProps, Validator } from './useValidation';
 import {
   validateDate,
   DateValidationError,
-  ExportedDateValidationProps,
+  DateComponentValidationProps,
 } from './useDateValidation';
 import {
   validateTime,
   TimeValidationError,
-  ExportedTimeValidationProps,
+  TimeComponentValidationProps,
 } from './useTimeValidation';
 
-export interface DateTimeValidationProps<TDate>
-  extends ExportedDateValidationProps<TDate>,
-    ExportedTimeValidationProps<TDate>,
-    ValidationProps<DateTimeValidationError, TDate> {}
+export interface DateTimeComponentValidationProps<TDate>
+  extends DateComponentValidationProps<TDate>,
+    TimeComponentValidationProps<TDate> {}
 
-export const validateDateTime: Validator<any, DateTimeValidationProps<any>> = (
-  utils,
-  value,
-  { minDate, maxDate, disableFuture, shouldDisableDate, disablePast, ...timeValidationProps },
-) => {
-  const dateValidationResult = validateDate(utils, value, {
-    minDate,
-    maxDate,
-    disableFuture,
-    shouldDisableDate,
-    disablePast,
+export const validateDateTime: Validator<
+  any | null,
+  any,
+  DateTimeValidationError,
+  DateTimeComponentValidationProps<any>
+> = ({ props, value, adapter }) => {
+  const dateValidationResult = validateDate({
+    adapter,
+    value,
+    props,
   });
 
   if (dateValidationResult !== null) {
     return dateValidationResult;
   }
 
-  return validateTime(utils, value, timeValidationProps);
+  return validateTime({
+    adapter,
+    value,
+    props,
+  });
 };
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
-const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) => a === b;
+/**
+ * TODO v6: Remove
+ */
+export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) =>
+  a === b;
 
+/**
+ * TODO v6: Remove
+ */
 export function useDateTimeValidation<TDate>(
-  props: DateTimeValidationProps<TDate> & ValidationProps<DateTimeValidationError, TDate>,
+  props: ValidationProps<
+    DateTimeValidationError,
+    TDate | null,
+    DateTimeComponentValidationProps<TDate>
+  >,
 ): DateTimeValidationError {
-  return useValidation(props, validateDateTime, isSameDateTimeError);
+  return useValidation(props, validateDateTime, isSameDateTimeError, null);
 }

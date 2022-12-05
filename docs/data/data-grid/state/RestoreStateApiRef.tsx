@@ -130,13 +130,13 @@ const DEMO_INITIAL_STATE: DemoState = {
   activeViewId: null,
 };
 
-const ViewListItem = (props: {
+function ViewListItem(props: {
   view: StateView;
   viewId: string;
   selected: boolean;
   onDelete: (viewId: string) => void;
   onSelect: (viewId: string) => void;
-}) => {
+}) {
   const { view, viewId, selected, onDelete, onSelect, ...other } = props;
 
   return (
@@ -155,16 +155,16 @@ const ViewListItem = (props: {
       </IconButton>
     </MenuItem>
   );
-};
+}
 
-const NewViewListButton = (props: {
+function NewViewListButton(props: {
   label: string;
   onLabelChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onSubmit: () => void;
   isValid: boolean;
-}) => {
+}) {
   const { label, onLabelChange, onSubmit, isValid } = props;
   const [isAddingView, setIsAddingView] = React.useState(false);
 
@@ -210,9 +210,9 @@ const NewViewListButton = (props: {
       </Dialog>
     </React.Fragment>
   );
-};
+}
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
   const [state, dispatch] = React.useReducer(demoReducer, DEMO_INITIAL_STATE);
 
@@ -224,9 +224,9 @@ const CustomToolbar = () => {
   };
 
   const handleNewViewLabelChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    dispatch({ type: 'setNewViewLabel', label: e.target.value });
+    dispatch({ type: 'setNewViewLabel', label: event.target.value });
   };
 
   const handleDeleteView = React.useCallback((viewId: string) => {
@@ -291,6 +291,7 @@ const CustomToolbar = () => {
           role={undefined}
           transition
           placement="bottom-start"
+          sx={{ zIndex: 'modal' }}
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
@@ -325,7 +326,7 @@ const CustomToolbar = () => {
       />
     </GridToolbarContainer>
   );
-};
+}
 
 export default function RestoreStateApiRef() {
   const apiRef = useGridApiRef();
@@ -335,7 +336,7 @@ export default function RestoreStateApiRef() {
   });
 
   return (
-    <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         components={{ Toolbar: CustomToolbar }}
         loading={loading}

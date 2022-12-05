@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { ownerDocument } from '@mui/material/utils';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
-
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
@@ -12,11 +11,24 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
+import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { getColumnsToExport } from './utils';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import {
+  GridExportDisplayOptions,
+  GridPrintExportMenuItem,
+} from '../../../components/toolbar/GridToolbarExport';
+
+function raf() {
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      resolve();
+    });
+  });
+}
 
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
@@ -33,7 +45,7 @@ type PrintWindowOnLoad = (
  * @requires useGridParamsApi (method)
  */
 export const useGridPrintExport = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
@@ -50,6 +62,7 @@ export const useGridPrintExport = (
   const updateGridColumnsForPrint = React.useCallback(
     (fields?: string[], allColumns?: boolean) =>
       new Promise<void>((resolve) => {
+        // TODO remove unused Promise
         if (!fields && !allColumns) {
           resolve();
           return;
@@ -68,18 +81,15 @@ export const useGridPrintExport = (
         });
 
         apiRef.current.setColumnVisibilityModel(newColumnVisibilityModel);
-
         resolve();
       }),
     [apiRef],
   );
 
+  // TODO move outside of this scope and remove React.useCallback
   const buildPrintWindow = React.useCallback((title?: string): HTMLIFrameElement => {
     const iframeEl = document.createElement('iframe');
 
-    iframeEl.id = 'grid-print-window';
-    // Without this 'onload' event won't fire in some browsers
-    iframeEl.src = window.location.href;
     iframeEl.style.position = 'absolute';
     iframeEl.style.width = '0px';
     iframeEl.style.height = '0px';
@@ -97,17 +107,13 @@ export const useGridPrintExport = (
         ...options,
       };
 
-      // Some agents, such as IE11 and Enzyme (as of 2 Jun 2020) continuously call the
-      // `onload` callback. This ensures that it is only called once.
-      printWindow.onload = null;
-
-      const printDoc = printWindow.contentDocument || printWindow.contentWindow?.document;
+      const printDoc = printWindow.contentDocument;
 
       if (!printDoc) {
         return;
       }
 
-      const headerHeight = gridDensityHeaderHeightSelector(apiRef);
+      const totalHeaderHeight = gridTotalHeaderHeightSelector(apiRef);
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
@@ -126,9 +132,9 @@ export const useGridPrintExport = (
       gridMain!.style.overflow = 'visible';
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
-      const columnHeadersInner = columnHeaders!.querySelector(
+      const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
         `.${gridClasses.columnHeadersInner}`,
-      ) as HTMLElement;
+      )!;
       columnHeadersInner.style.width = '100%';
 
       let gridToolbarElementHeight =
@@ -149,14 +155,16 @@ export const useGridPrintExport = (
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
         rowsMeta.currentPageTotalHeight +
-        headerHeight +
+        totalHeaderHeight +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;
 
-      // Remove all loaded elements from the current host
-      printDoc.body.innerHTML = '';
-      printDoc.body.appendChild(gridClone);
+      // printDoc.body.appendChild(gridClone); should be enough but a clone isolation bug in Safari
+      // prevents us to do it
+      const container = document.createElement('div');
+      container.appendChild(gridClone);
+      printDoc.body.innerHTML = container.innerHTML;
 
       const defaultPageStyle =
         typeof normalizeOptions.pageStyle === 'function'
@@ -258,15 +266,21 @@ export const useGridPrintExport = (
 
       await updateGridColumnsForPrint(options?.fields, options?.allColumns);
       apiRef.current.unstable_disableVirtualization();
+      await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
-      doc.current!.body.appendChild(printWindow);
       if (process.env.NODE_ENV === 'test') {
+        doc.current!.body.appendChild(printWindow);
         // In test env, run the all pipeline without waiting for loading
         handlePrintWindowLoad(printWindow, options);
         handlePrintWindowAfterPrint(printWindow);
       } else {
-        printWindow.onload = () => handlePrintWindowLoad(printWindow, options);
-        printWindow.contentWindow!.onafterprint = () => handlePrintWindowAfterPrint(printWindow);
+        printWindow.onload = () => {
+          handlePrintWindowLoad(printWindow, options);
+          printWindow.contentWindow!.onafterprint = () => {
+            handlePrintWindowAfterPrint(printWindow);
+          };
+        };
+        doc.current!.body.appendChild(printWindow);
       }
     },
     [
@@ -284,5 +298,29 @@ export const useGridPrintExport = (
     exportDataAsPrint,
   };
 
-  useGridApiMethod(apiRef, printExportApi, 'GridPrintExportApi');
+  useGridApiMethod(apiRef, printExportApi, 'public');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const addExportMenuButtons = React.useCallback<GridPipeProcessor<'exportMenu'>>(
+    (
+      initialValue,
+      options: { printOptions: GridPrintExportOptions & GridExportDisplayOptions },
+    ) => {
+      if (options.printOptions?.disableToolbarButton) {
+        return initialValue;
+      }
+      return [
+        ...initialValue,
+        {
+          component: <GridPrintExportMenuItem options={options.printOptions} />,
+          componentName: 'printExport',
+        },
+      ];
+    },
+    [],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 };

@@ -13,6 +13,7 @@ function InputNumberInterval(props) {
 
   const filterTimeout = React.useRef();
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+
   const [applying, setIsApplying] = React.useState(false);
 
   React.useEffect(() => {
@@ -93,7 +94,7 @@ InputNumberInterval.propTypes = {
     /**
      * The column from which we want to filter the rows.
      */
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     /**
      * Must be unique.
      * Only useful when the model contains several items.
@@ -101,9 +102,8 @@ InputNumberInterval.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     /**
      * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
      */
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     /**
      * The filtering value.
      * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -143,9 +143,9 @@ export default function CustomMultiValueOperator() {
     items: [
       {
         id: 1,
-        columnField: 'quantity',
+        field: 'quantity',
         value: [5000, 15000],
-        operatorValue: 'between',
+        operator: 'between',
       },
     ],
   });
@@ -169,7 +169,7 @@ export default function CustomMultiValueOperator() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
         filterModel={filterModel}
         onFilterModelChange={(model) => setFilterModel(model)}

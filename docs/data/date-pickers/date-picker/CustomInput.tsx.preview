@@ -1,15 +1,7 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
-  <DatePicker
-    label="Custom input"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={({ inputRef, inputProps, InputProps }) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <input ref={inputRef} {...inputProps} />
-        {InputProps?.endAdornment}
-      </Box>
-    )}
-  />
-</LocalizationProvider>
+<NextDatePicker
+  label="Custom input"
+  defaultValue={dayjs('2022-04-07')}
+  components={{
+    Input: BrowserInput,
+  }}
+/>

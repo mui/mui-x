@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
   GridStrategyProcessor,
   GridStrategyProcessorName,
@@ -8,7 +8,6 @@ import {
   GridStrategyGroup,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridEvents } from '../../../models/events';
 
 export const GRID_DEFAULT_STRATEGY = 'none';
 
@@ -39,22 +38,22 @@ type UntypedStrategyProcessors = {
  * The plugin containing the custom logic must use:
  *
  * - `useGridRegisterStrategyProcessor` to register their processor.
- *   When the processor of the active strategy changes, it will fire `GridEvents.activeStrategyProcessorChange` to re-apply the processor.
+ *   When the processor of the active strategy changes, it will fire `"activeStrategyProcessorChange"` to re-apply the processor.
  *
- * - `apiRef.current.unstable_setStrategyAvailability` to tell if their strategy can be used.
+ * - `apiRef.current.setStrategyAvailability` to tell if their strategy can be used.
  *
  * =====================================================================================================================
  *
  * The plugin or component that needs to apply the custom logic of the current strategy must use:
  *
- * - `apiRef.current.unstable_applyStrategyProcessor` to run the processor of the active strategy for a given processor name.
+ * - `apiRef.current.applyStrategyProcessor` to run the processor of the active strategy for a given processor name.
  *
- * - `GridEvents.strategyAvailabilityChange` to update something when the active strategy changes.
+ * - the "strategyAvailabilityChange" event to update something when the active strategy changes.
  *    Warning: Be careful not to apply the processor several times.
- *    For instance `GridEvents.rowsSet` is fired by `useGridRows` whenever the active strategy changes.
+ *    For instance "rowsSet" is fired by `useGridRows` whenever the active strategy changes.
  *    So listening to both would most likely run your logic twice.
  *
- * - `GridEvents.activeStrategyProcessorChange` to update something when the processor of the active strategy changes.
+ * - The "activeStrategyProcessorChange" event to update something when the processor of the active strategy changes.
  *
  * =====================================================================================================================
  *
@@ -64,7 +63,7 @@ type UntypedStrategyProcessors = {
  * - sorting algorithm.
  * - filtering algorithm.
  */
-export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridPrivateApiCommon>) => {
   const availableStrategies = React.useRef(
     new Map<string, { group: GridStrategyGroup; isAvailable: () => boolean }>(),
   );
@@ -73,7 +72,7 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   }>({});
 
   const registerStrategyProcessor = React.useCallback<
-    GridStrategyProcessingApi['unstable_registerStrategyProcessor']
+    GridStrategyProcessingApi['registerStrategyProcessor']
   >(
     (strategyName, processorName, processor: GridStrategyProcessor<any>) => {
       const cleanup = () => {
@@ -97,10 +96,9 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
       }
 
       if (
-        strategyName ===
-        apiRef.current.unstable_getActiveStrategy(GRID_STRATEGIES_PROCESSORS[processorName])
+        strategyName === apiRef.current.getActiveStrategy(GRID_STRATEGIES_PROCESSORS[processorName])
       ) {
-        apiRef.current.publishEvent(GridEvents.activeStrategyProcessorChange, processorName);
+        apiRef.current.publishEvent('activeStrategyProcessorChange', processorName);
       }
 
       return cleanup;
@@ -109,10 +107,10 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
   );
 
   const applyStrategyProcessor = React.useCallback<
-    GridStrategyProcessingApi['unstable_applyStrategyProcessor']
+    GridStrategyProcessingApi['applyStrategyProcessor']
   >(
     (processorName, params) => {
-      const activeStrategy = apiRef.current.unstable_getActiveStrategy(
+      const activeStrategy = apiRef.current.getActiveStrategy(
         GRID_STRATEGIES_PROCESSORS[processorName],
       );
       if (activeStrategy == null) {
@@ -132,37 +130,38 @@ export const useGridStrategyProcessing = (apiRef: React.MutableRefObject<GridApi
     [apiRef],
   );
 
-  const getActiveStrategy = React.useCallback<
-    GridStrategyProcessingApi['unstable_getActiveStrategy']
-  >((strategyGroup) => {
-    const strategyEntries = Array.from(availableStrategies.current.entries());
-    const availableStrategyEntry = strategyEntries.find(([, strategy]) => {
-      if (strategy.group !== strategyGroup) {
-        return false;
-      }
+  const getActiveStrategy = React.useCallback<GridStrategyProcessingApi['getActiveStrategy']>(
+    (strategyGroup) => {
+      const strategyEntries = Array.from(availableStrategies.current.entries());
+      const availableStrategyEntry = strategyEntries.find(([, strategy]) => {
+        if (strategy.group !== strategyGroup) {
+          return false;
+        }
 
-      return strategy.isAvailable();
-    });
+        return strategy.isAvailable();
+      });
 
-    return availableStrategyEntry?.[0] ?? GRID_DEFAULT_STRATEGY;
-  }, []);
+      return availableStrategyEntry?.[0] ?? GRID_DEFAULT_STRATEGY;
+    },
+    [],
+  );
 
   const setStrategyAvailability = React.useCallback<
-    GridStrategyProcessingApi['unstable_setStrategyAvailability']
+    GridStrategyProcessingApi['setStrategyAvailability']
   >(
     (strategyGroup, strategyName, isAvailable) => {
       availableStrategies.current.set(strategyName, { group: strategyGroup, isAvailable });
-      apiRef.current.publishEvent(GridEvents.strategyAvailabilityChange);
+      apiRef.current.publishEvent('strategyAvailabilityChange');
     },
     [apiRef],
   );
 
   const strategyProcessingApi: GridStrategyProcessingApi = {
-    unstable_registerStrategyProcessor: registerStrategyProcessor,
-    unstable_applyStrategyProcessor: applyStrategyProcessor,
-    unstable_getActiveStrategy: getActiveStrategy,
-    unstable_setStrategyAvailability: setStrategyAvailability,
+    registerStrategyProcessor,
+    applyStrategyProcessor,
+    getActiveStrategy,
+    setStrategyAvailability,
   };
 
-  useGridApiMethod(apiRef, strategyProcessingApi, 'GridStrategyProcessing');
+  useGridApiMethod(apiRef, strategyProcessingApi, 'private');
 };

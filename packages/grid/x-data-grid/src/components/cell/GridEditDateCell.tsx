@@ -1,14 +1,22 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import PropTypes from 'prop-types';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
+import { styled } from '@mui/material/styles';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridColDef } from '../../models/colDef/gridColDef';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const StyledInputBase = styled(InputBase)({
+  fontSize: 'inherit',
+});
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -20,7 +28,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBaseProps, 'id'>) {
+export interface GridEditDateCellProps
+  extends GridRenderEditCellParams,
+    Omit<InputBaseProps, 'id' | 'value' | 'tabIndex'> {
+  /**
+   * Callback called when the value is changed by the user.
+   * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
+   * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    newValue: Date | null,
+  ) => Promise<void> | void;
+}
+
+function GridEditDateCell(props: GridEditDateCellProps) {
   const {
     id,
     value: valueProp,
@@ -34,14 +57,15 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
     isEditable,
     tabIndex,
     hasFocus,
-    getValue,
     inputProps,
     isValidating,
     isProcessingProps,
+    onValueChange,
     ...other
   } = props;
 
   const isDateTime = colDef.type === 'dateTime';
+  const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>();
 
   const valueTransformed = React.useMemo(() => {
@@ -75,7 +99,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
-    (event) => {
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
       const newFormattedDate = event.target.value;
       let newParsedDate: Date | null;
 
@@ -85,7 +109,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
         const [date, time] = newFormattedDate.split('T');
         const [year, month, day] = date.split('-');
         newParsedDate = new Date();
-        newParsedDate.setFullYear(year, Number(month) - 1, day);
+        newParsedDate.setFullYear(Number(year), Number(month) - 1, Number(day));
         newParsedDate.setHours(0, 0, 0, 0);
         if (time) {
           const [hours, minutes] = time.split(':');
@@ -93,10 +117,14 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
         }
       }
 
+      if (onValueChange) {
+        await onValueChange(event, newParsedDate);
+      }
+
       setValueState({ parsed: newParsedDate, formatted: newFormattedDate });
-      api.setEditCellValue({ id, field, value: newParsedDate }, event);
+      apiRef.current.setEditCellValue({ id, field, value: newParsedDate }, event);
     },
-    [api, field, id],
+    [apiRef, field, id, onValueChange],
   );
 
   React.useEffect(() => {
@@ -118,7 +146,7 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
   }, [hasFocus]);
 
   return (
-    <InputBase
+    <StyledInputBase
       inputRef={inputRef}
       fullWidth
       className={classes.root}
@@ -133,6 +161,75 @@ export function GridEditDateCell(props: GridRenderEditCellParams & Omit<InputBas
     />
   );
 }
-export const renderEditDateCell: GridColDef['renderEditCell'] = (params) => (
+
+GridEditDateCell.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  /**
+   * GridApi that let you manipulate the grid.
+   */
+  api: PropTypes.object.isRequired,
+  /**
+   * The mode of the cell.
+   */
+  cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.object.isRequired,
+  /**
+   * The column field of the cell that triggered the event.
+   */
+  field: PropTypes.string.isRequired,
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: PropTypes.any,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
+  /**
+   * The grid row id.
+   */
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable: PropTypes.bool,
+  isProcessingProps: PropTypes.bool,
+  isValidating: PropTypes.bool,
+  /**
+   * Callback called when the value is changed by the user.
+   * @param {React.ChangeEvent<HTMLInputElement>} event The event source of the callback.
+   * @param {Date | null} newValue The value that is going to be passed to `apiRef.current.setEditCellValue`.
+   * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
+   */
+  onValueChange: PropTypes.func,
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: PropTypes.any.isRequired,
+  /**
+   * The node of the row that the current cell belongs to.
+   */
+  rowNode: PropTypes.object.isRequired,
+  /**
+   * the tabIndex value.
+   */
+  tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
+  /**
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
+   */
+  value: PropTypes.any,
+} as any;
+
+export { GridEditDateCell };
+
+export const renderEditDateCell = (params: GridRenderEditCellParams) => (
   <GridEditDateCell {...params} />
 );

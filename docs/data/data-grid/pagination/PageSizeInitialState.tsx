@@ -16,6 +16,7 @@ export default function PageSizeInitialState() {
         initialState={{
           ...data.initialState,
           pagination: {
+            ...data.initialState?.pagination,
             pageSize: 25,
           },
         }}

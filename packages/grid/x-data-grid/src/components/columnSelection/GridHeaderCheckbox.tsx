@@ -1,12 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { GridEvents } from '../../models/events';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { gridSelectionStateSelector } from '../../hooks/features/selection/gridSelectionSelector';
+import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { isNavigationKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -37,7 +35,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+    const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
     const visibleRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
     const paginatedVisibleRowIds = useGridSelector(
       apiRef,
@@ -95,7 +93,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         value: event.target.checked,
       };
 
-      apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, params);
+      apiRef.current.publishEvent('headerSelectionCheckboxChange', params);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
@@ -107,19 +105,15 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, [tabIndex, apiRef, props.field]);
 
     const handleKeyDown = React.useCallback(
-      (event) => {
+      (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === ' ') {
           // imperative toggle the checkbox because Space is disable by some preventDefault
-          apiRef.current.publishEvent(GridEvents.headerSelectionCheckboxChange, {
+          apiRef.current.publishEvent('headerSelectionCheckboxChange', {
             value: !isChecked,
           });
         }
-        // TODO v6 remove columnHeaderNavigationKeyDown events which are not used internally anymore
-        if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent(GridEvents.columnHeaderNavigationKeyDown, props, event);
-        }
       },
-      [apiRef, props, isChecked],
+      [apiRef, isChecked],
     );
 
     const handleSelectionChange = React.useCallback(() => {
@@ -127,7 +121,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     }, []);
 
     React.useEffect(() => {
-      return apiRef.current.subscribeEvent(GridEvents.selectionChange, handleSelectionChange);
+      return apiRef.current.subscribeEvent('rowSelectionChange', handleSelectionChange);
     }, [apiRef, handleSelectionChange]);
 
     const label = apiRef.current.getLocaleText(
@@ -141,7 +135,6 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
         checked={isChecked}
         onChange={handleChange}
         className={classes.root}
-        color="primary"
         inputProps={{ 'aria-label': label }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}

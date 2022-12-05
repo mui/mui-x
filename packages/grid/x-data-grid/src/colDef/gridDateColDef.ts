@@ -26,6 +26,7 @@ export const GRID_DATE_COL_DEF: GridColTypeDef<Date | string, string> = {
   valueFormatter: gridDateFormatter,
   filterOperators: getGridDateOperators(),
   renderEditCell: renderEditDateCell,
+  getApplyQuickFilterFn: undefined,
 };
 
 export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date | string, string> = {
@@ -35,4 +36,5 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef<Date | string, string> = {
   valueFormatter: gridDateTimeFormatter,
   filterOperators: getGridDateOperators(true),
   renderEditCell: renderEditDateCell,
+  getApplyQuickFilterFn: undefined,
 };

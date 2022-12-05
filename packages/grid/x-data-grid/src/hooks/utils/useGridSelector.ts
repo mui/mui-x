@@ -6,7 +6,7 @@ import { buildWarning } from '../../utils/warning';
 function isOutputSelector<Api extends GridApiCommon, T>(
   selector: any,
 ): selector is OutputSelector<Api['state'], T> {
-  return selector.cache;
+  return selector.acceptsApiRef;
 }
 
 const stateNotInitializedWarning = buildWarning([

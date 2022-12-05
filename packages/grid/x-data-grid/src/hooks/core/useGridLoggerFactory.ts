@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import { Logger } from '../../models';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoggerApi } from '../../models/api/gridLoggerApi';
 import { localStorageAvailable } from '../../utils/utils';
+import { useGridApiMethod } from '../utils';
 
 const forceDebug = localStorageAvailable() && window.localStorage.getItem('DEBUG') != null;
 
@@ -43,10 +43,10 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
 }
 
 export const useGridLoggerFactory = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommon>,
   props: Pick<DataGridProcessedProps, 'logger' | 'logLevel'>,
 ) => {
-  apiRef.current.getLogger = React.useCallback<GridLoggerApi['getLogger']>(
+  const getLogger = React.useCallback<GridLoggerApi['getLogger']>(
     (name: string): Logger => {
       if (forceDebug) {
         return getAppender(name, 'debug', props.logger);
@@ -60,4 +60,6 @@ export const useGridLoggerFactory = (
     },
     [props.logLevel, props.logger],
   );
+
+  useGridApiMethod(apiRef, { getLogger }, 'private');
 };

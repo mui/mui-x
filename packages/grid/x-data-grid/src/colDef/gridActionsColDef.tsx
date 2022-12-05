@@ -8,6 +8,8 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
   sortable: false,
   filterable: false,
+  // @ts-ignore
+  aggregable: false,
   width: 100,
   align: 'center',
   headerAlign: 'center',
@@ -15,4 +17,5 @@ export const GRID_ACTIONS_COL_DEF: GridColTypeDef = {
   disableColumnMenu: true,
   disableExport: true,
   renderCell: renderActionsCell,
+  getApplyQuickFilterFn: undefined,
 };

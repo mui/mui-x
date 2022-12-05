@@ -20,8 +20,7 @@ export default function ControlledSelectionServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
-  const [selectionModel, setSelectionModel] = React.useState([]);
-  const prevSelectionModel = React.useRef(selectionModel);
+  const [rowSelectionModel, setRowSelectionModel] = React.useState([]);
 
   React.useEffect(() => {
     let active = true;
@@ -36,9 +35,6 @@ export default function ControlledSelectionServerPaginationGrid() {
 
       setRows(newRows);
       setLoading(false);
-      setTimeout(() => {
-        setSelectionModel(prevSelectionModel.current);
-      });
     })();
 
     return () => {
@@ -49,8 +45,8 @@ export default function ControlledSelectionServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        {...data}
         rows={rows}
-        columns={data.columns}
         pagination
         checkboxSelection
         pageSize={5}
@@ -58,14 +54,14 @@ export default function ControlledSelectionServerPaginationGrid() {
         rowCount={100}
         paginationMode="server"
         onPageChange={(newPage) => {
-          prevSelectionModel.current = selectionModel;
           setPage(newPage);
         }}
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         loading={loading}
+        keepNonExistentRowsSelected
       />
     </div>
   );

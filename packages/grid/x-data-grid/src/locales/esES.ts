@@ -27,11 +27,17 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
+  // Quick filter toolbar field
+  // toolbarQuickFilterPlaceholder: 'Search…',
+  // toolbarQuickFilterLabel: 'Search',
+  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descargar como CSV',
   // toolbarExportPrint: 'Print',
+  // toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
@@ -44,9 +50,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Agregar filtro',
   filterPanelDeleteIconLabel: 'Borrar',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operadores',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
   filterPanelColumns: 'Columnas',
@@ -131,8 +135,20 @@ const esESGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
+
+  // Row reordering text
+  // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

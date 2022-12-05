@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
-import { GridEvents } from '../../../models/events';
 import {
   useGridLogger,
   useGridApiMethod,
@@ -13,6 +12,7 @@ import {
 import { gridPageSizeSelector } from './gridPaginationSelector';
 import { gridDensityRowHeightSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
 
@@ -30,7 +30,7 @@ const mergeStateWithPageSize =
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPageSize = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
@@ -39,12 +39,12 @@ export const useGridPageSize = (
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  apiRef.current.unstable_updateControlState({
+  apiRef.current.registerControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
     stateSelector: gridPageSizeSelector,
-    changeEvent: GridEvents.pageSizeChange,
+    changeEvent: 'pageSizeChange',
   });
 
   /**
@@ -68,21 +68,23 @@ export const useGridPageSize = (
     setPageSize,
   };
 
-  useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
+  useGridApiMethod(apiRef, pageSizeApi, 'public');
 
   /**
    * PRE-PROCESSING
    */
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pageSizeToExport = gridPageSizeSelector(apiRef);
 
       const shouldExportPageSize =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
         // Always export if the page size is controlled
         props.pageSize != null ||
         // Always export if the page size has been initialized
         props.initialState?.pagination?.pageSize != null ||
-        // Export if the page size value is not equal to the default value
+        // Export if the page size is not equal to the default value
         pageSizeToExport !== defaultPageSize(props.autoPageSize);
 
       if (!shouldExportPageSize) {
@@ -126,13 +128,16 @@ export const useGridPageSize = (
       return;
     }
 
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / rowHeight,
+      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
+        rowHeight,
     );
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
   }, [apiRef, props.autoPageSize, rowHeight]);
 
-  useGridApiEventHandler(apiRef, GridEvents.viewportInnerSizeChange, handleUpdateAutoPageSize);
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
 
   /**
    * EFFECTS

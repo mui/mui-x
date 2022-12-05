@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
+import Rating, { RatingProps } from '@mui/material/Rating';
 import {
   GridFilterInputValueProps,
   DataGrid,
@@ -21,8 +21,8 @@ function RatingInputValue(props: GridFilterInputValueProps) {
     },
   }));
 
-  const handleFilterChange = (event) => {
-    applyValue({ ...item, value: event.target.value });
+  const handleFilterChange: RatingProps['onChange'] = (event, newValue) => {
+    applyValue({ ...item, value: newValue });
   };
 
   return (
@@ -52,11 +52,7 @@ const ratingOnlyOperators: GridFilterOperator[] = [
     label: 'Above',
     value: 'above',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (
-        !filterItem.columnField ||
-        !filterItem.value ||
-        !filterItem.operatorValue
-      ) {
+      if (!filterItem.field || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
@@ -99,13 +95,14 @@ export default function CustomRatingOperator() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {
                   id: 1,
-                  columnField: 'rating',
+                  field: 'rating',
                   value: '3.5',
-                  operatorValue: 'above',
+                  operator: 'above',
                 },
               ],
             },

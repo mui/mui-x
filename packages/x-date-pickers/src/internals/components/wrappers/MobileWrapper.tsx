@@ -1,56 +1,73 @@
 import * as React from 'react';
 import { WrapperVariantContext } from './WrapperVariantContext';
-import { PickersModalDialog, ExportedPickerModalProps } from '../PickersModalDialog';
-import { PrivateWrapperProps, DateInputPropsLike } from './WrapperProps';
+import {
+  PickersModalDialog,
+  PickersModalDialogSlotsComponent,
+  PickersModalDialogSlotsComponentsProps,
+} from '../PickersModalDialog';
+import { DateInputPropsLike } from './WrapperProps';
+import { PickerStateWrapperProps } from '../../hooks/usePickerState';
+import { DateInputSlotsComponent } from '../PureDateInput';
+import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface MobileWrapperProps extends ExportedPickerModalProps {
+export interface MobileWrapperProps {
   children?: React.ReactNode;
 }
 
-export interface InternalMobileWrapperProps extends MobileWrapperProps, PrivateWrapperProps {
+export interface MobileWrapperSlotsComponent
+  extends PickersModalDialogSlotsComponent,
+    DateInputSlotsComponent {}
+
+export interface MobileWrapperSlotsComponentsProps extends PickersModalDialogSlotsComponentsProps {}
+
+export interface InternalMobileWrapperProps<TDate>
+  extends MobileWrapperProps,
+    PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   PureDateInputComponent: React.JSXElementConstructor<DateInputPropsLike>;
+  components?: MobileWrapperSlotsComponent;
+  componentsProps?: MobileWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
-export function MobileWrapper(props: InternalMobileWrapperProps) {
+export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {
   const {
-    cancelText,
     children,
-    clearable,
-    clearText,
     DateInputProps,
-    DialogProps,
-    okText,
     onAccept,
     onClear,
     onDismiss,
+    onCancel,
     onSetToday,
     open,
     PureDateInputComponent,
-    showTodayButton,
-    todayText,
+    components,
+    componentsProps,
+    localeText,
     ...other
   } = props;
 
   return (
-    <WrapperVariantContext.Provider value="mobile">
-      <PureDateInputComponent {...other} {...DateInputProps} />
-      <PickersModalDialog
-        cancelText={cancelText}
-        clearable={clearable}
-        clearText={clearText}
-        DialogProps={DialogProps}
-        okText={okText}
-        onAccept={onAccept}
-        onClear={onClear}
-        onDismiss={onDismiss}
-        onSetToday={onSetToday}
-        open={open}
-        showTodayButton={showTodayButton}
-        todayText={todayText}
-      >
-        {children}
-      </PickersModalDialog>
-    </WrapperVariantContext.Provider>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value="mobile">
+        <PureDateInputComponent components={components} {...other} {...DateInputProps} />
+        <PickersModalDialog
+          onAccept={onAccept}
+          onClear={onClear}
+          onDismiss={onDismiss}
+          onCancel={onCancel}
+          onSetToday={onSetToday}
+          open={open}
+          components={components}
+          componentsProps={componentsProps}
+        >
+          {children}
+        </PickersModalDialog>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 }

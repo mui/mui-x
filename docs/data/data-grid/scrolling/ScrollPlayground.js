@@ -67,7 +67,7 @@ export default function ScrollPlayground() {
   };
 
   return (
-    <div style={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Box sx={{ width: 300, margin: '0 auto 16px' }}>
         <Grid container justifyContent="center">
           <Grid item>
@@ -97,7 +97,7 @@ export default function ScrollPlayground() {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{ height: 400, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 400 }}>
         <DataGridPro
           apiRef={apiRef}
           onCellClick={handleCellClick}
@@ -105,6 +105,6 @@ export default function ScrollPlayground() {
           {...data}
         />
       </Box>
-    </div>
+    </Box>
   );
 }

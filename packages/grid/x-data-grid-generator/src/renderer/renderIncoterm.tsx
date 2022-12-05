@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import InfoIcon from '@mui/icons-material/Info';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 
 interface IncotermProps {
   value: string | null | undefined;

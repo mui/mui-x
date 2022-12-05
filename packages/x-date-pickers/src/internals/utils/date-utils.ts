@@ -2,11 +2,11 @@ import { MuiPickersAdapter } from '../models';
 
 interface FindClosestDateParams<TDate> {
   date: TDate;
-  disableFuture: boolean;
-  disablePast: boolean;
+  disableFuture?: boolean;
+  disablePast?: boolean;
   maxDate: TDate;
   minDate: TDate;
-  shouldDisableDate: (date: TDate) => boolean;
+  isDateDisabled: (date: TDate) => boolean;
   utils: MuiPickersAdapter<TDate>;
 }
 
@@ -16,7 +16,7 @@ export const findClosestEnabledDate = <TDate>({
   disablePast,
   maxDate,
   minDate,
-  shouldDisableDate,
+  isDateDisabled,
   utils,
 }: FindClosestDateParams<TDate>) => {
   const today = utils.startOfDay(utils.date()!);
@@ -32,13 +32,13 @@ export const findClosestEnabledDate = <TDate>({
   let forward: TDate | null = date;
   let backward: TDate | null = date;
   if (utils.isBefore(date, minDate)) {
-    forward = utils.date(minDate);
+    forward = minDate;
     backward = null;
   }
 
   if (utils.isAfter(date, maxDate)) {
     if (backward) {
-      backward = utils.date(maxDate);
+      backward = maxDate;
     }
 
     forward = null;
@@ -53,28 +53,51 @@ export const findClosestEnabledDate = <TDate>({
     }
 
     if (forward) {
-      if (!shouldDisableDate(forward)) {
+      if (!isDateDisabled(forward)) {
         return forward;
       }
       forward = utils.addDays(forward, 1);
     }
 
     if (backward) {
-      if (!shouldDisableDate(backward)) {
+      if (!isDateDisabled(backward)) {
         return backward;
       }
       backward = utils.addDays(backward, -1);
     }
   }
 
-  return today;
+  return null;
 };
 
-export const parsePickerInputValue = <TDate>(
+export const clamp = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate,
-): TDate | null => {
-  const parsedValue = utils.date(value);
+  minDate: TDate,
+  maxDate: TDate,
+): TDate => {
+  if (utils.isBefore(value, minDate)) {
+    return minDate;
+  }
+  if (utils.isAfter(value, maxDate)) {
+    return maxDate;
+  }
+  return value;
+};
 
-  return utils.isValid(parsedValue) ? parsedValue : null;
+export const replaceInvalidDateByNull = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: TDate | null,
+) => (value == null || !utils.isValid(value) ? null : value);
+
+export const applyDefaultDate = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: TDate | null | undefined,
+  defaultValue: TDate,
+): TDate => {
+  if (value == null || !utils.isValid(value)) {
+    return defaultValue;
+  }
+
+  return value;
 };

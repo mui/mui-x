@@ -1,55 +1,45 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import { ClockPickerView } from '../../models';
+import {
+  BaseTimeValidationProps,
+  CommonDateTimeValidationError,
+  TimeValidationProps,
+} from './models';
 
-export interface ExportedTimeValidationProps<TDate> {
-  /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
-   */
-  minTime?: TDate;
-  /**
-   * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
-   */
-  maxTime?: TDate;
-  /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
-   * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
-   */
-  shouldDisableTime?: (timeValue: number, clockType: ClockPickerView) => boolean;
-  /**
-   * Do not ignore date part when validating min/max time.
-   * @default false
-   */
-  disableIgnoringDatePartForTimeValidation?: boolean;
-}
-
-export interface TimeValidationProps<TDate>
-  extends ExportedTimeValidationProps<TDate>,
-    ValidationProps<TimeValidationError, TDate> {}
+export interface TimeComponentValidationProps<TDate>
+  extends Required<BaseTimeValidationProps>,
+    TimeValidationProps<TDate> {}
 
 export type TimeValidationError =
-  | 'invalidDate'
+  | CommonDateTimeValidationError
+  | 'minutesStep'
   | 'minTime'
   | 'maxTime'
   | 'shouldDisableTime-hours'
   | 'shouldDisableTime-minutes'
-  | 'shouldDisableTime-seconds'
-  | null;
+  | 'shouldDisableTime-seconds';
 
-export const validateTime: Validator<any, TimeValidationProps<any>> = (
-  utils,
-  value,
-  { minTime, maxTime, shouldDisableTime, disableIgnoringDatePartForTimeValidation },
-): TimeValidationError => {
-  const date = utils.date(value);
-  const isAfterComparingFn = createIsAfterIgnoreDatePart(
-    Boolean(disableIgnoringDatePartForTimeValidation),
-    utils,
+export const validateTime: Validator<
+  any | null,
+  any,
+  TimeValidationError,
+  TimeComponentValidationProps<any>
+> = ({ adapter, value, props }): TimeValidationError => {
+  const {
+    minTime,
+    maxTime,
+    minutesStep,
+    shouldDisableTime,
+    disableIgnoringDatePartForTimeValidation = false,
+    disablePast,
+    disableFuture,
+  } = props;
+
+  const now = adapter.utils.date()!;
+  const date = adapter.utils.date(value);
+  const isAfter = createIsAfterIgnoreDatePart(
+    disableIgnoringDatePartForTimeValidation,
+    adapter.utils,
   );
 
   if (value === null) {
@@ -57,31 +47,50 @@ export const validateTime: Validator<any, TimeValidationProps<any>> = (
   }
 
   switch (true) {
-    case !utils.isValid(value):
+    case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(minTime && isAfterComparingFn(minTime, date!)):
+    case Boolean(minTime && isAfter(minTime, value)):
       return 'minTime';
 
-    case Boolean(maxTime && isAfterComparingFn(date!, maxTime)):
+    case Boolean(maxTime && isAfter(value, maxTime)):
       return 'maxTime';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getHours(date!), 'hours')):
+    case Boolean(disableFuture && adapter.utils.isAfter(date, now)):
+      return 'disableFuture';
+
+    case Boolean(disablePast && adapter.utils.isBefore(date, now)):
+      return 'disablePast';
+
+    case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(value), 'hours')):
       return 'shouldDisableTime-hours';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getMinutes(date!), 'minutes')):
+    case Boolean(
+      shouldDisableTime && shouldDisableTime(adapter.utils.getMinutes(value), 'minutes'),
+    ):
       return 'shouldDisableTime-minutes';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(utils.getSeconds(date!), 'seconds')):
+    case Boolean(
+      shouldDisableTime && shouldDisableTime(adapter.utils.getSeconds(value), 'seconds'),
+    ):
       return 'shouldDisableTime-seconds';
+
+    case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
+      return 'minutesStep';
 
     default:
       return null;
   }
 };
 
-const isSameTimeError = (a: unknown, b: unknown) => a === b;
+/**
+ * TODO v6: Remove
+ */
+export const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
+/**
+ * TODO v6: Remove
+ */
 export const useTimeValidation = <TDate>(
-  props: TimeValidationProps<TDate> & ValidationProps<TimeValidationError, TDate>,
-): TimeValidationError => useValidation(props, validateTime, isSameTimeError);
+  props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,
+): TimeValidationError => useValidation(props, validateTime, isSameTimeError, null);

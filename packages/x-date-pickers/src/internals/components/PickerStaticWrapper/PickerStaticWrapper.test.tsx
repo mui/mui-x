@@ -1,23 +1,37 @@
 import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
-import { PickerStaticWrapper } from './PickerStaticWrapper';
+import { describeConformance } from '@mui/monorepo/test/utils';
+import { PickerStaticWrapper } from '@mui/x-date-pickers';
 import { pickerStaticWrapperClasses as classes } from './pickerStaticWrapperClasses';
+import { createPickerRenderer, wrapPickerMount } from '../../../../../../test/utils/pickers-utils';
 
 describe('<PickerStaticWrapper />', () => {
-  const { render } = createRenderer();
+  const { render } = createPickerRenderer();
 
-  describeConformance(<PickerStaticWrapper displayStaticWrapperAs="mobile" />, () => ({
-    classes,
-    muiName: 'MuiPickerStaticWrapper',
-    refInstanceof: undefined,
-    render,
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'themeVariants',
-      'propsSpread',
-      'refForwarding',
-      'rootClass',
-    ],
-  }));
+  describeConformance(
+    <PickerStaticWrapper
+      displayStaticWrapperAs="mobile"
+      open
+      onDismiss={() => {}}
+      onCancel={() => {}}
+      onSetToday={() => {}}
+      onAccept={() => {}}
+      onClear={() => {}}
+    />,
+    () => ({
+      classes,
+      refInstanceof: undefined,
+      wrapMount: wrapPickerMount,
+      render,
+      muiName: 'MuiPickerStaticWrapper',
+      skip: [
+        'componentProp',
+        'componentsProp',
+        'themeVariants',
+        'propsSpread',
+        'refForwarding',
+        'rootClass',
+        'reactTestRenderer',
+      ],
+    }),
+  );
 });

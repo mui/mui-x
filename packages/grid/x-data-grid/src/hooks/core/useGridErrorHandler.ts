@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridEvents } from '../../models/events';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 import { useGridApiEventHandler } from '../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -17,8 +16,12 @@ export function useGridErrorHandler(
   );
 
   React.useEffect(() => {
-    handleError(props.error);
+    if (props.error) {
+      handleError({ error: props.error });
+    } else {
+      handleError(null);
+    }
   }, [handleError, props.error]);
 
-  useGridApiEventHandler(apiRef, GridEvents.componentError, handleError);
+  useGridApiEventHandler(apiRef, 'componentError', handleError);
 }

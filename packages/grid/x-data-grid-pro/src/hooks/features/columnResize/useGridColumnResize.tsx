@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
 import {
-  GridEvents,
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
+import {
   GridEventListener,
   gridClasses,
   CursorCoordinates,
   GridColumnHeaderSeparatorSides,
   GridColumnResizeParams,
-  GridColumnHeaderSeparatorProps,
   useGridApiEventHandler,
   useGridApiOptionHandler,
   useGridNativeEventListener,
@@ -19,13 +20,17 @@ import {
   findParentElementFromClassName,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
+import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
+  findGroupHeaderElementsFromField,
 } from '../../../utils/domUtils';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+
+type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
 
 // TODO: remove support for Safari < 13.
 // https://caniuse.com/#search=touch-action
@@ -74,10 +79,10 @@ function computeNewWidth(
   initialOffsetToSeparator: number,
   clickX: number,
   columnBounds: DOMRect,
-  separatorSide: GridColumnHeaderSeparatorProps['side'],
+  resizeDirection: ResizeDirection,
 ) {
   let newWidth = initialOffsetToSeparator;
-  if (separatorSide === GridColumnHeaderSeparatorSides.Right) {
+  if (resizeDirection === 'Right') {
     newWidth += clickX - columnBounds.left;
   } else {
     newWidth += columnBounds.right - clickX;
@@ -88,18 +93,30 @@ function computeNewWidth(
 function computeOffsetToSeparator(
   clickX: number,
   columnBounds: DOMRect,
-  separatorSide: GridColumnHeaderSeparatorProps['side'],
+  resizeDirection: ResizeDirection,
 ) {
-  if (separatorSide === GridColumnHeaderSeparatorSides.Left) {
+  if (resizeDirection === 'Left') {
     return clickX - columnBounds.left;
   }
   return columnBounds.right - clickX;
 }
 
-function getSeparatorSide(element: HTMLElement) {
-  return element.classList.contains(gridClasses['columnSeparator--sideRight'])
-    ? GridColumnHeaderSeparatorSides.Right
-    : GridColumnHeaderSeparatorSides.Left;
+function flipResizeDirection(side: ResizeDirection) {
+  if (side === 'Right') {
+    return 'Left';
+  }
+  return 'Right';
+}
+
+function getResizeDirection(element: HTMLElement, direction: Direction) {
+  const side = element.classList.contains(gridClasses['columnSeparator--sideRight'])
+    ? 'Right'
+    : 'Left';
+  if (direction === 'rtl') {
+    // Resizing logic should be mirrored in the RTL case
+    return flipResizeDirection(side);
+  }
+  return side;
 }
 
 export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
@@ -108,25 +125,26 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
 });
 
 /**
- * Only available in DataGridPro
  * @requires useGridColumns (method, event)
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
-  const colCellElementsRef = React.useRef<NodeListOf<Element>>();
+  const colGroupingElementRef = React.useRef<Element[]>();
+  const colCellElementsRef = React.useRef<Element[]>();
+  const theme = useTheme();
 
   // To improve accessibility, the separator has padding on both sides.
   // Clicking inside the padding area should be treated as a click in the separator.
   // This ref stores the offset between the click and the separator.
   const initialOffsetToSeparator = React.useRef<number>();
-  const separatorSide = React.useRef<GridColumnHeaderSeparatorProps['side']>();
+  const resizeDirection = React.useRef<ResizeDirection>();
 
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
@@ -134,19 +152,32 @@ export const useGridColumnResize = (
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
+    const prevWidth = colElementRef.current!.offsetWidth;
+    const widthDiff = newWidth - prevWidth;
+
     colDefRef.current!.computedWidth = newWidth;
     colDefRef.current!.width = newWidth;
-    colDefRef.current!.flex = undefined;
+    colDefRef.current!.flex = 0;
 
     colElementRef.current!.style.width = `${newWidth}px`;
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
 
-    colCellElementsRef.current!.forEach((element) => {
+    [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
-      div.style.width = `${newWidth}px`;
-      div.style.minWidth = `${newWidth}px`;
-      div.style.maxWidth = `${newWidth}px`;
+      let finalWidth: `${number}px`;
+
+      if (div.getAttribute('aria-colspan') === '1') {
+        finalWidth = `${newWidth}px`;
+      } else {
+        // Cell with colspan > 1 cannot be just updated width new width.
+        // Instead, we add width diff to the current width.
+        finalWidth = `${div.offsetWidth + widthDiff}px`;
+      }
+
+      div.style.width = finalWidth;
+      div.style.minWidth = finalWidth;
+      div.style.maxWidth = finalWidth;
     });
   };
 
@@ -154,14 +185,14 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
+      apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
       if (colDefRef.current) {
         apiRef.current.publishEvent(
-          GridEvents.columnWidthChange,
+          'columnWidthChange',
           {
             element: colElementRef.current,
             colDef: colDefRef.current,
@@ -188,7 +219,7 @@ export const useGridColumnResize = (
       initialOffsetToSeparator.current!,
       nativeEvent.clientX,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
@@ -199,10 +230,10 @@ export const useGridColumnResize = (
       colDef: colDefRef.current!,
       width: newWidth,
     };
-    apiRef.current.publishEvent(GridEvents.columnResize, params, nativeEvent);
+    apiRef.current.publishEvent('columnResize', params, nativeEvent);
   });
 
-  const handleColumnResizeMouseDown: GridEventListener<GridEvents.columnSeparatorMouseDown> =
+  const handleColumnResizeMouseDown: GridEventListener<'columnSeparatorMouseDown'> =
     useEventCallback(({ colDef }, event) => {
       // Only handle left clicks
       if (event.button !== 0) {
@@ -218,27 +249,33 @@ export const useGridColumnResize = (
       event.preventDefault();
 
       logger.debug(`Start Resize on col ${colDef.field}`);
-      apiRef.current.publishEvent(GridEvents.columnResizeStart, { field: colDef.field }, event);
+      apiRef.current.publishEvent('columnResizeStart', { field: colDef.field }, event);
 
       colDefRef.current = colDef as GridStateColDef;
       colElementRef.current =
-        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector(
+        apiRef.current.columnHeadersContainerElementRef?.current!.querySelector<HTMLDivElement>(
           `[data-field="${colDef.field}"]`,
-        ) as HTMLDivElement;
+        )!;
+
+      colGroupingElementRef.current = findGroupHeaderElementsFromField(
+        apiRef.current.columnHeadersContainerElementRef?.current!,
+        colDef.field,
+      );
 
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
-      ) as NodeListOf<Element>;
+        apiRef.current,
+      );
 
-      const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current);
       doc.body.style.cursor = 'col-resize';
 
-      separatorSide.current = getSeparatorSide(event.currentTarget);
+      resizeDirection.current = getResizeDirection(event.currentTarget, theme.direction);
 
       initialOffsetToSeparator.current = computeOffsetToSeparator(
         event.clientX,
         colElementRef.current!.getBoundingClientRect(),
-        separatorSide.current,
+        resizeDirection.current,
       );
 
       doc.addEventListener('mousemove', handleResizeMouseMove);
@@ -255,11 +292,11 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(GridEvents.columnResizeStop, null, nativeEvent);
+      apiRef.current.publishEvent('columnResizeStop', null, nativeEvent);
     });
 
     logger.debug(
@@ -283,7 +320,7 @@ export const useGridColumnResize = (
       initialOffsetToSeparator.current!,
       (finger as CursorCoordinates).x,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     newWidth = clamp(newWidth, colDefRef.current!.minWidth!, colDefRef.current!.maxWidth!);
@@ -294,7 +331,7 @@ export const useGridColumnResize = (
       colDef: colDefRef.current!,
       width: newWidth,
     };
-    apiRef.current.publishEvent(GridEvents.columnResize, params, nativeEvent);
+    apiRef.current.publishEvent('columnResize', params, nativeEvent);
   });
 
   const handleTouchStart = useEventCallback((event: any) => {
@@ -324,24 +361,26 @@ export const useGridColumnResize = (
     const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumn(field);
 
+    colGroupingElementRef.current = findGroupHeaderElementsFromField(
+      apiRef.current.columnHeadersContainerElementRef?.current!,
+      field,
+    );
     logger.debug(`Start Resize on col ${colDef.field}`);
-    apiRef.current.publishEvent(GridEvents.columnResizeStart, { field }, event);
+    apiRef.current.publishEvent('columnResizeStart', { field }, event);
 
     colDefRef.current = colDef as GridStateColDef;
     colElementRef.current = findHeaderElementFromField(
       apiRef.current.columnHeadersElementRef?.current!,
       colDef.field,
     ) as HTMLDivElement;
-    colCellElementsRef.current = findGridCellElementsFromCol(
-      colElementRef.current,
-    ) as NodeListOf<Element>;
+    colCellElementsRef.current = findGridCellElementsFromCol(colElementRef.current, apiRef.current);
 
-    separatorSide.current = getSeparatorSide(event.target);
+    resizeDirection.current = getResizeDirection(event.target, theme.direction);
 
     initialOffsetToSeparator.current = computeOffsetToSeparator(
       touch.clientX,
       colElementRef.current!.getBoundingClientRect(),
-      separatorSide.current!,
+      resizeDirection.current!,
     );
 
     const doc = ownerDocument(event.currentTarget as HTMLElement);
@@ -350,7 +389,7 @@ export const useGridColumnResize = (
   });
 
   const stopListening = React.useCallback(() => {
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     doc.body.style.removeProperty('cursor');
     doc.removeEventListener('mousemove', handleResizeMouseMove);
     doc.removeEventListener('mouseup', handleResizeMouseUp);
@@ -358,7 +397,7 @@ export const useGridColumnResize = (
     doc.removeEventListener('touchend', handleTouchEnd);
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
-  const handleResizeStart = React.useCallback<GridEventListener<GridEvents.columnResizeStart>>(
+  const handleResizeStart = React.useCallback<GridEventListener<'columnResizeStart'>>(
     ({ field }) => {
       apiRef.current.setState((state) => ({
         ...state,
@@ -369,7 +408,7 @@ export const useGridColumnResize = (
     [apiRef],
   );
 
-  const handleResizeStop = React.useCallback<GridEventListener<GridEvents.columnResizeStop>>(() => {
+  const handleResizeStop = React.useCallback<GridEventListener<'columnResizeStop'>>(() => {
     apiRef.current.setState((state) => ({
       ...state,
       columnResize: { ...state.columnResize, resizingColumnField: '' },
@@ -392,10 +431,10 @@ export const useGridColumnResize = (
     { passive: doesSupportTouchActionNone() },
   );
 
-  useGridApiEventHandler(apiRef, GridEvents.columnSeparatorMouseDown, handleColumnResizeMouseDown);
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStart, handleResizeStart);
-  useGridApiEventHandler(apiRef, GridEvents.columnResizeStop, handleResizeStop);
+  useGridApiEventHandler(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
+  useGridApiEventHandler(apiRef, 'columnResizeStart', handleResizeStart);
+  useGridApiEventHandler(apiRef, 'columnResizeStop', handleResizeStop);
 
-  useGridApiOptionHandler(apiRef, GridEvents.columnResize, props.onColumnResize);
-  useGridApiOptionHandler(apiRef, GridEvents.columnWidthChange, props.onColumnWidthChange);
+  useGridApiOptionHandler(apiRef, 'columnResize', props.onColumnResize);
+  useGridApiOptionHandler(apiRef, 'columnWidthChange', props.onColumnWidthChange);
 };

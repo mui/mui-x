@@ -1,41 +1,58 @@
 ---
+product: date-pickers
 title: React Time Picker component
-components: DesktopTimePicker, MobileTimePicker, StaticTimePicker, TimePicker, ClockPicker
+components: NextTimePicker, DesktopNextTimePicker, MobileNextTimePicker, StaticNextTimePicker, TimeClock
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/time-pickers
+materialDesign: https://m2.material.io/components/time-pickers
 ---
 
 # Time Picker
 
 <p class="description">Time pickers allow the user to select a single time.</p>
 
-Time pickers allow the user to select a single time (in the hours:minutes format).
+:::warning
+The new time pickers are unstable.
+They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+(`NextTimePicker` will become `TimePicker`, ...)
+:::
+
 The selected time is indicated by the filled circle at the end of the clock hand.
 
 ## Basic usage
 
-The time picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
+The time picker is rendered as a modal dialog on mobile, and in the field on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 
-## Static mode
+## Uncontrolled vs. Controlled
 
-It's possible to render any time picker inline. This will enable building custom popover/modal containers.
+The component can be uncontrolled or controlled
 
-{{"demo": "StaticTimePickerDemo.js", "bg": true}}
+{{"demo": "TimePickerValue.js"}}
 
 ## Responsiveness
 
 The time picker component is designed and optimized for the device it runs on.
 
-- The `MobileTimePicker` component works best for touch devices and small screens.
-- The `DesktopTimePicker` component works best for mouse devices and large screens.
+- The `MobileNextTimePicker` component works best for touch devices and small screens.
+- The `DesktopNextTimePicker` component works best for mouse devices and large screens.
 
-By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `NextTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+
 {{"demo": "ResponsiveTimePickers.js"}}
+
+## Static mode
+
+It is also possible to render any time picker without the modal/popover and text field.
+This will enable building custom popover/modal containers.
+
+{{"demo": "StaticTimePickerDemo.js", "bg": true}}
 
 ## Form props
 
@@ -43,16 +60,9 @@ The time picker component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
-## Localization
+## Validation
 
-Use `LocalizationProvider` to change the date-engine locale that is used to render the time picker.
-The time picker will automatically adjust to the locale's time setting, i.e. the 12-hour or 24-hour format. This can be controlled with `ampm` prop.
-
-{{"demo": "LocalizedTimePicker.js"}}
-
-## Time validation
-
-{{"demo": "TimeValidationTimePicker.js"}}
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
 
 ## Landscape
 
@@ -60,9 +70,9 @@ The time picker will automatically adjust to the locale's time setting, i.e. the
 
 ## Sub-components
 
-Some lower-level sub-components (`ClockPicker`) are also exported. These are rendered without a wrapper or outer logic (masked input, date values parsing and validation, etc.).
+Some lower-level sub-components (`ClockPicker`) are also exported.
 
-{{"demo": "SubComponentsTimePickers.js"}}
+{{"demo": "SubComponentsTimeCalendars.js"}}
 
 ## Seconds
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridRowsProp, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridRowsProp, GridRowSelectionModel } from '@mui/x-data-grid';
 import { GridDemoData, useDemoData } from '@mui/x-data-grid-generator';
 
 function loadServerRows(page: number, data: GridDemoData): Promise<any> {
@@ -20,8 +20,8 @@ export default function ControlledSelectionServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState(false);
-  const [selectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
-  const prevSelectionModel = React.useRef<GridSelectionModel>(selectionModel);
+  const [rowSelectionModel, setRowSelectionModel] =
+    React.useState<GridRowSelectionModel>([]);
 
   React.useEffect(() => {
     let active = true;
@@ -36,9 +36,6 @@ export default function ControlledSelectionServerPaginationGrid() {
 
       setRows(newRows);
       setLoading(false);
-      setTimeout(() => {
-        setSelectionModel(prevSelectionModel.current);
-      });
     })();
 
     return () => {
@@ -49,8 +46,8 @@ export default function ControlledSelectionServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        {...data}
         rows={rows}
-        columns={data.columns}
         pagination
         checkboxSelection
         pageSize={5}
@@ -58,14 +55,14 @@ export default function ControlledSelectionServerPaginationGrid() {
         rowCount={100}
         paginationMode="server"
         onPageChange={(newPage) => {
-          prevSelectionModel.current = selectionModel;
           setPage(newPage);
         }}
-        onSelectionModelChange={(newSelectionModel) => {
-          setSelectionModel(newSelectionModel);
+        onRowSelectionModelChange={(newRowSelectionModel) => {
+          setRowSelectionModel(newRowSelectionModel);
         }}
-        selectionModel={selectionModel}
+        rowSelectionModel={rowSelectionModel}
         loading={loading}
+        keepNonExistentRowsSelected
       />
     </div>
   );

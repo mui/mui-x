@@ -9,7 +9,7 @@
     },
     {
       "name": "removeRowGroupingCriteria",
-      "description": "sRemove the field from the row grouping model.",
+      "description": "Remove the field from the row grouping model.",
       "type": "(groupingCriteriaField: string) => void"
     },
     {

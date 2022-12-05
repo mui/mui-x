@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -30,7 +30,7 @@ const VirtualScrollerRenderZoneRoot = styled('div', {
 
 const GridVirtualScrollerRenderZone = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerRenderZone(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();

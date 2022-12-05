@@ -1,34 +1,66 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { pick12hOr24hFormat } from '../internals/utils/text-field-helper';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedTimeClockProps } from '../TimeClock/TimeClock';
+import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
-import { ParseableDate } from '../internals/models/parseableDate';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { DateOrTimeView } from '../internals/models';
+import { applyDefaultDate } from '../internals/utils/date-utils';
+import { DefaultizedProps } from '../internals/models/helpers';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+} from '../internals/hooks/validation/models';
+import {
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
+import {
+  DateTimePickerToolbar,
+  DateTimePickerToolbarProps,
+  ExportedDateTimePickerToolbarProps,
+} from './DateTimePickerToolbar';
+import {
+  DateTimePickerTabs,
+  DateTimePickerTabsProps,
+  ExportedDateTimePickerTabsProps,
+} from './DateTimePickerTabs';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+
+export interface BaseDateTimePickerSlotsComponent<TDate>
+  extends CalendarOrClockPickerSlotsComponent<TDate, DateOrTimeView> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  /**
+   * Tabs enabling toggling between date and time pickers.
+   * @default DateTimePickerTabs
+   */
+  Tabs?: React.JSXElementConstructor<DateTimePickerTabsProps>;
+}
+
+export interface BaseDateTimePickerSlotsComponentsProps<TDate>
+  extends CalendarOrClockPickerSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateTimePickerToolbarProps;
+  tabs?: ExportedDateTimePickerTabsProps;
+}
 
 export interface BaseDateTimePickerProps<TDate>
-  extends ExportedClockPickerProps<TDate>,
-    ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<ParseableDate<TDate>, TDate | null>,
-    ValidationProps<DateTimeValidationError, ParseableDate<TDate>>,
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null> {
+  extends ExportedTimeClockProps<TDate>,
+    ExportedDateCalendarProps<TDate>,
+    BasePickerProps<TDate | null, TDate>,
+    ValidationCommonProps<DateTimeValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
-   * The components used for each slot.
-   * Either a string to use a HTML element or a component.
-   * @default {}
+   * 12h/24h view for hour selection clock.
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
-  components?: ExportedCalendarPickerProps<TDate>['components'] &
-    ExportedDateInputProps<ParseableDate<TDate>, TDate | null>['components'];
-  /**
-   * To show tabs.
-   */
-  hideTabs?: boolean;
+  ampm?: boolean;
   /**
    * Date tab icon.
    */
@@ -42,94 +74,117 @@ export interface BaseDateTimePickerProps<TDate>
    */
   minDateTime?: TDate;
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
   /**
    * Callback fired on view change.
-   * @param {CalendarOrClockPickerView} view The new view.
+   * @param {DateOrTimeView} view The new view.
    */
-  onViewChange?: (view: CalendarOrClockPickerView) => void;
+  onViewChange?: (view: DateOrTimeView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
-  openTo?: CalendarOrClockPickerView;
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate | null>>;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle?: React.ReactNode;
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat?: string;
+  openTo?: DateOrTimeView;
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
-  views?: readonly CalendarOrClockPickerView[];
+  views?: readonly DateOrTimeView[];
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDateTimePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
 }
-
-type DefaultizedProps<Props> = Props & { inputFormat: string };
 
 export function useDateTimePickerDefaultizedProps<
   TDate,
   Props extends BaseDateTimePickerProps<TDate>,
 >(
-  {
-    ampm,
-    inputFormat,
-    maxDate: maxDateProp,
-    maxDateTime,
-    maxTime,
-    minDate: minDateProp,
-    minDateTime,
-    minTime,
-    openTo = 'day',
-    orientation = 'portrait',
-    views = ['year', 'day', 'hours', 'minutes'],
-    ...other
-  }: Props,
+  props: Props,
   name: string,
-): DefaultizedProps<Props> & Required<Pick<BaseDateTimePickerProps<TDate>, 'openTo' | 'views'>> {
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
+    { inputFormat: string }
+  >
+> {
+  // This is technically unsound if the type parameters appear in optional props.
+  // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
+  const themeProps = useThemeProps({
+    props,
+    name,
+  });
+
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const minDate = minDateProp ?? defaultDates.minDate;
-  const maxDate = maxDateProp ?? defaultDates.maxDate;
-  const willUseAmPm = ampm ?? utils.is12HourCycleInCurrentLocale();
+  const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
-  if (orientation !== 'portrait') {
+  if (themeProps.orientation != null && themeProps.orientation !== 'portrait') {
     throw new Error('We are not supporting custom orientation for DateTimePicker yet :(');
   }
 
-  return useThemeProps({
-    props: {
-      openTo,
-      views,
-      ampm: willUseAmPm,
-      ampmInClock: true,
-      orientation,
-      showToolbar: true,
-      allowSameDateSelection: true,
-      minDate: minDateTime ?? minDate,
-      minTime: minDateTime ?? minTime,
-      maxDate: maxDateTime ?? maxDate,
-      maxTime: maxDateTime ?? maxTime,
-      disableIgnoringDatePartForTimeValidation: Boolean(minDateTime || maxDateTime),
-      acceptRegex: willUseAmPm ? /[\dap]/gi : /\d/gi,
-      mask: '__/__/____ __:__',
-      disableMaskedInput: willUseAmPm,
-      inputFormat: pick12hOr24hFormat(inputFormat, willUseAmPm, {
-        localized: utils.formats.keyboardDateTime,
-        '12h': utils.formats.keyboardDateTime12h,
-        '24h': utils.formats.keyboardDateTime24h,
-      }),
-      ...(other as Props),
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateTimePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
+  return {
+    ampm,
+    orientation: 'portrait',
+    openTo: 'day',
+    views: ['year', 'day', 'hours', 'minutes'],
+    ampmInClock: true,
+    acceptRegex: ampm ? /[\dap]/gi : /\d/gi,
+    disableMaskedInput: false,
+    inputFormat: ampm ? utils.formats.keyboardDateTime12h : utils.formats.keyboardDateTime24h,
+    disableIgnoringDatePartForTimeValidation: Boolean(
+      themeProps.minDateTime || themeProps.maxDateTime,
+    ),
+    disablePast: false,
+    disableFuture: false,
+    ...themeProps,
+    minDate: applyDefaultDate(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: applyDefaultDate(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
+    minTime: themeProps.minDateTime ?? themeProps.minTime,
+    maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    localeText,
+    components: {
+      Toolbar: DateTimePickerToolbar,
+      Tabs: DateTimePickerTabs,
+      ...themeProps.components,
     },
-    name,
-  });
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
+    },
+  };
 }

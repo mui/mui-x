@@ -1,0 +1,28 @@
+{
+  "props": {
+    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "classes": { "type": { "name": "object" } },
+    "dateIcon": { "type": { "name": "node" }, "default": "DateRange" },
+    "hidden": {
+      "type": { "name": "bool" },
+      "default": "`window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`"
+    },
+    "timeIcon": { "type": { "name": "node" }, "default": "Time" }
+  },
+  "slots": {},
+  "name": "DateTimePickerTabs",
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
+  "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components\">Custom components</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
+  ]
+}

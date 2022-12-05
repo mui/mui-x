@@ -2,6 +2,7 @@ import type {
   GridColumnMenuState,
   GridColumnsInitialState,
   GridColumnsState,
+  GridColumnsGroupingState,
   GridDensityState,
   GridFilterInitialState,
   GridFilterState,
@@ -16,25 +17,24 @@ import type {
   GridTabIndexState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridRowsInternalCache } from '../hooks/features/rows/gridRowsState';
 import type { GridEditRowsModel } from './gridEditRowModel';
-import type { GridSelectionModel } from './gridSelectionModel';
+import type { GridRowSelectionModel } from './gridRowSelectionModel';
 
 /**
  * The state of `DataGrid`.
  */
 export interface GridStateCommunity {
   rows: GridRowsState;
-  rowsCache: GridRowsInternalCache;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditRowsModel;
   pagination: GridPaginationState;
   columns: GridColumnsState;
+  columnGrouping: GridColumnsGroupingState;
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
-  selection: GridSelectionModel;
+  rowSelection: GridRowSelectionModel;
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;

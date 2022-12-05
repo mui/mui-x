@@ -1,0 +1,12 @@
+<DataGrid
+  autoHeight
+  disableExtendRowFullWidth
+  disableColumnFilter
+  disableRowSelectionOnClick
+  hideFooter
+  showCellRightBorder
+  showColumnRightBorder
+  getCellClassName={getCellClassName}
+  columns={columns}
+  rows={rows}
+/>

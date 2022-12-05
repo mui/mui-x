@@ -11,18 +11,19 @@ import {
   useGridApiContext,
   gridFilteredSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
+  GridApi,
 } from '@mui/x-data-grid';
 import MenuItem from '@mui/material/MenuItem';
 import { ButtonProps } from '@mui/material/Button';
 
-const getJson = (apiRef) => {
+const getJson = (apiRef: React.MutableRefObject<GridApi>) => {
   // Select rows and columns
   const filteredSortedRowIds = gridFilteredSortedRowIdsSelector(apiRef);
   const visibleColumnsField = gridVisibleColumnFieldsSelector(apiRef);
 
   // Format the data. Here we only keep the value
   const data = filteredSortedRowIds.map((id) => {
-    const row = {};
+    const row: Record<string, any> = {};
     visibleColumnsField.forEach((field) => {
       row[field] = apiRef.current.getCellParams(id, field).value;
     });
@@ -34,7 +35,7 @@ const getJson = (apiRef) => {
   return JSON.stringify(data, null, 2);
 };
 
-const exportBlob = (blob, filename) => {
+const exportBlob = (blob: Blob, filename: string) => {
   // Save the blob in a json file
   const url = URL.createObjectURL(blob);
 
@@ -48,7 +49,7 @@ const exportBlob = (blob, filename) => {
   });
 };
 
-const JsonExportMenuItem = (props: GridExportMenuItemProps<{}>) => {
+function JsonExportMenuItem(props: GridExportMenuItemProps<{}>) {
   const apiRef = useGridApiContext();
 
   const { hideMenu } = props;
@@ -69,22 +70,26 @@ const JsonExportMenuItem = (props: GridExportMenuItemProps<{}>) => {
       Export JSON
     </MenuItem>
   );
-};
+}
 
 const csvOptions: GridCsvExportOptions = { delimiter: ';' };
 
-const CustomExportButton = (props: ButtonProps) => (
-  <GridToolbarExportContainer {...props}>
-    <GridCsvExportMenuItem options={csvOptions} />
-    <JsonExportMenuItem />
-  </GridToolbarExportContainer>
-);
+function CustomExportButton(props: ButtonProps) {
+  return (
+    <GridToolbarExportContainer {...props}>
+      <GridCsvExportMenuItem options={csvOptions} />
+      <JsonExportMenuItem />
+    </GridToolbarExportContainer>
+  );
+}
 
-const CustomToolbar = (props: GridToolbarContainerProps) => (
-  <GridToolbarContainer {...props}>
-    <CustomExportButton />
-  </GridToolbarContainer>
-);
+function CustomToolbar(props: GridToolbarContainerProps) {
+  return (
+    <GridToolbarContainer {...props}>
+      <CustomExportButton />
+    </GridToolbarContainer>
+  );
+}
 
 export default function CustomExport() {
   const { data, loading } = useDemoData({

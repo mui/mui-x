@@ -1,59 +1,44 @@
 import * as yargs from 'yargs';
-import * as fse from 'fs-extra';
 import path from 'path';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
 import buildExportsDocumentation from './buildExportsDocumentation';
 import buildGridSelectorsDocumentation from './buildGridSelectorsDocumentation';
 import buildGridEventsDocumentation from './buildGridEventsDocumentation';
-import FEATURE_TOGGLE from '../../src/featureToggle';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
-  let documentationRoots = ['./docs/pages/api-docs'];
-  if (FEATURE_TOGGLE.enable_product_scope) {
-    documentationRoots = ['./docs/pages/api-docs', './docs/pages/x/api'];
-  }
-  if (FEATURE_TOGGLE.enable_redirects) {
-    documentationRoots = ['./docs/pages/x/api'];
-  }
-
   const projects = getTypeScriptProjects();
 
-  await Promise.all(
-    documentationRoots.map(async (relativeDocumentationRoot) => {
-      const documentationRoot = path.resolve(relativeDocumentationRoot);
-      fse.mkdirSync(documentationRoot, { mode: 0o777, recursive: true });
+  // Create documentation folder if it does not exist
+  const apiPagesFolder = path.resolve('./docs/pages/x/api');
+  const dataFolder = path.resolve('./docs/data');
 
-      const documentedInterfaces = buildInterfacesDocumentation({
-        projects,
-        documentationRoot,
-      });
+  const documentedInterfaces = buildInterfacesDocumentation({
+    projects,
+    apiPagesFolder,
+  });
 
-      await buildComponentsDocumentation({
-        documentationRoot,
-        documentedInterfaces,
-        projects,
-      });
+  await buildComponentsDocumentation({
+    apiPagesFolder,
+    dataFolder,
+    documentedInterfaces,
+    projects,
+  });
 
-      buildGridEventsDocumentation({
-        // TODO: Pass all the projects and add the pro icon for pro-only events
-        project: projects.get('x-data-grid-pro')!,
-        documentedInterfaces,
-      });
+  buildGridEventsDocumentation({
+    projects,
+    documentedInterfaces,
+  });
 
-      buildGridSelectorsDocumentation({
-        project: projects.get('x-data-grid-pro')!,
-        documentationRoot,
-      });
+  buildGridSelectorsDocumentation({
+    project: projects.get('x-data-grid-premium')!,
+    apiPagesFolder,
+  });
 
-      buildExportsDocumentation({
-        projects,
-      });
-
-      return Promise.resolve();
-    }),
-  );
+  buildExportsDocumentation({
+    projects,
+  });
 }
 
 yargs

@@ -33,6 +33,7 @@ export type ProjectNames =
   | 'x-license-pro'
   | 'x-data-grid'
   | 'x-data-grid-pro'
+  | 'x-data-grid-premium'
   | 'x-data-grid-generator'
   | 'x-date-pickers'
   | 'x-date-pickers-pro';
@@ -123,7 +124,15 @@ const createProject = (options: CreateProgramOptions): Project => {
  * @param {string[]} files The files from which we want to extract components
  */
 const getComponentPaths =
-  ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
+  ({
+    folders = [],
+    files = [],
+    includeUnstableComponents = false,
+  }: {
+    folders?: string[];
+    files?: string[];
+    includeUnstableComponents?: boolean;
+  }) =>
   (project: Project) => {
     const paths: string[] = [];
 
@@ -139,7 +148,9 @@ const getComponentPaths =
       const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder));
       componentFiles.forEach((file) => {
         const componentName = path.basename(file).replace('.tsx', '');
-        const isExported = !!project.exports[componentName];
+        const isExported =
+          !!project.exports[componentName] ||
+          (includeUnstableComponents && !!project.exports[`Unstable_${componentName}`]);
         if (isExported) {
           paths.push(file);
         }
@@ -172,7 +183,11 @@ export const getTypeScriptProjects = () => {
         files: ['src/DataGrid/DataGrid.tsx'],
       }),
       getComponentsWithApiDoc: getComponentPaths({
-        files: ['src/DataGrid/DataGrid.tsx'],
+        files: [
+          'src/DataGrid/DataGrid.tsx',
+          'src/components/panel/filterPanel/GridFilterForm.tsx',
+          'src/components/panel/filterPanel/GridFilterPanel.tsx',
+        ],
       }),
     }),
   );
@@ -194,6 +209,22 @@ export const getTypeScriptProjects = () => {
   );
 
   projects.set(
+    'x-data-grid-premium',
+    createProject({
+      name: 'x-data-grid-premium',
+      rootPath: path.join(workspaceRoot, 'packages/grid/x-data-grid-premium'),
+      documentationFolderName: 'data-grid',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src/components'],
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+      }),
+    }),
+  );
+
+  projects.set(
     'x-data-grid-generator',
     createProject({
       name: 'x-data-grid-generator',
@@ -210,9 +241,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
@@ -225,9 +258,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );

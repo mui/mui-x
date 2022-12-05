@@ -1,14 +1,14 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import endOfWeek from 'date-fns/endOfWeek';
-import isSameDay from 'date-fns/isSameDay';
-import isWithinInterval from 'date-fns/isWithinInterval';
-import startOfWeek from 'date-fns/startOfWeek';
+
+dayjs.extend(isBetweenPlugin);
 
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
@@ -32,44 +32,49 @@ const CustomPickersDay = styled(PickersDay, {
   }),
 }));
 
-export default function CustomDay() {
-  const [value, setValue] = React.useState(new Date());
+function Day(props) {
+  const { day, selectedDays } = props;
 
-  const renderWeekPickerDay = (date, selectedDates, pickersDayProps) => {
-    if (!value) {
-      return <PickersDay {...pickersDayProps} />;
-    }
+  if (selectedDays.length === 0) {
+    return <PickersDay {...props} />;
+  }
 
-    const start = startOfWeek(value);
-    const end = endOfWeek(value);
+  const start = selectedDays[0].startOf('week');
+  const end = selectedDays[0].endOf('week');
 
-    const dayIsBetween = isWithinInterval(date, { start, end });
-    const isFirstDay = isSameDay(date, start);
-    const isLastDay = isSameDay(date, end);
-
-    return (
-      <CustomPickersDay
-        {...pickersDayProps}
-        disableMargin
-        dayIsBetween={dayIsBetween}
-        isFirstDay={isFirstDay}
-        isLastDay={isLastDay}
-      />
-    );
-  };
+  const dayIsBetween = day.isBetween(start, end, null, '[]');
+  const isFirstDay = day.isSame(start, 'day');
+  const isLastDay = day.isSame(end, 'day');
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDatePicker
+    <CustomPickersDay
+      {...props}
+      disableMargin
+      dayIsBetween={dayIsBetween}
+      isFirstDay={isFirstDay}
+      isLastDay={isLastDay}
+    />
+  );
+}
+
+Day.propTypes = {
+  /**
+   * The date to show.
+   */
+  day: PropTypes.object.isRequired,
+  /**
+   * Currently selected days.
+   */
+  selectedDays: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
+export default function CustomDay() {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
-        label="Week picker"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderDay={renderWeekPickerDay}
-        renderInput={(params) => <TextField {...params} />}
-        inputFormat="'Week of' MMM d"
+        defaultValue={dayjs('2022-04-07')}
+        components={{ Day }}
       />
     </LocalizationProvider>
   );

@@ -33,6 +33,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'column',
         'groupingColDef',
         'rowNode',
+        'localeText',
+        'columnGroupingModel',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;

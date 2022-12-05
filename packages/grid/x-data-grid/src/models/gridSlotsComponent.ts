@@ -52,6 +52,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Cell: React.JSXElementConstructor<any>;
   /**
+   * Component rendered for each skeleton cell.
+   * @default GridSkeletonCell
+   */
+  SkeletonCell: React.JSXElementConstructor<any>;
+  /**
    * Filter icon component rendered in each column header.
    * @default GridColumnHeaderFilterIconButton
    */
@@ -63,7 +68,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   ColumnMenu: React.JSXElementConstructor<any>;
   /**
    * Error overlay component rendered above the grid when an error is caught.
-   * @default ErrorOverlay
+   * @default GridErrorOverlay
    */
   ErrorOverlay: React.JSXElementConstructor<any>;
   /**
@@ -71,12 +76,6 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridFooter
    */
   Footer: React.JSXElementConstructor<any>;
-  /**
-   * Header component rendered above the grid column header bar.
-   * Prefer using the `Toolbar` slot. You should never need to use this slot.
-   * @default GridHeader
-   */
-  Header: React.JSXElementConstructor<any>; // TODO remove.
   /**
    * Toolbar component rendered inside the Header component.
    * @default null

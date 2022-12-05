@@ -100,15 +100,18 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
 
     const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
       shouldResolveObject: ({ name }) => {
-        if (
-          name === 'classes' ||
-          name === 'state' ||
-          name === 'currentColumn' ||
-          name === 'colDef'
-        ) {
+        const propsToNotResolve = [
+          'classes',
+          'state',
+          'currentColumn',
+          'colDef',
+          'row',
+          'selectedDays',
+          'day',
+        ];
+        if (propsToNotResolve.includes(name)) {
           return false;
         }
-
         return undefined;
       },
     });

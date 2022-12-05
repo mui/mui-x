@@ -1,5 +1,8 @@
 export { PickerStaticWrapper } from './PickerStaticWrapper';
-export type { PickerStaticWrapperProps } from './PickerStaticWrapper';
+export type {
+  PickerStaticWrapperProps,
+  ExportedPickerStaticWrapperProps,
+} from './PickerStaticWrapper';
 
 export {
   pickerStaticWrapperClasses,

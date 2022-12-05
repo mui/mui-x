@@ -1,35 +1,9 @@
 import * as React from 'react';
 import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import type { Theme } from '@mui/material/styles';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
-
-const initialState = {
-  filter: {
-    filterModel: {
-      items: [
-        {
-          id: 1,
-          columnField: 'name',
-          operatorValue: 'contains',
-          value: 'D',
-        },
-        {
-          id: 2,
-          columnField: 'name',
-          operatorValue: 'contains',
-          value: 'D',
-        },
-        {
-          id: 3,
-          columnField: 'rating',
-          operatorValue: '>',
-          value: '0',
-        },
-      ],
-    },
-  },
-};
 
 export default function CustomFilterPanelContent() {
   const { data } = useDemoData({
@@ -69,6 +43,12 @@ export default function CustomFilterPanelContent() {
                 size: 'small',
                 sx: { mt: 'auto' },
               },
+              valueInputProps: {
+                InputComponentProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
+              },
               deleteIconProps: {
                 sx: {
                   '& .MuiSvgIcon-root': { color: '#d32f2f' },
@@ -79,7 +59,7 @@ export default function CustomFilterPanelContent() {
               // Customize inputs using css selectors
               '& .MuiDataGrid-filterForm': { p: 2 },
               '& .MuiDataGrid-filterForm:nth-child(even)': {
-                backgroundColor: (theme) =>
+                backgroundColor: (theme: Theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
               '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
@@ -89,7 +69,34 @@ export default function CustomFilterPanelContent() {
             },
           },
         }}
-        initialState={initialState}
+        initialState={{
+          ...data.initialState,
+          filter: {
+            ...data.initialState?.filter,
+            filterModel: {
+              items: [
+                {
+                  id: 1,
+                  field: 'name',
+                  operator: 'contains',
+                  value: 'D',
+                },
+                {
+                  id: 2,
+                  field: 'name',
+                  operator: 'contains',
+                  value: 'D',
+                },
+                {
+                  id: 3,
+                  field: 'rating',
+                  operator: '>',
+                  value: '0',
+                },
+              ],
+            },
+          },
+        }}
       />
     </div>
   );

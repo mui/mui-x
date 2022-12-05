@@ -1,61 +1,103 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import { useViews } from '../../hooks/useViews';
-import { ClockPicker, ExportedClockPickerProps } from '../../../ClockPicker/ClockPicker';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
+import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
 import {
-  CalendarPicker,
-  ExportedCalendarPickerProps,
-} from '../../../CalendarPicker/CalendarPicker';
+  DateCalendar,
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+} from '../../../DateCalendar';
+import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
-import { WrapperVariant, WrapperVariantContext } from '../wrappers/WrapperVariantContext';
+import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
 import { DateInputPropsLike } from '../wrappers/WrapperProps';
-import { PickerSelectionState } from '../../hooks/usePickerState';
+import { PickerStatePickerProps } from '../../hooks/usePickerState';
 import { BasePickerProps } from '../../models/props/basePickerProps';
-import { BaseToolbarProps } from '../../models/props/baseToolbarProps';
 import { PickerViewRoot } from '../PickerViewRoot';
-import { CalendarOrClockPickerView, CalendarPickerView, ClockPickerView } from '../../models';
+import { DateOrTimeView, DateView, TimeView } from '../../models';
+import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/toolbar';
+import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
+import { useFocusManagement } from './useFocusManagement';
+import {
+  CalendarOrClockPickerClasses,
+  getCalendarOrClockPickerUtilityClass,
+} from './calendarOrClockPickerClasses';
 
-export interface ExportedCalendarOrClockPickerProps<View extends CalendarOrClockPickerView>
-  extends Omit<BasePickerProps<unknown, unknown>, 'value' | 'onChange'>,
-    Omit<ExportedCalendarPickerProps<unknown>, 'onViewChange' | 'openTo' | 'view'>,
-    ExportedClockPickerProps<unknown> {
-  dateRangeIcon?: React.ReactNode;
+export interface CalendarOrClockPickerSlotsComponent<TDate, TView extends DateOrTimeView>
+  extends DateCalendarSlotsComponent<TDate> {
+  Tabs?: React.JSXElementConstructor<BaseTabsProps<TView>>;
+  Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null, TView>>;
+}
+
+export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
+  extends DateCalendarSlotsComponentsProps<TDate> {
+  tabs?: ExportedBaseTabsProps;
+  toolbar?: ExportedBaseToolbarProps;
+}
+
+export interface ExportedCalendarOrClockPickerProps<TDate, TView extends DateOrTimeView>
+  extends Omit<BasePickerProps<TDate | null, TDate>, 'value' | 'onChange' | 'localeText'>,
+    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
+    ExportedTimeClockProps<TDate> {
   /**
    * Callback fired on view change.
+   * @template View
    * @param {View} view The new view.
    */
-  onViewChange?: (view: View) => void;
+  onViewChange?: (view: TView) => void;
   /**
    * First view to show.
    */
-  openTo: View;
-  timeIcon?: React.ReactNode;
+  openTo: TView;
   /**
    * Array of views to show.
    */
-  views: readonly View[];
+  views: readonly TView[];
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: CalendarOrClockPickerSlotsComponent<TDate, TView>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: CalendarOrClockPickerSlotsComponentsProps<TDate>;
 }
 
-export interface CalendarOrClockPickerProps<View extends CalendarOrClockPickerView>
-  extends ExportedCalendarOrClockPickerProps<View> {
+export interface CalendarOrClockPickerProps<TDate, View extends DateOrTimeView>
+  extends ExportedCalendarOrClockPickerProps<TDate, View>,
+    PickerStatePickerProps<TDate | null> {
   autoFocus?: boolean;
-  date: any;
   DateInputProps: DateInputPropsLike;
-  isMobileKeyboardViewOpen: boolean;
-  onDateChange: (
-    date: any,
-    currentWrapperVariant: WrapperVariant,
-    isFinish?: PickerSelectionState,
-  ) => void;
-  toggleMobileKeyboardView: () => void;
+  classes?: Partial<CalendarOrClockPickerClasses>;
 }
 
-export const MobileKeyboardInputView = styled('div')({
+const useUtilityClasses = (ownerState: CalendarOrClockPickerProps<any, any>) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+    mobileKeyboardInputView: ['mobileKeyboardInputView'],
+  };
+
+  return composeClasses(slots, getCalendarOrClockPickerUtilityClass, classes);
+};
+
+export const MobileKeyboardInputView = styled('div', {
+  name: 'MuiCalendarOrClockPicker',
+  slot: 'MobileKeyboardInputView',
+  overridesResolver: (_, styles) => styles.mobileKeyboardInputView,
+})({
   padding: '16px 24px',
 });
 
-const PickerRoot = styled('div')<{ ownerState: { isLandscape: boolean } }>(({ ownerState }) => ({
+const PickerRoot = styled('div', {
+  name: 'MuiCalendarOrClockPicker',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})<{ ownerState: { isLandscape: boolean } }>(({ ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
   ...(ownerState.isLandscape && {
@@ -65,19 +107,22 @@ const PickerRoot = styled('div')<{ ownerState: { isLandscape: boolean } }>(({ ow
 
 const MobileKeyboardTextFieldProps = { fullWidth: true };
 
-const isDatePickerView = (view: CalendarOrClockPickerView): view is CalendarPickerView =>
+const isDatePickerView = (view: DateOrTimeView): view is DateView =>
   view === 'year' || view === 'month' || view === 'day';
 
-const isTimePickerView = (view: CalendarOrClockPickerView): view is ClockPickerView =>
+const isTimePickerView = (view: DateOrTimeView): view is TimeView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
-export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
-  props: CalendarOrClockPickerProps<View>,
+let warnedOnceNotValidOpenTo = false;
+
+export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
+  inProps: CalendarOrClockPickerProps<TDate, View>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiCalendarOrClockPicker' });
   const {
     autoFocus,
     className,
-    date,
+    value,
     DateInputProps,
     isMobileKeyboardViewOpen,
     onDateChange,
@@ -86,21 +131,19 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
     orientation,
     showToolbar,
     toggleMobileKeyboardView,
-    ToolbarComponent = () => null,
-    toolbarFormat,
-    toolbarPlaceholder,
-    toolbarTitle,
     views,
+    components,
+    componentsProps,
+    // excluding classes from `other` to avoid passing them down to children
+    classes: providedClasses,
     ...other
   } = props;
   const isLandscape = useIsLandscape(views, orientation);
   const wrapperVariant = React.useContext(WrapperVariantContext);
+  const classes = useUtilityClasses(props);
 
-  const toShowToolbar =
-    typeof showToolbar === 'undefined' ? wrapperVariant !== 'desktop' : showToolbar;
-
-  const handleDateChange = React.useCallback(
-    (newDate: unknown, selectionState?: PickerSelectionState) => {
+  const handleDateChange = React.useCallback<PickerOnChangeFn<TDate>>(
+    (newDate, selectionState) => {
       onDateChange(newDate, wrapperVariant, selectionState);
     },
     [onDateChange, wrapperVariant],
@@ -118,7 +161,17 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
 
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews({
+  if (process.env.NODE_ENV !== 'production') {
+    if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
+      console.warn(
+        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
+      );
+      warnedOnceNotValidOpenTo = true;
+    }
+  }
+
+  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate | null, View>({
     view: undefined,
     views,
     openTo,
@@ -126,28 +179,44 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
     onViewChange: handleViewChange,
   });
 
+  const { focusedView, setFocusedView } = useFocusManagement<DateView>({
+    autoFocus,
+    openView,
+  });
+
+  const Tabs = components?.Tabs;
+
+  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const Toolbar = components?.Toolbar;
+
   return (
-    <PickerRoot ownerState={{ isLandscape }}>
-      {toShowToolbar && (
-        <ToolbarComponent
-          {...other}
-          views={views}
+    <PickerRoot ownerState={{ isLandscape }} className={classes.root}>
+      {shouldRenderToolbar && !!Toolbar && (
+        <Toolbar
+          {...componentsProps?.toolbar}
           isLandscape={isLandscape}
-          date={date}
           onChange={handleDateChange}
-          setOpenView={setOpenView as NonNullable<BaseToolbarProps<unknown>['setOpenView']>}
-          openView={openView}
-          toolbarTitle={toolbarTitle}
-          toolbarFormat={toolbarFormat}
-          toolbarPlaceholder={toolbarPlaceholder}
+          value={value}
+          view={openView}
+          onViewChange={setOpenView as (view: DateOrTimeView) => void}
+          views={views}
+          disabled={other.disabled}
+          readOnly={other.readOnly}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
+        />
+      )}
+      {!!Tabs && (
+        <Tabs
+          view={openView}
+          onViewChange={setOpenView as (view: DateOrTimeView) => void}
+          {...componentsProps?.tabs}
         />
       )}
 
       <PickerViewRoot>
         {isMobileKeyboardViewOpen ? (
-          <MobileKeyboardInputView>
+          <MobileKeyboardInputView className={classes.mobileKeyboardInputView}>
             <KeyboardDateInput
               {...DateInputProps}
               ignoreInvalidInputs
@@ -158,33 +227,35 @@ export function CalendarOrClockPicker<View extends CalendarOrClockPickerView>(
         ) : (
           <React.Fragment>
             {isDatePickerView(openView) && (
-              <CalendarPicker
+              <DateCalendar
                 autoFocus={autoFocus}
-                date={date}
-                onViewChange={
-                  setOpenView as ExportedCalendarOrClockPickerProps<CalendarPickerView>['onViewChange']
-                }
+                value={value}
+                onViewChange={setOpenView as (view: DateView) => void}
                 onChange={handleChangeAndOpenNext}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
-                views={views.filter(isDatePickerView) as CalendarPickerView[]}
+                views={views.filter(isDatePickerView) as DateView[]}
+                focusedView={focusedView}
+                onFocusedViewChange={setFocusedView}
+                components={components}
+                componentsProps={componentsProps}
                 {...other}
               />
             )}
 
             {isTimePickerView(openView) && (
-              <ClockPicker
+              <TimeClock
                 {...other}
                 autoFocus={autoFocus}
-                date={date}
+                value={value}
                 view={openView}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
-                views={views.filter(isTimePickerView) as ClockPickerView[]}
+                views={views.filter(isTimePickerView) as TimeView[]}
                 onChange={handleChangeAndOpenNext}
-                onViewChange={
-                  setOpenView as ExportedCalendarOrClockPickerProps<ClockPickerView>['onViewChange']
-                }
+                onViewChange={setOpenView as (view: TimeView) => void}
                 showViewSwitcher={wrapperVariant === 'desktop'}
+                components={components}
+                componentsProps={componentsProps}
               />
             )}
           </React.Fragment>

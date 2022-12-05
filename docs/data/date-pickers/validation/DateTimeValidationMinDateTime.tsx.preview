@@ -1,0 +1,3 @@
+<GridItem label="DateTimePicker">
+  <NextDateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
+</GridItem>

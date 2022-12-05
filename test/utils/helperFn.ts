@@ -58,20 +58,24 @@ export function sleep(duration: number) {
   });
 }
 
-export function getColumnValues(colIndex: number = 0) {
+export function getColumnValues(colIndex: number) {
   return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
     (node) => node!.textContent,
   );
 }
 
-export function getColumnHeaderCell(colIndex: number): HTMLElement {
-  const columnHeader = document.querySelector(
-    `[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
+export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
+  const headerRowSelector =
+    rowIndex === undefined ? '' : `[role="row"][aria-rowindex="${rowIndex + 1}"] `;
+  const headerCellSelector = `[role="columnheader"][aria-colindex="${colIndex + 1}"]`;
+  const columnHeader = document.querySelector<HTMLElement>(
+    `${headerRowSelector}${headerCellSelector}`,
   );
+
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }
-  return columnHeader as HTMLElement;
+  return columnHeader;
 }
 
 export function getColumnHeadersTextContent() {
@@ -80,14 +84,20 @@ export function getColumnHeadersTextContent() {
   );
 }
 
+export function getRowsFieldContent(field: string) {
+  return Array.from(document.querySelectorAll('[role="row"][data-rowindex]')).map(
+    (node) => node.querySelector(`[role="cell"][data-field="${field}"]`)?.textContent,
+  );
+}
+
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
-  const cell = document.querySelector(
+  const cell = document.querySelector<HTMLElement>(
     `[role="row"][data-rowindex="${rowIndex}"] [role="cell"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
   }
-  return cell as HTMLElement;
+  return cell;
 }
 
 export function getRows() {
@@ -95,9 +105,9 @@ export function getRows() {
 }
 
 export function getRow(rowIndex: number): HTMLElement {
-  const row = document.querySelector(`[role="row"][data-rowindex="${rowIndex}"]`);
+  const row = document.querySelector<HTMLElement>(`[role="row"][data-rowindex="${rowIndex}"]`);
   if (row == null) {
     throw new Error(`Row ${rowIndex} not found`);
   }
-  return row as HTMLElement;
+  return row;
 }

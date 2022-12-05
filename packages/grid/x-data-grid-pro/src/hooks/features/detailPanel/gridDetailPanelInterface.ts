@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { GridRowId } from '@mui/x-data-grid';
 
+type DetailPanelHeightCache = Record<GridRowId, { autoHeight: boolean; height: number }>;
+
 /**
  * The master/detail API interface that is available in the grid [[apiRef]].
  */
@@ -22,10 +24,25 @@ export interface GridDetailPanelApi {
   setExpandedDetailPanels: (ids: GridRowId[]) => void;
 }
 
+export interface GridDetailPanelPrivateApi {
+  /**
+   * Stores the panel height measurement and triggers the row height pre-processing.
+   * @param {GridRowId} id The id of the row.
+   * @param {number} height The new height.
+   */
+  storeDetailPanelHeight: (id: GridRowId, height: number) => void;
+  /**
+   * Determines if the height of a detail panel is "auto".
+   * @param {GridRowId} id The id of the row.
+   * @returns {boolean} `true` if the detail panel height is "auto".
+   */
+  detailPanelHasAutoHeight: (id: GridRowId) => boolean;
+}
+
 export interface GridDetailPanelState {
   expandedRowIds: GridRowId[];
   contentCache: Record<GridRowId, React.ReactNode>;
-  heightCache: Record<GridRowId, number>;
+  heightCache: DetailPanelHeightCache;
 }
 
 export type GridDetailPanelInitialState = Pick<GridDetailPanelState, 'expandedRowIds'>;

@@ -8,6 +8,10 @@ const workspaceRoot = path.join(__dirname, '..', '..');
 async function getWebpackEntries() {
   return [
     {
+      name: '@mui/x-data-grid-premium',
+      path: 'packages/grid/x-data-grid-premium/build/index-esm.js',
+    },
+    {
       name: '@mui/x-data-grid-pro',
       path: 'packages/grid/x-data-grid-pro/build/index-esm.js',
     },
@@ -65,6 +69,10 @@ module.exports = async function webpackConfig(webpack, environment) {
           '@mui/x-data-grid-pro': path.join(
             workspaceRoot,
             'packages/grid/x-data-grid-pro/build/index-esm.js',
+          ),
+          '@mui/x-data-grid-premium': path.join(
+            workspaceRoot,
+            'packages/grid/x-data-grid-premium/build/index-esm.js',
           ),
           '@mui/x-license-pro': path.join(
             workspaceRoot,

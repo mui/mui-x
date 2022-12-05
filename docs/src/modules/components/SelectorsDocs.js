@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
@@ -21,6 +21,7 @@ const SelectorName = styled(Typography)({
 
 const SelectorDescription = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
+  fontWeight: 400,
 }));
 
 export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
@@ -31,7 +32,7 @@ export const SelectorExample = styled(HighlightedCode)(({ theme }) => ({
 
 const SELECTOR_NAME_PATTERN = /^grid(.*)Selector/;
 
-const SelectorAccordion = ({ selector }) => {
+function SelectorAccordion({ selector }) {
   let signature = `${selector.name}: (state: GridState) => ${selector.returnType}`;
   if (selector.supportsApiRef) {
     signature = [
@@ -82,7 +83,7 @@ const SelectorAccordion = ({ selector }) => {
       </SelectorDetails>
     </Accordion>
   );
-};
+}
 
 function SelectorCategoryDocs(props) {
   const { selectors, ...other } = props;
@@ -96,12 +97,12 @@ function SelectorCategoryDocs(props) {
   );
 }
 
-function SelectorsDocs(props) {
+export default function SelectorsDocs(props) {
   const { category } = props;
 
   if (category) {
     return (
-      <MarkdownElement sx={{ width: '100%' }}>
+      <MarkdownElement sx={{ width: '100%', mb: 2 }}>
         <SelectorCategoryDocs
           selectors={allSelectors.filter((selector) => selector.category === category)}
         />
@@ -121,7 +122,7 @@ function SelectorsDocs(props) {
   });
 
   return (
-    <MarkdownElement sx={{ width: '100%' }}>
+    <MarkdownElement sx={{ width: '100%', mb: 3 }}>
       {Object.entries(selectors).map(([categoryName, categorySelectors]) => (
         <React.Fragment key={categoryName}>
           <Typography variant="h4" sx={(theme) => ({ mb: theme.spacing(2) })}>
@@ -136,5 +137,3 @@ function SelectorsDocs(props) {
     </MarkdownElement>
   );
 }
-
-export default SelectorsDocs;

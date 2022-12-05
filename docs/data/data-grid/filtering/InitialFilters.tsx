@@ -21,11 +21,12 @@ export default function InitialFilters() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {
-                  columnField: 'rating',
-                  operatorValue: '>',
+                  field: 'rating',
+                  operator: '>',
                   value: '2.5',
                 },
               ],

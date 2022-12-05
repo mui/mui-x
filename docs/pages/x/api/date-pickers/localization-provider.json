@@ -1,6 +1,7 @@
 {
   "props": {
-    "dateAdapter": { "type": { "name": "func" }, "required": true },
+    "adapterLocale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } },
+    "dateAdapter": { "type": { "name": "func" } },
     "dateFormats": {
       "type": {
         "name": "shape",
@@ -8,11 +9,16 @@
       }
     },
     "dateLibInstance": { "type": { "name": "any" } },
-    "locale": { "type": { "name": "union", "description": "object<br>&#124;&nbsp;string" } }
+    "localeText": { "type": { "name": "object" } }
   },
   "slots": {},
   "name": "LocalizationProvider",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiLocalizationProvider" },
   "filename": "/packages/x-date-pickers/src/LocalizationProvider/LocalizationProvider.tsx",
-  "demos": "<ul></ul>"
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/adapters-locale\">Localized dates</a></li>\n<li><a href=\"/x/react-date-pickers/calendar-systems\">Support for other calendar systems</a></li>\n<li><a href=\"/x/react-date-pickers/localization\">Localization</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "LocalizationProvider" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "LocalizationProvider" }
+  ]
 }

@@ -25,11 +25,17 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Search…',
+  toolbarQuickFilterLabel: 'Search',
+  toolbarQuickFilterDeleteIconLabel: 'Clear',
+
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
   toolbarExportCSV: 'Download as CSV',
   toolbarExportPrint: 'Print',
+  toolbarExportExcel: 'Download as Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
@@ -42,7 +48,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
@@ -127,9 +133,21 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   unGroupColumn: (name) => `Stop grouping by ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Expand',
   collapseDetailPanel: 'Collapse',
 
   // Used core components translation keys
   MuiTablePagination: {},
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'size',
 };

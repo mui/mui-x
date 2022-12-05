@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
   useGridApiRef,
@@ -31,13 +30,13 @@ export default function DirectSelector() {
   };
 
   return (
-    <Stack spacing={2} alignItems="flex-start" style={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
       <Button size="small" onClick={handleSelectFirstVisibleRow}>
         Toggle the selection of the 1st row of the page
       </Button>
-      <Box sx={{ width: '100%', height: 400, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 400, mt: 1 }}>
         <DataGridPro apiRef={apiRef} pagination pageSize={10} {...data} />
       </Box>
-    </Stack>
+    </Box>
   );
 }

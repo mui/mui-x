@@ -1,4 +1,7 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface DateRangePickerDayClasses {
   /** Styles applied to the root element. */
@@ -25,6 +28,8 @@ export interface DateRangePickerDayClasses {
   dayInsideRangeInterval: string;
   /** Styles applied to the day element if `selected=false`. */
   notSelectedDate: string;
+  /** Styles applied to the day element if `isDragging=true`. */
+  dayDragging: string;
 }
 
 export type DateRangePickerDayClassKey = keyof DateRangePickerDayClasses;
@@ -48,5 +53,6 @@ export const dateRangePickerDayClasses: DateRangePickerDayClasses = generateUtil
     'dayOutsideRangeInterval',
     'dayInsideRangeInterval',
     'notSelectedDate',
+    'dayDragging',
   ],
 );

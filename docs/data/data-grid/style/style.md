@@ -1,7 +1,3 @@
----
-title: Data Grid - Styling
----
-
 # Data Grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
@@ -11,7 +7,7 @@ title: Data Grid - Styling
 For one-off styles, the `sx` prop can be used.
 It allows to apply simple to complex customizations directly onto the `DataGrid` element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
-For more details, visit the [`sx` prop page](/system/the-sx-prop/).
+For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
 ```tsx
 <DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px
@@ -45,7 +41,7 @@ const columns: GridColumns = [
 
 ## Styling rows
 
-The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string.
+The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string. Sometimes it might be needed to override the existing rules using higher specificity CSS selectors.
 
 ```tsx
 interface GridRowParams<R extends GridRowModel = GridRowModel> {
@@ -61,13 +57,6 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
    * All grid columns.
    */
   columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   */
-  getValue: (id: GridRowId, field: string) => any;
 }
 ```
 
@@ -115,7 +104,17 @@ It is also called with a `GridCellParams` object.
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
 Choose between one of the following values: 'left' | 'right' | 'center'.
 
-**Note**: You must use `headerAlign` to align the content of the header.
+:::info
+You must use `headerAlign` to align the content of the header.
+:::
+
+## Striped rows
+
+You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
+
+The following demo illustrates how this can be achieved.
+
+{{"demo": "StripedGrid.js", "bg": "inline"}}
 
 ## Custom theme
 
@@ -125,5 +124,6 @@ The following demo leverages the CSS customization API to match the Ant Design s
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

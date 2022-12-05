@@ -1,14 +1,10 @@
----
-title: Data Grid - Getting started
----
-
 # Data Grid - Getting started
 
 <p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
 
 ## Installation
 
-Using your favorite package manager, install `@mui/x-data-grid-pro` for the full-featured enterprise grid, or `@mui/x-data-grid` for the free community version.
+Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
 ```sh
 // with npm
@@ -43,7 +39,7 @@ npm install @mui/material @mui/styled-engine-sc styled-components
 yarn add @mui/material @mui/styled-engine-sc styled-components
 ```
 
-> 💡 Take a look at the [Styled Engine guide](/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
+> 💡 Take a look at the [Styled Engine guide](/material-ui/guides/styled-engine/) for more information about how to configure `styled-components` as the style engine.
 
 ## Quickstart
 
@@ -88,7 +84,7 @@ You can import `GridColDef` to see all column properties.
 Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
 ```tsx
-import React from 'react';
+import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
@@ -115,17 +111,18 @@ export default function App() {
 
 ## TypeScript
 
-In order to benefit from the [CSS overrides](/customization/theme-components/#global-style-overrides) and [default prop customization](/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
+In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.
 Internally, it uses module augmentation to extend the default theme structure.
 
 ```tsx
 // When using TypeScript 4.x and above
 import type {} from '@mui/x-data-grid/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+import type {} from '@mui/x-data-grid-premium/themeAugmentation';
 
 const theme = createTheme({
   components: {
-    // Use `MuiDataGrid` on both DataGrid and DataGridPro
+    // Use `MuiDataGrid` on DataGrid, DataGridPro and DataGridPremium
     MuiDataGrid: {
       styleOverrides: {
         root: {
@@ -144,12 +141,13 @@ Please pay attention to the license.
 
 ### Plans
 
-The component comes [in different plans](/pricing/):
+The component comes [in different plans](https://mui.com/pricing/):
 
 - **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
-- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](/x/license/).
+- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
+- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 
-More information about the various plans on [the dedicated section](/x/advanced-components#plans)
+You can find more information about the plans in [the Licensing page](/x/introduction/licensing/).
 
 ### Feature comparison
 
@@ -157,58 +155,59 @@ The following table summarizes the features available in the community `DataGrid
 All the features of the community version are available in the enterprise one.
 The enterprise components come in two plans: Pro and Premium.
 
-| Features                                                                                  | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
-| :---------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
-| **Column**                                                                                |           |                                    |
-| [Column groups](/components/data-grid/columns/#column-groups)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column spanning](/components/data-grid/columns/#column-spanning)                         |    🚧     |                 🚧                 |                     🚧                     |
-| [Column resizing](/components/data-grid/columns/#resizing)                                |    ❌     |                 ✅                 |                     ✅                     |
-| [Column reorder](/components/data-grid/columns/#column-reorder)                           |    ❌     |                 ✅                 |                     ✅                     |
-| [Column pinning](/components/data-grid/columns/#column-pinning)                           |    ❌     |                 ✅                 |                     ✅                     |
-| **Row**                                                                                   |           |                                    |                                            |
-| [Row height](/components/data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
-| [Row spanning](/components/data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/components/data-grid/rows/#row-reorder)                                 |    ❌     |                 🚧                 |                     🚧                     |
-| [Row pinning](/components/data-grid/rows/#row-pinning)                                    |    ❌     |                 🚧                 |                     🚧                     |
-| **Selection**                                                                             |           |                                    |                                            |
-| [Single row selection](/components/data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Checkbox selection](/components/data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Multiple row selection](/components/data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
-| [Cell range selection](/components/data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
-| **Filtering**                                                                             |           |                                    |                                            |
-| [Quick filter](/components/data-grid/filtering/#quick-filter)                             |    🚧     |                 🚧                 |                     🚧                     |
-| [Column filters](/components/data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column filtering](/components/data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
-| **Sorting**                                                                               |           |                                    |                                            |
-| [Column sorting](/components/data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
-| [Multi-column sorting](/components/data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
-| **Pagination**                                                                            |           |                                    |                                            |
-| [Pagination](/components/data-grid/pagination/)                                           |    ✅     |                 ✅                 |                     ✅                     |
-| [Pagination > 100 rows per page](/components/data-grid/pagination/#size-of-the-page)      |    ❌     |                 ✅                 |                     ✅                     |
-| **Editing**                                                                               |           |                                    |                                            |
-| [Row editing](/components/data-grid/editing/#row-editing)                                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Cell editing](/components/data-grid/editing/#cell-editing)                               |    ✅     |                 ✅                 |                     ✅                     |
-| **Import & export**                                                                       |           |                                    |                                            |
-| [CSV export](/components/data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
-| [Print](/components/data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
-| [Clipboard](/components/data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
-| [Excel export](/components/data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     🚧                     |
-| **Rendering**                                                                             |           |                                    |                                            |
-| [Customizable components](/components/data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |
-| [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |
-| [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |                 ✅                 |                     ✅                     |
-| **Group & Pivot**                                                                         |           |                                    |                                            |
-| [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |                 ✅                 |                     ✅                     |
-| [Grouping](/components/data-grid/group-pivot/#row-grouping)                               |    ❌     |                 ❌                 |                     🚧                     |
-| [Aggregation](/components/data-grid/group-pivot/#aggregation)                             |    ❌     |                 ❌                 |                     🚧                     |
-| [Pivoting](/components/data-grid/group-pivot/#pivoting)                                   |    ❌     |                 ❌                 |                     🚧                     |
-| **Misc**                                                                                  |           |                                    |                                            |
-| [Accessibility](/components/data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
-| [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)           |    ✅     |                 ✅                 |                     ✅                     |
-| [Localization](/components/data-grid/localization/)                                       |    ✅     |                 ✅                 |                     ✅                     |
+| Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
+| :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
+| **Column**                                                                             |           |                                    |
+| [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
+| [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
+| [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
+| [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
+| [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
+| **Row**                                                                                |           |                                    |                                            |
+| [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                 ✅                 |                     ✅                     |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
+| [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
+| **Selection**                                                                          |           |                                    |                                            |
+| [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
+| [Multiple row selection](/x/react-data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
+| [Cell range selection](/x/react-data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
+| **Filtering**                                                                          |           |                                    |                                            |
+| [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
+| [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column filtering](/x/react-data-grid/filtering/#multi-filtering)                |    ❌     |                 ✅                 |                     ✅                     |
+| **Sorting**                                                                            |           |                                    |                                            |
+| [Column sorting](/x/react-data-grid/sorting/)                                          |    ✅     |                 ✅                 |                     ✅                     |
+| [Multi-column sorting](/x/react-data-grid/sorting/#multi-sorting)                      |    ❌     |                 ✅                 |                     ✅                     |
+| **Pagination**                                                                         |           |                                    |                                            |
+| [Pagination](/x/react-data-grid/pagination/)                                           |    ✅     |                 ✅                 |                     ✅                     |
+| [Pagination > 100 rows per page](/x/react-data-grid/pagination/#size-of-the-page)      |    ❌     |                 ✅                 |                     ✅                     |
+| **Editing**                                                                            |           |                                    |                                            |
+| [Row editing](/x/react-data-grid/editing/#row-editing)                                 |    ✅     |                 ✅                 |                     ✅                     |
+| [Cell editing](/x/react-data-grid/editing/)                                            |    ✅     |                 ✅                 |                     ✅                     |
+| **Import & export**                                                                    |           |                                    |                                            |
+| [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
+| [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
+| [Clipboard](/x/react-data-grid/export/#clipboard)                                      |    ❌     |                 🚧                 |                     🚧                     |
+| [Excel export](/x/react-data-grid/export/#excel-export)                                |    ❌     |                 ❌                 |                     ✅                     |
+| **Rendering**                                                                          |           |                                    |                                            |
+| [Customizable components](/x/react-data-grid/components/)                              |    ✅     |                 ✅                 |                     ✅                     |
+| [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization)      |    ✅     |                 ✅                 |                     ✅                     |
+| [Row virtualization > 100 rows](/x/react-data-grid/virtualization/#row-virtualization) |    ❌     |                 ✅                 |                     ✅                     |
+| **Group & Pivot**                                                                      |           |                                    |                                            |
+| [Tree data](/x/react-data-grid/tree-data/)                                             |    ❌     |                 ✅                 |                     ✅                     |
+| [Master detail](/x/react-data-grid/master-detail/)                                     |    ❌     |                 ✅                 |                     ✅                     |
+| [Row grouping](/x/react-data-grid/row-grouping/)                                       |    ❌     |                 ❌                 |                     ✅                     |
+| [Aggregation](/x/react-data-grid/aggregation/)                                         |    ❌     |                 ❌                 |                     ✅                     |
+| [Pivoting](/x/react-data-grid/pivoting/)                                               |    ❌     |                 ❌                 |                     🚧                     |
+| **Misc**                                                                               |           |                                    |                                            |
+| [Accessibility](/x/react-data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
+| [Keyboard navigation](/x/react-data-grid/accessibility/#keyboard-navigation)           |    ✅     |                 ✅                 |                     ✅                     |
+| [Localization](/x/react-data-grid/localization/)                                       |    ✅     |                 ✅                 |                     ✅                     |
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid/)
-- [DataGridPro](/api/data-grid/data-grid-pro/)
+- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

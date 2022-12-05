@@ -27,11 +27,17 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'جستجو...',
+  toolbarQuickFilterLabel: 'جستجو',
+  toolbarQuickFilterDeleteIconLabel: 'حذف',
+
   // Export selector toolbar button text
   toolbarExport: 'خروجی',
   toolbarExportLabel: 'خروجی',
   toolbarExportCSV: 'دانلود به صورت CSV',
   toolbarExportPrint: 'چاپ',
+  toolbarExportExcel: 'دانلود به صورت اکسل',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'پیداکردن ستون',
@@ -44,9 +50,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'افزودن فیلتر',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLinkOperator: 'عملگر منطقی',
-  filterPanelOperators: 'عملگرها',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',
   filterPanelColumns: 'ستون‌ها',
@@ -131,8 +135,20 @@ const faIRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `لغو گروه‌بندی براساس ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'پنل جزئیات',
   expandDetailPanel: 'بازکردن پنل جزئیات',
   collapseDetailPanel: 'بستن پنل جزئیات',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'ترتیب مجدد سطر',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'تجمیع',
+  aggregationFunctionLabelSum: 'جمع',
+  aggregationFunctionLabelAvg: 'میانگین',
+  aggregationFunctionLabelMin: 'حداقل',
+  aggregationFunctionLabelMax: 'حداکثر',
+  aggregationFunctionLabelSize: 'اندازه',
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);

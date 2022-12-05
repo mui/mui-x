@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
@@ -27,11 +28,17 @@ export interface GridLocaleText {
   toolbarFiltersTooltipShow: React.ReactNode;
   toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: string;
+  toolbarQuickFilterLabel: string;
+  toolbarQuickFilterDeleteIconLabel: string;
+
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
   toolbarExportCSV: React.ReactNode;
   toolbarExportPrint: React.ReactNode;
+  toolbarExportExcel: string;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
@@ -44,7 +51,7 @@ export interface GridLocaleText {
   filterPanelAddFilter: React.ReactNode;
   filterPanelDeleteIconLabel: string;
   filterPanelLinkOperator: string;
-  filterPanelOperators: React.ReactNode;
+  filterPanelOperator: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
   filterPanelColumns: React.ReactNode;
@@ -124,8 +131,20 @@ export interface GridLocaleText {
   unGroupColumn: (name: string) => string;
 
   // Master/detail
+  detailPanelToggle: string;
   expandDetailPanel: string;
   collapseDetailPanel: string;
+
+  // Row reordering text
+  rowReorderingHeaderName: string;
+
+  // Aggregation
+  aggregationMenuItemHeader: string;
+  aggregationFunctionLabelSum: string;
+  aggregationFunctionLabelAvg: string;
+  aggregationFunctionLabelMin: string;
+  aggregationFunctionLabelMax: string;
+  aggregationFunctionLabelSize: string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<

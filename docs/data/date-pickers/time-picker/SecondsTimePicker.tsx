@@ -1,40 +1,26 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
 
 export default function SecondsTimePicker() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
-        <TimePicker
-          ampm={false}
-          openTo="hours"
+        <NextTimePicker
+          label="Hours, minutes and seconds"
           views={['hours', 'minutes', 'seconds']}
-          inputFormat="HH:mm:ss"
-          mask="__:__:__"
-          label="With seconds"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          format="HH:mm:ss"
+          defaultValue={dayjs('2022-04-07T15:30:10')}
         />
-        <TimePicker
+        <NextTimePicker
+          label="Minutes and seconds"
           ampmInClock
           views={['minutes', 'seconds']}
-          inputFormat="mm:ss"
-          mask="__:__"
-          label="Minutes and seconds"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          format="mm:ss"
+          defaultValue={dayjs('2022-04-07T15:30:10')}
         />
       </Stack>
     </LocalizationProvider>

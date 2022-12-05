@@ -1,0 +1,13 @@
+<Grid container spacing={4} width={550}>
+  <GridItem label="Uncontrolled field">
+    <MultiInputTimeRangeField
+      defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
+    />
+  </GridItem>
+  <GridItem label="Controlled field">
+    <MultiInputTimeRangeField
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+    />
+  </GridItem>
+</Grid>

@@ -1,9 +1,15 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  GridToolbar,
+  gridClasses,
+  GridStateColDef,
+} from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
@@ -12,7 +18,7 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -56,6 +62,7 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       fireEvent.click(getByText('Density'));
+      clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
@@ -126,6 +133,22 @@ describe('<DataGrid /> - Toolbar', () => {
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });
+
+    it('should apply to the root element a class corresponding to the current density', () => {
+      function Test(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} {...props} />
+          </div>
+        );
+      }
+      const { setProps } = render(<Test />);
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityStandard']);
+      setProps({ density: 'compact' });
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityCompact']);
+      setProps({ density: 'comfortable' });
+      expect(screen.getByRole('grid')).to.have.class(gridClasses['root--densityComfortable']);
+    });
   });
 
   describe('column selector', () => {
@@ -167,36 +190,6 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Hide all'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
-    });
-
-    it('should show all columns when clicking "SHOW ALL" from the column selector (deprecated)', () => {
-      const customColumns = [
-        {
-          field: 'id',
-          hide: true,
-        },
-        {
-          field: 'brand',
-          hide: true,
-        },
-      ];
-
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={customColumns}
-            components={{
-              Toolbar: GridToolbar,
-            }}
-          />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show all'));
-
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
 
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
@@ -245,14 +238,57 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       const button = screen.getByRole('button', { name: 'Select columns' });
-      button.focus();
+      act(() => button.focus());
       fireEvent.click(button);
 
       const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
-      column!.focus();
+      act(() => column!.focus());
       fireEvent.click(column);
 
       expect(column).toHaveFocus();
+    });
+
+    it('should allow to override search predicate function', () => {
+      const customColumns = [
+        {
+          field: 'id',
+          description: 'test',
+        },
+        {
+          field: 'brand',
+        },
+      ];
+
+      const columnSearchPredicate = (column: GridStateColDef, searchValue: string) => {
+        return (
+          (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1 ||
+          (column.description || '').toLowerCase().indexOf(searchValue) > -1
+        );
+      };
+
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            columns={customColumns}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            componentsProps={{
+              columnsPanel: {
+                searchPredicate: columnSearchPredicate,
+              },
+            }}
+          />
+        </div>,
+      );
+
+      fireEvent.click(getByText('Columns'));
+
+      const searchInput = document.querySelector('input[type="text"]')!;
+      fireEvent.change(searchInput, { target: { value: 'test' } });
+
+      expect(document.querySelector('[role="tooltip"] [name="id"]')).not.to.equal(null);
     });
   });
 });

@@ -1,13 +1,5 @@
-import { GridEditCellProps } from '../gridEditRowModel';
-import { GridRowId } from '../gridRows';
+import { GridRowId, GridValidRowModel } from '../gridRows';
 import { GridCellParams } from './gridCellParams';
-
-// TODO v6 - remove
-export interface GridEditCellPropsParams {
-  id: GridRowId;
-  field: string;
-  props: GridEditCellProps;
-}
 
 /**
  * Params passed to `apiRef.current.setEditCellValue`.
@@ -29,19 +21,10 @@ export interface GridEditCellValueParams {
    * The debounce time in milliseconds.
    */
   debounceMs?: number;
-}
-
-// TODO v6 - remove
-export interface GridCommitCellChangeParams {
-  id: GridRowId;
-  field: string;
-}
-
-// TODO v6 - remove
-export interface GridCellEditCommitParams {
-  id: GridRowId;
-  field: string;
-  value: any;
+  /**
+   * TBD
+   */
+  unstable_skipValueParser?: boolean;
 }
 
 enum GridCellEditStartReasons {
@@ -54,12 +37,16 @@ enum GridCellEditStartReasons {
 /**
  * Params passed to the `cellEditStart` event.
  */
-export interface GridCellEditStartParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
+export interface GridCellEditStartParams<V = any, R extends GridValidRowModel = any, F = V>
+  extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridCellEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridCellEditStopReasons {
@@ -73,10 +60,10 @@ enum GridCellEditStopReasons {
 /**
  * Params passed to the `cellEditStop event.
  */
-export interface GridCellEditStopParams<V = any, R = any, F = V> extends GridCellParams<V, R, F> {
+export interface GridCellEditStopParams<V = any, R extends GridValidRowModel = any, F = V>
+  extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
-   * Only available if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridCellEditStopReasons;
 }

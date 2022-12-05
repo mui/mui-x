@@ -15,7 +15,9 @@ import { GridDataGeneratorContext } from './gridColDefGenerator';
 const chanceId = globalChance();
 let chance: Chance.Chance;
 
-if (process.env.DISABLE_CHANCE_RANDOM) {
+declare const DISABLE_CHANCE_RANDOM: any;
+
+if (typeof DISABLE_CHANCE_RANDOM !== 'undefined' && DISABLE_CHANCE_RANDOM) {
   chance = globalChance(() => 0.5);
 } else {
   chance = chanceId;

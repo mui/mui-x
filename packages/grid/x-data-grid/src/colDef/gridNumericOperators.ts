@@ -1,7 +1,7 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { wrapWithWarningOnCall } from '../utils/warning';
+import { GridCellParams } from '../models';
 
 const parseNumericValue = (value: string | number | null | undefined) => {
   if (value == null) {
@@ -9,6 +9,16 @@ const parseNumericValue = (value: string | number | null | undefined) => {
   }
 
   return Number(value);
+};
+
+export const getGridNumericQuickFilterFn = (value: any) => {
+  if (value == null || Number.isNaN(value) || value === '') {
+    return null;
+  }
+
+  return ({ value: columnValue }: GridCellParams): boolean => {
+    return parseNumericValue(columnValue) === parseNumericValue(value);
+  };
 };
 
 export const getGridNumericOperators = (): GridFilterOperator<
@@ -129,6 +139,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return value == null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
@@ -137,6 +148,7 @@ export const getGridNumericOperators = (): GridFilterOperator<
         return value != null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isAnyOf',
@@ -153,11 +165,3 @@ export const getGridNumericOperators = (): GridFilterOperator<
     InputComponentProps: { type: 'number' },
   },
 ];
-
-/**
- * @deprecated Use `getGridNumericOperators` instead.
- */
-export const getGridNumericColumnOperators = wrapWithWarningOnCall(getGridNumericOperators, [
-  'MUI: The method getGridNumericColumnOperators is deprecated and will be removed in the next major version.',
-  'Use getGridNumericOperators instead.',
-]);

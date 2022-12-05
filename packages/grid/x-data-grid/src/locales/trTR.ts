@@ -26,11 +26,17 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Filtreleri göster',
   toolbarFiltersTooltipActive: (count) => `${count} aktif filtre`,
 
+  // Quick filter toolbar field
+  toolbarQuickFilterPlaceholder: 'Ara…',
+  toolbarQuickFilterLabel: 'Ara',
+  toolbarQuickFilterDeleteIconLabel: 'Temizle',
+
   // Export selector toolbar button text
   toolbarExport: 'Dışa aktar',
   toolbarExportLabel: 'Dışa aktar',
   toolbarExportCSV: 'CSV olarak aktar',
   toolbarExportPrint: 'Yazdır',
+  toolbarExportExcel: 'Excel olarak aktar',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Sütun ara',
@@ -42,10 +48,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operatör',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'Mantıksal operatörler',
+  filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
   filterPanelColumns: 'Sütunlar',
@@ -68,9 +72,9 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsAnyOf: 'herhangi biri',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'herhangi',
+  filterValueTrue: 'doğru',
+  filterValueFalse: 'yanlış',
 
   // Column menu text
   columnMenuLabel: 'Menü',
@@ -98,14 +102,14 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seçim',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Tüm satırları seç',
+  checkboxSelectionUnselectAllRows: 'Tüm satırların seçimini kaldır',
+  checkboxSelectionSelectRow: 'Satırı seç',
+  checkboxSelectionUnselectRow: 'Satır seçimini bırak',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'Evet',
+  booleanCellFalseLabel: 'Hayır',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
@@ -126,8 +130,20 @@ const trTRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} için gruplamayı kaldır`,
 
   // Master/detail
+  detailPanelToggle: 'Detay görünümüne geçiş',
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
+
+  // Row reordering text
+  rowReorderingHeaderName: 'Satırı yeniden sırala',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Toplama',
+  aggregationFunctionLabelSum: 'top',
+  aggregationFunctionLabelAvg: 'ort',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'maks',
+  aggregationFunctionLabelSize: 'boyut',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

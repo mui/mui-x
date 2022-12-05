@@ -1,16 +1,47 @@
-# Proxies
+/ /x/introduction/ 301
+/x/ https://mui.com/x/ 302
+# Avoid conflicts with the other Next.js apps hosted under https://mui.com/
+/x/_next/* /_next/:splat
 
-## mui-x is configured to be hosted at the root.
-/static/* https://material-ui-docs.netlify.app/static/:splat 200
+# For links that we can't edit later on, e.g. hosted in the code published on npm or sent by email
 
-## Localization
+# should all be prefixed with x-
+
+/r/x-get-license https://mui.com/pricing/ 302
+/r/x-license-eula https://mui.com/legal/mui-x-eula/ 302
+/r/x-license-trial https://mui.com/x/introduction/licensing/#evaluation-trial-licenses 302
+/r/x-license-key-installation https://mui.com/x/introduction/licensing/#license-key-installation 302
+/r/x-data-grid-no-dimensions https://mui.com/x/react-data-grid/layout/ 302
+/r/x-technical-support https://mui.com/x/introduction/support/#technical-support 302
+/r/x-issue-template https://codesandbox.io/s/mui-x-issue-template-qtf00h 302
+
+# Legacy redirection
+
+# 2021
 /fr/* /:splat 200
 /de/* /:splat 200
 /ja/* /:splat 200
+# 2022
+/x/license/ https://mui.com/legal/mui-x-eula/ 301
+/x/react-data-grid/group-pivot/ /x/react-data-grid/tree-data/ 301
+/:lang/x/react-data-grid/group-pivot/ /:lang/x/react-data-grid/tree-data/ 301
+/x/react-data-grid/columns/ /x/react-data-grid/column-definition/ 301
+/:lang/x/react-data-grid/columns/ /:lang/x/react-data-grid/column-definition/ 301
+/x/advanced-components/ /x/introduction/ 301
+/:lang/x/advanced-components/ /:lang/x/introduction/ 301
+/x/react-data-grid/rows/ /x/react-data-grid/row-definition/ 301
+/:lang/x/react-data-grid/rows/ /:lang/x/react-data-grid/row-definition/ 301
 
-# Redirections
+/x/react-data-grid/migration-v4/ /x/migration/migration-data-grid-v4/ 301
+/:lang/x/react-data-grid/migration-v4/ /:lang/x/migration/migration-data-grid-v4/ 301
+/x/react-data-grid/migration-v5/ /x/migration/migration-data-grid-v5/ 301
+/:lang/x/react-data-grid/migration-v5/ /:lang/x/migration/migration-data-grid-v5/ 301
+/x/react-date-pickers/migration-lab/ /x/migration/migration-pickers-lab/ 301
+/:lang/x/react-date-pickers/migration-lab/ /:lang/x/migration/migration-pickers-lab/ 301
 
-/ /components/data-grid/
+/x/api/date-pickers/clock-picker/ /x/api/date-pickers/time-clock/ 301
+/:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
 
-## Redirections have to be done in the core repository, it owns the domain name.
-## e.g. https://github.com/mui/material-ui/blob/HEAD/docs/public/_redirects#L31
+# 2023
+
+# Proxies

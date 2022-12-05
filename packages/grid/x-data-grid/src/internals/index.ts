@@ -6,7 +6,10 @@ export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHe
 
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
-export { useGridRegisterStrategyProcessor } from '../hooks/core/strategyProcessing';
+export {
+  useGridRegisterStrategyProcessor,
+  GRID_DEFAULT_STRATEGY,
+} from '../hooks/core/strategyProcessing';
 export type { GridStrategyProcessor } from '../hooks/core/strategyProcessing';
 export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
@@ -17,6 +20,11 @@ export {
   columnMenuStateInitializer,
 } from '../hooks/features/columnMenu/useGridColumnMenu';
 export { useGridColumns, columnsStateInitializer } from '../hooks/features/columns/useGridColumns';
+export { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
+export {
+  useGridColumnGrouping,
+  columnGroupsStateInitializer,
+} from '../hooks/features/columnGrouping/useGridColumnGrouping';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -26,6 +34,7 @@ export { useGridDensity, densityStateInitializer } from '../hooks/features/densi
 export { useGridCsvExport } from '../hooks/features/export/useGridCsvExport';
 export { useGridPrintExport } from '../hooks/features/export/useGridPrintExport';
 export { useGridFilter, filterStateInitializer } from '../hooks/features/filter/useGridFilter';
+export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export type { GridAggregatedFilterItemApplier } from '../hooks/features/filter/gridFilterState';
 export { useGridFocus, focusStateInitializer } from '../hooks/features/focus/useGridFocus';
 export { useGridKeyboardNavigation } from '../hooks/features/keyboardNavigation/useGridKeyboardNavigation';
@@ -37,27 +46,34 @@ export {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-export {
-  useGridEditing as useGridEditing_new,
-  editingStateInitializer as editingStateInitializer_new,
-} from '../hooks/features/editRows/useGridEditing.new';
-export {
-  useGridEditing as useGridEditing_old,
-  editingStateInitializer as editingStateInitializer_old,
-} from '../hooks/features/editRows/useGridEditing.old';
+export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
   GridRowTreeCreationValue,
-} from '../hooks/features/rows/gridRowsState';
+  GridHydrateRowsValue,
+  GridRowsPartialUpdates,
+  GridRowsPartialUpdateAction,
+  GridTreeDepths,
+  GridRowTreeUpdatedGroupsManager,
+  GridRowTreeUpdateGroupAction,
+  GridPinnedRowsState,
+} from '../hooks/features/rows/gridRowsInterfaces';
+export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
 export { useGridRowsMeta, rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 export { useGridParamsApi } from '../hooks/features/rows/useGridParamsApi';
+export { getRowIdFromRowModel } from '../hooks/features/rows/gridRowsUtils';
 export {
-  useGridSelection,
-  selectionStateInitializer,
-} from '../hooks/features/selection/useGridSelection';
-export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  gridAdditionalRowGroupsSelector,
+  gridPinnedRowsSelector,
+} from '../hooks/features/rows/gridRowsSelector';
+export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
+export {
+  useGridRowSelection,
+  rowSelectionStateInitializer,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
@@ -65,7 +81,10 @@ export { useGridEvents } from '../hooks/features/events/useGridEvents';
 export { useGridDimensions } from '../hooks/features/dimensions/useGridDimensions';
 export { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 export type { GridRestoreStatePreProcessingContext } from '../hooks/features/statePersistence/gridStatePersistenceInterface';
-export { useGridVirtualScroller } from '../hooks/features/virtualization/useGridVirtualScroller';
+export {
+  useGridVirtualScroller,
+  getRenderableIndexes,
+} from '../hooks/features/virtualization/useGridVirtualScroller';
 
 export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
@@ -79,10 +98,16 @@ export type {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '../models/props/DataGridProps';
 
-export { createSelector } from '../utils/createSelector';
+export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/export/utils';
+export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual } from '../utils/utils';
+export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
+export { buildWarning } from '../utils/warning';
+export { exportAs } from '../utils/exportAs';
+export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
+export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 export { getBorderColor } from '../utils/styleUtils';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
+export type { GridApiCaches } from '../models/gridApiCaches';

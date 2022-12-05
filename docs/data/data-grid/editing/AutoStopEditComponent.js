@@ -38,23 +38,20 @@ SelectEditInputCell.propTypes = {
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
-  value: PropTypes.any.isRequired,
+  value: PropTypes.any,
 };
 
-function renderSelectEditInputCell(params) {
+const renderSelectEditInputCell = (params) => {
   return <SelectEditInputCell {...params} />;
-}
+};
 
 export default function AutoStopEditComponent() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function IsCellEditableGrid() {
     <Box
       sx={{
         height: 400,
-        width: 1,
+        width: '100%',
         '& .MuiDataGrid-cell--editable': {
           bgcolor: (theme) =>
             theme.palette.mode === 'dark' ? '#376331' : 'rgb(217 243 190)',
@@ -23,7 +23,6 @@ export default function IsCellEditableGrid() {
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.age % 2 === 0}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );
