@@ -1,8 +1,6 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticNextTimePicker
-    ampm
-    orientation="landscape"
-    openTo="minutes"
-    defaultValue={dayjs('2022-04-07')}
-  />
-</LocalizationProvider>
+<StaticNextTimePicker
+  ampm
+  orientation="landscape"
+  openTo="minutes"
+  defaultValue={dayjs('2022-04-07')}
+/>

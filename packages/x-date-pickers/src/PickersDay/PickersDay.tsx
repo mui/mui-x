@@ -114,10 +114,12 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   // background required here to prevent collides with the other days when animating with transition group
   backgroundColor: (theme.vars || theme).palette.background.paper,
   color: (theme.vars || theme).palette.text.primary,
-  '&:hover': {
-    backgroundColor: theme.vars
-      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
-      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+  '@media (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    },
   },
   '&:focus': {
     backgroundColor: theme.vars

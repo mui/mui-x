@@ -249,7 +249,7 @@ export const usePickerValue = <
   const [rawValue, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'value',
   });
 
@@ -261,7 +261,7 @@ export const usePickerValue = <
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'selectedSections',
   });
 
