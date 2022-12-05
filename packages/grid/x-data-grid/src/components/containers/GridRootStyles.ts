@@ -74,7 +74,6 @@ export const GridRootStyles = styled('div', {
     styles.root,
   ],
 })(({ theme }) => {
-  // eslint-disable-next-line no-nested-ternary
   const borderColor = getBorderColor(theme);
 
   const gridStyle: CSSInterpolation = {

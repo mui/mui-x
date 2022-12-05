@@ -26,7 +26,6 @@ const GridColumnHeadersRoot = styled('div', {
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
 })(({ theme }) => {
-  // eslint-disable-next-line no-nested-ternary
   const borderColor = getBorderColor(theme);
 
   return {
