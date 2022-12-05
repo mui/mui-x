@@ -15,12 +15,20 @@ export function GridTempContainers() {
 
   const handelcellFocusUnmount = React.useCallback<GridEventListener<'cellFocusUnmount'>>(
     (params) => {
-      const { cell } = apiRef.current.state.focus;
+      const { cell, columnHeader } = apiRef.current.state.focus;
       if (cell) {
         const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
         if (cellElement && focusedCellElement !== null) {
           setFocusedCellElement(null);
         } else if (focusedCellElement === null && cellElement === null) {
+          setFocusedCellElement(params);
+        }
+      }
+      if (columnHeader) {
+        const columnElement = apiRef.current.getColumnHeaderElement(columnHeader.field);
+        if (columnElement && focusedCellElement !== null) {
+          setFocusedCellElement(null);
+        } else if (focusedCellElement === null && columnElement === null) {
           setFocusedCellElement(params);
         }
       }
@@ -33,6 +41,7 @@ export function GridTempContainers() {
 
   useGridApiEventHandler(apiRef, 'cellFocusUnmount', handelcellFocusUnmount);
   useGridApiEventHandler(apiRef, 'cellFocusOut', handleCellFocusOut);
+  useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleCellFocusOut);
 
   return (
     <Box sx={{ height: 0, width: 0, opacity: 0 }}>{focusedCellElement && focusedCellElement}</Box>

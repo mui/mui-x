@@ -40,6 +40,7 @@ interface GridGenericColumnHeaderItemProps
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
   disableHeaderSeparator?: boolean;
+  isNotInRow?: boolean;
 }
 
 const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
@@ -96,7 +97,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     if (hasFocus && !columnMenuState.open) {
       const focusableElement = headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || headerCellRef.current;
-      elementToFocus?.focus();
+      elementToFocus?.focus({ preventScroll: true });
       apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
     }
   }, [apiRef, hasFocus]);

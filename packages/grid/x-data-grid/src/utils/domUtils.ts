@@ -34,19 +34,18 @@ export function getGridColumnHeaderElement(root: Element, field: string) {
     `[role="columnheader"][data-field="${escapeOperandAttributeSelector(field)}"]`,
   );
 }
+function getGridRowElementSelector(id: GridRowId): string {
+  return `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`;
+}
 
 export function getGridRowElement(root: Element, id: GridRowId) {
-  return root.querySelector<HTMLDivElement>(
-    `.${gridClasses.row}[data-id="${escapeOperandAttributeSelector(String(id))}"]`,
-  );
+  return root.querySelector<HTMLDivElement>(getGridRowElementSelector(id));
 }
 
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
-  const row = getGridRowElement(root, id);
-  if (!row) {
-    return null;
-  }
-  return row.querySelector<HTMLDivElement>(
-    `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(field)}"]`,
-  );
+  const rowSelector = getGridRowElementSelector(id);
+  const cellSelector = `.${gridClasses.cell}[data-field="${escapeOperandAttributeSelector(
+    field,
+  )}"]`;
+  return root.querySelector<HTMLDivElement>(`${rowSelector} ${cellSelector}`);
 }
