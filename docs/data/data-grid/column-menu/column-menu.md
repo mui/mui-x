@@ -28,7 +28,7 @@ The `components` prop uses pascal case (`ColumnMenuFilterItem`), while `componen
 
 ### Adding a menu item
 
-To add a new menu item, pass it to the `components` prop.
+To add a new menu item, create a new item slot and pass it to the `components` prop. In the example below, the new slot is called `ColumnMenuUserItem` but you can choose any name and it'll be added to the menu automatically.
 You can also set the `displayOrder` (default `100`) or pass new props to the components using `componentsProps` prop.
 
 ```tsx
@@ -57,6 +57,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 ### Overriding default menu items
 
 Use the `components` prop to override default menu items.
+Check [this table](/x/react-data-grid/column-menu/#column-menu-components-and-their-configurations) to know the overridable slot name for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
