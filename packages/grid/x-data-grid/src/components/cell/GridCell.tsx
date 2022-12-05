@@ -211,7 +211,8 @@ function GridCell(props: GridCellProps) {
       if (isNotInRow) {
         return;
       }
-      if (hasFocus) {
+      const type = current.getRowNode(rowId)!.type;
+      if (hasFocus && type !== 'pinnedRow') {
         current.publishEvent('cellFocusUnmount', <GridCell {...props} isNotInRow />);
       }
     };
@@ -311,6 +312,7 @@ GridCell.propTypes = {
   hasFocus: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
+  isNotInRow: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,
