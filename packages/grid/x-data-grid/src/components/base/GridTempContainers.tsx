@@ -21,12 +21,12 @@ export function GridTempContainers() {
         const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
         if (cellElement) {
           setFocusedCellElement(null);
-        } else {
+        } else if (focusedCellElement === null) {
           setFocusedCellElement(params);
         }
       }
     },
-    [apiRef],
+    [apiRef, focusedCellElement],
   );
   const handleCellFocusOut = React.useCallback<GridEventListener<'cellFocusOut'>>(() => {
     setFocusedCellElement(null);
