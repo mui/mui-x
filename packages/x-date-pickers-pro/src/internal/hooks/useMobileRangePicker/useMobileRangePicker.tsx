@@ -10,6 +10,7 @@ import {
   PickersModalDialog,
   InferError,
   PickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerParams,
@@ -160,7 +161,7 @@ export const useMobileRangePicker = <
       ...componentsProps?.toolbar,
       currentlySelectingRangeEnd: currentDatePosition,
       setCurrentlySelectingRangeEnd: setCurrentDatePosition,
-    },
+    } as ExportedBaseToolbarProps,
   };
 
   const renderPicker = () => (

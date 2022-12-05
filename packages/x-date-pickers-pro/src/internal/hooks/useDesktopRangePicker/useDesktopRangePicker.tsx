@@ -12,6 +12,7 @@ import {
   PickersViewLayout,
   InferError,
   PickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -180,7 +181,7 @@ export const useDesktopRangePicker = <
       ...componentsProps?.toolbar,
       currentlySelectingRangeEnd: currentDatePosition,
       setCurrentlySelectingRangeEnd: setCurrentDatePosition,
-    },
+    } as ExportedBaseToolbarProps,
   };
 
   const renderPicker = () => (

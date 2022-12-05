@@ -8,6 +8,7 @@ import {
   PickersViewLayout,
   DIALOG_WIDTH,
   PickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseStaticRangePickerParams,
@@ -54,7 +55,7 @@ export const useStaticRangePicker = <
       ...componentsProps?.toolbar,
       currentlySelectingRangeEnd: currentDatePosition,
       setCurrentlySelectingRangeEnd: setCurrentDatePosition,
-    },
+    } as ExportedBaseToolbarProps,
   };
 
   const renderPicker = () => (

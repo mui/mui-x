@@ -43,7 +43,7 @@ export interface PickersViewLayoutSlotsComponentsProps
   /**
    * Props passed down to the toolbar component.
    */
-  toolbar?: ExportedBaseToolbarProps & Record<string, any>;
+  toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>
