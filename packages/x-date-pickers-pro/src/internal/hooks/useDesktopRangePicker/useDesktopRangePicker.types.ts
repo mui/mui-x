@@ -14,7 +14,7 @@ import {
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseDesktopRangePickerSlotsComponent
@@ -61,10 +61,7 @@ export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView,
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate>;
 }
 
-interface DesktopRangePickerAdditionalViewProps {
-  currentDatePosition: 'start' | 'end';
-  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
-}
+interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseDesktopRangePickerParams<
   TDate,

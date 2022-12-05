@@ -14,7 +14,7 @@ import {
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseMobileRangePickerSlotsComponent
@@ -61,10 +61,7 @@ export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, 
   componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate>;
 }
 
-interface MobileRangePickerAdditionalViewProps {
-  currentDatePosition: 'start' | 'end';
-  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
-}
+interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseMobileRangePickerParams<
   TDate,

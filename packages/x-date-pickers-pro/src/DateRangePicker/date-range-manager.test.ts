@@ -96,7 +96,7 @@ describe('date-range-manager', () => {
             utils: adapterToUse,
             range: range as DateRange<Date>,
             newDate,
-            currentlySelectingRangeEnd: selectingEnd,
+            rangePosition: selectingEnd,
             allowRangeFlip,
           }),
         ).to.deep.equal({
@@ -163,7 +163,7 @@ describe('date-range-manager', () => {
           utils: adapterToUse,
           range: range as DateRange<Date>,
           newDate,
-          currentlySelectingRangeEnd: selectingEnd,
+          rangePosition: selectingEnd,
         }),
       ).to.deep.equal(expectedRangePreview);
     });
