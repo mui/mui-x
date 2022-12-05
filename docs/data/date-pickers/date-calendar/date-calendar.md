@@ -76,9 +76,8 @@ The following demo shows how to add a badge on some day based on server side dat
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
 ## Localization
 
-Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
-See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
+You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).

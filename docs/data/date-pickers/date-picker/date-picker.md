@@ -30,6 +30,16 @@ The date picker is rendered as a modal dialog on mobile, and a textbox with a po
 
 {{"demo": "BasicDatePicker.js"}}
 
+## Component composition
+
+The Date Picker components are built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
+All the documented props of those two components can also be passed to the Date Picker components.
+
+Check-out their documentation page for more information:
+
+- [Date Field](/x/react-date-pickers/date-field/)
+- [Date Calendar](/x/react-date-pickers/date-calendar/)
+
 ## Uncontrolled vs. Controlled
 
 The component can be uncontrolled or controlled
@@ -91,19 +101,8 @@ Make sure to spread `inputProps` correctly to the custom input component.
 
 ## Validation
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
 
 ## Localization
 
-Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
-See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
-
-## View customization
-
-The Date Picker views are using the `DateCalendar` component.
-
-You can find its documentation in the [Date Calendar page](/x/react-date-pickers/date-calendar/#customization)
-
-## Dynamic data
-
-You can find the documentation in the [Date Calendar page](/x/react-date-pickers/date-calendar/#dynamic-data)
+You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
