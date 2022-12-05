@@ -163,6 +163,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     autoFocus,
     fixedWeekNumber,
     disableDragEditing,
+    displayWeekNumber,
     ...other
   } = props;
 
@@ -483,6 +484,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               componentsProps={componentsPropsForDayCalendar}
               autoFocus={autoFocus}
               fixedWeekNumber={fixedWeekNumber}
+              displayWeekNumber={displayWeekNumber}
             />
           </DateRangeCalendarMonthContainer>
         );
