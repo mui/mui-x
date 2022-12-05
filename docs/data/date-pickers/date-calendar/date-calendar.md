@@ -41,7 +41,7 @@ If you only need the `year` view or the `month` view, you can use the `YearCalen
 
 {{"demo": "YearMonthCalendar.js", "defaultCodeOpen": false}}
 
-## Customization
+## Day view customization
 
 ### Show additional days
 
