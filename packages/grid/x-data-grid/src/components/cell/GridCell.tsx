@@ -40,6 +40,7 @@ export interface GridCellProps<V = any, F = V> {
   tabIndex: 0 | -1;
   colSpan?: number;
   disableDragEvents?: boolean;
+  isNotInRow?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -108,6 +109,7 @@ function GridCell(props: GridCellProps) {
     row,
     colSpan,
     disableDragEvents,
+    isNotInRow,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -204,12 +206,16 @@ function GridCell(props: GridCellProps) {
 
   React.useEffect(() => {
     const current = apiRef.current;
+
     return () => {
+      if (isNotInRow) {
+        return;
+      }
       if (hasFocus) {
-        current.publishEvent('cellFocusUnmount', <GridCell {...props} />);
+        current.publishEvent('cellFocusUnmount', <GridCell {...props} isNotInRow />);
       }
     };
-  }, [hasFocus, props, apiRef]);
+  }, [hasFocus, props, apiRef, rowId, isNotInRow]);
 
   let handleFocus: any = other.onFocus;
 

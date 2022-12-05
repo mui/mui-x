@@ -6,8 +6,7 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { useGridApiEventHandler } from '../../hooks/utils/useGridApiEventHandler';
 
 // This container helps cell elements stay in the DOM if they are the active elements and
-// are not in the view range when virtualization is enabled.
-
+// If they have an event attached to them, that should be active even if using virtualization.
 export function GridTempContainers() {
   const apiRef = useGridPrivateApiContext();
   const [focusedCellElement, setFocusedCellElement] = React.useState<React.ReactElement | null>(
@@ -19,9 +18,9 @@ export function GridTempContainers() {
       const { cell } = apiRef.current.state.focus;
       if (cell) {
         const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
-        if (cellElement) {
+        if (cellElement && focusedCellElement !== null) {
           setFocusedCellElement(null);
-        } else if (focusedCellElement === null) {
+        } else if (focusedCellElement === null && cellElement === null) {
           setFocusedCellElement(params);
         }
       }
