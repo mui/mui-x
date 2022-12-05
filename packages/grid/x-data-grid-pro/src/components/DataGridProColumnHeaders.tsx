@@ -52,6 +52,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface GridColumnHeadersPinnedColumnHeadersProps {
   side: GridPinnedPosition;
+  showCellRightBorder: boolean;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -96,6 +97,11 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
       }),
   ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
+  ...(ownerState.side === GridPinnedPosition.right &&
+    ownerState.showCellRightBorder && {
+      borderLeftWidth: '1px',
+      borderLeftStyle: 'solid',
+    }),
 }));
 
 interface DataGridProColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -141,7 +147,11 @@ export const DataGridProColumnHeaders = React.forwardRef<
     minColumnIndex: leftPinnedColumns.length,
   });
 
-  const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
+  const ownerState = {
+    leftPinnedColumns,
+    rightPinnedColumns,
+    classes: rootProps.classes,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const leftRenderContext =
@@ -173,7 +183,10 @@ export const DataGridProColumnHeaders = React.forwardRef<
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
-          ownerState={{ side: GridPinnedPosition.left }}
+          ownerState={{
+            side: GridPinnedPosition.left,
+            showCellRightBorder: rootProps.showCellRightBorder,
+          }}
           {...pinnedColumnHeadersProps}
         >
           {getColumnGroupHeaders({
@@ -205,7 +218,10 @@ export const DataGridProColumnHeaders = React.forwardRef<
       </GridColumnHeadersInner>
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{ side: GridPinnedPosition.right }}
+          ownerState={{
+            side: GridPinnedPosition.right,
+            showCellRightBorder: rootProps.showCellRightBorder,
+          }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
           {...pinnedColumnHeadersProps}
