@@ -395,9 +395,10 @@ Component name changes are also reflected in `themeAugmentation`:
      </div>
    )
    <DatePicker
-     components={{
-       toolbar: CustomToolbarComponent
-     }}
+  -  ToolbarComponent={CustomToolbarComponent}
+  +  components={{
+  +    Toolbar: CustomToolbarComponent
+  +  }}
    />
   ```
 
@@ -413,9 +414,10 @@ Component name changes are also reflected in `themeAugmentation`:
      </div>
    )
    <DateRangePicker
-     components={{
-       toolbar: CustomToolbarComponent
-     }}
+  -  ToolbarComponent={CustomToolbarComponent}
+  +  components={{
+  +    Toolbar: CustomToolbarComponent
+  +  }}
    />
   ```
 
@@ -457,7 +459,7 @@ Component name changes are also reflected in `themeAugmentation`:
    )
    <DateTimePicker
      components={{
-       tabs: CustomTabsComponent
+       Tabs: CustomTabsComponent
      }}
    />
   ```
