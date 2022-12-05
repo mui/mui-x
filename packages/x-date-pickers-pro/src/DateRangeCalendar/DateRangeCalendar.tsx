@@ -147,8 +147,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     reduceAnimations,
     onMonthChange,
     defaultCalendarMonth,
-    currentDatePosition: currentDatePositionProp,
-    onCurrentDatePositionChange,
+    rangePosition: rangePositionProps,
+    onRangePositionChange,
     calendars,
     components,
     componentsProps,
@@ -173,16 +173,16 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     state: 'value',
   });
 
-  const [currentDatePosition, setCurrentDatePosition] = useControlled<DateRangePosition>({
-    controlled: currentDatePositionProp,
+  const [rangePosition, setRangePosition] = useControlled<DateRangePosition>({
+    controlled: rangePositionProps,
     default: 'start',
     name: 'DateRangeCalendar',
-    state: 'currentDatePosition',
+    state: 'rangePosition',
   });
 
   const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
-    if (currentDatePosition !== position) {
-      setCurrentDatePosition(position);
+    if (rangePosition !== position) {
+      setRangePosition(position);
     }
   });
 
@@ -196,14 +196,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         newDate,
         utils,
         range: value,
-        currentlySelectingRangeEnd: currentDatePosition,
+        rangePosition,
         allowRangeFlip,
       });
 
-      setCurrentDatePosition(nextSelection);
-      onCurrentDatePositionChange?.(nextSelection);
+      setRangePosition(nextSelection);
+      onRangePositionChange?.(nextSelection);
 
-      const isFullRangeSelected = currentDatePosition === 'end' && isRangeValid(utils, newRange);
+      const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
 
       setValue(newRange);
       onChange?.(newRange, isFullRangeSelected ? 'finish' : 'partial');
@@ -242,18 +242,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       utils,
       range: valueDayRange,
       newDate: rangeDragDay,
-      currentlySelectingRangeEnd: currentDatePosition,
+      rangePosition,
       allowRangeFlip: true,
     }).newRange;
     return newRange[0] !== null && newRange[1] !== null
       ? [utils.startOfDay(newRange[0]), utils.endOfDay(newRange[1])]
       : newRange;
-  }, [currentDatePosition, rangeDragDay, utils, valueDayRange]);
+  }, [rangePosition, rangeDragDay, utils, valueDayRange]);
 
   const wrappedShouldDisableDate =
     shouldDisableDate &&
-    ((dayToTest: TDate) =>
-      shouldDisableDate?.(dayToTest, draggingDatePosition || currentDatePosition));
+    ((dayToTest: TDate) => shouldDisableDate?.(dayToTest, draggingDatePosition || rangePosition));
 
   const {
     calendarState,
@@ -276,16 +275,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const prevValue = React.useRef<DateRange<TDate> | null>(null);
   React.useEffect(() => {
-    const date = currentDatePosition === 'start' ? value[0] : value[1];
+    const date = rangePosition === 'start' ? value[0] : value[1];
     if (!date || !utils.isValid(date)) {
       return;
     }
 
-    const prevDate =
-      currentDatePosition === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
+    const prevDate = rangePosition === 'start' ? prevValue.current?.[0] : prevValue.current?.[1];
     prevValue.current = value;
 
-    // The current date did not change, this call comes either from a `currentlySelectingRangeEnd` change or a change in the other date.
+    // The current date did not change, this call comes either from a `rangePosition` change or a change in the other date.
     // In both cases, we don't want to change the visible month(s).
     if (disableAutoMonthSwitching && prevDate && utils.isEqual(prevDate, date)) {
       return;
@@ -301,14 +299,14 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       requestedMonthNumber > currentMonthNumber + displayingMonthRange
     ) {
       const newMonth =
-        currentDatePosition === 'start'
+        rangePosition === 'start'
           ? date
           : // If need to focus end, scroll to the state when "end" is displaying in the last calendar
             utils.addMonths(date, -displayingMonthRange);
 
       changeMonth(newMonth);
     }
-  }, [currentDatePosition, value]); // eslint-disable-line
+  }, [rangePosition, value]); // eslint-disable-line
 
   const selectNextMonth = React.useCallback(() => {
     changeMonth(utils.getNextMonth(calendarState.currentMonth));
@@ -358,7 +356,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     utils,
     range: valueDayRange,
     newDate: rangePreviewDay,
-    currentlySelectingRangeEnd: currentDatePosition,
+    rangePosition,
   });
 
   const handlePreviewDayChange = (newPreviewRequest: TDate) => {
@@ -516,7 +514,6 @@ DateRangeCalendar.propTypes = {
    * @default {}
    */
   componentsProps: PropTypes.object,
-  currentDatePosition: PropTypes.oneOf(['end', 'start']),
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
@@ -594,7 +591,6 @@ DateRangeCalendar.propTypes = {
    * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
    */
   onChange: PropTypes.func,
-  onCurrentDatePositionChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -602,6 +598,8 @@ DateRangeCalendar.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
+  onRangePositionChange: PropTypes.func,
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   /**
    * Make picker read only.
    * @default false

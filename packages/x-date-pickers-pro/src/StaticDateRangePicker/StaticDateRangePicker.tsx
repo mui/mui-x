@@ -19,6 +19,7 @@ import {
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { RangePosition } from '../internal/models/range';
 
 const releaseInfo = getReleaseInfo();
 
@@ -70,9 +71,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     'MuiStaticDateRangePicker',
   );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const validationError = useDateRangeValidation(props);
 
@@ -93,8 +92,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   const DateInputProps = {
     ...inputProps,
     ...other,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     components,
     componentsProps,
@@ -114,8 +113,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         components={components}
         componentsProps={componentsProps}
         {...pickerProps}

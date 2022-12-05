@@ -13,7 +13,7 @@ import {
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDayProps } from '../DateRangePickerDay';
 
@@ -39,7 +39,8 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
-    DayRangeValidationProps<TDate> {
+    DayRangeValidationProps<TDate>,
+    Partial<RangePositionProps> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -105,8 +106,6 @@ export interface DateRangeCalendarProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  currentDatePosition?: DateRangePosition;
-  onCurrentDatePositionChange?: (newPosition: DateRangePosition) => void;
   /**
    * The number of calendars to render.
    * @default 2
@@ -136,6 +135,6 @@ export type ExportedDateRangeCalendarProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
-  | 'currentDatePosition'
-  | 'onCurrentDatePositionChange'
+  | 'rangePosition'
+  | 'onRangePositionChange'
 >;
