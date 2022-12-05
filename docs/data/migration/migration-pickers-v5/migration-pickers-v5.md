@@ -383,7 +383,41 @@ Component name changes are also reflected in `themeAugmentation`:
    />
   ```
 
-- The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`
+- The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`.
+
+  ```diff
+   const CustomToolbarComponent = props => (
+     <div>
+  -    <button onChange={() => props.onChange('day')}>Show day view</button>
+  +    <button onClick={() => props.onViewChange('day')}>Show day view</button>
+  -    <div>Current view: {props.openView}</div>
+  +    <div>Current view: {props.view}</div>
+     </div>
+   )
+   <DatePicker
+     components={{
+       toolbar: CustomToolbarComponent
+     }}
+   />
+  ```
+
+- The `currentlySelectingRangeEnd` / `setCurrentlySelectingRangeEnd` props on the Date Range Picker toolbar have been renamed to `rangePosition` / `onRangePositionChange`.
+
+  ```diff
+   const CustomToolbarComponent = props => (
+     <div>
+  -    <button onChange={() => props.setCurrentlySelectingRangeEnd('end')}>Edit end date</button>
+  +    <button onClick={() => props.onRangePositionChange('end')}>Edit end date</button>
+  -    <div>Is editing end date: {props.currentlySelectingRangeEnd === 'end'}</div>
+  +    <div>Is editing end date: {props.rangePosition === 'end'}</div>
+     </div>
+   )
+   <DateRangePicker
+     components={{
+       toolbar: CustomToolbarComponent
+     }}
+   />
+  ```
 
 ### Replace `tabs` props
 
