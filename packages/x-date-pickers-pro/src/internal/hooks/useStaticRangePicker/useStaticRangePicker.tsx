@@ -14,7 +14,7 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { RangePosition } from '../../models/range';
+import { DateRange, RangePosition } from '../../models/range';
 
 const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -50,7 +50,7 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps = {
+  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
