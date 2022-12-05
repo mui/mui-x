@@ -55,6 +55,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellFocusUnmount",
+    "description": "Fired when a focused cell unmount.",
+    "params": "React.ReactElement",
+    "event": "MuiEvent<{}>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
     "params": "GridCellParams",

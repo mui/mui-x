@@ -10,6 +10,7 @@ import {
   useGridApiEventHandler,
   GridRowId,
   GridOverlays,
+  GridTempContainers,
 } from '@mui/x-data-grid';
 import {
   GridVirtualScroller,
@@ -364,6 +365,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   return (
     <GridVirtualScroller {...getRootProps(other)}>
       <GridOverlays />
+      <GridTempContainers />
       {topPinnedRowsData.length > 0 ? (
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}

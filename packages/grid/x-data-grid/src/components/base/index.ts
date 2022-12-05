@@ -3,3 +3,4 @@ export * from './GridErrorHandler';
 export * from './GridFooterPlaceholder';
 export * from './GridHeaderPlaceholder';
 export * from './GridOverlays';
+export * from './GridTempContainers';

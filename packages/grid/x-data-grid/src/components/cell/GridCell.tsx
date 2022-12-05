@@ -202,6 +202,15 @@ function GridCell(props: GridCellProps) {
     }
   }, [hasFocus, cellMode, apiRef]);
 
+  React.useEffect(() => {
+    const current = apiRef.current;
+    return () => {
+      if (hasFocus) {
+        current.publishEvent('cellFocusUnmount', <GridCell {...props} />);
+      }
+    };
+  }, [hasFocus, props, apiRef]);
+
   let handleFocus: any = other.onFocus;
 
   if (

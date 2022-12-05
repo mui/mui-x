@@ -459,7 +459,10 @@ export interface GridEventLookup
    * Fired when a cell loses focus.
    */
   cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
-
+  /**
+   * Fired when a focused cell unmount.
+   */
+  cellFocusUnmount: { params: React.ReactElement };
   // Scroll
   /**
    * Fired during the scroll of the grid viewport.

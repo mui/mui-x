@@ -419,6 +419,7 @@
   { "name": "GridTabIndexState", "kind": "Interface" },
   { "name": "gridTabIndexStateSelector", "kind": "Variable" },
   { "name": "GridTableRowsIcon", "kind": "Variable" },
+  { "name": "GridTempContainers", "kind": "Function" },
   { "name": "GridToolbar", "kind": "Variable" },
   { "name": "GridToolbarColumnsButton", "kind": "Variable" },
   { "name": "GridToolbarContainer", "kind": "Variable" },
