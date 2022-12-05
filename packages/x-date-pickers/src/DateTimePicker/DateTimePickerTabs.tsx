@@ -19,8 +19,8 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (openView: DateOrTimeView): TabValue => {
-  if (['day', 'month', 'year'].includes(openView)) {
+const viewToTab = (view: DateOrTimeView): TabValue => {
+  if (['day', 'month', 'year'].includes(view)) {
     return 'date';
   }
 

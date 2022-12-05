@@ -140,6 +140,7 @@ StaticDateRangePicker.propTypes = {
    * @default 2
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
+  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */
@@ -305,11 +306,6 @@ StaticDateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Props to pass to keyboard adornment button.
    */

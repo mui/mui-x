@@ -53,7 +53,6 @@
     "onAccept": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
@@ -91,7 +90,11 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "StaticDateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
+  "styles": {
+    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
+    "globalClasses": {},
+    "name": "MuiStaticDateRangePicker"
+  },
   "spread": false,
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticDateRangePicker/StaticDateRangePicker.tsx",

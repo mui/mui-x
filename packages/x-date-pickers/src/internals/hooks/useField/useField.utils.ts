@@ -1,4 +1,4 @@
-import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
+import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 

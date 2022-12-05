@@ -1,5 +1,6 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
@@ -20,6 +21,12 @@
     "disablePast": { "type": { "name": "bool" } },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "focusedView": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      }
+    },
     "format": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
@@ -33,6 +40,7 @@
     "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
+    "onFocusedViewChange": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
@@ -77,6 +85,12 @@
       }
     },
     "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      }
+    },
     "views": {
       "type": {
         "name": "arrayOf",
@@ -101,7 +115,11 @@
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileNextDatePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileNextDatePicker" },
+  "styles": {
+    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
+    "globalClasses": {},
+    "name": "MuiMobileNextDatePicker"
+  },
   "filename": "/packages/x-date-pickers/src/MobileNextDatePicker/MobileNextDatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",

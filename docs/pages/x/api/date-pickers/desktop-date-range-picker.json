@@ -51,7 +51,6 @@
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
@@ -68,13 +67,7 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showToolbar": { "type": { "name": "bool" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
-    }
+    "showToolbar": { "type": { "name": "bool" } }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
@@ -100,7 +93,11 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "DesktopDateRangePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },
+  "styles": {
+    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
+    "globalClasses": {},
+    "name": "MuiDesktopDateRangePicker"
+  },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",

@@ -78,12 +78,6 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
-    },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -120,7 +114,11 @@
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DatePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
+  "styles": {
+    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
+    "globalClasses": {},
+    "name": "MuiDatePicker"
+  },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker\">Date Picker</a></li></ul>",

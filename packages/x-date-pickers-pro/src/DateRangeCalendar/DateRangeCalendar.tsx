@@ -434,7 +434,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             {calendars === 1 ? (
               <PickersCalendarHeader
                 views={['day']}
-                openView={'day'}
+                view={'day'}
                 currentMonth={calendarState.currentMonth}
                 onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
                 minDate={minDateWithDisabled}

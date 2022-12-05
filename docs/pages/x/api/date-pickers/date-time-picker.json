@@ -88,12 +88,6 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "sx": {
-      "type": {
-        "name": "union",
-        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
-      }
-    },
     "timeIcon": { "type": { "name": "node" } },
     "value": { "type": { "name": "any" } },
     "views": {
@@ -132,7 +126,11 @@
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DateTimePicker",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePicker" },
+  "styles": {
+    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
+    "globalClasses": {},
+    "name": "MuiDateTimePicker"
+  },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-time-picker\">Date Time Picker</a></li></ul>",

@@ -36,7 +36,7 @@ export interface BaseDatePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseDatePickerProps<TDate>
-  extends ExportedDateCalendarProps<TDate>,
+  extends Omit<ExportedDateCalendarProps<TDate>, 'value' | 'onChange' | 'defaultValue'>,
     BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {

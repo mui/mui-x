@@ -11,7 +11,7 @@ import {
   FieldSelectedSections,
   FieldBoundaries,
   FieldChangeHandlerContext,
-} from './useField.interfaces';
+} from './useField.types';
 import {
   addPositionPropertiesToSections,
   splitFormatIntoSections,

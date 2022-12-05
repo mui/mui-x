@@ -117,6 +117,7 @@ export type {
   UseStaticPickerSlotsComponentsProps,
 } from './hooks/useStaticPicker';
 export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
+export type { ExportedUseViewsOptions } from './hooks/useViews';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,

@@ -76,7 +76,11 @@ MobileNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Set to `true` if focus should be moved to the current view.
+   */
   autoFocus: PropTypes.bool,
+  classes: PropTypes.object,
   /**
    * Class name applied to the root element.
    */
@@ -148,6 +152,10 @@ MobileNextDatePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -212,6 +220,13 @@ MobileNextDatePicker.propTypes = {
    */
   onError: PropTypes.func,
   /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
+  /**
    * Callback firing on month change @DateIOType.
    * @template TDate
    * @param {TDate} month The new month.
@@ -230,8 +245,8 @@ MobileNextDatePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -246,7 +261,8 @@ MobileNextDatePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * Initially opened view.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -327,7 +343,11 @@ MobileNextDatePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * Controlled visible view.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;

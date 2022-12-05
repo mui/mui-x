@@ -33,6 +33,9 @@ NextDateRangePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Set to `true` if focus should be moved to the current view.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render on **desktop**.
@@ -126,6 +129,10 @@ NextDateRangePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
+   * Controlled focused view.
+   */
+  focusedView: PropTypes.oneOf(['day']),
+  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -176,6 +183,13 @@ NextDateRangePicker.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
+  /**
+   * Callback fired on focused view change.
+   * @template TView
+   * @param {TView} view The new view to focus or not.
+   * @param {boolean} hasFocus `true` if the view should be focused.
+   */
+  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate
@@ -258,6 +272,10 @@ NextDateRangePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * Controlled visible view.
+   */
+  view: PropTypes.oneOf(['day']),
 } as any;
 
 export { NextDateRangePicker };

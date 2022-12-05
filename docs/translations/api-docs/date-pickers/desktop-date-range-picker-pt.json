@@ -33,7 +33,6 @@
     "onError": "Callback that fired when input value or new <code>value</code> prop validation returns <strong>new</strong> validation error (or value is valid after error). In case of validation error detected <code>reason</code> prop return non-null value and <code>TextField</code> must be displayed in <code>error</code> state. This can be used to render appropriate form error.<br><a href=\"https://next.material-ui-pickers.dev/guides/forms\">Read the guide</a> about form integration and error displaying.<br><br><strong>Signature:</strong><br><code>function(reason: TError, value: TValue) =&gt; void</code><br><em>reason:</em> The reason why the current value is not valid.<br><em>value:</em> The invalid value.",
     "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
     "onOpen": "Callback fired when the popup requests to be opened. Use in controlled mode (see open).",
-    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: DateView) =&gt; void</code><br><em>view:</em> The new view.",
     "open": "Control the popup or dialog open state.",
     "OpenPickerButtonProps": "Props to pass to keyboard adornment button.",
     "readOnly": "Make picker read only.",
@@ -46,10 +45,24 @@
     "shouldDisableYear": "Disable specific year.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): If <code>true</code> the year will be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
-    "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The value of the picker."
   },
-  "classDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "labelContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the label container element"
+    },
+    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
+    "switchViewButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the switch view button element"
+    },
+    "switchViewIcon": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the switch view icon element"
+    }
+  },
   "slotDescriptions": {
     "Toolbar": "Custom component for the toolbar rendered above the views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
