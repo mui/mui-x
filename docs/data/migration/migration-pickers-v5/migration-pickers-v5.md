@@ -157,14 +157,39 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 
 ### Replace the `renderDay` prop
 
-The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
+- The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
 
-```diff
- <DatePicker
--  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
-+  components={{ Day: CustomDay }}
- />
-```
+  ```diff
+   <DatePicker
+  -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
+  +  components={{ Day: CustomDay }}
+   />
+  ```
+
+- The `selectedDays` prop have been removed from the `Day` component.
+  If you need to access it, you can control the value and pass it to the slot using `componentsProps`:
+
+  ```tsx
+  function CustomDay({ selectedDay, ...other }) {
+    console.log(selectedDay);
+    return <PickersDay {...other} />;
+  }
+
+  function App() {
+    const [value, setValue] = React.useState(null);
+
+    return (
+      <DatePicker
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        components={{ Day: CustomDay }}
+        componentsProps={{
+          day: { selectedDay: value },
+        }}
+      />
+    );
+  }
+  ```
 
 ### Rename the localization props
 
