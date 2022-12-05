@@ -242,11 +242,12 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       if (isNotInRow) {
         return;
       }
-      if (hasFocus) {
+      const isvisible = current.getVisibleColumns().some((col) => col.field === column.field);
+      if (hasFocus && isvisible) {
         current.publishEvent('cellFocusUnmount', <GridColumnHeaderItem {...props} isNotInRow />);
       }
     };
-  }, [hasFocus, props, apiRef, isNotInRow]);
+  }, [hasFocus, props, apiRef, isNotInRow, column]);
 
   const headerClassName =
     typeof column.headerClassName === 'function'
@@ -301,6 +302,7 @@ GridColumnHeaderItem.propTypes = {
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
   isLastColumn: PropTypes.bool.isRequired,
+  isNotInRow: PropTypes.bool,
   isResizing: PropTypes.bool.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),
