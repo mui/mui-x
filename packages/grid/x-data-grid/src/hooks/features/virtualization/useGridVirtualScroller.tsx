@@ -323,7 +323,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
     apiRef.current.publishEvent('scrollPositionChange', params);
-  }, [apiRef, computeRenderContext, containerDimensions, updateRenderContext]);
+  }, [apiRef, computeRenderContext, containerDimensions.width, updateRenderContext]);
 
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
