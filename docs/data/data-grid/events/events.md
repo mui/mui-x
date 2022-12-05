@@ -1,5 +1,5 @@
 ---
-title: Data Grid - Events
+title: DataGrid - Events
 ---
 
 # Data grid - Events
