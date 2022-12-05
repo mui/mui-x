@@ -440,7 +440,7 @@ describe('<DateCalendar />', () => {
     });
   });
 
-  describe('Performances', () => {
+  describe('Performance', () => {
     it('should only render newly selected day when selecting a day without a previously selected day', () => {
       const RenderCount = spy((props) => <PickersDay {...props} />);
 

@@ -84,13 +84,6 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,
   [`&.${dateRangeCalendarClasses.dayDragging}`]: {
-    [`& .${dayClasses.dayOutsideRangeInterval}`]: {
-      '@media (pointer: fine)': {
-        '&:hover': {
-          border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
-        },
-      },
-    },
     [`& .${dayClasses.day}`]: {
       cursor: 'grabbing',
     },
@@ -99,6 +92,13 @@ const DayCalendarForRange = styled(DayCalendar)(({ theme }) => ({
         // we can't override `PickersDay` background color here, because it's styles take precedence
         opacity: 0.6,
       },
+  },
+  [`&:not(.${dateRangeCalendarClasses.dayDragging}) .${dayClasses.dayOutsideRangeInterval}`]: {
+    '@media (pointer: fine)': {
+      '&:hover': {
+        border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
+      },
+    },
   },
 })) as typeof DayCalendar;
 

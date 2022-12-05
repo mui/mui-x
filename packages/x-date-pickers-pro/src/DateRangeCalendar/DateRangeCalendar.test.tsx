@@ -573,7 +573,7 @@ describe('<DateRangeCalendar />', () => {
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
   });
 
-  describe('Performances', () => {
+  describe('Performance', () => {
     it('should only render the new start day when selecting a start day without a previously selected start day', () => {
       const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
 
