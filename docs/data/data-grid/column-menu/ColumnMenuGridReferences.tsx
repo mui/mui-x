@@ -93,7 +93,7 @@ const allRows = [
     slot: 'ColumnMenuSortItem',
     defaultComponent: 'GridColumnMenuSortItem',
     design: 'default',
-    displayOrder: 0,
+    displayOrder: 10,
     plan: 'Community',
   },
   {
@@ -101,7 +101,7 @@ const allRows = [
     slot: 'ColumnMenuSortItem',
     defaultComponent: 'GridColumnMenuSortItemSimple',
     design: 'simple',
-    displayOrder: 0,
+    displayOrder: 10,
     plan: 'Community',
   },
   {
@@ -109,7 +109,7 @@ const allRows = [
     slot: 'ColumnMenuFilterItem',
     defaultComponent: 'GridColumnMenuFilterItem',
     design: 'default',
-    displayOrder: 10,
+    displayOrder: 20,
     plan: 'Community',
   },
   {
@@ -117,7 +117,7 @@ const allRows = [
     slot: 'ColumnMenuFilterItem',
     defaultComponent: 'GridColumnMenuFilterItemSimple',
     design: 'simple',
-    displayOrder: 10,
+    displayOrder: 20,
     plan: 'Community',
   },
   {
@@ -125,7 +125,7 @@ const allRows = [
     slot: 'ColumnMenuHideItem',
     defaultComponent: 'GridColumnMenuHideItem',
     design: 'default',
-    displayOrder: 20,
+    displayOrder: 30,
     plan: 'Community',
   },
   {
@@ -133,7 +133,7 @@ const allRows = [
     slot: 'ColumnMenuHideItem',
     defaultComponent: 'GridColumnMenuHideItemSimple',
     design: 'simple',
-    displayOrder: 20,
+    displayOrder: 30,
     plan: 'Community',
   },
   {
@@ -141,7 +141,7 @@ const allRows = [
     slot: 'ColumnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItem',
     design: 'default',
-    displayOrder: 30,
+    displayOrder: 40,
     plan: 'Community',
   },
   {
@@ -149,7 +149,7 @@ const allRows = [
     slot: 'ColumnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItemSimple',
     design: 'simple',
-    displayOrder: 30,
+    displayOrder: 40,
     plan: 'Community',
   },
   {
@@ -157,7 +157,7 @@ const allRows = [
     slot: 'ColumnMenuPinningItem',
     defaultComponent: 'GridColumnMenuPinningItem',
     design: 'default',
-    displayOrder: 5,
+    displayOrder: 15,
     plan: 'Pro',
   },
   {
@@ -165,7 +165,7 @@ const allRows = [
     slot: 'ColumnMenuPinningItem',
     defaultComponent: 'GridColumnMenuPinningItemSimple',
     design: 'simple',
-    displayOrder: 35,
+    displayOrder: 45,
     plan: 'Pro',
   },
   {
@@ -173,7 +173,7 @@ const allRows = [
     slot: 'ColumnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItem',
     design: 'default',
-    displayOrder: 17,
+    displayOrder: 27,
     plan: 'Premium',
   },
   {
@@ -181,7 +181,7 @@ const allRows = [
     slot: 'ColumnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItemSimple',
     design: 'simple',
-    displayOrder: 37,
+    displayOrder: 47,
     plan: 'Premium',
   },
   {
@@ -189,7 +189,7 @@ const allRows = [
     slot: 'ColumnMenuGroupingItem',
     defaultComponent: 'GridColumnMenuRowGroupItem,GridColumnMenuRowUngroupItem',
     design: 'default',
-    displayOrder: 13,
+    displayOrder: 23,
     plan: 'Premium',
   },
   {
@@ -198,7 +198,7 @@ const allRows = [
     defaultComponent:
       'GridColumnMenuRowGroupItemSimple,GridColumnMenuRowUngroupItemSimple',
     design: 'simple',
-    displayOrder: 33,
+    displayOrder: 43,
     plan: 'Premium',
   },
 ];

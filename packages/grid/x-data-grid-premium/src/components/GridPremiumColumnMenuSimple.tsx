@@ -51,8 +51,8 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PREMIUM = {
 
 export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS_PREMIUM = {
   ...GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
-  columnMenuAggregationItem: { displayOrder: 37 },
-  columnMenuGroupingItem: { displayOrder: 33 },
+  columnMenuAggregationItem: { displayOrder: 47 },
+  columnMenuGroupingItem: { displayOrder: 43 },
 };
 
 const GridPremiumColumnMenuSimple = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(

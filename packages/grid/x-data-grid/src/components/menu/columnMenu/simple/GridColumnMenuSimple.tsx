@@ -17,10 +17,10 @@ export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS = {
 };
 
 export const GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS = {
-  columnMenuSortItem: { displayOrder: 0 },
-  columnMenuFilterItem: { displayOrder: 10 },
-  columnMenuHideItem: { displayOrder: 20 },
-  columnMenuColumnsItem: { displayOrder: 30 },
+  columnMenuSortItem: { displayOrder: 10 },
+  columnMenuFilterItem: { displayOrder: 20 },
+  columnMenuHideItem: { displayOrder: 30 },
+  columnMenuColumnsItem: { displayOrder: 40 },
 };
 
 const GridGenericColumnMenuSimple = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
