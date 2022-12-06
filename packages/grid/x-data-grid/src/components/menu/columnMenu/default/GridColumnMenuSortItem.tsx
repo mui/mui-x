@@ -21,6 +21,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
+  const sortingOrder: GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
 
   const sortDirection = React.useMemo(() => {
     if (!colDef) {
@@ -35,10 +36,12 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
       const direction = event.currentTarget.getAttribute('data-value') || null;
       apiRef.current.sortColumn(
         colDef!,
-        (direction === sortDirection ? null : direction) as GridSortDirection,
+        (direction === sortDirection && sortingOrder.length > 2
+          ? null
+          : direction) as GridSortDirection,
       );
     },
-    [apiRef, colDef, sortDirection],
+    [apiRef, colDef, sortDirection, sortingOrder.length],
   );
 
   if (!colDef || !colDef.sortable) {
@@ -51,22 +54,26 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
         Sort by
       </Typography>
       <Stack direction="row">
-        <StyledButton
-          onClick={onSortMenuItemClick}
-          data-value="asc"
-          startIcon={<rootProps.components.ColumnMenuSortAscendingIcon />}
-          color={sortDirection === 'asc' ? 'primary' : 'inherit'}
-        >
-          {apiRef.current.getLocaleText('columnMenuSortAscAbbrev')}
-        </StyledButton>
-        <StyledButton
-          onClick={onSortMenuItemClick}
-          data-value="desc"
-          startIcon={<rootProps.components.ColumnMenuSortDescendingIcon />}
-          color={sortDirection === 'desc' ? 'primary' : 'inherit'}
-        >
-          {apiRef.current.getLocaleText('columnMenuSortDescAbbrev')}
-        </StyledButton>
+        {sortingOrder.includes('asc') ? (
+          <StyledButton
+            onClick={onSortMenuItemClick}
+            data-value="asc"
+            startIcon={<rootProps.components.ColumnMenuSortAscendingIcon />}
+            color={sortDirection === 'asc' ? 'primary' : 'inherit'}
+          >
+            {apiRef.current.getLocaleText('columnMenuSortAscAbbrev')}
+          </StyledButton>
+        ) : null}
+        {sortingOrder.includes('desc') ? (
+          <StyledButton
+            onClick={onSortMenuItemClick}
+            data-value="desc"
+            startIcon={<rootProps.components.ColumnMenuSortDescendingIcon />}
+            color={sortDirection === 'desc' ? 'primary' : 'inherit'}
+          >
+            {apiRef.current.getLocaleText('columnMenuSortDescAbbrev')}
+          </StyledButton>
+        ) : null}
       </Stack>
     </React.Fragment>
   );

@@ -122,9 +122,15 @@ export const useGridSorting = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuSortItem'];
+      const sortingOrder = colDef.sortingOrder || props.sortingOrder;
+
+      if (sortingOrder.some((item) => !!item)) {
+        return [...columnMenuItems, 'ColumnMenuSortItem'];
+      }
+
+      return columnMenuItems;
     },
-    [],
+    [props.sortingOrder],
   );
 
   /**
