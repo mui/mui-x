@@ -48,6 +48,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isDragging && 'columnHeader--moving',
       showRightBorder && 'withBorder',
       showColumnBorder && 'columnHeader--showColumnBorder',
+      'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],

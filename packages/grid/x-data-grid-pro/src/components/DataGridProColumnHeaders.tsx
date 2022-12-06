@@ -44,6 +44,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     rightPinnedColumns: [
       'pinnedColumnHeaders',
       rightPinnedColumns && rightPinnedColumns.length > 0 && `pinnedColumnHeaders--right`,
+      'withBorderColor',
     ],
   };
 

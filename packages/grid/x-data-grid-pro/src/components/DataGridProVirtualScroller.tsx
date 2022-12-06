@@ -72,11 +72,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     leftPinnedColumns: ['pinnedColumns', 'pinnedColumns--left'],
-    rightPinnedColumns: [
-      'pinnedColumns',
-      'pinnedColumns--right',
-      showCellRightBorder && 'withBorder',
-    ],
+    rightPinnedColumns: ['pinnedColumns', 'pinnedColumns--right', 'withBorderColor'],
     topPinnedRows: ['pinnedRows', 'pinnedRows--top'],
     bottomPinnedRows: ['pinnedRows', 'pinnedRows--bottom'],
     pinnedRowsRenderZone: ['pinnedRowsRenderZone'],

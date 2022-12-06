@@ -1,7 +1,16 @@
 import { CSSInterpolation } from '@mui/system';
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
-import { getBorderColor } from '../../utils/styleUtils';
+
+function getBorderColor(theme: Theme) {
+  if (theme.vars) {
+    return theme.vars.palette.TableCell.border;
+  }
+  if (theme.palette.mode === 'light') {
+    return lighten(alpha(theme.palette.divider, 1), 0.88);
+  }
+  return darken(alpha(theme.palette.divider, 1), 0.68);
+}
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -63,7 +72,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
     { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
-    { [`& .${gridClasses.withBorder}`]: styles.withBorder },
+    { [`& .${gridClasses.withBorderColor}`]: styles.withBorderColor },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${gridClasses.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${gridClasses.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
@@ -80,7 +89,9 @@ export const GridRootStyles = styled('div', {
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
-    border: `1px solid ${borderColor}`,
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor,
     borderRadius: theme.shape.borderRadius,
     color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
@@ -347,7 +358,7 @@ export const GridRootStyles = styled('div', {
       padding: 0,
       alignItems: 'stretch',
     },
-    [`& .${gridClasses.withBorder}`]: {
+    [`.${gridClasses.withBorderColor}`]: {
       borderColor,
     },
     [`& .${gridClasses['cell--withRightBorder']}`]: {

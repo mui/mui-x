@@ -6,7 +6,6 @@ import { styled, SxProps, Theme } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getBorderColor } from '../../utils/styleUtils';
 
 export type GridFooterContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
@@ -18,7 +17,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['footerContainer'],
+    root: ['footerContainer', 'withBorderColor'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -28,15 +27,13 @@ const GridFooterContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterContainer',
   overridesResolver: (props, styles) => styles.footerContainer,
-})(({ theme }) => {
-  const borderColor = getBorderColor(theme);
-
+})(() => {
   return {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     minHeight: 52, // Match TablePagination min height
-    borderTop: `1px solid ${borderColor}`,
+    borderTop: '1px solid',
   };
 });
 

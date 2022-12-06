@@ -78,6 +78,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isEditable && 'cell--editable',
       showRightBorder && 'withBorder',
       showRightBorder && 'cell--withRightBorder',
+      'withBorderColor',
     ],
     content: ['cellContent'],
   };

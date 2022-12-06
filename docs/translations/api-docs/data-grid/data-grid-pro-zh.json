@@ -612,10 +612,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
-    "withBorder": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.\nSets border color only.",
-      "nodeName": "both the cell and the column header",
-      "conditions": "<code>showColumnRightBorder={true}</code>"
+    "withBorderColor": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.\nSets border color only.",
+      "nodeName": "cells",
+      "conditions": "column header and other elements that have border"
     },
     "cell--withRightBorder": {
       "description": "Styles applied the cell if `showColumnRightBorder={true}`."

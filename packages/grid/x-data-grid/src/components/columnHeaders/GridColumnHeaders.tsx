@@ -5,7 +5,6 @@ import { styled, SxProps, Theme } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { getBorderColor } from '../../utils/styleUtils';
 
 type OwnerState = {
   classes?: DataGridProcessedProps['classes'];
@@ -15,7 +14,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['columnHeaders'],
+    root: ['columnHeaders', 'withBorderColor'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -26,8 +25,6 @@ const GridColumnHeadersRoot = styled('div', {
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
 })(({ theme }) => {
-  const borderColor = getBorderColor(theme);
-
   return {
     position: 'absolute',
     top: 0,
@@ -36,7 +33,7 @@ const GridColumnHeadersRoot = styled('div', {
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
-    borderBottom: `1px solid ${borderColor}`,
+    borderBottom: '1px solid',
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
   };

@@ -441,7 +441,7 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder",
+      "withBorderColor",
       "cell--withRightBorder",
       "columnHeader--withRightBorder",
       "treeDataGroupingCell",

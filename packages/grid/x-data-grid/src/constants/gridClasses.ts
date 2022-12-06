@@ -462,10 +462,10 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
-   * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   * Styles applied to cells, column header and other elements that have border.
    * Sets border color only.
    */
-  withBorder: string;
+  withBorderColor: string;
   /**
    * Styles applied the cell if `showColumnRightBorder={true}`.
    */
@@ -626,7 +626,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
-  'withBorder',
+  'withBorderColor',
   'cell--withRightBorder',
   'columnHeader--withRightBorder',
   'treeDataGroupingCell',
