@@ -405,6 +405,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     prevOpenViewRef.current = view;
   }, [focusedView, setFocusedView, view]);
 
+  const selectedDays = React.useMemo(() => [value], [value]);
+
   return (
     <DateCalendarRoot
       ref={ref}
@@ -471,7 +473,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}
-              selectedDays={[value]}
+              selectedDays={selectedDays}
               onSelectedDaysChange={handleSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}

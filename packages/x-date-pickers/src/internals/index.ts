@@ -174,7 +174,5 @@ export type {
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
-export { areDayPropsEqual } from '../PickersDay/PickersDay';
-
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
