@@ -54,6 +54,7 @@ function SortGridMenuItems(props: GridFilterItemProps) {
     <React.Fragment>
       {sortingOrder.map((direction) => (
         <MenuItem
+          key={direction}
           onClick={onSortMenuItemClick}
           data-value={direction}
           disabled={sortDirection === direction}
