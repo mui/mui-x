@@ -11,7 +11,7 @@ import {
   UsePickerViewsResponse,
   UsePickerViewsBaseProps,
 } from './usePickerViews';
-import { UsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout';
+import { UsePickerLayoutPropsProps, UsePickerLayoutPropsResponse } from './usePickerLayoutProps';
 
 /**
  * Props common to all picker headless implementations.
@@ -19,12 +19,12 @@ import { UsePickerLayoutProps, UsePickerLayoutResponse } from './usePickerLayout
 export interface UsePickerBaseProps<TValue, TView extends DateOrTimeView, TError>
   extends UsePickerValueBaseProps<TValue, TError>,
     UsePickerViewsBaseProps<TView>,
-    UsePickerLayoutProps {}
+    UsePickerLayoutPropsProps {}
 
 export interface UsePickerProps<TValue, TView extends DateOrTimeView, TError>
   extends UsePickerValueProps<TValue, TError>,
     UsePickerViewsProps<TView>,
-    UsePickerLayoutProps {}
+    UsePickerLayoutPropsProps {}
 
 export interface UsePickerParams<
   TValue,
@@ -46,4 +46,4 @@ export interface UsePickerParams<
 export interface UsePickerResponse<TValue, TView extends DateOrTimeView, TError>
   extends Omit<UsePickerValueResponse<TValue, TError>, 'viewProps' | 'layoutProps'>,
     Omit<UsePickerViewsResponse<TView>, 'layoutProps'>,
-    UsePickerLayoutResponse<TValue, TView> {}
+    UsePickerLayoutPropsResponse<TValue, TView> {}

@@ -5,7 +5,7 @@ import { PickersActionBarProps } from '../PickersActionBar';
 import { DateOrTimeView } from '../internals/models/views';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { UsePickerLayoutResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayout';
+import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersViewLayoutClasses } from './pickersViewLayoutClasses';
 
 export interface ExportedPickersViewLayoutSlotsComponent {
@@ -62,7 +62,7 @@ interface PickersViewLayoutSlotsComponentsProps
 }
 
 export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>
-  extends UsePickerLayoutResponseLayoutProps<TValue, TView> {
+  extends UsePickerLayoutPropsResponseLayoutProps<TValue, TView> {
   className?: string;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;

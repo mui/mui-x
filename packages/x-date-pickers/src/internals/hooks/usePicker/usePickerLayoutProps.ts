@@ -8,7 +8,7 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
  * Props used to create the layout of the views.
  * Those props are exposed on all the pickers.
  */
-export interface UsePickerLayoutProps {
+export interface UsePickerLayoutPropsProps {
   disabled?: boolean;
   readOnly?: boolean;
   showToolbar?: boolean;
@@ -18,20 +18,20 @@ export interface UsePickerLayoutProps {
   orientation?: 'portrait' | 'landscape';
 }
 
-export interface UsePickerLayoutResponseLayoutProps<TValue, TView extends DateOrTimeView>
+export interface UsePickerLayoutPropsResponseLayoutProps<TValue, TView extends DateOrTimeView>
   extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
-    UsePickerLayoutProps {
+    UsePickerLayoutPropsProps {
   isLandscape: boolean;
   wrapperVariant: WrapperVariant;
 }
 
-export interface UsePickerLayoutResponse<TValue, TView extends DateOrTimeView> {
-  layoutProps: UsePickerLayoutResponseLayoutProps<TValue, TView>;
+export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeView> {
+  layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView>;
 }
 
-export interface UsePickerLayoutParams<TValue, TView extends DateOrTimeView> {
-  props: UsePickerLayoutProps;
+export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView> {
+  props: UsePickerLayoutPropsProps;
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
@@ -40,16 +40,16 @@ export interface UsePickerLayoutParams<TValue, TView extends DateOrTimeView> {
 /**
  * Prepare the props for the view layout (managed by `PickersViewLayout`)
  */
-export const usePickerLayout = <TValue, TView extends DateOrTimeView>({
+export const usePickerLayoutProps = <TValue, TView extends DateOrTimeView>({
   props,
   propsFromPickerValue,
   propsFromPickerViews,
   wrapperVariant,
-}: UsePickerLayoutParams<TValue, TView>): UsePickerLayoutResponse<TValue, TView> => {
+}: UsePickerLayoutPropsParams<TValue, TView>): UsePickerLayoutPropsResponse<TValue, TView> => {
   const { orientation } = props;
   const isLandscape = useIsLandscape(propsFromPickerViews.views, orientation);
 
-  const layoutProps: UsePickerLayoutResponseLayoutProps<TValue, TView> = {
+  const layoutProps: UsePickerLayoutPropsResponseLayoutProps<TValue, TView> = {
     ...propsFromPickerViews,
     ...propsFromPickerValue,
     isLandscape,

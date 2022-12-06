@@ -200,7 +200,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 }
 
 /**
- * Props passed to `usePickerLayout`.
+ * Props passed to `usePickerLayoutProps`.
  */
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;

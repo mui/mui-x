@@ -2,7 +2,7 @@ import { DateOrTimeView } from '../../models';
 import { UsePickerParams, UsePickerProps, UsePickerResponse } from './usePicker.types';
 import { usePickerValue } from './usePickerValue';
 import { usePickerViews } from './usePickerViews';
-import { usePickerLayout } from './usePickerLayout';
+import { usePickerLayoutProps } from './usePickerLayoutProps';
 import { InferError } from '../validation/useValidation';
 
 export const usePicker = <
@@ -40,7 +40,7 @@ export const usePicker = <
     propsFromPickerValue: pickerValueResponse.viewProps,
   });
 
-  const pickerLayoutResponse = usePickerLayout({
+  const pickerLayoutResponse = usePickerLayoutProps({
     props,
     wrapperVariant,
     propsFromPickerValue: pickerValueResponse.layoutProps,
