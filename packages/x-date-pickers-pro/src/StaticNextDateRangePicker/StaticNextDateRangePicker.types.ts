@@ -1,9 +1,5 @@
-import {
-  StaticOnlyPickerProps,
-  UseStaticPickerSlotsComponent,
-  UseStaticPickerSlotsComponentsProps,
-  MakeOptional,
-} from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-date-pickers/internals'
+import { StaticRangeOnlyPickerProps, UseStaticRangePickerSlotsComponent, UseStaticRangePickerSlotsComponentsProps} from "../internal/hooks/useStaticRangePicker";
 import {
   BaseNextDateRangePickerProps,
   BaseNextDateRangePickerSlotsComponent,
@@ -12,15 +8,15 @@ import {
 
 export interface StaticNextDateRangePickerSlotsComponent<TDate>
   extends BaseNextDateRangePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent {}
+      UseStaticRangePickerSlotsComponent {}
 
 export interface StaticNextDateRangePickerSlotsComponentsProps<TDate>
   extends BaseNextDateRangePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps<TDate, 'day'> {}
+    UseStaticRangePickerSlotsComponentsProps<TDate, 'day'> {}
 
 export interface StaticNextDateRangePickerProps<TDate>
   extends BaseNextDateRangePickerProps<TDate>,
-    MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
+    MakeOptional<StaticRangeOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overrideable components.
    * @default {}
