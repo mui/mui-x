@@ -182,6 +182,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     autoFocus,
     fixedWeekNumber,
     disableDragEditing,
+    displayWeekNumber,
     ...other
   } = props;
 
@@ -277,8 +278,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       return undefined;
     }
 
-    return (dayToTest: TDate) => shouldDisableDate(dayToTest, draggingDatePosition || rangePosition);
-  }, [shouldDisableDate, currentDatePosition, draggingDatePosition]);
+    return (dayToTest: TDate) =>
+      shouldDisableDate(dayToTest, draggingDatePosition || rangePosition);
+  }, [shouldDisableDate, rangePosition, draggingDatePosition]);
 
   const {
     calendarState,
@@ -521,6 +523,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             componentsProps={componentsPropsForDayCalendar}
             autoFocus={autoFocus}
             fixedWeekNumber={fixedWeekNumber}
+            displayWeekNumber={displayWeekNumber}
           />
         </DateRangeCalendarMonthContainer>
       ))}
