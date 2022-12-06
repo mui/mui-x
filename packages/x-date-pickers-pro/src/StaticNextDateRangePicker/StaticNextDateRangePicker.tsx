@@ -195,6 +195,8 @@ StaticNextDateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
+  onRangePositionChange: PropTypes.func,
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.

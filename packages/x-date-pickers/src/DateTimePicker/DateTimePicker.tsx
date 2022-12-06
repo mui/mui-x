@@ -398,6 +398,11 @@ DateTimePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * Time tab icon.
    */

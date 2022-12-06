@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
@@ -39,6 +40,7 @@ export interface MobileDatePickerProps<TDate>
    * @default {}
    */
   componentsProps?: MobileDatePickerSlotsComponentsProps<TDate>;
+  sx?: SxProps;
 }
 
 type MobileDatePickerComponent = (<TDate>(
@@ -369,6 +371,11 @@ MobileDatePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The value of the picker.
    */

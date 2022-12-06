@@ -202,6 +202,7 @@ NextDateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onOpen: PropTypes.func,
+  onRangePositionChange: PropTypes.func,
   /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
@@ -212,6 +213,7 @@ NextDateRangePicker.propTypes = {
    * @default false
    */
   open: PropTypes.bool,
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.

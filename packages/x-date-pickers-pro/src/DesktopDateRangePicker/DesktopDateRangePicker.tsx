@@ -21,6 +21,7 @@ import {
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { SxProps } from '@mui/system';
 
 const releaseInfo = getReleaseInfo();
 
@@ -48,6 +49,7 @@ export interface DesktopDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
+  sx?: SxProps;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -385,6 +387,11 @@ DesktopDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The value of the picker.
    */

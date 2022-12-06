@@ -536,6 +536,9 @@ DateRangeCalendar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Set to `true` if focus should be moved to the current view.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render.

@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "autoFocus": "Set to <code>true</code> if focus should be moved to the current view.",
     "calendars": "The number of calendars to render.",
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
