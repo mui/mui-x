@@ -8,7 +8,7 @@ import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantC
 import { PickersViewLayout } from '../../../PickersViewLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 
-const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersViewLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
@@ -42,17 +42,20 @@ export const useStaticPicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
+  const Layout = components?.Layout ?? PickerStaticLayout;
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
+          {...componentsProps?.layout}
           components={components}
           componentsProps={componentsProps}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

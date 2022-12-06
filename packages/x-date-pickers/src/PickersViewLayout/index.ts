@@ -1,4 +1,8 @@
-export { PickersViewLayout } from './PickersViewLayout';
+export {
+  PickersViewLayout,
+  PickersViewLayoutRoot,
+  PickersViewLayoutContentWrapper,
+} from './PickersViewLayout';
 export type {
   PickersViewLayoutProps,
   PickersViewLayoutSlotsComponent,
@@ -7,5 +11,6 @@ export type {
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from './PickersViewLayout.types';
 
+export { default as usePickerLayout } from './usePickerLayout';
 export { pickersViewLayoutClasses } from './pickersViewLayoutClasses';
 export type { PickersViewLayoutClassKey } from './pickersViewLayoutClasses';

@@ -450,7 +450,7 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
-        content: {
+        contentWrapper: {
           backgroundColor: 'red',
         },
       },

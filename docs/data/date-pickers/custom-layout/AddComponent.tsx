@@ -9,7 +9,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
+import {
+  PickersViewLayoutProps,
+  usePickerLayout,
+  pickersViewLayoutClasses,
+  PickersViewLayoutRoot,
+  PickersViewLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersViewLayout';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -50,32 +56,39 @@ function RestaurantHeader() {
   );
 }
 
+function CustomLayout(props: PickersViewLayoutProps) {
+  const { toolbar, tabs, content, actionBar, classes } = usePickerLayout(props);
+
+  return (
+    <PickersViewLayoutRoot
+      ownerState={props}
+      sx={{
+        [`.${pickersViewLayoutClasses.actionBar}`]: {
+          gridColumn: 1,
+          gridRow: 2,
+        },
+        [`.${pickersViewLayoutClasses.toolbar}`]: {
+          gridColumn: 2,
+          gridRow: 1,
+        },
+      }}
+    >
+      <RestaurantHeader />
+      {toolbar}
+      {actionBar}
+      <PickersViewLayoutContentWrapper className={classes.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersViewLayoutContentWrapper>
+    </PickersViewLayoutRoot>
+  );
+}
 export default function AddComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
-        componentsProps={{
-          layout: ({ toolbar, actionBar, content }) => ({
-            sx: {
-              // Modify DOM structure
-              [`.${pickersViewLayoutClasses.actionBar}`]: {
-                gridColumn: 1,
-                gridRow: 2,
-              },
-              [`.${pickersViewLayoutClasses.toolbar}`]: {
-                gridColumn: 2,
-                gridRow: 1,
-              },
-            },
-            children: [
-              <RestaurantHeader key="header-logo" />,
-              toolbar,
-              actionBar,
-              content,
-            ],
-          }),
-        }}
         components={{
+          Layout: CustomLayout,
           ActionBar: ActionList,
         }}
       />

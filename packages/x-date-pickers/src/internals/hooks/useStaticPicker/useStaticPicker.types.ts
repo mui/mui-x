@@ -1,7 +1,9 @@
 import * as React from 'react';
+// import { SlotComponentProps } from '@mui/base/utils';
 import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
+  // PickersViewLayoutProps,
 } from '../../../PickersViewLayout';
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';

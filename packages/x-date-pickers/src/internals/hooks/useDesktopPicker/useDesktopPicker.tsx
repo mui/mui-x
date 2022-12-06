@@ -125,6 +125,8 @@ export const useDesktopPicker = <
     },
   };
 
+  const Layout = components?.Layout ?? PickersViewLayout;
+
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
@@ -152,13 +154,14 @@ export const useDesktopPicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

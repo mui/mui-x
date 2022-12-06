@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base/utils';
 import { SxProps, Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base/utils';
 import { PickersActionBarProps } from '../PickersActionBar';
 import { DateOrTimeView } from '../internals/models/views';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
@@ -9,7 +9,7 @@ import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/useP
 import { PickersViewLayoutClasses } from './pickersViewLayoutClasses';
 import { WrapperVariant } from '../internals/components/wrappers/WrapperVariantContext';
 
-export interface ExportedPickersViewLayoutSlotsComponent {
+export interface ExportedPickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.
    * @default PickersActionBar
@@ -19,7 +19,9 @@ export interface ExportedPickersViewLayoutSlotsComponent {
    * Custom component for wrapping the layout.
    * It wrapps the toolbar, views, and action bar
    */
-  Layout?: React.JSXElementConstructor<PickersViewLayoutSlotOwnerState<any, any>>;
+  Layout?: React.JSXElementConstructor<
+    PickersViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
+  >;
 }
 
 interface PickersViewLayoutActionBarOwnerState<TValue, TView extends DateOrTimeView>
@@ -44,15 +46,11 @@ export interface ExportedPickersViewLayoutSlotsComponentsProps<
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: SlotComponentProps<
-    React.JSXElementConstructor<PickersViewLayoutProps<any, any>>,
-    {},
-    PickersViewLayoutSlotOwnerState<any, any>
-  >;
+  layout?: Partial<PickersViewLayoutProps<TValue, TView>>;
 }
 
 export interface PickersViewLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponent {
+  extends ExportedPickersViewLayoutSlotsComponent<TValue, TView> {
   /**
    * Tabs enabling toggling between views.
    */
@@ -86,7 +84,7 @@ export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>
    * Overrideable components.
    * @default {}
    */
-  components?: PickersViewLayoutSlotsComponent<TValue, TView>;
+  components?: PickersViewLayoutSlotsComponent<any, any>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -95,11 +93,8 @@ export interface PickersViewLayoutProps<TValue, TView extends DateOrTimeView>
 }
 
 export interface SubComponents {
-  toolbar: JSX.Element | null;
-  content: JSX.Element | null;
-  actionBar: JSX.Element | null;
+  toolbar: React.ReactNode;
+  content: React.ReactNode;
+  tabs: React.ReactNode;
+  actionBar: React.ReactNode;
 }
-
-export interface PickersViewLayoutSlotOwnerState<TValue, TView extends DateOrTimeView>
-  extends PickersViewLayoutProps<TValue, TView>,
-    SubComponents {}

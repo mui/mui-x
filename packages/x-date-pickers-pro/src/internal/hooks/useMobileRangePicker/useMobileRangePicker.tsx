@@ -165,6 +165,7 @@ export const useMobileRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
+  const Layout = components?.Layout ?? PickersViewLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -187,13 +188,14 @@ export const useMobileRangePicker = <
             actionBar: undefined,
           }}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

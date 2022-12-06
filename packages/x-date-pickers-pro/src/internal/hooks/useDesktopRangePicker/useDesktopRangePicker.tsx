@@ -185,6 +185,7 @@ export const useDesktopRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
+  const Layout = components?.Layout ?? PickersViewLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -212,13 +213,14 @@ export const useDesktopRangePicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

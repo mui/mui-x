@@ -8,7 +8,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 
-import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
+import {
+  pickersViewLayoutClasses,
+  PickersViewLayoutContentWrapper,
+  PickersViewLayoutRoot,
+  usePickerLayout,
+} from '@mui/x-date-pickers/PickersViewLayout';
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -39,22 +44,40 @@ ActionList.propTypes = {
   onSetToday: PropTypes.func.isRequired,
 };
 
+function CustomLayout(props) {
+  const { isLandscape } = props;
+  const { toolbar, tabs, content, actionBar, classes } = usePickerLayout(props);
+
+  return (
+    <PickersViewLayoutRoot
+      ownerState={{ isLandscape }}
+      sx={{
+        [`.${pickersViewLayoutClasses.actionBar}`]: {
+          gridColumn: 1,
+          gridRow: 2,
+        },
+      }}
+    >
+      {toolbar}
+      {actionBar}
+      <PickersViewLayoutContentWrapper className={classes.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersViewLayoutContentWrapper>
+    </PickersViewLayoutRoot>
+  );
+}
+
+CustomLayout.propTypes = {
+  isLandscape: PropTypes.bool.isRequired,
+};
+
 export default function MovingActionsReorder() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
-        componentsProps={{
-          layout: ({ toolbar, content, actionBar }) => ({
-            sx: {
-              [`.${pickersViewLayoutClasses.actionBar}`]: {
-                gridColumn: 1,
-                gridRow: 2,
-              },
-            },
-            children: [toolbar, actionBar, content],
-          }),
-        }}
         components={{
+          Layout: CustomLayout,
           ActionBar: ActionList,
         }}
       />

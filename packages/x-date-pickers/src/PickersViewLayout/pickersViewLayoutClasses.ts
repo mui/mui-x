@@ -8,12 +8,14 @@ export interface PickersViewLayoutClasses {
   root: string;
   /** Styles applied to the root element in landscape orientation. */
   landscape: string;
-  /** Styles applied to the content element (which contains the tabs and the view itself). */
-  content: string;
-  /** Styles applied to the toolbar wrapper (used to position it) */
+  /** Styles applied to the contentWrapper element (which contains the tabs and the view itself). */
+  contentWrapper: string;
+  /** Styles applied to the toolbar. */
   toolbar: string;
-  /** Styles applied to the action bar wrapper (used to position it) */
+  /** Styles applied to the action bar. */
   actionBar: string;
+  /** Styles applied to the tabs. */
+  tabs: string;
 }
 
 export type PickersViewLayoutClassKey = keyof PickersViewLayoutClasses;
@@ -24,5 +26,5 @@ export function getPickersViewLayoutUtilityClass(slot: string) {
 
 export const pickersViewLayoutClasses = generateUtilityClasses<PickersViewLayoutClassKey>(
   'MuiPickersViewLayout',
-  ['root', 'landscape', 'content', 'toolbar', 'actionBar'],
+  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar'],
 );
