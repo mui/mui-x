@@ -12,7 +12,7 @@ import { MakeOptional, TimeView } from '../internals';
 
 export interface StaticNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent {}
+    UseStaticPickerSlotsComponent<any, any> {}
 
 export interface StaticNextTimePickerSlotsComponentsProps<TDate>
   extends BaseNextTimePickerSlotsComponentsProps,

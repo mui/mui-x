@@ -15,7 +15,7 @@ import {
 import { DateRange } from '../../models/range';
 
 export interface UseStaticRangePickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent,
+  extends ExportedPickersViewLayoutSlotsComponent<any, any>,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>

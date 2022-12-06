@@ -23,7 +23,7 @@ const PickerStaticLayout = styled(PickersViewLayout)(({ theme }) => ({
 export const useStaticPicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any, any>,
 >({
   props,
   valueManager,

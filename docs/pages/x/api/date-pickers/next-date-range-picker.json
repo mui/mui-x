@@ -85,6 +85,7 @@
     "FieldRoot": { "type": { "name": "elementType" } },
     "FieldSeparator": { "type": { "name": "elementType" } },
     "Input": { "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },

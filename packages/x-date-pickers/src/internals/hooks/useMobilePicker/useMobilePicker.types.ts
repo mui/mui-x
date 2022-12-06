@@ -21,7 +21,7 @@ import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseMobilePickerSlotsComponent<TDate>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersViewLayoutSlotsComponent<any, any> {
   /**
    * Component used to enter the date with the keyboard.
    */

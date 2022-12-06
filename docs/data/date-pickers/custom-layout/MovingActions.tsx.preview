@@ -1,0 +1,15 @@
+<StaticNextDatePicker
+  componentsProps={{
+    layout: {
+      sx: {
+        [`.${pickersViewLayoutClasses.actionBar}`]: {
+          gridColumn: 1,
+          gridRow: 2,
+        },
+      },
+    },
+  }}
+  components={{
+    ActionBar: ActionList,
+  }}
+/>

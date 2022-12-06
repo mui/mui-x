@@ -14,6 +14,8 @@ import {
   PickersViewLayoutRoot,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersViewLayout';
+import { DateView } from '@mui/x-date-pickers';
+import { Dayjs } from 'dayjs';
 
 function ActionList(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -36,7 +38,7 @@ function ActionList(props: PickersActionBarProps) {
   );
 }
 
-function CustomLayout(props: PickersViewLayoutProps) {
+function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
   const { isLandscape } = props;
   const { toolbar, tabs, content, actionBar, classes } = usePickerLayout(props);
 

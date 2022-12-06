@@ -12,7 +12,7 @@ import { DateView, MakeOptional } from '../internals';
 
 export interface StaticNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent {}
+    UseStaticPickerSlotsComponent<any, any> {}
 
 export interface StaticNextDatePickerSlotsComponentsProps<TDate>
   extends BaseNextDatePickerSlotsComponentsProps<TDate>,

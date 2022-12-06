@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
@@ -8,8 +7,9 @@ import {
   getPickersViewLayoutUtilityClass,
   PickersViewLayoutClassKey,
 } from './pickersViewLayoutClasses';
+import { DateOrTimeView } from '../internals';
 
-const useUtilityClasses = (ownerState: PickersViewLayoutProps) => {
+const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -26,7 +26,9 @@ interface UsePickerLayoutResponse extends SubComponents {
   classes: Record<PickersViewLayoutClassKey, string>;
 }
 
-const usePickerLayout = (props: PickersViewLayoutProps): UsePickerLayoutResponse => {
+const usePickerLayout = <TValue, TView extends DateOrTimeView>(
+  props: PickersViewLayoutProps<TValue, TView>,
+): UsePickerLayoutResponse => {
   const {
     wrapperVariant,
     onAccept,
@@ -49,6 +51,8 @@ const usePickerLayout = (props: PickersViewLayoutProps): UsePickerLayoutResponse
 
   const classes = useUtilityClasses(props);
 
+  // Action bar
+
   const ActionBar = components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
@@ -64,47 +68,41 @@ const usePickerLayout = (props: PickersViewLayoutProps): UsePickerLayoutResponse
     },
     ownerState: { ...props, wrapperVariant },
   });
+  const actionBar = <ActionBar {...actionBarProps} />;
 
-  const Tabs = components?.Tabs;
+  // Toolbar
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = components?.Toolbar;
+  const toolbarProps = useSlotProps({
+    elementType: Toolbar!,
+    externalSlotProps: componentsProps?.toolbar,
+    additionalProps: {
+      isLandscape,
+      onChange,
+      value,
+      view,
+      onViewChange,
+      views,
+      disabled,
+      readOnly,
+      className: classes.toolbar,
+    },
+    ownerState: { ...props, wrapperVariant },
+  });
+  const toolbar = view && shouldRenderToolbar && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
-  const toolbar =
-    view && shouldRenderToolbar && !!Toolbar ? (
-      <Toolbar
-        isLandscape={isLandscape}
-        onChange={onChange}
-        value={value}
-        view={view}
-        onViewChange={onViewChange}
-        views={views}
-        disabled={disabled}
-        readOnly={readOnly}
-        {...componentsProps?.toolbar}
-        className={clsx(classes.toolbar, componentsProps?.toolbar?.className)}
-      />
-    ) : null;
+  // Content
 
   const content = children;
 
+  // Tabs
+
+  const Tabs = components?.Tabs;
   const tabs =
     view && Tabs ? (
       <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
     ) : null;
-
-  const actionBar = (
-    <ActionBar
-      {...actionBarProps}
-      onAccept={onAccept}
-      onClear={onClear}
-      onCancel={onCancel}
-      onSetToday={onSetToday}
-      actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
-      {...componentsProps?.actionBar}
-      className={clsx(classes.actionBar, componentsProps?.actionBar?.className)}
-    />
-  );
 
   return {
     toolbar,

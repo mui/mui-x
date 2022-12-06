@@ -23,7 +23,7 @@ import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
 
 export interface UseDesktopPickerSlotsComponent<TDate>
   extends PickersPopperSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersViewLayoutSlotsComponent<any, any> {
   /**
    * Component used to enter the date with the keyboard.
    */

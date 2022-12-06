@@ -35,7 +35,7 @@ export const PickersViewLayoutContentWrapper = styled('div', {
 });
 
 export const PickersViewLayout = React.forwardRef(function PickersViewLayout(
-  inProps: PickersViewLayoutProps,
+  inProps: PickersViewLayoutProps<any, any>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });

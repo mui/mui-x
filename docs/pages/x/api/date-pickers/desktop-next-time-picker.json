@@ -80,6 +80,7 @@
     "Field": { "type": { "name": "elementType" } },
     "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerButton": { "default": "IconButton", "type": { "name": "elementType" } },

@@ -1,8 +1,6 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticNextDatePicker
-    components={{
-      Layout: CustomLayout,
-      ActionBar: ActionList,
-    }}
-  />
-</LocalizationProvider>
+<StaticNextDatePicker
+  components={{
+    Layout: CustomLayout,
+    ActionBar: ActionList,
+  }}
+/>

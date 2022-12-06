@@ -21,7 +21,7 @@ import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseDesktopRangePickerSlotsComponent
   extends PickersPopperSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersViewLayoutSlotsComponent<any, any> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
