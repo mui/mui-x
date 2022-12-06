@@ -61,6 +61,10 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
+   * Styles applied to the cell element if the cell is outlined.
+   */
+  'cell--outlined': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -519,6 +523,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
+  'cell--outlined',
   'cell',
   'cellContent',
   'cellCheckbox',

@@ -39,10 +39,7 @@
     "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ columnGrouping?: bool }" }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -263,6 +260,7 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--outlined",
       "cell",
       "cellContent",
       "cellCheckbox",

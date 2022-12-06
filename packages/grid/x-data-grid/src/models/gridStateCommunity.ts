@@ -15,6 +15,7 @@ import type {
   GridSortingInitialState,
   GridSortingState,
   GridTabIndexState,
+  GridOutlineState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditRowsModel } from './gridEditRowModel';
@@ -33,6 +34,7 @@ export interface GridStateCommunity {
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;
+  outline: GridOutlineState;
   tabIndex: GridTabIndexState;
   rowSelection: GridRowSelectionModel;
   filter: GridFilterState;

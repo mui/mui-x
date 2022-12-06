@@ -255,7 +255,6 @@ DataGridProRaw.propTypes = {
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     rowPinning: PropTypes.bool,
-    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.

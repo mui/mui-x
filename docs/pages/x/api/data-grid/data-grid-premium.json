@@ -72,7 +72,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, lazyLoading?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, rowPinning?: bool }"
       }
     },
     "filterMode": {
@@ -341,6 +341,7 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--outlined",
       "cell",
       "cellContent",
       "cellCheckbox",

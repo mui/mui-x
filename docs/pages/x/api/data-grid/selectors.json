@@ -12,6 +12,12 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridCellOutlineCellSelector",
+    "returnType": "GridCellIdentifier | null",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnGroupsHeaderMaxDepthSelector",
     "returnType": "number",
     "description": "",
@@ -131,6 +137,12 @@
   {
     "name": "gridFocusStateSelector",
     "returnType": "GridFocusState",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridOutlineStateSelector",
+    "returnType": "GridOutlineState",
     "description": "",
     "supportsApiRef": false
   },
