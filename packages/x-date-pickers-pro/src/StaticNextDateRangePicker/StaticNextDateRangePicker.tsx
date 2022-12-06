@@ -4,7 +4,7 @@ import { useStaticRangePicker } from '../internal/hooks/useStaticRangePicker';
 import { StaticNextDateRangePickerProps } from './StaticNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { rangeValueManager } from '../internal/utils/valueManagers';
-import { renderDateRangeView } from '../internal/utils/views';
+import { renderDateRangeView } from '../internal/utils/viewRenderers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 
 type StaticNextDatePickerComponent = (<TDate>(

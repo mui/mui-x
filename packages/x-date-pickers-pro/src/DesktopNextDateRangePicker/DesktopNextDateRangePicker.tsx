@@ -7,7 +7,7 @@ import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.ty
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { renderDateRangeView } from '../internal/utils/views';
+import { renderDateRangeView } from '../internal/utils/viewRenderers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 
 type DesktopDateRangePickerComponent = (<TDate>(

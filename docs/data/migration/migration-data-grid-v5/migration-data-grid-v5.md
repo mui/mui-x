@@ -71,6 +71,17 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Columns
 
 - The `GridColDef['hide']` property was removed. Use `GridColDef['columnVisibility']` instead.
+- Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. To fall back to the default formatted value, return `undefined` instead of `null`.
+
+  ```diff
+   const renderCell = () => {
+    if (condition) {
+      return <CustomComponent />;
+    }
+  - return null;
+  + return undefined;
+   }
+  ```
 
 ### Rows
 

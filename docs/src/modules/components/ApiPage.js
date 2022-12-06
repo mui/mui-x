@@ -171,12 +171,12 @@ ClassesTable.propTypes = {
 
 function getTranslatedHeader(t, header) {
   const translations = {
+    demos: t('api-docs.demos'),
     import: t('api-docs.import'),
     'component-name': t('api-docs.componentName'),
     props: t('api-docs.props'),
     slots: t('api-docs.slots'),
     inheritance: t('api-docs.inheritance'),
-    demos: t('api-docs.demos'),
     css: 'CSS',
   };
 
@@ -262,13 +262,13 @@ export default function ApiPage(props) {
   }
 
   const toc = [
+    createTocEntry('demos'),
     createTocEntry('import'),
     ...componentDescriptionToc,
     componentStyles.name && createTocEntry('component-name'),
     createTocEntry('props'),
     Object.keys(slots).length && createTocEntry('slots'),
     componentStyles.classes.length > 0 && createTocEntry('css'),
-    createTocEntry('demos'),
   ].filter(Boolean);
 
   // The `ref` is forwarded to the root element.
@@ -328,6 +328,16 @@ export default function ApiPage(props) {
           {description}
           {disableAd ? null : <Ad />}
         </Typography>
+        <Heading hash="demos" />
+        <div className="MuiCallout-root MuiCallout-info">
+          <p
+            dangerouslySetInnerHTML={{
+              __html:
+                'For examples and details on the usage of this React component, visit the component demo pages:',
+            }}
+          />
+          <span dangerouslySetInnerHTML={{ __html: demos }} />
+        </div>
         <Heading hash="import" />
         <HighlightedCode code={imports.join(`\n// ${t('or')}\n`)} language="jsx" />
         <span dangerouslySetInnerHTML={{ __html: t('api-docs.importDifference') }} />
@@ -394,11 +404,7 @@ export default function ApiPage(props) {
         {Object.keys(componentStyles.classes).length ? (
           <React.Fragment>
             <Heading hash="css" />
-            <ClassesTable
-              componentName={componentName}
-              componentStyles={componentStyles}
-              classDescriptions={classDescriptions}
-            />
+            <ClassesTable componentStyles={componentStyles} classDescriptions={classDescriptions} />
             <br />
             <span dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStyles') }} />
             <span
@@ -406,8 +412,6 @@ export default function ApiPage(props) {
             />
           </React.Fragment>
         ) : null}
-        <Heading hash="demos" />
-        <span dangerouslySetInnerHTML={{ __html: demos }} />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
         <symbol id="anchor-link-icon" viewBox="0 0 16 16">

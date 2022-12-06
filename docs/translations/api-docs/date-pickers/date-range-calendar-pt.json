@@ -33,7 +33,8 @@
     "monthContainer": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the container of a month"
-    }
+    },
+    "dayDragging": { "description": "Styles applied to the day calendar container when dragging" }
   },
   "slotDescriptions": {
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
