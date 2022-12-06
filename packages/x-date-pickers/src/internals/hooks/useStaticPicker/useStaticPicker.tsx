@@ -48,10 +48,7 @@ export const useStaticPicker = <
         <PickerStaticViewLayout
           {...layoutProps}
           components={components}
-          componentsProps={{
-            ...componentsProps,
-            actionBar: undefined,
-          }}
+          componentsProps={componentsProps}
           ref={ref}
         >
           {renderCurrentView()}
