@@ -28,5 +28,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MonthCalendar" },
     { "packageName": "@mui/x-date-pickers", "componentName": "MonthCalendar" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

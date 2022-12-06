@@ -76,5 +76,6 @@
       "packageName": "@mui/x-date-pickers-pro",
       "componentName": "Unstable_StaticNextDateRangePicker"
     }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

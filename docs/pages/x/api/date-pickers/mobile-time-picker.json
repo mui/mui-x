@@ -87,5 +87,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileTimePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "MobileTimePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

@@ -104,5 +104,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_NextTimePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_NextTimePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

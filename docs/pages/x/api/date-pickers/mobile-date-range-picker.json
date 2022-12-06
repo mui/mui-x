@@ -100,5 +100,6 @@
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-range-picker\">Date Range Picker </a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileDateRangePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

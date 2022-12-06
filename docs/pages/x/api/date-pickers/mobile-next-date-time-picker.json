@@ -121,5 +121,6 @@
       "componentName": "Unstable_MobileNextDateTimePicker"
     },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_MobileNextDateTimePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

@@ -87,5 +87,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_MobileNextTimePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_MobileNextTimePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

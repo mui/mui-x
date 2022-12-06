@@ -102,5 +102,6 @@
       "packageName": "@mui/x-date-pickers-pro",
       "componentName": "Unstable_DesktopNextDateRangePicker"
     }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

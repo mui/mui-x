@@ -39,5 +39,6 @@
     { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterForm" },
     { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterForm" },
     { "packageName": "@mui/x-data-grid", "componentName": "GridFilterForm" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

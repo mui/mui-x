@@ -101,5 +101,6 @@
       "componentName": "Unstable_StaticNextDateTimePicker"
     },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_StaticNextDateTimePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

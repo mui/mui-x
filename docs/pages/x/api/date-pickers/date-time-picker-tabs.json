@@ -24,5 +24,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
     { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
-  ]
+  ],
+  "requiresWrapperVariantContext": true
 }

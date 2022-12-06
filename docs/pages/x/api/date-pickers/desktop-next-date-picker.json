@@ -119,5 +119,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_DesktopNextDatePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_DesktopNextDatePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

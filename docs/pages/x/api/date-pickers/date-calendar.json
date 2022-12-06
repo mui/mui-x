@@ -82,5 +82,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateCalendar" },
     { "packageName": "@mui/x-date-pickers", "componentName": "DateCalendar" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

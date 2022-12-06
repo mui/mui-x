@@ -45,6 +45,7 @@ interface ReactApi extends ReactDocgenApi {
   inheritance: { component: string; pathname: string } | null;
   name: string;
   spread: boolean | undefined;
+  requiresWrapperVariantContext: boolean | undefined;
   src: string;
   styles: Styles;
   displayName: string;
@@ -483,6 +484,8 @@ const buildComponentDocumentation = async (options: {
       .map((item) => `<li><a href="${item.demoPathname}">${item.name}</a></li>`)
       .join('\n')}</ul>`,
     packages: reactApi.packages,
+    // Resolve if the component depends on `WrapperVariantContext` existing in the react context
+    requiresWrapperVariantContext: src.includes('React.useContext(WrapperVariantContext)'),
   };
 
   // docs/pages/component-name.json

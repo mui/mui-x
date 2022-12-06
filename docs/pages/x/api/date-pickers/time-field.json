@@ -32,5 +32,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_TimeField" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_TimeField" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

@@ -230,6 +230,7 @@ export default function ApiPage(props) {
     slots,
     styles: componentStyles,
     packages,
+    requiresWrapperVariantContext,
   } = pageContent;
 
   const {
@@ -352,6 +353,16 @@ export default function ApiPage(props) {
             />
           </React.Fragment>
         ) : null}
+        {requiresWrapperVariantContext && (<div className="MuiCallout-root MuiCallout-warning">
+          <p
+            dangerouslySetInnerHTML={{
+              __html:
+                `This component expects <code>WrapperVariantContext</code> to exist above in the React component tree.
+                If this component is used standalone and the context is not provided—the component might have unexpected behavior.<br>
+                Make sure that the component is used inside any of the Date and Time Picker components or provide the context yourself.`,
+            }}
+          />
+        </div>)}
         {componentStyles.name && (
           <React.Fragment>
             <Heading hash="component-name" />

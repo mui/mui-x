@@ -127,5 +127,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "DatePicker" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

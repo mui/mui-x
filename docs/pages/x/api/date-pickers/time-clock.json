@@ -62,5 +62,6 @@
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimeClock" },
     { "packageName": "@mui/x-date-pickers", "componentName": "TimeClock" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

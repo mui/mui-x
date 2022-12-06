@@ -29,5 +29,6 @@
     { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterPanel" },
     { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterPanel" },
     { "packageName": "@mui/x-data-grid", "componentName": "GridFilterPanel" }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }

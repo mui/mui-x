@@ -41,5 +41,6 @@
       "packageName": "@mui/x-date-pickers-pro",
       "componentName": "Unstable_MultiInputTimeRangeField"
     }
-  ]
+  ],
+  "requiresWrapperVariantContext": false
 }
