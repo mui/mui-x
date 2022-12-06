@@ -389,6 +389,19 @@ describe('<DataGridPro /> - Rows', () => {
       );
     }
 
+    it('should compute rows correctly on height change', async () => {
+      const { setProps } = render(
+        <TestCaseVirtualization nbRows={5} nbCols={2} height={160} rowBuffer={0} />,
+      );
+      expect(getRows()).to.have.length(1);
+      setProps({
+        height: 220,
+      });
+      await act(() => Promise.resolve());
+      clock.runToLast();
+      expect(getRows()).to.have.length(4);
+    });
+
     it('should render last row when scrolling to the bottom', () => {
       const rowHeight = 50;
       const rowBuffer = 4;

@@ -81,8 +81,6 @@
   },
   "name": "MobileNextTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileNextTimePicker" },
-  "spread": false,
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileNextTimePicker/MobileNextTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
