@@ -171,7 +171,7 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 
   ```tsx
   function CustomDay({ selectedDay, ...other }) {
-    console.log(selectedDay);
+    // do something with 'selectedDay'
     return <PickersDay {...other} />;
   }
 
