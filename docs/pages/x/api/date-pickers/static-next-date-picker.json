@@ -20,12 +20,6 @@
     },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
-    "focusedView": {
-      "type": {
-        "name": "enum",
-        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      }
-    },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
@@ -33,7 +27,6 @@
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "onYearChange": { "type": { "name": "func" } },

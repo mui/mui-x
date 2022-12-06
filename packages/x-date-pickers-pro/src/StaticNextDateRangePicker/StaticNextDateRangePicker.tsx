@@ -137,10 +137,6 @@ StaticNextDateRangePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
-   * Controlled focused view.
-   */
-  focusedView: PropTypes.oneOf(['day']),
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
@@ -181,13 +177,6 @@ StaticNextDateRangePicker.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
-  /**
-   * Callback fired on focused view change.
-   * @template TView
-   * @param {TView} view The new view to focus or not.
-   * @param {boolean} hasFocus `true` if the view should be focused.
-   */
-  onFocusedViewChange: PropTypes.func,
   /**
    * Callback firing on month change @DateIOType.
    * @template TDate

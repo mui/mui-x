@@ -15,12 +15,6 @@
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
-    "focusedView": {
-      "type": {
-        "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
-    },
     "localeText": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
@@ -28,7 +22,6 @@
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "openTo": {
       "type": {

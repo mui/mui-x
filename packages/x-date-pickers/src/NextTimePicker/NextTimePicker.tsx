@@ -103,10 +103,6 @@ NextTimePicker.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * Controlled focused view.
-   */
-  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
-  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
@@ -171,13 +167,6 @@ NextTimePicker.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
-  /**
-   * Callback fired on focused view change.
-   * @template TView
-   * @param {TView} view The new view to focus or not.
-   * @param {boolean} hasFocus `true` if the view should be focused.
-   */
-  onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
    * Use in controlled mode (see open).

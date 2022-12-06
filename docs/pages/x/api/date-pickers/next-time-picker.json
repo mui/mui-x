@@ -20,12 +20,6 @@
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
-    "focusedView": {
-      "type": {
-        "name": "enum",
-        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
-    },
     "format": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
@@ -39,7 +33,6 @@
     "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
-    "onFocusedViewChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },

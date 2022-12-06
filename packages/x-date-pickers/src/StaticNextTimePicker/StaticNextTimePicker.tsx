@@ -111,10 +111,6 @@ StaticNextTimePicker.propTypes = {
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
-   * Controlled focused view.
-   */
-  focusedView: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
-  /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
@@ -156,13 +152,6 @@ StaticNextTimePicker.propTypes = {
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
-  /**
-   * Callback fired on focused view change.
-   * @template TView
-   * @param {TView} view The new view to focus or not.
-   * @param {boolean} hasFocus `true` if the view should be focused.
-   */
-  onFocusedViewChange: PropTypes.func,
   /**
    * Callback fired on view change.
    * @template TView

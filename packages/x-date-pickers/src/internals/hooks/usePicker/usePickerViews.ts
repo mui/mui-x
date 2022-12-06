@@ -28,7 +28,7 @@ export type PickerViewRendererLookup<
  * Props used to handle the views that are common to all pickers.
  */
 export interface UsePickerViewsBaseProps<TView extends DateOrTimeView>
-  extends Omit<UseViewsOptions<any, TView>, 'onChange'> {
+  extends Omit<UseViewsOptions<any, TView>, 'onChange' | 'onFocusedViewChange' | 'focusedView'> {
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
