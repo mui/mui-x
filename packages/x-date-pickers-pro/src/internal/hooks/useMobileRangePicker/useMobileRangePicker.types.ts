@@ -26,13 +26,13 @@ export interface UseMobileRangePickerSlotsComponent
   Input?: React.ElementType<TextFieldProps>;
 }
 
-export interface UseMobileRangePickerSlotsComponentsProps<TDate>
+export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
   extends Pick<
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
@@ -58,7 +58,7 @@ export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, 
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate>;
+  componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
