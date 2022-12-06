@@ -16,7 +16,7 @@ const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
-const MAIN_BRANCH = 'next';
+const MAIN_BRANCH = 'master';
 
 const packagesWithL10n = [
   {
