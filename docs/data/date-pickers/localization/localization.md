@@ -30,9 +30,9 @@ you just have to import the locale from `@mui/x-date-pikers` (see the [list of s
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DateCalendar, LocalizationProvider, deDE } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import bgLocale from 'date-fns/locale/bg';
+import 'date-fns/locale/de';
 
 const theme = createTheme(
   {
@@ -40,7 +40,7 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG, // use 'bg' locale for UI texts (start, next month, ...)
+  deDE, // use 'de' locale for UI texts (start, next month, ...)
 );
 
 function App({ children }) {
@@ -49,14 +49,14 @@ function App({ children }) {
 ```
 
 Note that `createTheme` accepts any number of arguments.
-If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `bgBG` as a new argument.
+If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `deDE` as a new argument.
 
 ```jsx
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
-import { bgBG as coreBgBG } from '@mui/material/locale';
-import bgLocale from 'date-fns/locale/bg';
-import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DataGrid, deDE as dataGridDeDE } from '@mui/x-data-grid';
+import { deDE as coreDeDE } from '@mui/material/locale';
+import 'date-fns/locale/de';
+import { DateCalendar, LocalizationProvider, deDE } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
@@ -65,9 +65,9 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG, // x-date-pickers translations
-  dataGridBgBG, // x-data-grid translations
-  coreBgBG, // core translations
+  deDE, // x-date-pickers translations
+  dataGridDeDE, // x-data-grid translations
+  coreDeDE, // core translations
 );
 
 function App({ children }) {
@@ -82,11 +82,11 @@ you can directly load the language translations from the `@mui/x-date-pickers` o
 
 ```jsx
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import bgLocale from 'date-fns/locale/bg';
+import { DateCalendar, LocalizationProvider, deDE } from '@mui/x-date-pickers';
+import 'date-fns/locale/de';
 
 <LocalizationProvider
-  localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
+  localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
 >
   <DatePicker />
 </LocalizationProvider>;
@@ -108,7 +108,9 @@ This method can be combined with the ones shown above.
 If you pass a locale through `LocalizationProvider` or the theme, and you provide translation keys through the `localeText` prop of a picker at the same time, then only the latter translation keys will be overridden.
 
 ```tsx
-<LocalizationProvider localeText={frFR}>
+<LocalizationProvider
+  localeText={frFR.components.MuiLocalizationProvider.defaultProps.localeText}
+>
   <DatePicker
     // ...other props
     localeText={{
