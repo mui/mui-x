@@ -64,11 +64,10 @@ export const filterColumns = (
 
 type OwnerState = {
   classes: DataGridProProcessedProps['classes'];
-  showCellRightBorder: boolean;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { classes, showCellRightBorder } = ownerState;
+  const { classes } = ownerState;
 
   const slots = {
     leftPinnedColumns: ['pinnedColumns', 'pinnedColumns--left'],
@@ -244,13 +243,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const topPinnedRowsData = React.useMemo(() => pinnedRows?.top || [], [pinnedRows?.top]);
   const bottomPinnedRowsData = React.useMemo(() => pinnedRows?.bottom || [], [pinnedRows?.bottom]);
 
-  const ownerState = {
-    classes: rootProps.classes,
-    topPinnedRowsCount: topPinnedRowsData.length,
-    bottomPinnedRowsCount: bottomPinnedRowsData.length,
-    showCellRightBorder: rootProps.showCellRightBorder,
-  };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses({ classes: rootProps.classes });
 
   const {
     renderContext,
