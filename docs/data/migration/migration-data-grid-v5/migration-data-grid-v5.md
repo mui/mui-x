@@ -66,6 +66,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
+- The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
+  This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
+  For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
+  The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+
+  ```tsx
+  <DataGrid
+    onCellEditStop={(params, event) => {
+      if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+        return;
+      }
+      // Check if the target is inside a Portal
+      if (!event.currentTarget.contains(event.target)) {
+        event.defaultMuiPrevented = true;
+      }
+    }}
+  />
+  ```
+
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns
