@@ -39,6 +39,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
+- The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
 
 ### State access
 
@@ -61,6 +62,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Events
 
 - The `selectionChange` event was renamed to `rowSelectionChange`.
+- The `rowsScroll` event was renamed to `scrollPositionChange`.
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
@@ -69,6 +71,17 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Columns
 
 - The `GridColDef['hide']` property was removed. Use `GridColDef['columnVisibility']` instead.
+- Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. To fall back to the default formatted value, return `undefined` instead of `null`.
+
+  ```diff
+   const renderCell = () => {
+    if (condition) {
+      return <CustomComponent />;
+    }
+  - return null;
+  + return undefined;
+   }
+  ```
 
 ### Rows
 
@@ -123,6 +136,12 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
     </details>
 
+### Filtering
+
+- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- The `GridFilterItem['operator']` is now required.
+
 ### Other exports
 
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
@@ -133,6 +152,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
+- The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
 <!--
 ### CSS classes

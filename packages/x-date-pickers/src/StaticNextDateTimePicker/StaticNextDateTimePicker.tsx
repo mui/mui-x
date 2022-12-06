@@ -46,7 +46,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate | null, TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,

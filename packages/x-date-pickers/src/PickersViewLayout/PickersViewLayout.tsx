@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { PickersActionBar } from '../PickersActionBar';
+import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { DateOrTimeView } from '../internals/models/views';
 import { PickersViewLayoutSlotOwnerState, PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
@@ -109,6 +109,20 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   const classes = useUtilityClasses(props);
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions:
+        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+    },
+    ownerState: { ...props, wrapperVariant },
+  });
+
   const Tabs = components?.Tabs;
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -139,14 +153,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
     ),
     actionBar: (
       <PickersViewLayoutActionBar className={classes.actionBar} key="MUI-X_actionBar">
-        <ActionBar
-          onAccept={onAccept}
-          onClear={onClear}
-          onCancel={onCancel}
-          onSetToday={onSetToday}
-          actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
-          {...componentsProps?.actionBar}
-        />
+        <ActionBar {...actionBarProps} />
       </PickersViewLayoutActionBar>
     ),
   };

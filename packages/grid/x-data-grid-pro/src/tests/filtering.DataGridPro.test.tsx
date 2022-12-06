@@ -65,9 +65,9 @@ describe('<DataGridPro /> - Filter', () => {
   const filterModel = {
     items: [
       {
-        columnField: 'brand',
+        field: 'brand',
         value: 'a',
-        operatorValue: 'contains',
+        operator: 'contains',
       },
     ],
   };
@@ -75,7 +75,7 @@ describe('<DataGridPro /> - Filter', () => {
   it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
     const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
       // remove already filtered fields from list of columns
-      const filteredFields = currentFilters?.map((item) => item.columnField);
+      const filteredFields = currentFilters?.map((item) => item.field);
       return columns
         .filter(
           (colDef) =>
@@ -85,7 +85,7 @@ describe('<DataGridPro /> - Filter', () => {
     };
 
     const getColumnForNewFilter = ({ currentFilters, columns }: GetColumnForNewFilterArgs) => {
-      const filteredFields = currentFilters?.map(({ columnField }) => columnField);
+      const filteredFields = currentFilters?.map(({ field }) => field);
       const columnForNewFilter = columns
         .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
         .find((colDef) => colDef.filterOperators?.length);
@@ -186,14 +186,14 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
-              operatorValue: 'contains',
+              field: 'brand',
+              operator: 'contains',
             },
           ],
           linkOperator: GridLinkOperator.And,
@@ -211,14 +211,14 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
-              operatorValue: 'contains',
+              field: 'brand',
+              operator: 'contains',
             },
           ],
         }}
@@ -261,9 +261,9 @@ describe('<DataGridPro /> - Filter', () => {
       apiRef.current.setFilterModel({
         items: [
           {
-            columnField: 'brand',
+            field: 'brand',
             value: 'a',
-            operatorValue: 'startsWith',
+            operator: 'startsWith',
           },
         ],
       }),
@@ -276,15 +276,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'contains',
+          operator: 'contains',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'm',
-          operatorValue: 'contains',
+          operator: 'contains',
         },
       ],
     };
@@ -298,15 +298,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 's',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
     };
@@ -319,15 +319,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
       linkOperator: GridLinkOperator.Or,
@@ -342,15 +342,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
     };
@@ -386,9 +386,9 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
           ],
         }}
@@ -413,15 +413,15 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'endsWith',
+              operator: 'endsWith',
             },
           ],
         }}
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Filter', () => {
       <TestCase
         onFilterModelChange={onFilterModelChange}
         filterModel={{
-          items: [{ id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' }],
+          items: [{ id: 1, field: 'brand', value: 'a', operator: 'contains' }],
         }}
         initialState={{
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
@@ -475,9 +475,9 @@ describe('<DataGridPro /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
       ],
       linkOperator: GridLinkOperator.Or,
@@ -492,9 +492,9 @@ describe('<DataGridPro /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
       ],
     };
@@ -543,8 +543,8 @@ describe('<DataGridPro /> - Filter', () => {
               filterModel: {
                 linkOperator: GridLinkOperator.Or,
                 items: [
-                  { id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' },
-                  { id: 2, columnField: 'brand', value: 'm', operatorValue: 'contains' },
+                  { id: 1, field: 'brand', value: 'a', operator: 'contains' },
+                  { id: 2, field: 'brand', value: 'm', operator: 'contains' },
                 ],
               },
             },
@@ -577,7 +577,7 @@ describe('<DataGridPro /> - Filter', () => {
             filter: {
               filterModel: {
                 linkOperator: GridLinkOperator.Or,
-                items: [{ id: 1, columnField: 'brand', operatorValue: 'isAnyOf' }],
+                items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
               },
             },
           }}

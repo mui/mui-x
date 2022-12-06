@@ -423,7 +423,7 @@ describe('<DataGrid /> - Column Spanning', () => {
             initialState={{
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                  items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
                 },
               },
             }}
@@ -545,7 +545,7 @@ describe('<DataGrid /> - Column Spanning', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
               },
             },
           }}
@@ -617,8 +617,8 @@ describe('<DataGrid /> - Column Spanning', () => {
       </div>,
     );
 
-    expect(getCell(0, 0).getAttribute('aria-colspan')).to.equal('2');
-    expect(getCell(0, 2).getAttribute('aria-colspan')).to.equal('1');
+    expect(getCell(0, 0)).to.have.attribute('aria-colspan', '2');
+    expect(getCell(0, 2)).to.have.attribute('aria-colspan', '1');
   });
 
   it('should work with pagination', () => {

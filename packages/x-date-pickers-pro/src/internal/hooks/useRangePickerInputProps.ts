@@ -6,7 +6,7 @@ import {
   UsePickerResponse,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../models';
+import { DateRange, RangePosition } from '../models';
 
 interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
   extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
@@ -15,8 +15,8 @@ interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
   disabled?: boolean;
   disableOpenPicker?: boolean;
   onBlur?: () => void;
-  currentDatePosition: 'start' | 'end';
-  onCurrentDatePositionChange: (newPosition: 'start' | 'end') => void;
+  rangePosition: RangePosition;
+  onRangePositionChange: (newPosition: RangePosition) => void;
 }
 
 export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
@@ -27,8 +27,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   disabled,
   disableOpenPicker,
   onBlur,
-  currentDatePosition,
-  onCurrentDatePositionChange,
+  rangePosition,
+  onRangePositionChange,
 }: UseRangePickerFieldParams<TDate, TView>) => {
   const localeText = useLocaleText<TDate>();
 
@@ -40,18 +40,18 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
       return;
     }
 
-    if (currentDatePosition === 'start') {
+    if (rangePosition === 'start') {
       startRef.current?.focus();
-    } else if (currentDatePosition === 'end') {
+    } else if (rangePosition === 'end') {
       endRef.current?.focus();
     }
-  }, [currentDatePosition, open]);
+  }, [rangePosition, open]);
 
   const openRangeStartSelection = (
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event?.stopPropagation();
-    onCurrentDatePositionChange('start');
+    onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
     }
@@ -61,7 +61,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event?.stopPropagation();
-    onCurrentDatePositionChange('end');
+    onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
     }
@@ -69,13 +69,13 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
 
   const focusOnRangeStart = () => {
     if (open) {
-      onCurrentDatePositionChange('start');
+      onRangePositionChange('start');
     }
   };
 
   const focusOnRangeEnd = () => {
     if (open) {
-      onCurrentDatePositionChange('end');
+      onRangePositionChange('end');
     }
   };
 
@@ -84,7 +84,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     label: localeText.start,
     onKeyDown: onSpaceOrEnter(openRangeStartSelection),
     onFocus: focusOnRangeStart,
-    focused: open ? currentDatePosition === 'start' : undefined,
+    focused: open ? rangePosition === 'start' : undefined,
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
@@ -98,7 +98,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     label: localeText.end,
     onKeyDown: onSpaceOrEnter(openRangeEndSelection),
     onFocus: focusOnRangeEnd,
-    focused: open ? currentDatePosition === 'end' : undefined,
+    focused: open ? rangePosition === 'end' : undefined,
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeEndSelection }),

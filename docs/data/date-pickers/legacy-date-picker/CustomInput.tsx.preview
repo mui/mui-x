@@ -1,15 +1,13 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <DatePicker
-    label="Custom input"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={({ inputRef, inputProps, InputProps }) => (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <input ref={inputRef} {...inputProps} />
-        {InputProps?.endAdornment}
-      </Box>
-    )}
-  />
-</LocalizationProvider>
+<DatePicker
+  label="Custom input"
+  value={value}
+  onChange={(newValue) => {
+    setValue(newValue);
+  }}
+  renderInput={({ inputRef, inputProps, InputProps }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <input ref={inputRef} {...inputProps} />
+      {InputProps?.endAdornment}
+    </Box>
+  )}
+/>

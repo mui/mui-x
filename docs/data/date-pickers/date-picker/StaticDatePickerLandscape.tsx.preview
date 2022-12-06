@@ -1,6 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticNextDatePicker
-    orientation="landscape"
-    defaultValue={dayjs('2022-04-07')}
-  />
-</LocalizationProvider>
+<StaticNextDatePicker
+  orientation="landscape"
+  defaultValue={dayjs('2022-04-07')}
+/>

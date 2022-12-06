@@ -146,7 +146,10 @@ export const useDesktopPicker = <
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickersViewLayout

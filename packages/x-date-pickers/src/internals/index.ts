@@ -84,13 +84,19 @@ export type {
   MuiTextFieldProps,
   DateInputSlotsComponent,
 } from './components/PureDateInput';
-export type { DateInputPropsLike } from './components/wrappers/WrapperProps';
+export type {
+  DateInputPropsLike,
+  PickersSlotsComponent,
+  PickersSlotsComponentsProps,
+} from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
-export { DAY_MARGIN } from './constants/dimensions';
+export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
+export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export { useMaskedInput } from './hooks/useMaskedInput';
+export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
@@ -160,8 +166,6 @@ export type {
   DayCalendarSlotsComponentsProps,
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
-
-export { areDayPropsEqual } from '../PickersDay/PickersDay';
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 export { useCalendarState } from '../DateCalendar/useCalendarState';

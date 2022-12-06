@@ -39,6 +39,8 @@
 /x/react-date-pickers/migration-lab/ /x/migration/migration-pickers-lab/ 301
 /:lang/x/react-date-pickers/migration-lab/ /:lang/x/migration/migration-pickers-lab/ 301
 
+/x/api/date-pickers/clock-picker/ /x/api/date-pickers/time-clock/ 301
+/:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
 
 # 2023
 

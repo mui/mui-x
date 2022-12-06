@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
+import { useUtils } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -34,17 +34,21 @@ export interface DateRangePickerDayProps<TDate>
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<DateRangePickerDayClasses>;
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected?: boolean;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
@@ -138,12 +142,10 @@ const DateRangePickerDayRoot = styled('div', {
   ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
     ...startBorderStyle,
     paddingLeft: 0,
-    marginLeft: DAY_MARGIN / 2,
   }),
   ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
     ...endBorderStyle,
     paddingRight: 0,
-    marginRight: DAY_MARGIN / 2,
   }),
 }));
 
@@ -218,15 +220,16 @@ const DateRangePickerDayDay = styled(PickersDay, {
   ...(!ownerState.selected && {
     backgroundColor: 'transparent',
   }),
-  ...(!ownerState.isHighlighting && {
-    '&:hover': {
-      border: `1px solid ${(theme.vars || theme).palette.grey[500]}`,
-    },
-  }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
     }),
+  ...(ownerState.draggable && {
+    cursor: 'grab',
+  }),
+  ...(ownerState.draggable && {
+    touchAction: 'none',
+  }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => JSX.Element;
@@ -251,7 +254,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfHighlighting,
     isStartOfPreviewing,
     selected = false,
+    isVisuallySelected,
     sx,
+    draggable,
     ...other
   } = props;
 
@@ -269,6 +274,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected,
     isStartOfMonth,
     isEndOfMonth,
+    draggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -290,11 +296,12 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           ref={ref}
           disableMargin
           day={day}
-          selected={selected}
+          selected={isVisuallySelected}
           outsideCurrentMonth={outsideCurrentMonth}
           data-mui-test="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
+          draggable={draggable}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>
@@ -335,7 +342,7 @@ DateRangePickerDayRaw.propTypes = {
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -351,10 +358,15 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected: PropTypes.bool,
   onDaySelect: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -364,10 +376,6 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
-  /**
-   * Currently selected days.
-   */
-  selectedDays: PropTypes.array.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
@@ -380,21 +388,6 @@ DateRangePickerDayRaw.propTypes = {
   today: PropTypes.bool,
 } as any;
 
-const propsAreEqual = (
-  prevProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-  nextProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-) => {
-  return (
-    prevProps.isHighlighting === nextProps.isHighlighting &&
-    prevProps.isEndOfHighlighting === nextProps.isEndOfHighlighting &&
-    prevProps.isStartOfHighlighting === nextProps.isStartOfHighlighting &&
-    prevProps.isPreviewing === nextProps.isPreviewing &&
-    prevProps.isEndOfPreviewing === nextProps.isEndOfPreviewing &&
-    prevProps.isStartOfPreviewing === nextProps.isStartOfPreviewing &&
-    areDayPropsEqual(prevProps, nextProps)
-  );
-};
-
 /**
  *
  * Demos:
@@ -405,7 +398,4 @@ const propsAreEqual = (
  *
  * - [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)
  */
-export const DateRangePickerDay = React.memo(
-  DateRangePickerDayRaw,
-  propsAreEqual,
-) as DateRangePickerDayComponent;
+export const DateRangePickerDay = React.memo(DateRangePickerDayRaw) as DateRangePickerDayComponent;
