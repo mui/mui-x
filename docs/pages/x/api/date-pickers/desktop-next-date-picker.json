@@ -126,11 +126,7 @@
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopNextDatePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDesktopNextDatePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopNextDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopNextDatePicker/DesktopNextDatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",

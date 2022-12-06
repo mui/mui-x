@@ -115,7 +115,6 @@ StaticDatePicker.propTypes = {
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
   autoFocus: PropTypes.bool,
-  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */

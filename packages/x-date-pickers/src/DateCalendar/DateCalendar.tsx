@@ -23,7 +23,6 @@ import { YearCalendar } from '../YearCalendar';
 import { ExportedUseViewsOptions, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
-  ExportedCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
@@ -54,8 +53,7 @@ export interface ExportedDateCalendarProps<TDate>
     BaseDateValidationProps<TDate>,
     DayValidationProps<TDate>,
     YearValidationProps<TDate>,
-    MonthValidationProps<TDate>,
-    ExportedCalendarHeaderProps<TDate> {
+    MonthValidationProps<TDate> {
   /**
    * Default calendar month displayed when `value={null}`.
    */

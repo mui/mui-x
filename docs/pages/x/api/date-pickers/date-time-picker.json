@@ -126,11 +126,7 @@
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DateTimePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDateTimePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-time-picker\">Date Time Picker</a></li></ul>",

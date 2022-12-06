@@ -85,11 +85,7 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "MobileDateRangePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiMobileDateRangePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateRangePicker/MobileDateRangePicker.tsx",

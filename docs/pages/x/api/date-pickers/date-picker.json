@@ -114,11 +114,7 @@
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DatePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDatePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker\">Date Picker</a></li></ul>",

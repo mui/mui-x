@@ -97,7 +97,6 @@ DateRangePicker.propTypes = {
    */
   calendars: PropTypes.oneOf([1, 2, 3]),
   children: PropTypes.node,
-  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */

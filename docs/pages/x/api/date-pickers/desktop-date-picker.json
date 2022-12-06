@@ -107,11 +107,7 @@
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopDatePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDesktopDatePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker\">Date Picker</a></li></ul>",

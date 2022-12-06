@@ -80,7 +80,6 @@ MobileNextDatePicker.propTypes = {
    * Set to `true` if focus should be moved to the current view.
    */
   autoFocus: PropTypes.bool,
-  classes: PropTypes.object,
   /**
    * Class name applied to the root element.
    */

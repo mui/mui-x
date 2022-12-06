@@ -90,11 +90,7 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "StaticDateRangePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiStaticDateRangePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticDateRangePicker/StaticDateRangePicker.tsx",

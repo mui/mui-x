@@ -93,11 +93,7 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "DesktopDateRangePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDesktopDateRangePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DesktopDateRangePicker/DesktopDateRangePicker.tsx",

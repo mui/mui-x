@@ -124,7 +124,6 @@ MobileDateTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   children: PropTypes.node,
-  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */

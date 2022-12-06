@@ -125,11 +125,7 @@
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileNextDateTimePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiMobileNextDateTimePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileNextDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/MobileNextDateTimePicker/MobileNextDateTimePicker.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-picker\">Date Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",

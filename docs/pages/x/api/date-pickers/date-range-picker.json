@@ -100,11 +100,7 @@
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "DateRangePicker",
-  "styles": {
-    "classes": ["root", "labelContainer", "label", "switchViewButton", "switchViewIcon"],
-    "globalClasses": {},
-    "name": "MuiDateRangePicker"
-  },
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",

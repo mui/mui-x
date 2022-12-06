@@ -113,7 +113,6 @@ MobileDatePicker.propTypes = {
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
   children: PropTypes.node,
-  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */

@@ -51,22 +51,7 @@
     "view": "Controlled visible view.",
     "views": "Available views."
   },
-  "classDescriptions": {
-    "root": { "description": "Styles applied to the root element." },
-    "labelContainer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the label container element"
-    },
-    "label": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the label element" },
-    "switchViewButton": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the switch view button element"
-    },
-    "switchViewIcon": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the switch view icon element"
-    }
-  },
+  "classDescriptions": {},
   "slotDescriptions": {
     "Toolbar": "Custom component for the toolbar rendered above the views.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",

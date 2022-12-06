@@ -141,7 +141,6 @@ StaticDateTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  classes: PropTypes.object,
   /**
    * className applied to the root component.
    */
