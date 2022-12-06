@@ -77,7 +77,7 @@ If you want to pass language translations without using `createTheme` and `Theme
 you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
-import { LocalizationProvider, deDE } from '@mui/x-date-pickers';
+import { LocalizationProvider, deDE, DatePicker } from '@mui/x-date-pickers';
 
 <LocalizationProvider
   localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
