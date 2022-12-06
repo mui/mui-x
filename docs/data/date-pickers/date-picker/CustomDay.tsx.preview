@@ -1,4 +1,5 @@
-<DateCalendar
+<StaticNextDatePicker
+  displayStaticWrapperAs="desktop"
   value={value}
   onChange={(newValue) => setValue(newValue)}
   components={{ Day }}

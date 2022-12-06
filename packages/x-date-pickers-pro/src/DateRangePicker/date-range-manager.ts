@@ -1,11 +1,11 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
+import { DateRange, RangePosition } from '../internal/models';
 
 interface CalculateRangeChangeOptions<TDate> {
   utils: MuiPickersAdapter<TDate>;
   range: DateRange<TDate>;
   newDate: TDate | null;
-  currentlySelectingRangeEnd: 'start' | 'end';
+  rangePosition: RangePosition;
   /**
    * Should allow flipping range `start` and `end` dates if the `newDate` would result in a new range creation.
    *
@@ -15,7 +15,7 @@ interface CalculateRangeChangeOptions<TDate> {
 }
 
 interface CalculateRangeChangeResponse<TDate> {
-  nextSelection: 'start' | 'end';
+  nextSelection: RangePosition;
   newRange: DateRange<TDate>;
 }
 
@@ -23,12 +23,12 @@ export function calculateRangeChange<TDate>({
   utils,
   range,
   newDate: selectedDate,
-  currentlySelectingRangeEnd,
+  rangePosition,
   allowRangeFlip = false,
 }: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
 
-  if (currentlySelectingRangeEnd === 'start') {
+  if (rangePosition === 'start') {
     const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
       ? { nextSelection: 'start', newRange: [end!, selectedDate] }
       : { nextSelection: 'end', newRange: [selectedDate, null] };
@@ -60,5 +60,5 @@ export function calculateRangePreview<TDate>(
   }
 
   const [previewStart, previewEnd] = newRange;
-  return options.currentlySelectingRangeEnd === 'end' ? [end, previewEnd] : [previewStart, start];
+  return options.rangePosition === 'end' ? [end, previewEnd] : [previewStart, start];
 }

@@ -157,14 +157,39 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 
 ### Replace the `renderDay` prop
 
-The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
+- The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
 
-```diff
- <DatePicker
--  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
-+  components={{ Day: CustomDay }}
- />
-```
+  ```diff
+   <DatePicker
+  -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
+  +  components={{ Day: CustomDay }}
+   />
+  ```
+
+- The `selectedDays` prop have been removed from the `Day` component.
+  If you need to access it, you can control the value and pass it to the slot using `componentsProps`:
+
+  ```tsx
+  function CustomDay({ selectedDay, ...other }) {
+    // do something with 'selectedDay'
+    return <PickersDay {...other} />;
+  }
+
+  function App() {
+    const [value, setValue] = React.useState(null);
+
+    return (
+      <DatePicker
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        components={{ Day: CustomDay }}
+        componentsProps={{
+          day: { selectedDay: value },
+        }}
+      />
+    );
+  }
+  ```
 
 ### Rename the localization props
 
@@ -383,7 +408,43 @@ Component name changes are also reflected in `themeAugmentation`:
    />
   ```
 
-- The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`
+- The `onChange` / `openView` props on the toolbar have been renamed to `onViewChange` / `view`.
+
+  ```diff
+   const CustomToolbarComponent = props => (
+     <div>
+  -    <button onChange={() => props.onChange('day')}>Show day view</button>
+  +    <button onClick={() => props.onViewChange('day')}>Show day view</button>
+  -    <div>Current view: {props.openView}</div>
+  +    <div>Current view: {props.view}</div>
+     </div>
+   )
+   <DatePicker
+  -  ToolbarComponent={CustomToolbarComponent}
+  +  components={{
+  +    Toolbar: CustomToolbarComponent
+  +  }}
+   />
+  ```
+
+- The `currentlySelectingRangeEnd` / `setCurrentlySelectingRangeEnd` props on the Date Range Picker toolbar have been renamed to `rangePosition` / `onRangePositionChange`.
+
+  ```diff
+   const CustomToolbarComponent = props => (
+     <div>
+  -    <button onChange={() => props.setCurrentlySelectingRangeEnd('end')}>Edit end date</button>
+  +    <button onClick={() => props.onRangePositionChange('end')}>Edit end date</button>
+  -    <div>Is editing end date: {props.currentlySelectingRangeEnd === 'end'}</div>
+  +    <div>Is editing end date: {props.rangePosition === 'end'}</div>
+     </div>
+   )
+   <DateRangePicker
+  -  ToolbarComponent={CustomToolbarComponent}
+  +  components={{
+  +    Toolbar: CustomToolbarComponent
+  +  }}
+   />
+  ```
 
 ### Replace `tabs` props
 
@@ -423,7 +484,7 @@ Component name changes are also reflected in `themeAugmentation`:
    )
    <DateTimePicker
      components={{
-       tabs: CustomTabsComponent
+       Tabs: CustomTabsComponent
      }}
    />
   ```

@@ -1,12 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useStaticPicker } from '@mui/x-date-pickers/internals';
+import { useStaticRangePicker } from '../internal/hooks/useStaticRangePicker';
 import { StaticNextDateRangePickerProps } from './StaticNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { rangeValueManager } from '../internal/utils/valueManagers';
-import { renderDateRangeView } from '../internal/utils/views';
+import { renderDateRangeView } from '../internal/utils/viewRenderers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
-import { DateRange } from '../internal/models';
 
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -37,7 +36,7 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker<DateRange<TDate>, TDate, 'day', typeof props>({
+  const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
     viewLookup: VIEW_LOOKUP,
