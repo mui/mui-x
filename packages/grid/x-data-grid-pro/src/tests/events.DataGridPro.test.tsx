@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGridPro,
@@ -332,20 +332,16 @@ describe('<DataGridPro /> - Events Params', () => {
   });
 
   describe('gridReady', () => {
-    const sleep = (time = 50) =>
-      new Promise((resolve) => {
-        setTimeout(resolve, time);
-      });
-
     interface TestGridProps extends Partial<DataGridProProps> {
       onGridReady: () => void;
     }
 
-    let localApiRef: React.MutableRefObject<GridApi>;
+    let gridReadyApiRef: React.MutableRefObject<GridApi>;
+
     function TestGrid(props: TestGridProps) {
-      localApiRef = useGridApiRef();
+      gridReadyApiRef = useGridApiRef();
       React.useEffect(() => {
-        return localApiRef.current.subscribeEvent('gridReady', () => {
+        return gridReadyApiRef.current.subscribeEvent('gridReady', () => {
           props.onGridReady();
         });
       }, [props, props.onGridReady]);
@@ -353,7 +349,7 @@ describe('<DataGridPro /> - Events Params', () => {
         <div style={{ width: 300, height: 500 }}>
           <DataGridPro
             {...props}
-            apiRef={localApiRef}
+            apiRef={gridReadyApiRef}
             rows={props.rows ?? []}
             columns={props.columns ?? []}
           />
@@ -373,8 +369,7 @@ describe('<DataGridPro /> - Events Params', () => {
           columns={columns}
         />,
       );
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(1);
+      await waitFor(() => expect(gridReady.callCount).to.equal(1));
     });
 
     it('gridReady should not be fired if there is no data.', async () => {
@@ -387,11 +382,11 @@ describe('<DataGridPro /> - Events Params', () => {
           loading
         />,
       );
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(0);
+
+      await waitFor(() => expect(gridReady.callCount).to.equal(0));
     });
 
-    it('gridReady should be triggered after all states are initialized.', async () => {
+    it('gridReady should be triggered after all states are initialized. so that user can start interacting with the gird after its published', async () => {
       const gridReady = spy();
       const rowLength = 5;
       const { rows, columns } = getBasicGridData(rowLength, 4);
@@ -401,17 +396,19 @@ describe('<DataGridPro /> - Events Params', () => {
       render(
         <TestGrid
           onGridReady={() => {
-            gridReady(localApiRef.current.getRowModels().size);
-            act(() => localApiRef.current.setCellFocus(focusedRow, focusedColumnsField));
+            gridReady(gridReadyApiRef.current.getRowModels().size);
+            // user should be able to interact with the grid the `gridReady` event is triggered.
+            act(() => gridReadyApiRef.current.setCellFocus(focusedRow, focusedColumnsField));
           }}
           rows={rows}
           columns={columns}
         />,
       );
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(1);
-      // Checking if the user can successfully ineract with the grid after gridReady called.
-      expect(localApiRef.current.state.focus.cell).to.not.equal(null);
+
+      await waitFor(() => expect(gridReady.callCount).to.equal(1));
+
+      // Checking if the user can successfully interact with the grid after gridReady called.
+      expect(gridReadyApiRef.current.state.focus.cell).to.not.equal(null);
       expect(gridReady.args[0][0]).to.equal(rowLength);
     });
 
@@ -427,8 +424,8 @@ describe('<DataGridPro /> - Events Params', () => {
           columns={columns}
         />,
       );
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(1);
+
+      await waitFor(() => expect(gridReady.callCount).to.equal(1));
     });
 
     it('gridReady should not be called every time a state updates.', async () => {
@@ -444,10 +441,11 @@ describe('<DataGridPro /> - Events Params', () => {
           columns={columns}
         />,
       );
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(1);
-      act(() => localApiRef.current.setState({ ...localApiRef.current.state }));
-      await sleep(100);
+
+      await waitFor(() => {
+        expect(gridReady.callCount).to.equal(1);
+      });
+      act(() => gridReadyApiRef.current.setState({ ...gridReadyApiRef.current.state }));
       expect(gridReady.callCount).to.equal(1);
     });
 
@@ -457,7 +455,7 @@ describe('<DataGridPro /> - Events Params', () => {
       render(
         <TestGrid
           onGridReady={() => {
-            gridReady(localApiRef.current.getRowModels().size);
+            gridReady(gridReadyApiRef.current.getRowModels().size);
           }}
           rows={rows}
           columns={columns}
@@ -471,8 +469,7 @@ describe('<DataGridPro /> - Events Params', () => {
         />,
       );
 
-      await sleep(100);
-      expect(gridReady.callCount).to.equal(1);
+      await waitFor(() => act(() => expect(gridReady.callCount).to.equal(1)));
     });
   });
 
