@@ -6,11 +6,13 @@ import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSorti
 import { GridSortDirection } from '../../../models/gridSortModel';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
+import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 function SortGridMenuItems(props: GridFilterItemProps) {
   const { column, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
+  const rootProps = useGridRootProps();
 
   const sortDirection = React.useMemo(() => {
     if (!column) {
@@ -20,14 +22,29 @@ function SortGridMenuItems(props: GridFilterItemProps) {
     return sortItem?.sort;
   }, [column, sortModel]);
 
+  const sortingOrder = React.useMemo<GridSortDirection[]>(
+    () => column.sortingOrder ?? rootProps.sortingOrder,
+    [column, rootProps],
+  );
+
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      const direction = event.currentTarget.getAttribute('data-value') || null;
+      const direction = event.currentTarget.getAttribute('data-value');
       apiRef.current.sortColumn(column!, direction as GridSortDirection);
     },
     [apiRef, column, onClick],
   );
+
+  const getSortKey = React.useCallback((direction: GridSortDirection) => {
+    if (direction === 'asc') {
+      return 'columnMenuSortAsc';
+    }
+    if (direction === 'desc') {
+      return 'columnMenuSortDesc';
+    }
+    return 'columnMenuUnsort';
+  }, []);
 
   if (!column || !column.sortable) {
     return null;
@@ -35,15 +52,15 @@ function SortGridMenuItems(props: GridFilterItemProps) {
 
   return (
     <React.Fragment>
-      <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
-        {apiRef.current.getLocaleText('columnMenuUnsort')}
-      </MenuItem>
-      <MenuItem onClick={onSortMenuItemClick} data-value="asc" disabled={sortDirection === 'asc'}>
-        {apiRef.current.getLocaleText('columnMenuSortAsc')}
-      </MenuItem>
-      <MenuItem onClick={onSortMenuItemClick} data-value="desc" disabled={sortDirection === 'desc'}>
-        {apiRef.current.getLocaleText('columnMenuSortDesc')}
-      </MenuItem>
+      {sortingOrder.map((direction) => (
+        <MenuItem
+          onClick={onSortMenuItemClick}
+          data-value={direction}
+          disabled={sortDirection === direction}
+        >
+          {apiRef.current.getLocaleText(getSortKey(direction))}
+        </MenuItem>
+      ))}
     </React.Fragment>
   );
 }
