@@ -8,6 +8,7 @@ import {
   describeConformance,
   createEvent,
   fireTouchChangedEvent,
+  userEvent,
 } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
@@ -20,7 +21,8 @@ import {
 import {
   DateRangeCalendar,
   dateRangeCalendarClasses as classes,
-} from '@mui/x-date-pickers-pro/DateRangeCalendar/index';
+} from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
@@ -464,7 +466,7 @@ describe('<DateRangeCalendar />', () => {
         // flip date range
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
-          rangeCalendarDayTouches['2018-01-02'],
+          rangeCalendarDayTouches['2018-01-01'],
           rangeCalendarDayTouches['2018-01-09'],
           rangeCalendarDayTouches['2018-01-10'],
         );
@@ -569,5 +571,41 @@ describe('<DateRangeCalendar />', () => {
     render(<DateRangeCalendar calendars={3} />);
 
     expect(screen.getAllByMuiTest('pickers-calendar')).to.have.length(3);
+  });
+
+  describe('Performance', () => {
+    it('should only render the new start day when selecting a start day without a previously selected start day', () => {
+      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+
+      render(
+        <DateRangeCalendar
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(getPickerDay('2'));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+    });
+
+    it('should only render the day inside range when selecting the end day', () => {
+      const RenderCount = spy((props) => <DateRangePickerDay {...props} />);
+
+      render(
+        <DateRangeCalendar
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      userEvent.mousePress(getPickerDay('2'));
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(getPickerDay('4'));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(6); // 2 render * 3 day
+    });
   });
 });

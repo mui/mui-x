@@ -14,7 +14,10 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import Box from '@mui/material/Box';
 
-const componentsProps: DatePickerProps<any>['componentsProps'] = {
+const componentsProps: Pick<
+  NonNullable<DatePickerProps<any>['componentsProps']>,
+  'leftArrowIcon' | 'rightArrowIcon' | 'previousIconButton' | 'nextIconButton'
+> = {
   leftArrowIcon: { fontSize: 'large' },
   rightArrowIcon: { fontSize: 'large' },
   previousIconButton: {

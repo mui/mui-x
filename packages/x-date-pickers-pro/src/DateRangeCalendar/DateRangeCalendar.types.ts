@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
+import { SlotComponentProps } from '@mui/base';
 import { Theme } from '@mui/material/styles';
 import {
   BaseDateValidationProps,
@@ -12,10 +13,11 @@ import {
   PickerSelectionState,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
+  DayCalendarProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
-import { DateRangePickerDayProps } from '../DateRangePickerDay';
+import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -33,8 +35,14 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'>,
-    PickersCalendarHeaderSlotsComponentsProps<TDate> {}
+    Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
+    PickersCalendarHeaderSlotsComponentsProps<TDate> {
+  day?: SlotComponentProps<
+    typeof DateRangePickerDay,
+    {},
+    DayCalendarProps<TDate> & { day: TDate; selected: boolean }
+  >;
+}
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
@@ -116,6 +124,10 @@ export interface DateRangeCalendarProps<TDate>
    * @default false
    */
   disableDragEditing?: boolean;
+}
+
+export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
+  isDragging: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
