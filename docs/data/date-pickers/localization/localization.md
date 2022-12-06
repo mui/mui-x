@@ -99,11 +99,11 @@ If you want to customize some translations on specific component, you can use th
 :::info
 This method can be combined with the ones shown above.
 
-If you pass a locale through `LocalizationProvider` or the theme, and you provide translation keys through the `localeText` prop of a picker at the same time, then only the latter translation keys will be overridden.
+If you pass a localization through `LocalizationProvider` or the theme, and you provide translation keys through the `localeText` prop of a picker at the same time, then only the latter translation keys will be overridden.
 
 ```tsx
 <LocalizationProvider
-  localeText={frFR.components.MuiLocalizationProvider.defaultProps.localeText}
+  localeText={{ clearButtonLabel: 'Empty', todayButtonLabel: 'Now' }}
 >
   <DatePicker
     // ...other props
@@ -113,6 +113,11 @@ If you pass a locale through `LocalizationProvider` or the theme, and you provid
   />
 </LocalizationProvider>
 ```
+
+This will produce the following result:
+
+- "Today" button with text **Now** taken from the Localization Provider's `localeText` prop
+- "Clear" button with text **Vider** overridden by the Date Picker's `localeText` prop
 
 :::
 
