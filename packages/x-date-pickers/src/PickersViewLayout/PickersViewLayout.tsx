@@ -40,18 +40,18 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 
-  const { toolbar, content, tabs, actionBar, classes } = usePickerLayout(props);
+  const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
   const { sx, className, isLandscape } = props;
 
   return (
     <PickersViewLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, classes.root)}
+      className={clsx(className, pickersViewLayoutClasses.root)}
       ownerState={{ isLandscape }}
     >
       {toolbar}
-      <PickersViewLayoutContentWrapper className={classes.contentWrapper}>
+      <PickersViewLayoutContentWrapper className={pickersViewLayoutClasses.contentWrapper}>
         {tabs}
         {content}
       </PickersViewLayoutContentWrapper>

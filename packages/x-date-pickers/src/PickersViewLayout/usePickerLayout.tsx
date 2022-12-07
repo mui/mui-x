@@ -3,10 +3,7 @@ import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersViewLayoutProps, SubComponents } from './PickersViewLayout.types';
-import {
-  getPickersViewLayoutUtilityClass,
-  PickersViewLayoutClassKey,
-} from './pickersViewLayoutClasses';
+import { getPickersViewLayoutUtilityClass } from './pickersViewLayoutClasses';
 import { DateOrTimeView } from '../internals';
 
 const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
@@ -22,9 +19,8 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
 
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
 };
-interface UsePickerLayoutResponse extends SubComponents {
-  classes: Record<PickersViewLayoutClassKey, string>;
-}
+
+interface UsePickerLayoutResponse extends SubComponents {}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   props: PickersViewLayoutProps<TValue, TView>,
@@ -50,7 +46,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   } = props;
 
   const classes = useUtilityClasses(props);
-
   // Action bar
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
@@ -109,7 +104,6 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     content,
     tabs,
     actionBar,
-    classes,
   };
 };
 

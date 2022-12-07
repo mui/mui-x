@@ -40,7 +40,7 @@ function ActionList(props: PickersActionBarProps) {
 
 function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
   const { isLandscape } = props;
-  const { toolbar, tabs, content, actionBar, classes } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
 
   return (
     <PickersViewLayoutRoot
@@ -54,7 +54,7 @@ function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
     >
       {toolbar}
       {actionBar}
-      <PickersViewLayoutContentWrapper className={classes.contentWrapper}>
+      <PickersViewLayoutContentWrapper className={pickersViewLayoutClasses.contentWrapper}>
         {tabs}
         {content}
       </PickersViewLayoutContentWrapper>

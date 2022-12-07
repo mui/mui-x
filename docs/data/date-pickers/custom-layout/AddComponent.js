@@ -66,7 +66,7 @@ function RestaurantHeader() {
 }
 
 function CustomLayout(props) {
-  const { toolbar, tabs, content, actionBar, classes } = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (
     <PickersViewLayoutRoot
@@ -85,7 +85,9 @@ function CustomLayout(props) {
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersViewLayoutContentWrapper className={classes.contentWrapper}>
+      <PickersViewLayoutContentWrapper
+        className={pickersViewLayoutClasses.contentWrapper}
+      >
         {tabs}
         {content}
       </PickersViewLayoutContentWrapper>
