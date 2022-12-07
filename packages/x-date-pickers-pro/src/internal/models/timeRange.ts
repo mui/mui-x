@@ -1,9 +1,9 @@
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
 import {
   BaseTimeValidationProps,
   TimeValidationProps,
   DefaultizedProps,
   MakeOptional,
+  UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from './range';
 import { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
