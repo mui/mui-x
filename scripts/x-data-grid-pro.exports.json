@@ -521,7 +521,7 @@
   { "name": "selectedGridRowsSelector", "kind": "Variable" },
   { "name": "selectedIdsLookupSelector", "kind": "Variable" },
   { "name": "skSK", "kind": "Variable" },
-  { "name": "SortGridMenuItems", "kind": "Variable" },
+  { "name": "SortGridMenuItems", "kind": "Function" },
   { "name": "SUBMIT_FILTER_DATE_STROKE_TIME", "kind": "Variable" },
   { "name": "SUBMIT_FILTER_STROKE_TIME", "kind": "Variable" },
   { "name": "svSE", "kind": "Variable" },
