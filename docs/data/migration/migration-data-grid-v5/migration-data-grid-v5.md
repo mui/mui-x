@@ -154,10 +154,14 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
 - The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
-<!--
 ### CSS classes
 
-TBD
+- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
+
+  ```diff
+  -'.MuiDataGrid-cell:focus-within': {
+  +'.MuiDataGrid-cell--outlined': {
+  ```
 
 ### Virtualization
 
