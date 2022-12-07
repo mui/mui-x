@@ -25,7 +25,7 @@
     "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
     "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: TView) =&gt; void</code><br><em>view:</em> The new view.",
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
-    "openTo": "Initially opened view. Must be a valid option from <code>views</code> list.",
+    "openTo": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list.",
     "orientation": "Force rendering in particular orientation.",
     "reduceAnimations": "Disable heavy animations.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
@@ -36,7 +36,7 @@
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
-    "view": "Controlled visible view.",
+    "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
     "views": "Available views."
   },
   "classDescriptions": {},

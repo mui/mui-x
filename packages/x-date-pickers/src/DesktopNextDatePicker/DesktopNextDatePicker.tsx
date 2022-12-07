@@ -251,7 +251,8 @@ DesktopNextDatePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * Initially opened view.
+   * The default visible view.
+   * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
@@ -333,7 +334,9 @@ DesktopNextDatePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Controlled visible view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['day', 'month', 'year']),
   /**

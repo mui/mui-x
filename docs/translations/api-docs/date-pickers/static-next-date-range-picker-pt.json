@@ -33,7 +33,7 @@
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
-    "view": "Controlled visible view."
+    "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list."
   },
   "classDescriptions": {},
   "slotDescriptions": {
