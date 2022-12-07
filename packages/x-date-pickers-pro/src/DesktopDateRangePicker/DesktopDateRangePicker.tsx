@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   DesktopTooltipWrapper,
@@ -21,7 +22,6 @@ import {
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
-import { SxProps } from '@mui/system';
 
 const releaseInfo = getReleaseInfo();
 

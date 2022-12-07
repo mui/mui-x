@@ -1,3 +1,4 @@
+import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
@@ -25,12 +26,15 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeView> {
    */
   onViewChange?: (view: TView) => void;
   /**
-   * Initially opened view.
+   * The default visible view.
+   * Used when the component view is not controlled.
    * Must be a valid option from `views` list.
    */
   openTo?: TView;
   /**
-   * Controlled visible view.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
    */
   view?: TView;
   /**
@@ -57,7 +61,7 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeView> {
 export interface ExportedUseViewsOptions<TView extends DateOrTimeView>
   extends MakeOptional<Omit<UseViewsOptions<any, TView>, 'onChange'>, 'openTo' | 'views'> {}
 
-let warnedOnceNotValidOpenTo = false;
+let warnedOnceNotValidView = false;
 
 export function useViews<TValue, TView extends DateOrTimeView>({
   onChange,
@@ -70,27 +74,39 @@ export function useViews<TValue, TView extends DateOrTimeView>({
   onFocusedViewChange,
 }: UseViewsOptions<TValue, TView>) {
   if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnceNotValidOpenTo && openTo != null && !views.includes(openTo)) {
-      console.warn(
-        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
-        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
-      );
-      warnedOnceNotValidOpenTo = true;
+    if (!warnedOnceNotValidView) {
+      if (inView != null && !views.includes(inView)) {
+        console.warn(
+          `MUI: \`view="${inView}"\` is not a valid prop.`,
+          `It must be an element of \`views=["${views.join('", "')}"]\`.`,
+        );
+        warnedOnceNotValidView = true;
+      }
+
+      if (inView == null && openTo != null && !views.includes(openTo)) {
+        console.warn(
+          `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
+          `It must be an element of \`views=["${views.join('", "')}"]\`.`,
+        );
+        warnedOnceNotValidView = true;
+      }
     }
   }
 
-  const [view, setOpenView] = useControlled({
+  const defaultView = React.useRef(arrayIncludes(views, openTo) ? openTo : views[0]);
+  const [view, setView] = useControlled({
     name: 'useViews',
     state: 'view',
     controlled: inView,
-    default: arrayIncludes(views, openTo) ? openTo : views[0],
+    default: defaultView.current,
   });
 
+  const defaultFocusedView = React.useRef(autoFocus ? view : null);
   const [focusedView, setFocusedView] = useControlled({
     name: 'useViews',
     state: 'focusedView',
     controlled: inFocusedView,
-    default: autoFocus ? view : null,
+    default: defaultFocusedView.current,
   });
 
   const viewIndex = views.indexOf(view);
@@ -98,7 +114,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
   const nextView: TView | null = views[viewIndex + 1] ?? null;
 
   const handleChangeView = useEventCallback((newView: TView) => {
-    setOpenView(newView);
+    setView(newView);
 
     if (onViewChange) {
       onViewChange(newView);
