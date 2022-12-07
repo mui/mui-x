@@ -21,7 +21,7 @@ import {
   DayCalendarSlotsComponentsProps,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
-import { DateRange } from '../internal/models/range';
+import { DateRange, RangePosition } from '../internal/models/range';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
 import { doNothing } from '../internal/utils/utils';
@@ -86,7 +86,7 @@ export interface DateRangePickerViewDesktopProps<TDate>
   calendars: 1 | 2 | 3;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
-  currentlySelectingRangeEnd: 'start' | 'end';
+  rangePosition: RangePosition;
   classes?: Partial<DateRangePickerViewDesktopClasses>;
 }
 
@@ -148,7 +148,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     changeMonth,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
+    rangePosition,
     currentMonth,
     value,
     disableFuture,
@@ -189,7 +189,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     utils,
     range: valueDayRange,
     newDate: rangePreviewDay,
-    currentlySelectingRangeEnd,
+    rangePosition,
   });
 
   const handleSelectedDayChange = React.useCallback<

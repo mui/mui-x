@@ -10,6 +10,7 @@ import {
 } from '../NextDateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
+import { DateOrTimeView } from '../internals/models/views';
 
 export interface DesktopNextDateTimePickerSlotsComponent<TDate>
   extends BaseNextDateTimePickerSlotsComponent<TDate>,
@@ -17,7 +18,7 @@ export interface DesktopNextDateTimePickerSlotsComponent<TDate>
 
 export interface DesktopNextDateTimePickerSlotsComponentsProps<TDate>
   extends BaseNextDateTimePickerSlotsComponentsProps<TDate>,
-    UseDesktopPickerSlotsComponentsProps<TDate> {}
+    UseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
 
 export interface DesktopNextDateTimePickerProps<TDate>
   extends BaseNextDateTimePickerProps<TDate>,

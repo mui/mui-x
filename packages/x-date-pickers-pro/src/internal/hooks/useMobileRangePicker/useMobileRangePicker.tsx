@@ -9,6 +9,8 @@ import {
   PickersViewLayout,
   PickersModalDialog,
   InferError,
+  PickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerParams,
@@ -16,7 +18,7 @@ import {
 } from './useMobileRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange, RangePosition } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 const releaseInfo = getReleaseInfo();
@@ -45,7 +47,7 @@ export const useMobileRangePicker = <
   } = props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
-  const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const {
     open,
@@ -60,8 +62,8 @@ export const useMobileRangePicker = <
     viewLookup,
     validator,
     additionalViewProps: {
-      currentDatePosition,
-      onCurrentDatePositionChange: setCurrentDatePosition,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
     },
   });
 
@@ -72,8 +74,8 @@ export const useMobileRangePicker = <
     readOnly,
     disabled,
     disableOpenPicker,
-    currentDatePosition,
-    onCurrentDatePositionChange: setCurrentDatePosition,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
   });
 
   const Field = components.Field;
@@ -153,6 +155,15 @@ export const useMobileRangePicker = <
     },
   };
 
+  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...componentsProps,
+    toolbar: {
+      ...componentsProps?.toolbar,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
+    } as ExportedBaseToolbarProps,
+  };
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
@@ -169,12 +180,15 @@ export const useMobileRangePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
         >
           <PickersViewLayout
             {...layoutProps}
             components={components}
-            componentsProps={componentsProps}
+            componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
           </PickersViewLayout>

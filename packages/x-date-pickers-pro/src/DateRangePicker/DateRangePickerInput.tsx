@@ -11,7 +11,7 @@ import {
   onSpaceOrEnter,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { CurrentlySelectingRangeEndProps, DateRange } from '../internal/models/range';
+import { RangePositionProps, DateRange } from '../internal/models/range';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import {
   DateRangePickerInputClasses,
@@ -73,7 +73,7 @@ export interface DateRangePickerInputProps<TDate>
       DateInputProps<TDate>,
       keyof ExportedDateRangePickerInputProps<TDate> | 'value' | 'validationError'
     >,
-    CurrentlySelectingRangeEndProps {
+    RangePositionProps {
   validationError: DateRangeValidationError;
   value: DateRange<TDate>;
   classes?: Partial<DateRangePickerInputClasses>;
@@ -93,7 +93,8 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
 ): JSX.Element {
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerInput' });
   const {
-    currentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange,
     disableOpenPicker,
     onBlur,
     onChange,
@@ -103,7 +104,6 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     value: [start, end],
     readOnly,
     renderInput,
-    setCurrentlySelectingRangeEnd,
     TextFieldProps,
     validationError: [startValidationError, endValidationError],
     className,
@@ -121,12 +121,12 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
       return;
     }
 
-    if (currentlySelectingRangeEnd === 'start') {
+    if (rangePosition === 'start') {
       startRef.current?.focus();
-    } else if (currentlySelectingRangeEnd === 'end') {
+    } else if (rangePosition === 'end') {
       endRef.current?.focus();
     }
-  }, [currentlySelectingRangeEnd, open]);
+  }, [rangePosition, open]);
 
   // TODO: rethink this approach. We do not need to wait for calendar to be updated to rerender input (looks like freezing)
   // TODO: so simply break 1 react's commit phase in 2 (first for input and second for calendars) by executing onChange in the next tick
@@ -148,8 +148,8 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event.stopPropagation();
-    if (setCurrentlySelectingRangeEnd) {
-      setCurrentlySelectingRangeEnd('start');
+    if (onRangePositionChange) {
+      onRangePositionChange('start');
     }
     if (!readOnly && !disableOpenPicker) {
       openPicker();
@@ -160,8 +160,8 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event.stopPropagation();
-    if (setCurrentlySelectingRangeEnd) {
-      setCurrentlySelectingRangeEnd('end');
+    if (onRangePositionChange) {
+      onRangePositionChange('end');
     }
     if (!readOnly && !disableOpenPicker) {
       openPicker();
@@ -169,14 +169,14 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
   };
 
   const focusOnRangeEnd = () => {
-    if (open && setCurrentlySelectingRangeEnd) {
-      setCurrentlySelectingRangeEnd('end');
+    if (open && onRangePositionChange) {
+      onRangePositionChange('end');
     }
   };
 
   const focusOnRangeStart = () => {
-    if (open && setCurrentlySelectingRangeEnd) {
-      setCurrentlySelectingRangeEnd('start');
+    if (open && onRangePositionChange) {
+      onRangePositionChange('start');
     }
   };
   const startInputProps = useMaskedInput({
@@ -189,7 +189,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: startRef,
-      focused: open ? currentlySelectingRangeEnd === 'start' : undefined,
+      focused: open ? rangePosition === 'start' : undefined,
       // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
       // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
       ...(!readOnly && !other.disabled && { onClick: openRangeStartSelection }),
@@ -212,7 +212,7 @@ export const DateRangePickerInput = React.forwardRef(function DateRangePickerInp
     TextFieldProps: {
       ...TextFieldProps,
       inputRef: endRef,
-      focused: open ? currentlySelectingRangeEnd === 'end' : undefined,
+      focused: open ? rangePosition === 'end' : undefined,
       // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
       // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
       ...(!readOnly && !other.disabled && { onClick: openRangeEndSelection }),

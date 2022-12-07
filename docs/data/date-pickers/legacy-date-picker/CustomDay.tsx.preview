@@ -5,8 +5,11 @@
   onChange={(newValue) => {
     setValue(newValue);
   }}
-  components={{
-    Day,
+  components={{ Day }}
+  componentsProps={{
+    day: {
+      selectedDay: value,
+    } as any,
   }}
   renderInput={(params) => <TextField {...params} />}
   inputFormat="'Week of' MMM d"

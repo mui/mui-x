@@ -652,7 +652,7 @@ describe('<DesktopNextDateRangePicker />', () => {
       render(
         <DesktopNextDateRangePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SlideDirection } from './PickersSlideTransition';
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
@@ -182,7 +183,7 @@ export const useCalendarState = <TDate extends unknown>({
     dispatch({ type: 'finishMonthSwitchingAnimation' });
   }, []);
 
-  const changeFocusedDay = React.useCallback(
+  const changeFocusedDay = useEventCallback(
     (newFocusedDate: TDate | null, withoutMonthSwitchingAnimation?: boolean) => {
       if (!isDateDisabled(newFocusedDate)) {
         dispatch({
@@ -192,7 +193,6 @@ export const useCalendarState = <TDate extends unknown>({
         });
       }
     },
-    [isDateDisabled],
   );
 
   return {

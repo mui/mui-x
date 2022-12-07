@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { UseDateRangeFieldProps } from '../internal/models/dateRange';
+import { RangePosition } from '../internal/models/range';
 
 export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
@@ -61,7 +62,7 @@ export interface MultiInputDateRangeFieldSlotsComponentsProps<TDate> {
   input?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputDateRangeFieldOwnerState<TDate> & { position: 'start' | 'end' }
+    MultiInputDateRangeFieldOwnerState<TDate> & { position: RangePosition }
   >;
   separator?: SlotComponentProps<typeof Typography, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
 }
