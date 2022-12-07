@@ -263,12 +263,6 @@ NextDateRangePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
-  /**
-   * The visible view.
-   * Used when the component view is controlled.
-   * Must be a valid option from `views` list.
-   */
-  view: PropTypes.oneOf(['day']),
 } as any;
 
 export { NextDateRangePicker };
