@@ -8,7 +8,7 @@ title: Date and Time pickers - Localization
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
-Localization can impact pickers components rendering in two distincts ways: The date format, and the components attributes such as `aria-label`.
+Localization can impact pickers components rendering in two distinct ways: The date format, and the components attributes such as `aria-label`.
 
 ## Date-library locale
 
@@ -43,10 +43,10 @@ in the GitHub repository.
 You can set the locale text by using the theme provider.
 
 ```jsx
+import 'dayjs/locale/de';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { CalendarPicker, LocalizationProvider, deDE } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import bgLocale from 'date-fns/locale/bg';
 
 const theme = createTheme(
   {
@@ -54,13 +54,13 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG, // use 'bg' locale for UI texts (start, next month, ...)
+  deDE, // use 'de' locale for UI texts (start, next month, ...)
 );
 
 <ThemeProvider theme={theme}>
   <LocalizationProvider
     dateAdapter={AdapterDayjs}
-    adapterLocale={bgLocale} // use 'bg' locale for date parser/formatter
+    adapterLocale="de" // use 'de' locale for date parser/formatter
   >
     <CalendarPicker />
   </LocalizationProvider>
@@ -68,15 +68,15 @@ const theme = createTheme(
 ```
 
 Note that `createTheme` accepts any number of arguments.
-If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `bgBG` as a new argument.
+If you are already using the [translations of the core components](/material-ui/guides/localization/#locale-text) or the [translations of the data grid](/x/react-data-grid/localization/#locale-text), you can add `deDE` as a new argument.
 The same import works for `DataGridPro` as it's an extension of `DataGrid`.
 
 ```jsx
+import 'dayjs/locale/de';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { DataGrid, bgBG as dataGridBgBG } from '@mui/x-data-grid';
-import { bgBG as coreBgBG } from '@mui/material/locale';
-import bgLocale from 'date-fns/locale/bg';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
+import { DataGrid, deDE as dataGridDeDE } from '@mui/x-data-grid';
+import { deDE as coreDeDE } from '@mui/material/locale';
+import { CalendarPicker, LocalizationProvider, deDE } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const theme = createTheme(
@@ -85,13 +85,13 @@ const theme = createTheme(
       primary: { main: '#1976d2' },
     },
   },
-  bgBG, // x-date-pickers translations
-  dataGridBgBG, // x-data-grid translations
-  coreBgBG, // core translations
+  deDE, // x-date-pickers translations
+  dataGridDeDE, // x-data-grid translations
+  coreDeDE, // core translations
 );
 
 <ThemeProvider theme={theme}>
-  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={bgLocale}>
+  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
     <CalendarPicker />
     <DataGrid />
   </LocalizationProvider>
@@ -101,14 +101,14 @@ const theme = createTheme(
 If you want to pass language translations without using `createTheme` and `ThemeProvider`, you can directly load the language translations from the `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` package and pass them to the `LocalizationProvider`.
 
 ```jsx
+import 'dayjs/locale/de';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { CalendarPicker, LocalizationProvider, bgBG } from '@mui/x-date-pickers';
-import bgLocale from 'date-fns/locale/bg';
+import { CalendarPicker, LocalizationProvider, deDE } from '@mui/x-date-pickers';
 
 <LocalizationProvider
   dateAdapter={AdapterDayjs}
-  adapterLocale={bgLocale}
-  localeText={bgBG.components.MuiLocalizationProvider.defaultProps.localeText}
+  adapterLocale="de"
+  localeText={deDE.components.MuiLocalizationProvider.defaultProps.localeText}
 >
   <CalendarPicker />
 </LocalizationProvider>;
