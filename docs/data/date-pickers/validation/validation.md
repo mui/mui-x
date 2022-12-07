@@ -14,7 +14,7 @@ All the date and time pickers have an API for adding validation constraints.
 By default, they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
-The validation props are showcased for each type of picker component using the new responsive pickers (`NextTimePicker`, `NextDatePicker`, `NextDateRangePicker`, etc)
+The validation props are showcased for each type of picker component using the new responsive pickers (`NextTimePicker`, `NextDatePicker`, `NextDateRangePicker`, etc.).
 
 But the same props are available on:
 
@@ -76,7 +76,8 @@ For date time pickers, it will combine both.
 {{"demo": "DateValidationDisableFuture.js", "defaultCodeOpen": false}}
 
 :::info
-The current time is computed during the first render of the `LocalizationProvider`, it will not change during the lifetime of the component.
+The current time is computed during the first render of the `LocalizationProvider`.
+It will not change during the lifetime of the component.
 :::
 
 ## Date validation

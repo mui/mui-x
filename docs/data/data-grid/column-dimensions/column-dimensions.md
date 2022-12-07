@@ -30,7 +30,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 To set a minimum and maximum width for a `flex` column set the `minWidth` and the `maxWidth` property in `GridColDef`.
 
-:::info
+:::warning
 Before using fluid width, note that:
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.

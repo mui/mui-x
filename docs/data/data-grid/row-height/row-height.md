@@ -111,8 +111,8 @@ To add a border instead, set `rowSpacingType` to `"border"` and customize the co
 />
 ```
 
-:::info
-⚠ Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
+:::success
+Adding a bottom margin or border to rows that also have a [detail panel](/x/react-data-grid/master-detail/) is not recommended because the detail panel relies on the bottom margin to work.
 
 As an alternative, you can use the top spacing to define the space between rows.
 It's easier to always increase the next row spacing no matter if the detail panel is expanded or not, but you can use `gridDetailPanelExpandedRowIdsSelector` to apply a spacing depending on the open state.

@@ -104,7 +104,7 @@ It is also called with a `GridCellParams` object.
 Use the `align` property in `GridColDef` to change the alignment of content of the cells.
 Choose between one of the following values: 'left' | 'right' | 'center'.
 
-:::info
+:::warning
 You must use `headerAlign` to align the content of the header.
 :::
 

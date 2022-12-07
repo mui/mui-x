@@ -67,8 +67,8 @@ This can be done in two ways:
 
 {{"demo": "DisableColumnPinningButtons.js", "disableAd": true, "bg": "inline"}}
 
-:::info
-Using the `disableColumnMenu` prop also works, however, you disable completely the column menu with this approach.
+:::warning
+Using the `disableColumnMenu` prop also works, but this approach completely disables the column menu.
 :::
 
 ## Pinning the checkbox selection column
