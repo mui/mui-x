@@ -66,7 +66,7 @@ Such modification can lead to inconsistencies between the visual aspect, and the
 In the previous demonstration, the tab order is broken, because the action bar appears before the calendar whereas in the DOM the action bar is still after the calendar.
 
 To modify the DOM structure, you can create your own `Layout` component.
-To simplify the job, we export the hook `usePickerLayout` which takes Layout's props as an input and returns React nodes.
+To simplify the job, use the `usePickerLayout` hook which takes Layout's props as an input and returns React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx
