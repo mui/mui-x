@@ -61,6 +61,8 @@ import {
   rowPinningStateInitializer,
   useGridColumnGrouping,
   columnGroupsStateInitializer,
+  useGridLazyLoader,
+  useGridLazyLoaderPreProcessors,
 } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
@@ -91,6 +93,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorderPreProcessors(apiRef, props);
   useGridRowGroupingPreProcessors(apiRef, props);
   useGridTreeDataPreProcessors(apiRef, props);
+  useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);
   useGridDetailPanelPreProcessors(apiRef, props);
@@ -160,6 +163,7 @@ export const useDataGridPremiumComponent = (
   useGridRowReorder(apiRef, props);
   useGridScroll(apiRef, props);
   useGridInfiniteLoader(apiRef, props);
+  useGridLazyLoader(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef);
   useGridPrintExport(apiRef, props);
