@@ -155,7 +155,10 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
-  const selectedDateOrToday = value ?? now;
+  const selectedDateOrStartOfMonth = React.useMemo(
+    () => value ?? utils.startOfMonth(now),
+    [now, utils, value],
+  );
   const selectedMonth = React.useMemo(() => {
     if (value != null) {
       return utils.getMonth(value);
@@ -213,13 +216,13 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(selectedDateOrToday, month);
+    const newDate = utils.setMonth(selectedDateOrStartOfMonth, month);
     setValue(newDate);
     onChange?.(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
+    if (!isMonthDisabled(utils.setMonth(selectedDateOrStartOfMonth, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -281,7 +284,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(selectedDateOrToday).map((month) => {
+      {utils.getMonthArray(selectedDateOrStartOfMonth).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
         const isSelected = monthNumber === selectedMonth;

@@ -6,7 +6,7 @@ import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<MonthCalendar />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
 
   it('allows to pick month standalone by click, `Enter` and `Space`', () => {
     const onChange = spy();
@@ -24,6 +24,16 @@ describe('<MonthCalendar />', () => {
 
     expect(onChange.callCount).to.equal(1);
     expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
+  });
+
+  it('should select start of month without time when no initial value is present', () => {
+    const onChange = spy();
+    render(<MonthCalendar onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Feb' }));
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {
