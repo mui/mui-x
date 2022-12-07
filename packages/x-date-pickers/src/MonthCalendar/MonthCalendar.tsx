@@ -159,6 +159,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     () => value ?? utils.startOfMonth(now),
     [now, utils, value],
   );
+
   const selectedMonth = React.useMemo(() => {
     if (value != null) {
       return utils.getMonth(value);

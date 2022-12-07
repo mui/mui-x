@@ -158,6 +158,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     () => value ?? utils.startOfYear(now),
     [now, utils, value],
   );
+
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {
     if (value != null) {
