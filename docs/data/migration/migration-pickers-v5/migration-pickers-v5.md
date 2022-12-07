@@ -488,3 +488,21 @@ Component name changes are also reflected in `themeAugmentation`:
      }}
    />
   ```
+
+### Remove the callback version of the `action` prop on the `actionBar` slot
+
+The `action` prop of the `actionBar` slot is no longer supporting a callback.
+Instead, you can pass a callback at the slot level
+
+```diff
+ <DatePicker
+   componentsProps={{
+-     actionBar: {
+-       actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
+-     },
++     actionBar: ({ wrapperVariant }) => ({
++       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
++     }),
+   }}
+ />
+```

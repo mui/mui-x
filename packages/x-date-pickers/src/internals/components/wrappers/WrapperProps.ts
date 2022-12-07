@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { SlotComponentProps } from '@mui/base/utils';
 import { DateInputProps } from '../PureDateInput';
 import { PickersActionBarProps } from '../../../PickersActionBar';
+import { WrapperVariant } from './WrapperVariantContext';
 
 export interface DateInputPropsLike
   extends Omit<DateInputProps<any>, 'renderInput' | 'validationError'> {
@@ -25,7 +27,13 @@ export interface PickersSlotsComponentsProps {
   /**
    * Props passed down to the action bar component.
    */
-  actionBar?: Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>;
+  actionBar?: SlotComponentProps<
+    React.ComponentType<
+      Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>
+    >,
+    {},
+    { wrapperVariant: WrapperVariant }
+  >;
   /**
    * Props passed down to the paper content component.
    * Can't be used without a custom PaperContent component since the default one is React.Fragment.

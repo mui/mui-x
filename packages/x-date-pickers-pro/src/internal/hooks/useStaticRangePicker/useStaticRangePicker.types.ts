@@ -16,8 +16,8 @@ export interface UseStaticRangePickerSlotsComponent
   extends ExportedPickersViewLayoutSlotsComponent,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
-export interface UseStaticRangePickerSlotsComponentsProps
-  extends ExportedPickersViewLayoutSlotsComponentsProps,
+export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView>,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {
   toolbar?: ExportedBaseToolbarProps;
 }
@@ -36,7 +36,7 @@ export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, 
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticRangePickerSlotsComponentsProps;
+  componentsProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticRangePickerParams<

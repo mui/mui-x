@@ -15,8 +15,8 @@ export interface UseStaticPickerSlotsComponent
   extends ExportedPickersViewLayoutSlotsComponent,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
-export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickersViewLayoutSlotsComponentsProps,
+export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView>,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {}
 
 export interface StaticOnlyPickerProps {
@@ -39,7 +39,7 @@ export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TErro
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticPickerSlotsComponentsProps;
+  componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<
