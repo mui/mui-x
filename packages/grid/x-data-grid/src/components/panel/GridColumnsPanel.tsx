@@ -245,6 +245,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
           ) : (
             <span />
           )}
+
           {!disableShowAllButton ? (
             <rootProps.components.BaseButton
               onClick={() => toggleAllColumns(true)}
