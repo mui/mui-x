@@ -73,7 +73,7 @@ For example, when you want to upgrade the Data Grid:
   ```
 
   :::warning
-  There is an exception to the superset rule: the default value of the `pagination` prop changes. 
+  There is an exception to the superset rule: the default value of the `pagination` prop changes.
   See the [Pagination](https://mui.com/x/react-data-grid/pagination/) doc for details.
   :::
 

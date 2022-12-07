@@ -113,6 +113,7 @@ const validRows = [{ path: ['A'] }, { path: ['A', 'A'] }, { path: ['B'] }];
 // ❌ The row A.A is not immediately after its parent
 const invalidRows = [{ path: ['A'] }, { path: ['B'] }, { path: ['A', 'A'] }];
 ```
+
 :::
 
 ## Children lazy-loading
