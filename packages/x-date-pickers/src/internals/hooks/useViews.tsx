@@ -63,6 +63,20 @@ export interface ExportedUseViewsOptions<TView extends DateOrTimeView>
 
 let warnedOnceNotValidView = false;
 
+interface UseViewsResponse<TValue, TView extends DateOrTimeView> {
+  view: TView;
+  setView: (view: TView) => void;
+  focusedView: TView | null;
+  setFocusedView: (view: TView, hasFocus: boolean) => void;
+  nextView: TView | null;
+  previousView: TView | null;
+  goToNextView: () => void;
+  setValueAndGoToNextView: (
+    value: TValue,
+    currentViewSelectionState?: PickerSelectionState,
+  ) => void;
+}
+
 export function useViews<TValue, TView extends DateOrTimeView>({
   onChange,
   onViewChange,
@@ -72,7 +86,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
   autoFocus,
   focusedView: inFocusedView,
   onFocusedViewChange,
-}: UseViewsOptions<TValue, TView>) {
+}: UseViewsOptions<TValue, TView>): UseViewsResponse<TValue, TView> {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidView) {
       if (inView != null && !views.includes(inView)) {
