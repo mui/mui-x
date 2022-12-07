@@ -4,8 +4,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-date-pickers/StaticNextTimePicker';
 import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
@@ -43,7 +43,7 @@ export default function LayoutBlocks() {
           flexDirection: { xs: 'column', md: 'row' },
         }}
       >
-        <Paper
+        <Box
           sx={{
             flexShrink: 0,
             gap: 2,
@@ -88,7 +88,8 @@ export default function LayoutBlocks() {
               <ToggleButton value={'portrait'}>portrait</ToggleButton>
             </ToggleButtonGroup>
           </Stack>
-        </Paper>
+        </Box>
+        <Divider orientation={isDesktop ? 'vertical' : 'horizontal'} />
         <Box
           sx={{
             display: 'flex',
