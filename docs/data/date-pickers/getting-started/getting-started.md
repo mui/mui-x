@@ -124,7 +124,7 @@ Importing it from `@mui/x-date-pickers-pro` is enough.
 ## Native pickers
 
 :::warning
-Native input controls support by browsers [isn't perfect](https://caniuse.com/#feat=input-datetime).
+Browser support for native input controls is somewhat limited, according to [Can I use...](https://caniuse.com/#feat=input-datetime).
 :::
 
 Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime-local"`) pickers.

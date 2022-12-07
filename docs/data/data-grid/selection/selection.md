@@ -89,7 +89,7 @@ The following demo shows the prop in action:
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the Grid.
 :::
 
 {{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

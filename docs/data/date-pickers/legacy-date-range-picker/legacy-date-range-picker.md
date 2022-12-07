@@ -12,11 +12,11 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">The date range picker let the user select a range of dates.</p>
 
 :::warning
-This page describes how the legacy date range pickers work.
-If you are already using the v6 alpha or beta, we recommend you to try the [new date range pickers](/x/react-date-pickers/date-range-picker/).
+This page describes how the legacy Date Range Pickers work.
+If you are already using the v6 alpha or beta, we recommend you to try the [new Date Range Pickers](/x/react-date-pickers/date-range-picker/).
 
-At the end of the v6 beta phase, the legacy date range pickers will be removed and replaced the new date range pickers
-(which will be renamed to match the current name of the legacy pickers).
+At the end of the v6 beta phase, the legacy Date Range Pickers will be removed and replaced the new Date Range Pickers
+(which will be renamed to match the current names of the legacy Pickers).
 :::
 
 ## Basic usage

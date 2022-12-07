@@ -265,7 +265,7 @@ If you are rendering leaves with the `leafField` property of `groupColDef`, the 
 In both cases, you can force the sorting and filtering to be applied on another grouping criteria with the `mainGroupingCriteria` property of `groupColDef`
 
 :::warning
-This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`
+This feature is not yet compatible with `sortingMode = "server"` and `filteringMode = "server"`.
 :::
 
 {{"demo": "RowGroupingSortingSingleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -286,7 +286,7 @@ In the example below:
 {{"demo": "RowGroupingSortingMultipleGroupingColDef.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not automatically be cleaned-up and the sorting/filtering will not be re-applied.
+If you are dynamically switching the `leafField` or `mainGroupingCriteria`, the sorting and filtering models will not be cleaned up automatically, and the sorting/filtering will not be re-applied.
 :::
 
 ## Get the rows in a group

@@ -12,11 +12,11 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">The legacy date picker let the user select a date.</p>
 
 :::warning
-This page describes how the legacy date pickers work.
-If you are already using the v6 alpha or beta, we recommend you to try the [new date pickers](/x/react-date-pickers/date-picker/).
+This page describes how the legacy Date Pickers work.
+If you are already using the v6 alpha or beta, we recommend you to try the [new Date Pickers](/x/react-date-pickers/date-picker/).
 
-At the end of the v6 beta phase, the legacy date pickers will be removed and replaced the new date pickers
-(which will be renamed to match the current name of the legacy pickers).
+At the end of the v6 beta phase, the legacy Date Pickers will be removed and replaced the new Date Pickers
+(which will be renamed to match the current names of the legacy Pickers).
 :::
 
 Date pickers are displayed with:

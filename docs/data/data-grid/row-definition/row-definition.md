@@ -12,7 +12,7 @@ The rows can be defined with the `rows` prop, which expects an array of objects.
 
 :::warning
 The `rows` prop should keep the same reference between two renders except when you want to apply new rows.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the Grid will re-apply heavy work like sorting and filtering.
 :::
 
 {{"demo": "RowsGrid.js", "bg": "inline"}}
@@ -42,7 +42,7 @@ The data grid pulls this information directly from the data set itself, not from
 
 :::warning
 Just like the `rows` prop, the `getRowId` prop should keep the same reference between two renders.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the Grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Styling rows

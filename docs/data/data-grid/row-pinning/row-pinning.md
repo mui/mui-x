@@ -9,7 +9,7 @@ title: Data Grid - Row pinning
 Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the grid vertically.
 
 :::warning
-This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
+This feature is experimental and must be explicitly activated using the `rowPinning` experimental feature flag:
 
 ```tsx
 <DataGridPro experimentalFeatures={{ rowPinning: true }} {...otherProps} />
@@ -39,7 +39,7 @@ Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-defini
 
 :::warning
 Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
-Otherwise, the grid will re-apply heavy work like sorting and filtering.
+Otherwise, the Grid will re-apply heavy work like sorting and filtering.
 :::
 
 ## Controlling pinned rows

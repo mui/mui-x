@@ -12,11 +12,9 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">This component combines the date & time pickers.</p>
 
 :::warning
-The new date time pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+The new Date Time Pickers are unstable, and their props are subject to breaking changes before they get a stable release.
 
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextDateTimePicker` will become `DateTimePicker`, ...)
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy Pickers—`NextDateTimePicker` will become `DateTimePicker`, and so on.
 :::
 
 It allows the user to select both date and time with the same control.

@@ -20,13 +20,13 @@ If the return value is `null` or `undefined`, then the `rowHeight` prop will tak
 {{"demo": "VariableRowHeightGrid.js", "bg": "inline"}}
 
 :::warning
-Changing the `DataGrid` density does not affect the rows with variable row height.
+Changing the Data Grid density does not affect the rows with variable row height.
 You can access the density factor from the params provided to the `getRowHeight` prop
 :::
 
 :::warning
 Always memoize the function provided to `getRowHeight`.
-The grid bases on the referential value of these props to cache their values and optimize the rendering.
+The Grid bases on the referential value of these props to cache their values and optimize the rendering.
 :::
 
 ```tsx

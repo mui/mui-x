@@ -12,11 +12,11 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">This component combines the date & time pickers.</p>
 
 :::warning
-This page describes how the legacy date time pickers work.
-If you are already using the v6 alpha or beta, we recommend you to try the [new date time pickers](/x/react-date-pickers/date-time-picker/).
+This page describes how the legacy Date Time Pickers work.
+If you are already using the v6 alpha or beta, we recommend you to try the [new Date Time Pickers](/x/react-date-pickers/date-time-picker/).
 
-At the end of the v6 beta phase, the legacy date time pickers will be removed and replaced the new date time pickers
-(which will be renamed to match the current name of the legacy pickers).
+At the end of the v6 beta phase, the legacy Date Time Pickers will be removed and replaced the new Date Time Pickers
+(which will be renamed to match the current names of the legacy Pickers).
 :::
 
 It allows the user to select both date and time with the same control.

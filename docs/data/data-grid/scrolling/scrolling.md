@@ -15,7 +15,7 @@ The following demo explores the usage of this API:
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the Grid.
 :::
 
 {{"demo": "ScrollApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

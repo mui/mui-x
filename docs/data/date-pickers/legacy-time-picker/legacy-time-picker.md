@@ -12,11 +12,11 @@ materialDesign: https://m2.material.io/components/time-pickers
 <p class="description">Time pickers allow the user to select a single time.</p>
 
 :::warning
-This page describes how the legacy time pickers work.
-If you are already using the v6 alpha or beta, we recommend you to try the [new time pickers](/x/react-date-pickers/time-picker/).
+This page describes how the legacy Time Pickers work.
+If you are already using the v6 alpha or beta, we recommend you to try the [new Time Pickers](/x/react-date-pickers/time-picker/).
 
-At the end of the v6 beta phase, the legacy time pickers will be removed and replaced the new time pickers
-(which will be renamed to match the current name of the legacy pickers).
+At the end of the v6 beta phase, the legacy Time Pickers will be removed and replaced the new Time Pickers
+(which will be renamed to match the current names of the legacy Pickers).
 :::
 
 The selected time is indicated by the filled circle at the end of the clock hand.

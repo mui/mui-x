@@ -17,7 +17,7 @@ _See [the dedicated section](#customize-the-operators) to learn how to create yo
 ## Single and multi-filtering
 
 :::warning
-The `DataGrid` can only filter the rows according to one criterion at the time.
+The Data Grid can only filter the rows according to one criterion at the time.
 
 To use multi-filtering, you need to upgrade to the [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
@@ -411,7 +411,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 ## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the Grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

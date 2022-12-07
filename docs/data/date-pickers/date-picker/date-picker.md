@@ -12,11 +12,9 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">The date picker let the user select a date.</p>
 
 :::warning
-The new date pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+The new Date Pickers are unstable, and their props are subject to breaking changes before they get a stable release.
 
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextDatePicker` will become `DatePicker`, ...)
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy Pickers—`NextDatePicker` will become `DatePicker`, and so on.
 :::
 
 Date pickers are displayed with:

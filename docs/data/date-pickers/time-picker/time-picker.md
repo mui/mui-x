@@ -12,11 +12,9 @@ materialDesign: https://m2.material.io/components/time-pickers
 <p class="description">Time pickers allow the user to select a single time.</p>
 
 :::warning
-The new time pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+The new Time Pickers are unstable, and their props are subject to breaking changes before they get a stable release.
 
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextTimePicker` will become `TimePicker`, ...)
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy Pickers—`NextTimePicker` will become `TimePicker`, and so on.
 :::
 
 The selected time is indicated by the filled circle at the end of the clock hand.

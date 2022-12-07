@@ -11,8 +11,7 @@ packageName: '@mui/x-date-pickers'
 <p class="description">The field components let the user input date and time values with a keyboard and refined keyboard navigation.</p>
 
 :::warning
-These components are unstable.
-They might receive breaking changes on their props to have the best components possible by the time of the stable release.
+These component are unstable, and their props are subject to breaking changes before they get a stable release.
 :::
 
 ## Introduction

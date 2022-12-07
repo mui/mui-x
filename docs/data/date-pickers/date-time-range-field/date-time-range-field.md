@@ -11,8 +11,7 @@ packageName: '@mui/x-date-pickers-pro'
 <p class="description">The Date Time Range Field let the user select a date and time range with the keyboard.</p>
 
 :::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
+This component is unstable, and its props are subject to breaking changes before it gets a stable release.
 :::
 
 ## Basic usage
