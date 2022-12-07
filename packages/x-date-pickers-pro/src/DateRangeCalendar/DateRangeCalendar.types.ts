@@ -49,7 +49,6 @@ export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
-    Partial<RangePositionProps>,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
     Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**
@@ -95,7 +94,9 @@ export interface ExportedDateRangeCalendarProps<TDate>
   disableDragEditing?: boolean;
 }
 
-export interface DateRangeCalendarProps<TDate> extends ExportedDateRangeCalendarProps<TDate> {
+export interface DateRangeCalendarProps<TDate>
+  extends ExportedDateRangeCalendarProps<TDate>,
+    Partial<RangePositionProps> {
   /**
    * The selected value.
    * Used when the component is controlled.
