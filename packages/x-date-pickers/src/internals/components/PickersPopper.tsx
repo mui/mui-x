@@ -337,6 +337,19 @@ export function PickersPopper(inProps: PickerPopperProps) {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions: [],
+    },
+    ownerState: { wrapperVariant: 'desktop' },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
@@ -398,14 +411,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
             >
               <PaperContent {...componentsProps?.paperContent}>
                 {children}
-                <ActionBar
-                  onAccept={onAccept}
-                  onClear={onClear}
-                  onCancel={onCancel}
-                  onSetToday={onSetToday}
-                  actions={[]}
-                  {...componentsProps?.actionBar}
-                />
+                <ActionBar {...actionBarProps} />
               </PaperContent>
             </Paper>
           </Transition>
