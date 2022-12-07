@@ -57,6 +57,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    disabled,
     ...other
   } = themeProps;
 
@@ -78,12 +79,20 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'start' },
+    additionalProps: {
+      disabled,
+      readOnly,
+    },
   });
 
   const endInputProps: TextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'end' },
+    additionalProps: {
+      disabled,
+      readOnly,
+    },
   });
 
   const Separator = components?.Separator ?? MultiInputDateRangeFieldSeparator;
