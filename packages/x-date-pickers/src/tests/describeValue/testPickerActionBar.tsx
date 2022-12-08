@@ -105,7 +105,7 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'new-picker'> = (
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(2);
-        if (Array.isArray(values[0])) {
+        if (type === 'date-range') {
           values[0].forEach((value, index) => {
             expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
           });
