@@ -48,7 +48,7 @@
     "@date-io/moment": "^2.16.1",
     "@mui/utils": "^5.10.16",
     "@mui/x-date-pickers": "6.0.0-alpha.11",
-    "@mui/x-license-pro": "6.0.0-alpha.10",
+    "@mui/x-license-pro": "6.0.0-alpha.9",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
     "react-transition-group": "^4.4.5",
