@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.15
+
+_Dec 8, 2022_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Fix lazy-loading not working in `DataGridPremium` (#7130) @m4theushw
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.15` / `@mui/x-data-grid-pro@v5.17.15` / `@mui/x-data-grid-premium@v5.17.15`
+
+#### Changes
+
+- [DataGridPremium] Add support for lazy-loading (#7130) @m4theushw
+- [DataGridPremium] Pass `groupId` to the aggregation function (#7143) @m4theushw
+
+### `@mui/x-date-pickers@v5.0.10` / `@mui/x-date-pickers-pro@v5.0.10`
+
+#### Changes
+
+- [pickers] Initialize date without time when selecting year or month (#7136) @LukasTy
+
+### Docs
+
+- [docs] Fix the nested import on the api pages (#7134) @flaviendelangle
+- [docs] Keep track of the localization completion (#7099) @alexfauquette
+- [docs] Update localization doc to use existing locale (#7104) @LukasTy
+
 ## 5.17.14
 
 _Dec 1, 2022_

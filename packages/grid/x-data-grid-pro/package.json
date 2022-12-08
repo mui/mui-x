@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "5.17.14",
+  "version": "5.17.15",
   "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
