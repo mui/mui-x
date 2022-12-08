@@ -6,6 +6,7 @@ import { PickerStateProps } from '../../hooks/usePickerState';
 import { DateOrTimeView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
+// TODO v6: Drop with the legacy pickers
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
   /**
    * className applied to the root component.

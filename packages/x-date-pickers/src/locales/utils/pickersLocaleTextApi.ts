@@ -38,6 +38,7 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openPreviousView: string;
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
+  // TODO v6: Drop with the legacy pickers
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
     viewType: 'date' | 'time',

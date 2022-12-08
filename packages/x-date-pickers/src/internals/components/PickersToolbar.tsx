@@ -111,7 +111,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   } = props;
 
   const ownerState = props;
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const classes = useUtilityClasses(ownerState);
 
   return (

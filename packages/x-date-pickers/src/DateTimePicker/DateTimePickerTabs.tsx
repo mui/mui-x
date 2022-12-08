@@ -80,7 +80,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop order when the old pickers are removed
+    // TODO v6: Drop `order` with the legacy pickers
     order: 1,
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
@@ -100,7 +100,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const ownerState = { ...props, wrapperVariant };
   const classes = useUtilityClasses(ownerState);
