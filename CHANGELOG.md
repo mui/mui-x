@@ -10,7 +10,7 @@ _Dec 8, 2022_
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Add dragging support for the new Date Range Picker (`NextDateRangePicker`) (#6763) @LukasTy
-- ⚡️ Improve performance of `DayCalendar` (#7066) @flaviendelangle
+- ⚡️ Improve performance of the `day` view (#7066) @flaviendelangle
 - ✨ Fix lazy-loading feature not working in `DataGridPremium` (#7124) @m4theushw
 - 🐞 Bugfixes
 
