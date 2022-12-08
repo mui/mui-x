@@ -1,10 +1,11 @@
-import { PickerStateValueManager, replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import {
+  PickerStateValueManager,
+  replaceInvalidDateByNull,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from '@mui/x-date-pickers/internals-fields';
+} from '@mui/x-date-pickers/internals';
 import { DateRange, DateRangeFieldSection } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';

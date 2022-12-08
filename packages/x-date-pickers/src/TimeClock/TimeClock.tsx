@@ -151,7 +151,7 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop showViewSwitcher once the legacy pickers are removed
+// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:

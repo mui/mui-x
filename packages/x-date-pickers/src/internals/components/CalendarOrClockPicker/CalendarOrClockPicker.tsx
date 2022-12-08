@@ -112,6 +112,7 @@ const isDatePickerView = (view: DateOrTimeView): view is DateView =>
 const isTimePickerView = (view: DateOrTimeView): view is TimeView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
+// TODO v6: Drop with the legacy pickers
 export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
   inProps: CalendarOrClockPickerProps<TDate, View>,
 ) {

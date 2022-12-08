@@ -39,15 +39,11 @@ export const validateDateTime: Validator<
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
 
-/**
- * TODO v6: Remove
- */
+// TODO v6: Drop with the legacy pickers
 export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) =>
   a === b;
 
-/**
- * TODO v6: Remove
- */
+// TODO v6: Drop with the legacy pickers
 export function useDateTimeValidation<TDate>(
   props: ValidationProps<
     DateTimeValidationError,

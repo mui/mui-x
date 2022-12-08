@@ -92,6 +92,7 @@ const PickerStaticWrapperContent = styled('div', {
   backgroundColor: (theme.vars || theme).palette.background.paper,
 }));
 
+// TODO v6: Drop with the legacy pickers
 function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
   const {

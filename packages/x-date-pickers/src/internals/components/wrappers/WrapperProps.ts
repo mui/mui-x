@@ -4,12 +4,14 @@ import { DateInputProps } from '../PureDateInput';
 import { PickersActionBarProps } from '../../../PickersActionBar';
 import { WrapperVariant } from './WrapperVariantContext';
 
+// TODO v6: Drop with the legacy pickers
 export interface DateInputPropsLike
   extends Omit<DateInputProps<any>, 'renderInput' | 'validationError'> {
   renderInput: (...args: any) => JSX.Element;
   validationError?: any;
 }
 
+// TODO v6: Drop with the legacy pickers
 export interface PickersSlotsComponent {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.
@@ -23,6 +25,7 @@ export interface PickersSlotsComponent {
   PaperContent?: React.ElementType<{ children: React.ReactNode }>;
 }
 
+// TODO v6: Drop with the legacy pickers
 export interface PickersSlotsComponentsProps {
   /**
    * Props passed down to the action bar component.
