@@ -156,11 +156,15 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
 - The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 
-<!--
 ### CSS classes
 
-TBD
+- Some CSS classes were removed or renamed
 
+  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
+  | ------------------------- | ------------------------------ | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+
+<!--
 ### Virtualization
 
 TBD
