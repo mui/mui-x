@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { InputBaseProps } from '@mui/material/InputBase';
 import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
 import { PickerStateValueManager } from '../usePickerState';
 import { InferError, Validator } from '../validation/useValidation';
@@ -82,13 +83,11 @@ export interface UseFieldForwardedProps {
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onPaste?: React.ClipboardEventHandler;
+  inputProps?: Partial<InputBaseProps['inputProps']>;
 }
 
-export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
-  TForwardedProps,
-  keyof UseFieldForwardedProps
-> &
-  Required<UseFieldForwardedProps> &
+export type UseFieldResponse = Required<UseFieldForwardedProps> &
   Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
