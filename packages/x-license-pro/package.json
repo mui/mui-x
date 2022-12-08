@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-license-pro",
-  "version": "6.0.0-alpha.9",
+  "version": "6.0.0-alpha.11",
   "description": "MUI X License verification",
   "author": "MUI Team",
   "main": "src/index.ts",
