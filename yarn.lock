@@ -2445,7 +2445,7 @@
   version "5.10.16"
   resolved "https://github.com/mui/material-ui.git#b8e30a4b7c668ede64d5f1f76c00401590c977c1"
 
-"@mui/private-theming@^5.10.15", "@mui/private-theming@^5.10.16":
+"@mui/private-theming@^5.10.16":
   version "5.10.16"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.10.16.tgz#181ab7568a3cf0c6b12cc12f5a91aeb4509df1ce"
   integrity sha512-0MArkJaOHRCKqL/GWjngGZmyOeRz+uxffhx82bKcewr8swqV7xx7EFP02pk0L/gLdfcvYdqwH4YTVjG/+TaKrg==
@@ -2464,16 +2464,16 @@
     csstype "^3.1.1"
     prop-types "^15.8.1"
 
-"@mui/styles@^5.10.15":
-  version "5.10.15"
-  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.10.15.tgz#d7af4c17e8699e6b768f3c11b69c02cdc8cc3541"
-  integrity sha512-q8OW8Cyq2C9wGJMcDWXYtFa7qgIIZPAZ15JShDQXBLvyib4qDop5wV3+olQoJdwU5ARjmfPd67IsbORWxG3abQ==
+"@mui/styles@^5.10.16":
+  version "5.10.16"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.10.16.tgz#51f5d6d4200705741a4d47317222dd3aa539f74c"
+  integrity sha512-GYxY9pAx/mIAF3l9QJhTfWyUdT18UyjXHRmfPFgDupphTyHumrVE4rgYoTFordmzMWr+1kaS0mAUvDfziGncGA==
   dependencies:
     "@babel/runtime" "^7.20.1"
     "@emotion/hash" "^0.9.0"
-    "@mui/private-theming" "^5.10.15"
-    "@mui/types" "^7.2.1"
-    "@mui/utils" "^5.10.15"
+    "@mui/private-theming" "^5.10.16"
+    "@mui/types" "^7.2.2"
+    "@mui/utils" "^5.10.16"
     clsx "^1.2.1"
     csstype "^3.1.1"
     hoist-non-react-statics "^3.3.2"
@@ -2501,12 +2501,12 @@
     csstype "^3.1.1"
     prop-types "^15.8.1"
 
-"@mui/types@^7.2.1", "@mui/types@^7.2.2":
+"@mui/types@^7.2.2":
   version "7.2.2"
   resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.2.tgz#723f6d40c25c89c2e0352a7e51794e8eb77cdbe3"
   integrity sha512-siex8cZDtWeC916cXOoUOnEQQejuMYmHtc4hM6VkKVYaBICz3VIiqyiAomRboTQHt2jchxQ5Q5ATlbcDekTxDA==
 
-"@mui/utils@^5.10.15", "@mui/utils@^5.10.16":
+"@mui/utils@^5.10.16":
   version "5.10.16"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.10.16.tgz#7a981444855968ebdb1830d76e298d1ac47eaaf6"
   integrity sha512-3MB/SGsgiiu9Z55CFmAfiONUoR7AAue/H4F6w3mc2LnhFQCsoVvXhioDPcsiRpUMIQr34jDPzGXdCuqWooPCXQ==
@@ -11047,7 +11047,7 @@ object.assign@^4.1.0, object.assign@^4.1.2, object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
-object.entries@^1.1.1, object.entries@^1.1.2, object.entries@^1.1.6:
+object.entries@^1.1.1, object.entries@^1.1.2, object.entries@^1.1.5, object.entries@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.1.6.tgz#9737d0e5b8291edd340a3e3264bb8a3b00d5fa23"
   integrity sha512-leTPzo4Zvg3pmbQ3rDK69Rl8GQvIqMWubrkxONG9/ojtFE2rD9fjMKfSI5BxW3osRH1m6VdzmqK8oAY9aT4x5w==
