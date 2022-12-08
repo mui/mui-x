@@ -298,7 +298,7 @@ export default function ApiPage(props) {
 
   if (source === '@mui/x-date-pickers' || source === '@mui/x-date-pickers-pro') {
     packages.forEach((pkg) => {
-      // e.g. import DatePicker from '@mui/x-date-pickers/DatePicker';
+      // e.g. import { DatePicker } from '@mui/x-date-pickers/DatePicker';
       imports.push(`import { ${pkg.componentName} } from '${pkg.packageName}/${componentName}';`);
     });
   }

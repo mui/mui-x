@@ -5,20 +5,16 @@ import {
   DateOrTimeView,
   BaseNextPickerProps,
   UsePickerParams,
-  PickersSlotsComponent,
-  PickersSlotsComponentsProps,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 
 export interface UseStaticRangePickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent,
-    Pick<PickersSlotsComponent, 'PaperContent'> {}
+  extends ExportedPickersViewLayoutSlotsComponent {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView>,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {
+  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 

@@ -45,6 +45,7 @@ export interface InternalDesktopWrapperProps<TDate>
   localeText?: PickersInputLocaleText<TDate>;
 }
 
+// TODO v6: Drop with the legacy pickers
 export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,

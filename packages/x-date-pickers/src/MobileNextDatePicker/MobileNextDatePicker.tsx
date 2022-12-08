@@ -28,7 +28,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
-  const utils = useUtils();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
