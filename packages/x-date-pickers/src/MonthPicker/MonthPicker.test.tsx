@@ -10,7 +10,7 @@ import {
 } from '../../../../test/utils/pickers-utils';
 
 describe('<MonthPicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
 
   describeConformance(
     <MonthPicker
@@ -50,6 +50,16 @@ describe('<MonthPicker />', () => {
 
     fireEvent.click(screen.getByText('May', { selector: 'button' }));
     expect((onChangeMock.args[0][0] as Date).getMonth()).to.equal(4); // month index starting from 0
+  });
+
+  it('should select start of month without time when no initial value is present', () => {
+    const onChange = spy();
+    render(<MonthPicker date={null} onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Feb' }));
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {

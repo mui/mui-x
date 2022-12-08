@@ -131,7 +131,11 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
   const theme = useTheme();
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrStartOfMonth = React.useMemo(
+    () => date ?? utils.startOfMonth(now),
+    [now, utils, date],
+  );
+
   const selectedMonth = React.useMemo(() => {
     if (date != null) {
       return utils.getMonth(date);
@@ -179,7 +183,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(selectedDateOrToday, month);
+    const newDate = utils.setMonth(selectedDateOrStartOfMonth, month);
     onChange(newDate, 'finish');
   };
 
@@ -203,7 +207,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
 
   const focusMonth = React.useCallback(
     (month: number) => {
-      if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
+      if (!isMonthDisabled(utils.setMonth(selectedDateOrStartOfMonth, month))) {
         setFocusedMonth(month);
         changeHasFocus(true);
         if (onMonthFocus) {
@@ -211,7 +215,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
         }
       }
     },
-    [selectedDateOrToday, isMonthDisabled, utils, onMonthFocus, changeHasFocus],
+    [isMonthDisabled, utils, selectedDateOrStartOfMonth, changeHasFocus, onMonthFocus],
   );
 
   React.useEffect(() => {
@@ -275,7 +279,7 @@ export const MonthPicker = React.forwardRef(function MonthPicker<TDate>(
       onKeyDown={handleKeyDown}
       {...other}
     >
-      {utils.getMonthArray(selectedDateOrToday).map((month) => {
+      {utils.getMonthArray(selectedDateOrStartOfMonth).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
         const isDisabled = disabled || isMonthDisabled(month);

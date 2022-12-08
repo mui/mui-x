@@ -117,7 +117,11 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
-  const selectedDateOrToday = date ?? now;
+  const selectedDateOrStartOfYear = React.useMemo(
+    () => date ?? utils.startOfYear(now),
+    [now, utils, date],
+  );
+
   const currentYear = React.useMemo(() => {
     if (date != null) {
       return utils.getYear(date);
@@ -185,20 +189,20 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
       return;
     }
 
-    const newDate = utils.setYear(selectedDateOrToday, year);
+    const newDate = utils.setYear(selectedDateOrStartOfYear, year);
 
     onChange(newDate, isFinish);
   };
 
   const focusYear = React.useCallback(
     (year: number) => {
-      if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
+      if (!isYearDisabled(utils.setYear(selectedDateOrStartOfYear, year))) {
         setFocusedYear(year);
         changeHasFocus(true);
         onYearFocus?.(year);
       }
     },
-    [isYearDisabled, utils, selectedDateOrToday, changeHasFocus, onYearFocus],
+    [isYearDisabled, utils, selectedDateOrStartOfYear, changeHasFocus, onYearFocus],
   );
 
   React.useEffect(() => {
