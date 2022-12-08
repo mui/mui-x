@@ -11,7 +11,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../../PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -125,7 +125,7 @@ export const useDesktopPicker = <
     },
   };
 
-  const Layout = components?.Layout ?? PickersViewLayout;
+  const Layout = components?.Layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 

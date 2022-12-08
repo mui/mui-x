@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersViewLayout';
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
 import {
   DateOrTimeView,
   BaseNextPickerProps,
@@ -15,11 +15,11 @@ import {
 import { DateRange } from '../../models/range';
 
 export interface UseStaticRangePickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent<any, any>,
+  extends ExportedPickersLayoutSlotsComponent<any, any>,
     Pick<PickersSlotsComponent, 'PaperContent'> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView>,
+  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView>,
     Pick<PickersSlotsComponentsProps, 'paperContent'> {
   toolbar?: ExportedBaseToolbarProps;
 }

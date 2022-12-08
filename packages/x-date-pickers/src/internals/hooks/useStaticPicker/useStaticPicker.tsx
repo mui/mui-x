@@ -5,14 +5,14 @@ import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.t
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
-import { PickersViewLayout } from '../../../PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 
-const PickerStaticLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersViewLayout;
+})) as unknown as typeof PickersLayout;
 
 /**
  * Hook managing all the single-date static pickers:

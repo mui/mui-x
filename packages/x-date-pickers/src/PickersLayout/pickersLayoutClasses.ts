@@ -3,7 +3,7 @@ import {
   unstable_generateUtilityClasses as generateUtilityClasses,
 } from '@mui/utils';
 
-export interface PickersViewLayoutClasses {
+export interface PickersLayoutClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the root element in landscape orientation. */
@@ -18,13 +18,13 @@ export interface PickersViewLayoutClasses {
   tabs: string;
 }
 
-export type PickersViewLayoutClassKey = keyof PickersViewLayoutClasses;
+export type PickersLayoutClassKey = keyof PickersLayoutClasses;
 
-export function getPickersViewLayoutUtilityClass(slot: string) {
-  return generateUtilityClass('MuiPickersViewLayout', slot);
+export function getPickersLayoutUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickersLayout', slot);
 }
 
-export const pickersViewLayoutClasses = generateUtilityClasses<PickersViewLayoutClassKey>(
-  'MuiPickersViewLayout',
+export const pickersLayoutClasses = generateUtilityClasses<PickersLayoutClassKey>(
+  'MuiPickersLayout',
   ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar'],
 );

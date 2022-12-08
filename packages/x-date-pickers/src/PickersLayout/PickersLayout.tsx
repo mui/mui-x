@@ -1,12 +1,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { PickersViewLayoutProps } from './PickersViewLayout.types';
-import { pickersViewLayoutClasses } from './pickersViewLayoutClasses';
+import { PickersLayoutProps } from './PickersLayout.types';
+import { pickersLayoutClasses } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
 
-export const PickersViewLayoutRoot = styled('div', {
-  name: 'MuiPickersViewLayout',
+export const PickersLayoutRoot = styled('div', {
+  name: 'MuiPickersLayout',
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: { isLandscape: boolean } }>(({ theme, ownerState }) => ({
@@ -14,17 +14,17 @@ export const PickersViewLayoutRoot = styled('div', {
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
 
-  [`& .${pickersViewLayoutClasses.toolbar}`]: ownerState.isLandscape
+  [`& .${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
     ? {
         gridColumn: theme.direction === 'rtl' ? 3 : 1,
         gridRow: '1 / 3',
       }
     : { gridColumn: '1 / 4', gridRow: 1 },
-  [`& .${pickersViewLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
+  [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
 }));
 
-export const PickersViewLayoutContentWrapper = styled('div', {
-  name: 'MuiPickersViewLayout',
+export const PickersLayoutContentWrapper = styled('div', {
+  name: 'MuiPickersLayout',
   slot: 'Content',
   overridesResolver: (props, styles) => styles.contentWrapper,
 })({
@@ -34,28 +34,28 @@ export const PickersViewLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-export const PickersViewLayout = React.forwardRef(function PickersViewLayout(
-  inProps: PickersViewLayoutProps<any, any>,
+export const PickersLayout = React.forwardRef(function PickersLayout(
+  inProps: PickersLayoutProps<any, any>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
+  const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
   const { sx, className, isLandscape } = props;
 
   return (
-    <PickersViewLayoutRoot
+    <PickersLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, pickersViewLayoutClasses.root)}
+      className={clsx(className, pickersLayoutClasses.root)}
       ownerState={{ isLandscape }}
     >
       {toolbar}
-      <PickersViewLayoutContentWrapper className={pickersViewLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
         {content}
-      </PickersViewLayoutContentWrapper>
+      </PickersLayoutContentWrapper>
       {actionBar}
-    </PickersViewLayoutRoot>
+    </PickersLayoutRoot>
   );
 });

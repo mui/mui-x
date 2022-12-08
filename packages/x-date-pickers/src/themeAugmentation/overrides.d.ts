@@ -19,7 +19,7 @@ import { PickerStaticWrapperClassKey } from '../internals/components/PickerStati
 import { DatePickerToolbarClassKey } from '../DatePicker';
 import { DateTimePickerTabsClassKey, DateTimePickerToolbarClassKey } from '../DateTimePicker';
 import { TimePickerToolbarClassKey } from '../TimePicker';
-import { PickersViewLayoutClassKey } from '../PickersViewLayout';
+import { PickersLayoutClassKey } from '../PickersLayout';
 import {
   CalendarOrClockPickerClassKey,
   PickersArrowSwitcherClassKey,
@@ -72,7 +72,7 @@ export interface PickersComponentNameToClassKey {
   MuiPickersToolbar: PickersToolbarClassKey;
   MuiPickersToolbarButton: PickersToolbarButtonClassKey;
   MuiPickersToolbarText: PickersToolbarTextClassKey;
-  MuiPickersViewLayout: PickersViewLayoutClassKey;
+  MuiPickersLayout: PickersLayoutClassKey;
   MuiPickersYear: PickersYearClassKey;
   MuiStaticDatePicker: never;
   MuiStaticDateTimePicker: never;

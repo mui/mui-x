@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
-import { PickersViewLayoutProps, SubComponents } from './PickersViewLayout.types';
-import { getPickersViewLayoutUtilityClass } from './pickersViewLayoutClasses';
+import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
+import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { DateOrTimeView } from '../internals';
 
-const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -17,13 +17,13 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
     landscape: ['landscape'],
   };
 
-  return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
+  return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
 interface UsePickerLayoutResponse extends SubComponents {}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeView>(
-  props: PickersViewLayoutProps<TValue, TView>,
+  props: PickersLayoutProps<TValue, TView>,
 ): UsePickerLayoutResponse => {
   const {
     wrapperVariant,

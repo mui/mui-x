@@ -4,9 +4,9 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersViewLayout';
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
 import {
   DateOrTimeView,
   UsePickerParams,
@@ -21,7 +21,7 @@ import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseDesktopRangePickerSlotsComponent
   extends PickersPopperSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent<any, any> {
+    ExportedPickersLayoutSlotsComponent<any, any> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -34,7 +34,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},

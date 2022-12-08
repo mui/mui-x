@@ -32,7 +32,7 @@ Here is a demonstration with the 3 main blocks outlined with color borders.
 
 The layout is structured as follows:
 
-A `<PickersViewLayoutRoot />` wraps all the sub-components to provide the structure.
+A `<PickersLayoutRoot />` wraps all the sub-components to provide the structure.
 By default it renders a `div` with `display: grid`.
 Such that all sub-components take place into a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
 
@@ -40,14 +40,14 @@ Subcomponents are wrapped inside layout helper, responsible for placing it into 
 Here is an overview of the structure.
 
 ```jsx
-<PickersViewLayoutRoot>
+<PickersLayoutRoot>
   {toolbar}
-  <PickersViewLayoutContentWrapper>
+  <PickersLayoutContentWrapper>
     {tabs}
     {content}
-  </PickersViewLayoutContentWrapper>
+  </PickersLayoutContentWrapper>
   {actionBar}
-</PickersViewLayoutRoot>
+</PickersLayoutRoot>
 ```
 
 ## CSS customization
@@ -70,7 +70,7 @@ To simplify the job, use the `usePickerLayout` hook which takes Layout's props a
 Then you can fully customize the DOM structure.
 
 ```jsx
-const { usePickerLayout } from '@mui/x-date-pickers/PickersViewLayout';
+const { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
   const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
@@ -87,6 +87,6 @@ const MyCustomLayout = (props) => {
 This slot can also be used to add additional information in the layout.
 
 Here is the previous demonstration with a fix for the tabulation order and logo added into the layout.
-Notice the use of `pickersViewLayoutClasses`, `PickersViewLayoutRoot`, and `PickersViewLayoutContentWrapper` to avoid having to rewrite the default CSS.
+Notice the use of `pickersLayoutClasses`, `PickersLayoutRoot`, and `PickersLayoutContentWrapper` to avoid having to rewrite the default CSS.
 
 {{"demo": "AddComponent.js", "defaultCodeOpen": false}}

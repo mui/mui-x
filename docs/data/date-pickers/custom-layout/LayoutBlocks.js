@@ -11,17 +11,17 @@ import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-da
 import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 const highlighLayout = {
   sx: {
-    [`& .${pickersViewLayoutClasses.toolbar}`]: {
+    [`& .${pickersLayoutClasses.toolbar}`]: {
       border: 'solid red 4px',
     },
-    [`& .${pickersViewLayoutClasses.contentWrapper}`]: {
+    [`& .${pickersLayoutClasses.contentWrapper}`]: {
       border: 'solid green 4px',
     },
-    [`& .${pickersViewLayoutClasses.actionBar}`]: {
+    [`& .${pickersLayoutClasses.actionBar}`]: {
       border: 'solid blue 4px',
     },
   },

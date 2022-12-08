@@ -5,7 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { pickersViewLayoutClasses } from '@mui/x-date-pickers/PickersViewLayout';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 
@@ -37,7 +37,7 @@ export default function MovingActions() {
         componentsProps={{
           layout: {
             sx: {
-              [`.${pickersViewLayoutClasses.actionBar}`]: {
+              [`.${pickersLayoutClasses.actionBar}`]: {
                 gridColumn: 1,
                 gridRow: 2,
               },

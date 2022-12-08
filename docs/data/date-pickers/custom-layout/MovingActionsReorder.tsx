@@ -10,12 +10,12 @@ export default () => null;
 // import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 // import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 // import {
-//   pickersViewLayoutClasses,
-//   PickersViewLayoutContentWrapper,
-//   PickersViewLayoutProps,
-//   PickersViewLayoutRoot,
+//   pickersLayoutClasses,
+//   PickersLayoutContentWrapper,
+//   PickersLayoutProps,
+//   PickersLayoutRoot,
 //   usePickerLayout,
-// } from '@mui/x-date-pickers/PickersViewLayout';
+// } from '@mui/x-date-pickers/PickersLayout';
 // import { DateView } from '@mui/x-date-pickers';
 // import { Dayjs } from 'dayjs';
 
@@ -40,15 +40,15 @@ export default () => null;
 //   );
 // }
 
-// function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
+// function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
 //   const { isLandscape } = props;
 //   const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
 
 //   return (
-//     <PickersViewLayoutRoot
+//     <PickersLayoutRoot
 //       ownerState={{ isLandscape }}
 //       sx={{
-//         [`.${pickersViewLayoutClasses.actionBar}`]: {
+//         [`.${pickersLayoutClasses.actionBar}`]: {
 //           gridColumn: 1,
 //           gridRow: 2,
 //         },
@@ -56,11 +56,11 @@ export default () => null;
 //     >
 //       {toolbar}
 //       {actionBar}
-//       <PickersViewLayoutContentWrapper className={pickersViewLayoutClasses.contentWrapper}>
+//       <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
 //         {tabs}
 //         {content}
-//       </PickersViewLayoutContentWrapper>
-//     </PickersViewLayoutRoot>
+//       </PickersLayoutContentWrapper>
+//     </PickersLayoutRoot>
 //   );
 // }
 

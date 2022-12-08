@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../../PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -94,7 +94,7 @@ export const useMobilePicker = <
     Input: components.Input,
   };
 
-  const Layout = components?.Layout ?? PickersViewLayout;
+  const Layout = components?.Layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 

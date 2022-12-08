@@ -11,12 +11,12 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
-  PickersViewLayoutProps,
+  PickersLayoutProps,
   usePickerLayout,
-  pickersViewLayoutClasses,
-  PickersViewLayoutRoot,
-  PickersViewLayoutContentWrapper,
-} from '@mui/x-date-pickers/PickersViewLayout';
+  pickersLayoutClasses,
+  PickersLayoutRoot,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 import { DateView } from '@mui/x-date-pickers';
 
 function ActionList(props: PickersActionBarProps) {
@@ -58,18 +58,18 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (
-    <PickersViewLayoutRoot
+    <PickersLayoutRoot
       ownerState={props}
       sx={{
-        [`.${pickersViewLayoutClasses.actionBar}`]: {
+        [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,
         },
-        [`.${pickersViewLayoutClasses.toolbar}`]: {
+        [`.${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 2,
           gridRow: 1,
         },
@@ -78,13 +78,11 @@ function CustomLayout(props: PickersViewLayoutProps<Dayjs | null, DateView>) {
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersViewLayoutContentWrapper
-        className={pickersViewLayoutClasses.contentWrapper}
-      >
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
         {content}
-      </PickersViewLayoutContentWrapper>
-    </PickersViewLayoutRoot>
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
   );
 }
 export default function AddComponent() {

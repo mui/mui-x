@@ -38,7 +38,7 @@ export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView
 }
 
 /**
- * Prepare the props for the view layout (managed by `PickersViewLayout`)
+ * Prepare the props for the view layout (managed by `PickersLayout`)
  */
 export const usePickerLayoutProps = <TValue, TView extends DateOrTimeView>({
   props,

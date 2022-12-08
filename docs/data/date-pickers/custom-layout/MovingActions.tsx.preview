@@ -2,7 +2,7 @@
   componentsProps={{
     layout: {
       sx: {
-        [`.${pickersViewLayoutClasses.actionBar}`]: {
+        [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,
         },

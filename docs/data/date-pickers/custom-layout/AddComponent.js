@@ -13,10 +13,10 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
   usePickerLayout,
-  pickersViewLayoutClasses,
-  PickersViewLayoutRoot,
-  PickersViewLayoutContentWrapper,
-} from '@mui/x-date-pickers/PickersViewLayout';
+  pickersLayoutClasses,
+  PickersLayoutRoot,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 
 function ActionList(props) {
   const { onAccept, onClear, onCancel, onSetToday } = props;
@@ -69,14 +69,14 @@ function CustomLayout(props) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (
-    <PickersViewLayoutRoot
+    <PickersLayoutRoot
       ownerState={props}
       sx={{
-        [`.${pickersViewLayoutClasses.actionBar}`]: {
+        [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,
         },
-        [`.${pickersViewLayoutClasses.toolbar}`]: {
+        [`.${pickersLayoutClasses.toolbar}`]: {
           gridColumn: 2,
           gridRow: 1,
         },
@@ -85,13 +85,11 @@ function CustomLayout(props) {
       <RestaurantHeader />
       {toolbar}
       {actionBar}
-      <PickersViewLayoutContentWrapper
-        className={pickersViewLayoutClasses.contentWrapper}
-      >
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
         {content}
-      </PickersViewLayoutContentWrapper>
-    </PickersViewLayoutRoot>
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
   );
 }
 export default function AddComponent() {

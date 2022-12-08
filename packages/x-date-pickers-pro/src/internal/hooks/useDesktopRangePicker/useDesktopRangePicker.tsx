@@ -3,9 +3,9 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
-  PickersViewLayout,
-  PickersViewLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersViewLayout';
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
 import {
   DateOrTimeView,
   executeInTheNextEventLoopTick,
@@ -177,7 +177,7 @@ export const useDesktopRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
@@ -185,7 +185,7 @@ export const useDesktopRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
-  const Layout = components?.Layout ?? PickersViewLayout;
+  const Layout = components?.Layout ?? PickersLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
