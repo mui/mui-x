@@ -28,7 +28,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 ### Docs
 
 - [docs] Fix the nested import on the api pages (#7134) @flaviendelangle
-- [docs] Keep track of localization completion (cherry-pick #7002) (#7099) @alexfauquette
+- [docs] Keep track of the localization completion (#7099) @alexfauquette
 - [docs] Update localization doc to use existing locale (#7104) @LukasTy
 
 ## 5.17.14
