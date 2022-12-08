@@ -3,6 +3,117 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.11
+
+_Dec 8, 2022_
+
+We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Add dragging support for `DateRangePicker` (#6763) @LukasTy
+- ✨ Add missing lazy-loading feature to `DataGridPremium` (#7124) @m4theushw
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.11` / `@mui/x-data-grid-pro@v6.0.0-alpha.11` / `@mui/x-data-grid-premium@v6.0.0-alpha.11`
+
+#### Breaking changes
+
+- `filterPanelOperators` translation key was renamed to `filterPanelOperator` (#7062) @MBilalShafi
+
+#### Changes
+
+- [DataGrid] Add `GridCell` change in migration guide (#7087) @MBilalShafi
+- [DataGrid] Fixes rows not rendering properly after height change (#6892) @MBilalShafi
+- [DataGrid] Remove `Header` slot (#6999) @cherniavskii
+- [DataGrid] Rename `filterPanelOperators` -> `filterPanelOperator` (#7062) @MBilalShafi
+- [DataGridPremium] Add support for lazy-loading (#7124) @m4theushw
+- [DataGridPremium] Pass `groupId` to aggregation function (#7003) @m4theushw
+
+### `@mui/x-date-pickers@v6.0.0-alpha.11` / `@mui/x-date-pickers-pro@v6.0.0-alpha.11`
+
+#### Breaking changes
+
+- Remove the callback version of the `action` prop on the `actionBar` slot (#7038) @flaviendelangle
+
+  The `action` prop of the `actionBar` slot is no longer supporting a callback.
+  Instead, you can pass a callback at the slot level
+
+  ```diff
+   <DatePicker
+     componentsProps={{
+  -     actionBar: {
+  -       actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
+  -     },
+  +     actionBar: ({ wrapperVariant }) => ({
+  +       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+  +     }),
+     }}
+   />
+  ```
+
+- The `selectedDays` prop has been removed from the `Day` component (#7066) @flaviendelangle
+  If you need to access it, you can control the value and pass it to the slot using `componentsProps`:
+
+  ```tsx
+  function CustomDay({ selectedDay, ...other }) {
+    // do something with 'selectedDay'
+    return <PickersDay {...other} />;
+  }
+  function App() {
+    const [value, setValue] = React.useState(null);
+    return (
+      <DatePicker
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        components={{ Day: CustomDay }}
+        componentsProps={{
+          day: { selectedDay: value },
+        }}
+      />
+    );
+  }
+  ```
+
+- The `currentlySelectingRangeEnd` / `setCurrentlySelectingRangeEnd` props on the Date Range Picker toolbar have been renamed to `rangePosition` / `onRangePositionChange` (#6989) @flaviendelangle
+
+  ```diff
+   const CustomToolbarComponent = props => (
+     <div>
+  -    <button onChange={() => props.setCurrentlySelectingRangeEnd('end')}>Edit end date</button>
+  +    <button onClick={() => props.onRangePositionChange('end')}>Edit end date</button>
+  -    <div>Is editing end date: {props.currentlySelectingRangeEnd === 'end'}</div>
+  +    <div>Is editing end date: {props.rangePosition === 'end'}</div>
+     </div>
+   )
+   <DateRangePicker
+     components={{
+       Toolbar: CustomToolbarComponent
+     }}
+   />
+  ```
+
+#### Changes
+
+- [DateRangePicker] Add dragging support to edit range (#6763) @LukasTy
+- [pickers] Fix lost props on Date Range Pickers (#7092) @flaviendelangle
+- [pickers] Fix toolbar on the new range pickers (#6989) @flaviendelangle
+- [pickers] Improve performance of `DayCalendar` (#7066) @flaviendelangle
+- [pickers] Initialize date without time when selecting year or month (#7120) @LukasTy
+- [pickers] Remove the callback version of the `action` prop in the `actionBar` component slot (#7038) @flaviendelangle
+
+### Docs
+
+- [docs] Fix API page ad space regression (#7051) @oliviertassinari
+- [docs] Update localization doc to use existing locale (#7102) @LukasTy
+
+### Core
+
+- [core] Add codemod to move l10n translation (#7027) @alexfauquette
+- [core] Add notes to remove the legacy pickers internals (#7133) @flaviendelangle
+- [core] Remove internals-fields imports (#7119) @flaviendelangle
+- [core] Remove unused code (#7094) @flaviendelangle
+- [core] Sync `ApiPage.js` with monorepo (#7073) @oliviertassinari
+- [test] Fix karma-mocha assertion error messages (#7054) @cherniavskii
+
 ## 6.0.0-alpha.10
 
 _Dec 1, 2022_
