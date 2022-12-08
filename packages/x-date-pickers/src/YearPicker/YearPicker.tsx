@@ -121,6 +121,7 @@ export const YearPicker = React.forwardRef(function YearPicker<TDate>(
     () => date ?? utils.startOfYear(now),
     [now, utils, date],
   );
+
   const currentYear = React.useMemo(() => {
     if (date != null) {
       return utils.getYear(date);
