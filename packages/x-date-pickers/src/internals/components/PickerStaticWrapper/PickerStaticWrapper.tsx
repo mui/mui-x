@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -10,7 +11,7 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
-import { PickersActionBar } from '../../../PickersActionBar';
+import { PickersActionBar, PickersActionBarAction } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -111,6 +112,22 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const classes = useUtilityClasses(props);
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions:
+        displayStaticWrapperAs === 'desktop'
+          ? []
+          : (['cancel', 'accept'] as PickersActionBarAction[]),
+    },
+    ownerState: { wrapperVariant: displayStaticWrapperAs },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
@@ -120,14 +137,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
           <PickerStaticWrapperContent className={classes.content}>
             <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
           </PickerStaticWrapperContent>
-          <ActionBar
-            onAccept={onAccept}
-            onClear={onClear}
-            onCancel={onCancel}
-            onSetToday={onSetToday}
-            actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
-            {...componentsProps?.actionBar}
-          />
+          <ActionBar {...actionBarProps} />
         </PickerStaticWrapperRoot>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

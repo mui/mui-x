@@ -9,11 +9,9 @@ import {
   useLocalizationContext,
   useUtils,
   useValidation,
-} from '@mui/x-date-pickers/internals';
-import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
-} from '@mui/x-date-pickers/internals-fields';
+} from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 import {
   TimeRangeValidationError,
