@@ -190,6 +190,7 @@ interface PickerState<TValue> {
   wrapperProps: PickerStateWrapperProps;
 }
 
+// TODO v6: Drop with the legacy pickers
 export const usePickerState = <TValue, TDate, TError>(
   props: PickerStateProps<TValue>,
   valueManager: PickerStateValueManager<TValue, TDate, TError>,
