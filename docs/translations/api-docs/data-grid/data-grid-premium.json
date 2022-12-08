@@ -140,7 +140,7 @@
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
     "scrollEndThreshold": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
     "showCellVerticalBorder": "If <code>true</code>, the vertical borders of the cells are displayed.",
-    "showColumnRightBorder": "If <code>true</code>, the right border of the column headers are displayed.",
+    "showColumnVerticalBorder": "If <code>true</code>, the right border of the column headers are displayed.",
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
@@ -628,10 +628,10 @@
       "conditions": "column header and other elements that have border"
     },
     "cell--withRightBorder": {
-      "description": "Styles applied the cell if `showColumnRightBorder={true}`."
+      "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
     },
     "columnHeader--withRightBorder": {
-      "description": "Styles applied the column header if `showColumnRightBorder={true}`."
+      "description": "Styles applied the column header if `showColumnVerticalBorder={true}`."
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",

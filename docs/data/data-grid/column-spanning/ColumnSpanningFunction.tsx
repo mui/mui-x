@@ -131,7 +131,7 @@ export default function ColumnSpanningFunction() {
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder
-        showColumnRightBorder
+        showColumnVerticalBorder
         getCellClassName={getCellClassName}
         columns={columns}
         rows={rows}

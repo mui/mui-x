@@ -851,7 +851,7 @@ DataGridProRaw.propTypes = {
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

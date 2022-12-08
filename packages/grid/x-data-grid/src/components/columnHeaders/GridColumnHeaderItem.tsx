@@ -109,7 +109,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
+    ? rootProps.showColumnVerticalBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
   const ownerState = {

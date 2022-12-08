@@ -110,10 +110,10 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
+    ? rootProps.showColumnVerticalBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
-  const showColumnBorder = rootProps.showColumnRightBorder;
+  const showColumnBorder = rootProps.showColumnVerticalBorder;
 
   const ownerState = {
     ...props,

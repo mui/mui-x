@@ -303,7 +303,7 @@ export interface DataGridPropsWithDefaultValues {
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: boolean;
+  showColumnVerticalBorder: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]

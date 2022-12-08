@@ -186,7 +186,7 @@ export default function ColumnSpanningDerived() {
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder
-        showColumnRightBorder
+        showColumnVerticalBorder
         disableColumnReorder
       />
     </Box>

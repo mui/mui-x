@@ -467,11 +467,11 @@ export interface GridClasses {
    */
   withBorderColor: string;
   /**
-   * Styles applied the cell if `showColumnRightBorder={true}`.
+   * Styles applied the cell if `showColumnVerticalBorder={true}`.
    */
   'cell--withRightBorder': string;
   /**
-   * Styles applied the column header if `showColumnRightBorder={true}`.
+   * Styles applied the column header if `showColumnVerticalBorder={true}`.
    */
   'columnHeader--withRightBorder': string;
   /**

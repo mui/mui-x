@@ -11,6 +11,6 @@
   disableRowSelectionOnClick
   hideFooter
   showCellVerticalBorder
-  showColumnRightBorder
+  showColumnVerticalBorder
   disableColumnReorder
 />
