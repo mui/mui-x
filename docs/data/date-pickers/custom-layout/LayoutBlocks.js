@@ -46,8 +46,8 @@ export default function LayoutBlocks() {
         <Box
           sx={{
             flexShrink: 0,
-            gap: 2,
-            p: 3,
+            px: 3,
+            pb: 2,
             minWidth: '150px',
           }}
         >
@@ -64,7 +64,6 @@ export default function LayoutBlocks() {
                 }
               }}
               exclusive
-              sx={{ mb: 2 }}
             >
               <ToggleButton value={'date'}>date picker</ToggleButton>
               <ToggleButton value={'time'}>time picker</ToggleButton>
