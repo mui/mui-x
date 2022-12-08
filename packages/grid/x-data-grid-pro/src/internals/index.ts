@@ -35,6 +35,8 @@ export {
   useGridRowPinningPreProcessors,
   addPinnedRow,
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
+export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 
 export type {
   GridExperimentalProFeatures,
