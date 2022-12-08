@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { SlotComponentProps } from '@mui/base/utils';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -7,18 +6,11 @@ import {
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
-import {
-  PickersSlotsComponent,
-  PickersSlotsComponentsProps,
-} from '../../components/wrappers/WrapperProps';
 
-export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<TValue, TView>,
-    Pick<PickersSlotsComponent, 'PaperContent'> {}
+export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView> extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView>,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
+  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**

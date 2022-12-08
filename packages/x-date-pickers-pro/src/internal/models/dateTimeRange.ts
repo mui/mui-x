@@ -1,9 +1,9 @@
-import { UseFieldInternalProps } from '@mui/x-date-pickers/internals-fields';
 import {
   BaseDateValidationProps,
   TimeValidationProps,
   DefaultizedProps,
   MakeOptional,
+  UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
 import { DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';

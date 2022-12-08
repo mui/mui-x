@@ -1,4 +1,4 @@
-import { FieldSection } from '@mui/x-date-pickers/internals-fields';
+import { FieldSection } from '@mui/x-date-pickers/internals';
 
 export type DateRange<TDate> = [TDate | null, TDate | null];
 export type NonEmptyDateRange<TDate> = [TDate, TDate];

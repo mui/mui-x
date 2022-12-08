@@ -8,11 +8,9 @@ import {
   DateValidationError,
   useLocalizationContext,
   useValidation,
-} from '@mui/x-date-pickers/internals';
-import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
-} from '@mui/x-date-pickers/internals-fields';
+} from '@mui/x-date-pickers/internals';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
