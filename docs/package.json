@@ -62,7 +62,7 @@
     "luxon": "^3.1.0",
     "lz-string": "^1.4.4",
     "markdown-to-jsx": "^7.1.7",
-    "marked": "^4.2.2",
+    "marked": "^4.2.4",
     "moment": "^2.29.4",
     "next": "^13.0.2",
     "nprogress": "^0.2.0",
