@@ -9,20 +9,21 @@ _Dec 8, 2022_
 
 We'd like to offer a big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Add dragging support for `DateRangePicker` (#6763) @LukasTy
-- ✨ Add missing lazy-loading feature to `DataGridPremium` (#7124) @m4theushw
+- 🚀 Add dragging support for the new Date Range Picker (`NextDateRangePicker`) (#6763) @LukasTy
+- ⚡️ Improve performance of `DayCalendar` (#7066) @flaviendelangle
+- ✨ Fix lazy-loading feature not working in `DataGridPremium` (#7124) @m4theushw
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v6.0.0-alpha.11` / `@mui/x-data-grid-pro@v6.0.0-alpha.11` / `@mui/x-data-grid-premium@v6.0.0-alpha.11`
 
 #### Breaking changes
 
-- `filterPanelOperators` translation key was renamed to `filterPanelOperator` (#7062) @MBilalShafi
+- The `filterPanelOperators` translation key was renamed to `filterPanelOperator` (#7062) @MBilalShafi
+- The `components.Header` slot was removed. Use `components.Toolbar` slot instead (#6999) @cherniavskii
 
 #### Changes
 
-- [DataGrid] Add `GridCell` change in migration guide (#7087) @MBilalShafi
-- [DataGrid] Fixes rows not rendering properly after height change (#6892) @MBilalShafi
+- [DataGrid] Fix rows not rendering properly after height change (#6892) @MBilalShafi
 - [DataGrid] Remove `Header` slot (#6999) @cherniavskii
 - [DataGrid] Rename `filterPanelOperators` -> `filterPanelOperator` (#7062) @MBilalShafi
 - [DataGridPremium] Add support for lazy-loading (#7124) @m4theushw
@@ -35,7 +36,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - Remove the callback version of the `action` prop on the `actionBar` slot (#7038) @flaviendelangle
 
   The `action` prop of the `actionBar` slot is no longer supporting a callback.
-  Instead, you can pass a callback at the slot level
+  Instead, you can pass a callback at the slot level:
 
   ```diff
    <DatePicker
@@ -102,6 +103,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 ### Docs
 
+- [docs] Add `GridCell` change in migration guide (#7087) @MBilalShafi
 - [docs] Fix API page ad space regression (#7051) @oliviertassinari
 - [docs] Update localization doc to use existing locale (#7102) @LukasTy
 
@@ -109,7 +111,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
 - [core] Add codemod to move l10n translation (#7027) @alexfauquette
 - [core] Add notes to remove the legacy pickers internals (#7133) @flaviendelangle
-- [core] Remove internals-fields imports (#7119) @flaviendelangle
+- [core] Remove `internals-fields` imports (#7119) @flaviendelangle
 - [core] Remove unused code (#7094) @flaviendelangle
 - [core] Sync `ApiPage.js` with monorepo (#7073) @oliviertassinari
 - [test] Fix karma-mocha assertion error messages (#7054) @cherniavskii
