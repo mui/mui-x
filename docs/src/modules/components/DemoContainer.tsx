@@ -25,7 +25,7 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
   return 'single-input-field';
 };
 
-export function PickersGrid(props: PickersGridProps) {
+export function DemoContainer(props: PickersGridProps) {
   const { children } = props;
 
   const childrenCount = React.Children.count(children);
@@ -75,7 +75,7 @@ interface PickersGridItemProps {
   label: string;
   children: React.ReactNode;
 }
-export function PickersGridItem(props: PickersGridItemProps) {
+export function DemoItem(props: PickersGridItemProps) {
   const { label, children } = props;
 
   const childName = getChildComponentName(React.Children.toArray(children)[0]);

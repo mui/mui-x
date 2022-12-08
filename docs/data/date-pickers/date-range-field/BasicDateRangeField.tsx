@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PickersGrid } from 'docsx/src/modules/components/PickersGrid';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
@@ -9,7 +9,7 @@ export default function BasicDateRangeField() {
   const [value, setValue] = React.useState<any>([null, null]);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <PickersGrid>
+      <DemoContainer>
         <MultiInputDateRangeField
           value={value}
           onChange={(newValue) => setValue(newValue)}
@@ -18,7 +18,7 @@ export default function BasicDateRangeField() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </PickersGrid>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

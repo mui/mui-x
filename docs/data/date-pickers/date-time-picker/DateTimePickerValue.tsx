@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { PickersGrid } from 'docsx/src/modules/components/PickersGrid';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
@@ -10,7 +10,7 @@ export default function DateTimePickerValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <PickersGrid>
+      <DemoContainer>
         <NextDateTimePicker
           label="Uncontrolled picker"
           defaultValue={dayjs('2022-04-07T15:30')}
@@ -20,7 +20,7 @@ export default function DateTimePickerValue() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </PickersGrid>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { PickersGrid } from 'docsx/src/modules/components/PickersGrid';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -14,7 +14,7 @@ export default function DateRangeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <PickersGrid>
+      <DemoContainer>
         <SingleInputDateRangeField
           label="Uncontrolled field"
           defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
@@ -24,7 +24,7 @@ export default function DateRangeFieldValue() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </PickersGrid>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }
