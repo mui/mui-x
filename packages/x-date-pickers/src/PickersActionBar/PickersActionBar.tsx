@@ -21,7 +21,7 @@ export interface PickersActionBarProps extends DialogActionsProps {
 export function PickersActionBar(props: PickersActionBarProps) {
   const { onAccept, onClear, onCancel, onSetToday, actions, ...other } = props;
 
-  const localeText = useLocaleText<TDate>();
+  const localeText = useLocaleText();
 
   if (actions == null || actions.length === 0) {
     return null;

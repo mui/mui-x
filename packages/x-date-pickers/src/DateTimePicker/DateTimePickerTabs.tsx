@@ -100,7 +100,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
   } = props;
 
-  const localeText = useLocaleText<TDate>();
+  const localeText = useLocaleText();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const ownerState = { ...props, wrapperVariant };
   const classes = useUtilityClasses(ownerState);
