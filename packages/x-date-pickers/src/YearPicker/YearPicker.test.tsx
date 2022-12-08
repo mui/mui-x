@@ -63,6 +63,16 @@ describe('<YearPicker />', () => {
     expect(onChangeMock.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
   });
 
+  it('should select start of year without time when no initial value is present', () => {
+    const onChange = spy();
+    render(<YearPicker date={null} onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: '2025' }));
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
+  });
+
   it('does not allow to pick year if readOnly prop is passed', () => {
     const onChangeMock = spy();
     render(
