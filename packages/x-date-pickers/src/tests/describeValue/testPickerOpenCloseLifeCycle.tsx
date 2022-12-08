@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
@@ -70,10 +70,16 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
     });
@@ -99,10 +105,16 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
@@ -125,6 +137,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
 
       // Change the value (same value)
       setNewValue(values[0], { isOpened: true, applySameValue: true });
+      if (pickerParams.type === 'date-range') {
+        setNewValue(values[0], { isOpened: true, applySameValue: true, setEndDate: true });
+      }
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -148,18 +163,30 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       );
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValueBis = setNewValue(newValue, { isOpened: true });
-      expect(onChange.callCount).to.equal(2);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
+      let newValueBis = setNewValue(newValue, { isOpened: true });
+      expect(onChange.callCount).to.equal(3);
+      if (pickerParams.type === 'date-range') {
+        newValueBis = setNewValue(newValueBis, { isOpened: true, setEndDate: true });
+        newValueBis.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -187,8 +214,13 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -214,7 +246,12 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       );
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      if (pickerParams.type === 'date-range') {
+        // for range picker a mouse press does not seem to trigger onClose (at least in "jsdom" env)
+        fireEvent.keyDown(document.activeElement, { key: 'Escape' });
+      } else {
+        userEvent.mousePress(document.body);
+      }
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
@@ -245,11 +282,21 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       const newValue = setNewValue(values[0], { isOpened: true });
 
       // Dismiss the picker
-      userEvent.mousePress(document.body);
+      if (pickerParams.type === 'date-range') {
+        // for range picker a mouse press does not seem to trigger onClose (at least in "jsdom" env)
+        fireEvent.keyDown(document.activeElement, { key: 'Escape' });
+      } else {
+        userEvent.mousePress(document.body);
+      }
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue.forEach((value, index) => {
+          expect(onAccept.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onClose.callCount).to.equal(1);
     });
 

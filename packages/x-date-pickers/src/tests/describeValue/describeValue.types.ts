@@ -16,7 +16,7 @@ type DescribeValueNonStaticPickerOptions<TValue> = DescribeValueBaseOptions<TVal
     componentFamily: 'new-picker';
     setNewValue: (
       value: TValue,
-      pickerParams?: { isOpened?: boolean; applySameValue?: boolean },
+      pickerParams?: { isOpened?: boolean; applySameValue?: boolean; setEndDate?: boolean },
     ) => TValue;
   };
 
