@@ -157,14 +157,39 @@ The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component pr
 
 ### Replace the `renderDay` prop
 
-The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
+- The `renderDay` prop has been replaced by a `Day` component slot on all date, date time and date range pickers:
 
-```diff
- <DatePicker
--  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
-+  components={{ Day: CustomDay }}
- />
-```
+  ```diff
+   <DatePicker
+  -  renderDay={(_, dayProps) => <CustomDay {...dayProps} />}
+  +  components={{ Day: CustomDay }}
+   />
+  ```
+
+- The `selectedDays` prop have been removed from the `Day` component.
+  If you need to access it, you can control the value and pass it to the slot using `componentsProps`:
+
+  ```tsx
+  function CustomDay({ selectedDay, ...other }) {
+    // do something with 'selectedDay'
+    return <PickersDay {...other} />;
+  }
+
+  function App() {
+    const [value, setValue] = React.useState(null);
+
+    return (
+      <DatePicker
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        components={{ Day: CustomDay }}
+        componentsProps={{
+          day: { selectedDay: value },
+        }}
+      />
+    );
+  }
+  ```
 
 ### Rename the localization props
 
@@ -463,3 +488,21 @@ Component name changes are also reflected in `themeAugmentation`:
      }}
    />
   ```
+
+### Remove the callback version of the `action` prop on the `actionBar` slot
+
+The `action` prop of the `actionBar` slot is no longer supporting a callback.
+Instead, you can pass a callback at the slot level
+
+```diff
+ <DatePicker
+   componentsProps={{
+-     actionBar: {
+-       actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
+-     },
++     actionBar: ({ wrapperVariant }) => ({
++       actions: wrapperVariant === 'desktop' ? [] : ['clear'],
++     }),
+   }}
+ />
+```

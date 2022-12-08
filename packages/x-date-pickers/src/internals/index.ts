@@ -101,6 +101,21 @@ export type { WrapperVariant } from './components/wrappers/WrapperVariantContext
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
+export {
+  useField,
+  createDateStrFromSections,
+  addPositionPropertiesToSections,
+  splitFormatIntoSections,
+} from './hooks/useField';
+export type {
+  UseFieldInternalProps,
+  UseFieldParams,
+  UseFieldResponse,
+  FieldValueManager,
+  FieldSection,
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
+} from './hooks/useField';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePickerState } from './hooks/usePickerState';
@@ -172,8 +187,6 @@ export type {
   DayCalendarSlotsComponentsProps,
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
-
-export { areDayPropsEqual } from '../PickersDay/PickersDay';
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 export { useCalendarState } from '../DateCalendar/useCalendarState';

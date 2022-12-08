@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useEventCallback from '@mui/utils/useEventCallback';
 import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
@@ -35,7 +36,11 @@ export interface DayCalendarSlotsComponent<TDate> {
 }
 
 export interface DayCalendarSlotsComponentsProps<TDate> {
-  day?: SlotComponentProps<typeof PickersDay, {}, DayCalendarProps<TDate> & { day: TDate }>;
+  day?: SlotComponentProps<
+    typeof PickersDay,
+    {},
+    DayCalendarProps<TDate> & { day: TDate; selected: boolean }
+  >;
 }
 
 export interface ExportedDayCalendarProps<TDate>
@@ -248,7 +253,8 @@ function WrappedDay<TDate extends unknown>({
   const isToday = utils.isSameDay(day, now);
 
   const Day = components?.Day ?? PickersDay;
-  const dayProps = useSlotProps({
+  // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
+  const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
     externalSlotProps: componentsProps?.day,
     additionalProps: {
@@ -260,18 +266,22 @@ function WrappedDay<TDate extends unknown>({
       showDaysOutsideCurrentMonth,
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
-      selectedDays,
       // it is used in date range dragging logic by accessing `dataset.timestamp`
       'data-timestamp': utils.toJsDate(day).valueOf(),
     },
-    ownerState: { ...parentProps, day },
+    ownerState: { ...parentProps, day, selected: isSelected },
   });
+
+  const isDisabled = React.useMemo(
+    () => disabled || isDateDisabled(day),
+    [disabled, isDateDisabled, day],
+  );
 
   return (
     <Day
       {...dayProps}
       day={day}
-      disabled={disabled || isDateDisabled(day)}
+      disabled={isDisabled}
       autoFocus={hasFocus && isFocusableDay}
       today={isToday}
       outsideCurrentMonth={utils.getMonth(day) !== currentMonthNumber}
@@ -291,6 +301,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const utils = useUtils<TDate>();
   const props = useThemeProps({ props: inProps, name: 'MuiDayCalendar' });
   const classes = useUtilityClasses(props);
+  const theme = useTheme();
+
   const {
     onFocusedDayChange,
     className,
@@ -336,16 +348,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     () => focusedDay || now,
   );
 
-  const changeHasFocus = React.useCallback(
-    (newHasFocus: boolean) => {
-      if (onFocusedViewChange) {
-        onFocusedViewChange(newHasFocus);
-      }
-    },
-    [onFocusedViewChange],
-  );
-
-  const handleDaySelect = React.useCallback(
+  const handleDaySelect = useEventCallback(
     (day: TDate, isFinish: PickerSelectionState = 'finish') => {
       if (readOnly) {
         return;
@@ -353,106 +356,107 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
 
       onSelectedDaysChange(day, isFinish);
     },
-    [onSelectedDaysChange, readOnly],
   );
 
-  const focusDay = React.useCallback(
-    (day: TDate) => {
-      if (!isDateDisabled(day)) {
-        onFocusedDayChange(day);
-        setInternalFocusedDay(day);
-        changeHasFocus(true);
+  const focusDay = (day: TDate) => {
+    if (!isDateDisabled(day)) {
+      onFocusedDayChange(day);
+      setInternalFocusedDay(day);
+      onFocusedViewChange?.(true);
+    }
+  };
+
+  const handleKeyDown = useEventCallback(
+    (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          focusDay(utils.addDays(day, -7));
+          event.preventDefault();
+          break;
+        case 'ArrowDown':
+          focusDay(utils.addDays(day, 7));
+          event.preventDefault();
+          break;
+        case 'ArrowLeft': {
+          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
+          const nextAvailableMonth =
+            theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
+
+          const closestDayToFocus = findClosestEnabledDate({
+            utils,
+            date: newFocusedDayDefault,
+            minDate:
+              theme.direction === 'ltr'
+                ? utils.startOfMonth(nextAvailableMonth)
+                : newFocusedDayDefault,
+            maxDate:
+              theme.direction === 'ltr'
+                ? newFocusedDayDefault
+                : utils.endOfMonth(nextAvailableMonth),
+            isDateDisabled,
+          });
+          focusDay(closestDayToFocus || newFocusedDayDefault);
+          event.preventDefault();
+          break;
+        }
+        case 'ArrowRight': {
+          const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
+          const nextAvailableMonth =
+            theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
+
+          const closestDayToFocus = findClosestEnabledDate({
+            utils,
+            date: newFocusedDayDefault,
+            minDate:
+              theme.direction === 'ltr'
+                ? newFocusedDayDefault
+                : utils.startOfMonth(nextAvailableMonth),
+            maxDate:
+              theme.direction === 'ltr'
+                ? utils.endOfMonth(nextAvailableMonth)
+                : newFocusedDayDefault,
+            isDateDisabled,
+          });
+          focusDay(closestDayToFocus || newFocusedDayDefault);
+          event.preventDefault();
+          break;
+        }
+        case 'Home':
+          focusDay(utils.startOfWeek(day));
+          event.preventDefault();
+          break;
+        case 'End':
+          focusDay(utils.endOfWeek(day));
+          event.preventDefault();
+          break;
+        case 'PageUp':
+          focusDay(utils.getNextMonth(day));
+          event.preventDefault();
+          break;
+        case 'PageDown':
+          focusDay(utils.getPreviousMonth(day));
+          event.preventDefault();
+          break;
+        default:
+          break;
       }
     },
-    [isDateDisabled, onFocusedDayChange, changeHasFocus],
   );
 
-  const theme = useTheme();
-
-  function handleKeyDown(event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) {
-    switch (event.key) {
-      case 'ArrowUp':
-        focusDay(utils.addDays(day, -7));
-        event.preventDefault();
-        break;
-      case 'ArrowDown':
-        focusDay(utils.addDays(day, 7));
-        event.preventDefault();
-        break;
-      case 'ArrowLeft': {
-        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? -1 : 1);
-        const nextAvailableMonth =
-          theme.direction === 'ltr' ? utils.getPreviousMonth(day) : utils.getNextMonth(day);
-
-        const closestDayToFocus = findClosestEnabledDate({
-          utils,
-          date: newFocusedDayDefault,
-          minDate:
-            theme.direction === 'ltr'
-              ? utils.startOfMonth(nextAvailableMonth)
-              : newFocusedDayDefault,
-          maxDate:
-            theme.direction === 'ltr' ? newFocusedDayDefault : utils.endOfMonth(nextAvailableMonth),
-          isDateDisabled,
-        });
-        focusDay(closestDayToFocus || newFocusedDayDefault);
-        event.preventDefault();
-        break;
-      }
-      case 'ArrowRight': {
-        const newFocusedDayDefault = utils.addDays(day, theme.direction === 'ltr' ? 1 : -1);
-        const nextAvailableMonth =
-          theme.direction === 'ltr' ? utils.getNextMonth(day) : utils.getPreviousMonth(day);
-
-        const closestDayToFocus = findClosestEnabledDate({
-          utils,
-          date: newFocusedDayDefault,
-          minDate:
-            theme.direction === 'ltr'
-              ? newFocusedDayDefault
-              : utils.startOfMonth(nextAvailableMonth),
-          maxDate:
-            theme.direction === 'ltr' ? utils.endOfMonth(nextAvailableMonth) : newFocusedDayDefault,
-          isDateDisabled,
-        });
-        focusDay(closestDayToFocus || newFocusedDayDefault);
-        event.preventDefault();
-        break;
-      }
-      case 'Home':
-        focusDay(utils.startOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'End':
-        focusDay(utils.endOfWeek(day));
-        event.preventDefault();
-        break;
-      case 'PageUp':
-        focusDay(utils.getNextMonth(day));
-        event.preventDefault();
-        break;
-      case 'PageDown':
-        focusDay(utils.getPreviousMonth(day));
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  }
-
-  function handleFocus(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
-    focusDay(day);
-  }
-  function handleBlur(event: React.FocusEvent<HTMLButtonElement>, day: TDate) {
+  const handleFocus = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) =>
+    focusDay(day),
+  );
+  const handleBlur = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) => {
     if (hasFocus && utils.isSameDay(internalFocusedDay, day)) {
-      changeHasFocus(false);
+      onFocusedViewChange?.(false);
     }
-  }
+  });
 
   const currentMonthNumber = utils.getMonth(currentMonth);
-  const validSelectedDays = selectedDays
-    .filter((day): day is TDate => !!day)
-    .map((day) => utils.startOfDay(day));
+  const validSelectedDays = React.useMemo(
+    () => selectedDays.filter((day): day is TDate => !!day).map((day) => utils.startOfDay(day)),
+    [utils, selectedDays],
+  );
 
   // need a new ref whenever the `key` of the transition changes: http://reactcommunity.org/react-transition-group/transition/#Transition-prop-nodeRef.
   const transitionKey = currentMonthNumber;

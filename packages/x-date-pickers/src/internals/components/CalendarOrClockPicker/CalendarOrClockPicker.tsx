@@ -115,6 +115,7 @@ const isTimePickerView = (view: DateOrTimeView): view is TimeView =>
 
 let warnedOnceNotValidOpenTo = false;
 
+// TODO v6: Drop with the legacy pickers
 export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
   inProps: CalendarOrClockPickerProps<TDate, View>,
 ) {
