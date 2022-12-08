@@ -52,7 +52,7 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  describe('prop: showCellRightBorder', () => {
+  describe('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.getPropertyValue('border-right-color');
@@ -74,7 +74,7 @@ describe('<DataGrid /> - Cells', () => {
           <DataGrid
             {...baselineProps}
             columns={[{ field: 'id' }, { field: 'brand' }]}
-            showCellRightBorder
+            showCellVerticalBorder
           />
         </div>,
       );
@@ -97,7 +97,7 @@ describe('<DataGrid /> - Cells', () => {
             {...baselineProps}
             autoHeight
             columns={[{ field: 'id' }, { field: 'brand' }]}
-            showCellRightBorder
+            showCellVerticalBorder
           />
         </div>,
       );

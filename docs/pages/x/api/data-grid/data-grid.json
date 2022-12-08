@@ -148,7 +148,7 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "showCellRightBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" } },
     "showColumnRightBorder": { "type": { "name": "bool" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },

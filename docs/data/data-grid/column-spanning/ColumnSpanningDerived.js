@@ -176,7 +176,7 @@ export default function ColumnSpanningDerived() {
         disableExtendRowFullWidth
         disableRowSelectionOnClick
         hideFooter
-        showCellRightBorder
+        showCellVerticalBorder
         showColumnRightBorder
         disableColumnReorder
       />

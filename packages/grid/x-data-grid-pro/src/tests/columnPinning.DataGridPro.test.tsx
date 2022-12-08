@@ -360,7 +360,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
   });
 
-  it('should add border to right pinned columns section when `showCellRightBorder={true}`', function test() {
+  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test() {
     if (isJSDOM) {
       // Doesn't work with mocked window.getComputedStyle
       this.skip();
@@ -368,7 +368,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
     render(
       <div style={{ width: 300, height: 500 }}>
-        <TestCase showCellRightBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
+        <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
       </div>,
     );
 

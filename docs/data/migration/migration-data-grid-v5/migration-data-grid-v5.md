@@ -33,6 +33,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
+  | `showCellRightBorder`      | `showCellVerticalBorder`      |
 
 ### Removed props
 

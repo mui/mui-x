@@ -4,7 +4,7 @@
   disableColumnFilter
   disableRowSelectionOnClick
   hideFooter
-  showCellRightBorder
+  showCellVerticalBorder
   showColumnRightBorder
   getCellClassName={getCellClassName}
   columns={columns}

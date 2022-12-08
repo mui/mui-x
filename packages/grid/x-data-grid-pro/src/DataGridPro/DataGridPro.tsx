@@ -843,10 +843,10 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false

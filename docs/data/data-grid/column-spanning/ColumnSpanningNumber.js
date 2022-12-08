@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const other = {
   autoHeight: true,
-  showCellRightBorder: true,
+  showCellVerticalBorder: true,
   showColumnRightBorder: true,
 };
 

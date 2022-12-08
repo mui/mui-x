@@ -84,7 +84,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface VirtualScrollerPinnedColumnsProps {
   side: GridPinnedPosition;
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -144,7 +144,7 @@ const VirtualScrollerPinnedColumns = styled('div', {
       boxShadow: `-2px 0px 4px -2px ${boxShadowColor}`,
     }),
     ...(ownerState.side === GridPinnedPosition.right &&
-      ownerState.showCellRightBorder && {
+      ownerState.showCellVerticalBorder && {
         borderLeftWidth: '1px',
         borderLeftStyle: 'solid',
       }),
@@ -375,7 +375,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               className={classes.leftPinnedColumns}
               ownerState={{
                 side: GridPinnedPosition.left,
-                showCellRightBorder: rootProps.showCellRightBorder,
+                showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
             >
               {getRows({
@@ -400,7 +400,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               className={classes.rightPinnedColumns}
               ownerState={{
                 side: GridPinnedPosition.right,
-                showCellRightBorder: rootProps.showCellRightBorder,
+                showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
             >
               {getRows({
@@ -422,7 +422,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             className={classes.leftPinnedColumns}
             ownerState={{
               side: GridPinnedPosition.left,
-              showCellRightBorder: rootProps.showCellRightBorder,
+              showCellVerticalBorder: rootProps.showCellVerticalBorder,
             }}
             style={pinnedColumnsStyle}
           >
@@ -444,7 +444,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             ref={rightColumns}
             ownerState={{
               side: GridPinnedPosition.right,
-              showCellRightBorder: rootProps.showCellRightBorder,
+              showCellVerticalBorder: rootProps.showCellVerticalBorder,
             }}
             className={classes.rightPinnedColumns}
             style={pinnedColumnsStyle}
@@ -477,7 +477,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               className={classes.leftPinnedColumns}
               ownerState={{
                 side: GridPinnedPosition.left,
-                showCellRightBorder: rootProps.showCellRightBorder,
+                showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
             >
               {getRows({
@@ -503,7 +503,7 @@ const DataGridProVirtualScroller = React.forwardRef<
               className={classes.rightPinnedColumns}
               ownerState={{
                 side: GridPinnedPosition.right,
-                showCellRightBorder: rootProps.showCellRightBorder,
+                showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
             >
               {getRows({

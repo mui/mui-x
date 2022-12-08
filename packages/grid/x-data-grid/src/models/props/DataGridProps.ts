@@ -295,10 +295,10 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false

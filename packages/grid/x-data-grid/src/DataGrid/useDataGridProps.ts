@@ -64,7 +64,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   rowHeight: 52,
   rowsPerPageOptions: [25, 50, 100],
   rowSpacingType: 'margin',
-  showCellRightBorder: false,
+  showCellVerticalBorder: false,
   showColumnRightBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   sortingMode: 'client',

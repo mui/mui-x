@@ -448,7 +448,7 @@ const GridRow = React.forwardRef<
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
+      ? rootProps.showCellVerticalBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(

@@ -53,7 +53,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface GridColumnHeadersPinnedColumnHeadersProps {
   side: GridPinnedPosition;
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -99,7 +99,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
   ...(ownerState.side === GridPinnedPosition.right &&
-    ownerState.showCellRightBorder && {
+    ownerState.showCellVerticalBorder && {
       borderLeftWidth: '1px',
       borderLeftStyle: 'solid',
     }),
@@ -186,7 +186,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
           className={classes.leftPinnedColumns}
           ownerState={{
             side: GridPinnedPosition.left,
-            showCellRightBorder: rootProps.showCellRightBorder,
+            showCellVerticalBorder: rootProps.showCellVerticalBorder,
           }}
           {...pinnedColumnHeadersProps}
         >
@@ -221,7 +221,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
         <GridColumnHeadersPinnedColumnHeaders
           ownerState={{
             side: GridPinnedPosition.right,
-            showCellRightBorder: rootProps.showCellRightBorder,
+            showCellVerticalBorder: rootProps.showCellVerticalBorder,
           }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
