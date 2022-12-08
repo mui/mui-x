@@ -74,6 +74,9 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     ['readOnly', 'disabled'].forEach((prop) => {
       it(`should apply ${prop}="true" prop`, () => {
+        if (!['field', 'new-picker'].includes(componentFamily)) {
+          return;
+        }
         const handleChange = spy();
         render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
 
