@@ -33,7 +33,7 @@ export const useField = <
   TInternalProps extends UseFieldInternalProps<any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
-): UseFieldResponse => {
+): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>();
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');

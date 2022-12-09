@@ -83,11 +83,14 @@ export interface UseFieldForwardedProps {
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
-  onPaste?: React.ClipboardEventHandler;
-  inputProps?: Partial<InputBaseProps['inputProps']>;
+  inputProps?: InputBaseProps['inputProps'];
 }
 
-export type UseFieldResponse = Required<UseFieldForwardedProps> &
+export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
+  TForwardedProps,
+  keyof Omit<UseFieldForwardedProps, 'inputProps'>
+> &
+  Required<UseFieldForwardedProps> &
   Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
