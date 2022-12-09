@@ -1,6 +1,8 @@
-<GridItem label="YearCalendar" spacing={2}>
-  <YearCalendar />
-</GridItem>
-<GridItem label="MonthCalendar" spacing={2}>
-  <MonthCalendar />
-</GridItem>
+<DemoContainer>
+  <DemoItem label="YearCalendar">
+    <YearCalendar />
+  </DemoItem>
+  <DemoItem label="MonthCalendar">
+    <MonthCalendar />
+  </DemoItem>
+</DemoContainer>

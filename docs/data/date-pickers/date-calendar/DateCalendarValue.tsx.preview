@@ -1,6 +1,8 @@
-<GridItem label="Uncontrolled calendar" spacing={2}>
-  <DateCalendar defaultValue={dayjs('2022-04-07')} />
-</GridItem>
-<GridItem label="Controlled calendar" spacing={2}>
-  <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
-</GridItem>
+<DemoContainer>
+  <DemoItem label="Uncontrolled calendar">
+    <DateCalendar defaultValue={dayjs('2022-04-07')} />
+  </DemoItem>
+  <DemoItem label="Controlled calendar">
+    <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
+  </DemoItem>
+</DemoContainer>
