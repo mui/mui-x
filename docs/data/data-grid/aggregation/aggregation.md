@@ -294,6 +294,10 @@ In the example below, you can see that all the aggregation functions are rendere
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Selectors
+
+{{"demo": "AggregationSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
