@@ -17,7 +17,9 @@ const MultiInputDateRangeFieldRoot = styled(
     slot: 'Root',
     overridesResolver: (props, styles) => styles.root,
   },
-)({});
+)({
+  alignItems: 'baseline',
+});
 
 const MultiInputDateRangeFieldSeparator = styled(
   (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
