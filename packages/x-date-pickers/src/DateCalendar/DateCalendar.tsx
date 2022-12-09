@@ -168,6 +168,7 @@ export type ExportedDateCalendarProps<TDate> = Omit<
   | 'componentsProps'
   | 'onFocusedViewChange'
   | 'focusedView'
+  | 'autoFocus'
 >;
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<

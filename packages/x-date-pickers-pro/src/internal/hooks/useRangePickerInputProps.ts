@@ -48,7 +48,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   }, [rangePosition, open]);
 
   const openRangeStartSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+    event?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event?.stopPropagation();
     onRangePositionChange('start');
@@ -58,7 +58,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   };
 
   const openRangeEndSelection = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+    event?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
     event?.stopPropagation();
     onRangePositionChange('end');
@@ -66,6 +66,16 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
       actions.onOpen();
     }
   };
+
+  React.useEffect(() => {
+    if (startRef.current && startRef.current === document.activeElement) {
+      openRangeStartSelection();
+      return;
+    }
+    if (endRef.current && endRef.current === document.activeElement) {
+      openRangeEndSelection();
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const focusOnRangeStart = () => {
     if (open) {

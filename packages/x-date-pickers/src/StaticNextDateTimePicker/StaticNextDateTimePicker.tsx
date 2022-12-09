@@ -72,7 +72,6 @@ StaticNextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */

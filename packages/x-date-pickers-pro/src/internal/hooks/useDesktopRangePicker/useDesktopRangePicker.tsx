@@ -44,6 +44,7 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
@@ -109,6 +110,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
+      autoFocus,
       ref: fieldRef,
     },
     ownerState: props,
