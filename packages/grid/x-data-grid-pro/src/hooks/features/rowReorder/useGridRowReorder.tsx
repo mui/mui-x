@@ -29,7 +29,7 @@ interface ReorderStateProps {
   dragDirection: Direction | null;
 }
 
-let previousMousePoistion: { x: number; y: number } | null = null;
+let previousMousePosition: { x: number; y: number } | null = null;
 
 let previousReorderState: ReorderStateProps = {
   previousTargetId: null,
