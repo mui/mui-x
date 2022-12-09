@@ -79,7 +79,7 @@ Which will transform the imports like this:
 ```
 
 Components of the Community Plan such as `<DatePicker />` can be imported from both `@mui/x-date-pickers-pro` and `@mui/x-date-pickers`.
-Only [date adapters](/x/react-date-pickers/getting-started/#setup) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
+[Date adapters](/x/react-date-pickers/getting-started/#installation) such as `AdapterDayjs` can only be imported from `@mui/x-date-pickers/[adapterName]`.
 
 ### 3. Handle breaking changes introduced in alpha
 
@@ -123,13 +123,14 @@ To decide which button must be displayed and in which order, you can now use the
 ```jsx
 <DatePicker
   componentsProps={{
+    // The actions will be the same between desktop and mobile
     actionBar: {
-      // The actions will be the same between desktop and mobile
       actions: ['clear'],
-
-      // The actions will be different between desktop and mobile
-      actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
     },
+    // The actions will be different between desktop and mobile
+    actionBar: ({ wrapperVariant }) => ({
+      actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+    }),
   }}
 />
 ```

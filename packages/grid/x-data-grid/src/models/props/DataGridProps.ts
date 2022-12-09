@@ -76,6 +76,7 @@ export type DataGridForcedPropsKey =
   | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -143,6 +144,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowBuffer: number;
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: boolean;
+  /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
@@ -207,11 +213,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableVirtualization: boolean;
-  /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: boolean; // TODO v6: remove prop and make its `true` behavior the default
   /**
    * Controls whether to use the cell or row editing.
    * @default "cell"
@@ -331,6 +332,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 /**
@@ -739,7 +746,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   sx?: SxProps<Theme>;
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;

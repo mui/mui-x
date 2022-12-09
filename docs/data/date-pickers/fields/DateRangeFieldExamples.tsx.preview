@@ -1,16 +1,14 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Grid container spacing={4} width={550}>
-    <GridItem label="SingleInputDateRangeField">
-      <SingleInputDateRangeField defaultValue={[date1, date2]} />
-    </GridItem>
-    <GridItem label="MultiInputDateRangeField">
-      <MultiInputDateRangeField defaultValue={[date1, date2]} />
-    </GridItem>
-    <GridItem label="MultiInputTimeRangeField">
-      <MultiInputTimeRangeField defaultValue={[date1, date2]} />
-    </GridItem>
-    <GridItem label="MultiInputDateTimeRangeField">
-      <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
-    </GridItem>
-  </Grid>
-</LocalizationProvider>
+<Grid container spacing={4} width={550}>
+  <GridItem label="SingleInputDateRangeField">
+    <SingleInputDateRangeField defaultValue={[date1, date2]} />
+  </GridItem>
+  <GridItem label="MultiInputDateRangeField">
+    <MultiInputDateRangeField defaultValue={[date1, date2]} />
+  </GridItem>
+  <GridItem label="MultiInputTimeRangeField">
+    <MultiInputTimeRangeField defaultValue={[date1, date2]} />
+  </GridItem>
+  <GridItem label="MultiInputDateTimeRangeField">
+    <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
+  </GridItem>
+</Grid>

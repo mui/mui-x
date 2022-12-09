@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
-  debounce,
-  ownerDocument,
+  unstable_debounce as debounce,
+  unstable_ownerDocument as ownerDocument,
   unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+} from '@mui/utils';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   useGridApiEventHandler,
   useGridApiOptionHandler,
@@ -14,7 +14,7 @@ import {
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridDimensions, GridDimensionsApi } from './gridDimensionsApi';
+import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
 import { gridColumnsTotalWidthSelector } from '../columns';
 import { gridDensityRowHeightSelector } from '../density';
 import { useGridSelector } from '../../utils';
@@ -53,7 +53,7 @@ const hasScroll = ({
 };
 
 export function useGridDimensions(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     'onResize' | 'scrollbarSize' | 'pagination' | 'paginationMode' | 'autoHeight' | 'getRowHeight'
@@ -179,7 +179,7 @@ export function useGridDimensions(
     // TODO: Use a combination of scrollTop, dimensions.viewportInnerSize.height and rowsMeta.possitions
     // to find out the maximum number of rows that can fit in the visible part of the grid
     if (props.getRowHeight) {
-      const renderContext = apiRef.current.unstable_getRenderContext();
+      const renderContext = apiRef.current.getRenderContext();
       const viewportPageSize = renderContext.lastRowIndex - renderContext.firstRowIndex;
 
       return Math.min(viewportPageSize - 1, currentPage.rows.length);
@@ -195,11 +195,15 @@ export function useGridDimensions(
   const dimensionsApi: GridDimensionsApi = {
     resize,
     getRootDimensions,
-    unstable_getViewportPageSize: getViewportPageSize,
-    unstable_updateGridDimensionsRef: updateGridDimensionsRef,
   };
 
-  useGridApiMethod(apiRef, dimensionsApi, 'GridDimensionsApi');
+  const dimensionsPrivateApi: GridDimensionsPrivateApi = {
+    getViewportPageSize,
+    updateGridDimensionsRef,
+  };
+
+  useGridApiMethod(apiRef, dimensionsApi, 'public');
+  useGridApiMethod(apiRef, dimensionsPrivateApi, 'private');
 
   const debounceResize = React.useMemo(() => debounce(resize, 60), [resize]);
 

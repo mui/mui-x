@@ -133,6 +133,19 @@ describe('<DataGrid /> - Cells', () => {
     expect(getCell(0, 0)).to.have.text('0');
   });
 
+  it('should render nothing in cell when renderCell returns a `null` value', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          autoHeight={isJSDOM}
+          columns={[{ field: 'brand', renderCell: () => null }]}
+          rows={[{ id: 1, brand: 'Nike' }]}
+        />
+      </div>,
+    );
+    expect(getCell(0, 0)).to.have.text('');
+  });
+
   it('should call the valueFormatter with the correct params', () => {
     const valueFormatter = spy(({ value }) => (value ? 'Yes' : 'No'));
     render(
@@ -172,5 +185,40 @@ describe('<DataGrid /> - Cells', () => {
     expect(() => {
       getCell(1, 0).focus();
     }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
+  });
+
+  // See https://github.com/mui/mui-x/issues/6378
+  it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
+    if (isJSDOM) {
+      this.skip(); // Needs layout
+    }
+
+    const rowHeight = 50;
+    const columns = [{ field: 'id' }];
+    const rows = [];
+    for (let i = 0; i < 20; i += 1) {
+      rows.push({ id: i });
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} rowHeight={rowHeight} />
+      </div>,
+    );
+
+    const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+
+    const thirdRowCell = getCell(2, 0);
+    userEvent.mousePress(thirdRowCell);
+
+    let scrollTop = 6 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(scrollTop);
+
+    scrollTop = 2 * rowHeight;
+    virtualScroller.scrollTop = scrollTop;
+    virtualScroller.dispatchEvent(new Event('scroll'));
+    expect(virtualScroller.scrollTop).to.equal(scrollTop);
   });
 });

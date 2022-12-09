@@ -9,14 +9,19 @@ import MuiPopper, {
 import MuiTrapFocus, {
   TrapFocusProps as MuiTrapFocusProps,
 } from '@mui/material/Unstable_TrapFocus';
-import { useForkRef, useEventCallback, ownerDocument } from '@mui/material/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEventCallback as useEventCallback,
+  unstable_ownerDocument as ownerDocument,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
 import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import { getActiveElement } from '../utils/utils';
 
 export interface PickersPopperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
@@ -76,6 +81,7 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   components?: PickersPopperSlotsComponent;
   componentsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
+  shouldRestoreFocus?: () => boolean;
 }
 
 const useUtilityClasses = (ownerState: PickerPopperProps) => {
@@ -261,6 +267,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     anchorEl,
     children,
     containerRef = null,
+    shouldRestoreFocus,
     onBlur,
     onDismiss,
     onClear,
@@ -290,12 +297,12 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   const lastFocusedElementRef = React.useRef<Element | null>(null);
   React.useEffect(() => {
-    if (role === 'tooltip') {
+    if (role === 'tooltip' || (shouldRestoreFocus && !shouldRestoreFocus())) {
       return;
     }
 
     if (open) {
-      lastFocusedElementRef.current = document.activeElement;
+      lastFocusedElementRef.current = getActiveElement(document);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
@@ -308,7 +315,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
         }
       });
     }
-  }, [open, role]);
+  }, [open, role, shouldRestoreFocus]);
 
   const [clickAwayRef, onPaperClick, onPaperTouchStart] = useClickAwayListener(
     open,
@@ -330,6 +337,19 @@ export function PickersPopper(inProps: PickerPopperProps) {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions: [],
+    },
+    ownerState: { wrapperVariant: 'desktop' },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
@@ -391,14 +411,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
             >
               <PaperContent {...componentsProps?.paperContent}>
                 {children}
-                <ActionBar
-                  onAccept={onAccept}
-                  onClear={onClear}
-                  onCancel={onCancel}
-                  onSetToday={onSetToday}
-                  actions={[]}
-                  {...componentsProps?.actionBar}
-                />
+                <ActionBar {...actionBarProps} />
               </PaperContent>
             </Paper>
           </Transition>

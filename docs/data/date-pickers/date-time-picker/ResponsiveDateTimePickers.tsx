@@ -1,44 +1,27 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
+import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker';
-import Stack from '@mui/material/Stack';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { Unstable_MobileNextDateTimePicker as MobileNextDateTimePicker } from '@mui/x-date-pickers/MobileNextDateTimePicker';
+import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from '@mui/x-date-pickers/DesktopNextDateTimePicker';
 
 export default function ResponsiveDateTimePickers() {
-  const [value, setValue] = React.useState<Dayjs | null>(
-    dayjs('2018-01-01T00:00:00.000Z'),
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
-        <MobileDateTimePicker
+        <MobileNextDateTimePicker
           label="For mobile"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <DesktopDateTimePicker
+        <DesktopNextDateTimePicker
           label="For desktop"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <DateTimePicker
+        <NextDateTimePicker
           label="Responsive"
-          renderInput={(params) => <TextField {...params} />}
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
       </Stack>
     </LocalizationProvider>

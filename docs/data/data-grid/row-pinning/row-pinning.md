@@ -2,7 +2,7 @@
 title: Data Grid - Row pinning
 ---
 
-# Data grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Row pinning [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Pin rows to keep them visible at all times.</p>
 
@@ -67,7 +67,9 @@ Pinned rows do not support the following features:
 - tree data
 - row reordering
 - master detail
-  :::
+
+but you can still use these features with the rows that aren't pinned.
+:::
 
 ## API
 

@@ -1,11 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridRowSelectionStateSelector } from '../../hooks/features/rowSelection/gridRowSelectionSelector';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
-import { isNavigationKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -113,12 +112,8 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
             value: !isChecked,
           });
         }
-        // TODO v6 remove columnHeaderNavigationKeyDown events which are not used internally anymore
-        if (isNavigationKey(event.key) && !event.shiftKey) {
-          apiRef.current.publishEvent('columnHeaderNavigationKeyDown', props, event);
-        }
       },
-      [apiRef, props, isChecked],
+      [apiRef, isChecked],
     );
 
     const handleSelectionChange = React.useCallback(() => {

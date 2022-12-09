@@ -1,18 +1,17 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
 const nineAM = dayjs().set('hour', 9).startOf('hour');
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -20,7 +19,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Typography variant="body2" sx={{ mb: spacing }}>
@@ -29,32 +28,17 @@ const GridItem = ({
       {children}
     </Box>
   );
-};
+}
 
 export default function TimeValidationMinTime() {
-  const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(fiveAM);
-  const [dateTimePickerValue, setDateTimePickerValue] = React.useState<Dayjs | null>(
-    fiveAM,
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4}>
         <GridItem label="TimePicker">
-          <TimePicker
-            minTime={nineAM}
-            value={timePickerValue}
-            onChange={(newValue) => setTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
+          <NextTimePicker defaultValue={fiveAM} minTime={nineAM} />
         </GridItem>
         <GridItem label="DateTimePicker">
-          <DateTimePicker
-            minTime={nineAM}
-            value={dateTimePickerValue}
-            onChange={(newValue) => setDateTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
+          <NextDateTimePicker defaultValue={fiveAM} minTime={nineAM} />
         </GridItem>
       </Stack>
     </LocalizationProvider>

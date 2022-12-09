@@ -1,8 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { capitalize } from '@mui/material/utils';
-import { alpha, styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_capitalize as capitalize,
+  unstable_composeClasses as composeClasses,
+} from '@mui/utils';
+import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import {
   WrapperVariant,
   WrapperVariantContext,
@@ -13,11 +15,14 @@ import {
   PickersYearClasses,
 } from './pickersYearClasses';
 
-export interface PickersYearProps {
+export interface ExportedPickersYearProps {
+  classes?: Partial<PickersYearClasses>;
+}
+
+export interface PickersYearProps extends ExportedPickersYearProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus?: boolean;
   children: React.ReactNode;
-  classes?: Partial<PickersYearClasses>;
   className?: string;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, year: number) => void;
@@ -45,7 +50,7 @@ const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
 };
 
 const PickersYearRoot = styled('div', {
-  name: 'PrivatePickersYear',
+  name: 'MuiPickersYear',
   slot: 'Root',
   overridesResolver: (_, styles) => [
     styles.root,
@@ -63,10 +68,10 @@ const PickersYearRoot = styled('div', {
 }));
 
 const PickersYearButton = styled('button', {
-  name: 'PrivatePickersYear',
-  slot: 'Button',
+  name: 'MuiPickersYear',
+  slot: 'YearButton',
   overridesResolver: (_, styles) => [
-    styles.button,
+    styles.yearButton,
     { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
     { [`&.${pickersYearClasses.selected}`]: styles.selected },
   ],
@@ -82,23 +87,27 @@ const PickersYearButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.focusOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
   },
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:disabled': {
     cursor: 'auto',
     pointerEvents: 'none',
   },
   [`&.${pickersYearClasses.disabled}`]: {
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`&.${pickersYearClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     '&:focus, &:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
 }));
@@ -106,8 +115,11 @@ const PickersYearButton = styled('button', {
 /**
  * @ignore - internal component.
  */
-const PickersYearRaw = (props: PickersYearProps) => {
-  // TODO v6: add 'useThemeProps' once the component class names are aligned
+const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersYear',
+  });
   const {
     autoFocus,
     className,
@@ -165,9 +177,6 @@ const PickersYearRaw = (props: PickersYearProps) => {
       </PickersYearButton>
     </PickersYearRoot>
   );
-};
+});
 
-/**
- * @ignore - do not document.
- */
-export const PickersYear = React.memo(PickersYearRaw);
+export { PickersYear };

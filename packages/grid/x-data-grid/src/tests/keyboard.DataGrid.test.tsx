@@ -26,21 +26,19 @@ const expectAriaCoordinate = (
   element: Element | null,
   { colIndex, rowIndex }: { colIndex: number; rowIndex: number },
 ) => {
-  expect(element?.getAttribute('aria-colindex')).to.equal(colIndex.toString());
-  expect(element?.closest('[role="row"]')?.getAttribute('aria-rowindex')).to.equal(
-    rowIndex.toString(),
-  );
+  expect(element).to.have.attribute('aria-colindex', colIndex.toString());
+  expect(element?.closest('[role="row"]')).to.have.attribute('aria-rowindex', rowIndex.toString());
 };
 
 describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  const NavigationTestCaseNoScrollX = (
+  function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
       'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
     > & {},
-  ) => {
+  ) {
     const data = useBasicDemoData(100, 3);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
@@ -57,13 +55,13 @@ describe('<DataGrid /> - Keyboard', () => {
           rowHeight={ROW_HEIGHT}
           headerHeight={HEADER_HEIGHT}
           hideFooter
-          filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
           experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
           {...props}
         />
       </div>
     );
-  };
+  }
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('cell navigation', () => {
@@ -463,12 +461,12 @@ describe('<DataGrid /> - Keyboard', () => {
       },
     ];
 
-    const NavigationTestGroupingCaseNoScrollX = (
+    function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
         'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
       > & {},
-    ) => {
+    ) {
       const data = getBasicGridData(10, 10);
       const transformColSizes = (columns: GridColumns) =>
         columns.map((column) => ({ ...column, width: 60 }));
@@ -492,7 +490,7 @@ describe('<DataGrid /> - Keyboard', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should scroll horizontally when navigating between column group headers with arrows', function test() {
       if (isJSDOM) {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
@@ -20,7 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
+function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const { id, value: isExpanded } = props;
 
   const rootProps = useGridRootProps();
@@ -50,7 +50,7 @@ const GridDetailPanelToggleCell = (props: GridRenderCellParams) => {
       <Icon fontSize="inherit" />
     </IconButton>
   );
-};
+}
 
 GridDetailPanelToggleCell.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -59,9 +59,8 @@ GridDetailPanelToggleCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
@@ -91,14 +90,6 @@ GridDetailPanelToggleCell.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
   /**
    * If true, the cell is the active element.
    */

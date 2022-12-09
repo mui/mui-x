@@ -30,7 +30,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
   let columnProps: any = {};
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         />
       </div>
     );
-  };
+  }
 
   afterEach(() => {
     renderEditCell.resetHistory();
@@ -65,9 +65,9 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
       it('should update the CSS class of the cell', () => {
         render(<TestCase />);
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should render the component given in renderEditCell', () => {
@@ -316,7 +316,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     });
 
     describe('stopCellEditMode', () => {
-      const CustomEditComponent = ({ hasFocus }: GridCellProps) => {
+      function CustomEditComponent({ hasFocus }: GridCellProps) {
         const ref = React.useRef<HTMLInputElement>(null);
         React.useLayoutEffect(() => {
           if (hasFocus) {
@@ -324,7 +324,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           }
         }, [hasFocus]);
         return <input ref={ref} />;
-      };
+      }
 
       it('should throw an error when the cell is not in edit mode', () => {
         render(<TestCase />);
@@ -379,7 +379,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
 
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
         resolveCallback!();
 
@@ -397,7 +397,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should keep mode=edit if props of any column contains error=true', async () => {
@@ -429,24 +429,24 @@ describe('<DataGridPro /> - Cell Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: '' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
         await act(() =>
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should update the CSS class of the cell', async () => {
         render(<TestCase />);
         act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         await act(() =>
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should call processRowUpdate before updating the row', async () => {
@@ -489,7 +489,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         ).toErrorDev(
           'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should call onProcessRowUpdateError if processRowUpdate throws an error', () => {
@@ -971,7 +971,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         });
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
@@ -985,22 +985,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         );
         fireEvent.click(getCell(1, 1));
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
-      });
-
-      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed and disableIgnoreModificationsIfProcessingProps is true', async () => {
-        columnProps.preProcessEditCellProps = ({ props }: GridPreProcessEditCellProps) =>
-          new Promise((resolve) => resolve(props));
-        render(<TestCase disableIgnoreModificationsIfProcessingProps />);
-        const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
-        fireEvent.doubleClick(getCell(0, 1));
-        await act(() =>
-          apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
-        );
-        fireEvent.click(getCell(1, 1));
-        expect(spiedStopCellEditMode.callCount).to.equal(1);
         expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
-        await act(() => Promise.resolve());
       });
     });
 
@@ -1063,7 +1048,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         });
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
@@ -1079,7 +1064,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         );
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });
 
@@ -1112,7 +1097,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         });
       });
 
-      it('should call stopCellEditMode with ignoreModifications=true if the props are being processed', async () => {
+      it('should call stopCellEditMode with ignoreModifications=false if the props are being processed', async () => {
         columnProps.preProcessEditCellProps = () => new Promise(() => {});
         render(<TestCase />);
         const spiedStopCellEditMode = spy(apiRef.current, 'stopCellEditMode');
@@ -1128,7 +1113,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
         );
         fireEvent.keyDown(cell, { key: 'Tab' });
         expect(spiedStopCellEditMode.callCount).to.equal(1);
-        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(true);
+        expect(spiedStopCellEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
     });
   });
@@ -1137,9 +1122,9 @@ describe('<DataGridPro /> - Cell Editing', () => {
     describe('mode=view to mode=edit', () => {
       it('should start edit mode', () => {
         const { setProps } = render(<TestCase />);
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         setProps({ cellModesModel: { 0: { currencyPair: { mode: GridCellModes.Edit } } } });
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
     });
 
@@ -1148,9 +1133,9 @@ describe('<DataGridPro /> - Cell Editing', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,
         );
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         setProps({ cellModesModel: { 0: { currencyPair: { mode: GridCellModes.View } } } });
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should ignode modifications if ignoreModifications=true', async () => {

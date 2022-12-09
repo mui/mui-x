@@ -13,20 +13,21 @@ import {
   pickersToolbarClasses,
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
+import { DateOrTimeView } from '../models/views';
 
-export interface PickersToolbarProps<TValue>
+export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
   extends Pick<
-    BaseToolbarProps<TValue>,
+    BaseToolbarProps<TValue, TView>,
     'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
   > {
   className?: string;
-  viewType?: 'calendar' | 'clock';
+  viewType?: 'date' | 'time';
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
   classes?: Partial<PickersToolbarClasses>;
 }
 
-const useUtilityClasses = (ownerState: PickersToolbarProps<any>) => {
+const useUtilityClasses = (ownerState: PickersToolbarProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
@@ -42,7 +43,7 @@ const PickersToolbarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>(({ theme, ownerState }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -63,10 +64,13 @@ const PickersToolbarContent = styled(Grid, {
   slot: 'Content',
   overridesResolver: (props, styles) => styles.content,
 })<{
-  ownerState: PickersToolbarProps<any>;
-}>({
+  ownerState: PickersToolbarProps<any, any>;
+}>(({ ownerState }) => ({
   flex: 1,
-});
+  ...(!ownerState.isLandscape && {
+    alignItems: 'center',
+  }),
+}));
 
 const PickersToolbarPenIconButton = styled(IconButton, {
   name: 'MuiPickersToolbar',
@@ -76,18 +80,22 @@ const PickersToolbarPenIconButton = styled(IconButton, {
     styles.penIconButton,
   ],
 })<{
-  ownerState: PickersToolbarProps<any>;
+  ownerState: PickersToolbarProps<any, any>;
 }>({});
 
-const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
-  viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
+const getViewTypeIcon = (viewType: 'date' | 'time') =>
+  viewType === 'time' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
-type PickersToolbarComponent = (<TValue>(
-  props: React.PropsWithChildren<PickersToolbarProps<TValue>> & React.RefAttributes<HTMLDivElement>,
+type PickersToolbarComponent = (<TValue, TView extends DateOrTimeView>(
+  props: React.PropsWithChildren<PickersToolbarProps<TValue, TView>> &
+    React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
-  inProps: React.PropsWithChildren<PickersToolbarProps<TValue>>,
+export const PickersToolbar = React.forwardRef(function PickersToolbar<
+  TValue,
+  TView extends DateOrTimeView,
+>(
+  inProps: React.PropsWithChildren<PickersToolbarProps<TValue, TView>>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
@@ -99,7 +107,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
     landscapeDirection = 'column',
     toggleMobileKeyboardView,
     toolbarTitle,
-    viewType = 'calendar',
+    viewType = 'date',
   } = props;
 
   const ownerState = props;
@@ -125,16 +133,21 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<TValue>(
         alignItems={isLandscape ? 'flex-start' : 'flex-end'}
       >
         {children}
-        <PickersToolbarPenIconButton
-          onClick={toggleMobileKeyboardView}
-          className={classes.penIconButton}
-          ownerState={ownerState}
-          color="inherit"
-          data-mui-test="toggle-mobile-keyboard-view"
-          aria-label={localeText.inputModeToggleButtonAriaLabel(isMobileKeyboardViewOpen, viewType)}
-        >
-          {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
-        </PickersToolbarPenIconButton>
+        {isMobileKeyboardViewOpen != null && toggleMobileKeyboardView != null && (
+          <PickersToolbarPenIconButton
+            onClick={toggleMobileKeyboardView}
+            className={classes.penIconButton}
+            ownerState={ownerState}
+            color="inherit"
+            data-mui-test="toggle-mobile-keyboard-view"
+            aria-label={localeText.inputModeToggleButtonAriaLabel(
+              isMobileKeyboardViewOpen,
+              viewType,
+            )}
+          >
+            {isMobileKeyboardViewOpen ? getViewTypeIcon(viewType) : <Pen color="inherit" />}
+          </PickersToolbarPenIconButton>
+        )}
       </PickersToolbarContent>
     </PickersToolbarRoot>
   );

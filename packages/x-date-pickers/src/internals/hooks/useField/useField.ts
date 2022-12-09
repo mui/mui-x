@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { MuiDateSectionName, MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
+import { MuiDateSectionName } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -34,7 +34,7 @@ export const useField = <
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
-  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  const utils = useUtils<TDate>();
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
@@ -59,6 +59,7 @@ export const useField = <
     internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
+    valueManager,
     validator,
   } = params;
 
@@ -95,6 +96,10 @@ export const useField = <
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
       if (input !== inputRef.current) {
+        return;
+      }
+
+      if (selectedSectionIndexes != null) {
         return;
       }
 
@@ -449,7 +454,8 @@ export const useField = <
   const validationError = useValidation(
     { ...internalProps, value: state.value },
     validator,
-    fieldValueManager.isSameError,
+    valueManager.isSameError,
+    valueManager.defaultErrorState,
   );
 
   const inputError = React.useMemo(

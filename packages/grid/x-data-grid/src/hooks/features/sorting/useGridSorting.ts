@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridGroupNode } from '../../../models/gridRows';
@@ -52,7 +52,7 @@ export const sortingStateInitializer: GridStateInitializer<
  * @requires useGridColumns (event)
  */
 export const useGridSorting = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
     | 'initialState'
@@ -65,7 +65,7 @@ export const useGridSorting = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'sortModel',
     propModel: props.sortModel,
     propOnChange: props.onSortModelChange,
@@ -138,7 +138,7 @@ export const useGridSorting = (
 
       const sortModel = gridSortModelSelector(state, apiRef.current.instanceId);
       const sortRowList = buildAggregatedSortingApplier(sortModel, apiRef);
-      const sortedRows = apiRef.current.unstable_applyStrategyProcessor('sorting', {
+      const sortedRows = apiRef.current.applyStrategyProcessor('sorting', {
         sortRowList,
       });
 
@@ -199,11 +199,6 @@ export const useGridSorting = (
     [apiRef],
   );
 
-  const getRowIndex = React.useCallback<GridSortApi['getRowIndex']>(
-    (id) => apiRef.current.getSortedRowIds().indexOf(id),
-    [apiRef],
-  );
-
   const getRowIdFromRowIndex = React.useCallback<GridSortApi['getRowIdFromRowIndex']>(
     (index) => apiRef.current.getSortedRowIds()[index],
     [apiRef],
@@ -213,13 +208,12 @@ export const useGridSorting = (
     getSortModel,
     getSortedRows,
     getSortedRowIds,
-    getRowIndex,
     getRowIdFromRowIndex,
     setSortModel,
     sortColumn,
     applySorting,
   };
-  useGridApiMethod(apiRef, sortApi, 'GridSortApi');
+  useGridApiMethod(apiRef, sortApi, 'public');
 
   /**
    * PRE-PROCESSING

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import { getValueFromOption } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
@@ -61,7 +61,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const id = useId();
   const rootProps = useGridRootProps();
 
-  const resolvedColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const resolvedColumn = item.field ? apiRef.current.getColumn(item.field) : null;
   const resolvedValueOptions = React.useMemo(() => {
     if (!resolvedColumn?.valueOptions) {
       return [];
@@ -77,7 +77,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     return resolvedValueOptions?.map(getValueFromOption);
   }, [resolvedValueOptions]);
 
-  const { valueFormatter, field } = apiRef.current.getColumn(item.columnField);
+  const { valueFormatter, field } = apiRef.current.getColumn(item.field);
 
   const filterValueOptionFormatter = (option: ValueOptions) => {
     if (typeof option === 'object') {
@@ -183,9 +183,9 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   type: PropTypes.oneOf(['singleSelect']),

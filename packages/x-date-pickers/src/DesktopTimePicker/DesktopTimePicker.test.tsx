@@ -15,7 +15,7 @@ import {
   openPicker,
   getClockMouseEvent,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopTimePicker = withPickerControls(DesktopTimePicker)({
   components: { DesktopTransition: FakeTransitionComponent },
@@ -32,7 +32,7 @@ describe('<DesktopTimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   describeConformance(
@@ -619,7 +619,7 @@ describe('<DesktopTimePicker />', () => {
         <WrappedDesktopTimePicker
           initialValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'time', variant: 'desktop' });

@@ -1,6 +1,9 @@
-import { Dayjs } from 'dayjs';
+/* eslint-disable class-methods-use-this */
+import defaultDayjs, { Dayjs } from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { DateIOFormats } from '@date-io/core/IUtils';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -19,19 +22,33 @@ const formatTokenMap: MuiFormatTokenMap = {
   MMMM: { sectionName: 'month', contentType: 'letter' },
   D: 'day',
   DD: 'day',
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  m: 'minute',
-  mm: 'minute',
-  s: 'second',
-  ss: 'second',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  m: 'minutes',
+  mm: 'minutes',
+  s: 'seconds',
+  ss: 'seconds',
   A: 'meridiem',
   a: 'meridiem',
 };
 
-export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {
+interface Opts {
+  locale?: string;
+  /** Make sure that your dayjs instance extends customParseFormat and advancedFormat */
+  instance?: typeof defaultDayjs;
+  formats?: Partial<DateIOFormats>;
+}
+
+export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickersAdapter<Dayjs> {
+  public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super(options);
+    this.rawDayJsInstance.extend(weekOfYear);
+  }
+
   public formatTokenMap = formatTokenMap;
 
   /**
@@ -70,5 +87,9 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdap
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: Dayjs) => {
+    return date.week();
   };
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   getPickersToolbarTextUtilityClass,
@@ -9,10 +9,16 @@ import {
   PickersToolbarTextClasses,
 } from './pickersToolbarTextClasses';
 
-export interface PickersToolbarTextProps extends Omit<TypographyProps, 'classes'> {
+export interface ExportedPickersToolbarTextProps
+  extends Omit<TypographyProps, 'classes' | 'variant' | 'align'> {
+  classes?: Partial<PickersToolbarTextClasses>;
+}
+
+export interface PickersToolbarTextProps
+  extends Omit<TypographyProps, 'classes'>,
+    Pick<ExportedPickersToolbarTextProps, 'classes'> {
   selected?: boolean;
   value: React.ReactNode;
-  classes?: Partial<PickersToolbarTextClasses>;
 }
 
 const useUtilityClasses = (ownerState: PickersToolbarTextProps) => {
@@ -25,7 +31,7 @@ const useUtilityClasses = (ownerState: PickersToolbarTextProps) => {
 };
 
 const PickersToolbarTextRoot = styled(Typography, {
-  name: 'PrivatePickersToolbarText',
+  name: 'MuiPickersToolbarText',
   slot: 'Root',
   overridesResolver: (_, styles) => [
     styles.root,
@@ -35,15 +41,15 @@ const PickersToolbarTextRoot = styled(Typography, {
   component?: React.ElementType;
 }>(({ theme }) => ({
   transition: theme.transitions.create('color'),
-  color: theme.palette.text.secondary,
+  color: (theme.vars || theme).palette.text.secondary,
   [`&.${pickersToolbarTextClasses.selected}`]: {
-    color: theme.palette.text.primary,
+    color: (theme.vars || theme).palette.text.primary,
   },
 }));
 
 export const PickersToolbarText = React.forwardRef<HTMLSpanElement, PickersToolbarTextProps>(
-  function PickersToolbarText(props, ref) {
-    // TODO v6: add 'useThemeProps' once the component class names are aligned
+  function PickersToolbarText(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarText' });
     const { className, selected, value, ...other } = props;
     const classes = useUtilityClasses(props);
 

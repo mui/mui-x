@@ -2,9 +2,9 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -52,11 +52,12 @@ describe('<MobileDateRangePicker />', () => {
     }),
   );
 
-  describeValidation(MobileDateRangePicker, () => ({
+  describeRangeValidation(MobileDateRangePicker, () => ({
     render,
     clock,
-    isLegacyPicker: true,
-    withDate: true,
+    componentFamily: 'legacy-picker',
+    views: ['day'],
+    variant: 'mobile',
   }));
 
   describe('picker state', () => {
@@ -301,6 +302,23 @@ describe('<MobileDateRangePicker />', () => {
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
+    });
+
+    it('should correctly set focused styles when input is focused', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      const firstInput = screen.getAllByRole('textbox')[0];
+      fireEvent.focus(firstInput);
+
+      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+    });
+
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
     });
   });
 

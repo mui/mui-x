@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersPopper,
@@ -45,6 +45,7 @@ export interface InternalDesktopWrapperProps<TDate>
   localeText?: PickersInputLocaleText<TDate>;
 }
 
+// TODO v6: Drop with the legacy pickers
 export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,

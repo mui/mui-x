@@ -1,8 +1,4 @@
----
-title: Data Grid - Editing
----
-
-# Data grid - Editing
+# Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
@@ -96,7 +92,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: GridCellValue, params: GridCellParams) => {
+    valueParser: (value: any, params: GridCellParams) => {
       return value.toLowerCase();
     },
   },
@@ -236,17 +232,6 @@ Note that the value passed to `props.error` is passed directly to the edit compo
 While the promise is not resolved, the edit component will receive an `isProcessingProps` prop with value equal to `true`.
 
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-If the user performs an action that saves the changes and exits the edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-To avoid this, use the `disableIgnoreModificationsIfProcessingProps` prop to keep the cell or row in edit mode while props are processed:
-
-```tsx
-<DataGrid disableIgnoreModificationsIfProcessingProps />
-```
-
-In v6, this prop will be removed and the editing API will behave, by default, like if it was enabled.
-:::
 
 ## Persistence
 

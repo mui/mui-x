@@ -1,6 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const luxonVersionWarning = buildWarning([
@@ -9,16 +10,16 @@ const luxonVersionWarning = buildWarning([
 ]);
 
 const formatTokenMap: MuiFormatTokenMap = {
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
 
   a: 'meridiem',
 
@@ -41,7 +42,9 @@ const formatTokenMap: MuiFormatTokenMap = {
   yyyy: 'year',
 };
 
-export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdapter<DateTime> {
+export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<DateTime> {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
 
   public expandFormat = (format: string) => {
@@ -63,5 +66,9 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
       return '';
     }
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: DateTime) => {
+    return date.weekNumber;
   };
 }

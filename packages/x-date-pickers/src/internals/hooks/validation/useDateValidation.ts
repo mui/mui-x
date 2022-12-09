@@ -107,8 +107,10 @@ export const useIsDateDisabled = <TDate>({
   );
 };
 
+// TODO v6: Drop with the legacy pickers
 export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
+// TODO v6: Drop with the legacy pickers
 export const useDateValidation = <TDate>(
   props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
-): DateValidationError => useValidation(props, validateDate, isSameDateError);
+): DateValidationError => useValidation(props, validateDate, isSameDateError, null);

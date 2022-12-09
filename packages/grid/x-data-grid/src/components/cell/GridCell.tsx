@@ -2,8 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { ownerDocument, capitalize } from '@mui/material/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_ownerDocument as ownerDocument,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import {
   GridCellEventLookup,
@@ -178,7 +181,7 @@ function GridCell(props: GridCellProps) {
     maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
   };
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
@@ -233,7 +236,7 @@ function GridCell(props: GridCellProps) {
   const managesOwnFocus = column.type === 'actions';
 
   const renderChildren = () => {
-    if (children == null) {
+    if (children === undefined) {
       return <div className={classes.content}>{valueToRender?.toString()}</div>;
     }
 

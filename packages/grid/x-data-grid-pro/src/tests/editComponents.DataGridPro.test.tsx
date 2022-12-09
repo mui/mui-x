@@ -45,14 +45,14 @@ describe('<DataGridPro /> - Edit Components', () => {
 
   const defaultData: Pick<DataGridProProps, 'rows' | 'columns'> = { columns: [], rows: [] };
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro apiRef={apiRef} {...defaultData} {...props} />
       </div>
     );
-  };
+  }
 
   describe('column type: string', () => {
     beforeEach(() => {

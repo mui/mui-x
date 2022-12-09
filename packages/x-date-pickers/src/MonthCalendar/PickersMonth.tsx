@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { capitalize, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { styled, alpha, useThemeProps } from '@mui/material/styles';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import {
   WrapperVariant,
   WrapperVariantContext,
@@ -12,11 +15,14 @@ import {
   PickersMonthClasses,
 } from './pickersMonthClasses';
 
-interface PickersMonthProps {
+export interface ExportedPickersMonthProps {
+  classes?: Partial<PickersMonthClasses>;
+}
+
+interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus: boolean;
   children: React.ReactNode;
-  classes?: Partial<PickersMonthClasses>;
   disabled?: boolean;
   onClick: (event: React.MouseEvent, month: number) => void;
   onKeyDown: (event: React.KeyboardEvent, month: number) => void;
@@ -43,7 +49,7 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
 };
 
 const PickersMonthRoot = styled('div', {
-  name: 'PrivatePickersMonth',
+  name: 'MuiPickersMonth',
   slot: 'Root',
   overridesResolver: (_, styles) => [
     styles.root,
@@ -60,7 +66,7 @@ const PickersMonthRoot = styled('div', {
 });
 
 const PickersMonthButton = styled('button', {
-  name: 'PrivatePickersMonth',
+  name: 'MuiPickersMonth',
   slot: 'MonthButton',
   overridesResolver: (_, styles) => [
     styles.monthButton,
@@ -81,23 +87,27 @@ const PickersMonthButton = styled('button', {
   borderRadius: 18,
   cursor: 'pointer',
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.focusOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
   },
   '&:disabled': {
     cursor: 'auto',
     pointerEvents: 'none',
   },
   [`&.${pickersMonthClasses.disabled}`]: {
-    color: theme.palette.text.secondary,
+    color: (theme.vars || theme).palette.text.secondary,
   },
   [`&.${pickersMonthClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     '&:focus, &:hover': {
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
 }));
@@ -105,8 +115,11 @@ const PickersMonthButton = styled('button', {
 /**
  * @ignore - do not document.
  */
-const PickersMonthRaw = (props: PickersMonthProps) => {
-  // TODO v6 add 'useThemeProps' once the component class names are aligned
+const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps) {
+  const props = useThemeProps({
+    props: inProps,
+    name: 'MuiPickersMonth',
+  });
   const {
     autoFocus,
     children,
@@ -159,9 +172,6 @@ const PickersMonthRaw = (props: PickersMonthProps) => {
       </PickersMonthButton>
     </PickersMonthRoot>
   );
-};
+});
 
-/**
- * @ignore - do not document.
- */
-export const PickersMonth = React.memo(PickersMonthRaw);
+export { PickersMonth };

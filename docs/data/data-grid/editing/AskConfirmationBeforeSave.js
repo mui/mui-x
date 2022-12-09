@@ -16,15 +16,15 @@ import Alert from '@mui/material/Alert';
 const useFakeMutation = () => {
   return React.useCallback(
     (user) =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject();
           } else {
             resolve(user);
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };
@@ -90,7 +90,6 @@ export default function AskConfirmationBeforeSave() {
     // the dialog is fully open.
     // noButtonRef.current?.focus();
   };
-
   const renderConfirmDialog = () => {
     if (!promiseArguments) {
       return null;

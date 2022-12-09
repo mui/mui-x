@@ -3,7 +3,11 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_DateField as DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  buildFieldInteractions,
+} from 'test/utils/pickers-utils';
 
 const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
   expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
@@ -14,19 +18,7 @@ describe('<DateField /> - Editing', () => {
     clockConfig: new Date(2022, 5, 15),
   });
 
-  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
-    act(() => {
-      fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
-      fireEvent.mouseUp(input);
-      input.setSelectionRange(cursorPosition, cursorPosition);
-      fireEvent.click(input);
-
-      clock.runToLast();
-    });
-  };
+  const { clickOnInput } = buildFieldInteractions({ clock });
 
   const testKeyPress = <TDate extends unknown>({
     key,

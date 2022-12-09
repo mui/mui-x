@@ -36,10 +36,10 @@ import {
   getCellGroupingCriteria,
   getGroupingRules,
 } from './gridRowGroupingUtils';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'disableRowGrouping'
@@ -104,7 +104,7 @@ export const useGridRowGroupingPreProcessors = (
       const newColumnsLookup: GridColumnRawLookup = {};
 
       // We only keep the non-grouping columns
-      columnsState.all.forEach((field) => {
+      columnsState.orderedFields.forEach((field) => {
         if (!isGroupingColumn(field)) {
           newColumnFields.push(field);
           newColumnsLookup[field] = columnsState.lookup[field];
@@ -128,7 +128,7 @@ export const useGridRowGroupingPreProcessors = (
         ...newColumnFields.slice(startIndex),
       ];
 
-      columnsState.all = newColumnFields;
+      columnsState.orderedFields = newColumnFields;
       columnsState.lookup = newColumnsLookup;
 
       return columnsState;
@@ -144,7 +144,7 @@ export const useGridRowGroupingPreProcessors = (
         sanitizedRowGroupingModel,
         columnsLookup,
       });
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => {
         const row = params.dataRowIdToModelLookup[rowId];

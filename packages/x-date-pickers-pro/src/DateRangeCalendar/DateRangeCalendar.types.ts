@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
+import { SlotComponentProps } from '@mui/base';
 import { Theme } from '@mui/material/styles';
 import {
   BaseDateValidationProps,
@@ -10,16 +11,20 @@ import {
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
   PickerSelectionState,
+  PickersCalendarHeaderSlotsComponent,
+  PickersCalendarHeaderSlotsComponentsProps,
+  DayCalendarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DayRangeValidationProps } from '../internal/models';
+import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
-import { DateRangePickerDayProps } from '../DateRangePickerDay';
+import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 
 export type DateRangePosition = 'start' | 'end';
 
 export interface DateRangeCalendarSlotsComponent<TDate>
   extends PickersArrowSwitcherSlotsComponent,
-    Omit<DayCalendarSlotsComponent<TDate>, 'Day'> {
+    Omit<DayCalendarSlotsComponent<TDate>, 'Day'>,
+    PickersCalendarHeaderSlotsComponent {
   /**
    * Custom component for day in range pickers.
    * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
@@ -30,15 +35,37 @@ export interface DateRangeCalendarSlotsComponent<TDate>
 
 export interface DateRangeCalendarSlotsComponentsProps<TDate>
   extends PickersArrowSwitcherSlotsComponentsProps,
-    Omit<DayCalendarSlotsComponentsProps<TDate>, 'Day'> {}
+    Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'>,
+    PickersCalendarHeaderSlotsComponentsProps<TDate> {
+  day?: SlotComponentProps<
+    typeof DateRangePickerDay,
+    {},
+    DayCalendarProps<TDate> & { day: TDate; selected: boolean }
+  >;
+}
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
-    DayRangeValidationProps<TDate> {
+    DayRangeValidationProps<TDate>,
+    Partial<RangePositionProps> {
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
   value?: DateRange<TDate>;
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
   defaultValue?: DateRange<TDate>;
-  onChange?: (newValue: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
+  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
   autoFocus?: boolean;
   className?: string;
   classes?: Partial<DateRangeCalendarClasses>;
@@ -87,22 +114,30 @@ export interface DateRangeCalendarProps<TDate>
    * @returns {void|Promise} -
    */
   onMonthChange?: (month: TDate) => void | Promise<void>;
-  currentDatePosition?: DateRangePosition;
-  onCurrentDatePositionChange?: (newPosition: DateRangePosition) => void;
   /**
    * The number of calendars to render.
    * @default 2
    */
   calendars?: 1 | 2 | 3;
+  /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing?: boolean;
+}
+
+export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
+  isDragging: boolean;
 }
 
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
-  'reduceAnimations' | 'calendars' | keyof BaseDateValidationProps<TDate>
+  'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
 >;
 
 export type ExportedDateRangeCalendarProps<TDate> = Omit<
   DateRangeCalendarProps<TDate>,
+  | 'defaultValue'
   | 'value'
   | 'onChange'
   | 'changeView'
@@ -112,6 +147,6 @@ export type ExportedDateRangeCalendarProps<TDate> = Omit<
   | 'classes'
   | 'components'
   | 'componentsProps'
-  | 'currentDatePosition'
-  | 'onCurrentDatePositionChange'
+  | 'rangePosition'
+  | 'onRangePositionChange'
 >;

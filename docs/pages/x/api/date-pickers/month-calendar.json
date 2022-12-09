@@ -1,15 +1,15 @@
 {
   "props": {
-    "onChange": { "type": { "name": "func" }, "required": true },
-    "value": { "type": { "name": "any" }, "required": true },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
+    "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "onChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "sx": {
@@ -17,15 +17,16 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    }
+    },
+    "value": { "type": { "name": "any" } }
   },
   "slots": {},
   "name": "MonthCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiMonthCalendar" },
-  "spread": true,
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MonthCalendar/MonthCalendar.tsx",
-  "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MonthCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "MonthCalendar" }
+  ]
 }

@@ -1,15 +1,20 @@
 import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
-import { MuiPickerFieldAdapter, MuiDateSectionName } from '../../models';
+import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   formatToken: string,
 ): Pick<FieldSection, 'dateSectionName' | 'contentType'> => {
   const config = utils.formatTokenMap[formatToken];
 
   if (config == null) {
-    throw new Error(`getDatePartNameFromFormat doesn't understand the format ${formatToken}`);
+    throw new Error(
+      [
+        `MUI: The token "${formatToken}" is not supported by the Date and Time Pickers.`,
+        'Please try using another token or open an issue on https://github.com/mui/mui-x/issues/new/choose if you think it should be supported.',
+      ].join('\n'),
+    );
   }
 
   if (typeof config === 'string') {
@@ -41,7 +46,7 @@ const getDeltaFromKeyCode = (keyCode: Omit<AvailableAdjustKeyCode, 'Home' | 'End
 };
 
 export const adjustDateSectionValue = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   date: TDate,
   dateSectionName: MuiDateSectionName,
   keyCode: AvailableAdjustKeyCode,
@@ -75,7 +80,7 @@ export const adjustDateSectionValue = <TDate>(
     case 'meridiem': {
       return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
     }
-    case 'hour': {
+    case 'hours': {
       if (isStart) {
         return utils.startOfDay(date);
       }
@@ -84,7 +89,7 @@ export const adjustDateSectionValue = <TDate>(
       }
       return utils.addHours(date, delta);
     }
-    case 'minute': {
+    case 'minutes': {
       if (isStart) {
         return utils.setMinutes(date, 0);
       }
@@ -93,7 +98,7 @@ export const adjustDateSectionValue = <TDate>(
       }
       return utils.addMinutes(date, delta);
     }
-    case 'second': {
+    case 'seconds': {
       if (isStart) {
         return utils.setSeconds(date, 0);
       }
@@ -109,7 +114,7 @@ export const adjustDateSectionValue = <TDate>(
 };
 
 export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
 ): string => {
@@ -186,7 +191,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return am;
     }
 
-    case 'hour': {
+    case 'hours': {
       let newDate: TDate;
       if (shouldSetAbsolute) {
         if (delta > 0 || isEnd) {
@@ -201,7 +206,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return utils.formatByString(newDate, section.formatValue);
     }
 
-    case 'minute': {
+    case 'minutes': {
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
@@ -214,7 +219,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       return utils.formatByString(newDate, section.formatValue);
     }
 
-    case 'second': {
+    case 'seconds': {
       let newDate: TDate;
       if (section.value === '') {
         // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
@@ -270,7 +275,7 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 };
 
 const getSectionPlaceholder = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   sectionConfig: Pick<FieldSection, 'dateSectionName' | 'contentType'>,
   currentTokenValue: string,
@@ -292,15 +297,15 @@ const getSectionPlaceholder = <TDate>(
       return localeText.fieldDayPlaceholder();
     }
 
-    case 'hour': {
+    case 'hours': {
       return localeText.fieldHoursPlaceholder();
     }
 
-    case 'minute': {
+    case 'minutes': {
       return localeText.fieldMinutesPlaceholder();
     }
 
-    case 'second': {
+    case 'seconds': {
       return localeText.fieldSecondsPlaceholder();
     }
 
@@ -315,7 +320,7 @@ const getSectionPlaceholder = <TDate>(
 };
 
 export const splitFormatIntoSections = <TDate>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
@@ -395,7 +400,7 @@ export const createDateStrFromSections = (
     .join('');
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   section: TSection,
   query: string,
 ) => {
@@ -423,7 +428,7 @@ export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
 };
 
 export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
 ): FieldBoundaries<TDate, TSection> => {
   const today = utils.date()!;
 
@@ -451,17 +456,17 @@ export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
           ? utils.getDaysInMonth(currentDate)
           : maxDaysInMonth,
     }),
-    hour: () => ({
+    hours: () => ({
       minimum: 0,
       // Assumption: All days have the same amount of hours
       maximum: utils.getHours(endOfYear),
     }),
-    minute: () => ({
+    minutes: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of minutes
       maximum: utils.getMinutes(endOfYear),
     }),
-    second: () => ({
+    seconds: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of seconds
       maximum: utils.getSeconds(endOfYear),
@@ -480,7 +485,7 @@ export const applySectionValueToDate = <TDate>({
   getNumericSectionValue,
   getMeridiemSectionValue,
 }: {
-  utils: MuiPickerFieldAdapter<TDate>;
+  utils: MuiPickersAdapter<TDate>;
   dateSectionName: MuiDateSectionName;
   date: TDate;
   getNumericSectionValue: (getter: (date: TDate) => number) => number;
@@ -502,15 +507,15 @@ export const applySectionValueToDate = <TDate>({
   }
 
   const adapterMethods = {
-    second: {
+    seconds: {
       getter: utils.getSeconds,
       setter: utils.setSeconds,
     },
-    minute: {
+    minutes: {
       getter: utils.getMinutes,
       setter: utils.setMinutes,
     },
-    hour: {
+    hours: {
       getter: utils.getHours,
       setter: utils.setHours,
     },
@@ -579,7 +584,7 @@ export const mergeDateIntoReferenceDate = <
   TDate,
   TSection extends Omit<FieldSection, 'start' | 'end'>,
 >(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   date: TDate,
   sections: TSection[],
   referenceDate: TDate,
@@ -605,7 +610,7 @@ export const mergeDateIntoReferenceDate = <
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
 export const clampDaySection = <TDate, TSection extends FieldSection>(
-  utils: MuiPickerFieldAdapter<TDate>,
+  utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
   boundaries: FieldBoundaries<TDate, TSection>,
   format: string,

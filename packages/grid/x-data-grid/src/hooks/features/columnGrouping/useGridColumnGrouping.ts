@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
@@ -86,7 +86,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnGrouping = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
 ) => {
   /**
@@ -115,7 +115,7 @@ export const useGridColumnGrouping = (
     unstable_getAllGroupDetails: getAllGroupDetails,
   };
 
-  useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
+  useGridApiMethod(apiRef, columnGroupingApi, 'public');
 
   const handleColumnReorderChange = React.useCallback<
     GridEventListener<'columnOrderChange'>
@@ -123,7 +123,7 @@ export const useGridColumnGrouping = (
     const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
 
     apiRef.current.setState((state) => {
-      const orderedFields = state.columns?.all ?? [];
+      const orderedFields = state.columns?.orderedFields ?? [];
 
       const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
         orderedFields as string[],

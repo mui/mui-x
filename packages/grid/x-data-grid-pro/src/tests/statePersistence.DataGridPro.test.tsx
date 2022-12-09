@@ -60,7 +60,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   filter: {
     filterModel: {
-      items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+      items: [{ field: 'id', operator: '<', value: '5' }],
     },
   },
   pagination: {
@@ -84,7 +84,7 @@ describe('<DataGridPro /> - State Persistence', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) => {
+  function TestCase(props: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
 
     return (
@@ -110,7 +110,7 @@ describe('<DataGridPro /> - State Persistence', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: exportState', () => {
     it('should export the default values of the models', () => {
@@ -213,7 +213,7 @@ describe('<DataGridPro /> - State Persistence', () => {
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
-          items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+          items: [{ field: 'id', operator: '<', value: '5' }],
         });
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - State Persistence', () => {
     });
 
     it('should restore controlled sub-state', () => {
-      const ControlledTest = () => {
+      function ControlledTest() {
         const [page, setPage] = React.useState(0);
 
         return (
@@ -269,7 +269,7 @@ describe('<DataGridPro /> - State Persistence', () => {
             }}
           />
         );
-      };
+      }
 
       render(<ControlledTest />);
       act(() =>

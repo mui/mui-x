@@ -1,21 +1,49 @@
 import * as React from 'react';
-import { createRenderer, screen, RenderOptions, userEvent } from '@mui/monorepo/test/utils';
+import { expect } from 'chai';
+import sinon from 'sinon';
+import {
+  createRenderer,
+  screen,
+  RenderOptions,
+  userEvent,
+  getByRole,
+  act,
+  fireEvent,
+} from '@mui/monorepo/test/utils';
 import { CreateRendererOptions } from '@mui/monorepo/test/utils/createRenderer';
+import { unstable_useControlled as useControlled } from '@mui/utils';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
+// import { AdapterJsJoda } from '@mui/x-date-pickers/AdapterJsJoda';
+import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
+import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
+import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import sinon from 'sinon';
-import { useControlled } from '@mui/material/utils';
+import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+
+export type AdapterName =
+  | 'date-fns'
+  | 'dayjs'
+  | 'luxon'
+  | 'moment'
+  | 'moment-hijri'
+  | 'moment-jalaali'
+  // | 'js-joda'
+  | 'date-fns-jalali';
 
 const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
   moment: AdapterMoment,
+  'moment-hijri': AdapterMomentHijri,
+  'moment-jalaali': AdapterMomentJalaali,
+  'date-fns-jalali': AdapterDateFnsJalali,
+  // 'js-joda': AdapterJsJoda,
 };
 
 let AdapterClassToExtend = availableAdapters['date-fns'];
@@ -62,7 +90,7 @@ export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, Transiti
 interface CreatePickerRendererOptions extends CreateRendererOptions {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: Locale;
-  adapterName?: 'date-fns' | 'dayjs' | 'luxon' | 'moment';
+  adapterName?: AdapterName;
 }
 
 export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
@@ -77,7 +105,13 @@ export function createPickerRenderer({
 }: CreatePickerRendererOptions = {}) {
   const { clock, render: clientRender } = createRenderer(createRendererOptions);
 
-  let adapterLocale = (adapterName ?? adapterToUse.lib) === 'date-fns' ? locale : locale?.code;
+  let adapterLocale = [
+    'date-fns',
+    'date-fns-jalali',
+    // 'js-joda'
+  ].includes(adapterName ?? adapterToUse.lib)
+    ? locale
+    : locale?.code;
 
   if (typeof adapterLocale === 'string' && adapterLocale.length > 2) {
     adapterLocale = adapterLocale.slice(0, 2);
@@ -85,6 +119,7 @@ export function createPickerRenderer({
   const adapter = adapterName
     ? new availableAdapters[adapterName]({ locale: adapterLocale })
     : new AdapterClassToUse({ locale: adapterLocale });
+
   function Wrapper({ children }: { children?: React.ReactNode }) {
     return (
       <LocalizationProvider
@@ -105,7 +140,7 @@ export function createPickerRenderer({
   };
 }
 
-type OpenPickerParams =
+export type OpenPickerParams =
   | {
       type: 'date' | 'date-time' | 'time';
       variant: 'mobile' | 'desktop';
@@ -152,17 +187,55 @@ export const getClockMouseEvent = (
   return event;
 };
 
-// TODO: Handle dynamic values
-export const getClockTouchEvent = () => {
+export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | '24hours') => {
+  // TODO: Handle 24 hours clock
+  if (view === '24hours') {
+    throw new Error('Do not support 24 hours clock yet');
+  }
+
+  let itemCount: number;
+  if (view === 'minutes') {
+    itemCount = 60;
+  } else {
+    itemCount = 12;
+  }
+
+  const angle = Math.PI / 2 - (Math.PI * 2 * value) / itemCount;
+  const clientX = Math.round(((1 + Math.cos(angle)) * CLOCK_WIDTH) / 2);
+  const clientY = Math.round(((1 - Math.sin(angle)) * CLOCK_WIDTH) / 2);
+
   return {
     changedTouches: [
       {
-        clientX: 20,
-        clientY: 15,
+        clientX,
+        clientY,
       },
     ],
   };
 };
+
+export const rangeCalendarDayTouches = {
+  '2018-01-01': {
+    clientX: 85,
+    clientY: 125,
+  },
+  '2018-01-02': {
+    clientX: 125,
+    clientY: 125,
+  },
+  '2018-01-09': {
+    clientX: 125,
+    clientY: 165,
+  },
+  '2018-01-10': {
+    clientX: 165,
+    clientY: 165,
+  },
+  '2018-01-11': {
+    clientX: 205,
+    clientY: 165,
+  },
+} as const;
 
 export const withPickerControls =
   <
@@ -172,7 +245,7 @@ export const withPickerControls =
     Component: React.ComponentType<Props>,
   ) =>
   <DefaultProps extends Partial<Props>>(defaultProps: DefaultProps) => {
-    return (
+    return function WithPickerControls(
       props: Omit<
         Props,
         'value' | 'onChange' | Exclude<keyof DefaultProps, 'components' | 'componentsProps'>
@@ -182,7 +255,7 @@ export const withPickerControls =
           value?: TValue;
           onChange?: any;
         },
-    ) => {
+    ) {
       const { initialValue, value: inValue, onChange, ...other } = props;
 
       const [value, setValue] = useControlled({
@@ -219,3 +292,107 @@ export const stubMatchMedia = (matches = true) =>
     addListener: () => {},
     removeListener: () => {},
   });
+export const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+
+export const expectInputValue = (
+  input: HTMLInputElement,
+  expectedValue: string,
+  shouldRemoveDashSpaces: boolean = false,
+) => {
+  let value = input.value.replace(/\u200e|\u2068|\u2069/g, '');
+  if (shouldRemoveDashSpaces) {
+    value = value.replace(/ \/ /g, '/');
+  }
+
+  return expect(value).to.equal(expectedValue);
+};
+
+export const buildFieldInteractions = ({
+  clock,
+}: {
+  // TODO: Export `Clock` from monorepo
+  clock: ReturnType<typeof createRenderer>['clock'];
+}) => {
+  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+      input.setSelectionRange(cursorPosition, cursorPosition);
+      fireEvent.click(input);
+
+      clock.runToLast();
+    });
+  };
+
+  return { clickOnInput };
+};
+
+export type DragEventTypes =
+  | 'dragStart'
+  | 'dragOver'
+  | 'dragEnter'
+  | 'dragLeave'
+  | 'dragEnd'
+  | 'drop';
+
+export class MockedDataTransfer implements DataTransfer {
+  data: Record<string, string>;
+
+  dropEffect: 'none' | 'copy' | 'move' | 'link';
+
+  effectAllowed:
+    | 'none'
+    | 'copy'
+    | 'copyLink'
+    | 'copyMove'
+    | 'link'
+    | 'linkMove'
+    | 'move'
+    | 'all'
+    | 'uninitialized';
+
+  files: FileList;
+
+  img?: Element;
+
+  items: DataTransferItemList;
+
+  types: string[];
+
+  xOffset: number;
+
+  yOffset: number;
+
+  constructor() {
+    this.data = {};
+    this.dropEffect = 'none';
+    this.effectAllowed = 'all';
+    this.files = [] as unknown as FileList;
+    this.items = [] as unknown as DataTransferItemList;
+    this.types = [];
+    this.xOffset = 0;
+    this.yOffset = 0;
+  }
+
+  clearData() {
+    this.data = {};
+  }
+
+  getData(format: string) {
+    return this.data[format];
+  }
+
+  setData(format: string, data: string) {
+    this.data[format] = data;
+  }
+
+  setDragImage(img: Element, xOffset: number, yOffset: number) {
+    this.img = img;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
+  }
+}

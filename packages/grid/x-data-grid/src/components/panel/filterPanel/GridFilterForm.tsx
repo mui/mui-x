@@ -1,12 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useId as useId,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
@@ -246,13 +249,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       }
 
       const filteredFields = filterColumns({
-        field: item.columnField,
+        field: item.field,
         columns: filterableColumns,
         currentFilters: filterModel?.items || [],
       });
 
       return filterableColumns.filter((column) => filteredFields.includes(column.field));
-    }, [filterColumns, filterModel?.items, filterableColumns, item.columnField]);
+    }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -271,22 +274,20 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       }
     }, [filteredColumns, columnsSort]);
 
-    const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+    const currentColumn = item.field ? apiRef.current.getColumn(item.field) : null;
 
     const currentOperator = React.useMemo(() => {
-      if (!item.operatorValue || !currentColumn) {
+      if (!item.operator || !currentColumn) {
         return null;
       }
 
-      return currentColumn.filterOperators?.find(
-        (operator) => operator.value === item.operatorValue,
-      );
+      return currentColumn.filterOperators?.find((operator) => operator.value === item.operator);
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
       (event: SelectChangeEvent) => {
-        const columnField = event.target.value as string;
-        const column = apiRef.current.getColumn(columnField)!;
+        const field = event.target.value as string;
+        const column = apiRef.current.getColumn(field)!;
 
         if (column.field === currentColumn!.field) {
           // column did not change
@@ -295,7 +296,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         // try to keep the same operator when column change
         const newOperator =
-          column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+          column.filterOperators!.find((operator) => operator.value === item.operator) ||
           column.filterOperators![0];
 
         // Erase filter value if the input component is modified
@@ -305,8 +306,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          columnField,
-          operatorValue: newOperator.value,
+          field,
+          operator: newOperator.value,
           value: eraseItemValue ? undefined : item.value,
         });
       },
@@ -315,11 +316,9 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const changeOperator = React.useCallback(
       (event: SelectChangeEvent) => {
-        const operatorValue = event.target.value as string;
+        const operator = event.target.value as string;
 
-        const newOperator = currentColumn?.filterOperators!.find(
-          (operator) => operator.value === operatorValue,
-        );
+        const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
 
         const eraseItemValue =
           !newOperator?.InputComponent ||
@@ -327,7 +326,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          operatorValue,
+          operator,
           value: eraseItemValue ? undefined : item.value,
         });
       },
@@ -446,7 +445,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.columnField || ''}
+            value={item.field || ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
@@ -470,13 +469,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
         >
           <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
-            {apiRef.current.getLocaleText('filterPanelOperators')}
+            {apiRef.current.getLocaleText('filterPanelOperator')}
           </InputLabel>
           <rootProps.components.BaseSelect
             labelId={operatorSelectLabelId}
-            label={apiRef.current.getLocaleText('filterPanelOperators')}
+            label={apiRef.current.getLocaleText('filterPanelOperator')}
             id={operatorSelectId}
-            value={item.operatorValue}
+            value={item.operator}
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
@@ -585,9 +584,9 @@ GridFilterForm.propTypes = {
    * The [[GridFilterItem]] representing this form.
    */
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   /**

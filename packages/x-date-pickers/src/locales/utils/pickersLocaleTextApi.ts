@@ -1,4 +1,4 @@
-import { CalendarPickerView, ClockPickerView, MuiPickersAdapter } from '../../internals/models';
+import { DateView, TimeView, MuiPickersAdapter } from '../../internals/models';
 
 export interface PickersComponentSpecificLocaleText {
   /**
@@ -28,13 +28,20 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   previousMonth: string;
   nextMonth: string;
 
+  // Calendar week number
+  calendarWeekNumberHeaderLabel: string;
+  calendarWeekNumberHeaderText: string;
+  calendarWeekNumberAriaLabelText: (weekNumber: number) => string;
+  calendarWeekNumberText: (weekNumber: number) => string;
+
   // View navigation
   openPreviousView: string;
   openNextView: string;
-  calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
+  calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
+  // TODO v6: Drop with the legacy pickers
   inputModeToggleButtonAriaLabel: (
     isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
+    viewType: 'date' | 'time',
   ) => string;
 
   // DateRange placeholders
@@ -48,11 +55,7 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   todayButtonLabel: string;
 
   // Clock labels
-  clockLabelText: (
-    view: ClockPickerView,
-    time: TDate | null,
-    adapter: MuiPickersAdapter<TDate>,
-  ) => string;
+  clockLabelText: (view: TimeView, time: TDate | null, adapter: MuiPickersAdapter<TDate>) => string;
   hoursClockNumberText: (hours: string) => string;
   minutesClockNumberText: (minutes: string) => string;
   secondsClockNumberText: (seconds: string) => string;

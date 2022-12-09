@@ -5,10 +5,10 @@ import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<TimePicker />', () => {
-  const ControlledTimePicker = () => {
+  function ControlledTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <TimePicker
@@ -17,7 +17,7 @@ describe('<TimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
 
   describeConformance(
     <TimePicker
@@ -50,7 +50,7 @@ describe('<TimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   it('should handle controlled `onChange` in desktop mode', () => {

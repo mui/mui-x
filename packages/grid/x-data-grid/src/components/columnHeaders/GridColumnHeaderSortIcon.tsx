@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';

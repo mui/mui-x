@@ -1,64 +1,43 @@
 import * as React from 'react';
-
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import Box from '@mui/material/Box';
+import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+
+function GridItem({ label, children, spacing = 1 }) {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="body2" sx={{ mb: spacing }}>
+        {label}
+      </Typography>
+      {children}
+    </Box>
+  );
+}
+
+GridItem.propTypes = {
+  children: PropTypes.node,
+  label: PropTypes.string.isRequired,
+  spacing: PropTypes.number,
+};
 
 export default function CalendarsDateRangePicker() {
-  const [value, setValue] = React.useState([null, null]);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div>
-        <Typography sx={{ mt: 2, mb: 1 }}>1 calendar </Typography>
-        <DateRangePicker
-          calendars={1}
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
-        <Typography sx={{ mt: 2, mb: 1 }}>2 calendars</Typography>
-        <DateRangePicker
-          calendars={2}
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
-        <Typography sx={{ mt: 2, mb: 1 }}>3 calendars</Typography>
-        <DateRangePicker
-          calendars={3}
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
-      </div>
+      <Stack spacing={4}>
+        <GridItem label="1 calendar" spacing={2}>
+          <NextDateRangePicker calendars={1} />
+        </GridItem>
+        <GridItem label="2 calendars" spacing={2}>
+          <NextDateRangePicker calendars={2} />
+        </GridItem>
+        <GridItem label="3 calendars" spacing={2}>
+          <NextDateRangePicker calendars={3} />
+        </GridItem>
+      </Stack>
     </LocalizationProvider>
   );
 }

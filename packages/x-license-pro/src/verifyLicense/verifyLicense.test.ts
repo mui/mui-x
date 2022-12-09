@@ -34,7 +34,7 @@ describe('License: verifyLicense', () => {
       ).to.equal(LicenseStatus.Valid);
     });
 
-    it('should check expired License properly', () => {
+    it('should check expired license properly', () => {
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(releaseDate.getTime() - oneDayInMS),
         orderNumber: 'MUI-123',
@@ -47,7 +47,7 @@ describe('License: verifyLicense', () => {
           acceptedScopes: ['pro', 'premium'],
           isProduction: true,
         }),
-      ).to.equal(LicenseStatus.Expired);
+      ).to.equal(LicenseStatus.ExpiredVersion);
     });
 
     it('should return Invalid for invalid license', () => {

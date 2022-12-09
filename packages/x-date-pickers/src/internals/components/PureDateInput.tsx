@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
-import { useEventCallback } from '@mui/material/utils';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { onSpaceOrEnter } from '../utils/utils';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { getDisplayDate } from '../utils/text-field-helper';
@@ -114,7 +114,7 @@ export type ExportedDateInputProps<TDate> = Omit<
   | 'components'
 >;
 
-// TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
+// TODO v6: Drop with the legacy pickers
 export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
   props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -134,7 +134,7 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
     className,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // The prop can not be deprecated
   // Default is "Choose date, ...", but time pickers override it with "Choose time, ..."

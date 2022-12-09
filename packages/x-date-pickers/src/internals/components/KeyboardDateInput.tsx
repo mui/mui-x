@@ -6,6 +6,7 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 
+// TODO v6: Drop with the legacy pickers
 export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDate>(
   props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -24,7 +25,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDa
     ...other
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
 

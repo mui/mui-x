@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { getDataGridUtilityClass } from '../../../constants';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_CHECKBOX_SELECTION_FIELD } from '../../../colDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
@@ -23,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const useGridRowSelectionPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
 ) => {
   const ownerState = { classes: props.classes };
@@ -43,10 +43,10 @@ export const useGridRowSelectionPreProcessors = (
 
       if (shouldHaveSelectionColumn && !haveSelectionColumn) {
         columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] = selectionColumn;
-        columnsState.all = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.all];
+        columnsState.orderedFields = [GRID_CHECKBOX_SELECTION_FIELD, ...columnsState.orderedFields];
       } else if (!shouldHaveSelectionColumn && haveSelectionColumn) {
         delete columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD];
-        columnsState.all = columnsState.all.filter(
+        columnsState.orderedFields = columnsState.orderedFields.filter(
           (field) => field !== GRID_CHECKBOX_SELECTION_FIELD,
         );
       } else if (shouldHaveSelectionColumn && haveSelectionColumn) {

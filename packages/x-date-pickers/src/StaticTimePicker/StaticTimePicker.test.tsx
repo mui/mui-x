@@ -16,7 +16,7 @@ import {
   withPickerControls,
 } from 'test/utils/pickers-utils';
 import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedStaticTimePicker = withPickerControls(StaticTimePicker)({
   renderInput: (params) => <TextField {...params} />,
@@ -29,8 +29,7 @@ describe('<StaticTimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    skip: ['textField'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-static-picker',
   }));
 
   describeConformance(
@@ -161,8 +160,8 @@ describe('<StaticTimePicker />', () => {
     expect(disabledHours.length).to.equal(12);
 
     // meridiem are disabled
-    expect(screen.getByRole('button', { name: /AM/i }).getAttribute('disabled')).to.not.equal(null);
-    expect(screen.getByRole('button', { name: /PM/i }).getAttribute('disabled')).to.not.equal(null);
+    expect(screen.getByRole('button', { name: /AM/i })).to.have.attribute('disabled');
+    expect(screen.getByRole('button', { name: /PM/i })).to.have.attribute('disabled');
   });
 
   describe('localization', () => {

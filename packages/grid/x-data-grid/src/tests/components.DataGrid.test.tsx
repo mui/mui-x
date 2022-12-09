@@ -43,7 +43,9 @@ describe('<DataGrid /> - Components', () => {
     });
 
     it('should hide custom footer if prop hideFooter is set', () => {
-      const CustomFooter = () => <div className="customFooter">Custom Footer</div>;
+      function CustomFooter() {
+        return <div className="customFooter">Custom Footer</div>;
+      }
       render(
         <div style={{ width: 300, height: 500 }}>
           <DataGrid {...baselineProps} hideFooter components={{ Footer: CustomFooter }} />
@@ -90,7 +92,7 @@ describe('<DataGrid /> - Components', () => {
             {...baselineProps}
             hideFooter
             filterModel={{
-              items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }],
+              items: [{ field: 'brand', operator: 'contains', value: 'a' }],
             }}
             disableVirtualization
             componentsProps={{ columnHeaderFilterIconButton: { onClick } }}

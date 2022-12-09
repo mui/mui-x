@@ -182,7 +182,7 @@ interface GroupingCellWithLazyLoadingProps
  * Reproduce the behavior of the `GridTreeDataGroupingCell` component in `@mui/x-data-grid-pro`
  * But base the amount of children on a `row.descendantCount` property rather than on the internal lookups.
  */
-const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) => {
+function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
   const { id, field, rowNode, row, hideDescendantCount, formattedValue } = props;
 
   const rootProps = useGridRootProps();
@@ -192,15 +192,6 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
   const Icon = rowNode.childrenExpanded
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
-
-  const handleKeyDown: IconButtonProps['onKeyDown'] = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
 
   const handleClick: IconButtonProps['onClick'] = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
@@ -215,7 +206,6 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
           <IconButton
             size="small"
             onClick={handleClick}
-            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               rowNode.childrenExpanded
@@ -235,7 +225,7 @@ const GroupingCellWithLazyLoading = (props: GroupingCellWithLazyLoadingProps) =>
       </span>
     </Box>
   );
-};
+}
 
 const CUSTOM_GROUPING_COL_DEF: GridGroupingColDefOverride = {
   renderCell: (params) => (

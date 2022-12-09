@@ -47,7 +47,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const Test = (props: Partial<DataGridPremiumProps>) => {
+  function Test(props: Partial<DataGridPremiumProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -55,7 +55,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <DataGridPremium {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   describe('Setting aggregation model', () => {
     describe('initialState: aggregation.model', () => {
@@ -270,7 +270,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Tree Data', () => {
-    const TreeDataTest = (props: Omit<DataGridPremiumProps, 'columns'>) => {
+    function TreeDataTest(props: Omit<DataGridPremiumProps, 'columns'>) {
       return (
         <Test
           treeData
@@ -296,7 +296,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
           {...props}
         />
       );
-    };
+    }
 
     it('should use aggregated values instead of provided values on data groups', () => {
       render(
@@ -385,7 +385,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -399,7 +399,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -414,7 +414,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -704,7 +704,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             aggregation: { model: { id: 'sum' } },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
+                items: [{ field: 'id', operator: '!=', value: 15 }],
               },
             },
           }}

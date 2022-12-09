@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-const GridItem = ({
+function GridItem({
   label,
   children,
   spacing = 1,
@@ -16,7 +16,7 @@ const GridItem = ({
   label: string;
   children: React.ReactNode;
   spacing?: number;
-}) => {
+}) {
   return (
     <Grid xs={12} item>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -27,7 +27,7 @@ const GridItem = ({
       </Box>
     </Grid>
   );
-};
+}
 
 // TODO: Use the same structure as on the other `XXXFieldValue` demos when using the single input version.
 export default function TimeRangeFieldValue() {

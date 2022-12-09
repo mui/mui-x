@@ -29,11 +29,11 @@ describe('<DataGridPro /> - Row Selection', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestDataGridSelection = ({
+  function TestDataGridSelection({
     rowLength = 4,
     ...other
   }: Omit<DataGridProProps, 'rows' | 'columns' | 'apiRef'> &
-    Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) => {
+    Partial<Pick<DataGridProProps, 'rows' | 'columns'>> & { rowLength?: number }) {
     apiRef = useGridApiRef();
 
     const data = React.useMemo(() => getBasicGridData(rowLength, 2), [rowLength]);
@@ -43,7 +43,7 @@ describe('<DataGridPro /> - Row Selection', () => {
         <DataGridPro {...data} {...other} apiRef={apiRef} disableVirtualization />
       </div>
     );
-  };
+  }
 
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
@@ -371,7 +371,7 @@ describe('<DataGridPro /> - Row Selection', () => {
     it('should select only filtered rows selecting a range', () => {
       render(
         <TestDataGridSelection
-          filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
+          filterModel={{ items: [{ field: 'id', value: 1, operator: '!=' }] }}
         />,
       );
       act(() => apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true));
@@ -388,9 +388,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       apiRef.current.setFilterModel({
         items: [
           {
-            columnField: 'currencyPair',
+            field: 'currencyPair',
             value: 'usd',
-            operatorValue: 'startsWith',
+            operator: 'startsWith',
           },
         ],
       }),

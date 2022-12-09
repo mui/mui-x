@@ -11,11 +11,9 @@ import {
   useLocalizationContext,
   useUtils,
   useValidation,
-} from '@mui/x-date-pickers/internals';
-import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
-} from '@mui/x-date-pickers/internals-fields';
+} from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 import type {
   UseMultiInputDateTimeRangeFieldDefaultizedProps,
@@ -27,7 +25,7 @@ import {
   DateTimeRangeValidationError,
   validateDateTimeRange,
 } from '../validation/useDateTimeRangeValidation';
-import { dateRangePickerValueManager } from '../../../DateRangePicker/shared';
+import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
 export const useDefaultizedDateTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
@@ -81,7 +79,7 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
 
     return (newDate, rawContext) => {
       const currentDateRange =
-        valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+        valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
       const newDateRange: DateRange<TDate> =
         index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
 
@@ -126,14 +124,19 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
     inputRef: endInputRef,
   });
 
-  const value = valueProp ?? firstDefaultValue.current ?? dateRangePickerValueManager.emptyValue;
+  const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 
   const validationError = useValidation<
     DateRange<TDate>,
     TDate,
     DateTimeRangeValidationError,
     DateTimeRangeComponentValidationProps<TDate>
-  >({ ...sharedProps, value }, validateDateTimeRange, () => true);
+  >(
+    { ...sharedProps, value },
+    validateDateTimeRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 
   const startDateResponse = {
     ...rawStartDateResponse,

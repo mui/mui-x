@@ -2,27 +2,15 @@
   {
     "name": "gridAggregationLookupSelector",
     "returnType": "GridAggregationLookup",
-    "description": "",
+    "category": "Aggregation",
+    "description": "Get the aggregation results as a lookup.",
     "supportsApiRef": true
   },
   {
     "name": "gridAggregationModelSelector",
     "returnType": "GridAggregationModel",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridColumnDefinitionsSelector",
-    "returnType": "GridStateColDef<any, any, any>[]",
-    "category": "Columns",
-    "description": "Get the columns as an array.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridColumnFieldsSelector",
-    "returnType": "string[]",
-    "category": "Columns",
-    "description": "Get the field of each column.",
+    "category": "Aggregation",
+    "description": "Get the aggregation model, containing the aggregation function of each column.\nIf a column is not in the model, it is not aggregated.",
     "supportsApiRef": true
   },
   {
@@ -50,24 +38,10 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridColumnLookupSelector",
-    "returnType": "GridColumnLookup",
-    "category": "Columns",
-    "description": "Get the columns as a lookup (an object containing the field for keys and the definition for values).",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridColumnMenuSelector",
     "returnType": "GridColumnMenuState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridColumnPositionsSelector",
-    "returnType": "number[]",
-    "category": "Visible Columns",
-    "description": "Get the left position in pixel of each visible columns relative to the left of the first column.",
-    "supportsApiRef": true
   },
   {
     "name": "gridColumnReorderDragColSelector",
@@ -86,20 +60,6 @@
     "returnType": "GridColumnResizeState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridColumnVisibilityModelSelector",
-    "returnType": "GridColumnVisibilityModel",
-    "category": "Visible Columns",
-    "description": "Get the column visibility model, containing the visibility status of each column.\nIf a column is not registered in the model, it is visible.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridColumnsTotalWidthSelector",
-    "returnType": "number",
-    "category": "Visible Columns",
-    "description": "Get the summed width of all the visible columns.",
-    "supportsApiRef": true
   },
   {
     "name": "gridDensityFactorSelector",
@@ -142,27 +102,6 @@
     "returnType": "GridFilterModel",
     "category": "Filtering",
     "description": "Get the current filter model.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridFilterStateSelector",
-    "returnType": "GridFilterState",
-    "category": "Filtering",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridFilterableColumnDefinitionsSelector",
-    "returnType": "GridStateColDef<any, any, any>[]",
-    "category": "Columns",
-    "description": "Get the filterable columns as an array.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridFilterableColumnLookupSelector",
-    "returnType": "GridColumnLookup",
-    "category": "Columns",
-    "description": "Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).",
     "supportsApiRef": true
   },
   {
@@ -331,20 +270,6 @@
     "name": "gridTotalHeaderHeightSelector",
     "returnType": "number",
     "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleColumnDefinitionsSelector",
-    "returnType": "GridStateColDef<any, any, any>[]",
-    "category": "Visible Columns",
-    "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values).",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleColumnFieldsSelector",
-    "returnType": "string[]",
-    "category": "Visible Columns",
-    "description": "Get the field of each visible column.",
     "supportsApiRef": true
   },
   {

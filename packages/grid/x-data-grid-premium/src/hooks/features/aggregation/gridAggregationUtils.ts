@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { capitalize } from '@mui/material';
+import { unstable_capitalize as capitalize } from '@mui/utils';
 import {
   GridColDef,
   GridFooterNode,
@@ -23,7 +23,7 @@ import {
 } from './gridAggregationInterfaces';
 import { GridStatePremium } from '../../../models/gridStatePremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const GRID_AGGREGATION_ROOT_FOOTER_ROW_ID = 'auto-generated-group-footer-root';
 
@@ -122,7 +122,7 @@ interface AddFooterRowsParams {
    * If `true`, there are some aggregation rules to apply
    */
   hasAggregationRule: boolean;
-  apiRef: React.MutableRefObject<GridApiPremium>;
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>;
 }
 
 /**

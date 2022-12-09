@@ -6,7 +6,7 @@ import {
   GridRestoreStatePreProcessingContext,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   getAvailableAggregationFunctions,
   addFooterRows,
@@ -22,10 +22,12 @@ import { GridAggregationColumnMenuItem } from '../../../components/GridAggregati
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
+function Divider() {
+  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
+}
 
 export const useGridAggregationPreProcessors = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition'
@@ -33,7 +35,7 @@ export const useGridAggregationPreProcessors = (
 ) => {
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const { rulesOnLastColumnHydration } = apiRef.current.unstable_caches.aggregation;
+      const { rulesOnLastColumnHydration } = apiRef.current.caches.aggregation;
 
       const aggregationRules = props.disableAggregation
         ? {}
@@ -43,7 +45,7 @@ export const useGridAggregationPreProcessors = (
             aggregationFunctions: props.aggregationFunctions,
           });
 
-      columnsState.all.forEach((field) => {
+      columnsState.orderedFields.forEach((field) => {
         const shouldHaveAggregationValue = !!aggregationRules[field];
         const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
 
@@ -66,8 +68,6 @@ export const useGridAggregationPreProcessors = (
         columnsState.lookup[field] = column;
       });
 
-      apiRef.current.unstable_caches.aggregation.rulesOnLastColumnHydration = aggregationRules;
-
       return columnsState;
     },
     [apiRef, props.aggregationFunctions, props.disableAggregation],
@@ -88,14 +88,13 @@ export const useGridAggregationPreProcessors = (
       // If we did not have any aggregation footer before, and we still don't have any,
       // Then we can skip this step
       if (
-        Object.keys(apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration).length ===
-          0 &&
+        Object.keys(apiRef.current.caches.aggregation.rulesOnLastRowHydration).length === 0 &&
         !hasAggregationRule
       ) {
         return value;
       }
 
-      apiRef.current.unstable_caches.aggregation.rulesOnLastRowHydration = aggregationRules;
+      apiRef.current.caches.aggregation.rulesOnLastRowHydration = aggregationRules;
 
       return addFooterRows({
         apiRef,

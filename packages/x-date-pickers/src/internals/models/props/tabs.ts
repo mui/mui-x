@@ -1,15 +1,16 @@
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 
-export interface BaseTabsProps {
+export interface BaseTabsProps<TView extends DateOrTimeView> {
   /**
    * Currently visible picker view.
    */
-  view: CalendarOrClockPickerView;
+  view: TView;
   /**
    * Callback called when a tab is clicked
-   * @param {CalendarOrClockPickerView} view The view to open
+   * @template TView
+   * @param {TView} view The view to open
    */
-  onViewChange: (view: CalendarOrClockPickerView) => void;
+  onViewChange: (view: TView) => void;
 }
 
 export interface ExportedBaseTabsProps {}

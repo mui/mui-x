@@ -1,13 +1,16 @@
-import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
-import { useField } from '@mui/x-date-pickers/internals-fields';
+import {
+  useUtils,
+  useDefaultDates,
+  applyDefaultDate,
+  useField,
+} from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputDateRangeFieldDefaultizedProps,
   UseSingleInputDateRangeFieldParams,
   UseSingleInputDateRangeFieldProps,
 } from './SingleInputDateRangeField.types';
-import { dateRangePickerValueManager } from '../DateRangePicker/shared';
+import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
-import { dateRangeFieldValueManager } from '../internal/hooks/valueManager/dateRangeValueManager';
 
 export const useDefaultizedDateRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateRangeFieldProps<TDate>,
@@ -64,8 +67,8 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       selectedSections,
       onSelectedSectionsChange,
     },
-    valueManager: dateRangePickerValueManager,
-    fieldValueManager: dateRangeFieldValueManager,
+    valueManager: rangeValueManager,
+    fieldValueManager: rangeFieldValueManager,
     validator: validateDateRange,
     supportedDateSections: ['year', 'month', 'day'],
   });

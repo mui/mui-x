@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { styled, alpha } from '@mui/material/styles';
-import { useEventCallback } from '@mui/material/utils';
 import {
   getDataGridUtilityClass,
   gridClasses,
@@ -79,13 +81,19 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   boxShadow: theme.shadows[2],
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && {
-    backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-      '#fff',
-      getOverlayAlpha(2),
-    )})`,
-  }),
+  backgroundColor: (theme.vars || theme).palette.background.default,
+  ...(theme.vars
+    ? {
+        backgroundImage: theme.vars.overlays?.[2],
+      }
+    : {
+        ...(theme.palette.mode === 'dark' && {
+          backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
+            '#fff',
+            getOverlayAlpha(2),
+          )})`,
+        }),
+      }),
   ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
 }));

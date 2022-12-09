@@ -8,7 +8,6 @@
     "disableMargin": "If <code>true</code>, days are rendering without margin. Useful for displaying linked range of days.",
     "outsideCurrentMonth": "If <code>true</code>, day is outside of month and will be hidden.",
     "selected": "If <code>true</code>, renders as selected.",
-    "selectedDays": "Currently selected days.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "today": "If <code>true</code>, renders as today date."
   },

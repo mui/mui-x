@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { GridEventListener } from '../models/events';
 import { useGridApiEventHandler } from '../hooks/utils/useGridApiEventHandler';
@@ -72,7 +72,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const handleScrolling = React.useCallback<GridEventListener<'rowsScroll'>>(
+  const handleScrolling = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     (newScrollPosition) => {
       scrollPosition.current = newScrollPosition;
     },
@@ -115,7 +115,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
     setDragging((prevDragging) => !prevDragging);
   }, []);
 
-  useGridApiEventHandler(apiRef, 'rowsScroll', handleScrolling);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScrolling);
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', toggleDragging);
   useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', toggleDragging);
 

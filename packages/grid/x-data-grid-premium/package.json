@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "6.0.0-alpha.4",
+  "version": "6.0.0-alpha.11",
   "description": "The Premium plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -28,12 +28,12 @@
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
     "build": "yarn build:legacy && yarn build:modern && yarn build:node && yarn build:stable && yarn build:types && yarn build:copy-files ",
-    "build:legacy": "node ../../../scripts/build legacy",
-    "build:modern": "node ../../../scripts/build modern",
-    "build:node": "node ../../../scripts/build node",
-    "build:stable": "node ../../../scripts/build stable",
-    "build:copy-files": "node ../../../scripts/copyFiles.js",
-    "build:types": "node ../../../scripts/buildTypes",
+    "build:legacy": "node ../../../scripts/build.mjs legacy",
+    "build:modern": "node ../../../scripts/build.mjs modern",
+    "build:node": "node ../../../scripts/build.mjs node",
+    "build:stable": "node ../../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../../scripts/copyFiles.mjs",
+    "build:types": "node ../../../scripts/buildTypes.mjs",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -42,16 +42,16 @@
     "directory": "packages/grid/x-data-grid-premium"
   },
   "dependencies": {
-    "@babel/runtime": "^7.19.0",
-    "@mui/utils": "^5.10.9",
-    "@mui/x-data-grid": "6.0.0-alpha.4",
-    "@mui/x-data-grid-pro": "6.0.0-alpha.4",
-    "@mui/x-license-pro": "6.0.0-alpha.3",
+    "@babel/runtime": "^7.20.6",
+    "@mui/utils": "^5.10.16",
+    "@mui/x-data-grid": "6.0.0-alpha.11",
+    "@mui/x-data-grid-pro": "6.0.0-alpha.11",
+    "@mui/x-license-pro": "6.0.0-alpha.9",
     "@types/format-util": "^1.0.2",
     "clsx": "^1.2.1",
     "exceljs": "^4.3.0",
     "prop-types": "^15.8.1",
-    "reselect": "^4.1.6"
+    "reselect": "^4.1.7"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",
@@ -63,6 +63,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   }
 }
