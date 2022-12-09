@@ -7,6 +7,6 @@ export type {
   ExportedPickersLayoutSlotsComponentsProps,
 } from './PickersLayout.types';
 
-export { default as usePickerLayout } from './usePickerLayout';
+export { default as usePickerLayout, UsePickerLayoutResponse } from './usePickerLayout';
 export { pickersLayoutClasses } from './pickersLayoutClasses';
 export type { PickersLayoutClassKey } from './pickersLayoutClasses';

@@ -184,6 +184,17 @@ export const useDesktopRangePicker = <
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
+    shortcuts: {
+      shortcuts: [
+        {
+          label: 'first week',
+          getValue: (value, view, isValid, adapter) => {
+            const week = adapter.getWeekArray(adapter.startOfMonth(value[0]));
+            return [week[0], week[6]];
+          },
+        },
+      ],
+    },
   };
   const Layout = components?.Layout ?? PickersLayout;
 

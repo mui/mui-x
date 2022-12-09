@@ -59,6 +59,22 @@ export const useStaticRangePicker = <
       rangePosition,
       onDateRangePositionRange: setRangePosition,
     } as ExportedBaseToolbarProps,
+    shortcuts: {
+      shortcuts: [
+        {
+          label: 'next week',
+          getValue: (value, view, isValid, adapter) => {
+            adapter.date();
+            // return [null, null];
+            // console.log({ adapter });
+            const today = adapter.date();
+            const weeks = adapter.getWeekArray(adapter.addWeeks(today, 1));
+            const weekIndex = weeks.findIndex((w) => adapter.isAfterDay(w[0], today));
+            return [weeks[weekIndex][0], weeks[weekIndex][6]];
+          },
+        },
+      ],
+    },
   };
 
   const renderPicker = () => (

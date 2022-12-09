@@ -14,12 +14,18 @@ export const PickersLayoutRoot = styled('div', {
   gridAutoColumns: 'max-content auto max-content',
   gridAutoRows: 'max-content auto max-content',
 
-  [`& .${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
+  [`.${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
     ? {
         gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '1 / 3',
+        gridRow: '2 / 3',
       }
-    : { gridColumn: '1 / 4', gridRow: 1 },
+    : { gridColumn: '2 / 4', gridRow: 1 },
+  [`.${pickersLayoutClasses.shortcuts}`]: ownerState.isLandscape
+    ? { gridColumn: '2 / 4', gridRow: 1 }
+    : {
+        gridColumn: theme.direction === 'rtl' ? 3 : 1,
+        gridRow: '2 / 3',
+      },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
 }));
 
@@ -40,7 +46,7 @@ export const PickersLayout = React.forwardRef(function PickersLayout(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
+  const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
   const { sx, className, isLandscape } = props;
 
   return (
@@ -50,7 +56,8 @@ export const PickersLayout = React.forwardRef(function PickersLayout(
       className={clsx(className, pickersLayoutClasses.root)}
       ownerState={{ isLandscape }}
     >
-      {toolbar}
+      {isLandscape ? shortcuts : toolbar}
+      {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
         {content}

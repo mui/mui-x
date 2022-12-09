@@ -205,6 +205,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
   onChange: (newValue: TValue) => void;
+  isValid: (value: TValue) => boolean;
 }
 
 export interface UsePickerValueResponse<TValue, TError> {
@@ -453,10 +454,18 @@ export const usePickerValue = <
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
+  const isValid = (testedValue: TValue) =>
+    validator({
+      adapter,
+      value: testedValue,
+      props: { ...props, value: testedValue },
+    }) === null;
+
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
     value: dateState.draft,
     onChange: handleChangeAndCommit,
+    isValid,
   };
 
   return {

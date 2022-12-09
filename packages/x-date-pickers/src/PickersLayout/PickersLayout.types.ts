@@ -8,6 +8,7 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { WrapperVariant } from '../internals/components/wrappers/WrapperVariantContext';
+import { PickersShortcutsProps } from '../PickersShortcuts';
 
 export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {
   /**
@@ -15,6 +16,11 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
    * @default PickersActionBar
    */
   ActionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component for the shortcuts.
+   * @default PickersShortcuts
+   */
+  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TView>>;
   /**
    * Custom component for wrapping the layout.
    * It wrapps the toolbar, views, and action bar
@@ -37,6 +43,14 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
     React.ComponentType<
       Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>
     >,
+    {},
+    PickersLayoutActionBarOwnerState<TValue, TView>
+  >;
+  /**
+   * Props passed down to the action bar component.
+   */
+  shortcuts?: SlotComponentProps<
+    React.ComponentType<PickersShortcutsProps<TValue, TView>>,
     {},
     PickersLayoutActionBarOwnerState<TValue, TView>
   >;
@@ -94,4 +108,5 @@ export interface SubComponents {
   content: React.ReactNode;
   tabs: React.ReactNode;
   actionBar: React.ReactNode;
+  shortcuts: React.ReactNode;
 }

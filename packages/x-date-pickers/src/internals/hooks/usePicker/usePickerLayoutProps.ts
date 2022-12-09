@@ -24,6 +24,7 @@ export interface UsePickerLayoutPropsResponseLayoutProps<TValue, TView extends D
     UsePickerLayoutPropsProps {
   isLandscape: boolean;
   wrapperVariant: WrapperVariant;
+  isValid: (value: TValue) => boolean;
 }
 
 export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeView> {

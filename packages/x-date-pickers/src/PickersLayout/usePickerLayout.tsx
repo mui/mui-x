@@ -5,6 +5,7 @@ import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { DateOrTimeView } from '../internals';
+import { PickersShortcuts } from '../PickersShortcuts';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
@@ -15,12 +16,13 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
     actionBar: ['actionBar'],
     tabs: ['tabs'],
     landscape: ['landscape'],
+    shortcuts: ['shortcuts'],
   };
 
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface UsePickerLayoutResponse extends SubComponents {}
+export interface UsePickerLayoutResponse extends SubComponents {}
 
 const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   props: PickersLayoutProps<TValue, TView>,
@@ -36,6 +38,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     onViewChange,
     value,
     onChange,
+    isValid,
     isLandscape,
     disabled,
     readOnly,
@@ -99,11 +102,35 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
       <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
     ) : null;
 
+  // Shortcuts
+
+  const Shortcuts = components?.Shortcuts ?? PickersShortcuts;
+  const shortcutsProps = useSlotProps({
+    elementType: Shortcuts!,
+    externalSlotProps: componentsProps?.shortcuts,
+    additionalProps: {
+      isValid,
+      isLandscape,
+      onChange,
+      value,
+      view,
+      onViewChange,
+      views,
+      disabled,
+      readOnly,
+      className: classes.shortcuts,
+    },
+    ownerState: { ...props, wrapperVariant },
+  });
+
+  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
+
   return {
     toolbar,
     content,
     tabs,
     actionBar,
+    shortcuts,
   };
 };
 
