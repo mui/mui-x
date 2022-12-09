@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useForkRef } from '@mui/material/utils';
+import { useForkRef, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
 import { useGridApiContext } from '../../utils/useGridApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -216,7 +216,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
   }, [disableVirtualization]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     setContainerWidth(rootRef.current!.clientWidth);
   }, [rowsMeta.currentPageTotalHeight]);
 
@@ -299,7 +299,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     [apiRef, setRenderContext, prevRenderContext, currentPage.rows.length, rootProps.rowBuffer],
   );
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerWidth == null) {
       return;
     }
