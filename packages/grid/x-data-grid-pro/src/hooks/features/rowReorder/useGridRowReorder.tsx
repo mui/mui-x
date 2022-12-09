@@ -121,8 +121,8 @@ export const useGridRowReorder = (
       // For more information check here https://github.com/mui/mui-x/issues/2680.
       event.stopPropagation();
 
-      const mouseMovementdiffrence = previousMousePoistion
-        ? previousMousePoistion.y - event.clientY
+      const mouseMovementdiffrence = previousMousePosition
+        ? previousMousePosition.y - event.clientY
         : event.clientY;
 
       if (params.id !== dragRowId) {
@@ -145,7 +145,7 @@ export const useGridRowReorder = (
           previousReorderState = currentReorderState;
         }
       }
-      previousMousePoistion = { x: event.clientX, y: event.clientY };
+      previousMousePosition = { x: event.clientX, y: event.clientY };
     },
     [apiRef, logger, dragRowId],
   );
