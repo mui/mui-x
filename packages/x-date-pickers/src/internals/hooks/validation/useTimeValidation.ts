@@ -30,7 +30,7 @@ export const validateTime: Validator<
     maxTime,
     minutesStep,
     shouldDisableTime,
-    disableIgnoringDatePartForTimeValidation,
+    disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
   } = props;
@@ -83,14 +83,10 @@ export const validateTime: Validator<
   }
 };
 
-/**
- * TODO v6: Remove
- */
+// TODO v6: Drop with the legacy pickers
 export const isSameTimeError = (a: unknown, b: unknown) => a === b;
 
-/**
- * TODO v6: Remove
- */
+// TODO v6: Drop with the legacy pickers
 export const useTimeValidation = <TDate>(
   props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,
 ): TimeValidationError => useValidation(props, validateTime, isSameTimeError, null);

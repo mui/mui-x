@@ -1,14 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const shouldDisableTime = (timeValue, view) => view === 'minutes' && timeValue >= 45;
 
@@ -32,27 +31,19 @@ GridItem.propTypes = {
 };
 
 export default function TimeValidationShouldDisableTime() {
-  const [timePickerValue, setTimePickerValue] = React.useState(defaultValue);
-
-  const [dateTimePickerValue, setDateTimePickerValue] = React.useState(defaultValue);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4}>
         <GridItem label="TimePicker">
-          <TimePicker
+          <NextTimePicker
+            defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}
-            value={timePickerValue}
-            onChange={(newValue) => setTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
           />
         </GridItem>
         <GridItem label="DateTimePicker">
-          <DateTimePicker
+          <NextDateTimePicker
+            defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}
-            value={dateTimePickerValue}
-            onChange={(newValue) => setDateTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
           />
         </GridItem>
       </Stack>

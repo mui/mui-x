@@ -1,11 +1,10 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const todayAtNoon = dayjs().set('hour', 12).startOf('hour');
 const todayAt3PM = dayjs().set('hour', 15).startOf('hour');
@@ -30,17 +29,10 @@ function GridItem({
 }
 
 export default function DateTimeValidationMinDateTime() {
-  const [value, setValue] = React.useState<Dayjs | null>(todayAtNoon);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <GridItem label="DateTimePicker">
-        <DateTimePicker
-          minDateTime={todayAt3PM}
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          renderInput={(params) => <TextField {...params} />}
-        />
+        <NextDateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
       </GridItem>
     </LocalizationProvider>
   );

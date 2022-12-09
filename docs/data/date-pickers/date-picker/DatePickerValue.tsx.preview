@@ -1,0 +1,11 @@
+<DemoContainer>
+  <NextDatePicker
+    label="Uncontrolled picker"
+    defaultValue={dayjs('2022-04-07')}
+  />
+  <NextDatePicker
+    label="Controlled picker"
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoContainer>

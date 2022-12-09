@@ -1,11 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticDateTimePicker
-    displayStaticWrapperAs="desktop"
-    openTo="year"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} />}
-  />
-</LocalizationProvider>
+<StaticNextDateTimePicker
+  displayStaticWrapperAs="desktop"
+  defaultValue={dayjs('2022-04-07T15:30')}
+/>

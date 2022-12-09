@@ -1,0 +1,11 @@
+<DemoContainer>
+  <SingleInputDateRangeField
+    label="Uncontrolled field"
+    defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
+  />
+  <SingleInputDateRangeField
+    label="Controlled field"
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoContainer>

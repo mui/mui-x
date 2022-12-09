@@ -3,7 +3,7 @@ import { LicenseInfo } from '@mui/x-license-pro';
 import { unstable_resetCleanupTracking } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingPro } from '@mui/x-data-grid-pro';
 
-function createXMochaHooks(coreMochaHooks = {}) {
+export function createXMochaHooks(coreMochaHooks = {}) {
   const mochaHooks = {
     beforeAll: [...(coreMochaHooks.beforeAll ?? [])],
     afterAll: [...(coreMochaHooks.afterAll ?? [])],
@@ -30,5 +30,3 @@ function createXMochaHooks(coreMochaHooks = {}) {
 
   return mochaHooks;
 }
-
-module.exports = { createXMochaHooks };

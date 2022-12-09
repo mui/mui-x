@@ -1,16 +1,14 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
-    <DateField
-      label="Dash separator"
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-      format="MM-DD-YYYY"
-    />
-    <DateField
-      label="Full letter month"
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-      format="LL"
-    />
-  </Stack>
-</LocalizationProvider>
+<DemoContainer>
+  <DateField
+    label="Dash separator"
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    format="MM-DD-YYYY"
+  />
+  <DateField
+    label="Full letter month"
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+    format="LL"
+  />
+</DemoContainer>

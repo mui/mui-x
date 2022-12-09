@@ -2,10 +2,9 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 
 dayjs.extend(isBetweenPlugin);
@@ -38,15 +37,15 @@ const CustomPickersDay = styled(PickersDay, {
   }),
 })) as React.ComponentType<CustomPickerDayProps>;
 
-function Day(props: PickersDayProps<Dayjs>) {
-  const { day, selectedDays } = props;
+function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
+  const { day, selectedDay } = props;
 
-  if (selectedDays.length === 0) {
+  if (selectedDay == null) {
     return <PickersDay {...props} />;
   }
 
-  const start = selectedDays[0].startOf('week');
-  const end = selectedDays[0].endOf('week');
+  const start = selectedDay.startOf('week');
+  const end = selectedDay.endOf('week');
 
   const dayIsBetween = day.isBetween(start, end, null, '[]');
   const isFirstDay = day.isSame(start, 'day');
@@ -68,18 +67,16 @@ export default function CustomDay() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDatePicker
+      <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
-        label="Week picker"
         value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
+        onChange={(newValue) => setValue(newValue)}
+        components={{ Day }}
+        componentsProps={{
+          day: {
+            selectedDay: value,
+          } as any,
         }}
-        components={{
-          Day,
-        }}
-        renderInput={(params) => <TextField {...params} />}
-        inputFormat="'Week of' MMM d"
       />
     </LocalizationProvider>
   );

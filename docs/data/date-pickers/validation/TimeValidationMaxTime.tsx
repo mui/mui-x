@@ -1,13 +1,12 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
 const nineAM = dayjs().set('hour', 9).startOf('hour');
@@ -32,29 +31,14 @@ function GridItem({
 }
 
 export default function TimeValidationMaxTime() {
-  const [timePickerValue, setTimePickerValue] = React.useState<Dayjs | null>(nineAM);
-  const [dateTimePickerValue, setDateTimePickerValue] = React.useState<Dayjs | null>(
-    nineAM,
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={4}>
         <GridItem label="TimePicker">
-          <TimePicker
-            maxTime={fiveAM}
-            value={timePickerValue}
-            onChange={(newValue) => setTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
+          <NextTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </GridItem>
         <GridItem label="DateTimePicker">
-          <DateTimePicker
-            maxTime={fiveAM}
-            value={dateTimePickerValue}
-            onChange={(newValue) => setDateTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-          />
+          <NextDateTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </GridItem>
       </Stack>
     </LocalizationProvider>

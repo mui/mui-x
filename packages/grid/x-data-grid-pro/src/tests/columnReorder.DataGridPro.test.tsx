@@ -178,9 +178,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const columnHeader = getColumnHeaderCell(0);
     const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild);
-    expect(
-      columnHeaderDraggableContainer.classList.contains(gridClasses['columnHeader--dragging']),
-    ).to.equal(false);
+    expect(columnHeaderDraggableContainer).not.to.have.class(gridClasses['columnHeader--dragging']);
   });
 
   it('should keep the order of the columns when dragEnd is fired and disableColumnReorder=true', () => {

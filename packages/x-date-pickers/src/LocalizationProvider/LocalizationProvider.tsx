@@ -52,15 +52,16 @@ export interface LocalizationProviderProps<TDate> {
  * @ignore - do not document.
  */
 export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<TDate>) {
+  const { localeText: inLocaleText, ...otherInProps } = inProps;
+
   const { utils: parentUtils, localeText: parentLocaleText } = React.useContext(
     MuiPickersAdapterContext,
   ) ?? { utils: undefined, localeText: undefined };
 
-  const props = useThemeProps({
-    props: {
-      localeText: parentLocaleText,
-      ...inProps,
-    },
+  const props: LocalizationProviderProps<TDate> = useThemeProps({
+    // We don't want to pass the `localeText` prop to the theme, that way it will always return the theme value,
+    // We will then merge this theme value with our value manually
+    props: otherInProps,
     name: 'MuiLocalizationProvider',
   });
 
@@ -70,8 +71,13 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
     dateFormats,
     dateLibInstance,
     adapterLocale,
-    localeText,
+    localeText: themeLocaleText,
   } = props;
+
+  const localeText = React.useMemo(
+    () => ({ ...themeLocaleText, ...parentLocaleText, ...inLocaleText }),
+    [themeLocaleText, parentLocaleText, inLocaleText],
+  );
 
   const utils = React.useMemo(() => {
     if (!DateAdapter) {
@@ -82,11 +88,23 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
       return null;
     }
 
-    return new DateAdapter({
+    const adapter = new DateAdapter({
       locale: adapterLocale,
       formats: dateFormats,
       instance: dateLibInstance,
     });
+
+    if (!adapter.isMUIAdapter) {
+      throw new Error(
+        [
+          'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
+          "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
+          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#installation',
+        ].join(`\n`),
+      );
+    }
+
+    return adapter;
   }, [DateAdapter, adapterLocale, dateFormats, dateLibInstance, parentUtils]);
 
   const defaultDates: MuiPickersAdapterContextNullableValue<TDate>['defaultDates'] =

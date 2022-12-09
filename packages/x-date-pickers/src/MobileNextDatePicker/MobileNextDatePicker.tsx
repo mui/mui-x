@@ -27,8 +27,8 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   inProps: MobileNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText();
-  const utils = useUtils();
+  const localeText = useLocaleText<TDate>();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -137,6 +137,10 @@ MobileNextDatePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars

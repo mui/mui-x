@@ -6,18 +6,11 @@ import {
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
-import {
-  PickersSlotsComponent,
-  PickersSlotsComponentsProps,
-} from '../../components/wrappers/WrapperProps';
 
-export interface UseStaticPickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent,
-    Pick<PickersSlotsComponent, 'PaperContent'> {}
+export interface UseStaticPickerSlotsComponent extends ExportedPickersViewLayoutSlotsComponent {}
 
-export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickersViewLayoutSlotsComponentsProps,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
+export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -39,7 +32,7 @@ export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TErro
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticPickerSlotsComponentsProps;
+  componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<

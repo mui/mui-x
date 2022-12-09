@@ -1,15 +1,11 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticDatePicker
-    displayStaticWrapperAs="desktop"
-    label="Week picker"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    components={{
-      Day,
-    }}
-    renderInput={(params) => <TextField {...params} />}
-    inputFormat="'Week of' MMM d"
-  />
-</LocalizationProvider>
+<StaticNextDatePicker
+  displayStaticWrapperAs="desktop"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  components={{ Day }}
+  componentsProps={{
+    day: {
+      selectedDay: value,
+    } as any,
+  }}
+/>

@@ -7,6 +7,7 @@ import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
 } from '../internal/models/timeRange';
+import { RangePosition } from '../internal/models/range';
 
 export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
@@ -64,7 +65,7 @@ export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
   input?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputTimeRangeFieldOwnerState<TDate> & { position: 'start' | 'end' }
+    MultiInputTimeRangeFieldOwnerState<TDate> & { position: RangePosition }
   >;
   separator?: SlotComponentProps<typeof Typography, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
 }

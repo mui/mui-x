@@ -117,12 +117,6 @@ export const useGridDetailPanel = (
         return;
       }
 
-      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-        // TODO v6: only support Space on the detail toggle
-        apiRef.current.toggleDetailPanel(params.id);
-        return;
-      }
-
       if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD && event.key === ' ') {
         apiRef.current.toggleDetailPanel(params.id);
       }

@@ -8,27 +8,27 @@ import {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals';
+import { MakeOptional, TimeView } from '../internals';
 
-export interface StaticNextTimePickerSlotsComponent<TTime>
-  extends BaseNextTimePickerSlotsComponent<TTime>,
+export interface StaticNextTimePickerSlotsComponent<TDate>
+  extends BaseNextTimePickerSlotsComponent<TDate>,
     UseStaticPickerSlotsComponent {}
 
-export interface StaticNextTimePickerSlotsComponentsProps
+export interface StaticNextTimePickerSlotsComponentsProps<TDate>
   extends BaseNextTimePickerSlotsComponentsProps,
-    UseStaticPickerSlotsComponentsProps {}
+    UseStaticPickerSlotsComponentsProps<TDate, TimeView> {}
 
-export interface StaticNextTimePickerProps<TTime>
-  extends BaseNextTimePickerProps<TTime>,
+export interface StaticNextTimePickerProps<TDate>
+  extends BaseNextTimePickerProps<TDate>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: StaticNextTimePickerSlotsComponent<TTime>;
+  components?: StaticNextTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: StaticNextTimePickerSlotsComponentsProps;
+  componentsProps?: StaticNextTimePickerSlotsComponentsProps<TDate>;
 }

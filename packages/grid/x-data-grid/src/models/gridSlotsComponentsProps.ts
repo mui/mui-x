@@ -17,7 +17,6 @@ export interface GridSlotsComponentsProps {
   errorOverlay?: any;
   filterPanel?: any;
   footer?: any;
-  header?: any;
   loadingOverlay?: any;
   noResultsOverlay?: any;
   noRowsOverlay?: any;

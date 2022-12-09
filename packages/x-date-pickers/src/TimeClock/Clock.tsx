@@ -132,7 +132,7 @@ const ClockPin = styled('div', {
   width: 6,
   height: 6,
   borderRadius: '50%',
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -149,10 +149,10 @@ const ClockAmButton = styled(IconButton, {
   bottom: ownerState.ampmInClock ? 64 : 8,
   left: 8,
   ...(ownerState.meridiemMode === 'am' && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
     '&:hover': {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: (theme.vars || theme).palette.primary.light,
     },
   }),
 }));
@@ -167,10 +167,10 @@ const ClockPmButton = styled(IconButton, {
   bottom: ownerState.ampmInClock ? 64 : 8,
   right: 8,
   ...(ownerState.meridiemMode === 'pm' && {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
     '&:hover': {
-      backgroundColor: theme.palette.primary.light,
+      backgroundColor: (theme.vars || theme).palette.primary.light,
     },
   }),
 }));
@@ -202,7 +202,7 @@ export function Clock<TDate>(inProps: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
   const classes = useUtilityClasses(ownerState);

@@ -14,7 +14,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   components: { DesktopTransition: FakeTransitionComponent },
@@ -28,7 +28,7 @@ describe('<DesktopDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   describe('Component slots: OpenPickerIcon', () => {
@@ -788,7 +788,7 @@ describe('<DesktopDatePicker />', () => {
         <WrappedDesktopDatePicker
           initialValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

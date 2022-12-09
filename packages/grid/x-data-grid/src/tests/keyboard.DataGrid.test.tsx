@@ -26,10 +26,8 @@ const expectAriaCoordinate = (
   element: Element | null,
   { colIndex, rowIndex }: { colIndex: number; rowIndex: number },
 ) => {
-  expect(element?.getAttribute('aria-colindex')).to.equal(colIndex.toString());
-  expect(element?.closest('[role="row"]')?.getAttribute('aria-rowindex')).to.equal(
-    rowIndex.toString(),
-  );
+  expect(element).to.have.attribute('aria-colindex', colIndex.toString());
+  expect(element?.closest('[role="row"]')).to.have.attribute('aria-rowindex', rowIndex.toString());
 };
 
 describe('<DataGrid /> - Keyboard', () => {
@@ -57,7 +55,7 @@ describe('<DataGrid /> - Keyboard', () => {
           rowHeight={ROW_HEIGHT}
           headerHeight={HEADER_HEIGHT}
           hideFooter
-          filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
           experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
           {...props}
         />

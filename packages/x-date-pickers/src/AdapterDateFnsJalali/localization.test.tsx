@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
@@ -73,5 +74,13 @@ describe('<AdapterDateFnsJalali />', () => {
         expect(screen.getByRole('textbox')).to.have.value(localizedTexts[localeKey].value);
       });
     });
+  });
+
+  it('should return the correct week number', () => {
+    const adapter = new AdapterDateFnsJalali({ locale: faIR });
+
+    const dateToTest = adapter.date(new Date(2022, 10, 10));
+
+    expect(adapter.getWeekNumber!(dateToTest)).to.equal(34);
   });
 });

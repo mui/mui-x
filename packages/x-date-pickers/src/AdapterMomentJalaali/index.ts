@@ -1,6 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: MuiFormatTokenMap = {
@@ -45,8 +46,10 @@ const formatTokenMap: MuiFormatTokenMap = {
 
 export class AdapterMomentJalaali
   extends BaseAdapterMomentJalaali
-  implements MuiPickerFieldAdapter<defaultMoment.Moment>
+  implements MuiPickersAdapter<defaultMoment.Moment>
 {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
 
   /**
@@ -81,5 +84,9 @@ export class AdapterMomentJalaali
       .replace('jM', 'M')
       .replace('jD', 'D')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.jWeek();
   };
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { TimeView } from '@mui/x-date-pickers/internals';
 import { StaticNextTimePickerProps } from './StaticNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
@@ -7,8 +8,8 @@ import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { renderTimeView } from '../internals/utils/viewRenderers';
 import { validateTime } from '../internals/hooks/validation/useTimeValidation';
 
-type StaticTimePickerComponent = (<TTime>(
-  props: StaticNextTimePickerProps<TTime> & React.RefAttributes<HTMLDivElement>,
+type StaticTimePickerComponent = (<TDate>(
+  props: StaticNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 const VIEW_LOOKUP = {
@@ -17,13 +18,13 @@ const VIEW_LOOKUP = {
   seconds: renderTimeView,
 };
 
-const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TTime>(
-  inProps: StaticNextTimePickerProps<TTime>,
+const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDate>(
+  inProps: StaticNextTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const defaultizedProps = useNextTimePickerDefaultizedProps<
-    TTime,
-    StaticNextTimePickerProps<TTime>
+    TDate,
+    StaticNextTimePickerProps<TDate>
   >(inProps, 'MuiStaticNextTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
@@ -35,7 +36,7 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TTim
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker({
+  const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
