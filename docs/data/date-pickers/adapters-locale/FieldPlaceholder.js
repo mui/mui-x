@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'dayjs/locale/de';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { deDE } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -9,7 +9,7 @@ import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 const germanLocale = deDE.components.MuiLocalizationProvider.defaultProps.localeText;
 export default function FieldPlaceholder() {
   return (
-    <Stack spacing={3}>
+    <DemoContainer>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField label="English locale (default)" />
       </LocalizationProvider>
@@ -23,6 +23,6 @@ export default function FieldPlaceholder() {
       >
         <DateField label="German locale" />
       </LocalizationProvider>
-    </Stack>
+    </DemoContainer>
   );
 }
