@@ -57,7 +57,6 @@
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component)."
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views."
   }
 }

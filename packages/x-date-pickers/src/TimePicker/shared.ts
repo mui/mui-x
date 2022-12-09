@@ -133,7 +133,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   };
 }
 
-// TODO v6: Drop, we only need it on the legacy pickers for the custom valueReducer
+// TODO v6: Drop with the legacy pickers
 export const timeValueManager: PickerStateValueManager<any, any, TimeValidationError> = {
   ...singleItemValueManager,
   valueReducer: (utils, lastValidValue, newValue) => {
