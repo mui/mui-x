@@ -2,14 +2,21 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
-import { DescribeValueTestSuite } from './describeValue.types';
+import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   ElementToTest,
   getOptions,
 ) => {
-  const { render, values, componentFamily, emptyValue, assertRenderedValue, setNewValue } =
-    getOptions();
+  const {
+    render,
+    values,
+    componentFamily,
+    emptyValue,
+    assertRenderedValue,
+    setNewValue,
+    ...pickerParams
+  } = getOptions();
 
   describe('Controlled / uncontrolled value', () => {
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
@@ -80,6 +87,15 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const handleChange = spy();
         render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
 
+        // assert that editing in "readOnly" mode is not allowed
+        if (
+          prop === 'readOnly' &&
+          componentFamily === 'new-picker' &&
+          (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
+        ) {
+          setNewValue(values[0], { isOpened: false });
+          expect(handleChange.callCount).to.equal(0);
+        }
         const textBoxes = screen.getAllByRole('textbox');
         textBoxes.forEach((textbox) => {
           expect(textbox).to.have.attribute(prop.toLowerCase());
