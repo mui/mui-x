@@ -259,13 +259,11 @@ export const useGridRowEditing = (
 
           if (reason) {
             event.preventDefault(); // Prevent going to the next element in the tab sequence
-
-            const newParams: GridRowEditStopParams = {
-              ...rowParams,
-              reason,
-              field: params.field,
-            };
-            apiRef.current.publishEvent('rowEditStop', newParams, event);
+            const isValid = await apiRef.current.commitRowChange(params.id);
+            if (!isValid && props.experimentalFeatures?.preventCommitWhileValidating) {
+              return;
+            }
+            apiRef.current.publishEvent('rowEditStop', rowParams as GridRowEditStopParams, event);
           }
 
           if (!reason) {
