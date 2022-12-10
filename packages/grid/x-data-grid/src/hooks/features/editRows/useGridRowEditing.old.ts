@@ -13,7 +13,10 @@ import {
   GridCellModes,
 } from '../../../models/gridEditRowModel';
 import { useGridSelector } from '../../utils/useGridSelector';
-import { gridColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
+import {
+  gridColumnDefinitionsSelector,
+  gridColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 import { gridEditRowsStateSelector } from './gridEditRowsSelector';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -24,6 +27,7 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import {
   GridRowEditStartParams,
   GridRowEditStopParams,
+  GridRowEditStopReasons,
 } from '../../../models/params/gridRowParams';
 import {
   useGridApiOptionHandler,
@@ -237,6 +241,39 @@ export const useGridRowEditing = (
           apiRef.current.publishEvent('rowEditStop', rowParams as GridRowEditStopParams, event);
         } else if (event.key === 'Escape') {
           apiRef.current.publishEvent('rowEditStop', rowParams as GridRowEditStopParams, event);
+        } else if (event.key === 'Tab') {
+          let reason: GridRowEditStopReasons | undefined;
+          const columnFields = gridColumnFieldsSelector(apiRef).filter((field) =>
+            apiRef.current.isCellEditable(apiRef.current.getCellParams(params.id, field)),
+          );
+
+          if (event.shiftKey) {
+            if (params.field === columnFields[0]) {
+              // Exit if user pressed Shift+Tab on the first field
+              reason = GridRowEditStopReasons.shiftTabKeyDown;
+            }
+          } else if (params.field === columnFields[columnFields.length - 1]) {
+            // Exit if user pressed Tab on the last field
+            reason = GridRowEditStopReasons.tabKeyDown;
+          }
+
+          if (reason) {
+            event.preventDefault(); // Prevent going to the next element in the tab sequence
+
+            const newParams: GridRowEditStopParams = {
+              ...rowParams,
+              reason,
+              field: params.field,
+            };
+            apiRef.current.publishEvent('rowEditStop', newParams, event);
+          }
+
+          if (!reason) {
+            event.preventDefault();
+            const index = columnFields.findIndex((field) => field === params.field);
+            const nextFieldToFocus = columnFields[event.shiftKey ? index - 1 : index + 1];
+            apiRef.current.setCellFocus(params.id, nextFieldToFocus);
+          }
         }
       } else if (event.key === 'Enter') {
         apiRef.current.publishEvent('rowEditStart', rowParams as GridRowEditStartParams, event);
