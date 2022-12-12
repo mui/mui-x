@@ -98,7 +98,7 @@ export function DemoContainer(props: PickersGridProps) {
   } else if (childrenTypes.has('single-input-range-field')) {
     sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 250 } };
+    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 272 } };
   } else {
     sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
   }
