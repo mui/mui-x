@@ -168,7 +168,8 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
     },
     [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
-      borderBottom: `solid ${borderColor} 1px`,
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
@@ -177,7 +178,8 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
       {
-        borderBottom: `solid ${borderColor} 1px`,
+        borderBottomWidth: '1px',
+        borderBottomStyle: 'solid',
         boxSizing: 'border-box',
       },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
@@ -298,7 +300,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
-      borderBottom: `1px solid ${borderColor}`,
+      borderBottom: '1px solid',
     },
     [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
