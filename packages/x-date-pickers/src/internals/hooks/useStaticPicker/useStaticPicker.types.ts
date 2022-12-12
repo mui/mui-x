@@ -6,18 +6,11 @@ import {
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
-import {
-  PickersSlotsComponent,
-  PickersSlotsComponentsProps,
-} from '../../components/wrappers/WrapperProps';
 
-export interface UseStaticPickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent,
-    Pick<PickersSlotsComponent, 'PaperContent'> {}
+export interface UseStaticPickerSlotsComponent extends ExportedPickersViewLayoutSlotsComponent {}
 
-export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickersViewLayoutSlotsComponentsProps,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
+export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -27,8 +20,8 @@ export interface StaticOnlyPickerProps {
   displayStaticWrapperAs: 'desktop' | 'mobile';
 }
 
-export interface UseStaticPickerProps<TValue, TDate, TView extends DateOrTimeView, TError>
-  extends BaseNextPickerProps<TValue, TDate, TView, TError>,
+export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
+  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
@@ -39,16 +32,15 @@ export interface UseStaticPickerProps<TValue, TDate, TView extends DateOrTimeVie
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticPickerSlotsComponentsProps;
+  componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<
-  TValue,
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TValue, TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 > extends Pick<
-    UsePickerParams<TValue, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
     'valueManager' | 'viewLookup' | 'validator'
   > {
   props: TExternalProps;
