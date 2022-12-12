@@ -42,7 +42,7 @@ describe('<DesktopNextDatePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getByRole('textbox');
-        clickOnInput(input, 5); // Update the day
+        clickOnInput(input, 10); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 
