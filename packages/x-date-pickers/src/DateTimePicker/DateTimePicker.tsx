@@ -59,7 +59,7 @@ type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDate = TInputDate>(
+export const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDate = TInputDate>(
   inProps: DateTimePickerProps<TInputDate, TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -501,5 +501,3 @@ DateTimePicker.propTypes = {
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
 } as any;
-
-export { DateTimePicker };
