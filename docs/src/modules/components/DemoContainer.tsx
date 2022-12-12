@@ -7,7 +7,12 @@ interface PickersGridProps {
   children: React.ReactNode;
 }
 
-type PickersGridChildComponentType = 'multi-input-field' | 'single-input-field' | 'UI-view';
+type PickersGridChildComponentType =
+  | 'single-input-field'
+  | 'multi-input-range-field'
+  | 'single-input-range-field'
+  | 'UI-view';
+type PickersSupportedSections = 'date' | 'time' | 'date-time';
 
 const getChildComponentName = (child: any) => child.type?.render?.name ?? child.type?.name;
 
@@ -15,14 +20,31 @@ const getChildTypeFromChildName = (childName: string): PickersGridChildComponent
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
     return 'UI-view';
   }
+
   if (
-    childName.match(/^MultiInput([A-Za-z]+)Field$/) ||
+    childName.match(/^MultiInput([A-Za-z]+)RangeField$/) ||
     childName.match(/^([A-Za-z]+)RangePicker$/)
   ) {
-    return 'multi-input-field';
+    return 'multi-input-range-field';
+  }
+
+  if (childName.match(/^SingleInput([A-Za-z]+)RangeField$/)) {
+    return 'single-input-range-field';
   }
 
   return 'single-input-field';
+};
+
+const getSupportedSectionFromChildName = (childName: string): PickersSupportedSections => {
+  if (childName.includes('DateTime')) {
+    return 'date-time';
+  }
+
+  if (childName.includes('Date')) {
+    return 'date';
+  }
+
+  return 'time';
 };
 
 export function DemoContainer(props: PickersGridProps) {
@@ -30,16 +52,18 @@ export function DemoContainer(props: PickersGridProps) {
 
   const childrenCount = React.Children.count(children);
   const childrenTypes = new Set<PickersGridChildComponentType>();
+  const childrenSupportedSections = new Set<PickersSupportedSections>();
 
   React.Children.forEach(children, (child: any) => {
     let childName = getChildComponentName(child);
 
-    if (childName === 'PickersGridItem') {
+    if (childName === 'DemoItem') {
       const nestedChild = React.Children.toArray(child.props.children)[0] as any;
       childName = getChildComponentName(nestedChild);
     }
 
     childrenTypes.add(getChildTypeFromChildName(childName));
+    childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
   });
 
   const getSpacing = (direction: 'column' | 'row') => {
@@ -52,8 +76,13 @@ export function DemoContainer(props: PickersGridProps) {
 
   let direction: StackProps['direction'];
   let spacing: StackProps['spacing'];
+  let sx: StackProps['sx'];
 
-  if (childrenCount > 2 || childrenTypes.has('multi-input-field')) {
+  if (
+    childrenCount > 2 ||
+    childrenTypes.has('multi-input-range-field') ||
+    childrenTypes.has('single-input-range-field')
+  ) {
     direction = 'column';
     spacing = getSpacing('column');
   } else if (childrenTypes.has('UI-view')) {
@@ -64,8 +93,18 @@ export function DemoContainer(props: PickersGridProps) {
     spacing = { xs: getSpacing('column'), lg: getSpacing('row') };
   }
 
+  if (childrenTypes.has('UI-view')) {
+    sx = null;
+  } else if (childrenTypes.has('single-input-range-field')) {
+    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
+  } else if (childrenSupportedSections.has('date-time')) {
+    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 250 } };
+  } else {
+    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+  }
+
   return (
-    <Stack direction={direction} spacing={spacing}>
+    <Stack direction={direction} spacing={spacing} sx={sx}>
       {children}
     </Stack>
   );
@@ -84,7 +123,7 @@ export function DemoItem(props: PickersGridItemProps) {
   let spacing: StackProps['spacing'];
   let sx: StackProps['sx'];
 
-  if (childType === 'multi-input-field') {
+  if (childType === 'multi-input-range-field') {
     spacing = 2;
     sx = {
       [`& .${textFieldClasses.root}`]: {
