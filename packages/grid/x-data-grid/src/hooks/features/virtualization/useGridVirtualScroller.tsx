@@ -206,7 +206,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     containerWidth,
   ]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (disableVirtualization) {
       renderZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
     } else {
