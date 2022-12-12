@@ -466,7 +466,6 @@
   { "name": "jaJP", "kind": "Variable" },
   { "name": "koKR", "kind": "Variable" },
   { "name": "Logger", "kind": "Interface" },
-  { "name": "MAX_PAGE_SIZE", "kind": "Variable" },
   { "name": "MuiBaseEvent", "kind": "TypeAlias" },
   { "name": "MuiEvent", "kind": "TypeAlias" },
   { "name": "nbNO", "kind": "Variable" },
