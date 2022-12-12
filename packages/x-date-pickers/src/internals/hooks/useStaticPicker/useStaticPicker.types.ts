@@ -7,7 +7,8 @@ import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 
-export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView> extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
+export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {}

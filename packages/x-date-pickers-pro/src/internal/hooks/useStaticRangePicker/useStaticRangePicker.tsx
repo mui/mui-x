@@ -69,7 +69,7 @@ export const useStaticRangePicker = <
             // console.log({ adapter });
             const today = adapter.date();
             const weeks = adapter.getWeekArray(adapter.addWeeks(today, 1));
-            const weekIndex = weeks.findIndex((w) => adapter.isAfterDay(w[0], today));
+            const weekIndex = weeks.findIndex((week: any[]) => adapter.isAfterDay(week[0], today));
             return [weeks[weekIndex][0], weeks[weekIndex][6]];
           },
         },

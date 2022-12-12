@@ -35,6 +35,11 @@ interface PickersLayoutActionBarOwnerState<TValue, TView extends DateOrTimeView>
   wrapperVariant: WrapperVariant;
 }
 
+interface PickersShortcutsOwnerState<TValue, TView extends DateOrTimeView>
+  extends PickersShortcutsProps<TValue, TView> {
+  wrapperVariant: WrapperVariant;
+}
+
 export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView> {
   /**
    * Props passed down to the action bar component.
@@ -52,7 +57,7 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
   shortcuts?: SlotComponentProps<
     React.ComponentType<PickersShortcutsProps<TValue, TView>>,
     {},
-    PickersLayoutActionBarOwnerState<TValue, TView>
+    PickersShortcutsOwnerState<TValue, TView>
   >;
   /**
    * Props passed down to the layoutRoot component.
