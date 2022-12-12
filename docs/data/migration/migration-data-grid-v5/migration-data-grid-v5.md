@@ -110,6 +110,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `windowRef`                                       |
   | `footerRef`                                       |
   | `headerRef`                                       |
+  | `columnHeadersElementRef`                         |
+  | `columnHeadersContainerElementRef`                |
   | `unstable_caches`                                 |
   | `unstable_eventManager`                           |
   | `unstable_requestPipeProcessorsApplication`       |
