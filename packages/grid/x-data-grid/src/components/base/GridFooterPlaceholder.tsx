@@ -8,9 +8,5 @@ export function GridFooterPlaceholder() {
     return null;
   }
 
-  return (
-    <div>
-      <rootProps.components.Footer {...rootProps.componentsProps?.footer} />
-    </div>
-  );
+  return <rootProps.components.Footer {...rootProps.componentsProps?.footer} />;
 }
