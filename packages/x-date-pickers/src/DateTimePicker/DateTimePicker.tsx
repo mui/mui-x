@@ -59,10 +59,10 @@ type DateTimePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [DateTimePicker API](https://mui.com/x/api/date-pickers/date-time-picker/)
  */
-export const DateTimePicker = React.forwardRef(function DateTimePicker<TInputDate, TDate = TInputDate>(
-  inProps: DateTimePickerProps<TInputDate, TDate>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+export const DateTimePicker = React.forwardRef(function DateTimePicker<
+  TInputDate,
+  TDate = TInputDate,
+>(inProps: DateTimePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
   const {
     desktopModeMediaQuery = '@media (pointer: fine)',
