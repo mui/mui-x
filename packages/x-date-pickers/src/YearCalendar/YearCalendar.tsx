@@ -173,11 +173,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {

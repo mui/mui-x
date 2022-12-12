@@ -521,7 +521,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             renderLoading={renderLoading}
             components={componentsForDayCalendar}
             componentsProps={componentsPropsForDayCalendar}
-            autoFocus={autoFocus}
+            autoFocus={autoFocus && (value[0] == null || utils.isSameMonth(value[0], month))}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
           />
