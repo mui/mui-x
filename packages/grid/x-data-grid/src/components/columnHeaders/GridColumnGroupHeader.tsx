@@ -46,7 +46,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       headerAlign === 'center' && 'columnHeader--alignCenter',
       headerAlign === 'right' && 'columnHeader--alignRight',
       isDragging && 'columnHeader--moving',
-      showRightBorder && 'withBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
       showColumnBorder && 'columnHeader--showColumnBorder',
       'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
