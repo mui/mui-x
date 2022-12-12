@@ -33,10 +33,12 @@ export const useGridAggregationPreProcessors = (
     'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition'
   >,
 ) => {
+  // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
+  // that the pre-processor is called it will already have been updated with the current rules.
+  const rulesOnLastColumnHydration = React.useRef<GridAggregationRules>({});
+
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const { rulesOnLastColumnHydration } = apiRef.current.unstable_caches.aggregation;
-
       const aggregationRules = props.disableAggregation
         ? {}
         : getAggregationRules({
@@ -47,7 +49,7 @@ export const useGridAggregationPreProcessors = (
 
       columnsState.all.forEach((field) => {
         const shouldHaveAggregationValue = !!aggregationRules[field];
-        const haveAggregationColumnValue = !!rulesOnLastColumnHydration[field];
+        const haveAggregationColumnValue = !!rulesOnLastColumnHydration.current[field];
 
         let column = columnsState.lookup[field];
 
@@ -67,6 +69,8 @@ export const useGridAggregationPreProcessors = (
 
         columnsState.lookup[field] = column;
       });
+
+      rulesOnLastColumnHydration.current = aggregationRules;
 
       return columnsState;
     },
