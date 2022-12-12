@@ -578,7 +578,6 @@
   { "name": "useGridLogger", "kind": "Function" },
   { "name": "useGridNativeEventListener", "kind": "Variable" },
   { "name": "useGridRootProps", "kind": "Variable" },
-  { "name": "useGridScrollFn", "kind": "Function" },
   { "name": "useGridSelector", "kind": "Variable" },
   { "name": "useKeepGroupedColumnsHidden", "kind": "Variable" },
   { "name": "ValueOptions", "kind": "TypeAlias" },
