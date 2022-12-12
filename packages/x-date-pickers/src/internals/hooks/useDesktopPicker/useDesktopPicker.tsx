@@ -74,7 +74,7 @@ export const useDesktopPicker = <
       disabled,
       className,
       format,
-      autoFocus,
+      autoFocus: autoFocus && !props.open,
     },
     ownerState: props,
   });

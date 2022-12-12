@@ -44,6 +44,7 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
@@ -110,9 +111,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
-      // If we stop opening the view when `autoFocus = true` on the picker,
-      // The add back the `autoFocus` here to forward it to the field.
-      // autoFocus,
+      autoFocus: autoFocus && !props.open,
       ref: fieldRef,
     },
     ownerState: props,
