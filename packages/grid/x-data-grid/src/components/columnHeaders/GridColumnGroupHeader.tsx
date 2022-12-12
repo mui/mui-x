@@ -52,7 +52,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
-    titleContainer: ['columnHeaderTitleContainer'],
+    titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
     titleContainerContent: ['columnHeaderTitleContainerContent'],
   };
 
