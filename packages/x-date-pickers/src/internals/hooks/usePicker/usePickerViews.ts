@@ -84,6 +84,7 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
+  autoFocusView: boolean;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
@@ -138,6 +139,7 @@ export const usePickerViews = <
   additionalViewProps,
   inputRef,
   wrapperVariant,
+  autoFocusView,
 }: UsePickerViewParams<
   TValue,
   TView,
@@ -166,7 +168,10 @@ export const usePickerViews = <
   });
 
   // TODO v6: Move `useFocusManagement` here
-  const { focusedView, setFocusedView } = useFocusManagement<TView>({ autoFocus: true, openView });
+  const { focusedView, setFocusedView } = useFocusManagement<TView>({
+    autoFocus: autoFocusView,
+    openView,
+  });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>

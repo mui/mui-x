@@ -59,6 +59,7 @@ export const useDesktopPicker = <
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });

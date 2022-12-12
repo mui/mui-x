@@ -65,6 +65,7 @@ export const useDesktopRangePicker = <
     wrapperVariant: 'desktop',
     viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange: setRangePosition,
