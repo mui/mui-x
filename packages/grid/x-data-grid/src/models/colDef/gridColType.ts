@@ -15,7 +15,10 @@ export type GridNativeColTypes =
  */
 type LiteralAnyString = string & Record<never, never>
 
+/**
+ * Immitate typescript's template literal syntax to document in autocomplete that the string type is open for extension.
+ */
 // eslint-disable-next-line no-template-curly-in-string
-type LiteralAnyStringPrompt = '${string}'
+type LiteralAnyStringDocPrompt = '${string}'
 
-export type GridColType = GridNativeColTypes | LiteralAnyStringPrompt | LiteralAnyString;
+export type GridColType = GridNativeColTypes | LiteralAnyStringDocPrompt | LiteralAnyString;
