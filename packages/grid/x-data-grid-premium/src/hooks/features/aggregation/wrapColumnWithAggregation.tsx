@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridBaseColDef, GridRowId } from '@mui/x-data-grid-pro';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
@@ -22,28 +22,28 @@ const AGGREGATION_WRAPPABLE_PROPERTIES = [
 
 type WrappableColumnProperty = typeof AGGREGATION_WRAPPABLE_PROPERTIES[number];
 
-interface GridColDefWithAggregationWrappers extends GridColDef {
+interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties?: {
-    [P in WrappableColumnProperty]?: { original: GridColDef[P]; wrapped: GridColDef[P] };
+    [P in WrappableColumnProperty]?: { original: GridBaseColDef[P]; wrapped: GridBaseColDef[P] };
   };
 }
 
 type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
   apiRef: React.MutableRefObject<GridApiPremium>;
-  value: GridColDef[P];
-  colDef: GridColDef;
+  value: GridBaseColDef[P];
+  colDef: GridBaseColDef;
   aggregationRule: GridAggregationRule;
   getCellAggregationResult: (
     id: GridRowId,
     field: string,
   ) => GridAggregationLookup[GridRowId][string] | null;
-}) => GridColDef[P];
+}) => GridBaseColDef[P];
 
 const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
   value: valueGetter,
   getCellAggregationResult,
 }) => {
-  const wrappedValueGetter: GridColDef['valueGetter'] = (params) => {
+  const wrappedValueGetter: GridBaseColDef['valueGetter'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
     if (cellAggregationResult != null) {
       return cellAggregationResult?.value ?? null;
@@ -70,7 +70,7 @@ const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueForm
     return valueFormatter;
   }
 
-  const wrappedValueFormatter: GridColDef['valueFormatter'] = (params) => {
+  const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (params) => {
     if (params.id != null) {
       const cellAggregationResult = getCellAggregationResult(params.id, params.field);
       if (cellAggregationResult != null) {
@@ -93,7 +93,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
   aggregationRule,
   getCellAggregationResult,
 }) => {
-  const wrappedRenderCell: GridColDef['renderCell'] = (params) => {
+  const wrappedRenderCell: GridBaseColDef['renderCell'] = (params) => {
     const cellAggregationResult = getCellAggregationResult(params.id, params.field);
     if (cellAggregationResult != null) {
       if (!renderCell) {
@@ -156,7 +156,7 @@ const getWrappedRenderHeader: ColumnPropertyWrapper<'renderHeader'> = ({
   value: renderHeader,
   aggregationRule,
 }) => {
-  const wrappedRenderCell: GridColDef['renderHeader'] = (params) => {
+  const wrappedRenderCell: GridBaseColDef['renderHeader'] = (params) => {
     const aggregationMeta: GridAggregationHeaderMeta = {
       aggregationRule,
     };
@@ -179,10 +179,10 @@ export const wrapColumnWithAggregationValue = ({
   apiRef,
   aggregationRule,
 }: {
-  column: GridColDef;
+  column: GridBaseColDef;
   apiRef: React.MutableRefObject<GridApiPremium>;
   aggregationRule: GridAggregationRule;
-}): GridColDef => {
+}): GridBaseColDef => {
   const getCellAggregationResult = (
     id: GridRowId,
     field: string,
@@ -270,7 +270,7 @@ export const unwrapColumnFromAggregation = ({
     return column;
   }
 
-  const unwrappedColumn: GridColDef = { ...column };
+  const unwrappedColumn: GridBaseColDef = { ...column };
 
   originalProperties.forEach(([propertyName, { original, wrapped }]) => {
     // The value changed since we wrapped it

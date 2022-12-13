@@ -35,7 +35,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition interface.
  */
-export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
+export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -243,7 +243,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridColDef<R, V, F> {
+  extends GridBaseColDef<R, V, F> {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -257,17 +257,17 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
   getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
-  | GridColDef<R, V, F>
+export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
+  | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>;
 
-export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
+export type GridColumns<R extends GridValidRowModel = any> = GridColDef<R>[];
 
-export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<any, V, F>, 'field'> & {
+export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };
 
-export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridEnrichedColDef<
+export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<
   R,
   V,
   F
