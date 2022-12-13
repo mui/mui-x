@@ -3,6 +3,7 @@
   "propDescriptions": {
     "ampm": "12h/24h view for hour selection clock.",
     "ampmInClock": "Display ampm controls under the clock (instead of in the toolbar).",
+    "autoFocus": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will close after submitting full date.",
     "components": "Overrideable components.",

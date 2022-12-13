@@ -19,6 +19,10 @@ export interface StaticOnlyPickerProps {
    * @default "mobile"
    */
   displayStaticWrapperAs: 'desktop' | 'mobile';
+  /**
+   * If `true`, the view is focused during the first mount.
+   */
+  autoFocus?: boolean;
 }
 
 export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError, TValue>
