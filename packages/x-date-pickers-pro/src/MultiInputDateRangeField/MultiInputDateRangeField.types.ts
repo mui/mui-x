@@ -24,7 +24,7 @@ export type UseMultiInputDateRangeFieldComponentProps<TDate, TChildProps extends
   UseMultiInputDateRangeFieldProps<TDate>;
 
 export interface MultiInputDateRangeFieldProps<TDate>
-  extends UseMultiInputDateRangeFieldComponentProps<TDate, {}> {
+  extends UseMultiInputDateRangeFieldComponentProps<TDate, { autoFocus?: boolean }> {
   /**
    * Overrideable components.
    * @default {}

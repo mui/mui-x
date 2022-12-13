@@ -37,7 +37,7 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
+  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
@@ -46,6 +46,7 @@ export const useStaticRangePicker = <
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });

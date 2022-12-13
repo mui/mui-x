@@ -93,12 +93,12 @@ export const useField = <
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
     // The ref is guaranteed to be resolved that this point.
-    const input = inputRef.current as HTMLInputElement;
+    const input = inputRef.current;
 
     clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
-      if (input !== inputRef.current) {
+      if (!input || input !== inputRef.current) {
         return;
       }
 
@@ -475,8 +475,13 @@ export const useField = <
   );
 
   React.useEffect(() => {
+    // Select the right section when focused on mount (`autoFocus = true` on the input)
+    if (inputRef.current && inputRef.current === document.activeElement) {
+      setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+    }
+
     return () => window.clearTimeout(focusTimeoutRef.current);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
     () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),

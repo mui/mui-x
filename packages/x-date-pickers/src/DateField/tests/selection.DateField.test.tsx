@@ -32,6 +32,15 @@ describe('<DateField /> - Selection', () => {
   };
 
   describe('Focus', () => {
+    it('should select all on mount focus (`autoFocus = true`)', () => {
+      render(<DateField autoFocus />);
+      const input = screen.getByRole('textbox');
+
+      expect(input.value).to.equal('MM / DD / YYYY');
+      expect(input.selectionStart).to.equal(0);
+      expect(input.selectionEnd).to.equal(input.value.length);
+    });
+
     it('should select all on <Tab> focus', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');

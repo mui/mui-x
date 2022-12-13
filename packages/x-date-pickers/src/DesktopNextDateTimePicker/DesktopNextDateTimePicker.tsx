@@ -40,7 +40,6 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,
@@ -87,6 +86,9 @@ DesktopNextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
