@@ -7,9 +7,16 @@ import { useUtils } from '../internals/hooks/useUtils';
 import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 // import { useLocaleText } from '@mui/x-date-pickers/src/internals/hooks/useUtils';
 
-export interface PickersShortcutsItems<TValue> {
+interface PickersShortcutsItemGetValueParams<TValue> {
+  value: TValue;
+  view: any;
+  isValid: (value: TValue) => boolean;
+  adapter: any;
+}
+
+export interface PickersShortcutsItem<TValue> {
   label: string;
-  getValue: (value: TValue, view: any, isValid: (value: TValue) => boolean, adapter: any) => TValue;
+  getValue: (params: PickersShortcutsItemGetValueParams<TValue>) => TValue;
 }
 
 export interface PickersShortcutsProps<TValue, TView extends DateOrTimeView>
@@ -19,7 +26,7 @@ export interface PickersShortcutsProps<TValue, TView extends DateOrTimeView>
    * If empty, does not display the shortcuts.
    * @default `[]`
    */
-  shortcuts?: PickersShortcutsItems<TValue>[];
+  shortcuts?: PickersShortcutsItem<TValue>[];
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;
@@ -41,7 +48,7 @@ export function PickersShortcuts<TValue, TDate, TView extends DateOrTimeView>(
   }
 
   const items = shortcuts.map((item) => {
-    const newValue = item.getValue(value, view, isValid, utils);
+    const newValue = item.getValue({ value, view, isValid, adapter: utils });
 
     return {
       label: item.label,

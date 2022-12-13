@@ -25,7 +25,7 @@ const getMonthWeekday = (adapter, monthIndex, weekdayIndex, dayRank) => {
 const shortcuts = [
   {
     label: "New Year's Day",
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (January 1)
       const today = adapter.date();
       return adapter.setDate(adapter.setMonth(today, 0), 1);
@@ -33,14 +33,14 @@ const shortcuts = [
   },
   {
     label: 'Birthday of Martin Luther King Jr.',
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (third Monday in January)
       return getMonthWeekday(adapter, 0, 0, 3);
     },
   },
   {
     label: 'Independence Day',
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (July 4)
       const today = adapter.date();
       return adapter.setDate(adapter.setMonth(today, 6), 4);
@@ -48,44 +48,21 @@ const shortcuts = [
   },
   {
     label: 'Labor Day',
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (first Monday in September)
       return getMonthWeekday(adapter, 8, 0, 1);
     },
   },
   {
-    label: 'Columbus Day',
-    getValue: (value, view, isValid, adapter) => {
-      // (second Monday in October)
-      return getMonthWeekday(adapter, 9, 0, 2);
-    },
-  },
-  {
-    label: 'Veterans Day',
-    getValue: (value, view, isValid, adapter) => {
-      // (November 11)
-      const today = adapter.date();
-      return adapter.setDate(adapter.setMonth(today, 10), 11);
-    },
-  },
-  {
     label: 'Thanksgiving Day',
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (fourth Thursday in November)
       return getMonthWeekday(adapter, 10, 3, 4);
     },
   },
   {
-    label: 'World AIDS Day',
-    getValue: (value, view, isValid, adapter) => {
-      // (December 1)
-      const today = adapter.date();
-      return adapter.setDate(adapter.setMonth(today, 11), 1);
-    },
-  },
-  {
     label: 'Christmas Day',
-    getValue: (value, view, isValid, adapter) => {
+    getValue: ({ adapter }) => {
       // (December 25)
       const today = adapter.date();
       return adapter.setDate(adapter.setMonth(today, 11), 25);
