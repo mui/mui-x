@@ -10,11 +10,11 @@ type DateTimePickerComponent = (<TDate>(
   props: NextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-const NextDateTimePicker = React.forwardRef(function NextDatePicker<TDate>(
+const NextDateTimePicker = React.forwardRef(function NextDateTimePicker<TDate>(
   inProps: NextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiNextDatePicker' });
+  const props = useThemeProps({ props: inProps, name: 'MuiNextDateTimePicker' });
 
   const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
@@ -43,6 +43,9 @@ NextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

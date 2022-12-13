@@ -29,7 +29,6 @@ export type PickerViewRendererLookup<
  * Props used to handle the views that are common to all pickers.
  */
 export interface UsePickerViewsBaseProps<TView extends DateOrTimeView> {
-  autoFocus?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
@@ -85,6 +84,7 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
+  autoFocusView: boolean;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
@@ -139,6 +139,7 @@ export const usePickerViews = <
   additionalViewProps,
   inputRef,
   wrapperVariant,
+  autoFocusView,
 }: UsePickerViewParams<
   TValue,
   TView,
@@ -146,7 +147,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, autoFocus } = props;
+  const { views, openTo, onViewChange, disableOpenPicker } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
@@ -167,7 +168,10 @@ export const usePickerViews = <
   });
 
   // TODO v6: Move `useFocusManagement` here
-  const { focusedView, setFocusedView } = useFocusManagement<TView>({ autoFocus, openView });
+  const { focusedView, setFocusedView } = useFocusManagement<TView>({
+    autoFocus: autoFocusView,
+    openView,
+  });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>

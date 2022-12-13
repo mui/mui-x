@@ -41,5 +41,7 @@ export const renderTimeView = <TDate extends unknown>(props: TimeViewRendererPro
     view={props.view as TimeView}
     // We don't want to pass this prop to the views because it can cause proptypes warnings
     openTo={undefined}
+    // TODO: Remove when `TimeClock` will support `focusedView`
+    autoFocus
   />
 );
