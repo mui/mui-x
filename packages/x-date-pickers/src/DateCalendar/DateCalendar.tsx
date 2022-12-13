@@ -439,7 +439,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
             <YearCalendar<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               value={value}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
@@ -452,7 +451,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
             <MonthCalendar<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               hasFocus={hasFocus}
               className={className}
               value={value}
@@ -467,7 +465,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}

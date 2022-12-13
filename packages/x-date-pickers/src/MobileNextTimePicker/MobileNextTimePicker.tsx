@@ -36,7 +36,6 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: TimeField,
       ...defaultizedProps.components,

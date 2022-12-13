@@ -42,7 +42,6 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       OpenPickerIcon: Calendar,
       Field: DateField,

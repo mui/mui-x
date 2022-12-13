@@ -106,6 +106,7 @@ export {
   createDateStrFromSections,
   addPositionPropertiesToSections,
   splitFormatIntoSections,
+  getSectionOrder,
 } from './hooks/useField';
 export type {
   UseFieldInternalProps,
@@ -131,7 +132,13 @@ export type {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from './hooks/useStaticPicker';
-export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
+export {
+  useLocalizationContext,
+  useDefaultDates,
+  useUtils,
+  useLocaleText,
+  useNow,
+} from './hooks/useUtils';
 export type { ExportedUseViewsOptions } from './hooks/useViews';
 export type {
   BaseDateValidationProps,

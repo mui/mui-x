@@ -41,7 +41,6 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     ...defaultizedProps,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: DateField,
       ...defaultizedProps.components,

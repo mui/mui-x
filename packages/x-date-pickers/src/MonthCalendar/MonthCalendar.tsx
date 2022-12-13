@@ -173,11 +173,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'MonthCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {

@@ -5,6 +5,7 @@ import {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
+  getSectionOrder,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DateRangeFieldSection } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
@@ -142,4 +143,6 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  getSectionOrder: (utils, localeText, format, isRTL) =>
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };

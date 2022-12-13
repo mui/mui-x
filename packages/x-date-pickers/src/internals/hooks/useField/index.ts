@@ -14,4 +14,5 @@ export {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
+  getSectionOrder,
 } from './useField.utils';

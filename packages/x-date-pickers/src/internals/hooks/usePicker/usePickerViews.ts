@@ -70,6 +70,7 @@ export interface UsePickerViewParams<
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
   wrapperVariant: WrapperVariant;
+  autoFocusView: boolean;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
@@ -122,6 +123,7 @@ export const usePickerViews = <
   additionalViewProps,
   inputRef,
   wrapperVariant,
+  autoFocusView,
 }: UsePickerViewParams<
   TValue,
   TView,
@@ -129,7 +131,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, autoFocus } = props;
+  const { views, openTo, onViewChange, disableOpenPicker } = props;
 
   const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
     view: undefined,
@@ -137,7 +139,7 @@ export const usePickerViews = <
     openTo,
     onChange,
     onViewChange,
-    autoFocus,
+    autoFocus: autoFocusView,
   });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
