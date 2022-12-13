@@ -78,6 +78,7 @@
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
     "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileNextTimePicker",

@@ -54,6 +54,7 @@
     "FieldRoot": "",
     "FieldSeparator": "",
     "Input": "",
+    "Shortcuts": "Custom component for the shortcuts.",
     "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, and action bar",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
