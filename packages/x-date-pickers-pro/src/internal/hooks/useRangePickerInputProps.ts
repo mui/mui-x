@@ -50,7 +50,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   const openRangeStartSelection = (
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
-    event?.stopPropagation();
+    event.stopPropagation();
     onRangePositionChange('start');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();
@@ -60,7 +60,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   const openRangeEndSelection = (
     event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
   ) => {
-    event?.stopPropagation();
+    event.stopPropagation();
     onRangePositionChange('end');
     if (!readOnly && !disableOpenPicker) {
       actions.onOpen();

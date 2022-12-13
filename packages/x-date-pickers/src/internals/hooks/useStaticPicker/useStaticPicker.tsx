@@ -31,13 +31,14 @@ export const useStaticPicker = <
   validator,
   ref,
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
+  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
 
   const { layoutProps, renderCurrentView } = usePicker({
     props,
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });

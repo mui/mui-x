@@ -57,7 +57,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
-      showRightBorder && 'withBorder',
+      'withBorderColor',
+      showRightBorder && 'columnHeader--withRightBorder',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -108,7 +109,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
+    ? rootProps.showColumnVerticalBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
   const ownerState = {

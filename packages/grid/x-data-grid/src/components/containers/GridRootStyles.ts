@@ -1,6 +1,16 @@
 import { CSSInterpolation } from '@mui/system';
-import { darken, lighten, alpha, styled } from '@mui/material/styles';
+import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
+
+function getBorderColor(theme: Theme) {
+  if (theme.vars) {
+    return theme.vars.palette.TableCell.border;
+  }
+  if (theme.palette.mode === 'light') {
+    return lighten(alpha(theme.palette.divider, 1), 0.88);
+  }
+  return darken(alpha(theme.palette.divider, 1), 0.68);
+}
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -62,7 +72,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${gridClasses.rowReorderCell}`]: styles.rowReorderCell },
     { [`& .${gridClasses['rowReorderCell--draggable']}`]: styles['rowReorderCell--draggable'] },
     { [`& .${gridClasses.sortIcon}`]: styles.sortIcon },
-    { [`& .${gridClasses.withBorder}`]: styles.withBorder },
+    { [`& .${gridClasses.withBorderColor}`]: styles.withBorderColor },
     { [`& .${gridClasses.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
     { [`& .${gridClasses.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${gridClasses.detailPanelToggleCell}`]: styles.detailPanelToggleCell },
@@ -73,18 +83,15 @@ export const GridRootStyles = styled('div', {
     styles.root,
   ],
 })(({ theme }) => {
-  // eslint-disable-next-line no-nested-ternary
-  const borderColor = theme.vars
-    ? theme.vars.palette.TableCell.border
-    : theme.palette.mode === 'light'
-    ? lighten(alpha(theme.palette.divider, 1), 0.88)
-    : darken(alpha(theme.palette.divider, 1), 0.68);
+  const borderColor = getBorderColor(theme);
 
   const gridStyle: CSSInterpolation = {
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
-    border: `1px solid ${borderColor}`,
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor,
     borderRadius: theme.shape.borderRadius,
     color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
@@ -161,7 +168,8 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
     },
     [`& .${gridClasses['columnHeader--filledGroup']} .${gridClasses.columnHeaderTitleContainer}`]: {
-      borderBottom: `solid ${borderColor} 1px`,
+      borderBottomWidth: '1px',
+      borderBottomStyle: 'solid',
       boxSizing: 'border-box',
     },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']} .${gridClasses.columnHeaderTitleContainer}`]:
@@ -170,7 +178,8 @@ export const GridRootStyles = styled('div', {
       },
     [`& .${gridClasses['columnHeader--filledGroup']}.${gridClasses['columnHeader--showColumnBorder']}`]:
       {
-        borderBottom: `solid ${borderColor} 1px`,
+        borderBottomWidth: '1px',
+        borderBottomStyle: 'solid',
         boxSizing: 'border-box',
       },
     [`& .${gridClasses.sortIcon}, & .${gridClasses.filterIcon}`]: {
@@ -291,7 +300,7 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses.cell}`]: {
       display: 'flex',
       alignItems: 'center',
-      borderBottom: `1px solid ${borderColor}`,
+      borderBottom: '1px solid',
     },
     [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',
@@ -351,8 +360,16 @@ export const GridRootStyles = styled('div', {
       padding: 0,
       alignItems: 'stretch',
     },
-    [`& .${gridClasses.withBorder}`]: {
-      borderRight: `1px solid ${borderColor}`,
+    [`.${gridClasses.withBorderColor}`]: {
+      borderColor,
+    },
+    [`& .${gridClasses['cell--withRightBorder']}`]: {
+      borderRightWidth: '1px',
+      borderRightStyle: 'solid',
+    },
+    [`& .${gridClasses['columnHeader--withRightBorder']}`]: {
+      borderRightWidth: '1px',
+      borderRightStyle: 'solid',
     },
     [`& .${gridClasses['cell--textLeft']}`]: {
       justifyContent: 'flex-start',
