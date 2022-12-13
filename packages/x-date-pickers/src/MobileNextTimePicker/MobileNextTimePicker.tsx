@@ -82,7 +82,7 @@ MobileNextTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
-   * Set to `true` if focus should be moved to the current view.
+   * If `true`, the view is focused during the first mount.
    */
   autoFocus: PropTypes.bool,
   /**

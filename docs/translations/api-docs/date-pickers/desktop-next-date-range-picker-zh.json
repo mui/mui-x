@@ -1,7 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "autoFocus": "Set to <code>true</code> if focus should be moved to the current view.",
+    "autoFocus": "If <code>true</code>, the view is focused during the first mount.",
     "calendars": "The number of calendars to render on <strong>desktop</strong>.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will close after submitting full date.",

@@ -498,7 +498,7 @@ DateCalendar.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * Set to `true` if focus should be moved to the current view.
+   * If `true`, the view is focused during the first mount.
    */
   autoFocus: PropTypes.bool,
   classes: PropTypes.object,
