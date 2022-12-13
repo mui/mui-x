@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "autoFocus": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will close after submitting full date.",
     "components": "Overrideable components.",

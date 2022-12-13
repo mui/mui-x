@@ -4,7 +4,10 @@ import Typography from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base';
 import { useSlotProps } from '@mui/base/utils';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useControlled as useControlled,
+} from '@mui/utils';
 import clsx from 'clsx';
 import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -227,6 +230,7 @@ function WrappedDay<TDate extends unknown>({
   onDaySelect,
   isDateDisabled,
   currentMonthNumber,
+  isViewFocused,
 }: Pick<PickersDayProps<TDate>, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps<TDate>;
   day: TDate;
@@ -234,6 +238,7 @@ function WrappedDay<TDate extends unknown>({
   selectedDays: TDate[];
   isDateDisabled: (date: TDate | null) => boolean;
   currentMonthNumber: number;
+  isViewFocused: boolean;
 }) {
   const utils = useUtils<TDate>();
   const now = useNow<TDate>();
@@ -243,7 +248,6 @@ function WrappedDay<TDate extends unknown>({
     disableHighlightToday,
     isMonthSwitchingAnimating,
     showDaysOutsideCurrentMonth,
-    hasFocus,
     components,
     componentsProps,
   } = parentProps;
@@ -282,7 +286,7 @@ function WrappedDay<TDate extends unknown>({
       {...dayProps}
       day={day}
       disabled={isDisabled}
-      autoFocus={hasFocus && isFocusableDay}
+      autoFocus={isViewFocused && isFocusableDay}
       today={isToday}
       outsideCurrentMonth={utils.getMonth(day) !== currentMonthNumber}
       selected={isSelected}
@@ -330,6 +334,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     gridLabelId,
     displayWeekNumber,
     fixedWeekNumber,
+    autoFocus,
   } = props;
 
   const isDateDisabled = useIsDateDisabled({
@@ -343,6 +348,13 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   });
 
   const localeText = useLocaleText<TDate>();
+
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
+    name: 'DayCalendar',
+    state: 'hasFocus',
+    controlled: hasFocus,
+    default: autoFocus ?? false,
+  });
 
   const [internalFocusedDay, setInternalFocusedDay] = React.useState<TDate>(
     () => focusedDay || now,
@@ -362,7 +374,9 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     if (!isDateDisabled(day)) {
       onFocusedDayChange(day);
       setInternalFocusedDay(day);
+
       onFocusedViewChange?.(true);
+      setInternalHasFocus(true);
     }
   };
 
@@ -447,7 +461,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     focusDay(day),
   );
   const handleBlur = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) => {
-    if (hasFocus && utils.isSameDay(internalFocusedDay, day)) {
+    if (internalHasFocus && utils.isSameDay(internalFocusedDay, day)) {
       onFocusedViewChange?.(false);
     }
   });
@@ -582,6 +596,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     onDaySelect={handleDaySelect}
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
+                    isViewFocused={internalHasFocus}
                   />
                 ))}
               </PickersCalendarWeek>

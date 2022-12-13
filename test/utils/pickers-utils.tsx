@@ -295,12 +295,17 @@ export const stubMatchMedia = (matches = true) =>
 export const getPickerDay = (name: string, picker = 'January 2018') =>
   getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
+export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+
+export const getCleanedSelectedContent = (input: HTMLInputElement) =>
+  cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
+
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
   shouldRemoveDashSpaces: boolean = false,
 ) => {
-  let value = input.value.replace(/\u200e|\u2068|\u2069/g, '');
+  let value = cleanText(input.value);
   if (shouldRemoveDashSpaces) {
     value = value.replace(/ \/ /g, '/');
   }

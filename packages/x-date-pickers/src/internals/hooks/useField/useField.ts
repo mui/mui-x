@@ -16,12 +16,12 @@ import {
 } from './useField.interfaces';
 import {
   getMonthsMatchingQuery,
-  getSectionVisibleValue,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
   applySectionValueToDate,
   cleanTrailingZeroInNumericSectionValue,
   isAndroid,
+  cleanString,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
@@ -51,6 +51,7 @@ export const useField = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
+    sectionOrder,
   } = useFieldState(params);
 
   const {
@@ -68,9 +69,11 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
-    const nextSectionIndex = state.sections.findIndex(
-      (section) => section.start > (inputRef.current!.selectionStart ?? 0),
-    );
+    const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+    const nextSectionIndex =
+      browserStartIndex <= state.sections[0].startInInput
+        ? 1 // Special case if browser index is in invisible cheracters at the begining.
+        : state.sections.findIndex((section) => section.startInInput > browserStartIndex);
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
     setSelectedSections(sectionIndex);
   };
@@ -90,12 +93,12 @@ export const useField = <
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
     // The ref is guaranteed to be resolved that this point.
-    const input = inputRef.current as HTMLInputElement;
+    const input = inputRef.current;
 
     clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => {
       // The ref changed, the component got remounted, the focus event is no longer relevant.
-      if (input !== inputRef.current) {
+      if (!input || input !== inputRef.current) {
         return;
       }
 
@@ -155,7 +158,7 @@ export const useField = <
       return;
     }
 
-    const valueStr = event.target.value;
+    const valueStr = cleanString(event.target.value);
 
     // If no section is selected, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
@@ -164,7 +167,7 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = fieldValueManager.getValueStrFromSections(state.sections);
+    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
@@ -197,7 +200,7 @@ export const useField = <
       valueStr.length -
       prevValueStr.length +
       activeSection.end -
-      (activeSection.separator?.length ?? 0);
+      cleanString(activeSection.separator || '').length;
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -355,11 +358,15 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSections(0);
+          setSelectedSections(sectionOrder.startIndex);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.endIndex);
-        } else if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-          setSelectedSections(selectedSectionIndexes.startIndex + 1);
+        } else {
+          const nextSectionIndex =
+            sectionOrder.neighbors[selectedSectionIndexes.startIndex].rightIndex;
+          if (nextSectionIndex !== null) {
+            setSelectedSections(nextSectionIndex);
+          }
         }
         break;
       }
@@ -369,11 +376,15 @@ export const useField = <
         event.preventDefault();
 
         if (selectedSectionIndexes == null) {
-          setSelectedSections(state.sections.length - 1);
+          setSelectedSections(sectionOrder.endIndex);
         } else if (selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex) {
           setSelectedSections(selectedSectionIndexes.startIndex);
-        } else if (selectedSectionIndexes.startIndex > 0) {
-          setSelectedSections(selectedSectionIndexes.startIndex - 1);
+        } else {
+          const nextSectionIndex =
+            sectionOrder.neighbors[selectedSectionIndexes.startIndex].leftIndex;
+          if (nextSectionIndex !== null) {
+            setSelectedSections(nextSectionIndex);
+          }
         }
         break;
       }
@@ -446,8 +457,8 @@ export const useField = <
     const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
     updateSelectionRangeIfChanged(
-      firstSelectedSection.start,
-      lastSelectedSection.start + getSectionVisibleValue(lastSelectedSection, true).length,
+      firstSelectedSection.startInInput,
+      lastSelectedSection.endInInput,
     );
   });
 
@@ -464,8 +475,13 @@ export const useField = <
   );
 
   React.useEffect(() => {
+    // Select the right section when focused on mount (`autoFocus = true` on the input)
+    if (inputRef.current && inputRef.current === document.activeElement) {
+      setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+    }
+
     return () => window.clearTimeout(focusTimeoutRef.current);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
     () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
