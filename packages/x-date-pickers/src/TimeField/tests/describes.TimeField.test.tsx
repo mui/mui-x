@@ -7,7 +7,7 @@ import {
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });

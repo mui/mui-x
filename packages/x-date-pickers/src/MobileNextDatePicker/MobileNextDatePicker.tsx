@@ -8,7 +8,7 @@ import {
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
 import { useLocaleText, useUtils, validateDate } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateView } from '../internals/utils/viewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';

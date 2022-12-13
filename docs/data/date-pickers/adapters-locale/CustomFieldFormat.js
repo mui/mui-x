@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
 export default function CustomFieldFormat() {

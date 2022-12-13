@@ -4,7 +4,7 @@ import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContai
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 
 export default function TimeRangeFieldValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
