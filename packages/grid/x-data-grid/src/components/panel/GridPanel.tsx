@@ -96,6 +96,7 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     const columnHeadersElement = apiRef.current.rootElementRef?.current?.querySelector(
       `.${gridClasses.columnHeaders}`,
     );
+
     if (columnHeadersElement) {
       setAnchorEl(columnHeadersElement);
     }
