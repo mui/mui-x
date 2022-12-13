@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
@@ -226,8 +226,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
     });
 
     it('should call onClose when clicking outside of the picker without prior change', () => {
-      // TODO: Fix this test and enable it on mobile
-      if (pickerParams.variant === 'mobile') {
+      // TODO: Fix this test and enable it on mobile and date-range
+      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
         return;
       }
 
@@ -247,20 +247,15 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       );
 
       // Dismiss the picker
-      if (pickerParams.type === 'date-range') {
-        // for range picker a mouse press does not seem to trigger onClose (at least in "jsdom" env)
-        fireEvent.keyDown(document.activeElement, { key: 'Escape' });
-      } else {
-        userEvent.mousePress(document.body);
-      }
+      userEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-      // TODO: Fix this test and enable it on mobile
-      if (pickerParams.variant === 'mobile') {
+      // TODO: Fix this test and enable it on mobile and date-range
+      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
         return;
       }
 
@@ -283,21 +278,10 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       const newValue = setNewValue(values[0], { isOpened: true });
 
       // Dismiss the picker
-      if (pickerParams.type === 'date-range') {
-        // for range picker a mouse press does not seem to trigger onClose (at least in "jsdom" env)
-        fireEvent.keyDown(document.activeElement, { key: 'Escape' });
-      } else {
-        userEvent.mousePress(document.body);
-      }
+      userEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      if (pickerParams.type === 'date-range') {
-        newValue.forEach((value, index) => {
-          expect(onAccept.lastCall.args[0][index]).toEqualDateTime(value);
-        });
-      } else {
-        expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
-      }
+      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
       expect(onClose.callCount).to.equal(1);
     });
 
