@@ -8,6 +8,9 @@ export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
 
   formatTokenMap: MuiFormatTokenMap;
 
+  /**
+   * Characters used to start and end an escaped message in the format.
+   */
   escapedCharacters: { start: string; end: string };
 
   expandFormat: (format: string) => string;
