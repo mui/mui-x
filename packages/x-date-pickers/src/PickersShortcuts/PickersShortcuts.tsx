@@ -40,20 +40,26 @@ export function PickersShortcuts<TValue, TDate, TView extends DateOrTimeView>(
 
   const items = shortcuts.map((item) => {
     const newValue = item.getValue(value, view, isValid, utils);
-
+    console.log({ newValue });
     return {
       label: item.label,
-      onClick: () => onChange(newValue),
+      onClick: () => {
+        console.log('click');
+        onChange(newValue);
+      },
     };
   });
 
   return (
     <List {...other}>
-      {items.map((item) => (
-        <ListItem key={item.label}>
-          <Chip {...item} />
-        </ListItem>
-      ))}
+      {items.map((item) => {
+        console.log(item);
+        return (
+          <ListItem key={item.label}>
+            <Chip {...item} />
+          </ListItem>
+        );
+      })}
     </List>
   );
 }
