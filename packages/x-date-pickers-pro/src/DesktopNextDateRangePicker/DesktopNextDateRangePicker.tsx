@@ -1,22 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { extractValidationProps } from '@mui/x-date-pickers/internals';
+import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
-import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
+import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { renderDateRangeView } from '../internal/utils/viewRenderers';
+import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRange } from '../internal/models';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateRangeView,
-};
 
 const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRangePicker<TDate>(
   inProps: DesktopNextDateRangePickerProps<TDate>,
@@ -28,8 +25,14 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     DesktopNextDateRangePickerProps<TDate>
   >(inProps, 'MuiDesktopNextDateRangePicker');
 
+  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
+    day: renderDateRangeViewCalendar,
+    ...defaultizedProps.viewRenderers,
+  };
+
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
@@ -54,7 +57,6 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
   const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDateRange,
   });
 
@@ -285,6 +287,14 @@ DesktopNextDateRangePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+  }),
 } as any;
 
 export { DesktopNextDateRangePicker };

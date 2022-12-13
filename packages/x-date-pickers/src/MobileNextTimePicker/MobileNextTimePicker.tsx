@@ -5,20 +5,15 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_TimeField as TimeField } from '../TimeField';
 import { MobileNextTimePickerProps } from './MobileNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
+import { renderTimeViewClock } from '../timeViewRenderers';
 import { TimeView, useLocaleText, validateTime } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderTimeView } from '../internals/utils/viewRenderers';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  hours: renderTimeView,
-  minutes: renderTimeView,
-  seconds: renderTimeView,
-};
 
 const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDate>(
   inProps: MobileNextTimePickerProps<TDate>,
@@ -32,9 +27,17 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     MobileNextTimePickerProps<TDate>
   >(inProps, 'MuiMobileNextTimePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {
@@ -60,7 +63,6 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateTime,
   });
 
@@ -269,6 +271,16 @@ MobileNextTimePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
+  }),
   /**
    * Array of views to show.
    */

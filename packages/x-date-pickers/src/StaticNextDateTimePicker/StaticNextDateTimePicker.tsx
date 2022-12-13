@@ -2,24 +2,17 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticNextDateTimePickerProps } from './StaticNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
+import { renderTimeViewClock } from '../timeViewRenderers';
+import { renderDateViewCalendar } from '../dateViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
 import { DateOrTimeView } from '../internals/models';
-import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
 import { validateDateTime } from '../internals/hooks/validation/useDateTimeValidation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticDateTimePickerComponent = (<TDate>(
   props: StaticNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-  hours: renderTimeView,
-  minutes: renderTimeView,
-  seconds: renderTimeView,
-};
 
 const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
   inProps: StaticNextDateTimePickerProps<TDate>,
@@ -32,9 +25,20 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     componentsProps: {
@@ -49,7 +53,6 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    viewLookup: VIEW_LOOKUP,
     ref,
     validator: validateDateTime,
   });
@@ -297,6 +300,19 @@ StaticNextDateTimePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
   /**
    * Array of views to show.
    */

@@ -9,16 +9,11 @@ import { TimeView, useLocaleText, validateTime } from '../internals';
 import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  hours: null,
-  minutes: null,
-  seconds: null,
-};
 
 const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TDate>(
   inProps: DesktopNextTimePickerProps<TDate>,
@@ -32,9 +27,17 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     DesktopNextTimePickerProps<TDate>
   >(inProps, 'MuiDesktopNextTimePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+    hours: null,
+    minutes: null,
+    seconds: null,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
     autoFocus: true,
     components: {
@@ -61,7 +64,6 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openTimePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateTime,
   });
 
@@ -270,6 +272,16 @@ DesktopNextTimePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
+  }),
   /**
    * Array of views to show.
    */

@@ -2,12 +2,13 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
-  BaseNextPickerProps,
   DefaultizedProps,
   useDefaultDates,
   useUtils,
   applyDefaultDate,
   BaseDateValidationProps,
+  BaseNextPickerInputProps,
+  PickerViewRendererLookup,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -21,6 +22,7 @@ import {
   DateRangePickerToolbarProps,
   ExportedDateRangePickerToolbarProps,
 } from '../DateRangePicker/DateRangePickerToolbar';
+import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 
 export interface BaseNextDateRangePickerSlotsComponent<TDate>
   extends DateRangeCalendarSlotsComponent<TDate> {
@@ -38,7 +40,7 @@ export interface BaseNextDateRangePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDateRangePickerProps<TDate>
   extends Omit<
-      BaseNextPickerProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
+      BaseNextPickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
     ExportedDateRangeCalendarProps<TDate>,
@@ -53,6 +55,14 @@ export interface BaseNextDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers?: Partial<
+    PickerViewRendererLookup<DateRange<TDate>, 'day', DateRangeViewRendererProps<TDate, 'day'>, {}>
+  >;
 }
 
 type UseNextDateRangePickerDefaultizedProps<

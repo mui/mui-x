@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { DefaultizedProps } from '../internals/models/helpers';
 import { TimeView } from '../TimeClock';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
@@ -8,7 +8,7 @@ import {
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
 } from '../TimeClock/TimeClock';
-import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
+import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
@@ -17,6 +17,8 @@ import {
   TimePickerToolbar,
 } from '../TimePicker/TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { TimeViewRendererProps } from '../timeViewRenderers';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -31,10 +33,7 @@ export interface BaseNextTimePickerSlotsComponentsProps extends TimeClockSlotsCo
 }
 
 export interface BaseNextTimePickerProps<TDate>
-  extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, TimeView, TimeValidationError>,
-      'views' | 'openTo'
-    >,
+  extends BaseNextPickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
     ExportedTimeClockProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
@@ -51,6 +50,14 @@ export interface BaseNextTimePickerProps<TDate>
    * @default {}
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers?: Partial<
+    PickerViewRendererLookup<TDate | null, TimeView, TimeViewRendererProps<TDate, TimeView>, {}>
+  >;
 }
 
 type UseNextTimePickerDefaultizedProps<

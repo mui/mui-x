@@ -5,23 +5,16 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
+import { renderTimeViewClock } from '../timeViewRenderers';
+import { renderDateViewCalendar } from '../dateViewRenderers';
 import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-  hours: renderTimeView,
-  minutes: renderTimeView,
-  seconds: renderTimeView,
-};
 
 const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePicker<TDate>(
   inProps: MobileNextDateTimePickerProps<TDate>,
@@ -35,9 +28,20 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     MobileNextDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileNextDateTimePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
     autoFocus: true,
     components: {
@@ -63,7 +67,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDateTime,
   });
 
@@ -370,6 +373,19 @@ MobileNextDateTimePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
   /**
    * Array of views to show.
    */

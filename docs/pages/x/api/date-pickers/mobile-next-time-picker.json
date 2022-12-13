@@ -59,6 +59,9 @@
       }
     },
     "value": { "type": { "name": "any" } },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ hours?: func, minutes?: func, seconds?: func }" }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

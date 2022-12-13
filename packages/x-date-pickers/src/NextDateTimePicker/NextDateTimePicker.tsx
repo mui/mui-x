@@ -335,6 +335,19 @@ NextDateTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
    * Array of views to show.
    */
   views: PropTypes.arrayOf(

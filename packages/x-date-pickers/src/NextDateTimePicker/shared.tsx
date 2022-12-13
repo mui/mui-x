@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { DefaultizedProps } from '../internals/models/helpers';
 import { DateOrTimeView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
@@ -13,7 +13,7 @@ import {
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
 } from '../TimeClock/TimeClock';
-import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
+import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
   DateTimePickerTabs,
@@ -31,6 +31,9 @@ import {
   ExportedDateTimePickerToolbarProps,
 } from '../DateTimePicker/DateTimePickerToolbar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { DateViewRendererProps } from '../dateViewRenderers';
+import { TimeViewRendererProps } from '../timeViewRenderers';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -61,10 +64,7 @@ export interface BaseNextDateTimePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseNextDateTimePickerProps<TDate>
-  extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
-      'views' | 'openTo'
-    >,
+  extends BaseNextPickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
   /**
@@ -90,6 +90,19 @@ export interface BaseNextDateTimePickerProps<TDate>
    * @default {}
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers?: Partial<
+    PickerViewRendererLookup<
+      TDate | null,
+      DateOrTimeView,
+      DateViewRendererProps<TDate, DateOrTimeView> & TimeViewRendererProps<TDate, DateOrTimeView>,
+      {}
+    >
+  >;
 }
 
 type UseNextDateTimePickerDefaultizedProps<

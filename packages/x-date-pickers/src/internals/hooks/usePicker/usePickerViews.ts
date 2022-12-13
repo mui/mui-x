@@ -3,14 +3,30 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeView } from '../../models';
 import { useViews } from '../useViews';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import type { UsePickerValueViewsResponse } from './usePickerValue';
 import { useFocusManagement } from '../../components/CalendarOrClockPicker/useFocusManagement';
+
+interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>
+  extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
+
+export type PickerViewsRendererProps<
+  TValue,
+  TView extends DateOrTimeView,
+  TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
+  TAdditionalProps extends {},
+> = TExternalProps &
+  TAdditionalProps &
+  UsePickerValueViewsResponse<TValue> & {
+    view: TView;
+    views: readonly TView[];
+    focusedView: TView | null;
+    onFocusedViewChange?: (view: TView) => (newHasFocus: boolean) => void;
+  };
 
 type PickerViewRenderer<
   TValue,
   TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TView>,
+  TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = (
   props: PickerViewsRendererProps<TValue, TView, TExternalProps, TAdditionalProps>,
@@ -19,7 +35,7 @@ type PickerViewRenderer<
 export type PickerViewRendererLookup<
   TValue,
   TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TView>,
+  TExternalProps extends PickerViewsRendererBaseExternalProps<TView>,
   TAdditionalProps extends {},
 > = {
   [K in TView]: PickerViewRenderer<TValue, TView, TExternalProps, TAdditionalProps> | null;
@@ -28,7 +44,12 @@ export type PickerViewRendererLookup<
 /**
  * Props used to handle the views that are common to all pickers.
  */
-export interface UsePickerViewsBaseProps<TView extends DateOrTimeView> {
+export interface UsePickerViewsBaseProps<
+  TValue,
+  TView extends DateOrTimeView,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TAdditionalProps extends {},
+> {
   autoFocus?: boolean;
   /**
    * If `true`, the picker and text field are disabled.
@@ -49,6 +70,11 @@ export interface UsePickerViewsBaseProps<TView extends DateOrTimeView> {
    * Array of views to show.
    */
   views: readonly TView[];
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   */
+  viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
 }
 
 /**
@@ -65,26 +91,24 @@ export interface UsePickerViewsNonStaticProps {
 /**
  * Props used to handle the value of the pickers.
  */
-export interface UsePickerViewsProps<TView extends DateOrTimeView>
-  extends UsePickerViewsBaseProps<TView>,
+export interface UsePickerViewsProps<
+  TValue,
+  TView extends DateOrTimeView,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TAdditionalProps extends {},
+> extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
     UsePickerViewsNonStaticProps {}
 
 export interface UsePickerViewParams<
   TValue,
   TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TView>,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, TExternalProps, TAdditionalProps>,
   TAdditionalProps extends {},
 > {
   props: TExternalProps;
   propsFromPickerValue: UsePickerValueViewsResponse<TValue>;
-  /**
-   * Define the view renderer for each section.
-   * If no component is defined, then the view will be editing with the field.
-   */
-  viewLookup: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
   additionalViewProps: TAdditionalProps;
   inputRef?: React.RefObject<HTMLInputElement>;
-  wrapperVariant: WrapperVariant;
 }
 
 export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
@@ -97,21 +121,6 @@ export interface UsePickerViewsResponse<TView extends DateOrTimeView> {
   shouldRestoreFocus: () => boolean;
   layoutProps: UsePickerViewsLayoutResponse<TView>;
 }
-
-export type PickerViewsRendererProps<
-  TValue,
-  TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TView>,
-  TAdditionalProps extends {},
-> = TExternalProps &
-  TAdditionalProps &
-  UsePickerValueViewsResponse<TValue> & {
-    view: TView;
-    views: readonly TView[];
-    wrapperVariant: WrapperVariant;
-    focusedView: TView | null;
-    onFocusedViewChange?: (view: TView) => (newHasFocus: boolean) => void;
-  };
 
 export interface UsePickerViewsLayoutResponse<TView extends DateOrTimeView> {
   view: TView | null;
@@ -130,15 +139,13 @@ let warnedOnceNotValidOpenTo = false;
 export const usePickerViews = <
   TValue,
   TView extends DateOrTimeView,
-  TExternalProps extends UsePickerViewsProps<TView>,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 >({
   props,
   propsFromPickerValue,
-  viewLookup,
   additionalViewProps,
   inputRef,
-  wrapperVariant,
 }: UsePickerViewParams<
   TValue,
   TView,
@@ -146,7 +153,7 @@ export const usePickerViews = <
   TAdditionalProps
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
-  const { views, openTo, onViewChange, disableOpenPicker, autoFocus } = props;
+  const { views, openTo, onViewChange, disableOpenPicker, autoFocus, viewRenderers } = props;
 
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
@@ -176,7 +183,7 @@ export const usePickerViews = <
           let viewMode: 'field' | 'UI';
           if (disableOpenPicker) {
             viewMode = 'field';
-          } else if (viewLookup[view] != null) {
+          } else if (viewRenderers[view] != null) {
             viewMode = 'UI';
           } else {
             viewMode = 'field';
@@ -191,7 +198,7 @@ export const usePickerViews = <
         },
         { hasUIView: false, viewModeLookup: {} as Record<TView, 'field' | 'UI'> },
       ),
-    [disableOpenPicker, viewLookup, views],
+    [disableOpenPicker, viewRenderers, views],
   );
 
   const currentViewMode = viewModeLookup[openView];
@@ -240,7 +247,7 @@ export const usePickerViews = <
         return null;
       }
 
-      const renderer = viewLookup?.[popperView];
+      const renderer = viewRenderers[popperView];
       if (renderer == null) {
         return null;
       }
@@ -249,7 +256,6 @@ export const usePickerViews = <
         ...props,
         ...additionalViewProps,
         ...propsFromPickerValue,
-        wrapperVariant,
         views,
         onChange: handleChangeAndOpenNext,
         view: popperView,

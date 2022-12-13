@@ -7,22 +7,17 @@ import {
   getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
-import { useLocaleText, useUtils, validateDate } from '../internals';
+import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
 import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/viewRenderers';
+import { renderDateViewCalendar } from '../dateViewRenderers';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-};
 
 const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TDate>(
   inProps: DesktopNextDatePickerProps<TDate>,
@@ -37,9 +32,17 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     DesktopNextDatePickerProps<TDate>
   >(inProps, 'MuiDesktopNextDatePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     autoFocus: true,
@@ -62,11 +65,10 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     },
   };
 
-  const { renderPicker } = useDesktopPicker({
+  const { renderPicker } = useDesktopPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDate,
   });
 
@@ -328,6 +330,16 @@ DesktopNextDatePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the view will be editing with the field.
+   * If `undefined`, the view will be the one defined internally.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    month: PropTypes.func,
+    year: PropTypes.func,
+  }),
   /**
    * Array of views to show.
    */
