@@ -1,10 +1,8 @@
-<DemoContainer>
-  <MultiInputDateRangeField
-    value={value}
-    onChange={(newValue) => setValue(newValue)}
-  />
-  <SingleInputDateRangeField
-    value={value}
-    onChange={(newValue) => setValue(newValue)}
-  />
-</DemoContainer>
+<MultiInputDateRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
+<SingleInputDateRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
