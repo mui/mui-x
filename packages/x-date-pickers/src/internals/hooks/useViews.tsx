@@ -42,7 +42,10 @@ export interface UseViewsOptions<TValue, TView extends DateOrTimeView> {
    */
   views: readonly TView[];
   /**
-   * If `true`, the view is focused during the first mount.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus?: boolean;
   /**

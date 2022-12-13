@@ -7,7 +7,11 @@ import {
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { isYearAndMonthViews, isYearOnlyView } from '../internals/utils/views';
+import {
+  applyDefaultViewProps,
+  isYearAndMonthViews,
+  isYearOnlyView,
+} from '../internals/utils/views';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -99,8 +103,12 @@ export function useNextDatePickerDefaultizedProps<
   return {
     ...themeProps,
     localeText,
-    views: themeProps.views ?? ['year', 'day'],
-    openTo: themeProps.openTo ?? 'day',
+    ...applyDefaultViewProps({
+      views: themeProps.views,
+      openTo: themeProps.openTo,
+      defaultViews: ['year', 'day'],
+      defaultOpenTo: 'day',
+    }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
