@@ -3,7 +3,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import getWeek from 'date-fns/getWeek';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
   y: 'year',
@@ -29,7 +29,9 @@ const formatTokenMap: MuiFormatTokenMap = {
   aaa: 'meridiem',
 };
 
-export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerFieldAdapter<Date> {
+export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdapter<Date> {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
 
   public expandFormat = (format: string) => {

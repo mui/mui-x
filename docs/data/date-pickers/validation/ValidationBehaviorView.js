@@ -1,18 +1,16 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+
+const today = dayjs();
+const twoPM = dayjs().set('hour', 14).startOf('hour');
+const threePM = dayjs().set('hour', 15).startOf('hour');
 
 export default function ValidationBehaviorView() {
-  const [datePickerValue, setDatePickerValue] = React.useState(null);
-  const [timePickerValue, setTimePickerValue] = React.useState(
-    dayjs().set('hour', 14).startOf('hour'),
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid
@@ -23,25 +21,10 @@ export default function ValidationBehaviorView() {
         justifyContent="center"
       >
         <Grid item>
-          <StaticDatePicker
-            disableFuture
-            value={datePickerValue}
-            views={['day']}
-            onChange={(newValue) => setDatePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-            showToolbar={false}
-            components={{ ActionBar: () => null }}
-          />
+          <DateCalendar defaultValue={today} disableFuture />
         </Grid>
         <Grid item>
-          <StaticTimePicker
-            maxTime={dayjs().set('hour', 15).startOf('hour')}
-            value={timePickerValue}
-            onChange={(newValue) => setTimePickerValue(newValue)}
-            renderInput={(params) => <TextField {...params} />}
-            showToolbar={false}
-            components={{ ActionBar: () => null }}
-          />
+          <TimeClock defaultValue={twoPM} maxTime={threePM} />
         </Grid>
       </Grid>
     </LocalizationProvider>

@@ -8,9 +8,9 @@ export interface DateRangePickerDayClasses {
   root: string;
   /** Styles applied to the root element if `isHighlighting=true` and `outsideCurrentMonth=false`. */
   rangeIntervalDayHighlight: string;
-  /** Styles applied to the root element if `isStartOfHighlighting=true` or `day` is the start of the month. */
+  /** Styles applied to the root element if `isStartOfHighlighting=true`. */
   rangeIntervalDayHighlightStart: string;
-  /** Styles applied to the root element if `isEndOfHighlighting=true` or `day` is the end of the month. */
+  /** Styles applied to the root element if `isEndOfHighlighting=true`. */
   rangeIntervalDayHighlightEnd: string;
   /** Styles applied to the preview element. */
   rangeIntervalPreview: string;

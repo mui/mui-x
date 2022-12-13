@@ -45,7 +45,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon?: React.ReactNode;
+  dateIcon?: React.ReactNode;
   /**
    * Time tab icon.
    * @default Time
@@ -80,7 +80,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop order when the old pickers are removed
+    // TODO v6: Drop `order` with the legacy pickers
     order: 1,
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
@@ -93,7 +93,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
-    dateRangeIcon = <DateRange />,
+    dateIcon = <DateRange />,
     onViewChange,
     timeIcon = <Time />,
     view,
@@ -124,7 +124,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
       <Tab
         value="date"
         aria-label={localeText.dateTableLabel}
-        icon={<React.Fragment>{dateRangeIcon}</React.Fragment>}
+        icon={<React.Fragment>{dateIcon}</React.Fragment>}
       />
       <Tab
         value="time"
@@ -148,7 +148,7 @@ DateTimePickerTabs.propTypes = {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon: PropTypes.node,
+  dateIcon: PropTypes.node,
   /**
    * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`

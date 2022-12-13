@@ -91,7 +91,7 @@ function EmptyCell({ width }: { width: number }) {
 
   const style = { width };
 
-  return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
 const GridRow = React.forwardRef<
@@ -293,7 +293,7 @@ const GridRow = React.forwardRef<
       }
 
       const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode = null;
+      let content: React.ReactNode;
 
       if (editCellState == null && column.renderCell) {
         content = column.renderCell({ ...cellParams, api: apiRef.current });
@@ -448,7 +448,7 @@ const GridRow = React.forwardRef<
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
+      ? rootProps.showCellVerticalBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(

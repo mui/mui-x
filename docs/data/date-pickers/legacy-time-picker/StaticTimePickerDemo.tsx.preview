@@ -1,10 +1,8 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticTimePicker
-    displayStaticWrapperAs="mobile"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} />}
-  />
-</LocalizationProvider>
+<StaticTimePicker
+  displayStaticWrapperAs="mobile"
+  value={value}
+  onChange={(newValue) => {
+    setValue(newValue);
+  }}
+  renderInput={(params) => <TextField {...params} />}
+/>

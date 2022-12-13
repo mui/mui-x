@@ -75,9 +75,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     'MuiDesktopDateRangePicker',
   );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<'start' | 'end'>('start');
 
   const validationError = useDateRangeValidation(props);
 
@@ -89,8 +87,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     ...other,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     ref,
   };
@@ -107,8 +105,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       <DateRangePickerView<TDate>
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         {...pickerProps}
         components={components}
         componentsProps={componentsProps}

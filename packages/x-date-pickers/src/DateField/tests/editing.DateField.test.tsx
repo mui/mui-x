@@ -3,10 +3,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { Unstable_DateField as DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
-
-const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
+import {
+  createPickerRenderer,
+  adapterToUse,
+  buildFieldInteractions,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -14,29 +16,29 @@ describe('<DateField /> - Editing', () => {
     clockConfig: new Date(2022, 5, 15),
   });
 
-  const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
-    act(() => {
-      fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
-      fireEvent.mouseUp(input);
-      input.setSelectionRange(cursorPosition, cursorPosition);
-      fireEvent.click(input);
-
-      clock.runToLast();
-    });
-  };
+  const { clickOnInput } = buildFieldInteractions({ clock });
 
   const testKeyPress = <TDate extends unknown>({
     key,
     expectedValue,
     cursorPosition = 1,
+    valueToSelect,
     ...props
-  }: DateFieldProps<TDate> & { key: string; expectedValue: string; cursorPosition?: number }) => {
+  }: DateFieldProps<TDate> & {
+    key: string;
+    expectedValue: string;
+    cursorPosition?: number;
+    valueToSelect?: string;
+  }) => {
     render(<DateField {...props} />);
     const input = screen.getByRole('textbox');
-    clickOnInput(input, cursorPosition);
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
     userEvent.keyPress(input, { key });
     expectInputValue(input, expectedValue);
   };
@@ -126,7 +128,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowDown',
         expectedValue: 'May 31',
         // To select the date and not the month
-        cursorPosition: 5,
+        valueToSelect: '1',
       });
     });
 
@@ -218,7 +220,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowUp',
         expectedValue: 'July 1',
         // To select the date and not the month
-        cursorPosition: 5,
+        valueToSelect: '30',
       });
     });
 
@@ -646,7 +648,7 @@ describe('<DateField /> - Editing', () => {
         />,
       );
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 10);
+      clickOnInput(input, input.value.indexOf('2010'));
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));

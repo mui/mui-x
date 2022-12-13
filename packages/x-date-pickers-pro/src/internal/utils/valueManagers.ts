@@ -1,10 +1,12 @@
-import { PickerStateValueManager, replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import {
+  PickerStateValueManager,
+  replaceInvalidDateByNull,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
   createDateStrFromSections,
-} from '@mui/x-date-pickers/internals-fields';
+  getSectionOrder,
+} from '@mui/x-date-pickers/internals';
 import { DateRange, DateRangeFieldSection } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
@@ -141,4 +143,6 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  getSectionOrder: (utils, localeText, format, isRTL) =>
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };
