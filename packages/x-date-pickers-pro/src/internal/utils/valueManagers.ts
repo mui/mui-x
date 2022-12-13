@@ -12,6 +12,7 @@ import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
 import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import { RangeFieldSection, RangeFieldSectionWithoutPosition } from '../models/fields';
 
 export type RangePickerStateValueManager<
   TValue = [any, any],
@@ -75,27 +76,44 @@ export const rangeFieldValueManager: FieldValueManager<
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
     const rawSectionsOfEndDate = getSections(end, prevDateRangeSections.endDate);
 
-    const sectionsOfStartDate = rawSectionsOfStartDate.map((section, sectionIndex) => {
-      if (sectionIndex === rawSectionsOfStartDate.length - 1) {
+    const sectionsOfStartDate: RangeFieldSectionWithoutPosition[] = rawSectionsOfStartDate.map(
+      (section, sectionIndex) => {
+        if (sectionIndex === rawSectionsOfStartDate.length - 1) {
+          return {
+            ...section,
+            dateName: 'start',
+            separator: ' – ',
+          };
+        }
+
         return {
           ...section,
           dateName: 'start' as const,
-          separator: ' – ',
         };
-      }
+      },
+    );
 
+    const sectionsOfEndDate: RangeFieldSectionWithoutPosition[] = rawSectionsOfEndDate.map(
+      (section) => ({
+        ...section,
+        dateName: 'end',
+      }),
+    );
+
+    return addPositionPropertiesToSections<RangeFieldSection>([
+      ...sectionsOfStartDate,
+      ...sectionsOfEndDate,
+    ]).map((section) => {
+      if (section.dateName === 'start') {
+        return section;
+      }
       return {
         ...section,
-        dateName: 'start' as const,
+        // Shift of 2 hidden characters due to startText + endText concatenation
+        startInInput: section.startInInput + 2,
+        endInInput: section.endInInput + 2,
       };
     });
-
-    const sectionsOfEndDate = rawSectionsOfEndDate.map((section) => ({
-      ...section,
-      dateName: 'end' as const,
-    }));
-
-    return addPositionPropertiesToSections([...sectionsOfStartDate, ...sectionsOfEndDate]);
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
@@ -143,6 +161,15 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
-  getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
+  getSectionOrder: (utils, localeText, format, isRTL) => {
+    const splitedFormat = splitFormatIntoSections(utils, localeText, format, null);
+    return getSectionOrder(
+      [
+        ...splitedFormat.slice(0, splitedFormat.length - 1),
+        { ...splitedFormat[splitedFormat.length - 1], separator: ' - ' },
+        ...splitedFormat,
+      ],
+      isRTL,
+    );
+  },
 };
