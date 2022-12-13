@@ -36,9 +36,8 @@ describe('<DateField /> - Selection', () => {
       render(<DateField autoFocus />);
       const input = screen.getByRole('textbox');
 
-      expect(input.value).to.equal('MM / DD / YYYY');
-      expect(input.selectionStart).to.equal(0);
-      expect(input.selectionEnd).to.equal(input.value.length);
+      expectInputValue(input, 'MM / DD / YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
     });
 
     it('should select all on <Tab> focus', () => {
@@ -51,8 +50,7 @@ describe('<DateField /> - Selection', () => {
       });
 
       expectInputValue(input, 'MM / DD / YYYY');
-      expect(input.selectionStart).to.equal(0);
-      expect(input.selectionEnd).to.equal(input.value.length);
+      expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
     });
 
     it('should select day on mobile', () => {
