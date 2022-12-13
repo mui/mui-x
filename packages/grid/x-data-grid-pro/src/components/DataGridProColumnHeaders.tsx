@@ -77,6 +77,7 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   ],
 })<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
   position: 'absolute',
+  top: 0,
   overflow: 'hidden',
   zIndex: 1,
   display: 'flex',
