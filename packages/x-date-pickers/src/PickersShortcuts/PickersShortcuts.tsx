@@ -2,7 +2,9 @@ import * as React from 'react';
 import List, { ListProps } from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Chip from '@mui/material/Chip';
-import { DateOrTimeView, useUtils } from '../internals';
+import { DateOrTimeView } from '../internals';
+import { useUtils } from '../internals/hooks/useUtils';
+import { VIEW_HEIGHT } from '../internals/constants/dimensions';
 // import { useLocaleText } from '@mui/x-date-pickers/src/internals/hooks/useUtils';
 
 export interface PickersShortcutsItems<TValue> {
@@ -40,20 +42,19 @@ export function PickersShortcuts<TValue, TDate, TView extends DateOrTimeView>(
 
   const items = shortcuts.map((item) => {
     const newValue = item.getValue(value, view, isValid, utils);
-    console.log({ newValue });
+
     return {
       label: item.label,
       onClick: () => {
-        console.log('click');
         onChange(newValue);
       },
+      disabled: !isValid(newValue),
     };
   });
 
   return (
-    <List {...other}>
+    <List {...other} dense sx={{ maxHeight: VIEW_HEIGHT, overflow: 'auto' }}>
       {items.map((item) => {
-        console.log(item);
         return (
           <ListItem key={item.label}>
             <Chip {...item} />

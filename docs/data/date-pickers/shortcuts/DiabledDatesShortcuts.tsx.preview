@@ -1,0 +1,8 @@
+<StaticNextDatePicker
+  componentsProps={{
+    shortcuts: {
+      shortcuts,
+    },
+  }}
+  minDate={middleDate}
+/>

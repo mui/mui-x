@@ -1,10 +1,16 @@
 import * as React from 'react';
-
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { PickersShortcutsItems } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
 
-const getMonthWeekday = (adapter, monthIndex, weekdayIndex, dayRank) => {
+const getMonthWeekday = (
+  adapter: any,
+  monthIndex: number,
+  weekdayIndex: number,
+  dayRank: number,
+) => {
   // Helper to find for exampel the 3rd monday in Jun
 
   const today = adapter.date();
@@ -22,7 +28,7 @@ const getMonthWeekday = (adapter, monthIndex, weekdayIndex, dayRank) => {
   }
   return null;
 };
-const shortcuts = [
+const shortcuts: PickersShortcutsItems<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: (value, view, isValid, adapter) => {
@@ -31,6 +37,7 @@ const shortcuts = [
       return adapter.setDate(adapter.setMonth(today, 0), 1);
     },
   },
+
   {
     label: 'Birthday of Martin Luther King Jr.',
     getValue: (value, view, isValid, adapter) => {
@@ -38,6 +45,7 @@ const shortcuts = [
       return getMonthWeekday(adapter, 0, 0, 3);
     },
   },
+
   {
     label: 'Independence Day',
     getValue: (value, view, isValid, adapter) => {
@@ -46,6 +54,7 @@ const shortcuts = [
       return adapter.setDate(adapter.setMonth(today, 6), 4);
     },
   },
+
   {
     label: 'Labor Day',
     getValue: (value, view, isValid, adapter) => {
@@ -53,6 +62,7 @@ const shortcuts = [
       return getMonthWeekday(adapter, 8, 0, 1);
     },
   },
+
   {
     label: 'Columbus Day',
     getValue: (value, view, isValid, adapter) => {
@@ -60,6 +70,7 @@ const shortcuts = [
       return getMonthWeekday(adapter, 9, 0, 2);
     },
   },
+
   {
     label: 'Veterans Day',
     getValue: (value, view, isValid, adapter) => {
@@ -68,6 +79,7 @@ const shortcuts = [
       return adapter.setDate(adapter.setMonth(today, 10), 11);
     },
   },
+
   {
     label: 'Thanksgiving Day',
     getValue: (value, view, isValid, adapter) => {
@@ -75,6 +87,7 @@ const shortcuts = [
       return getMonthWeekday(adapter, 10, 3, 4);
     },
   },
+
   {
     label: 'World AIDS Day',
     getValue: (value, view, isValid, adapter) => {
@@ -83,6 +96,7 @@ const shortcuts = [
       return adapter.setDate(adapter.setMonth(today, 11), 1);
     },
   },
+
   {
     label: 'Christmas Day',
     getValue: (value, view, isValid, adapter) => {
@@ -93,7 +107,9 @@ const shortcuts = [
   },
 ];
 
-export default function BasicShortcuts() {
+export default function DiabledDatesShortcuts() {
+  const middleDate = dayjs(new Date().setMonth(6));
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
@@ -102,6 +118,7 @@ export default function BasicShortcuts() {
             shortcuts,
           },
         }}
+        minDate={middleDate}
       />
     </LocalizationProvider>
   );

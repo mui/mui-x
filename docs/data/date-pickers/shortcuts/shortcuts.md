@@ -9,5 +9,8 @@ title: Date and Time pickers - Shortcuts
 
 ## Adding shortcuts
 
-
 {{"demo": "BasicShortcuts.js", "hideToolbar": true, "bg": "inline"}}
+
+## Diabled dates
+
+{{"demo": "DiabledDatesShortcuts.js", "hideToolbar": true, "bg": "inline"}}

@@ -11,8 +11,8 @@ export const PickersLayoutRoot = styled('div', {
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: { isLandscape: boolean } }>(({ theme, ownerState }) => ({
   display: 'grid',
-  gridAutoColumns: 'max-content auto max-content',
-  gridAutoRows: 'max-content auto max-content',
+  gridAutoColumns: 'max-content 1fr max-content',
+  gridAutoRows: 'max-content 1fr max-content',
 
   [`.${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
     ? {

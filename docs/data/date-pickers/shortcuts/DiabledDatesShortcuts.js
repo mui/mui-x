@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
@@ -93,7 +93,9 @@ const shortcuts = [
   },
 ];
 
-export default function BasicShortcuts() {
+export default function DiabledDatesShortcuts() {
+  const middleDate = dayjs(new Date().setMonth(6));
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
@@ -102,6 +104,7 @@ export default function BasicShortcuts() {
             shortcuts,
           },
         }}
+        minDate={middleDate}
       />
     </LocalizationProvider>
   );
