@@ -6,7 +6,7 @@ import type { FieldSection, FieldValueManager } from '../hooks/useField';
 import { replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   splitFormatIntoSections,
   getSectionOrder,
 } from '../hooks/useField/useField.utils';
@@ -34,9 +34,15 @@ export const singleItemFieldValueManager: FieldValueManager<
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) =>
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
-  getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
-    addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
+  getSectionsFromValue: (utils, localeText, prevSections, date, format) => {
+    const { sections, startSeparator } = splitFormatIntoSections(utils, localeText, format, date);
+    return {
+      sections: addPositionPropertiesToSections({ sections, startSeparator }),
+      startSeparator,
+    };
+  },
+  getValueStrFromSections: (sections, startSeparator) =>
+    createDateStrForInputFromSections(sections, startSeparator, true),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
@@ -55,5 +61,5 @@ export const singleItemFieldValueManager: FieldValueManager<
     parseDate(valueStr.trim(), referenceValue),
   hasError: (error) => error != null,
   getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null).sections, isRTL),
 };

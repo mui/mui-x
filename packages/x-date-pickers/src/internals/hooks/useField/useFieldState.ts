@@ -18,9 +18,9 @@ import {
   splitFormatIntoSections,
   clampDaySection,
   mergeDateIntoReferenceDate,
-  createDateStrFromSections,
   getSectionBoundaries,
   validateSections,
+  getDateFromDateSections,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
@@ -73,7 +73,7 @@ export const useFieldState = <
   }, [fieldValueManager, format, isRTL, localeText, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
-    const sections = fieldValueManager.getSectionsFromValue(
+    const { sections, startSeparator } = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
       null,
@@ -84,6 +84,7 @@ export const useFieldState = <
 
     return {
       sections,
+      startSeparator,
       value: valueFromTheOutside,
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
@@ -141,7 +142,7 @@ export const useFieldState = <
       state.sections,
       value,
       format,
-    );
+    ).sections;
 
     setState((prevState) => ({
       ...prevState,
@@ -169,7 +170,10 @@ export const useFieldState = <
       edited: true,
     };
 
-    return addPositionPropertiesToSections<TSection>(newSections);
+    return addPositionPropertiesToSections<TSection>({
+      sections: newSections,
+      startSeparator: state.startSeparator,
+    });
   };
 
   const clearValue = () =>
@@ -202,7 +206,7 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date);
+      const sections = splitFormatIntoSections(utils, localeText, format, date).sections;
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
@@ -247,7 +251,8 @@ export const useFieldState = <
     const newSectionValue = setSectionValueOnSections(boundaries);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    let newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
+
+    let newDate = getDateFromDateSections(utils, activeDateSections);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
     // We can try to set the day to the maximum boundary.
@@ -256,9 +261,9 @@ export const useFieldState = <
       activeDateSections.every((section) => section.value !== '') &&
       activeDateSections.some((section) => section.dateSectionName === 'day')
     ) {
-      const cleanSections = clampDaySection(utils, activeDateSections, boundaries, format);
+      const cleanSections = clampDaySection(utils, activeDateSections, boundaries);
       if (cleanSections != null) {
-        newDate = utils.parse(createDateStrFromSections(cleanSections, false), format);
+        newDate = getDateFromDateSections(utils, cleanSections);
       }
     }
 
@@ -293,7 +298,8 @@ export const useFieldState = <
         state.sections,
         valueFromTheOutside,
         format,
-      );
+      ).sections;
+
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,
@@ -308,7 +314,7 @@ export const useFieldState = <
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
-    const sections = fieldValueManager.getSectionsFromValue(
+    const { sections, startSeparator } = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
       state.sections,
@@ -318,6 +324,7 @@ export const useFieldState = <
     validateSections(sections, supportedDateSections);
     setState((prevState) => ({
       ...prevState,
+      startSeparator,
       sections,
     }));
   }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps

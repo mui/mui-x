@@ -8,6 +8,8 @@ export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
 
   formatTokenMap: MuiFormatTokenMap;
 
+  escapedCharacters: { start: string; end: string };
+
   expandFormat: (format: string) => string;
 
   getWeekNumber: (date: TDate) => number;

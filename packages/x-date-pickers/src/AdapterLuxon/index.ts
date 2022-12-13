@@ -47,6 +47,8 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
 
   public formatTokenMap = formatTokenMap;
 
+  public escapedCharacters = { start: "'", end: "'" };
+
   public expandFormat = (format: string) => {
     if (!DateTime.expandFormat) {
       throw Error(

@@ -119,15 +119,10 @@ export interface FieldSection {
   placeholder: string;
   /**
    * Separator used in the input.
+   * If it contains escaped characters, then it must not have the escaping characters.
+   * For example, on Day.js, the `year` section of the format `YYYY [year]` has a `separator` equal to `year` not `[year]`
    */
   separator: string | null;
-  /**
-   * Separator used to recreate the date from the sections.
-   * Can be useful when the separator rendered in the input is not the same as the one used for parsing.
-   * e.g: ` / ` in the input and `/` in parsing.
-   * @default `section.separator`
-   */
-  parsingSeparator?: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;
@@ -136,7 +131,7 @@ export interface FieldSection {
 }
 
 export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
-  MuiDateSectionName,
+  Exclude<MuiDateSectionName, 'empty'>,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;
 
@@ -191,7 +186,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @param {TSection[] | null} prevSections The last section list stored in state.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
-   * @returns {TSection[]}  The new section list.
+   * @returns {Pick<UseFieldState<TValue, TSection>, 'sections' | 'startSeparator'>}  The new section list and the start separator.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
@@ -199,14 +194,15 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,
-  ) => TSection[];
+  ) => Pick<UseFieldState<TValue, TSection>, 'sections' | 'startSeparator'>;
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
+   * @param {string} startSeparator The separator to insert before the first section.
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[]) => string;
+  getValueStrFromSections: (sections: TSection[], startSeparator: string) => string;
   /**
    * Filter the section list to only keep the sections in the same date as the active section.
    * On a single date field does nothing.
@@ -290,6 +286,14 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    */
   referenceValue: TValue;
   sections: TSection[];
+
+  /**
+   * The separator to insert before the first section.
+   * If it contains escaped characters, then it must not have the escaping characters.
+   * For example, on Day.js, the format `[Current year:] YYYY` has a `startSeparator` equal to `Current year:` not `[Current year:]`
+   */
+  startSeparator: string;
+
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
    * There are two `onChange` calls:

@@ -270,11 +270,15 @@ export const getSectionVisibleValue = (
 export const cleanString = (dirtyString: string) =>
   dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
 
-export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
-): TSection[] => {
-  let position = 0;
-  let positionInInput = 1;
+export const addPositionPropertiesToSections = <TSection extends FieldSection>({
+  sections,
+  startSeparator,
+}: {
+  sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[];
+  startSeparator: string;
+}): TSection[] => {
+  let position = startSeparator.length;
+  let positionInInput = startSeparator.length + 1;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
@@ -357,9 +361,33 @@ export const splitFormatIntoSections = <TDate>(
   format: string,
   date: TDate | null,
 ) => {
-  let currentTokenValue = '';
-  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
   const expandedFormat = utils.expandFormat(format);
+
+  let escapeDepth = 0;
+  let currentEscapeStart: number = 0;
+  const escapedIndexes: { start: number; end: number | null }[] = [];
+  for (let i = 0; i < expandedFormat.length; i += 1) {
+    const char = expandedFormat[i];
+    if (char === utils.escapedCharacters.start) {
+      if (escapeDepth === 0) {
+        currentEscapeStart = i;
+      }
+      escapeDepth += 1;
+    } else if (char === utils.escapedCharacters.end && escapeDepth > 0) {
+      escapeDepth -= 1;
+      if (escapeDepth === 0) {
+        escapedIndexes.push({ start: currentEscapeStart, end: i });
+      }
+    }
+
+    if (escapeDepth > 0 && i === expandedFormat.length - 1) {
+      escapedIndexes.push({ start: currentEscapeStart, end: i });
+    }
+  }
+
+  let currentTokenValue = '';
+  let startSeparator: string = '';
+  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
 
   const commitCurrentToken = () => {
     if (currentTokenValue === '') {
@@ -387,25 +415,38 @@ export const splitFormatIntoSections = <TDate>(
   };
 
   for (let i = 0; i < expandedFormat.length; i += 1) {
+    const currentEscapedIndex = escapedIndexes.find(
+      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end! >= i,
+    );
+
     const char = expandedFormat[i];
 
-    if (char.match(/([A-zÀ-ú]+)/g)) {
+    if (currentEscapedIndex == null && char.match(/([A-zÀ-ú]+)/g)) {
       currentTokenValue += char;
-    } else {
+    }
+    // If we are on the starting of the ending character of an escaped part of the format,
+    // Then we ignore this character.
+    else if (
+      currentEscapedIndex == null ||
+      (currentEscapedIndex.start !== i && currentEscapedIndex.end !== i)
+    ) {
       commitCurrentToken();
-      sections[sections.length - 1].separator += char;
+      if (sections.length === 0) {
+        startSeparator += char;
+      } else {
+        sections[sections.length - 1].separator += char;
+      }
     }
   }
 
   commitCurrentToken();
 
-  return sections.map((section) => {
+  const cleanSections = sections.map((section) => {
     if (section.separator !== '/') {
       if (section.separator !== null && section.separator.includes(' ')) {
         return {
           ...section,
           separator: `\u2069${section.separator}\u2066`,
-          parsingSeparator: section.separator,
         };
       }
       return section;
@@ -413,38 +454,51 @@ export const splitFormatIntoSections = <TDate>(
     return {
       ...section,
       separator: ' / ',
-      parsingSeparator: '/',
     };
   });
+
+  return {
+    sections: cleanSections,
+    startSeparator,
+  };
 };
 
-export const createDateStrFromSections = (
+/**
+ * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
+ * To make sure that the parsing works, we are building a format and a date without any separator.
+ */
+export const getDateFromDateSections = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
   sections: FieldSection[],
-  willBeRenderedInInput: boolean,
+) => {
+  const formatWithoutSeparator = sections.map((section) => section.formatValue).join(' ');
+  const dateWithoutSeparatorStr = sections
+    .map((section) => getSectionVisibleValue(section, false))
+    .join(' ');
+
+  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
+};
+
+export const createDateStrForInputFromSections = (
+  sections: FieldSection[],
+  startSeparator: string,
 ) => {
   const formattedArray = sections.map((section) => {
-    let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
+    let sectionValueStr = getSectionVisibleValue(section, true);
 
-    const separator = willBeRenderedInInput
-      ? section.separator
-      : section.parsingSeparator ?? section.separator;
-
-    if (separator != null) {
-      sectionValueStr += separator;
+    if (section.separator != null) {
+      sectionValueStr += section.separator;
     }
 
     return `${sectionValueStr}`;
   });
 
-  if (willBeRenderedInInput) {
-    // \u2066: start left-to-right isolation
-    // \u2067: start right-to-left isolation
-    // \u2068: start first strong character isolation
-    // \u2069: pop isolation
-    // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-    return `\u2066${formattedArray.join('')}\u2069`;
-  }
-  return formattedArray.join('');
+  // \u2066: start left-to-right isolation
+  // \u2067: start right-to-left isolation
+  // \u2068: start first strong character isolation
+  // \u2069: pop isolation
+  // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
+  return `\u2066${startSeparator}${formattedArray.join('')}\u2069`;
 };
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
@@ -661,7 +715,6 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
   boundaries: FieldBoundaries<TDate, TSection>,
-  format: string,
 ) => {
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
@@ -682,10 +735,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
     };
   });
 
-  const startOfMonth = utils.parse(
-    createDateStrFromSections(sectionsForStartOfMonth, false),
-    format,
-  );
+  const startOfMonth = getDateFromDateSections(utils, sectionsForStartOfMonth);
 
   // Even the start of the month is invalid, we probably have other invalid sections, the clamping failed.
   if (startOfMonth == null || !utils.isValid(startOfMonth)) {
@@ -735,9 +785,7 @@ export const getSectionOrder = (
   while (RTLIndex >= 0) {
     groupedSectionsEnd = sections.findIndex(
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) =>
-        index >= groupedSectionsStart &&
-        (section.parsingSeparator ?? section.separator)?.includes(' '),
+      (section, index) => index >= groupedSectionsStart && section.separator?.includes(' '),
     );
     if (groupedSectionsEnd === -1) {
       groupedSectionsEnd = sections.length - 1;

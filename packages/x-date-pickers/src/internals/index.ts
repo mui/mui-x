@@ -103,7 +103,7 @@ export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   addPositionPropertiesToSections,
   splitFormatIntoSections,
   getSectionOrder,

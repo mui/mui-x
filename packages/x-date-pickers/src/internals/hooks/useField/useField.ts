@@ -167,7 +167,9 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
+    const prevValueStr = cleanString(
+      fieldValueManager.getValueStrFromSections(state.sections, state.startSeparator),
+    );
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
@@ -485,8 +487,10 @@ export const useField = <
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
-    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
-    [state.sections, fieldValueManager, state.tempValueStrAndroid],
+    () =>
+      state.tempValueStrAndroid ??
+      fieldValueManager.getValueStrFromSections(state.sections, state.startSeparator),
+    [state.sections, state.startSeparator, fieldValueManager, state.tempValueStrAndroid],
   );
 
   const inputMode = React.useMemo(() => {

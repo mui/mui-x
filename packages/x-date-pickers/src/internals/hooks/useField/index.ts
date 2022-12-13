@@ -13,6 +13,6 @@ export type {
 export {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   getSectionOrder,
 } from './useField.utils';

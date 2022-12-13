@@ -4,7 +4,7 @@ import {
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   getSectionOrder,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, DateRangeFieldSection } from '../models/range';
@@ -69,7 +69,7 @@ export const rangeFieldValueManager: FieldValueManager<
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, localeText, format, newDate);
+      return splitFormatIntoSections(utils, localeText, format, newDate).sections;
     };
 
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
@@ -95,12 +95,28 @@ export const rangeFieldValueManager: FieldValueManager<
       dateName: 'end' as const,
     }));
 
-    return addPositionPropertiesToSections([...sectionsOfStartDate, ...sectionsOfEndDate]);
+    const startSeparator = splitFormatIntoSections(utils, localeText, format, null).startSeparator;
+
+    return {
+      sections: addPositionPropertiesToSections<DateRangeFieldSection>({
+        sections: [...sectionsOfStartDate, ...sectionsOfEndDate],
+        startSeparator,
+      }),
+      startSeparator,
+    };
   },
-  getValueStrFromSections: (sections) => {
+  getValueStrFromSections: (sections, startSeparator) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
+    const startDateStr = createDateStrForInputFromSections(
+      dateRangeSections.startDate,
+      startSeparator,
+      true,
+    );
+    const endDateStr = createDateStrForInputFromSections(
+      dateRangeSections.endDate,
+      startSeparator,
+      true,
+    );
 
     return `${startDateStr}${endDateStr}`;
   },
@@ -144,5 +160,5 @@ export const rangeFieldValueManager: FieldValueManager<
   },
   hasError: (error) => error[0] != null || error[1] != null,
   getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null).sections, isRTL),
 };
