@@ -39,7 +39,6 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       Field: TimeField,
       OpenPickerIcon: Clock,
@@ -85,6 +84,9 @@ DesktopNextTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

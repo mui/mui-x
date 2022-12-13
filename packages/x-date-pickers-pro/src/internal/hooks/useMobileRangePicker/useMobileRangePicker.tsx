@@ -66,6 +66,7 @@ export const useMobileRangePicker = <
     valueManager,
     wrapperVariant: 'mobile',
     validator,
+    autoFocusView: true,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange: setRangePosition,

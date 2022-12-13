@@ -45,6 +45,7 @@ export const useMobilePicker = <
     inputRef,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
   });

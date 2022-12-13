@@ -74,7 +74,12 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
 export interface DesktopOnlyPickerProps<TDate>
   extends BaseNextNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps {
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
+  autoFocus?: boolean;
+}
 
 export interface UseDesktopPickerProps<
   TDate,

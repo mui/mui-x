@@ -48,7 +48,7 @@ export interface UsePickerParams<
     >,
     Pick<
       UsePickerViewParams<TValue, TView, TExternalProps, TAdditionalProps>,
-      'additionalViewProps' | 'inputRef'
+      'additionalViewProps' | 'inputRef' | 'autoFocusView'
     > {
   props: TExternalProps;
 }

@@ -44,7 +44,6 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: DateField,
       ...defaultizedProps.components,
@@ -78,7 +77,6 @@ MobileNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
