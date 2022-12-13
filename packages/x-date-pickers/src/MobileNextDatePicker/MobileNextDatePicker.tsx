@@ -28,7 +28,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
-  const utils = useUtils();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -41,7 +41,6 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     ...defaultizedProps,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: DateField,
       ...defaultizedProps.components,
@@ -76,7 +75,6 @@ MobileNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */

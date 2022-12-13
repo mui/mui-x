@@ -47,6 +47,7 @@ export const useMobilePicker = <
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
   });
@@ -113,7 +114,10 @@ export const useMobilePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
         >
           <PickersViewLayout
             {...layoutProps}

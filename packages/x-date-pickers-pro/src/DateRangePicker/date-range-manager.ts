@@ -1,32 +1,47 @@
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../internal/models';
+import { DateRange, RangePosition } from '../internal/models';
 
 interface CalculateRangeChangeOptions<TDate> {
   utils: MuiPickersAdapter<TDate>;
   range: DateRange<TDate>;
   newDate: TDate | null;
-  currentlySelectingRangeEnd: 'start' | 'end';
+  rangePosition: RangePosition;
+  /**
+   * Should allow flipping range `start` and `end` dates if the `newDate` would result in a new range creation.
+   *
+   * It is used to allow dragging range `start` date past `end` date essentially becoming the new `end` date and vice versa.
+   */
+  allowRangeFlip?: boolean;
+}
+
+interface CalculateRangeChangeResponse<TDate> {
+  nextSelection: RangePosition;
+  newRange: DateRange<TDate>;
 }
 
 export function calculateRangeChange<TDate>({
   utils,
   range,
   newDate: selectedDate,
-  currentlySelectingRangeEnd,
-}: CalculateRangeChangeOptions<TDate>): {
-  nextSelection: 'start' | 'end';
-  newRange: DateRange<TDate>;
-} {
+  rangePosition,
+  allowRangeFlip = false,
+}: CalculateRangeChangeOptions<TDate>): CalculateRangeChangeResponse<TDate> {
   const [start, end] = range;
 
-  if (currentlySelectingRangeEnd === 'start') {
+  if (rangePosition === 'start') {
+    const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
+      ? { nextSelection: 'start', newRange: [end!, selectedDate] }
+      : { nextSelection: 'end', newRange: [selectedDate, null] };
     return Boolean(end) && utils.isAfter(selectedDate!, end!)
-      ? { nextSelection: 'end', newRange: [selectedDate, null] }
+      ? truthyResult
       : { nextSelection: 'end', newRange: [selectedDate, end] };
   }
 
+  const truthyResult: CalculateRangeChangeResponse<TDate> = allowRangeFlip
+    ? { nextSelection: 'end', newRange: [selectedDate, start!] }
+    : { nextSelection: 'end', newRange: [selectedDate, null] };
   return Boolean(start) && utils.isBefore(selectedDate!, start!)
-    ? { nextSelection: 'end', newRange: [selectedDate, null] }
+    ? truthyResult
     : { nextSelection: 'start', newRange: [start, selectedDate] };
 }
 
@@ -45,5 +60,5 @@ export function calculateRangePreview<TDate>(
   }
 
   const [previewStart, previewEnd] = newRange;
-  return options.currentlySelectingRangeEnd === 'end' ? [end, previewEnd] : [previewStart, start];
+  return options.rangePosition === 'end' ? [end, previewEnd] : [previewStart, start];
 }

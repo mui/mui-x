@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { fireEvent, userEvent, screen } from '@mui/monorepo/test/utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterClassToUse, adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
@@ -425,8 +426,6 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      // const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      //
       const rootElement = document.querySelector('.MuiDateCalendar-root')!;
       const selectedButton = document.querySelector('.Mui-selected')!;
 
@@ -438,6 +437,41 @@ describe('<DateCalendar />', () => {
 
       expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
       expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
+    });
+  });
+
+  describe('Performance', () => {
+    it('should only render newly selected day when selecting a day without a previously selected day', () => {
+      const RenderCount = spy((props) => <PickersDay {...props} />);
+
+      render(
+        <DateCalendar
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+    });
+
+    it('should only re-render previously selected day and newly selected day when selecting a day', () => {
+      const RenderCount = spy((props) => <PickersDay {...props} />);
+
+      render(
+        <DateCalendar
+          defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
     });
   });
 });

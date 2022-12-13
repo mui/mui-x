@@ -11,6 +11,8 @@ import {
   PickersPopper,
   PickersViewLayout,
   InferError,
+  PickersViewLayoutSlotsComponentsProps,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerParams,
@@ -18,7 +20,7 @@ import {
 } from './useDesktopRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange, RangePosition } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 const releaseInfo = getReleaseInfo();
@@ -42,13 +44,14 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const {
     open,
@@ -63,9 +66,10 @@ export const useDesktopRangePicker = <
     wrapperVariant: 'desktop',
     viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
-      currentDatePosition,
-      onCurrentDatePositionChange: setCurrentDatePosition,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
     },
   });
 
@@ -90,8 +94,8 @@ export const useDesktopRangePicker = <
     disabled,
     disableOpenPicker,
     onBlur: handleBlur,
-    currentDatePosition,
-    onCurrentDatePositionChange: setCurrentDatePosition,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
   });
 
   const Field = components.Field;
@@ -107,6 +111,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
       ref: fieldRef,
     },
     ownerState: props,
@@ -173,6 +178,15 @@ export const useDesktopRangePicker = <
     },
   };
 
+  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...componentsProps,
+    toolbar: {
+      ...componentsProps?.toolbar,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
+    } as ExportedBaseToolbarProps,
+  };
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
@@ -193,13 +207,16 @@ export const useDesktopRangePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickersViewLayout
             {...layoutProps}
             components={components}
-            componentsProps={componentsProps}
+            componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
           </PickersViewLayout>

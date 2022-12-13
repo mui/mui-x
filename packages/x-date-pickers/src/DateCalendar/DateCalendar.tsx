@@ -168,6 +168,7 @@ export type ExportedDateCalendarProps<TDate> = Omit<
   | 'componentsProps'
   | 'onFocusedViewChange'
   | 'focusedView'
+  | 'autoFocus'
 >;
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
@@ -462,6 +463,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     prevOpenViewRef.current = openView;
   }, [focusedView, handleFocusedViewChange, openView]);
 
+  const selectedDays = React.useMemo(() => [value], [value]);
+
   return (
     <DateCalendarRoot
       ref={ref}
@@ -496,7 +499,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
             <YearCalendar<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               value={value}
               onChange={handleDateYearChange}
               shouldDisableYear={shouldDisableYear}
@@ -509,7 +511,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
             <MonthCalendar<TDate>
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               hasFocus={hasFocus}
               className={className}
               value={value}
@@ -524,11 +525,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               {...calendarState}
               {...baseDateValidationProps}
               {...commonViewProps}
-              autoFocus={autoFocus}
               onMonthSwitchingAnimationEnd={onMonthSwitchingAnimationEnd}
               onFocusedDayChange={changeFocusedDay}
               reduceAnimations={reduceAnimations}
-              selectedDays={[value]}
+              selectedDays={selectedDays}
               onSelectedDaysChange={handleSelectedDayChange}
               shouldDisableDate={shouldDisableDate}
               shouldDisableMonth={shouldDisableMonth}

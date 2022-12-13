@@ -10,6 +10,7 @@
     "defaultValue": "The default value. Used when the component is not controlled.",
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
+    "disableDragEditing": "If <code>true</code>, editing dates by dragging is disabled.",
     "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
     "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
@@ -42,7 +43,6 @@
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component)."
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views."
   }
 }

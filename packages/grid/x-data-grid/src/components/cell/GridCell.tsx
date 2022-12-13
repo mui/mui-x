@@ -78,7 +78,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       `cell--text${capitalize(align)}`,
       isEditable && 'cell--editable',
       isSelected && 'selected',
-      showRightBorder && 'withBorder',
+      showRightBorder && 'cell--withRightBorder',
+      'withBorderColor',
     ],
     content: ['cellContent'],
   };

@@ -6,6 +6,7 @@ import {
   screen,
   RenderOptions,
   userEvent,
+  getByRole,
   act,
   fireEvent,
 } from '@mui/monorepo/test/utils';
@@ -213,6 +214,29 @@ export const getClockTouchEvent = (value: number, view: 'minutes' | '12hours' | 
   };
 };
 
+export const rangeCalendarDayTouches = {
+  '2018-01-01': {
+    clientX: 85,
+    clientY: 125,
+  },
+  '2018-01-02': {
+    clientX: 125,
+    clientY: 125,
+  },
+  '2018-01-09': {
+    clientX: 125,
+    clientY: 165,
+  },
+  '2018-01-10': {
+    clientX: 165,
+    clientY: 165,
+  },
+  '2018-01-11': {
+    clientX: 205,
+    clientY: 165,
+  },
+} as const;
+
 export const withPickerControls =
   <
     TValue,
@@ -268,13 +292,20 @@ export const stubMatchMedia = (matches = true) =>
     addListener: () => {},
     removeListener: () => {},
   });
+export const getPickerDay = (name: string, picker = 'January 2018') =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+
+export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+
+export const getCleanedSelectedContent = (input: HTMLInputElement) =>
+  cleanText(input.value.slice(input.selectionStart ?? 0, input.selectionEnd ?? 0));
 
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
   shouldRemoveDashSpaces: boolean = false,
 ) => {
-  let value = input.value.replace(/\u200e|\u2068|\u2069/g, '');
+  let value = cleanText(input.value);
   if (shouldRemoveDashSpaces) {
     value = value.replace(/ \/ /g, '/');
   }
@@ -304,3 +335,69 @@ export const buildFieldInteractions = ({
 
   return { clickOnInput };
 };
+
+export type DragEventTypes =
+  | 'dragStart'
+  | 'dragOver'
+  | 'dragEnter'
+  | 'dragLeave'
+  | 'dragEnd'
+  | 'drop';
+
+export class MockedDataTransfer implements DataTransfer {
+  data: Record<string, string>;
+
+  dropEffect: 'none' | 'copy' | 'move' | 'link';
+
+  effectAllowed:
+    | 'none'
+    | 'copy'
+    | 'copyLink'
+    | 'copyMove'
+    | 'link'
+    | 'linkMove'
+    | 'move'
+    | 'all'
+    | 'uninitialized';
+
+  files: FileList;
+
+  img?: Element;
+
+  items: DataTransferItemList;
+
+  types: string[];
+
+  xOffset: number;
+
+  yOffset: number;
+
+  constructor() {
+    this.data = {};
+    this.dropEffect = 'none';
+    this.effectAllowed = 'all';
+    this.files = [] as unknown as FileList;
+    this.items = [] as unknown as DataTransferItemList;
+    this.types = [];
+    this.xOffset = 0;
+    this.yOffset = 0;
+  }
+
+  clearData() {
+    this.data = {};
+  }
+
+  getData(format: string) {
+    return this.data[format];
+  }
+
+  setData(format: string, data: string) {
+    this.data[format] = data;
+  }
+
+  setDragImage(img: Element, xOffset: number, yOffset: number) {
+    this.img = img;
+    this.xOffset = xOffset;
+    this.yOffset = yOffset;
+  }
+}

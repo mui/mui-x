@@ -6,6 +6,7 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 
+// TODO v6: Drop with the legacy pickers
 export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDate>(
   props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

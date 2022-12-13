@@ -1,4 +1,9 @@
-import { GridValueFormatterParams, GridRowId, GridRowModel } from '@mui/x-data-grid-pro';
+import {
+  GridValueFormatterParams,
+  GridRowId,
+  GridRowModel,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 
 export interface GridAggregationState {
   model: GridAggregationModel;
@@ -77,6 +82,8 @@ export interface GridAggregationFunction<V = any, AV = V, FAV = AV> {
 
 interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
+  groupId: GridRowId;
+  field: GridColDef['field'];
 }
 
 export type GridAggregationModel = {
