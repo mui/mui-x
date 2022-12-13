@@ -1,11 +1,11 @@
-<GridItem label="Uncontrolled picker" spacing={2}>
+<DemoItem label="Uncontrolled picker">
   <NextDateRangePicker
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
   />
-</GridItem>
-<GridItem label="Controlled picker" spacing={2}>
+</DemoItem>
+<DemoItem label="Controlled picker">
   <NextDateRangePicker
     value={value}
     onChange={(newValue) => setValue(newValue)}
   />
-</GridItem>
+</DemoItem>

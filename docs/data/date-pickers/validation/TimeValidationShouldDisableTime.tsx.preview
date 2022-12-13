@@ -1,12 +1,12 @@
-<GridItem label="TimePicker">
+<DemoItem label="TimePicker">
   <NextTimePicker
     defaultValue={defaultValue}
     shouldDisableTime={shouldDisableTime}
   />
-</GridItem>
-<GridItem label="DateTimePicker">
+</DemoItem>
+<DemoItem label="DateTimePicker">
   <NextDateTimePicker
     defaultValue={defaultValue}
     shouldDisableTime={shouldDisableTime}
   />
-</GridItem>
+</DemoItem>
