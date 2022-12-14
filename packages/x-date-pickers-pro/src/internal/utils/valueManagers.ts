@@ -110,13 +110,8 @@ export const rangeFieldValueManager: FieldValueManager<
     const startDateStr = createDateStrForInputFromSections(
       dateRangeSections.startDate,
       startSeparator,
-      true,
     );
-    const endDateStr = createDateStrForInputFromSections(
-      dateRangeSections.endDate,
-      startSeparator,
-      true,
-    );
+    const endDateStr = createDateStrForInputFromSections(dateRangeSections.endDate, startSeparator);
 
     return `${startDateStr}${endDateStr}`;
   },

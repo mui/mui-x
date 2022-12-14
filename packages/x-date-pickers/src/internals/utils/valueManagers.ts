@@ -42,7 +42,7 @@ export const singleItemFieldValueManager: FieldValueManager<
     };
   },
   getValueStrFromSections: (sections, startSeparator) =>
-    createDateStrForInputFromSections(sections, startSeparator, true),
+    createDateStrForInputFromSections(sections, startSeparator),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
