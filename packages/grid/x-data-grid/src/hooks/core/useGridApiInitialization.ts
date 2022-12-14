@@ -73,8 +73,10 @@ export function useGridApiInitialization<
   if (!privateApiRef.current) {
     privateApiRef.current = wrapPublicApi<PrivateApi, Api>(publicApiRef.current);
 
-    privateApiRef.current.register('private', { caches: {} as PrivateApi['caches'] });
-    privateApiRef.current.register('private', { eventManager: new EventManager() });
+    privateApiRef.current.register('private', {
+      caches: {} as PrivateApi['caches'],
+      eventManager: new EventManager(),
+    });
   }
 
   React.useImperativeHandle(inputApiRef, () => publicApiRef.current, [publicApiRef]);
