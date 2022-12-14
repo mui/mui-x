@@ -19,7 +19,7 @@ describe('<DateField /> - Format', () => {
     expectInputValue(input, 'Escaped 2019');
   });
 
-  it('should support escaped characters between sections' + ' separator', () => {
+  it('should support escaped characters between sections separator', () => {
     const { start: startChar, end: endChar } = adapterToUse.escapedCharacters;
     // For Day.js: "MMMM [Escaped] YYYY"
     const { setProps } = render(
