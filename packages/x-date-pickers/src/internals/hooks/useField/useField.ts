@@ -447,22 +447,23 @@ export const useField = <
       return;
     }
 
-    const updateSelectionRangeIfChanged = (selectionStart: number, selectionEnd: number) => {
-      if (
-        selectionStart !== inputRef.current!.selectionStart ||
-        selectionEnd !== inputRef.current!.selectionEnd
-      ) {
-        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
-      }
-    };
+    let selectionStart = state.sections[selectedSectionIndexes.startIndex].startInInput;
+    const selectionEnd = state.sections[selectedSectionIndexes.endIndex].endInInput;
 
-    const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
-    const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
+    // If we are selecting all sections, we want to select the start selector as well.
+    if (
+      selectedSectionIndexes.startIndex === 0 &&
+      selectedSectionIndexes.endIndex === state.sections.length - 1
+    ) {
+      selectionStart = 1;
+    }
 
-    updateSelectionRangeIfChanged(
-      firstSelectedSection.startInInput,
-      lastSelectedSection.endInInput,
-    );
+    if (
+      selectionStart !== inputRef.current!.selectionStart ||
+      selectionEnd !== inputRef.current!.selectionEnd
+    ) {
+      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+    }
   });
 
   const validationError = useValidation(

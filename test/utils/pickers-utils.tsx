@@ -46,7 +46,7 @@ const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapte
   // 'js-joda': AdapterJsJoda,
 };
 
-let AdapterClassToExtend = availableAdapters['date-fns'];
+let AdapterClassToExtend = availableAdapters['dayjs'];
 
 // Check if we are in unit tests
 if (/jsdom/.test(window.navigator.userAgent)) {

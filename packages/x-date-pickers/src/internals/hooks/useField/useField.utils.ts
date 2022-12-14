@@ -363,25 +363,18 @@ export const splitFormatIntoSections = <TDate>(
 ) => {
   const expandedFormat = utils.expandFormat(format);
 
-  let escapeDepth = 0;
+  let isInsideEscapedPart = false;
   let currentEscapeStart: number = 0;
-  const escapedIndexes: { start: number; end: number | null }[] = [];
+  const escapedIndexes: { start: number; end: number }[] = [];
   for (let i = 0; i < expandedFormat.length; i += 1) {
     const char = expandedFormat[i];
-    if (char === utils.escapedCharacters.start) {
-      if (escapeDepth === 0) {
-        currentEscapeStart = i;
-      }
-      escapeDepth += 1;
-    } else if (char === utils.escapedCharacters.end && escapeDepth > 0) {
-      escapeDepth -= 1;
-      if (escapeDepth === 0) {
-        escapedIndexes.push({ start: currentEscapeStart, end: i });
-      }
-    }
 
-    if (escapeDepth > 0 && i === expandedFormat.length - 1) {
+    if (char === utils.escapedCharacters.end && isInsideEscapedPart) {
+      isInsideEscapedPart = false;
       escapedIndexes.push({ start: currentEscapeStart, end: i });
+    } else if (char === utils.escapedCharacters.start && !isInsideEscapedPart) {
+      currentEscapeStart = i;
+      isInsideEscapedPart = true;
     }
   }
 
@@ -416,12 +409,12 @@ export const splitFormatIntoSections = <TDate>(
 
   for (let i = 0; i < expandedFormat.length; i += 1) {
     const currentEscapedIndex = escapedIndexes.find(
-      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end! >= i,
+      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
     );
 
     const char = expandedFormat[i];
 
-    if (currentEscapedIndex == null && char.match(/([A-zÀ-ú]+)/g)) {
+    if (currentEscapedIndex == null && char.match(/([A-Za-z]+)/g)) {
       currentTokenValue += char;
     }
     // If we are on the starting of the ending character of an escaped part of the format,
