@@ -24,7 +24,7 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
       'themeVariants',
     ],
   }));
-  
+
   describeRangeValidation(SingleInputDateRangeField, () => ({
     render,
     clock,
