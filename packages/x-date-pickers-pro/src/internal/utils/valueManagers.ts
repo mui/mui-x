@@ -7,7 +7,7 @@ import {
   createDateStrFromSections,
   getSectionOrder,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DateRangeFieldSection } from '../models/range';
+import { DateRange } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
@@ -36,7 +36,7 @@ export const rangeValueManager: RangePickerStateValueManager = {
 export const rangeFieldValueManager: FieldValueManager<
   DateRange<any>,
   any,
-  DateRangeFieldSection,
+  RangeFieldSection,
   DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
@@ -63,7 +63,7 @@ export const rangeFieldValueManager: FieldValueManager<
         ? { startDate: null, endDate: null }
         : splitDateRangeSections(prevSections);
 
-    const getSections = (newDate: any | null, prevDateSections: DateRangeFieldSection[] | null) => {
+    const getSections = (newDate: any | null, prevDateSections: RangeFieldSection[] | null) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
 
       if (shouldReUsePrevDateSections) {

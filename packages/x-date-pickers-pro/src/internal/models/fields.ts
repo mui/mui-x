@@ -10,9 +10,7 @@ export interface RangeFieldSection extends FieldSection {
 }
 
 export interface RangeFieldSectionWithoutPosition
-  extends Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'> {
-  dateName: 'start' | 'end';
-}
+  extends Omit<RangeFieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'> {}
 
 export interface BaseMultiInputFieldProps<TValue, TError>
   extends Omit<BaseFieldProps<TValue, TError>, 'components' | 'componentsProps'> {
