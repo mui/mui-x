@@ -42,7 +42,6 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       OpenPickerIcon: Calendar,
       Field: DateField,
@@ -78,6 +77,9 @@ DesktopNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

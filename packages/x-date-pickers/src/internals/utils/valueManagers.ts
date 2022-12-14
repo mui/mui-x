@@ -8,6 +8,7 @@ import {
   addPositionPropertiesToSections,
   createDateStrFromSections,
   splitFormatIntoSections,
+  getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
 export type SingleItemPickerStateValueManager<
@@ -53,4 +54,6 @@ export const singleItemFieldValueManager: FieldValueManager<
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   hasError: (error) => error != null,
+  getSectionOrder: (utils, localeText, format, isRTL) =>
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };

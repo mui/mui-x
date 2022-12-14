@@ -44,6 +44,7 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
@@ -65,6 +66,7 @@ export const useDesktopRangePicker = <
     wrapperVariant: 'desktop',
     viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange: setRangePosition,
@@ -109,6 +111,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
       ref: fieldRef,
     },
     ownerState: props,

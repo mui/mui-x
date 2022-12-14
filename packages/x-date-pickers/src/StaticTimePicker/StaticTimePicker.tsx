@@ -129,6 +129,7 @@ StaticTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  autoFocus: PropTypes.bool,
   /**
    * className applied to the root component.
    */

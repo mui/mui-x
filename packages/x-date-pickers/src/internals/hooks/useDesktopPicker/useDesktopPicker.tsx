@@ -31,7 +31,16 @@ export const useDesktopPicker = <
   viewLookup,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
+  const {
+    components,
+    componentsProps,
+    className,
+    format,
+    readOnly,
+    disabled,
+    autoFocus,
+    localeText,
+  } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -50,6 +59,7 @@ export const useDesktopPicker = <
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
@@ -64,6 +74,7 @@ export const useDesktopPicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
     },
     ownerState: props,
   });

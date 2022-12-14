@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
@@ -10,7 +10,7 @@ import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from 
 export default function ResponsiveDateTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
+      <DemoContainer>
         <MobileNextDateTimePicker
           label="For mobile"
           defaultValue={dayjs('2022-04-07T15:30')}
@@ -23,7 +23,7 @@ export default function ResponsiveDateTimePickers() {
           label="Responsive"
           defaultValue={dayjs('2022-04-07T15:30')}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

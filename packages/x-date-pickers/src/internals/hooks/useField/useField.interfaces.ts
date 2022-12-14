@@ -97,8 +97,24 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   };
 
 export interface FieldSection {
+  /**
+   * Start index of the section in the format
+   */
   start: number;
+  /**
+   * End index of the section in the format
+   */
   end: number;
+  /**
+   * Start index of the section value in the input.
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
+   */
+  startInInput: number;
+  /**
+   * End index of the section value in the input.
+   * Takes into account invisible unicode characters such as \u2069 but does not include them
+   */
+  endInInput: number;
   value: string;
   placeholder: string;
   /**
@@ -249,6 +265,21 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @returns {boolean} `true` if the current error is not empty.
    */
   hasError: (error: TError) => boolean;
+  /**
+   * Return a description of sections display order. This description is usefull in RTL mode.
+   * @template TDate
+   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
+   * @param {PickersLocaleText<TDate>} localeText The translation object.
+   * @param {string} format The format from which sections are computed.
+   * @param {boolean} isRTL Is the field in right-to-left orientation.
+   * @returns {SectionOrdering} The description of sections order from left to right.
+   */
+  getSectionOrder: (
+    utils: MuiPickersAdapter<TDate>,
+    localeText: PickersLocaleText<TDate>,
+    format: string,
+    isRTL: boolean,
+  ) => SectionOrdering;
 }
 
 export interface UseFieldState<TValue, TSection extends FieldSection> {
@@ -292,3 +323,31 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
+
+export type SectionNeighbors = {
+  [sectionIndex: number]: {
+    /**
+     * Index of the next section displayed on the left. `null` if it's the leftmost section.
+     */
+    leftIndex: number | null;
+    /**
+     * Index of the next section displayed on the right. `null` if it's the rightmost section.
+     */
+    rightIndex: number | null;
+  };
+};
+
+export type SectionOrdering = {
+  /**
+   * For each section index provide the index of the section displayed on the left and on the right.
+   */
+  neighbors: SectionNeighbors;
+  /**
+   * Index of the section displayed on the far left
+   */
+  startIndex: number;
+  /**
+   * Index of the section displayed on the far right
+   */
+  endIndex: number;
+};
