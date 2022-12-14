@@ -1,28 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import {
   gridColumnLookupSelector,
   useGridSelector,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
-import { styled } from '@mui/material/styles';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridRowGroupingSanitizedModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(16),
-  fontWeight: theme.typography.fontWeightRegular,
-  textTransform: 'none',
-}));
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
+  const rootProps = useGridRootProps();
 
   if (!colDef.groupable) {
     return null;
@@ -42,26 +37,22 @@ function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
-      <StyledButton
-        onClick={ungroupColumn}
-        key={colDef.field}
-        startIcon={<rootProps.components.ColumnMenuUngroupIcon />}
-        color="inherit"
-      >
-        {apiRef.current.getLocaleText('unGroupColumn')(name)}
-      </StyledButton>
+      <MenuItem onClick={ungroupColumn}>
+        <ListItemIcon>
+          <rootProps.components.ColumnMenuUngroupIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
+      </MenuItem>
     );
   }
 
   return (
-    <StyledButton
-      onClick={groupColumn}
-      key={colDef.field}
-      startIcon={<rootProps.components.ColumnMenuGroupIcon />}
-      color="inherit"
-    >
-      {apiRef.current.getLocaleText('groupColumn')(name)}
-    </StyledButton>
+    <MenuItem onClick={groupColumn}>
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuGroupIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
+    </MenuItem>
   );
 }
 

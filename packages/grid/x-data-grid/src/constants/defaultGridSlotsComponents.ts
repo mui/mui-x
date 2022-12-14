@@ -45,7 +45,7 @@ import {
   GridViewColumnIcon,
   GridClearIcon,
 } from '../components';
-import { GridColumnMenuDefault } from '../components/menu/columnMenu/default/GridColumnMenuDefault';
+import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
@@ -97,7 +97,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Cell: GridCell,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
-  ColumnMenu: GridColumnMenuDefault,
+  ColumnMenu: GridColumnMenu,
   ErrorOverlay: GridErrorOverlay,
   Footer: GridFooter,
   Header: GridHeader,

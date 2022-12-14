@@ -73,7 +73,6 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
 ### Column menu
 
-- The `GridColumnMenu` component was renamed to `GridColumnMenuDefault` with the new column menu design. For previous design, use `GridColumnMenuSimple`.
 - The column menu components have been renamed with the new design for consistency and API improvemennt, the renamed components are following:
 
   | Old name                          | New name                        |

@@ -2,8 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridColumnMenuItemProps, useGridSelector } from '@mui/x-data-grid-pro';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import FunctionsIcon from '@mui/icons-material/Functions';
 import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -66,32 +69,39 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
 
   return (
-    <FormControl size="small" fullWidth sx={{ minWidth: 150, my: 0.5 }}>
-      <InputLabel id={`${id}-label`}>{label}</InputLabel>
-      <Select
-        labelId={`${id}-label`}
-        id={`${id}-input`}
-        value={selectedAggregationRule}
-        label={label}
-        color="primary"
-        onChange={handleAggregationItemChange}
-        onBlur={(e) => e.stopPropagation()}
-        fullWidth
-      >
-        <MenuItem value="">...</MenuItem>
-        {availableAggregationFunctions.map((aggFunc) => (
-          <MenuItem key={aggFunc} value={aggFunc}>
-            {getAggregationFunctionLabel({
-              apiRef,
-              aggregationRule: {
-                aggregationFunctionName: aggFunc,
-                aggregationFunction: rootProps.aggregationFunctions[aggFunc],
-              },
-            })}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <MenuItem disableRipple>
+      <ListItemIcon>
+        <FunctionsIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>
+        <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>
+          <InputLabel id={`${id}-label`}>{label}</InputLabel>
+          <Select
+            labelId={`${id}-label`}
+            id={`${id}-input`}
+            value={selectedAggregationRule}
+            label={label}
+            color="primary"
+            onChange={handleAggregationItemChange}
+            onBlur={(e) => e.stopPropagation()}
+            fullWidth
+          >
+            <MenuItem value="">...</MenuItem>
+            {availableAggregationFunctions.map((aggFunc) => (
+              <MenuItem key={aggFunc} value={aggFunc}>
+                {getAggregationFunctionLabel({
+                  apiRef,
+                  aggregationRule: {
+                    aggregationFunctionName: aggFunc,
+                    aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+                  },
+                })}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </ListItemText>
+    </MenuItem>
   );
 }
 
@@ -105,22 +115,3 @@ GridColumnMenuAggregationItem.propTypes = {
 } as any;
 
 export { GridColumnMenuAggregationItem };
-
-function GridColumnMenuAggregationItemSimple(props: GridColumnMenuItemProps) {
-  return (
-    <MenuItem disableRipple>
-      <GridColumnMenuAggregationItem {...props} />
-    </MenuItem>
-  );
-}
-
-GridColumnMenuAggregationItemSimple.propTypes = {
-  // ----------------------------- Warning --------------------------------
-  // | These PropTypes are generated from the TypeScript type definitions |
-  // | To update them edit the TypeScript types and run "yarn proptypes"  |
-  // ----------------------------------------------------------------------
-  colDef: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-} as any;
-
-export { GridColumnMenuAggregationItemSimple };

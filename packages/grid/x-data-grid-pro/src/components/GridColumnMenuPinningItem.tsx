@@ -1,19 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { GridColumnMenuItemProps } from '@mui/x-data-grid';
-import { styled } from '@mui/material/styles';
 import { GridPinnedPosition } from '../hooks/features/columnPinning';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  fontSize: theme.typography.pxToRem(16),
-  fontWeight: theme.typography.fontWeightRegular,
-  textTransform: 'none',
-}));
 
 function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
@@ -36,31 +29,41 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
 
   const side = apiRef.current.isColumnPinned(colDef.field);
 
+  if (side) {
+    const otherSide =
+      side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
+    const label = otherSide === GridPinnedPosition.right ? 'pinToRight' : 'pinToLeft';
+
+    return (
+      <React.Fragment>
+        <MenuItem onClick={pinColumn(otherSide)}>
+          <ListItemIcon>
+            <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{apiRef.current.getLocaleText(label)}</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={unpinColumn}>
+          <ListItemIcon />
+          <ListItemText>{apiRef.current.getLocaleText('unpin')}</ListItemText>
+        </MenuItem>
+      </React.Fragment>
+    );
+  }
+
   return (
     <React.Fragment>
-      <Typography color="text.secondary" fontSize="12px">
-        Pin to
-      </Typography>
-      <Stack direction="row">
-        <StyledButton
-          onClick={
-            side === GridPinnedPosition.left ? unpinColumn : pinColumn(GridPinnedPosition.left)
-          }
-          startIcon={<rootProps.components.ColumnMenuPinLeftIcon />}
-          color={side === GridPinnedPosition.left ? 'primary' : 'inherit'}
-        >
-          {apiRef.current.getLocaleText('directionLeft')}
-        </StyledButton>
-        <StyledButton
-          onClick={
-            side === GridPinnedPosition.right ? unpinColumn : pinColumn(GridPinnedPosition.right)
-          }
-          startIcon={<rootProps.components.ColumnMenuPinRightIcon />}
-          color={side === GridPinnedPosition.right ? 'primary' : 'inherit'}
-        >
-          {apiRef.current.getLocaleText('directionRight')}
-        </StyledButton>
-      </Stack>
+      <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
+        <ListItemIcon>
+          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
+        <ListItemIcon>
+          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
+      </MenuItem>
     </React.Fragment>
   );
 }

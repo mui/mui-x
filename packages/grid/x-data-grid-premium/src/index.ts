@@ -29,10 +29,7 @@ export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverlo
 export type { GridApi, GridInitialState, GridState } from './typeOverloads/reexports';
 
 export {
-  GridColumnMenuDefault,
-  GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
-  GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
-  GridColumnMenuSimple,
-  GRID_COLUMN_MENU_SIMPLE_COMPONENTS,
-  GRID_COLUMN_MENU_SIMPLE_COMPONENTS_PROPS,
+  GridColumnMenu,
+  GRID_COLUMN_MENU_COMPONENTS,
+  GRID_COLUMN_MENU_COMPONENTS_PROPS,
 } from './components/reexports';

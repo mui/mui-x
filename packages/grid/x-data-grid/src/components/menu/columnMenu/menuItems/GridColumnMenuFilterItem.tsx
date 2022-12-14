@@ -1,37 +1,40 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@mui/material/Button';
-
-import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
-  const { onClick } = props;
+function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const showColumns = React.useCallback(
+  const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
-      apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
+      apiRef.current.showFilterPanel(colDef.field);
     },
-    [apiRef, onClick],
+    [apiRef, colDef.field, onClick],
   );
 
-  if (rootProps.disableColumnSelector) {
+  if (rootProps.disableColumnFilter || !colDef.filterable) {
     return null;
   }
 
   return (
-    <Button onClick={showColumns} startIcon={<rootProps.components.ColumnMenuManageColumnsIcon />}>
-      {apiRef.current.getLocaleText('columnMenuManageColumns')}
-    </Button>
+    <MenuItem onClick={showFilter}>
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuFilterIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('columnMenuFilter')}</ListItemText>
+    </MenuItem>
   );
 }
 
-GridColumnMenuColumnsItem.propTypes = {
+GridColumnMenuFilterItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -40,4 +43,4 @@ GridColumnMenuColumnsItem.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { GridColumnMenuColumnsItem };
+export { GridColumnMenuFilterItem };

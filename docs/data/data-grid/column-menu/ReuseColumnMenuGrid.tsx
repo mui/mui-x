@@ -1,10 +1,12 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import IconFilter from '@mui/icons-material/FilterAlt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import {
   DataGrid,
-  GridColumnMenuDefault,
+  GridColumnMenu,
   GridColumnMenuProps,
   GridColumnMenuItemProps,
   useGridApiContext,
@@ -22,24 +24,30 @@ function CustomFilterItem(props: GridColumnMenuItemProps) {
     [apiRef, colDef.field, onClick],
   );
   return (
-    <Button onClick={handleClick} startIcon={<IconFilter />}>
-      Show Filters
-    </Button>
+    <MenuItem onClick={handleClick}>
+      <ListItemIcon>
+        <IconFilter fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>Show Filters</ListItemText>
+    </MenuItem>
   );
 }
 
 function CustomUserItem(props: GridColumnMenuItemProps) {
   const { myCustomHandler, myCustomValue } = props;
   return (
-    <Button onClick={myCustomHandler} startIcon={<SettingsApplicationsIcon />}>
-      {myCustomValue}
-    </Button>
+    <MenuItem onClick={myCustomHandler}>
+      <ListItemIcon>
+        <SettingsApplicationsIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{myCustomValue}</ListItemText>
+    </MenuItem>
   );
 }
 
 function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
-    <GridColumnMenuDefault
+    <GridColumnMenu
       {...props}
       components={{
         // Override slot for `ColumnMenuFilterItem`

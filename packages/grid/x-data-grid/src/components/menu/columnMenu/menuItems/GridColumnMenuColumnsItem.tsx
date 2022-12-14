@@ -1,12 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { GridPreferencePanelsValue } from '../../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-function GridColumnMenuColumnsItemSimple(props: GridColumnMenuItemProps) {
+function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -25,12 +27,15 @@ function GridColumnMenuColumnsItemSimple(props: GridColumnMenuItemProps) {
 
   return (
     <MenuItem onClick={showColumns}>
-      {apiRef.current.getLocaleText('columnMenuShowColumns')}
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuManageColumnsIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('columnMenuShowColumns')}</ListItemText>
     </MenuItem>
   );
 }
 
-GridColumnMenuColumnsItemSimple.propTypes = {
+GridColumnMenuColumnsItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -39,4 +44,4 @@ GridColumnMenuColumnsItemSimple.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { GridColumnMenuColumnsItemSimple };
+export { GridColumnMenuColumnsItem };

@@ -1,35 +1,39 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Divider from '@mui/material/Divider';
 import { styled } from '@mui/material/styles';
-import { useGridColumnMenuComponents } from '../../../../hooks/features/columnMenu/useGridColumnMenuComponents';
-import { GridColumnMenuContainer } from '../GridColumnMenuContainer';
-import { GridColumnMenuProps, GridGenericColumnMenuProps } from '../GridColumnMenuProps';
-import { GridColumnMenuColumnsItem } from './GridColumnMenuColumnsItem';
-import { GridColumnMenuFilterItem } from './GridColumnMenuFilterItem';
-import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
-import { GridColumnMenuSortItem } from './GridColumnMenuSortItem';
+import MenuList from '@mui/material/MenuList';
+import Divider from '@mui/material/Divider';
 
-export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS = {
+import { useGridColumnMenuComponents } from '../../../hooks/features/columnMenu/useGridColumnMenuComponents';
+import { GridColumnMenuContainer } from './GridColumnMenuContainer';
+import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
+import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
+import { GridColumnMenuHideItem } from './menuItems/GridColumnMenuHideItem';
+import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
+import { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
+
+export const GRID_COLUMN_MENU_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItem,
   ColumnMenuFilterItem: GridColumnMenuFilterItem,
   ColumnMenuHideItem: GridColumnMenuHideItem,
   ColumnMenuColumnsItem: GridColumnMenuColumnsItem,
 };
 
-export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS = {
+export const GRID_COLUMN_MENU_COMPONENTS_PROPS = {
   columnMenuSortItem: { displayOrder: 10 },
   columnMenuFilterItem: { displayOrder: 20 },
   columnMenuHideItem: { displayOrder: 30 },
   columnMenuColumnsItem: { displayOrder: 40 },
 };
 
-const StyledDiv = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0.5, 1.5, 0.5, 1.5),
+const StyledDivider = styled(Divider)(() => ({
+  // TODO: Get rid of `!important`
+  marginBottom: '0px !important',
+  marginTop: '0px !important',
 }));
 
-const GridGenericColumnMenuDefault = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
-  function GridColumnMenuDefault(props, ref) {
+const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
+  function GridGenericColumnMenu(props, ref) {
     const { defaultComponents, defaultComponentsProps, components, componentsProps, ...other } =
       props;
 
@@ -42,13 +46,11 @@ const GridGenericColumnMenuDefault = React.forwardRef<HTMLUListElement, GridGene
     });
 
     return (
-      <GridColumnMenuContainer ref={ref} {...other}>
-        {orderedComponents.map(([Component, extraProps], index: number) => (
+      <GridColumnMenuContainer MenuListComponent={MenuList} ref={ref} {...other}>
+        {orderedComponents.map(([Component, extraProps], index) => (
           <div key={index}>
-            <StyledDiv>
-              <Component onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
-            </StyledDiv>
-            {index !== orderedComponents.length - 1 ? <Divider /> : null}
+            <Component key={index} onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />
+            {index !== orderedComponents.length - 1 ? <StyledDivider /> : null}
           </div>
         ))}
       </GridColumnMenuContainer>
@@ -56,20 +58,20 @@ const GridGenericColumnMenuDefault = React.forwardRef<HTMLUListElement, GridGene
   },
 );
 
-const GridColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
-  function GridColumnMenuDefault(props, ref) {
+const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+  function GridColumnMenu(props, ref) {
     return (
-      <GridGenericColumnMenuDefault
+      <GridGenericColumnMenu
         {...props}
         ref={ref}
-        defaultComponents={GRID_COLUMN_MENU_DEFAULT_COMPONENTS}
-        defaultComponentsProps={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS}
+        defaultComponents={GRID_COLUMN_MENU_COMPONENTS}
+        defaultComponentsProps={GRID_COLUMN_MENU_COMPONENTS_PROPS}
       />
     );
   },
 );
 
-GridColumnMenuDefault.propTypes = {
+GridColumnMenu.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -92,4 +94,4 @@ GridColumnMenuDefault.propTypes = {
   open: PropTypes.bool.isRequired,
 } as any;
 
-export { GridColumnMenuDefault, GridGenericColumnMenuDefault };
+export { GridColumnMenu, GridGenericColumnMenu };

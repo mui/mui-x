@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { styled, Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
-  GridColumnMenuDefault,
+  GridColumnMenu,
   GridColumnMenuContainer,
   GridColumnMenuProps,
   GridColumnMenuFilterItem,
@@ -24,7 +24,7 @@ const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)<{
   background: theme.palette[ownerState.color].main,
 }));
 
-const StyledGridColumnMenu = styled(GridColumnMenuDefault)<{
+const StyledGridColumnMenu = styled(GridColumnMenu)<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }: { theme: Theme; ownerState: OwnerState }) => ({
   background: theme.palette[ownerState.color].main,

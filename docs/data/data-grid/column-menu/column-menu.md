@@ -18,7 +18,7 @@ It can be accessed by clicking on the 3-dots icon that appears on hover on a hea
 
 You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component.
 
-**components**: Prop accepted by column menu components `<GridColumnMenuDefault />` or `<GridColumnMenuSimple />`, could be used to override default column menu components or add new components.
+**components**: Prop accepted by default column menu component `<GridColumnMenu />`, could be used to override default column menu components or add new components.
 
 **componentsProps**: Use this prop to override or pass [`displayOrder`](/x/react-data-grid/column-menu/#reordering-menu-items) for column menu items. You can also use this to pass extra props to custom column menu components.
 
@@ -34,7 +34,7 @@ You can also set the `displayOrder` (default `100`) or pass new props to the com
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
-    <GridColumnMenuDefault
+    <GridColumnMenu
       {...props}
       components={{
         // Add new item
@@ -62,7 +62,7 @@ Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-c
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
-    <GridColumnMenuDefault
+    <GridColumnMenu
       {...props}
       components={{
         // Override `ColumnMenuFilterItem` component
@@ -81,7 +81,7 @@ Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-c
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
-    <GridColumnMenuDefault
+    <GridColumnMenu
       {...props}
       components={{
         // Hide `ColumnMenuColumnsItem`
@@ -103,7 +103,7 @@ Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-c
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
-    <GridColumnMenuDefault
+    <GridColumnMenu
       {...props}
       componentsProps={{
         // Swap positions of filter and sort items
@@ -125,7 +125,7 @@ The following demo implements adding, overriding, hiding, and re-ordering of col
 
 ### Column menu items and their configurations
 
-As a reference, here are the default `components` supported by each column menu design along with the default item components and `displayOrder`.
+As a reference, here are the column menu `components` along with the default item components and `displayOrder`.
 
 {{"demo": "ColumnMenuGridReferences.js", "bg": "inline", "hideToolbar": true}}
 
@@ -139,23 +139,17 @@ You can also customize and replace the column menu by [passing a fully custom co
 <strong>Tip</strong>: In the `ColumnMenu` component and its items, you receive the prop `colDef` corresponding to the current column; you can use this to conditionally render some items or change some logic.
 :::
 
-## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
-
-In the following demo, you can see in action all the additional menu items related to the commercial features.
-
-{{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
-
-## Simple column menu
-
-You can replace the default column menu with a simplified one using the `GridColumnMenuSimple` component.
-
-{{"demo": "SimpleColumnMenuGrid.js", "bg": "inline"}}
-
 ## Disable column menu
 
 By default, each column header has the column menu enabled. To disable the column menu, set the prop `disableColumnMenu={true}`.
 
 {{"demo": "DisabledColumnMenuGrid.js", "bg": "inline"}}
+
+## Column menu with Pro/Premium options [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+
+In the following demo, you can see in action all the additional menu items related to the commercial features.
+
+{{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
 
 ## API
 

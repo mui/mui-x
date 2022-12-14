@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  GridGenericColumnMenuDefault,
+  GridGenericColumnMenu,
   GridColumnMenuProps,
-  GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
-  GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
+  GRID_COLUMN_MENU_COMPONENTS,
+  GRID_COLUMN_MENU_COMPONENTS_PROPS,
   GridColumnMenuItemProps,
 } from '@mui/x-data-grid-pro';
 import { GridColumnMenuAggregationItem } from './GridColumnMenuAggregationItem';
@@ -23,32 +23,36 @@ function GroupingItem(props: GridColumnMenuItemProps) {
   return null;
 }
 
-export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PREMIUM = {
-  ...GRID_COLUMN_MENU_DEFAULT_COMPONENTS,
-  ColumnMenuAggregationItem: GridColumnMenuAggregationItem,
+function AggregationItem(props: GridColumnMenuItemProps) {
+  return <GridColumnMenuAggregationItem {...props} />;
+}
+
+export const GRID_COLUMN_MENU_COMPONENTS_PREMIUM = {
+  ...GRID_COLUMN_MENU_COMPONENTS,
+  ColumnMenuAggregationItem: AggregationItem,
   ColumnMenuGroupingItem: GroupingItem,
 };
 
-export const GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PREMIUM = {
-  ...GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS,
-  columnMenuAggregationItem: { displayOrder: 27 },
-  columnMenuGroupingItem: { displayOrder: 23 },
+export const GRID_COLUMN_MENU_COMPONENTS_PROPS_PREMIUM = {
+  ...GRID_COLUMN_MENU_COMPONENTS_PROPS,
+  columnMenuAggregationItem: { displayOrder: 47 },
+  columnMenuGroupingItem: { displayOrder: 43 },
 };
 
-const GridPremiumColumnMenuDefault = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
-  function GridPremiumColumnMenuDefault(props, ref) {
+const GridPremiumColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
+  function GridPremiumColumnMenuSimple(props, ref) {
     return (
-      <GridGenericColumnMenuDefault
+      <GridGenericColumnMenu
         ref={ref}
         {...props}
-        defaultComponents={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PREMIUM}
-        defaultComponentsProps={GRID_COLUMN_MENU_DEFAULT_COMPONENTS_PROPS_PREMIUM}
+        defaultComponents={GRID_COLUMN_MENU_COMPONENTS_PREMIUM}
+        defaultComponentsProps={GRID_COLUMN_MENU_COMPONENTS_PROPS_PREMIUM}
       />
     );
   },
 );
 
-GridPremiumColumnMenuDefault.propTypes = {
+GridPremiumColumnMenu.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -58,4 +62,4 @@ GridPremiumColumnMenuDefault.propTypes = {
   open: PropTypes.bool.isRequired,
 } as any;
 
-export { GridPremiumColumnMenuDefault };
+export { GridPremiumColumnMenu };

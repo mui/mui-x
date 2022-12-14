@@ -1,12 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-function GridColumnMenuHideItemSimple(props: GridColumnMenuItemProps) {
+function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -50,12 +52,15 @@ function GridColumnMenuHideItemSimple(props: GridColumnMenuItemProps) {
 
   return (
     <MenuItem onClick={toggleColumn} disabled={disabled}>
-      {apiRef.current.getLocaleText('columnMenuHideColumn')}
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuHideIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumn')}</ListItemText>
     </MenuItem>
   );
 }
 
-GridColumnMenuHideItemSimple.propTypes = {
+GridColumnMenuHideItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -64,4 +69,4 @@ GridColumnMenuHideItemSimple.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { GridColumnMenuHideItemSimple };
+export { GridColumnMenuHideItem };

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { useGridSelector } from '../../../../hooks/utils/useGridSelector';
 import { gridSortModelSelector } from '../../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../../models/gridSortModel';
@@ -8,7 +10,7 @@ import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
 import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 
-function GridColumnMenuSortItemSimple(props: GridColumnMenuItemProps) {
+function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
@@ -42,30 +44,33 @@ function GridColumnMenuSortItemSimple(props: GridColumnMenuItemProps) {
 
   return (
     <React.Fragment>
-      {sortingOrder.includes(null) ? (
-        <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
-          {apiRef.current.getLocaleText('columnMenuUnsort')}
+      {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
+        <MenuItem onClick={onSortMenuItemClick} data-value="asc">
+          <ListItemIcon>
+            <rootProps.components.ColumnMenuSortAscendingIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortAsc')}</ListItemText>
         </MenuItem>
       ) : null}
-      {sortingOrder.includes('asc') ? (
-        <MenuItem onClick={onSortMenuItemClick} data-value="asc" disabled={sortDirection === 'asc'}>
-          {apiRef.current.getLocaleText('columnMenuSortAsc')}
+      {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
+        <MenuItem onClick={onSortMenuItemClick} data-value="desc">
+          <ListItemIcon>
+            <rootProps.components.ColumnMenuSortDescendingIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{apiRef.current.getLocaleText('columnMenuSortDesc')}</ListItemText>
         </MenuItem>
       ) : null}
-      {sortingOrder.includes('desc') ? (
-        <MenuItem
-          onClick={onSortMenuItemClick}
-          data-value="desc"
-          disabled={sortDirection === 'desc'}
-        >
-          {apiRef.current.getLocaleText('columnMenuSortDesc')}
+      {sortingOrder.includes(null) && sortDirection != null ? (
+        <MenuItem onClick={onSortMenuItemClick}>
+          <ListItemIcon />
+          <ListItemText>{apiRef.current.getLocaleText('columnMenuUnsort')}</ListItemText>
         </MenuItem>
       ) : null}
     </React.Fragment>
   );
 }
 
-GridColumnMenuSortItemSimple.propTypes = {
+GridColumnMenuSortItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -74,4 +79,4 @@ GridColumnMenuSortItemSimple.propTypes = {
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { GridColumnMenuSortItemSimple };
+export { GridColumnMenuSortItem };

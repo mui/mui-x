@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import {
-  GridColumnMenuDefault,
+  GridColumnMenu,
   GridColumnMenuContainer,
   GridColumnMenuFilterItem,
   GridColumnMenuSortItem,
@@ -19,11 +19,9 @@ const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
   }),
 );
 
-const StyledGridColumnMenu = styled(GridColumnMenuDefault)(
-  ({ theme, ownerState }) => ({
-    background: theme.palette[ownerState.color].main,
-  }),
-);
+const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => ({
+  background: theme.palette[ownerState.color].main,
+}));
 
 function CustomColumnMenuComponent(props) {
   const { hideMenu, colDef, color, ...other } = props;

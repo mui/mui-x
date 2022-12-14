@@ -3,9 +3,7 @@ export * from './GridColumnHeaderMenu';
 export * from './GridColumnMenuProps';
 export * from './GridColumnMenuItemProps';
 export * from './GridColumnMenuContainer';
+export { GridGenericColumnMenu } from './GridColumnMenu';
 
-// default one
-export * from './default';
-
-// simple one
-export * from './simple';
+// items
+export * from './menuItems';
