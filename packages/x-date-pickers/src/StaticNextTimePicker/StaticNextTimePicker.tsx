@@ -34,6 +34,7 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDat
     ...defaultizedProps,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    showViewSwitcher: displayStaticWrapperAs === 'desktop',
   };
 
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
