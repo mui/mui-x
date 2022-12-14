@@ -33,6 +33,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
+  | `showCellRightBorder`      | `showCellVerticalBorder`      |
+  | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
 
 ### Removed props
 
@@ -161,11 +163,15 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `MAX_PAGE_SIZE` constant was removed.
 - The `useGridScrollFn` hook was removed.
 
-<!--
 ### CSS classes
 
-TBD
+- Some CSS classes were removed or renamed
 
+  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
+  | ------------------------- | ------------------------------ | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+
+<!--
 ### Virtualization
 
 TBD

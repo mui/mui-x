@@ -42,7 +42,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
 
   const slots = {
-    root: ['root', autoHeight && 'autoHeight', `root--density${capitalize(density)}`],
+    root: [
+      'root',
+      autoHeight && 'autoHeight',
+      `root--density${capitalize(density)}`,
+      'withBorderColor',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

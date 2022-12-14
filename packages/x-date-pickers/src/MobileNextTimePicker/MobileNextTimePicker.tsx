@@ -36,7 +36,6 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
   const props = {
     ...defaultizedProps,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: TimeField,
       ...defaultizedProps.components,
@@ -82,7 +81,6 @@ MobileNextTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
