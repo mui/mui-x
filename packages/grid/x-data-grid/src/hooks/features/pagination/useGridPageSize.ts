@@ -10,7 +10,7 @@ import {
   useGridSelector,
 } from '../../utils';
 import { gridPageSizeSelector } from './gridPaginationSelector';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityFactorSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
@@ -33,11 +33,15 @@ export const useGridPageSize = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
+    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState' | 'rowHeight'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const derivedRowHeight = React.useMemo(
+    () => Math.floor(props.rowHeight * densityFactor),
+    [props.rowHeight, densityFactor],
+  );
 
   apiRef.current.registerControlState({
     stateId: 'pageSize',
@@ -132,10 +136,10 @@ export const useGridPageSize = (
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
       (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
-        rowHeight,
+        derivedRowHeight,
     );
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
-  }, [apiRef, props.autoPageSize, rowHeight]);
+  }, [apiRef, props.autoPageSize, derivedRowHeight]);
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
 

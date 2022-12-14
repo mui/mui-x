@@ -68,18 +68,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridDensityHeaderHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridDensityRowHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridDensitySelector",
     "returnType": "GridDensityState",
     "description": "",
@@ -265,12 +253,6 @@
     "returnType": "GridTabIndexState",
     "description": "",
     "supportsApiRef": false
-  },
-  {
-    "name": "gridTotalHeaderHeightSelector",
-    "returnType": "number",
-    "description": "",
-    "supportsApiRef": true
   },
   {
     "name": "gridVisibleRowCountSelector",

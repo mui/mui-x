@@ -5,8 +5,7 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
+import { getTotalHeaderHeight } from '../../hooks/features/columns/gridColumnsUtils';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -29,7 +28,7 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
+
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -83,8 +82,10 @@ function GridBody(props: GridBodyProps) {
             width: size.width,
             // If `autoHeight` is on, there will be no height value.
             // In this case, let the container to grow whatever it needs.
-            height: size.height ? size.height - totalHeaderHeight : 'auto',
-            marginTop: totalHeaderHeight,
+            height: size.height
+              ? size.height - getTotalHeaderHeight(apiRef, rootProps.headerHeight)
+              : 'auto',
+            marginTop: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
           } as React.CSSProperties;
 
           return (

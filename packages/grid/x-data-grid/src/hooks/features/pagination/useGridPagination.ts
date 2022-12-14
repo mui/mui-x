@@ -44,6 +44,7 @@ export const useGridPagination = (
     | 'rowCount'
     | 'initialState'
     | 'paginationMode'
+    | 'rowHeight'
   >,
 ) => {
   useGridPageSize(apiRef, props);

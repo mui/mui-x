@@ -7,10 +7,7 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
-import {
-  gridDensityRowHeightSelector,
-  gridDensityFactorSelector,
-} from '../density/densitySelector';
+import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridFilterModelSelector } from '../filter/gridFilterSelector';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
@@ -34,7 +31,12 @@ export const useGridRowsMeta = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'getRowHeight' | 'getEstimatedRowHeight' | 'getRowSpacing' | 'pagination' | 'paginationMode'
+    | 'getRowHeight'
+    | 'getEstimatedRowHeight'
+    | 'getRowSpacing'
+    | 'pagination'
+    | 'paginationMode'
+    | 'rowHeight'
   >,
 ): void => {
   const { getRowHeight: getRowHeightProp, getRowSpacing, getEstimatedRowHeight } = props;
@@ -50,26 +52,25 @@ export const useGridRowsMeta = (
   // Inspired by https://github.com/bvaughn/react-virtualized/blob/master/source/Grid/utils/CellSizeAndPositionManager.js
   const lastMeasuredRowIndex = React.useRef(-1);
   const hasRowWithAutoHeight = React.useRef(false);
-  const rowHeightFromDensity = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
-
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
+
+  const derivedRowHeight = React.useMemo(
+    () => Math.floor(props.rowHeight * densityFactor),
+    [props.rowHeight, densityFactor],
+  );
 
   const hydrateRowsMeta = React.useCallback(() => {
     hasRowWithAutoHeight.current = false;
 
-    const densityFactor = gridDensityFactorSelector(
-      apiRef.current.state,
-      apiRef.current.instanceId,
-    );
-
     const calculateRowProcessedSizes = (row: GridRowEntry) => {
       if (!rowsHeightLookup.current[row.id]) {
         rowsHeightLookup.current[row.id] = {
-          sizes: { baseCenter: rowHeightFromDensity },
+          sizes: { baseCenter: derivedRowHeight },
           isResized: false,
           autoHeight: false,
           needsFirstMeasurement: true, // Assume all rows will need to be measured by default
@@ -77,7 +78,7 @@ export const useGridRowsMeta = (
       }
 
       const { isResized, needsFirstMeasurement, sizes } = rowsHeightLookup.current[row.id];
-      let baseRowHeight = rowHeightFromDensity;
+      let baseRowHeight = derivedRowHeight;
       const existingBaseRowHeight = sizes.baseCenter;
 
       if (isResized) {
@@ -90,10 +91,10 @@ export const useGridRowsMeta = (
           if (needsFirstMeasurement) {
             const estimatedRowHeight = getEstimatedRowHeight
               ? getEstimatedRowHeight({ ...row, densityFactor })
-              : rowHeightFromDensity;
+              : derivedRowHeight;
 
             // If the row was not measured yet use the estimated row height
-            baseRowHeight = estimatedRowHeight ?? rowHeightFromDensity;
+            baseRowHeight = estimatedRowHeight ?? derivedRowHeight;
           } else {
             baseRowHeight = existingBaseRowHeight;
           }
@@ -102,7 +103,7 @@ export const useGridRowsMeta = (
           rowsHeightLookup.current[row.id].autoHeight = true;
         } else {
           // Default back to base rowHeight if getRowHeight returns null or undefined.
-          baseRowHeight = rowHeightFromUser ?? rowHeightFromDensity;
+          baseRowHeight = rowHeightFromUser ?? derivedRowHeight;
           rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
           rowsHeightLookup.current[row.id].autoHeight = false;
         }
@@ -197,19 +198,20 @@ export const useGridRowsMeta = (
   }, [
     apiRef,
     currentPage.rows,
-    rowHeightFromDensity,
+    derivedRowHeight,
     getRowHeightProp,
     getRowSpacing,
     getEstimatedRowHeight,
     pinnedRows,
+    densityFactor,
   ]);
 
   const getRowHeight = React.useCallback<GridRowsMetaApi['unstable_getRowHeight']>(
     (rowId) => {
       const height = rowsHeightLookup.current[rowId];
-      return height ? height.sizes.baseCenter : rowHeightFromDensity;
+      return height ? height.sizes.baseCenter : derivedRowHeight;
     },
-    [rowHeightFromDensity],
+    [derivedRowHeight],
   );
 
   const getRowInternalSizes = (rowId: GridRowId): Record<string, number> | undefined =>
@@ -279,7 +281,7 @@ export const useGridRowsMeta = (
   // Because of variable row height this is needed for the virtualization
   React.useEffect(() => {
     hydrateRowsMeta();
-  }, [rowHeightFromDensity, filterModel, paginationState, sortModel, hydrateRowsMeta]);
+  }, [derivedRowHeight, filterModel, paginationState, sortModel, hydrateRowsMeta]);
 
   useGridRegisterPipeApplier(apiRef, 'rowHeight', hydrateRowsMeta);
 
