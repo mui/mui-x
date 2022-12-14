@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
@@ -8,7 +8,7 @@ import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/N
 export default function ViewsDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
+      <DemoContainer>
         <NextDatePicker
           label="Year only"
           views={['year']}
@@ -31,7 +31,7 @@ export default function ViewsDatePicker() {
           defaultValue={dayjs('2022-04-07')}
         />
         <NextDatePicker label="Just date" views={['day']} />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

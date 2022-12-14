@@ -1,6 +1,6 @@
-<GridItem label="TimePicker">
+<DemoItem label="TimePicker">
   <NextTimePicker defaultValue={fiveAM} minTime={nineAM} />
-</GridItem>
-<GridItem label="DateTimePicker">
+</DemoItem>
+<DemoItem label="DateTimePicker">
   <NextDateTimePicker defaultValue={fiveAM} minTime={nineAM} />
-</GridItem>
+</DemoItem>
