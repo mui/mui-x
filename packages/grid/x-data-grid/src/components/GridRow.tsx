@@ -273,7 +273,10 @@ const GridRow = React.forwardRef<
         column.field,
       );
 
-      const classNames: string[] = [];
+      const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field: column.field,
+      });
 
       const disableDragEvents =
         (rootProps.disableColumnReorder && column.disableReorder) ||
@@ -340,6 +343,11 @@ const GridRow = React.forwardRef<
           ? 0
           : -1;
 
+      const isSelected = apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+        id: rowId,
+        field: column.field,
+      });
+
       return (
         <rootProps.components.Cell
           key={column.field}
@@ -354,6 +362,7 @@ const GridRow = React.forwardRef<
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
+          isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           className={clsx(classNames)}
