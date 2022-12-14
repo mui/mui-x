@@ -82,7 +82,9 @@ export const rangeFieldValueManager: FieldValueManager<
           return {
             ...section,
             dateName: 'start',
-            separator: ' – ',
+            separator: `\u2069${' – '}\u2066`,
+            parsingSeparator: ' – ',
+            // separator: ' – ',
           };
         }
 
@@ -103,24 +105,14 @@ export const rangeFieldValueManager: FieldValueManager<
     return addPositionPropertiesToSections<RangeFieldSection>([
       ...sectionsOfStartDate,
       ...sectionsOfEndDate,
-    ]).map((section) => {
-      if (section.dateName === 'start') {
-        return section;
-      }
-      return {
-        ...section,
-        // Shift of 2 hidden characters due to startText + endText concatenation
-        startInInput: section.startInInput + 2,
-        endInInput: section.endInInput + 2,
-      };
-    });
+    ]);
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
-
-    return `${startDateStr}${endDateStr}`;
+    return createDateStrFromSections(
+      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      true,
+    );
   },
   getActiveDateSections: (sections, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
@@ -166,7 +158,7 @@ export const rangeFieldValueManager: FieldValueManager<
     return getSectionOrder(
       [
         ...splitedFormat.slice(0, splitedFormat.length - 1),
-        { ...splitedFormat[splitedFormat.length - 1], separator: ' - ' },
+        { ...splitedFormat[splitedFormat.length - 1], separator: ' – ' },
         ...splitedFormat,
       ],
       isRTL,
