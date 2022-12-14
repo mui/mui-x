@@ -208,7 +208,7 @@ function findXDemos(
 
       return {
         name,
-        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}`,
+        demoPathname: `/x/react-date-pickers/${pathnameMatches![1]}/`,
       };
     });
 }
