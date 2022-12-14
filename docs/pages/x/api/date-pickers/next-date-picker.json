@@ -123,7 +123,7 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiNextDatePicker" },
   "filename": "/packages/x-date-pickers/src/NextDatePicker/NextDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_NextDatePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_NextDatePicker" }
