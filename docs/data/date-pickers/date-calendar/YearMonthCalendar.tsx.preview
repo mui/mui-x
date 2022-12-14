@@ -1,8 +1,6 @@
-<DemoContainer>
-  <DemoItem label="YearCalendar">
-    <YearCalendar />
-  </DemoItem>
-  <DemoItem label="MonthCalendar">
-    <MonthCalendar />
-  </DemoItem>
-</DemoContainer>
+<DemoItem label="YearCalendar">
+  <YearCalendar />
+</DemoItem>
+<DemoItem label="MonthCalendar">
+  <MonthCalendar />
+</DemoItem>

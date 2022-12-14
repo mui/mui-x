@@ -1,8 +1,6 @@
-<DemoContainer>
-  <DemoItem label="Uncontrolled calendar">
-    <DateCalendar defaultValue={dayjs('2022-04-07')} />
-  </DemoItem>
-  <DemoItem label="Controlled calendar">
-    <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
-  </DemoItem>
-</DemoContainer>
+<DemoItem label="Uncontrolled calendar">
+  <DateCalendar defaultValue={dayjs('2022-04-07')} />
+</DemoItem>
+<DemoItem label="Controlled calendar">
+  <DateCalendar value={value} onChange={(newValue) => setValue(newValue)} />
+</DemoItem>

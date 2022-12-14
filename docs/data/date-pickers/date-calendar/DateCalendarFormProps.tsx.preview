@@ -1,8 +1,6 @@
-<DemoContainer>
-  <DemoItem label="disabled">
-    <DateCalendar defaultValue={dayjs('2022-04-07')} disabled />
-  </DemoItem>
-  <DemoItem label="readOnly">
-    <DateCalendar defaultValue={dayjs('2022-04-07')} readOnly />
-  </DemoItem>
-</DemoContainer>
+<DemoItem label="disabled">
+  <DateCalendar defaultValue={dayjs('2022-04-07')} disabled />
+</DemoItem>
+<DemoItem label="readOnly">
+  <DateCalendar defaultValue={dayjs('2022-04-07')} readOnly />
+</DemoItem>
