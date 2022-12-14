@@ -355,6 +355,28 @@ const getSectionPlaceholder = <TDate>(
   }
 };
 
+const getEscapedPartsFromExpandedFormatOrDateStr = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  expandedFormat: string,
+) => {
+  let isInsideEscapedPart = false;
+  let currentEscapeStart: number = 0;
+  const escapedParts: { start: number; end: number }[] = [];
+  for (let i = 0; i < expandedFormat.length; i += 1) {
+    const char = expandedFormat[i];
+
+    if (char === utils.escapedCharacters.end && isInsideEscapedPart) {
+      isInsideEscapedPart = false;
+      escapedParts.push({ start: currentEscapeStart, end: i });
+    } else if (char === utils.escapedCharacters.start && !isInsideEscapedPart) {
+      currentEscapeStart = i;
+      isInsideEscapedPart = true;
+    }
+  }
+
+  return escapedParts;
+};
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
@@ -362,22 +384,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
 ) => {
   const expandedFormat = utils.expandFormat(format);
-
-  let isInsideEscapedPart = false;
-  let currentEscapeStart: number = 0;
-  const escapedIndexes: { start: number; end: number }[] = [];
-  for (let i = 0; i < expandedFormat.length; i += 1) {
-    const char = expandedFormat[i];
-
-    if (char === utils.escapedCharacters.end && isInsideEscapedPart) {
-      isInsideEscapedPart = false;
-      escapedIndexes.push({ start: currentEscapeStart, end: i });
-    } else if (char === utils.escapedCharacters.start && !isInsideEscapedPart) {
-      currentEscapeStart = i;
-      isInsideEscapedPart = true;
-    }
-  }
-
+  const escapedParts = getEscapedPartsFromExpandedFormatOrDateStr(utils, expandedFormat);
   let currentTokenValue = '';
   let startSeparator: string = '';
   const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
@@ -408,20 +415,20 @@ export const splitFormatIntoSections = <TDate>(
   };
 
   for (let i = 0; i < expandedFormat.length; i += 1) {
-    const currentEscapedIndex = escapedIndexes.find(
+    const escapedPartOfCurrentChar = escapedParts.find(
       (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
     );
 
     const char = expandedFormat[i];
 
-    if (currentEscapedIndex == null && char.match(/([A-Za-z]+)/g)) {
+    if (escapedPartOfCurrentChar == null && char.match(/([A-Za-z]+)/g)) {
       currentTokenValue += char;
     }
     // If we are on the starting of the ending character of an escaped part of the format,
     // Then we ignore this character.
     else if (
-      currentEscapedIndex == null ||
-      (currentEscapedIndex.start !== i && currentEscapedIndex.end !== i)
+      escapedPartOfCurrentChar == null ||
+      (escapedPartOfCurrentChar.start !== i && escapedPartOfCurrentChar.end !== i)
     ) {
       commitCurrentToken();
       if (sections.length === 0) {
@@ -454,6 +461,39 @@ export const splitFormatIntoSections = <TDate>(
     sections: cleanSections,
     startSeparator,
   };
+};
+
+export const getDateFromDateStr = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateStr: string,
+  format: string,
+) => {
+  const removeEscapedParts = (
+    stringToCleanup: string,
+    escapedPartsOfString: { start: number; end: number }[],
+  ) => {
+    let cleanedUpString = '';
+    for (let i = 0; i < stringToCleanup.length; i += 1) {
+      const char = stringToCleanup[i];
+      const isInEscapedPart = escapedPartsOfString.find(
+        (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+      );
+
+      if (!isInEscapedPart) {
+        cleanedUpString += char;
+      }
+    }
+
+    return cleanedUpString;
+  };
+
+  const expandedFormat = utils.expandFormat(format);
+  const escapedPartsInFormat = getEscapedPartsFromExpandedFormatOrDateStr(utils, expandedFormat);
+  const escapedPartsInDateStr = getEscapedPartsFromExpandedFormatOrDateStr(utils, dateStr);
+  const cleanDateStr = removeEscapedParts(dateStr, escapedPartsInDateStr);
+  const cleanFormat = removeEscapedParts(expandedFormat, escapedPartsInFormat);
+
+  return utils.parse(cleanDateStr, cleanFormat);
 };
 
 /**

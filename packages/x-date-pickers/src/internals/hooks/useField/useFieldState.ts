@@ -21,6 +21,7 @@ import {
   getSectionBoundaries,
   validateSections,
   getDateFromDateSections,
+  getDateFromDateStr,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
@@ -200,8 +201,8 @@ export const useFieldState = <
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
-    const getValueFromDateStr = (dateStr: string, referenceDate: TDate) => {
-      const date = utils.parse(dateStr, format);
+    const parseDateStr = (dateStr: string, referenceDate: TDate) => {
+      const date = getDateFromDateStr(utils, dateStr, format);
       if (date == null || !utils.isValid(date)) {
         return null;
       }
@@ -210,11 +211,7 @@ export const useFieldState = <
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
-    const newValue = fieldValueManager.parseValueStr(
-      valueStr,
-      state.referenceValue,
-      getValueFromDateStr,
-    );
+    const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
 
     const newReferenceValue = fieldValueManager.updateReferenceValue(
       utils,
