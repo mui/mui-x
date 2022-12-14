@@ -52,7 +52,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterMode: 'client',
-  headerHeight: 56,
+  columnHeaderHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,
   hideFooterRowCount: false,

@@ -45,20 +45,24 @@ const getUpdatedDensityState = (
 };
 
 export const densityStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'density' | 'headerHeight' | 'rowHeight'>
+  Pick<DataGridProcessedProps, 'density' | 'columnHeaderHeight' | 'rowHeight'>
 > = (state, props) => ({
   ...state,
-  density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight),
+  density: getUpdatedDensityState(props.density, props.columnHeaderHeight, props.rowHeight),
 });
 
 export const useGridDensity = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'headerHeight' | 'rowHeight' | 'density'>,
+  props: Pick<DataGridProcessedProps, 'columnHeaderHeight' | 'rowHeight' | 'density'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useDensity');
 
   const setDensity = React.useCallback<GridDensityApi['setDensity']>(
-    (newDensity, newHeaderHeight = props.headerHeight, newRowHeight = props.rowHeight): void => {
+    (
+      newDensity,
+      newHeaderHeight = props.columnHeaderHeight,
+      newRowHeight = props.rowHeight,
+    ): void => {
       logger.debug(`Set grid density to ${newDensity}`);
       apiRef.current.setState((state) => {
         const currentDensityState = gridDensitySelector(state);
@@ -75,12 +79,12 @@ export const useGridDensity = (
       });
       apiRef.current.forceUpdate();
     },
-    [logger, apiRef, props.headerHeight, props.rowHeight],
+    [logger, apiRef, props.columnHeaderHeight, props.rowHeight],
   );
 
   React.useEffect(() => {
-    apiRef.current.setDensity(props.density, props.headerHeight, props.rowHeight);
-  }, [apiRef, props.density, props.rowHeight, props.headerHeight]);
+    apiRef.current.setDensity(props.density, props.columnHeaderHeight, props.rowHeight);
+  }, [apiRef, props.density, props.rowHeight, props.columnHeaderHeight]);
 
   const densityApi: GridDensityApi = {
     setDensity,

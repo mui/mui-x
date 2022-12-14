@@ -228,7 +228,7 @@ export interface DataGridPropsWithDefaultValues {
    * Set the height in pixel of the column headers in the grid.
    * @default 56
    */
-  headerHeight: number;
+  columnHeaderHeight: number;
   /**
    * If `true`, the footer component is hidden.
    * @default false

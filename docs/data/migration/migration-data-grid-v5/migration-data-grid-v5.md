@@ -35,6 +35,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
+  | `headerHeight`             | `columnHeaderHeight`          |
 
 ### Removed props
 

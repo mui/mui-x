@@ -53,7 +53,7 @@ describe('<DataGrid /> - Keyboard', () => {
           rowsPerPageOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
-          headerHeight={HEADER_HEIGHT}
+          columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
           experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
@@ -481,7 +481,7 @@ describe('<DataGrid /> - Keyboard', () => {
             rowsPerPageOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
-            headerHeight={HEADER_HEIGHT}
+            columnHeaderHeight={HEADER_HEIGHT}
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}

@@ -230,13 +230,13 @@ describe('<DataGridPro /> - Detail panel', () => {
       this.skip(); // Needs layout
     }
     const rowHeight = 50;
-    const headerHeight = 50;
+    const columnHeaderHeight = 50;
     render(
       <TestCase
         getDetailPanelHeight={() => rowHeight}
         getDetailPanelContent={() => <div />}
         rowHeight={rowHeight}
-        headerHeight={headerHeight}
+        columnHeaderHeight={columnHeaderHeight}
         initialState={{
           detailPanel: {
             expandedRowIds: [0],

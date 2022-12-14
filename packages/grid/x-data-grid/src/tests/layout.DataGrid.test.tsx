@@ -651,20 +651,20 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     describe('autoHeight', () => {
       it('should have the correct intrinsic height', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 30;
         render(
           <div style={{ width: 300 }}>
             <DataGrid
               {...baselineProps}
-              headerHeight={headerHeight}
+              columnHeaderHeight={columnHeaderHeight}
               rowHeight={rowHeight}
               autoHeight
             />
           </div>,
         );
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          headerHeight + rowHeight * baselineProps.rows.length,
+          columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -673,13 +673,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         if (/macintosh/i.test(window.navigator.userAgent)) {
           this.skip();
         }
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 30;
         render(
           <div style={{ width: 150 }}>
             <DataGrid
               {...baselineProps}
-              headerHeight={headerHeight}
+              columnHeaderHeight={columnHeaderHeight}
               rowHeight={rowHeight}
               columns={[{ field: 'brand' }, { field: 'year' }]}
               autoHeight
@@ -690,7 +690,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
         expect(scrollBarSize).not.to.equal(0);
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          scrollBarSize + headerHeight + rowHeight * baselineProps.rows.length,
+          scrollBarSize + columnHeaderHeight + rowHeight * baselineProps.rows.length,
         );
       });
 
@@ -779,7 +779,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should not place the overlay on top of the horizontal scrollbar when rows=[]', () => {
-      const headerHeight = 40;
+      const columnHeaderHeight = 40;
       const height = 300;
       const border = 1;
       render(
@@ -787,7 +787,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           <DataGrid
             rows={[]}
             columns={[{ field: 'brand' }, { field: 'price' }]}
-            headerHeight={headerHeight}
+            columnHeaderHeight={columnHeaderHeight}
             hideFooter
           />
         </div>,
@@ -795,7 +795,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller');
       const scrollBarSize = virtualScroller!.offsetHeight - virtualScroller!.clientHeight;
       const overlayWrapper = screen.getByText('No rows').parentElement;
-      const expectedHeight = height - headerHeight - scrollBarSize;
+      const expectedHeight = height - columnHeaderHeight - scrollBarSize;
       expect(overlayWrapper).toHaveComputedStyle({ height: `${expectedHeight}px` });
     });
 

@@ -91,6 +91,11 @@ DataGridRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Set the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
    * Set of columns of type [[GridColumns]].
    */
   columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
@@ -254,11 +259,6 @@ DataGridRaw.propTypes = {
    * @returns {GridRowSpacing} The row spacing values.
    */
   getRowSpacing: PropTypes.func,
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
