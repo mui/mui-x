@@ -950,4 +950,19 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  unstable_cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  unstable_cellSelectionModel: PropTypes.object,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  unstable_onCellSelectionModelChange: PropTypes.func,
 } as any;
