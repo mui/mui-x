@@ -82,9 +82,8 @@ export const rangeFieldValueManager: FieldValueManager<
           return {
             ...section,
             dateName: 'start',
-            separator: `\u2069${' – '}\u2066`,
+            separator: `\u2069 – \u2066`,
             parsingSeparator: ' – ',
-            // separator: ' – ',
           };
         }
 
