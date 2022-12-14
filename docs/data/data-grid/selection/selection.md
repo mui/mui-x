@@ -154,7 +154,7 @@ The demo below shows how to add a border around the range.
 If a single cell is selected, all classes above are applied to the same element.
 :::
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 

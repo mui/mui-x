@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import {
   GridColumnHeaderSeparator,
@@ -73,7 +73,7 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     ...other
   } = props;
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);

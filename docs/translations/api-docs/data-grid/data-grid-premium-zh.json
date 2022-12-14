@@ -4,7 +4,7 @@
     "aggregationFunctions": "Aggregation functions available on the grid.",
     "aggregationModel": "Set the aggregation model of the grid.",
     "aggregationRowsScope": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows.",
-    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
