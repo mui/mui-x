@@ -456,6 +456,7 @@ export const useField = <
 
     const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
+
     updateSelectionRangeIfChanged(
       firstSelectedSection.startInInput,
       lastSelectedSection.endInInput,

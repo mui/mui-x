@@ -9,6 +9,7 @@ import type {
   GridAggregationModel,
   GridAggregationCellMeta,
   GridAggregationHeaderMeta,
+  GridCellSelectionModel,
 } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
@@ -22,6 +23,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the row grouping model changes.
    */
   rowGroupingModelChange: { params: GridRowGroupingModel };
+  /**
+   * Fired when the selection state of one or multiple cells change.
+   */
+  cellSelectionChange: { params: GridCellSelectionModel };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

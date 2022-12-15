@@ -4,7 +4,7 @@
     "aggregationFunctions": "Aggregation functions available on the grid.",
     "aggregationModel": "Set the aggregation model of the grid.",
     "aggregationRowsScope": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows.",
-    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
@@ -146,7 +146,10 @@
     "sortModel": "Set the sort model of the grid.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "throttleRowsMs": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
-    "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop.",
+    "unstable_cellSelection": "If <code>true</code>, the cell selection mode is enabled.",
+    "unstable_cellSelectionModel": "Set the cell selection model of the grid.",
+    "unstable_onCellSelectionModelChange": "Callback fired when the selection state of one or multiple cells changes.<br><br><strong>Signature:</strong><br><code>function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>cellSelectionModel:</em> Object in the shape of GridCellSelectionModel containg the selected cells.<br><em>details:</em> Additional details for this callback."
   },
   "classDescriptions": {
     "actionsCell": {
@@ -216,6 +219,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
+    },
+    "cell--rangeTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of a cell selection range"
+    },
+    "cell--rangeBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of a cell selection range"
+    },
+    "cell--rangeLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of a cell selection range"
+    },
+    "cell--rangeRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -549,6 +572,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "density is \"compact\""
+    },
+    "root--disableUserSelection": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "user selection is disabled"
     },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
