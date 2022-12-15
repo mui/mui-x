@@ -60,6 +60,8 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       format,
       onChange,
       readOnly,
+      // allowing `disabled` propagation to inputProps, but still applying it to `Field` by not destructuring from `other`
+      disabled: other.disabled,
       onError,
       disableFuture,
       disablePast,

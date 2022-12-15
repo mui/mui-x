@@ -76,6 +76,8 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
       format,
       onChange,
       readOnly,
+      // allowing `disabled` propagation to inputProps, but still applying it to `Field` by not destructuring from `other`
+      disabled: other.disabled,
       onError,
       shouldDisableDate,
       shouldDisableMonth,
