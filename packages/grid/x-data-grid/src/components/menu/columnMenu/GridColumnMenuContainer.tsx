@@ -14,7 +14,8 @@ const StyledMenuList = styled(MenuList)(() => ({
 
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
-    const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
+    const { hideMenu, colDef, id, labelledby, className, children, open, MenuListProps, ...other } =
+      props;
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -37,6 +38,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
         onKeyDown={handleListKeyDown}
         autoFocus={open}
         {...other}
+        {...MenuListProps}
       >
         {children}
       </StyledMenuList>

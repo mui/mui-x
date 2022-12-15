@@ -139,6 +139,12 @@ You can also customize and replace the column menu by [passing a fully custom co
 <strong>Tip</strong>: In the `ColumnMenu` component and its items, you receive the prop `colDef` corresponding to the current column; you can use this to conditionally render some items or change some logic.
 :::
 
+## Customize Menu List props
+
+Column menu internally uses [`<MenuList />`](https://mui.com/material-ui/api/menu-list/) component, use `MenuListProps` component prop to update some props for it. Following example sets the menu layout to `dense`.
+
+{{"demo": "ColumnMenuDense.js", "bg": "inline"}}
+
 ## Disable column menu
 
 By default, each column header has the column menu enabled. To disable the column menu, set the prop `disableColumnMenu={true}`.

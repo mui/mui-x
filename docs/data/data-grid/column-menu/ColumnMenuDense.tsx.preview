@@ -1,0 +1,8 @@
+<DataGrid
+  {...data}
+  componentsProps={{
+    columnMenu: {
+      dense: true,
+    },
+  }}
+/>
