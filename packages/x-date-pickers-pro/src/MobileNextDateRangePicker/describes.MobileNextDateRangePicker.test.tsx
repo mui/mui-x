@@ -63,7 +63,9 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(screen.getAllByRole('textbox')[setEndDate ? 1 : 0], { key: 'Escape' });
+        fireDiscreteEvent.keyDown(screen.getAllByRole('textbox')[setEndDate ? 1 : 0], {
+          key: 'Escape',
+        });
         clock.runToLast();
       }
 
