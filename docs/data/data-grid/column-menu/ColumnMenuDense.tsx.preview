@@ -2,7 +2,7 @@
   {...data}
   componentsProps={{
     columnMenu: {
-      dense: true,
+      MenuListProps: { dense: true },
     },
   }}
 />

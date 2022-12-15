@@ -15,7 +15,7 @@ export default function ColumnMenuDense() {
         {...data}
         componentsProps={{
           columnMenu: {
-            dense: true,
+            MenuListProps: { dense: true },
           },
         }}
       />
