@@ -3,6 +3,7 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
