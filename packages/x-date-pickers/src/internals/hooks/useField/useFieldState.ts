@@ -21,7 +21,6 @@ import {
   getSectionBoundaries,
   validateSections,
   getDateFromDateSections,
-  getDateFromDateStr,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
@@ -202,7 +201,7 @@ export const useFieldState = <
 
   const updateValueFromValueStr = (valueStr: string) => {
     const parseDateStr = (dateStr: string, referenceDate: TDate) => {
-      const date = getDateFromDateStr(utils, dateStr, format);
+      const date = utils.parse(dateStr, format);
       if (date == null || !utils.isValid(date)) {
         return null;
       }

@@ -358,7 +358,7 @@ const getSectionPlaceholder = <TDate>(
   }
 };
 
-const getEscapedPartsFromExpandedFormatOrDateStr = <TDate>(
+const getEscapedPartsFromExpandedFormat = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   expandedFormat: string,
 ) => {
@@ -387,7 +387,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
 ) => {
   const expandedFormat = utils.expandFormat(format);
-  const escapedParts = getEscapedPartsFromExpandedFormatOrDateStr(utils, expandedFormat);
+  const escapedParts = getEscapedPartsFromExpandedFormat(utils, expandedFormat);
   let currentTokenValue = '';
   let startSeparator: string = '';
   const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
@@ -464,39 +464,6 @@ export const splitFormatIntoSections = <TDate>(
     sections: cleanSections,
     startSeparator,
   };
-};
-
-export const getDateFromDateStr = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateStr: string,
-  format: string,
-) => {
-  const removeEscapedParts = (
-    stringToCleanup: string,
-    escapedPartsOfString: { start: number; end: number }[],
-  ) => {
-    let cleanedUpString = '';
-    for (let i = 0; i < stringToCleanup.length; i += 1) {
-      const char = stringToCleanup[i];
-      const isInEscapedPart = escapedPartsOfString.find(
-        (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
-      );
-
-      if (!isInEscapedPart) {
-        cleanedUpString += char;
-      }
-    }
-
-    return cleanedUpString;
-  };
-
-  const expandedFormat = utils.expandFormat(format);
-  const escapedPartsInFormat = getEscapedPartsFromExpandedFormatOrDateStr(utils, expandedFormat);
-  const escapedPartsInDateStr = getEscapedPartsFromExpandedFormatOrDateStr(utils, dateStr);
-  const cleanDateStr = removeEscapedParts(dateStr, escapedPartsInDateStr);
-  const cleanFormat = removeEscapedParts(expandedFormat, escapedPartsInFormat);
-
-  return utils.parse(cleanDateStr, cleanFormat);
 };
 
 /**

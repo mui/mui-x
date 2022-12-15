@@ -596,7 +596,7 @@ describe('<DateField /> - Editing', () => {
       // Select all sections
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
-      firePasteEvent(input, `${startChar}Escaped${endChar} 2014`);
+      firePasteEvent(input, `Escaped 2014`);
       expect(onChange.callCount).to.equal(1);
       expect(adapterToUse.getYear(onChange.lastCall.firstArg)).to.equal(2014);
     });
