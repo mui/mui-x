@@ -75,6 +75,10 @@ import {
 } from '../hooks/features/rowGrouping/useGridRowGrouping';
 import { useGridRowGroupingPreProcessors } from '../hooks/features/rowGrouping/useGridRowGroupingPreProcessors';
 import { useGridExcelExport } from '../hooks/features/export/useGridExcelExport';
+import {
+  cellSelectionStateInitializer,
+  useGridCellSelection,
+} from '../hooks/features/cellSelection/useGridCellSelection';
 
 export const useDataGridPremiumComponent = (
   inputApiRef: React.MutableRefObject<GridApiPremium> | undefined,
@@ -107,6 +111,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(rowGroupingStateInitializer, privateApiRef, props);
   useGridInitializeState(aggregationStateInitializer, privateApiRef, props);
   useGridInitializeState(rowSelectionStateInitializer, privateApiRef, props);
+  useGridInitializeState(cellSelectionStateInitializer, privateApiRef, props);
   useGridInitializeState(detailPanelStateInitializer, privateApiRef, props);
   useGridInitializeState(columnPinningStateInitializer, privateApiRef, props);
   useGridInitializeState(columnsStateInitializer, privateApiRef, props);
@@ -130,6 +135,7 @@ export const useDataGridPremiumComponent = (
   useGridAggregation(privateApiRef, props);
   useGridKeyboardNavigation(privateApiRef, props);
   useGridRowSelection(privateApiRef, props);
+  useGridCellSelection(privateApiRef, props);
   useGridColumnPinning(privateApiRef, props);
   useGridRowPinning(privateApiRef, props);
   useGridColumns(privateApiRef, props);
