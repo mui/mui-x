@@ -86,8 +86,6 @@ const itITGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: "Annulla l'ordinamento",
   columnMenuSortAsc: 'Ordinamento crescente',
   columnMenuSortDesc: 'Ordinamento decrescente',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,9 +123,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Blocca a sinistra',
   pinToRight: 'Blocca a destra',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
-  unpin: 'Sblocca',
+  // unpin: 'Unpin',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Gruppo',

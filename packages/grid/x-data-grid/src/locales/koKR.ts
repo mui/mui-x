@@ -85,8 +85,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '정렬 해제',
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
@@ -120,8 +118,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '왼쪽에 고정',
   pinToRight: '오른쪽에 고정',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: '고정 해제',
 
   // Tree Data

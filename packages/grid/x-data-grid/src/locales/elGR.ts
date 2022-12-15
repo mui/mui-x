@@ -85,8 +85,6 @@ const elGRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',
   columnMenuSortAsc: 'Ταξινόμηση σε αύξουσα σειρά',
   columnMenuSortDesc: 'Ταξινόμηση σε φθίνουσα σειρά',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -124,8 +122,6 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   // unpin: 'Unpin',
 
   // Tree Data

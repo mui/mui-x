@@ -86,8 +86,6 @@ const viVNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Bỏ sắp xếp',
   columnMenuSortAsc: 'Sắp xếp tăng dần',
   columnMenuSortDesc: 'Sắp xếp giảm dần',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -123,8 +121,6 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Ghim cột bên trái',
   pinToRight: 'Ghim cột bên phải',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Bỏ ghim',
 
   // Tree Data

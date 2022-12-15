@@ -85,8 +85,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '預設排序',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} 個篩選器`,
@@ -120,8 +118,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '釘選在左側',
   pinToRight: '釘選在右側',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: '取消釘選',
 
   // Tree Data

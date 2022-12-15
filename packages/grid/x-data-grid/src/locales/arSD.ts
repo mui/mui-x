@@ -86,8 +86,6 @@ const arSDGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'الغاء الفرز',
   columnMenuSortAsc: 'الفرز تصاعدياً',
   columnMenuSortDesc: 'الفرز تنازلياً',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -123,8 +121,6 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'التدبيس يميناً',
   pinToRight: 'التدبيس يساراً',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'الغاء التدبيس',
 
   // Tree Data

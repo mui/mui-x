@@ -109,8 +109,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Скасувати сортування',
   columnMenuSortAsc: 'Сортувати за зростанням',
   columnMenuSortDesc: 'Сортувати за спаданням',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -154,8 +152,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закріпити ліворуч',
   pinToRight: 'Закріпити праворуч',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Відкріпити',
 
   // Tree Data

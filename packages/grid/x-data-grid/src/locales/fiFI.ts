@@ -86,8 +86,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Poista järjestys',
   columnMenuSortAsc: 'Järjestä nousevasti',
   columnMenuSortDesc: 'Järjestä laskevasti',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Kiinnitä vasemmalle',
   pinToRight: 'Kiinnitä oikealle',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Irrota kiinnitys',
 
   // Tree Data

@@ -85,8 +85,6 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Sıralama',
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
@@ -120,8 +118,6 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Sola sabitle',
   pinToRight: 'Sağa sabitle',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Sabitlemeyi kaldır',
 
   // Tree Data

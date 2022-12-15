@@ -85,8 +85,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'ソート解除',
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
@@ -120,8 +118,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '左側に固定',
   pinToRight: '右側に固定',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: '固定解除',
 
   // Tree Data

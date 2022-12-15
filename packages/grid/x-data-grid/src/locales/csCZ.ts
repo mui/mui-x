@@ -93,8 +93,6 @@ const csCZGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Zrušit filtry',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -151,8 +149,6 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Připnout na levo',
   pinToRight: 'Připnout na pravo',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Odepnout',
 
   // Tree Data

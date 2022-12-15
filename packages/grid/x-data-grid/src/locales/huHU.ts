@@ -85,8 +85,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Sorrend visszaállítása',
   columnMenuSortAsc: 'Növekvő sorrendbe',
   columnMenuSortDesc: 'Csökkenő sorrendbe',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} aktív szűrő`,
@@ -120,8 +118,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Rögzítés balra',
   pinToRight: 'Rögzítés jobbra',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Rögzítés törlése',
 
   // Tree Data

@@ -87,8 +87,6 @@ export interface GridLocaleText {
   columnMenuUnsort: React.ReactNode;
   columnMenuSortAsc: React.ReactNode;
   columnMenuSortDesc: React.ReactNode;
-  columnMenuSortAscAbbrev: React.ReactNode;
-  columnMenuSortDescAbbrev: React.ReactNode;
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
@@ -120,9 +118,7 @@ export interface GridLocaleText {
 
   // Column pinning text
   pinToLeft: string;
-  directionLeft: string;
   pinToRight: string;
-  directionRight: string;
   unpin: string;
 
   // Tree Data

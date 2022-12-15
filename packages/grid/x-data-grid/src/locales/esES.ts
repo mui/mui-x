@@ -86,8 +86,6 @@ const esESGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Desordenar',
   columnMenuSortAsc: 'Ordenar ASC',
   columnMenuSortDesc: 'Ordenar DESC',
-  columnMenuSortAscAbbrev: 'ASC',
-  columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column pinning text
   // pinToLeft: 'Pin to left',
   // pinToRight: 'Pin to right',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   // unpin: 'Unpin',
 
   // Tree Data

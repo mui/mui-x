@@ -86,8 +86,6 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Fjern sortering',
   columnMenuSortAsc: 'Sorter stigende',
   columnMenuSortDesc: 'Sorter faldende',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -123,8 +121,6 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fastgør til venstre',
   pinToRight: 'Fastgør til højre',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Frigiv',
 
   // Tree Data

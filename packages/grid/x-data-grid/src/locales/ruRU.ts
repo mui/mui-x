@@ -94,8 +94,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Отменить сортировку',
   columnMenuSortAsc: 'Сортировать по возрастанию',
   columnMenuSortDesc: 'Сортировать по убыванию',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
@@ -147,8 +145,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закрепить слева',
   pinToRight: 'Закрепить справа',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Открепить',
 
   // Tree Data

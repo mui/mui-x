@@ -85,8 +85,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Anuluj sortowanie',
   columnMenuSortAsc: 'Sortuj rosnąco',
   columnMenuSortDesc: 'Sortuj malejąco',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
@@ -120,8 +118,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Przypnij do lewej',
   pinToRight: 'Przypnij do prawej',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Odepnij',
 
   // Tree Data

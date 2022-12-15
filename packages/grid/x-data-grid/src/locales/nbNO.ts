@@ -86,8 +86,6 @@ const nbNOGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Usorter',
   columnMenuSortAsc: 'Sorter ØKENDE',
   columnMenuSortDesc: 'Sorter SYNKENDE',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -123,8 +121,6 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fest til venstre',
   pinToRight: 'Fest til høyre',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Løsne',
 
   // Tree Data

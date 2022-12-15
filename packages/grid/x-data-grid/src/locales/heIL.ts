@@ -86,8 +86,6 @@ const heILGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'בטל מיון',
   columnMenuSortAsc: 'מיין בסדר עולה',
   columnMenuSortDesc: 'מיין בסדר יורד',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -123,9 +121,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
-  unpin: 'בטל נעיצה',
+  // unpin: 'Unpin',
 
   // Tree Data
   treeDataGroupingHeaderName: 'קבוצה',

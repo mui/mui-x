@@ -86,8 +86,6 @@ const roROGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Dezactivare sortare',
   columnMenuSortAsc: 'Sortează crescător',
   columnMenuSortDesc: 'Sortează descrescător',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fixare în stânga',
   pinToRight: 'Fixare în dreapta',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Anulare fixare',
 
   // Tree Data

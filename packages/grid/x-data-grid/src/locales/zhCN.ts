@@ -85,8 +85,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: '恢复默认',
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -121,8 +119,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: '固定到左侧',
   pinToRight: '固定到右侧',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: '取消固定',
 
   // Tree Data

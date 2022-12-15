@@ -86,8 +86,6 @@ const svSEGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Osortera',
   columnMenuSortAsc: 'Sortera stigande',
   columnMenuSortDesc: 'Sortera fallande',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fäst till vänster',
   pinToRight: 'Fäst till höger',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Ta bort fäste',
 
   // Tree Data

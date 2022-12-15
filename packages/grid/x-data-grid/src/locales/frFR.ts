@@ -86,8 +86,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Épingler à gauche',
   pinToRight: 'Épingler à droite',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Désépingler',
 
   // Tree Data

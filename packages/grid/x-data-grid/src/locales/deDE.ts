@@ -86,8 +86,6 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Sortierung deaktivieren',
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links anheften',
   pinToRight: 'Rechts anheften',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Loslösen',
 
   // Tree Data

@@ -86,8 +86,6 @@ const nlNLGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Annuleer sortering',
   columnMenuSortAsc: 'Oplopend sorteren',
   columnMenuSortDesc: 'Aflopend sorteren',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Links vastzetten',
   pinToRight: 'Rechts vastzetten',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Losmaken',
 
   // Tree Data

@@ -86,8 +86,6 @@ const faIRGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'نامرتب‌کردن',
   columnMenuSortAsc: 'مرتب‌کردن صعودی',
   columnMenuSortDesc: 'مرتب‌کردن نزولی',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -125,8 +123,6 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'سنجاق کردن به چپ',
   pinToRight: 'سنجاق کردن به راست',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'برداشتن سنجاق',
 
   // Tree Data

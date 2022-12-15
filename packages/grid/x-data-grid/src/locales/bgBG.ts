@@ -85,8 +85,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Отмени сортирането',
   columnMenuSortAsc: 'Сортирай по възходящ ред',
   columnMenuSortDesc: 'Сортирай по низходящ ред',
-  // columnMenuSortAscAbbrev: 'ASC',
-  // columnMenuSortDescAbbrev: 'DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
@@ -123,8 +121,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Закачи в ляво',
   pinToRight: 'Закачи в дясно',
-  // directionLeft: 'Left',
-  // directionRight: 'Right',
   unpin: 'Откачи',
 
   // Tree Data
