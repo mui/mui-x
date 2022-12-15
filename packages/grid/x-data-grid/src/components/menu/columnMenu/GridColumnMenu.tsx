@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import MenuList from '@mui/material/MenuList';
 import Divider from '@mui/material/Divider';
 
 import { useGridColumnMenuComponents } from '../../../hooks/features/columnMenu/useGridColumnMenuComponents';
@@ -46,7 +45,7 @@ const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColu
     });
 
     return (
-      <GridColumnMenuContainer MenuListComponent={MenuList} ref={ref} {...other}>
+      <GridColumnMenuContainer ref={ref} {...other}>
         {orderedComponents.map(([Component, extraProps], index) => (
           <div key={index}>
             <Component key={index} onClick={props.hideMenu} colDef={props.colDef} {...extraProps} />

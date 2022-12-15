@@ -2,32 +2,13 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
-import { styled } from '@mui/material/styles';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
-const StyledMenuList = styled(MenuList)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  paddingTop: theme.spacing(0.5),
-  paddingBottom: theme.spacing(0.5),
-  minWidth: 248,
-}));
-
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
-    const {
-      MenuListComponent = StyledMenuList,
-      hideMenu,
-      colDef,
-      id,
-      labelledby,
-      className,
-      children,
-      open,
-      ...other
-    } = props;
+    const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -42,7 +23,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
     );
 
     return (
-      <MenuListComponent
+      <MenuList
         id={id}
         ref={ref}
         className={clsx(gridClasses.menuList, className)}
@@ -52,7 +33,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
         {...other}
       >
         {children}
-      </MenuListComponent>
+      </MenuList>
     );
   },
 );
@@ -66,7 +47,6 @@ GridColumnMenuContainer.propTypes = {
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
-  MenuListComponent: PropTypes.elementType,
   open: PropTypes.bool.isRequired,
 } as any;
 

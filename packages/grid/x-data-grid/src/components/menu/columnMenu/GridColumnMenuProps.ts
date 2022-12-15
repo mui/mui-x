@@ -8,13 +8,12 @@ export interface GridColumnMenuContainerProps extends React.HTMLAttributes<HTMLU
   open: boolean;
   id?: string;
   labelledby?: string;
-  MenuListComponent?: React.JSXElementConstructor<any>;
 }
 
 export interface GridColumnMenuProps
   extends Pick<GridColumnMenuRootProps, 'components' | 'componentsProps'>,
-    Omit<GridColumnMenuContainerProps, 'MenuListComponent'> {}
+    GridColumnMenuContainerProps {}
 
 export interface GridGenericColumnMenuProps
   extends GridColumnMenuRootProps,
-    Omit<GridColumnMenuContainerProps, 'MenuListComponent'> {}
+    GridColumnMenuContainerProps {}

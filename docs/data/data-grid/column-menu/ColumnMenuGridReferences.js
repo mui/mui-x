@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
-
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 

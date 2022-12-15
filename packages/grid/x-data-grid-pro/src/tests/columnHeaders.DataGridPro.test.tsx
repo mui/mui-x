@@ -2,12 +2,7 @@ import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import {
-  gridClasses,
-  DataGridPro,
-  DataGridProProps,
-  GridColumnMenuSimple,
-} from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro, DataGridProProps, GridColumnMenu } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -227,7 +222,7 @@ describe('<DataGridPro /> - Column Headers', () => {
             <DataGridPro
               {...baselineProps}
               columns={[{ field: 'brand' }]}
-              components={{ ColumnMenu: GridColumnMenuSimple }}
+              components={{ ColumnMenu: GridColumnMenu }}
               initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
               {...props}
             />
