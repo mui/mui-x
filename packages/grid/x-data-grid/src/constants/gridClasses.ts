@@ -61,6 +61,22 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
+   * Styles applied to the cell element if it is at the top edge of a cell selection range.
+   */
+  'cell--rangeTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of a cell selection range.
+   */
+  'cell--rangeBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of a cell selection range.
+   */
+  'cell--rangeLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of a cell selection range.
+   */
+  'cell--rangeRight': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -389,6 +405,10 @@ export interface GridClasses {
    */
   'root--densityCompact': string;
   /**
+   * Styles applied to the root element when user selection is disabled.
+   */
+  'root--disableUserSelection': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -528,6 +548,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
+  'cell--rangeTop',
+  'cell--rangeBottom',
+  'cell--rangeLeft',
+  'cell--rangeRight',
   'cell',
   'cellContent',
   'cellCheckbox',
@@ -597,6 +621,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityStandard',
   'root--densityComfortable',
   'root--densityCompact',
+  'root--disableUserSelection',
   'row',
   'row--editable',
   'row--editing',

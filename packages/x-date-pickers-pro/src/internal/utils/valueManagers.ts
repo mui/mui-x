@@ -7,11 +7,12 @@ import {
   createDateStrFromSections,
   getSectionOrder,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, DateRangeFieldSection } from '../models/range';
+import { DateRange } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
 import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import { RangeFieldSection, RangeFieldSectionWithoutPosition } from '../models/fields';
 
 export type RangePickerStateValueManager<
   TValue = [any, any],
@@ -35,7 +36,7 @@ export const rangeValueManager: RangePickerStateValueManager = {
 export const rangeFieldValueManager: FieldValueManager<
   DateRange<any>,
   any,
-  DateRangeFieldSection,
+  RangeFieldSection,
   DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
@@ -62,7 +63,7 @@ export const rangeFieldValueManager: FieldValueManager<
         ? { startDate: null, endDate: null }
         : splitDateRangeSections(prevSections);
 
-    const getSections = (newDate: any | null, prevDateSections: DateRangeFieldSection[] | null) => {
+    const getSections = (newDate: any | null, prevDateSections: RangeFieldSection[] | null) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
 
       if (shouldReUsePrevDateSections) {
@@ -75,34 +76,42 @@ export const rangeFieldValueManager: FieldValueManager<
     const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
     const rawSectionsOfEndDate = getSections(end, prevDateRangeSections.endDate);
 
-    const sectionsOfStartDate = rawSectionsOfStartDate.map((section, sectionIndex) => {
-      if (sectionIndex === rawSectionsOfStartDate.length - 1) {
+    const sectionsOfStartDate: RangeFieldSectionWithoutPosition[] = rawSectionsOfStartDate.map(
+      (section, sectionIndex) => {
+        if (sectionIndex === rawSectionsOfStartDate.length - 1) {
+          return {
+            ...section,
+            dateName: 'start',
+            separator: `\u2069 – \u2066`,
+            parsingSeparator: ' – ',
+          };
+        }
+
         return {
           ...section,
           dateName: 'start' as const,
-          separator: ' – ',
         };
-      }
+      },
+    );
 
-      return {
+    const sectionsOfEndDate: RangeFieldSectionWithoutPosition[] = rawSectionsOfEndDate.map(
+      (section) => ({
         ...section,
-        dateName: 'start' as const,
-      };
-    });
+        dateName: 'end',
+      }),
+    );
 
-    const sectionsOfEndDate = rawSectionsOfEndDate.map((section) => ({
-      ...section,
-      dateName: 'end' as const,
-    }));
-
-    return addPositionPropertiesToSections([...sectionsOfStartDate, ...sectionsOfEndDate]);
+    return addPositionPropertiesToSections<RangeFieldSection>([
+      ...sectionsOfStartDate,
+      ...sectionsOfEndDate,
+    ]);
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
-
-    return `${startDateStr}${endDateStr}`;
+    return createDateStrFromSections(
+      [...dateRangeSections.startDate, ...dateRangeSections.endDate],
+      true,
+    );
   },
   getActiveDateSections: (sections, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
@@ -143,6 +152,15 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
-  getSectionOrder: (utils, localeText, format, isRTL) =>
-    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
+  getSectionOrder: (utils, localeText, format, isRTL) => {
+    const splitedFormat = splitFormatIntoSections(utils, localeText, format, null);
+    return getSectionOrder(
+      [
+        ...splitedFormat.slice(0, splitedFormat.length - 1),
+        { ...splitedFormat[splitedFormat.length - 1], separator: ' – ' },
+        ...splitedFormat,
+      ],
+      isRTL,
+    );
+  },
 };
