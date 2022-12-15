@@ -505,6 +505,7 @@ export const useField = <
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
+    readOnly,
     onClick: handleInputClick,
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,

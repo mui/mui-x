@@ -35,6 +35,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     ref: inputRef,
     onPaste,
     inputMode,
+    readOnly,
     ...fieldProps
   } = useTimeField<TDate, typeof inputProps>({
     props: inputProps,
@@ -45,7 +46,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     <Input
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
 }) as TimeFieldComponent;
