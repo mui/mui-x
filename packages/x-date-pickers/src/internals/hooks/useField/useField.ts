@@ -57,7 +57,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, disabled = false },
+    internalProps: { readOnly = false },
     forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
     fieldValueManager,
     valueManager,
@@ -514,6 +514,5 @@ export const useField = <
     onMouseUp: handleInputMouseUp,
     error: inputError,
     ref: handleRef,
-    inputProps: { ...otherForwardedProps.inputProps, readOnly, disabled },
   };
 };
