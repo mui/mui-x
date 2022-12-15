@@ -496,7 +496,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const category1Menuitem = screen.queryByRole('button', {
+      const category1Menuitem = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       expect(category1Menuitem).to.equal(null);
@@ -508,7 +508,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category2'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const category2Menuitem = screen.queryByRole('button', { name: 'Group by category2' });
+      const category2Menuitem = screen.queryByRole('menuitem', { name: 'Group by category2' });
       expect(category2Menuitem).to.equal(null);
     });
   });
@@ -1564,7 +1564,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('button', { name: 'Group by category1' });
+      const menuItem = screen.queryByRole('menuitem', { name: 'Group by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category1']);
     });
@@ -1586,7 +1586,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      expect(screen.queryByRole('button', { name: 'Group by category1' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Group by category1' })).to.equal(null);
     });
 
     it('should add a "Stop grouping by {field}" menu item on grouped column', () => {
@@ -1610,7 +1610,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItem = screen.queryByRole('button', { name: 'Stop grouping by category1' });
+      const menuItem = screen.queryByRole('menuitem', { name: 'Stop grouping by category1' });
       fireEvent.click(menuItem);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
@@ -1641,7 +1641,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category1__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('button', {
+      const menuItemCategory1 = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
@@ -1654,7 +1654,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group_category2__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory2 = screen.queryByRole('button', {
+      const menuItemCategory2 = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
@@ -1686,12 +1686,12 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('__row_group_by_columns_group__'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      const menuItemCategory1 = screen.queryByRole('button', {
+      const menuItemCategory1 = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category1',
       });
       fireEvent.click(menuItemCategory1);
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal(['category2']);
-      const menuItemCategory2 = screen.queryByRole('button', {
+      const menuItemCategory2 = screen.queryByRole('menuitem', {
         name: 'Stop grouping by category2',
       });
       fireEvent.click(menuItemCategory2);
@@ -1715,7 +1715,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      expect(screen.queryByRole('button', { name: 'Group by Category 1' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Group by Category 1' })).not.to.equal(null);
     });
 
     it('should use the colDef.headerName property for ungrouping menu item label', () => {
@@ -1740,7 +1740,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       act(() => apiRef.current.showColumnMenu('category1'));
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      expect(screen.queryByRole('button', { name: 'Stop grouping by Category 1' })).not.to.equal(
+      expect(screen.queryByRole('menuitem', { name: 'Stop grouping by Category 1' })).not.to.equal(
         null,
       );
     });

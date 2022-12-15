@@ -608,7 +608,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('button', { name: 'Left' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--left']} [data-field="id"]`),
       ).not.to.equal(null);
@@ -619,7 +619,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('button', { name: 'Right' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--right']} [data-field="id"]`),
       ).not.to.equal(null);
@@ -630,7 +630,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('button', { name: 'Right' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to right' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--left']} [data-field="id"]`),
       ).to.equal(null);
@@ -644,7 +644,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('button', { name: 'Left' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--right']} [data-field="id"]`),
       ).to.equal(null);
@@ -658,7 +658,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('button', { name: 'Left' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--left']} [data-field="id"]`),
       ).to.equal(null);
@@ -677,16 +677,16 @@ describe('<DataGridPro /> - Column pinning', () => {
 
       const brandHeader = document.querySelector('[role="columnheader"][data-field="brand"]')!;
       fireEvent.click(brandHeader.querySelector('button[aria-label="Menu"]'));
-      expect(screen.queryByRole('button', { name: 'Left' })).not.to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
       fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
 
       clock.runToLast();
       // Ensure that the first menu was closed
-      expect(screen.queryByRole('button', { name: 'Left' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
 
       const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
       fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]'));
-      expect(screen.queryByRole('button', { name: 'Left' })).to.equal(null);
+      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
     });
   });
 

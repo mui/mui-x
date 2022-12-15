@@ -117,7 +117,7 @@ describe('<DataGridPro /> - Column Headers', () => {
       fireEvent.click(menuIconButton);
       clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
-      fireEvent.click(screen.getByRole('button', { name: 'ASC' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 

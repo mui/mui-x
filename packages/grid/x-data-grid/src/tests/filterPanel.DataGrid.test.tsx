@@ -493,7 +493,7 @@ describe('<DataGrid /> - Filter panel', () => {
     const columnCell = getColumnHeaderCell(0);
     const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
     fireEvent.click(menuIconButton);
-    fireEvent.click(screen.queryByRole('button', { name: 'Filter' }));
+    fireEvent.click(screen.queryByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
     expect(screen.getByRole('combobox', { name: 'Columns' }).value).to.equal('brand');
