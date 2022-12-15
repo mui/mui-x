@@ -424,20 +424,24 @@ export const splitFormatIntoSections = <TDate>(
 
     const char = expandedFormat[i];
 
-    if (escapedPartOfCurrentChar == null && char.match(/([A-Za-z]+)/g)) {
+    const isEscapedChar = escapedPartOfCurrentChar != null;
+
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
       currentTokenValue += char;
-    }
-    // If we are on the starting of the ending character of an escaped part of the format,
-    // Then we ignore this character.
-    else if (
-      escapedPartOfCurrentChar == null ||
-      (escapedPartOfCurrentChar.start !== i && escapedPartOfCurrentChar.end !== i)
-    ) {
-      commitCurrentToken();
-      if (sections.length === 0) {
-        startSeparator += char;
-      } else {
-        sections[sections.length - 1].separator += char;
+    } else {
+      // If we are on the opening or closing character of an escaped part of the format,
+      // Then we ignore this character.
+      const isEscapeBoundary =
+        (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
+        escapedPartOfCurrentChar?.end === i;
+
+      if (!isEscapeBoundary) {
+        commitCurrentToken();
+        if (sections.length === 0) {
+          startSeparator += char;
+        } else {
+          sections[sections.length - 1].separator += char;
+        }
       }
     }
   }

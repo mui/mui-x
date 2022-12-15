@@ -129,7 +129,7 @@ export interface FieldSection {
   edited: boolean;
   hasTrailingZeroes: boolean;
   /**
-   * If `true`, the start separator will be rendered just before this input.
+   * If `true`, the start separator will be rendered just before this section.
    * @default false
    */
   hasStartSeparator?: boolean;
