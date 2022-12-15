@@ -6,7 +6,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import FunctionsIcon from '@mui/icons-material/Functions';
 import { unstable_useId as useId } from '@mui/utils';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -71,7 +70,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem disableRipple>
       <ListItemIcon>
-        <FunctionsIcon fontSize="small" />
+        <rootProps.components.ColumnMenuAggregationIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>
         <FormControl size="small" fullWidth sx={{ minWidth: 150 }}>

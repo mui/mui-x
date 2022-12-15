@@ -751,6 +751,7 @@
     "ColumnMenuPinLeftIcon": "Icon displayed in column menu for left pinning",
     "ColumnMenuPinRightIcon": "Icon displayed in column menu for right pinning",
     "ColumnMenuUngroupIcon": "Icon displayed in column menu for ungrouping",
-    "ColumnMenuGroupIcon": "Icon displayed in column menu for grouping"
+    "ColumnMenuGroupIcon": "Icon displayed in column menu for grouping",
+    "ColumnMenuAggregationIcon": "Icon displayed in column menu for aggregation"
   }
 }

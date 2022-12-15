@@ -270,6 +270,10 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuAggregationIcon": {
+      "default": "GridFunctionsIcon",
+      "type": { "name": "elementType" }
+    },
     "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
     "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
     "ColumnMenuGroupIcon": { "default": "GridGroupWorkIcon", "type": { "name": "elementType" } },

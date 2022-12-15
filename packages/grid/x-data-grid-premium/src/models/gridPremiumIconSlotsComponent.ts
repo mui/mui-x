@@ -11,4 +11,9 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridGroupWorkIcon
    */
   ColumnMenuGroupIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed in column menu for aggregation
+   * @default GridFunctionsIcon
+   */
+  ColumnMenuAggregationIcon: React.JSXElementConstructor<any>;
 }
