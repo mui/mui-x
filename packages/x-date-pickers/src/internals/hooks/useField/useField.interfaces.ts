@@ -118,25 +118,26 @@ export interface FieldSection {
   value: string;
   placeholder: string;
   /**
-   * Separator used in the input.
+   * Separator displayed before the value of the section in the input.
    * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the `year` section of the format `YYYY [year]` has a `separator` equal to `year` not `[year]`
+   * For example, on Day.js, the `year` section of the format `YYYY [year]` has an end separator equal to `year` not `[year]`
    */
-  separator: string | null;
+  startSeparator: string;
+  /**
+   * Separator displayed after the value of the section in the input.
+   * If it contains escaped characters, then it must not have the escaping characters.
+   * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
+   */
+  endSeparator: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;
   edited: boolean;
   hasTrailingZeroes: boolean;
-  /**
-   * If `true`, the start separator will be rendered just before this section.
-   * @default false
-   */
-  hasStartSeparator?: boolean;
 }
 
 export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
-  Exclude<MuiDateSectionName, 'empty'>,
+  MuiDateSectionName,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;
 
@@ -173,13 +174,22 @@ interface FieldActiveDateManager<TValue, TDate> {
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
 
-export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
+export type FieldSelectedSectionsIndexes = {
+  startIndex: number;
+  endIndex: number;
+  /**
+   * If `true`, the selectors at the very beginning and very end of the input will be selected.
+   * @default false
+   */
+  shouldSelectBoundarySelectors?: boolean;
+};
 
 export type FieldSelectedSections =
   | number
-  | FieldSelectedSectionsIndexes
   | MuiDateSectionName
-  | null;
+  | null
+  | 'all'
+  | { startIndex: number; endIndex: number };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   /**
@@ -191,7 +201,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @param {TSection[] | null} prevSections The last section list stored in state.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
-   * @returns {Pick<UseFieldState<TValue, TSection>, 'sections' | 'startSeparator'>}  The new section list and the start separator.
+   * @returns {TSection[]}  The new section list.
    */
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
@@ -199,15 +209,14 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
     prevSections: TSection[] | null,
     value: TValue,
     format: string,
-  ) => Pick<UseFieldState<TValue, TSection>, 'sections' | 'startSeparator'>;
+  ) => TSection[];
   /**
    * Creates the string value to render in the input based on the current section list.
    * @template TSection
    * @param {TSection[]} sections The current section list.
-   * @param {string} startSeparator The separator to insert before the first section.
    * @returns {string} The string value to render in the input.
    */
-  getValueStrFromSections: (sections: TSection[], startSeparator: string) => string;
+  getValueStrFromSections: (sections: TSection[]) => string;
   /**
    * Filter the section list to only keep the sections in the same date as the active section.
    * On a single date field does nothing.
@@ -291,14 +300,6 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    */
   referenceValue: TValue;
   sections: TSection[];
-
-  /**
-   * The separator to insert before the first section.
-   * If it contains escaped characters, then it must not have the escaping characters.
-   * For example, on Day.js, the format `[Current year:] YYYY` has a `startSeparator` equal to `Current year:` not `[Current year:]`
-   */
-  startSeparator: string;
-
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.
    * There are two `onChange` calls:

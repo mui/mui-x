@@ -73,7 +73,7 @@ export const useFieldState = <
   }, [fieldValueManager, format, isRTL, localeText, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
-    const { sections, startSeparator } = fieldValueManager.getSectionsFromValue(
+    const sections = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
       null,
@@ -84,7 +84,6 @@ export const useFieldState = <
 
     return {
       sections,
-      startSeparator,
       value: valueFromTheOutside,
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
@@ -117,6 +116,14 @@ export const useFieldState = <
       return null;
     }
 
+    if (selectedSections === 'all') {
+      return {
+        startIndex: 0,
+        endIndex: state.sections.length - 1,
+        shouldSelectBoundarySelectors: true,
+      };
+    }
+
     if (typeof selectedSections === 'number') {
       return { startIndex: selectedSections, endIndex: selectedSections };
     }
@@ -142,7 +149,7 @@ export const useFieldState = <
       state.sections,
       value,
       format,
-    ).sections;
+    );
 
     setState((prevState) => ({
       ...prevState,
@@ -170,10 +177,7 @@ export const useFieldState = <
       edited: true,
     };
 
-    return addPositionPropertiesToSections<TSection>({
-      sections: newSections,
-      startSeparator: state.startSeparator,
-    });
+    return addPositionPropertiesToSections<TSection>(newSections);
   };
 
   const clearValue = () =>
@@ -206,7 +210,7 @@ export const useFieldState = <
         return null;
       }
 
-      const sections = splitFormatIntoSections(utils, localeText, format, date).sections;
+      const sections = splitFormatIntoSections(utils, localeText, format, date);
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
@@ -294,7 +298,7 @@ export const useFieldState = <
         state.sections,
         valueFromTheOutside,
         format,
-      ).sections;
+      );
 
       setState((prevState) => ({
         ...prevState,
@@ -310,7 +314,7 @@ export const useFieldState = <
   }, [valueFromTheOutside]); // eslint-disable-line react-hooks/exhaustive-deps
 
   React.useEffect(() => {
-    const { sections, startSeparator } = fieldValueManager.getSectionsFromValue(
+    const sections = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
       state.sections,
@@ -320,7 +324,6 @@ export const useFieldState = <
     validateSections(sections, supportedDateSections);
     setState((prevState) => ({
       ...prevState,
-      startSeparator,
       sections,
     }));
   }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps

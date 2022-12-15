@@ -73,7 +73,9 @@ export const useField = <
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
         ? 1 // Special case if browser index is in invisible characters at the beginning.
-        : state.sections.findIndex((section) => section.startInInput > browserStartIndex);
+        : state.sections.findIndex(
+            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+          );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
 
     setSelectedSections(sectionIndex);
@@ -108,7 +110,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections('all');
       } else {
         syncSelectionFromDOM();
       }
@@ -168,9 +170,7 @@ export const useField = <
       return;
     }
 
-    const prevValueStr = cleanString(
-      fieldValueManager.getValueStrFromSections(state.sections, state.startSeparator),
-    );
+    const prevValueStr = cleanString(fieldValueManager.getValueStrFromSections(state.sections));
 
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
@@ -203,7 +203,7 @@ export const useField = <
       valueStr.length -
       prevValueStr.length +
       activeSection.end -
-      cleanString(activeSection.separator || '').length;
+      cleanString(activeSection.endSeparator || '').length;
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -352,7 +352,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections('all');
         break;
       }
 
@@ -448,15 +448,14 @@ export const useField = <
       return;
     }
 
-    let selectionStart = state.sections[selectedSectionIndexes.startIndex].startInInput;
-    const selectionEnd = state.sections[selectedSectionIndexes.endIndex].endInInput;
+    const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
+    const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
+    let selectionStart = firstSelectedSection.startInInput;
+    let selectionEnd = lastSelectedSection.endInInput;
 
-    // If we are selecting all sections, we want to select the start selector as well.
-    if (
-      selectedSectionIndexes.startIndex === 0 &&
-      selectedSectionIndexes.endIndex === state.sections.length - 1
-    ) {
-      selectionStart = 1;
+    if (selectedSectionIndexes.shouldSelectBoundarySelectors) {
+      selectionStart -= firstSelectedSection.startSeparator.length;
+      selectionEnd += lastSelectedSection.endSeparator.length;
     }
 
     if (
@@ -482,17 +481,15 @@ export const useField = <
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === document.activeElement) {
-      setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+      setSelectedSections('all');
     }
 
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
-    () =>
-      state.tempValueStrAndroid ??
-      fieldValueManager.getValueStrFromSections(state.sections, state.startSeparator),
-    [state.sections, state.startSeparator, fieldValueManager, state.tempValueStrAndroid],
+    () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
+    [state.sections, fieldValueManager, state.tempValueStrAndroid],
   );
 
   const inputMode = React.useMemo(() => {

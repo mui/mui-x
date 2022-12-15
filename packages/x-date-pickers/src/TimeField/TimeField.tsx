@@ -143,7 +143,7 @@ TimeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
