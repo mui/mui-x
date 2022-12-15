@@ -247,7 +247,10 @@
       }
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
-    "treeData": { "type": { "name": "bool" } }
+    "treeData": { "type": { "name": "bool" } },
+    "unstable_cellSelection": { "type": { "name": "bool" } },
+    "unstable_cellSelectionModel": { "type": { "name": "object" } },
+    "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
   },
   "slots": {
     "BaseButton": { "default": "Button", "type": { "name": "elementType" } },
@@ -341,6 +344,10 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -423,6 +430,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",

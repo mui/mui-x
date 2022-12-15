@@ -21,14 +21,14 @@ const VIEW_LOOKUP = {
   seconds: renderTimeView,
 };
 
-const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
+const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePicker<TDate>(
   inProps: StaticNextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const defaultizedProps = useNextDateTimePickerDefaultizedProps<
     TDate,
     StaticNextDateTimePickerProps<TDate>
-  >(inProps, 'MuiStaticNextDatePicker');
+  >(inProps, 'MuiStaticNextDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 

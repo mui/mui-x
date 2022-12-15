@@ -20,12 +20,14 @@ export function useGridApiMethod<
       return;
     }
     apiMethodsNames.forEach((methodName) => {
-      privateApiRef.current.register(visibility, {
-        [methodName]: (...args: any[]) => {
-          const fn = apiMethodsRef.current[methodName] as Function;
-          return fn(...args);
-        },
-      });
+      if (!privateApiRef.current.hasOwnProperty(methodName)) {
+        privateApiRef.current.register(visibility, {
+          [methodName]: (...args: any[]) => {
+            const fn = apiMethodsRef.current[methodName] as Function;
+            return fn(...args);
+          },
+        });
+      }
     });
   }, [apiMethodsNames, privateApiRef, visibility]);
 
