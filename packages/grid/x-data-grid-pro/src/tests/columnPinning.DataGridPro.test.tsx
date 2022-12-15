@@ -603,7 +603,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('column menu', () => {
-    it('should pin the column to the left when clicking the "Left" pinning button', () => {
+    it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -614,7 +614,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should pin the column to the right when clicking the "Right" pinning button', () => {
+    it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -625,7 +625,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Right" pinning button on a left pinned column', () => {
+    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -639,7 +639,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Left" pinning button on a right pinned column', () => {
+    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -653,12 +653,12 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to unpin a pinned left column when clicking "Left" pinning button', () => {
+    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
       fireEvent.click(menuIconButton);
-      fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Unpin' }));
       expect(
         document.querySelector(`.${gridClasses['pinnedColumns--left']} [data-field="id"]`),
       ).to.equal(null);
