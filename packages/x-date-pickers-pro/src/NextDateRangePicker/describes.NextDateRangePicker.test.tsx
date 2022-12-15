@@ -3,7 +3,7 @@ import { describeConformance } from '@mui/monorepo/test/utils';
 import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
 import { wrapPickerMount } from 'test/utils/pickers-utils';
 
-describe('<DesktopNextDateRangePicker /> - Describes', () => {
+describe('<NextDateRangePicker /> - Describes', () => {
   describeConformance(<NextDateRangePicker />, () => ({
     classes: {},
     muiName: 'MuiNextDateRangePicker',
