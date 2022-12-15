@@ -2,6 +2,7 @@
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
@@ -54,7 +55,6 @@
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
@@ -65,7 +65,7 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticNextTimePicker/StaticNextTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-picker/\">Time Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_StaticNextTimePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_StaticNextTimePicker" }

@@ -29,7 +29,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
-  const utils = useUtils();
+  const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
   const { className, sx, ...defaultizedProps } = useNextDatePickerDefaultizedProps<
@@ -42,7 +42,6 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       OpenPickerIcon: Calendar,
       Field: DateField,
@@ -78,6 +77,9 @@ DesktopNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

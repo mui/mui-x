@@ -21,14 +21,14 @@ const VIEW_LOOKUP = {
   seconds: renderTimeView,
 };
 
-const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
+const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePicker<TDate>(
   inProps: StaticNextDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const defaultizedProps = useNextDateTimePickerDefaultizedProps<
     TDate,
     StaticNextDateTimePickerProps<TDate>
-  >(inProps, 'MuiStaticNextDatePicker');
+  >(inProps, 'MuiStaticNextDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
@@ -46,7 +46,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDatePicker<
     },
   };
 
-  const { renderPicker } = useStaticPicker<TDate | null, TDate, DateOrTimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -72,6 +72,9 @@ StaticNextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the view is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

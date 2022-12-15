@@ -21,24 +21,24 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
  * - StaticTimePicker
  */
 export const useStaticPicker = <
-  TValue,
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TValue, TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
 >({
   props,
   valueManager,
   viewLookup,
   validator,
   ref,
-}: UseStaticPickerParams<TValue, TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
+}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
+  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
 
   const { layoutProps, renderCurrentView } = usePicker({
     props,
     viewLookup,
     valueManager,
     validator,
+    autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });

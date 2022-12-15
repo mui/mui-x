@@ -33,12 +33,15 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
+  | `showCellRightBorder`      | `showCellVerticalBorder`      |
+  | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
 
 ### Removed props
 
 - The `disableIgnoreModificationsIfProcessingProps` prop was removed and its behavior when `true` was incorporated as the default behavior.
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
+- The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
 
 ### State access
 
@@ -70,6 +73,17 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### Columns
 
 - The `GridColDef['hide']` property was removed. Use `GridColDef['columnVisibility']` instead.
+- Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. To fall back to the default formatted value, return `undefined` instead of `null`.
+
+  ```diff
+   const renderCell = () => {
+    if (condition) {
+      return <CustomComponent />;
+    }
+  - return null;
+  + return undefined;
+   }
+  ```
 
 ### Column menu
 
@@ -114,6 +128,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | ------------------------------------------------- |
   | `getLogger`                                       |
   | `windowRef`                                       |
+  | `footerRef`                                       |
+  | `headerRef`                                       |
+  | `columnHeadersElementRef`                         |
+  | `columnHeadersContainerElementRef`                |
   | `unstable_caches`                                 |
   | `unstable_eventManager`                           |
   | `unstable_requestPipeProcessorsApplication`       |
@@ -153,17 +171,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
 - The `useGridState` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
 - The `getGridColDef` utility function was removed.
+- The `GridHeaderPlaceholder` component was removed.
 - The `GridValueGetterFullParams` type was removed.
 - The `GridSortModelParams` interface was removed.
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
+- The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
+- The `MAX_PAGE_SIZE` constant was removed.
+- The `useGridScrollFn` hook was removed.
 
-<!--
 ### CSS classes
 
-TBD
+- Some CSS classes were removed or renamed
 
+  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
+  | ------------------------- | ------------------------------ | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+
+<!--
 ### Virtualization
 
 TBD

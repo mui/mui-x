@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const pluginName = 'babel-plugin-jsx-preview';
 
-const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider'];
+const wrapperTypes = ['div', 'Box', 'Stack', 'LocalizationProvider', 'DemoContainer', 'DemoItem'];
 
 /**
  * @returns {import('@babel/core').PluginObj}

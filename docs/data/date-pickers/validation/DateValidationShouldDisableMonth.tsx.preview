@@ -1,0 +1,14 @@
+<DemoItem label="DatePicker">
+  <NextDatePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day']}
+  />
+</DemoItem>
+<DemoItem label="DateTimePicker">
+  <NextDateTimePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day', 'hours', 'minutes']}
+  />
+</DemoItem>

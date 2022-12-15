@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderSeparatorProps } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
@@ -57,7 +57,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isColumnSorted && 'columnHeader--sorted',
       isColumnFiltered && 'columnHeader--filtered',
       isColumnNumeric && 'columnHeader--numeric',
-      showRightBorder && 'withBorder',
+      'withBorderColor',
+      showRightBorder && 'columnHeader--withRightBorder',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
     titleContainer: ['columnHeaderTitleContainer'],
@@ -84,7 +85,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     disableReorder,
     separatorSide,
   } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
@@ -108,7 +109,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
+    ? rootProps.showColumnVerticalBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
   const ownerState = {

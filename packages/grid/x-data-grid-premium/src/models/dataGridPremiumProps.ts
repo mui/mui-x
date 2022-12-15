@@ -16,6 +16,7 @@ import type {
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
+import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 
 export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
 
@@ -66,6 +67,11 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  */
 export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWithDefaultValue {
   /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  unstable_cellSelection: boolean;
+  /**
    * If `true`, aggregation is disabled.
    * @default false
    */
@@ -105,7 +111,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPremium>;
   /**
@@ -134,4 +140,17 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onAggregationModelChange?: (model: GridAggregationModel, details: GridCallbackDetails) => void;
+  /**
+   * Set the cell selection model of the grid.
+   */
+  unstable_cellSelectionModel?: GridCellSelectionModel;
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  unstable_onCellSelectionModelChange?: (
+    cellSelectionModel: GridCellSelectionModel,
+    details: GridCallbackDetails,
+  ) => void;
 }

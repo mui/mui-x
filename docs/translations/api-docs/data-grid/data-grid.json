@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
@@ -98,8 +99,8 @@
     "rowsPerPageOptions": "Select the pageSize dynamically using the component UI.",
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
-    "showCellRightBorder": "If <code>true</code>, the right border of the cells are displayed.",
-    "showColumnRightBorder": "If <code>true</code>, the right border of the column headers are displayed.",
+    "showCellVerticalBorder": "If <code>true</code>, the vertical borders of the cells are displayed.",
+    "showColumnVerticalBorder": "If <code>true</code>, the right border of the column headers are displayed.",
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
@@ -173,6 +174,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
+    },
+    "cell--rangeTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of a cell selection range"
+    },
+    "cell--rangeBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of a cell selection range"
+    },
+    "cell--rangeLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of a cell selection range"
+    },
+    "cell--rangeRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -507,6 +528,11 @@
       "nodeName": "the root element",
       "conditions": "density is \"compact\""
     },
+    "root--disableUserSelection": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "user selection is disabled"
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",
@@ -579,14 +605,20 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
-    "withBorder": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "both the cell and the column header",
-      "conditions": "<code>showColumnRightBorder={true}</code>"
+    "withBorderColor": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.\nSets border color only.",
+      "nodeName": "cells",
+      "conditions": "column header and other elements that have border"
+    },
+    "cell--withRightBorder": {
+      "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
+    },
+    "columnHeader--withRightBorder": {
+      "description": "Styles applied the column header if `showColumnVerticalBorder={true}`."
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root of the grouping cell of the tree data"
+      "nodeName": "the root of the grouping column of the tree data"
     },
     "treeDataGroupingCellToggle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -630,7 +662,6 @@
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
-    "Header": "Header component rendered above the grid column header bar.\nPrefer using the <code>Toolbar</code> slot. You should never need to use this slot.",
     "Toolbar": "Toolbar component rendered inside the Header component.",
     "PreferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "LoadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",

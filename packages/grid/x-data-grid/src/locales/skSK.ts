@@ -57,9 +57,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
   filterPanelLinkOperator: 'Logický operátor',
-  filterPanelOperators: 'Operátory',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
   filterPanelColumns: 'Stĺpce',

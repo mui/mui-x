@@ -49,9 +49,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'フィルター追加',
   filterPanelDeleteIconLabel: '削除',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'オペレータ',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'オペレータ',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: '列',

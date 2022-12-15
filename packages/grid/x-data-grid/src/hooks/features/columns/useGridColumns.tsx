@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridColumnApi } from '../../../models/api/gridColumnApi';
+import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -14,7 +14,7 @@ import {
   gridVisibleColumnDefinitionsSelector,
   gridColumnPositionsSelector,
 } from './gridColumnsSelector';
-import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridSignature, useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import {
   GridPipeProcessor,
@@ -75,6 +75,7 @@ export function useGridColumns(
     | 'components'
     | 'componentsProps'
     | 'disableColumnSelector'
+    | 'signature'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
@@ -193,7 +194,7 @@ export function useGridColumns(
     [apiRef],
   );
 
-  const setColumnIndex = React.useCallback<GridColumnApi['setColumnIndex']>(
+  const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
       const allColumns = gridColumnFieldsSelector(apiRef);
       const oldIndexPosition = allColumns.findIndex((col) => col === field);
@@ -249,11 +250,17 @@ export function useGridColumns(
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,
-    setColumnIndex,
     setColumnWidth,
   };
 
+  const columnReorderApi: GridColumnReorderApi = { setColumnIndex };
+
   useGridApiMethod(apiRef, columnApi, 'public');
+  useGridApiMethod(
+    apiRef,
+    columnReorderApi,
+    props.signature === GridSignature.DataGrid ? 'private' : 'public',
+  );
 
   /**
    * PRE-PROCESSING

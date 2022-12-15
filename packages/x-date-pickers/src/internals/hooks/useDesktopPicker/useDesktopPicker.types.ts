@@ -49,13 +49,13 @@ export interface UseDesktopPickerSlotsComponent<TDate>
   OpenPickerIcon: React.ElementType;
 }
 
-export interface UseDesktopPickerSlotsComponentsProps<TDate>
+export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},
@@ -74,7 +74,12 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate>
 export interface DesktopOnlyPickerProps<TDate>
   extends BaseNextNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps {
+  /**
+   * If `true`, the `input` element is focused during the first mount.
+   */
+  autoFocus?: boolean;
+}
 
 export interface UseDesktopPickerProps<TDate, TView extends DateOrTimeView, TError>
   extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
@@ -88,7 +93,7 @@ export interface UseDesktopPickerProps<TDate, TView extends DateOrTimeView, TErr
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopPickerSlotsComponentsProps<TDate>;
+  componentsProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseDesktopPickerParams<

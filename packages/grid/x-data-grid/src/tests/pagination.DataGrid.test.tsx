@@ -14,6 +14,8 @@ import {
   gridClasses,
   GridLinkOperator,
   GridRowsProp,
+  GridApi,
+  useGridApiRef,
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
@@ -268,6 +270,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
+    it('should throw if pageSize exceeds 100', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function TestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <BaselineTestCase
+            apiRef={apiRef}
+            pageSize={1}
+            page={0}
+            rowsPerPageOptions={[1, 2, 101]}
+          />
+        );
+      }
+      render(<TestCase />);
+      expect(() => apiRef.current.setPageSize(101)).to.throw(
+        /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
+      );
+    });
+
     it('should allow to update both the page and pageSize from the outside at once', () => {
       const { setProps } = render(
         <BaselineTestCase pageSize={1} page={0} rowsPerPageOptions={[1, 2]} />,
@@ -477,10 +498,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // make sure there is no more pages.
       const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-      expect(nextPageBtn!.getAttribute('disabled')).not.to.equal(
-        null,
-        'next page should be disabled.',
-      );
+      expect(nextPageBtn!).not.to.have.attribute('disabled', 'false'); // next page should be disabled
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {

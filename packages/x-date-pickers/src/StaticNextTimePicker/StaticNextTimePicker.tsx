@@ -36,7 +36,7 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDat
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
   };
 
-  const { renderPicker } = useStaticPicker<TDate | null, TDate, TimeView, typeof props>({
+  const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     viewLookup: VIEW_LOOKUP,
@@ -62,6 +62,9 @@ StaticNextTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the view is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.

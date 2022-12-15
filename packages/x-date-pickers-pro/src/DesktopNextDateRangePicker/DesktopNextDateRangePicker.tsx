@@ -7,7 +7,7 @@ import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.ty
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { renderDateRangeView } from '../internal/utils/views';
+import { renderDateRangeView } from '../internal/utils/viewRenderers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -34,7 +34,6 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     views: ['day'] as const,
     openTo: 'day' as const,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    autoFocus: true,
     components: {
       Field: MultiInputDateRangeField,
       ...defaultizedProps.components,
@@ -117,6 +116,11 @@ DesktopNextDateRangePicker.propTypes = {
    * @default false
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, editing dates by dragging is disabled.
+   * @default false
+   */
+  disableDragEditing: PropTypes.bool,
   /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSlotProps } from '@mui/base/utils';
 import DialogContent from '@mui/material/DialogContent';
 import Fade from '@mui/material/Fade';
 import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
@@ -6,7 +7,7 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { PickersActionBar } from '../../PickersActionBar';
+import { PickersActionBar, PickersActionBarAction } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 
@@ -87,6 +88,19 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
   } = props;
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions: ['cancel', 'accept'] as PickersActionBarAction[],
+    },
+    ownerState: { wrapperVariant: 'mobile' },
+  });
+
   const Dialog = components?.Dialog ?? PickersModalDialogRoot;
   const Transition = components?.MobileTransition ?? Fade;
 
@@ -101,14 +115,7 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
       PaperProps={componentsProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
-      <ActionBar
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        actions={['cancel', 'accept']}
-        {...componentsProps?.actionBar}
-      />
+      <ActionBar {...actionBarProps} />
     </Dialog>
   );
 }

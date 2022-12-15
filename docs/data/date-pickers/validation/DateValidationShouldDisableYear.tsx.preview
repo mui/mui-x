@@ -1,16 +1,9 @@
-<GridItem label="DatePicker">
-  <DatePicker
+<DemoItem label="DatePicker">
+  <NextDatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
+</DemoItem>
+<DemoItem label="DateTimePicker">
+  <NextDateTimePicker
+    defaultValue={today}
     shouldDisableYear={isInCurrentYear}
-    value={datePickerValue}
-    onChange={(newValue) => setDatePickerValue(newValue)}
-    renderInput={(params) => <TextField {...params} />}
   />
-</GridItem>
-<GridItem label="DateTimePicker">
-  <DateTimePicker
-    shouldDisableYear={isInCurrentYear}
-    value={dateTimePickerValue}
-    onChange={(newValue) => setDateTimePickerValue(newValue)}
-    renderInput={(params) => <TextField {...params} />}
-  />
-</GridItem>
+</DemoItem>

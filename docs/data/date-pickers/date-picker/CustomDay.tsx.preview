@@ -1,5 +1,11 @@
 <StaticNextDatePicker
   displayStaticWrapperAs="desktop"
-  defaultValue={dayjs('2022-04-07')}
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
   components={{ Day }}
+  componentsProps={{
+    day: {
+      selectedDay: value,
+    } as any,
+  }}
 />

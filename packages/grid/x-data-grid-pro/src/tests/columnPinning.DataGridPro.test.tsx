@@ -360,7 +360,29 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
   });
 
-  describe('prop: onPinnedColumnsChange', () => {
+  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test() {
+    if (isJSDOM) {
+      // Doesn't work with mocked window.getComputedStyle
+      this.skip();
+    }
+
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
+      </div>,
+    );
+
+    const computedStyle = window.getComputedStyle(
+      document.querySelector('.MuiDataGrid-pinnedColumns--right') as HTMLElement,
+    );
+    const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
+    const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
+    expect(borderLeftWidth).to.equal('1px');
+    // should not be transparent
+    expect(borderLeftColor).to.not.equal('rgba(0, 0, 0, 0)');
+  });
+
+  describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);

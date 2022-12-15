@@ -278,6 +278,10 @@ In the example below, you can see that all the aggregation functions are rendere
 
 {{"demo": "AggregationRenderCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## Selectors
+
+{{"component": "modules/components/SelectorsDocs.js", "category": "Aggregation"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)

@@ -15,6 +15,7 @@
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableDragEditing": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
@@ -56,7 +57,6 @@
     "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
@@ -69,7 +69,7 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers-pro/src/StaticNextDateRangePicker/StaticNextDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     {
       "packageName": "@mui/x-date-pickers-pro",
