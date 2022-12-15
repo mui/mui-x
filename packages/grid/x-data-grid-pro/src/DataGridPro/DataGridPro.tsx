@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -32,7 +32,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -61,7 +61,7 @@ DataGridProRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
