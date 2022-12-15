@@ -28,10 +28,11 @@ The component can be disabled or read-only.
 
 ## Views
 
-The component contains three views: `day`, `month`, and `year`.
+The component can contain three views: `day`, `month`, and `year`.
 By default, only the `day` and `year` views are enabled.
 
-You can customize the enabled views using the `views` prop:
+You can customize the enabled views using the `views` prop.
+Views will appear in the order they're included in the `views` array.
 
 {{"demo": "DateCalendarViews.js"}}
 
@@ -45,7 +46,7 @@ If you only need the `year` view or the `month` view, you can use the `YearCalen
 
 ### Show additional days
 
-To shows all days of displayed weeks, included those outside of the current month, use `showDaysOutsideCurrentMonth`.
+To show all days of displayed weeks, including those outside of the current month, use `showDaysOutsideCurrentMonth`.
 
 By default, only weeks of the current month are displayed, but you can provide a total number of week to display with `fixedWeekNumber` prop.
 This value is usually set to `6` for Gregorian calendars, because months display can vary between 4 and 6 weeks.

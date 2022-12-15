@@ -61,7 +61,8 @@ const YearCalendarRoot = styled('div', {
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
-  maxHeight: '304px',
+  width: 320,
+  maxHeight: 304,
 });
 
 export interface YearCalendarProps<TDate>

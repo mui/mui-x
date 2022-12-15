@@ -9,8 +9,11 @@ export default function DateCalendarViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label={'"year" and "day" (default)'}>
-          <DateCalendar defaultValue={dayjs('2022-04-07')} views={['year', 'day']} />
+        <DemoItem label={'"year", "month" and "day"'}>
+          <DateCalendar
+            defaultValue={dayjs('2022-04-07')}
+            views={['year', 'month', 'day']}
+          />
         </DemoItem>
         <DemoItem label={'"day"'}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} views={['day']} />
