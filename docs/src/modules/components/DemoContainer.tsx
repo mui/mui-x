@@ -1,10 +1,18 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { textFieldClasses } from '@mui/material/TextField';
+import { SystemStyleObject } from '@mui/system/styleFunctionSx/styleFunctionSx';
+import IconButton from '@mui/material/IconButton';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface PickersGridProps {
   children: React.ReactNode;
+  /**
+   * If `true`, the grid will have a max width to allow a more realistic usage on playground pages.
+   */
+  isInPlayground?: boolean;
 }
 
 type PickersGridChildComponentType =
@@ -48,11 +56,14 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 };
 
 export function DemoContainer(props: PickersGridProps) {
-  const { children } = props;
+  const { children, isInPlayground } = props;
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const childrenCount = React.Children.count(children);
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
+  const nonCollapsedChildren: React.ReactNode[] = [];
+  const collapsedChildren: React.ReactNode[] = [];
 
   React.Children.forEach(children, (child: any) => {
     let childName = getChildComponentName(child);
@@ -60,6 +71,14 @@ export function DemoContainer(props: PickersGridProps) {
     if (childName === 'DemoItem') {
       const nestedChild = React.Children.toArray(child.props.children)[0] as any;
       childName = getChildComponentName(nestedChild);
+
+      if ((child.props as DemoItemProps).collapsed) {
+        collapsedChildren.push(child);
+      } else {
+        nonCollapsedChildren.push(child);
+      }
+    } else {
+      nonCollapsedChildren.push(child);
     }
 
     childrenTypes.add(getChildTypeFromChildName(childName));
@@ -76,9 +95,10 @@ export function DemoContainer(props: PickersGridProps) {
 
   let direction: StackProps['direction'];
   let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
+  let sx: SystemStyleObject;
 
   if (
+    collapsedChildren.length > 0 ||
     childrenCount > 2 ||
     childrenTypes.has('multi-input-range-field') ||
     childrenTypes.has('single-input-range-field')
@@ -94,7 +114,7 @@ export function DemoContainer(props: PickersGridProps) {
   }
 
   if (childrenTypes.has('UI-view')) {
-    sx = null;
+    sx = {};
   } else if (childrenTypes.has('single-input-range-field')) {
     sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
   } else if (childrenSupportedSections.has('date-time')) {
@@ -103,18 +123,39 @@ export function DemoContainer(props: PickersGridProps) {
     sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
   }
 
+  if (isInPlayground) {
+    // @ts-ignore
+    sx.maxWidth = 500;
+  }
+
   return (
     <Stack direction={direction} spacing={spacing} sx={sx}>
-      {children}
+      {nonCollapsedChildren}
+      {collapsedChildren.length > 0 && (
+        <Stack spacing={2} alignItems="center">
+          <IconButton onClick={() => setIsExpanded((prev) => !prev)}>
+            <MoreHorizIcon />
+          </IconButton>
+          <Stack
+            direction={direction}
+            spacing={spacing}
+            sx={{ ...sx, maxHeight: isExpanded ? 'auto' : 0, overflow: 'hidden' }}
+            alignSelf="stretch"
+          >
+            {collapsedChildren}
+          </Stack>
+        </Stack>
+      )}
     </Stack>
   );
 }
 
-interface PickersGridItemProps {
+interface DemoItemProps {
   label: string;
   children: React.ReactNode;
+  collapsed?: boolean;
 }
-export function DemoItem(props: PickersGridItemProps) {
+export function DemoItem(props: DemoItemProps) {
   const { label, children } = props;
 
   const childName = getChildComponentName(React.Children.toArray(children)[0]);
@@ -122,7 +163,6 @@ export function DemoItem(props: PickersGridItemProps) {
 
   let spacing: StackProps['spacing'];
   let sx: StackProps['sx'];
-
   if (childType === 'multi-input-range-field') {
     spacing = 2;
     sx = {
