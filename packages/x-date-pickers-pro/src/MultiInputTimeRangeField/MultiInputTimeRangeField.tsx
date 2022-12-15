@@ -170,6 +170,11 @@ MultiInputTimeRangeField.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
+   * If `true`, the field is disabled
+   * @default false
+   */
+  disabled: PropTypes.bool,
+  /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */

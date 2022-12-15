@@ -152,7 +152,6 @@ MultiInputDateRangeField.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  autoFocus: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
@@ -167,6 +166,11 @@ MultiInputDateRangeField.propTypes = {
    * The default value. Use when the component is not controlled.
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * If `true`, the field is disabled
+   * @default false
+   */
+  disabled: PropTypes.bool,
   /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
