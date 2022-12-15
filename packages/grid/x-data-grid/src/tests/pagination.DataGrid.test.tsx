@@ -14,6 +14,8 @@ import {
   gridClasses,
   GridLinkOperator,
   GridRowsProp,
+  GridApi,
+  useGridApiRef,
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
@@ -266,6 +268,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should throw if pageSize exceeds 100', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function TestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <BaselineTestCase
+            apiRef={apiRef}
+            pageSize={1}
+            page={0}
+            rowsPerPageOptions={[1, 2, 101]}
+          />
+        );
+      }
+      render(<TestCase />);
+      expect(() => apiRef.current.setPageSize(101)).to.throw(
+        /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
+      );
     });
 
     it('should allow to update both the page and pageSize from the outside at once', () => {

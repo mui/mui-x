@@ -6,6 +6,7 @@ import {
   gridPanelClasses as classes,
   useGridApiRef,
   GridApiContext,
+  gridClasses,
 } from '@mui/x-data-grid';
 import Popper from '@mui/material/Popper';
 
@@ -14,7 +15,7 @@ describe('<GridPanel />', () => {
 
   function Wrapper(props: { children: React.ReactNode }) {
     const apiRef = useGridApiRef();
-    apiRef.current.columnHeadersContainerElementRef = {
+    apiRef.current.rootElementRef = {
       // @ts-ignore
       current: document.body,
     };
@@ -31,6 +32,7 @@ describe('<GridPanel />', () => {
       (node: React.ReactNode) => {
         const wrapper = baseMount(
           <Wrapper>
+            <div className={gridClasses.columnHeaders} />
             <span>{node}</span>
           </Wrapper>,
         );
