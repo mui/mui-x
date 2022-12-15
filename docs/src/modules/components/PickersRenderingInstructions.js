@@ -66,7 +66,9 @@ export default function PickersRenderingInstructions() {
           select
         >
           {Object.keys(libraries).map((lib) => (
-            <MenuItem value={lib}>{lib}</MenuItem>
+            <MenuItem key={lib} value={lib}>
+              {lib}
+            </MenuItem>
           ))}
         </TextField>
       </Stack>
