@@ -149,8 +149,8 @@ These placeholders are based on your current component localization, not on your
 For more information on how to define your component localization, check out the [Translated components](/x/react-date-pickers/localization/) page.
 
 :::warning
-Not all locale are translating the placeholders.
-Some are keeping the English letters because it is what is usually done for the dates in those languages.
+Placeholders translations depend on locale.
+Some locales might keep using English placeholders, because that format is commonly used in a given locale.
 :::
 
 ### Custom toolbar format
