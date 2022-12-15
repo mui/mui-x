@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { align, classes } = ownerState;
 
   const slots = {
-    root: ['cell', 'cellSkeleton', `cell--text${capitalize(align)}`],
+    root: ['cell', 'cellSkeleton', `cell--text${capitalize(align)}`, 'withBorderColor'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);

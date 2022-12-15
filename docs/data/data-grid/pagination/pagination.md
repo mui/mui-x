@@ -126,7 +126,7 @@ To do so, you just have to keep track of the next cursor associated with each pa
 
 You can customize the rendering of the pagination in the footer following [the component section](/x/react-data-grid/components/#pagination) of the documentation.
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -134,7 +134,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "Pagination"}}
 
