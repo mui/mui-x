@@ -35,11 +35,12 @@ describe('<DesktopNextDateRangePicker /> - Describes', () => {
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
+      const textBoxes = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
         // TODO: Support single range input
-        expectInputValue(screen.getAllByRole('textbox')[index], expectedValueStr, true);
+        expectInputValue(textBoxes[index], expectedValueStr, true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -60,7 +61,7 @@ describe('<DesktopNextDateRangePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getAllByRole('textbox')[0];
-        clickOnInput(input, 5); // Update the day
+        clickOnInput(input, 9, 11); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

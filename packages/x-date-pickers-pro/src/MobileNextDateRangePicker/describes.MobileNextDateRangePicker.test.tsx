@@ -34,11 +34,12 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
+      const textBoxes = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
         // TODO: Support single range input
-        expectInputValue(screen.getAllByRole('textbox')[index], expectedValueStr, true);
+        expectInputValue(textBoxes[index], expectedValueStr, true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
