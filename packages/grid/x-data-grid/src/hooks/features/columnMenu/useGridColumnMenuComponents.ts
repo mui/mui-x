@@ -1,10 +1,13 @@
 import * as React from 'react';
+import Divider from '@mui/material/Divider';
 import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
 interface UseGridColumnMenuComponentsProps extends GridColumnMenuRootProps {
   colDef: GridColDef;
+  hideMenu: (event: React.SyntheticEvent) => void;
+  addDividers?: boolean;
 }
 
 type UseGridColumnMenuComponentsResponse = Array<
@@ -24,6 +27,9 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
     defaultComponentsProps,
     components = {},
     componentsProps = {},
+    hideMenu,
+    colDef,
+    addDividers = true,
   } = props;
 
   const processedComponents = React.useMemo(
@@ -51,7 +57,8 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
 
   return React.useMemo(() => {
     const uniqueItems = Array.from(new Set<string>([...defaultItems, ...userItems]));
-    const sorted = uniqueItems.sort((a, b) => {
+    const cleansedItems = uniqueItems.filter((key) => processedComponents[key] != null);
+    const sorted = cleansedItems.sort((a, b) => {
       const leftItemProps = processedComponentsProps[camelize(a)];
       const rightItemProps = processedComponentsProps[camelize(b)];
       const leftDisplayOrder = Number.isFinite(leftItemProps?.displayOrder)
@@ -62,18 +69,26 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
         : 100;
       return leftDisplayOrder! - rightDisplayOrder!;
     });
-    return sorted.reduce<UseGridColumnMenuComponentsResponse>((acc, key) => {
-      if (processedComponents[key] == null) {
-        return acc;
-      }
-      const processedComponentProps = processedComponentsProps[camelize(key)] || {};
+    return sorted.reduce<UseGridColumnMenuComponentsResponse>((acc, key, index) => {
+      let itemProps = { colDef, onClick: hideMenu };
+      const processedComponentProps = processedComponentsProps[camelize(key)];
       if (processedComponentProps) {
         const { displayOrder, ...customProps } = processedComponentProps;
-        return [...acc, [processedComponents[key]!, customProps]];
+        itemProps = { ...itemProps, ...customProps };
       }
-      return [...acc, [processedComponents[key]!, {}]];
+      return addDividers && index !== sorted.length - 1
+        ? [...acc, [processedComponents[key]!, itemProps], [Divider, {}]]
+        : [...acc, [processedComponents[key]!, itemProps]];
     }, []);
-  }, [defaultItems, processedComponents, processedComponentsProps, userItems]);
+  }, [
+    addDividers,
+    colDef,
+    defaultItems,
+    hideMenu,
+    processedComponents,
+    processedComponentsProps,
+    userItems,
+  ]);
 };
 
 export { useGridColumnMenuComponents };

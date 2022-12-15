@@ -2,9 +2,15 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
+import { styled } from '@mui/material/styles';
+
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
+
+const StyledMenuList = styled(MenuList)(() => ({
+  minWidth: 248,
+}));
 
 const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
@@ -23,7 +29,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
     );
 
     return (
-      <MenuList
+      <StyledMenuList
         id={id}
         ref={ref}
         className={clsx(gridClasses.menuList, className)}
@@ -33,7 +39,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
         {...other}
       >
         {children}
-      </MenuList>
+      </StyledMenuList>
     );
   },
 );

@@ -134,14 +134,14 @@ const rows = [
     id: 11,
     slot: 'ColumnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItem',
-    displayOrder: 27,
+    displayOrder: 23,
     plan: 'Premium',
   },
   {
     id: 13,
     slot: 'ColumnMenuGroupingItem',
     defaultComponent: 'GridColumnMenuRowGroupItem,GridColumnMenuRowUngroupItem',
-    displayOrder: 23,
+    displayOrder: 27,
     plan: 'Premium',
   },
 ];

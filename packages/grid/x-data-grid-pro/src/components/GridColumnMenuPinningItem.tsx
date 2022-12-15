@@ -33,12 +33,15 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     const otherSide =
       side === GridPinnedPosition.right ? GridPinnedPosition.left : GridPinnedPosition.right;
     const label = otherSide === GridPinnedPosition.right ? 'pinToRight' : 'pinToLeft';
-
+    const Icon =
+      side === GridPinnedPosition.right
+        ? rootProps.components.ColumnMenuPinLeftIcon
+        : rootProps.components.ColumnMenuPinRightIcon;
     return (
       <React.Fragment>
         <MenuItem onClick={pinColumn(otherSide)}>
           <ListItemIcon>
-            <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+            <Icon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{apiRef.current.getLocaleText(label)}</ListItemText>
         </MenuItem>
@@ -60,7 +63,7 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
       </MenuItem>
       <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
         <ListItemIcon>
-          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+          <rootProps.components.ColumnMenuPinRightIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
       </MenuItem>

@@ -30,7 +30,7 @@ function GridColumnMenuColumnsItem(props: GridColumnMenuItemProps) {
       <ListItemIcon>
         <rootProps.components.ColumnMenuManageColumnsIcon fontSize="small" />
       </ListItemIcon>
-      <ListItemText>{apiRef.current.getLocaleText('columnMenuShowColumns')}</ListItemText>
+      <ListItemText>{apiRef.current.getLocaleText('columnMenuManageColumns')}</ListItemText>
     </MenuItem>
   );
 }
