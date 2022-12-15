@@ -10,7 +10,7 @@ import {
   UseSingleInputDateTimeRangeFieldProps,
 } from './SingleInputDateTimeRangeField.types';
 import { rangeValueManager, rangeFieldValueManager } from '../internal/utils/valueManagers';
-import { validateTimeRange } from '../internal/hooks/validation/useTimeRangeValidation';
+import { validateDateTimeRange } from '../internal/hooks/validation/useDateTimeRangeValidation';
 
 export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends {}>(
   props: UseSingleInputDateTimeRangeFieldProps<TDate>,
@@ -26,8 +26,11 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
     format: props.format ?? defaultFormat,
-    minDate: applyDefaultDate(utils, props.minDate, defaultDates.minDate),
-    maxDate: applyDefaultDate(utils, props.maxDate, defaultDates.maxDate),
+    minDate: applyDefaultDate(utils, props.minDateTime ?? props.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, props.maxDateTime ?? props.maxDate, defaultDates.maxDate),
+    minTime: props.minDateTime ?? props.minTime,
+    maxTime: props.maxDateTime ?? props.maxTime,
+    disableIgnoringDatePartForTimeValidation: Boolean(props.minDateTime || props.maxDateTime),
   } as any;
 };
 
@@ -45,12 +48,15 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
     shouldDisableDate,
     minDate,
     maxDate,
-    minTime,
-    maxTime,
-    minutesStep,
-    shouldDisableTime,
     disableFuture,
     disablePast,
+    minTime,
+    maxTime,
+    minDateTime,
+    maxDateTime,
+    minutesStep,
+    shouldDisableTime,
+    disableIgnoringDatePartForTimeValidation,
     selectedSections,
     onSelectedSectionsChange,
     ...other
@@ -66,18 +72,22 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
       onChange,
       readOnly,
       onError,
+      shouldDisableDate,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
       minTime,
       maxTime,
       minutesStep,
       shouldDisableTime,
-      disableFuture,
-      disablePast,
+      disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
-    validator: validateTimeRange,
+    validator: validateDateTimeRange,
     supportedDateSections: ['hours', 'minutes', 'seconds', 'meridiem'],
   });
 };
