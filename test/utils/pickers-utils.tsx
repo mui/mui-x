@@ -319,7 +319,11 @@ export const buildFieldInteractions = ({
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
 }) => {
-  const clickOnInput = (input: HTMLInputElement, cursorStartPosition: number, cursorEndPosition = cursorStartPosition) => {
+  const clickOnInput = (
+    input: HTMLInputElement,
+    cursorStartPosition: number,
+    cursorEndPosition = cursorStartPosition,
+  ) => {
     act(() => {
       fireEvent.mouseDown(input);
       if (document.activeElement !== input) {
