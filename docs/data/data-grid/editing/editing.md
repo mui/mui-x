@@ -427,7 +427,7 @@ Instead, use the buttons available in each row or in the toolbar.
 
 See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

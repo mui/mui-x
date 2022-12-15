@@ -277,34 +277,37 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>({
   sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[];
   startSeparator: string;
 }): TSection[] => {
-  let position = startSeparator.length;
-  let positionInInput = startSeparator.length + 1;
+  let position = 0;
+  let positionInInput = 1;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const renderedValue = getSectionVisibleValue(section, true);
+    const startSeparatorInSection = section.hasStartSeparator ? startSeparator : '';
+    const sectionStr = `${startSeparatorInSection}${renderedValue}${section.separator || ''}`;
 
-    const end = position + cleanString(`${renderedValue}${section.separator || ''}`).length;
+    const sectionLength = cleanString(sectionStr).length;
+    const sectionLengthInInput = sectionStr.length;
 
     // The ...InInput values consider the unicode characters but do include them in their indexes
     const cleanedValue = cleanString(renderedValue);
-    const startInInput = positionInInput + renderedValue.indexOf(cleanedValue[0]);
+    const startInInput =
+      positionInInput +
+      renderedValue.indexOf(cleanedValue[0]) +
+      cleanString(startSeparatorInSection).length;
     const endInInput = startInInput + cleanedValue.length;
 
     newSections.push({
       ...section,
       start: position,
-      end,
+      end: position + sectionLength,
       startInInput,
       endInInput,
     } as TSection);
-    position = end;
+    position += sectionLength;
     // Move position to the end of string associated to the current section
-    positionInInput =
-      positionInInput +
-      getSectionVisibleValue(section, true).length +
-      (section.separator?.length ?? 0);
+    positionInInput += sectionLengthInInput;
   }
 
   return newSections;
@@ -441,20 +444,16 @@ export const splitFormatIntoSections = <TDate>(
 
   commitCurrentToken();
 
-  const cleanSections = sections.map((section) => {
-    if (section.separator !== '/') {
-      if (section.separator !== null && section.separator.includes(' ')) {
-        return {
-          ...section,
-          separator: `\u2069${section.separator}\u2066`,
-        };
-      }
-      return section;
+  const cleanSections = sections.map((section, sectionIndex) => {
+    if (section.separator !== null && section.separator.includes(' ')) {
+      section.separator = `\u2069${section.separator}\u2066`;
+    } else if (section.separator === '/') {
+      section.separator = ' / ';
     }
-    return {
-      ...section,
-      separator: ' / ',
-    };
+
+    section.hasStartSeparator = sectionIndex === 0;
+
+    return section;
   });
 
   return {
@@ -517,7 +516,12 @@ export const createDateStrForInputFromSections = (
   startSeparator: string,
 ) => {
   const formattedArray = sections.map((section) => {
-    let sectionValueStr = getSectionVisibleValue(section, true);
+    let sectionValueStr: string = '';
+    if (section.hasStartSeparator) {
+      sectionValueStr += startSeparator;
+    }
+
+    sectionValueStr += getSectionVisibleValue(section, true);
 
     if (section.separator != null) {
       sectionValueStr += section.separator;
@@ -531,7 +535,7 @@ export const createDateStrForInputFromSections = (
   // \u2068: start first strong character isolation
   // \u2069: pop isolation
   // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-  return `\u2066${startSeparator}${formattedArray.join('')}\u2069`;
+  return `\u2066${formattedArray.join('')}\u2069`;
 };
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(

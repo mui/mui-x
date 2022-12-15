@@ -75,6 +75,7 @@ export const useField = <
         ? 1 // Special case if browser index is in invisible characters at the beginning.
         : state.sections.findIndex((section) => section.startInInput > browserStartIndex);
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+
     setSelectedSections(sectionIndex);
   };
 
@@ -451,12 +452,12 @@ export const useField = <
     const selectionEnd = state.sections[selectedSectionIndexes.endIndex].endInInput;
 
     // If we are selecting all sections, we want to select the start selector as well.
-    if (
-      selectedSectionIndexes.startIndex === 0 &&
-      selectedSectionIndexes.endIndex === state.sections.length - 1
-    ) {
-      selectionStart = 1;
-    }
+    // if (
+    //   selectedSectionIndexes.startIndex === 0 &&
+    //   selectedSectionIndexes.endIndex === state.sections.length - 1
+    // ) {
+    //   selectionStart = 1;
+    // }
 
     if (
       selectionStart !== inputRef.current!.selectionStart ||

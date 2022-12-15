@@ -128,6 +128,11 @@ export interface FieldSection {
   formatValue: string;
   edited: boolean;
   hasTrailingZeroes: boolean;
+  /**
+   * If `true`, the start separator will be rendered just before this input.
+   * @default false
+   */
+  hasStartSeparator?: boolean;
 }
 
 export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
