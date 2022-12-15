@@ -1,1 +1,8 @@
-<MultiInputDateTimeRangeField />
+<MultiInputDateTimeRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
+<SingleInputDateTimeRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
