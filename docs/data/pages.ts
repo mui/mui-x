@@ -54,7 +54,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/sorting' },
       { pathname: '/x/react-data-grid/filtering' },
       { pathname: '/x/react-data-grid/pagination' },
-      { pathname: '/x/react-data-grid/selection' },
+      {
+        pathname: '/x/react-data-grid/selection',
+        scopePathnames: ['/x/react-data-grid/row-selection', '/x/react-data-grid/cell-selection'],
+        children: [
+          { pathname: '/x/react-data-grid/row-selection' },
+          { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
+        ],
+      },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
