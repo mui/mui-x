@@ -51,6 +51,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 #### Changes
 
+- [fields] Fix bug introduced by RTL in single input range fields (#7189) @alexfauquette
 - [fields] Support RTL out of the box (#6715) @alexfauquette
 - [pickers] Clean `autoFocus` behavior on fields and new pickers (#7153) @flaviendelangle
 - [pickers] Fix label on the new range pickers (#7210) @flaviendelangle
@@ -68,7 +69,6 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 ### Core
 
 - [core] Fix broken test (#7179) @flaviendelangle
-- [field] Fix bug introduced by RTL in single input range fields (#7189) @alexfauquette
 
 
 ## 6.0.0-alpha.11
