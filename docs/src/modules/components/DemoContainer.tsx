@@ -127,6 +127,9 @@ export function DemoContainer(props: PickersGridProps) {
     // @ts-ignore
     sx.maxWidth =
       childrenTypes.has('multi-input-range-field') || childrenTypes.has('UI-view') ? 700 : 400;
+  } else {
+    // @ts-ignore
+    sx.maxWidth = '100%';
   }
 
   return (
@@ -135,7 +138,6 @@ export function DemoContainer(props: PickersGridProps) {
       {collapsedChildren.length > 0 && (
         <Stack spacing={2} alignItems="center">
           <Button onClick={() => setIsExpanded((prev) => !prev)} endIcon={<MoreHorizIcon />}>
-            yarn pr
             {isExpanded ? 'Less' : 'More'} components
           </Button>
           <Stack
