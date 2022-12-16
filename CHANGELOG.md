@@ -29,7 +29,6 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - [docs] Document aggregation selectors (#7151) @cherniavskii
 
-
 ## 5.17.15
 
 _Dec 8, 2022_
