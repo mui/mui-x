@@ -4,7 +4,7 @@ import {
   FieldBoundaries,
   SectionNeighbors,
   SectionOrdering,
-} from './useField.interfaces';
+} from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 

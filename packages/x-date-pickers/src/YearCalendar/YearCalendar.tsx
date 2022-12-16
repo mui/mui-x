@@ -108,7 +108,7 @@ export interface YearCalendarProps<TDate>
   disableHighlightToday?: boolean;
   onYearFocus?: (year: number) => void;
   hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (hasFocus: boolean) => void;
 }
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
