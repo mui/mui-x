@@ -27,6 +27,7 @@ describe('<DesktopNextDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'desktop',
     initialFocus: 'start',
+    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 4))],

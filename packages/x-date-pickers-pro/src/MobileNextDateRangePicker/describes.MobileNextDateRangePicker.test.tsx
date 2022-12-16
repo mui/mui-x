@@ -26,6 +26,7 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',
+    clock,
     values: [
       // initial start and end dates
       [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 4))],

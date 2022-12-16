@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { screen } from '@mui/monorepo/test/utils';
+import { screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -15,6 +15,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     emptyValue,
     assertRenderedValue,
     setNewValue,
+    clock,
     ...pickerParams
   } = getOptions();
 
@@ -87,20 +88,31 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         const handleChange = spy();
         render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
 
-        // assert that editing in "readOnly" mode is not allowed
-        if (
-          prop === 'readOnly' &&
-          componentFamily === 'new-picker' &&
-          (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
-        ) {
-          setNewValue(values[0], { isOpened: false });
-          expect(handleChange.callCount).to.equal(0);
-        }
         const textBoxes = screen.getAllByRole('textbox');
         textBoxes.forEach((textbox) => {
           expect(textbox).to.have.attribute(prop.toLowerCase());
         });
       });
+    });
+
+    it('should not allow editing with keyboard in mobile pickers', () => {
+      if (
+        componentFamily !== 'new-picker' &&
+        (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
+      ) {
+        return;
+      }
+      const handleChange = spy();
+
+      render(<ElementToTest defaultValue={values[0]} onChange={handleChange} />);
+      const input = screen.getAllByRole('textbox')[0];
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+      userEvent.keyPress(input, { key: 'ArrowUp' });
+      clock.runToLast();
+      expect(handleChange.callCount).to.equal(0);
     });
   });
 };
