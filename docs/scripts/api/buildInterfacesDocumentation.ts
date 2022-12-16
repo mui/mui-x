@@ -112,12 +112,7 @@ const parseInterfaceSymbol = (
 
       const exportedSymbol = project.exports[interfaceName];
       const type = project.checker.getDeclaredTypeOfSymbol(exportedSymbol);
-      const typeDeclaration = type.symbol.declarations?.[0];
       const symbol = resolveExportSpecifier(exportedSymbol, project);
-
-      if (!typeDeclaration || !ts.isInterfaceDeclaration(typeDeclaration)) {
-        return null;
-      }
 
       return {
         symbol,

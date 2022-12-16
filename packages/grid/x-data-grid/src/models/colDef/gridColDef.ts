@@ -33,7 +33,7 @@ export type ValueOptions = string | number | { value: any; label: string };
 export type GridKeyValue = string | number | boolean;
 
 /**
- * Column Definition interface.
+ * Column Definition base interface.
  */
 export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
@@ -257,6 +257,9 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
   getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
+/**
+ * Column Definition interface.
+ */
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>;
