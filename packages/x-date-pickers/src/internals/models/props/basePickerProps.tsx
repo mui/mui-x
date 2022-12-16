@@ -43,7 +43,7 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 }
 
 /**
- * Props common to all pickers after the applying the default props on each picker.
+ * Props common to all pickers after applying the default props on each picker.
  */
 export interface BaseNextPickerProps<
   TValue,
@@ -74,7 +74,7 @@ export interface BaseNextPickerProps<
 }
 
 /**
- * Props common to all pickers after the applying the default props on each picker.
+ * Props common to all pickers before applying the default props on each picker.
  */
 export interface BaseNextPickerInputProps<TValue, TDate, TView extends DateOrTimeView, TError>
   extends Omit<

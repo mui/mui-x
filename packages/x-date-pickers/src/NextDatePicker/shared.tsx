@@ -53,8 +53,8 @@ export interface BaseNextDatePickerProps<TDate>
   componentsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
-   * If `null`, the view will be editing with the field.
-   * If `undefined`, the view will be the one defined internally.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
    */
   viewRenderers?: Partial<
     PickerViewRendererLookup<TDate | null, DateView, DateViewRendererProps<TDate, DateView>, {}>
