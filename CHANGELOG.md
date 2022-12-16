@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## __VERSION__
+
+_Dec 16, 2022_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 The `apiRef` is now available on `@mui/x-data-grid`
+
+  ```tsx
+  const apiRef = useGridApiRef();
+
+  return (
+    <DataGrid apiRef={apiRef} {...other} />
+  )
+  ```
+
+- 🎁 The `DataGridPremium` now supports cell selection:
+
+  ```tsx
+  <DataGridPremium unstable_cellSelection />
+  ```
+
+  See [the documentation](https://next.mui.com/x/react-data-grid/selection/#cell-selection) for more information
+
+- 🌍 Support the *Right To Left* orientation on the fields components
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.12` / `@mui/x-data-grid-pro@v6.0.0-alpha.12` / `@mui/x-data-grid-premium@v6.0.0-alpha.12`
+
+#### Breaking changes
+
+- The `showCellRightBorder` was renamed to `showCellVerticalBorder`
+- The `showColumnRightBorder` was renamed to `showColumnVerticalBorder`
+- The `.MuiDataGrid-withBorder` CSS class was renamed to `.MuiDataGrid-withBorderColor` and it only sets `border-color` CSS property now.
+
+#### Changes
+
+- [DataGrid] Support `apiRef` in Community package (#6773) @cherniavskii
+- [DataGridPremium] Add support for cell selection (#6567) @m4theushw
+- [DataGridPremium] Use separate cache for aggregation columns pre-processor (#7142) @m4theushw
+- [DataGridPro] Fix missing border in right-pinned columns (#4197) @cherniavskii
+- [DataGridPro] Fix wrong border color on skeleton cells (#7202) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.12` / `@mui/x-date-pickers-pro@v6.0.0-alpha.12`
+
+#### Changes
+
+- [fields] Support RTL out of the box (#6715) @alexfauquette
+- [pickers] Clean `autoFocus` behavior on fields and new pickers (#7153) @flaviendelangle
+- [pickers] Fix label on the new range pickers (#7210) @flaviendelangle
+- [pickers] Fix wrong component name on `StaticNextDateTime` (#7187) @flaviendelangle
+
+### Docs
+
+- [docs] Add doc section about field placeholders localization (#7139) @flaviendelangle
+- [docs] Create a `DemoGrid` component to unify demos with several components (#7057) @flaviendelangle
+- [docs] Document aggregation selectors (#7148) @cherniavskii
+- [docs] Fix 301 links to demo pages in API pages (#7197) @oliviertassinari
+- [docs] Fix errors and warning in demos (#7209) @LukasTy
+- [docs] Use `DemoContainer` and `DemoItem` on every picker demo (#7149) @flaviendelangle
+
+### Core
+
+- [core] Fix broken test (#7179) @flaviendelangle
+- [field] Fix bug introduced by RTL in single input range fields (#7189) @alexfauquette
+
+
 ## 6.0.0-alpha.11
 
 _Dec 8, 2022_
