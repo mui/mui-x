@@ -13,7 +13,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
   FieldBoundaries,
-} from './useField.interfaces';
+} from './useField.types';
 import {
   getMonthsMatchingQuery,
   adjustDateSectionValue,

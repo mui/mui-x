@@ -34,10 +34,10 @@ const CustomPickersDay = styled(PickersDay, {
 }));
 
 function Day(props) {
-  const { day, selectedDay } = props;
+  const { day, selectedDay, ...other } = props;
 
   if (selectedDay == null) {
-    return <PickersDay {...props} />;
+    return <PickersDay {...other} day={day} />;
   }
 
   const start = selectedDay.startOf('week');
@@ -49,7 +49,8 @@ function Day(props) {
 
   return (
     <CustomPickersDay
-      {...props}
+      {...other}
+      day={day}
       disableMargin
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}

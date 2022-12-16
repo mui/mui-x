@@ -60,6 +60,12 @@
       }
     },
     "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

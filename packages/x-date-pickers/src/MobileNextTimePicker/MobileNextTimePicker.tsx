@@ -82,6 +82,13 @@ MobileNextTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
+  autoFocus: PropTypes.bool,
+  /**
    * Class name applied to the root element.
    */
   className: PropTypes.string,
@@ -207,8 +214,8 @@ MobileNextTimePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -217,7 +224,9 @@ MobileNextTimePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -268,7 +277,13 @@ MobileNextTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

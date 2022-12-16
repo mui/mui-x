@@ -61,7 +61,7 @@ export interface MonthCalendarProps<TDate>
   disableHighlightToday?: boolean;
   onMonthFocus?: (month: number) => void;
   hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (hasFocus: boolean) => void;
 }
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
