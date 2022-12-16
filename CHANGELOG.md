@@ -38,6 +38,10 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - The `showCellRightBorder` was renamed to `showCellVerticalBorder`
 - The `showColumnRightBorder` was renamed to `showColumnVerticalBorder`
 - The `.MuiDataGrid-withBorder` CSS class was renamed to `.MuiDataGrid-withBorderColor` and it only sets `border-color` CSS property now.
+- The following undocumented properties from `apiRef` were removed: `footerRef`, `headerRef`, `columnHeadersElementRef`, `columnHeadersContainerElementRef`
+- The `GridHeaderPlaceholder` component was removed.
+- The `MAX_PAGE_SIZE` constant was removed.
+- The `useGridScrollFn` hook was removed.
 
 #### Changes
 
