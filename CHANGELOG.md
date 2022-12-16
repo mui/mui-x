@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.16
+
+_Dec 16, 2022_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.16` / `@mui/x-data-grid-pro@v5.17.16` / `@mui/x-data-grid-premium@v5.17.16`
+
+#### Changes
+
+- [DataGrid] Display sort column menu items as per `sortingOrder` prop (#7125) @hanbin9775
+- [DataGrid] Fix flickering on mount (#7155) @cherniavskii
+- [DataGridPremium] Use separate cache for aggregation columns pre-processor (#7174) @m4theushw
+
+### `@mui/x-date-pickers@v5.0.11` / `@mui/x-date-pickers-pro@v5.0.11`
+
+#### Changes
+
+- [DateTimePicker] Update export pattern (#7172) @kealjones-wk
+
+### Docs
+
+- [docs] Document aggregation selectors (#7151) @cherniavskii
+
+
 ## 5.17.15
 
 _Dec 8, 2022_
