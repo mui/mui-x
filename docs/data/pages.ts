@@ -391,12 +391,17 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/date-pickers/next-time-picker', title: 'NextTimePicker' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           {
-            pathname: '/x/api/date-pickers/single-input-time-range-field',
+            pathname: '/x/api/date-pickers/single-input-date-range-field',
             title: 'SingleInputDateRangeField',
             plan: 'pro',
           },
           {
-            pathname: '/x/api/date-pickers/single-input-date-range-field',
+            pathname: '/x/api/date-pickers/single-input-date-time-range-field',
+            title: 'SingleInputDateTimeRangeField',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/api/date-pickers/single-input-time-range-field',
             title: 'SingleInputTimeRangeField',
             plan: 'pro',
           },
