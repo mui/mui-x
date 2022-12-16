@@ -17,8 +17,8 @@ export default function SecondsTimePicker() {
         />
         <NextTimePicker
           label="Minutes and seconds"
-          ampmInClock
           views={['minutes', 'seconds']}
+          openTo="minutes"
           format="mm:ss"
           defaultValue={dayjs('2022-04-07T15:30:10')}
         />

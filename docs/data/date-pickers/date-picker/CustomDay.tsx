@@ -38,10 +38,10 @@ const CustomPickersDay = styled(PickersDay, {
 })) as React.ComponentType<CustomPickerDayProps>;
 
 function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
-  const { day, selectedDay } = props;
+  const { day, selectedDay, ...other } = props;
 
   if (selectedDay == null) {
-    return <PickersDay {...props} />;
+    return <PickersDay day={day} {...other} />;
   }
 
   const start = selectedDay.startOf('week');
@@ -53,7 +53,8 @@ function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
 
   return (
     <CustomPickersDay
-      {...props}
+      {...other}
+      day={day}
       disableMargin
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}

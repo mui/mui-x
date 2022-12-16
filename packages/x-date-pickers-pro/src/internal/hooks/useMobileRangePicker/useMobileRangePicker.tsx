@@ -80,6 +80,7 @@ export const useMobileRangePicker = <
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
     rangePosition,
     onRangePositionChange: setRangePosition,
   });
