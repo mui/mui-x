@@ -9,7 +9,7 @@ export type {
   FieldSelectedSections,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-} from './useField.interfaces';
+} from './useField.types';
 export {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
