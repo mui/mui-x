@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
-import { GridActionsColDef, GridColDef, GridColumns, GridRowParams } from '../models';
+import { GridActionsColDef, GridColDef, GridRowParams } from '../models';
 
 function RenderCellParamsExplicitTyping() {
   return (
@@ -82,7 +82,7 @@ function CellParamsFromRowModel() {
     },
   };
 
-  const columns: GridColumns<PriceRowModel> = [
+  const columns: GridColDef<PriceRowModel>[] = [
     {
       field: 'price1',
       type: 'actions',

@@ -264,8 +264,6 @@ export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>;
 
-export type GridColumns<R extends GridValidRowModel = any> = GridColDef<R>[];
-
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };

@@ -1,5 +1,5 @@
 import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 
 /**
  * Object passed as parameter in the row callbacks.
@@ -16,7 +16,7 @@ export interface GridRowParams<R extends GridValidRowModel = any> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
+  columns: GridColDef[];
 }
 
 interface GridRowVisibilityParams {

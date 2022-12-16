@@ -1,4 +1,4 @@
-import { GridColDef, GridColumns, GridRowModel } from '@mui/x-data-grid-premium';
+import { GridColDef, GridRowModel } from '@mui/x-data-grid-premium';
 
 export type Movie = {
   id: number;
@@ -20,7 +20,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-const COLUMNS: GridColumns = [
+const COLUMNS: GridColDef[] = [
   { field: 'title', headerName: 'Title', width: 200, groupable: false },
   {
     field: 'gross',

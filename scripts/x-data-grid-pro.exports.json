@@ -159,7 +159,6 @@
   { "name": "GridColumnResizeParams", "kind": "Interface" },
   { "name": "gridColumnResizeSelector", "kind": "Variable" },
   { "name": "GridColumnResizeState", "kind": "Interface" },
-  { "name": "GridColumns", "kind": "TypeAlias" },
   { "name": "GridColumnsGroupingState", "kind": "Interface" },
   { "name": "GridColumnsInitialState", "kind": "Interface" },
   { "name": "GridColumnsMenuItem", "kind": "Function" },
