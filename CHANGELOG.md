@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## __VERSION__
+## 6.0.0-alpha.12
 
 _Dec 16, 2022_
 
