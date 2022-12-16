@@ -27,10 +27,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Dzisiaj',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: 'Wybierz datę',
+  dateTimePickerDefaultToolbarTitle: 'Wybierz datę i czas',
+  timePickerDefaultToolbarTitle: 'Wybierz czas',
+  dateRangePickerDefaultToolbarTitle: 'Wybierz zakres dat',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
