@@ -35,7 +35,8 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
-      const textBoxes = screen.getAllByRole('textbox');
+      // `getAllByRole('textbox')` does not work here, because inputs are `readonly`
+      const textBoxes = [screen.getByLabelText('Start'), screen.getByLabelText('End')];
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
@@ -65,7 +66,7 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-        fireDiscreteEvent.keyDown(screen.getAllByRole('textbox')[setEndDate ? 1 : 0], {
+        fireDiscreteEvent.keyDown(screen.getByLabelText(setEndDate ? 'End' : 'Start'), {
           key: 'Escape',
         });
         clock.runToLast();
