@@ -59,7 +59,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### Docs
 
-- [docs] Add doc section about field placeholders localization (#7139) @flaviendelangle
+- [docs] Add docs section about field placeholders' localization (#7139) @flaviendelangle
 - [docs] Create a `DemoGrid` component to unify demos with several components (#7057) @flaviendelangle
 - [docs] Document aggregation selectors (#7148) @cherniavskii
 - [docs] Fix 301 links to demo pages in API pages (#7197) @oliviertassinari
