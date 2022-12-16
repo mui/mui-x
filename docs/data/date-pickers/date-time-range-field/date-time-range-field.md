@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Time Range Field components
-components: MultiInputDateTimeRangeField
+components: MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers-pro'
 ---
@@ -11,15 +11,14 @@ packageName: '@mui/x-date-pickers-pro'
 <p class="description">The Date Time Range Field let the user select a date and time range with the keyboard.</p>
 
 :::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
+Those components are unstable.
+They might receive breaking changes on their props to have the best component possible by the time of the stable release.
 :::
 
 ## Basic usage
 
-:::info
-A single input version of the Date Time Range Field will soon be available just like for the Date Range Field.
-:::
+You can render your Date Time Range Field with either one input using `SingleInputDateTimeRangeField`
+or two inputs using `MultiInputDateTimeRangeField` as show below.
 
 {{"demo": "BasicDateTimeRangeField.js"}}
 
