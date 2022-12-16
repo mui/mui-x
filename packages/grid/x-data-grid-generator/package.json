@@ -32,7 +32,7 @@
   "dependencies": {
     "@babel/runtime": "^7.18.9",
     "@mui/base": "^5.0.0-alpha.97",
-    "@mui/x-data-grid-premium": "5.17.15",
+    "@mui/x-data-grid-premium": "5.17.16",
     "chance": "^1.1.8",
     "clsx": "^1.2.1",
     "lru-cache": "^7.14.0"
