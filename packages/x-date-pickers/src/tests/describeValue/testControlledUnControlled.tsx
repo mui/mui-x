@@ -97,7 +97,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     it('should not allow editing with keyboard in mobile pickers', () => {
       if (
-        componentFamily !== 'new-picker' &&
+        componentFamily !== 'new-picker' ||
         (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
       ) {
         return;
