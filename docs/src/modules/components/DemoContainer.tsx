@@ -4,7 +4,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { textFieldClasses } from '@mui/material/TextField';
 import { SystemStyleObject } from '@mui/system/styleFunctionSx/styleFunctionSx';
-import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 interface PickersGridProps {
@@ -125,7 +125,8 @@ export function DemoContainer(props: PickersGridProps) {
 
   if (isInPlayground) {
     // @ts-ignore
-    sx.maxWidth = 500;
+    sx.maxWidth =
+      childrenTypes.has('multi-input-range-field') || childrenTypes.has('UI-view') ? 700 : 400;
   }
 
   return (
@@ -133,9 +134,10 @@ export function DemoContainer(props: PickersGridProps) {
       {nonCollapsedChildren}
       {collapsedChildren.length > 0 && (
         <Stack spacing={2} alignItems="center">
-          <IconButton onClick={() => setIsExpanded((prev) => !prev)}>
-            <MoreHorizIcon />
-          </IconButton>
+          <Button onClick={() => setIsExpanded((prev) => !prev)} endIcon={<MoreHorizIcon />}>
+            yarn pr
+            {isExpanded ? 'Less' : 'More'} components
+          </Button>
           <Stack
             direction={direction}
             spacing={spacing}
