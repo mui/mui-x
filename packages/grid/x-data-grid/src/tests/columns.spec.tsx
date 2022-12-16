@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
-import { GridActionsColDef, GridColDef, GridRowParams } from '../models';
+import { GridColDef, GridRowParams } from '../models';
 
 function RenderCellParamsExplicitTyping() {
   return (
@@ -44,7 +44,7 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price6',
           type: 'actions',
-          // @ts-expect-error `price` is expected to be a number because of GridEnrichedCallDef
+          // @ts-expect-error `price` is expected to be a number because of GridColDef
           getActions: (params: GridRowParams<{ price: string }>) => {
             return params.row.price.toUpperCase();
           },
@@ -65,7 +65,7 @@ function RenderCellParamsExplicitTyping() {
 function CellParamsFromRowModel() {
   type PriceRowModel = { price1: number; price2: string };
 
-  const actionColumn: GridActionsColDef<PriceRowModel> = {
+  const actionColumn: GridColDef<PriceRowModel> = {
     field: 'price1',
     type: 'actions',
     getActions: (params) => {

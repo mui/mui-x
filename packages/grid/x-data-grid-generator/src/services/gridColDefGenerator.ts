@@ -1,4 +1,4 @@
-import { GridBaseColDef } from '@mui/x-data-grid-premium';
+import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 
 export interface GridDataGeneratorContext {
   /**

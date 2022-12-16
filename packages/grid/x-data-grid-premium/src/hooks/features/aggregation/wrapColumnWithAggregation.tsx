@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridBaseColDef, GridRowId } from '@mui/x-data-grid-pro';
+import { GridRowId } from '@mui/x-data-grid-pro';
+import { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import {
   GridAggregationCellMeta,
