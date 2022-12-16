@@ -9,8 +9,6 @@ import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from 
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { DateRange } from '@mui/x-date-pickers-pro/internal/models';
-import { renderDateRangeViewCalendar } from '@mui/x-date-pickers-pro/dateRangeViewRenderers';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
