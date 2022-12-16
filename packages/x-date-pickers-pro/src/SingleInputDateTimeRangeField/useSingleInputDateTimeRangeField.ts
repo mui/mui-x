@@ -19,7 +19,9 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
   const defaultDates = useDefaultDates<TDate>();
 
   const ampm = props.ampm ?? utils.is12HourCycleInCurrentLocale();
-  const defaultFormat = ampm ? utils.formats.fullTime12h : utils.formats.fullTime24h;
+  const defaultFormat = ampm
+    ? utils.formats.keyboardDateTime12h
+    : utils.formats.keyboardDateTime24h;
 
   return {
     ...props,
