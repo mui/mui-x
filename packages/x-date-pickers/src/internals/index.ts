@@ -143,6 +143,7 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
+export type { ExportedUseViewsOptions } from './hooks/useViews';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,

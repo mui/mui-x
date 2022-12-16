@@ -5,12 +5,16 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
-import { renderTimeViewClock } from '../timeViewRenderers';
-import { renderDateViewCalendar } from '../dateViewRenderers';
-import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
+import {
+  DateOrTimeView,
+  PickerViewRendererLookup,
+  useLocaleText,
+  validateDateTime,
+} from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
-import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { renderDateViewCalendar } from '../dateViewRenderers';
+import { renderTimeViewClock } from '../timeViewRenderers';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -87,6 +91,13 @@ MobileNextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
+  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
@@ -268,8 +279,8 @@ MobileNextDateTimePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -284,7 +295,9 @@ MobileNextDateTimePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -372,6 +385,12 @@ MobileNextDateTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  /**
    * Define custom view renderers for each section.
    * If `null`, the view will be editing with the field.
    * If `undefined`, the view will be the one defined internally.
@@ -385,7 +404,7 @@ MobileNextDateTimePicker.propTypes = {
     year: PropTypes.func,
   }),
   /**
-   * Array of views to show.
+   * Available views.
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

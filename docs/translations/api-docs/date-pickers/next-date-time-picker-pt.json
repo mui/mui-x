@@ -3,7 +3,7 @@
   "propDescriptions": {
     "ampm": "12h/24h view for hour selection clock.",
     "ampmInClock": "Display ampm controls under the clock (instead of in the toolbar).",
-    "autoFocus": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
+    "autoFocus": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will close after submitting full date.",
     "components": "Overrideable components.",
@@ -39,10 +39,10 @@
     "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
     "onOpen": "Callback fired when the popup requests to be opened. Use in controlled mode (see open).",
     "onSelectedSectionsChange": "Callback fired when the selected sections change.<br><br><strong>Signature:</strong><br><code>function(newValue: FieldSelectedSections) =&gt; void</code><br><em>newValue:</em> The new selected sections.",
-    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: View) =&gt; void</code><br><em>view:</em> The new view.",
+    "onViewChange": "Callback fired on view change.<br><br><strong>Signature:</strong><br><code>function(view: TView) =&gt; void</code><br><em>view:</em> The new view.",
     "onYearChange": "Callback firing on year change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; void</code><br><em>year:</em> The new year.",
     "open": "Control the popup or dialog open state.",
-    "openTo": "First view to show.",
+    "openTo": "The default visible view. Used when the component view is not controlled. Must be a valid option from <code>views</code> list.",
     "orientation": "Force rendering in particular orientation.",
     "reduceAnimations": "Disable heavy animations.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
@@ -55,8 +55,9 @@
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
+    "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
     "viewRenderers": "Define custom view renderers for each section. If <code>null</code>, the view will be editing with the field. If <code>undefined</code>, the view will be the one defined internally.",
-    "views": "Array of views to show."
+    "views": "Available views."
   },
   "classDescriptions": {},
   "slotDescriptions": {

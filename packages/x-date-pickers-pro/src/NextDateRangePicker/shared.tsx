@@ -41,7 +41,7 @@ export interface BaseNextDateRangePickerSlotsComponentsProps<TDate>
 export interface BaseNextDateRangePickerProps<TDate>
   extends Omit<
       BaseNextPickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
-      'views' | 'openTo' | 'onViewChange' | 'orientation'
+      'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate> {

@@ -34,6 +34,7 @@ import { DateTimeValidationError } from '../internals/hooks/validation/useDateTi
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
+import { applyDefaultViewProps } from '../internals/utils/views';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -133,7 +134,6 @@ export function useNextDateTimePickerDefaultizedProps<
     name,
   });
 
-  const views = themeProps.views ?? ['year', 'day', 'hours', 'minutes'];
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
@@ -149,12 +149,16 @@ export function useNextDateTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
-    views,
+    ...applyDefaultViewProps({
+      views: themeProps.views,
+      openTo: themeProps.openTo,
+      defaultViews: ['year', 'day', 'hours', 'minutes'],
+      defaultOpenTo: 'day',
+    }),
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
     ampmInClock: themeProps.ampmInClock ?? true,
-    openTo: themeProps.openTo ?? 'day',
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
