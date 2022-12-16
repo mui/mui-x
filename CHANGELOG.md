@@ -19,6 +19,8 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   )
   ```
 
+  See [the documentation](https://next.mui.com/x/react-data-grid/api-object/) for more information.
+
 - 🎁 The `DataGridPremium` now supports cell selection:
 
   ```tsx
