@@ -485,7 +485,6 @@
   { "name": "gridSortModelSelector", "kind": "Variable" },
   { "name": "GridState", "kind": "TypeAlias" },
   { "name": "GridStateApi", "kind": "Interface" },
-  { "name": "GridStateColDef", "kind": "TypeAlias" },
   { "name": "GridStatePersistenceApi", "kind": "Interface" },
   { "name": "gridStringOrNumberComparator", "kind": "Variable" },
   { "name": "gridTabIndexCellSelector", "kind": "Variable" },

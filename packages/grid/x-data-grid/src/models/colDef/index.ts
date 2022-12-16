@@ -5,7 +5,6 @@ export type {
   GridKeyValue,
   GridColDef,
   GridColTypeDef,
-  GridStateColDef,
   GridColumnsMeta,
 } from './gridColDef';
 

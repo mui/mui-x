@@ -1,4 +1,4 @@
-export type { GridBaseColDef } from '../models/colDef/gridColDef';
+export type { GridBaseColDef, GridStateColDef } from '../models/colDef/gridColDef';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
