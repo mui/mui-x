@@ -9,7 +9,7 @@ _Dec 16, 2022_
 
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 The `apiRef` is now available on `@mui/x-data-grid`
+- 🚀 The `apiRef` prop is now available in the `@mui/x-data-grid` package:
 
   ```tsx
   const apiRef = useGridApiRef();
