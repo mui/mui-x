@@ -151,6 +151,13 @@ const faIRGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelMin: 'حداقل',
   aggregationFunctionLabelMax: 'حداکثر',
   aggregationFunctionLabelSize: 'اندازه',
+  
+  // Pagination
+  MuiTablePagination: {
+	  labelDisplayedRows: ({ from, to, count }) =>
+	  `${from} - ${to} از ${count}`,
+	  labelRowsPerPage: "سطر در صفحه",
+	},
 };
 
 export const faIR: Localization = getGridLocalization(faIRGrid, faIRCore);
