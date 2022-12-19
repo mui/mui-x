@@ -27,9 +27,6 @@ export default function ColumnMenuGridPremium() {
       rowGrouping: {
         model: ['company'],
       },
-      sorting: {
-        sortModel: [{ field: 'year', sort: 'desc' }],
-      },
     },
   });
 

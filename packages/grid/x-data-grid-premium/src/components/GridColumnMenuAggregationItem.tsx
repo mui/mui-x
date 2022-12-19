@@ -63,6 +63,7 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         : { ...otherColumnItems, [colDef?.field]: newAggregationItem };
 
     apiRef.current.setAggregationModel(newModel);
+    apiRef.current.hideColumnMenu();
   };
 
   const label = apiRef.current.getLocaleText('aggregationMenuItemHeader');
