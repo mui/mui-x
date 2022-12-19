@@ -440,11 +440,12 @@ export const splitFormatIntoSections = <TDate>(
   const cleanSections = sections.map((section) => {
     const cleanSeparator = (separator: string) => {
       let cleanedSeparator = separator;
-      if (cleanedSeparator === '/') {
-        cleanedSeparator = ' / ';
-      }
       if (cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
         cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
+      }
+
+      if (cleanedSeparator === '/') {
+        cleanedSeparator = ' / ';
       }
 
       return cleanedSeparator;
