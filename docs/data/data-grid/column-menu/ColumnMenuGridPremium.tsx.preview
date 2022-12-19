@@ -1,1 +1,7 @@
-<DataGridPremium {...data} />
+<DataGridPremium
+  {...data}
+  groupingColDef={{
+    leafField: 'title',
+  }}
+  initialState={initialState}
+/>

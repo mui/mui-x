@@ -5,22 +5,19 @@ import { useGridColumnMenuComponents } from '../../../hooks/features/columnMenu/
 import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
-import { GridColumnMenuHideItem } from './menuItems/GridColumnMenuHideItem';
 import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
 import { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
 
 export const GRID_COLUMN_MENU_COMPONENTS = {
   ColumnMenuSortItem: GridColumnMenuSortItem,
   ColumnMenuFilterItem: GridColumnMenuFilterItem,
-  ColumnMenuHideItem: GridColumnMenuHideItem,
   ColumnMenuColumnsItem: GridColumnMenuColumnsItem,
 };
 
 export const GRID_COLUMN_MENU_COMPONENTS_PROPS = {
   columnMenuSortItem: { displayOrder: 10 },
   columnMenuFilterItem: { displayOrder: 20 },
-  columnMenuHideItem: { displayOrder: 30 },
-  columnMenuColumnsItem: { displayOrder: 40 },
+  columnMenuColumnsItem: { displayOrder: 30 },
 };
 
 const GridGenericColumnMenu = React.forwardRef<HTMLUListElement, GridGenericColumnMenuProps>(
