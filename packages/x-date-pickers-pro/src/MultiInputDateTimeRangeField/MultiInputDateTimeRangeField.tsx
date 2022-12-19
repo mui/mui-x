@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
 
@@ -80,13 +81,13 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
 
   const Input = components?.Input ?? TextField;
-  const startInputProps: TextFieldProps = useSlotProps({
+  const startInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'start' },
   });
 
-  const endInputProps: TextFieldProps = useSlotProps({
+  const endInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'end' },
@@ -102,7 +103,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const {
     startDate: { onKeyDown: onStartInputKeyDown, ref: startInputRef, ...startDateProps },
     endDate: { onKeyDown: onEndInputKeyDown, ref: endInputRef, ...endDateProps },
-  } = useMultiInputDateTimeRangeField<TDate, TextFieldProps>({
+  } = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: {
       value,
       defaultValue,

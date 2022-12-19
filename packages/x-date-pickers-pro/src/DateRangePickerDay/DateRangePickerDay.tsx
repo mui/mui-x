@@ -411,11 +411,6 @@ DateRangePickerDayRaw.propTypes = {
    * Indicates if the day should be visually selected.
    */
   isVisuallySelected: PropTypes.bool,
-  /**
-   * The component used to render a link when the `href` prop is provided.
-   * @default 'a'
-   */
-  LinkComponent: PropTypes.elementType,
   onDaySelect: PropTypes.func.isRequired,
   /**
    * Callback fired when the component is focused with a keyboard.

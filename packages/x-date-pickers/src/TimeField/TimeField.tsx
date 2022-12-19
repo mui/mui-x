@@ -61,12 +61,6 @@ TimeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * This prop helps users to fill forms faster, especially on mobile devices.
-   * The name can be confusing, as it's more like an autofill.
-   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
-   */
-  autoComplete: PropTypes.string,
-  /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
    */
@@ -186,18 +180,10 @@ TimeField.propTypes = {
    */
   margin: PropTypes.oneOf(['dense', 'none', 'normal']),
   /**
-   * Maximum number of rows to display when multiline option is set to true.
-   */
-  maxRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
-  /**
-   * Minimum number of rows to display when multiline option is set to true.
-   */
-  minRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
@@ -208,11 +194,6 @@ TimeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * If `true`, a `textarea` element is rendered instead of an input.
-   * @default false
-   */
-  multiline: PropTypes.bool,
   /**
    * Name attribute of the `input` element.
    */
@@ -239,10 +220,6 @@ TimeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * The short hint displayed in the `input` before the user enters a value.
-   */
-  placeholder: PropTypes.string,
-  /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
    * @default false
@@ -253,16 +230,6 @@ TimeField.propTypes = {
    * @default false
    */
   required: PropTypes.bool,
-  /**
-   * Number of rows to display when multiline option is set to true.
-   */
-  rows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * Render a [`Select`](/material-ui/api/select/) element while passing the Input element to `Select` as `input` parameter.
-   * If this option is set you must pass the options of the select as children.
-   * @default false
-   */
-  select: PropTypes.bool,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -280,10 +247,6 @@ TimeField.propTypes = {
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
-  /**
-   * Props applied to the [`Select`](/material-ui/api/select/) element.
-   */
-  SelectProps: PropTypes.object,
   /**
    * Disable specific time.
    * @param {number} timeValue The value to check.

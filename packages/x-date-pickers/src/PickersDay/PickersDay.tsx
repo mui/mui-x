@@ -21,7 +21,10 @@ import {
 } from './pickersDayClasses';
 
 export interface PickersDayProps<TDate>
-  extends Omit<ExtendMui<ButtonBaseProps>, 'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter'> {
+  extends Omit<
+    ExtendMui<ButtonBaseProps>,
+    'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
+  > {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -386,11 +389,6 @@ PickersDayRaw.propTypes = {
    */
   focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
-  /**
-   * The component used to render a link when the `href` prop is provided.
-   * @default 'a'
-   */
-  LinkComponent: PropTypes.elementType,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
