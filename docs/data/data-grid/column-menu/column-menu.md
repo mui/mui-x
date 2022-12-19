@@ -141,7 +141,7 @@ You can also customize and replace the column menu by [passing a fully custom co
 
 ## Customize Menu List props
 
-Column menu internally uses [`<MenuList />`](https://mui.com/material-ui/api/menu-list/) component, use `MenuListProps` component prop to update some props for it. Following example sets the menu layout to `dense`.
+The column menu uses a [`<MenuList />`](https://mui.com/material-ui/api/menu-list/) internally, you can use `MenuListProps` component prop to update its properties. The following example sets the menu layout to `dense`.
 
 {{"demo": "ColumnMenuDense.js", "bg": "inline"}}
 

@@ -77,7 +77,6 @@ export const GridColumnMenu = React.forwardRef<
     <GridColumnMenuContainer ref={ref} {...props}>
       <GridColumnMenuSortItem onClick={hideMenu} column={colDef!} />
       <GridColumnMenuFilterItem onClick={hideMenu} column={colDef!} />
-      <GridColumnMenuHideItem onClick={hideMenu} column={colDef!} />
       <GridColumnMenuColumnsItem onClick={hideMenu} column={colDef!} />
     </GridColumnMenuContainer>
   );

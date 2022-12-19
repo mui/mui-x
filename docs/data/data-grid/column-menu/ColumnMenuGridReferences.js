@@ -110,17 +110,10 @@ const rows = [
     plan: 'Community',
   },
   {
-    id: 5,
-    slot: 'ColumnMenuHideItem',
-    defaultComponent: 'GridColumnMenuHideItem',
-    displayOrder: 30,
-    plan: 'Community',
-  },
-  {
     id: 7,
     slot: 'ColumnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItem',
-    displayOrder: 40,
+    displayOrder: 30,
     plan: 'Community',
   },
   {
