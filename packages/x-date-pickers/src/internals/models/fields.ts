@@ -24,6 +24,7 @@ export interface FieldsTextFieldProps
   extends Omit<
     TextFieldProps,
     | 'autoComplete'
+    | 'error'
     | 'maxRows'
     | 'minRows'
     | 'multiline'
@@ -31,4 +32,5 @@ export interface FieldsTextFieldProps
     | 'rows'
     | 'select'
     | 'SelectProps'
+    | 'type'
   > {}

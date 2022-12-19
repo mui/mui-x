@@ -98,11 +98,6 @@ SingleInputDateRangeField.propTypes = {
    */
   disablePast: PropTypes.bool,
   /**
-   * If `true`, the label is displayed in an error state.
-   * @default false
-   */
-  error: PropTypes.bool,
-  /**
    * If `true`, the component is displayed in focused state.
    */
   focused: PropTypes.bool,
@@ -250,33 +245,6 @@ SingleInputDateRangeField.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
-  ]),
-  /**
-   * Type of the `input` element. It should be [a valid HTML5 input type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types).
-   */
-  type: PropTypes.oneOf([
-    'button',
-    'checkbox',
-    'color',
-    'date',
-    'datetime-local',
-    'email',
-    'file',
-    'hidden',
-    'image',
-    'month',
-    'number',
-    'password',
-    'radio',
-    'range',
-    'reset',
-    'search',
-    'submit',
-    'tel',
-    'text',
-    'time',
-    'url',
-    'week',
   ]),
   /**
    * The selected value.
