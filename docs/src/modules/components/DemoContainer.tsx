@@ -62,8 +62,6 @@ export function DemoContainer(props: PickersGridProps) {
       childName = getChildComponentName(nestedChild);
     }
 
-    console.log(childName)
-
     childrenTypes.add(getChildTypeFromChildName(childName));
     childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
   });
