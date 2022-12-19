@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 

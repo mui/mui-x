@@ -10,7 +10,7 @@ import {
   MonthValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps } from '../internals/models';
+import { FieldsTextFieldProps } from '../internals';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
   props: UseDateFieldComponentProps<TDate, TChildProps>;
