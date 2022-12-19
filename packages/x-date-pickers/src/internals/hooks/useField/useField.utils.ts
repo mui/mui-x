@@ -355,19 +355,14 @@ const getEscapedPartsFromExpandedFormat = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   expandedFormat: string,
 ) => {
-  let isInsideEscapedPart = false;
-  let currentEscapeStart: number = 0;
   const escapedParts: { start: number; end: number }[] = [];
-  for (let i = 0; i < expandedFormat.length; i += 1) {
-    const char = expandedFormat[i];
+  const { start: startChar, end: endChar } = utils.escapedCharacters;
+  const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${startChar})+`, 'g');
 
-    if (char === utils.escapedCharacters.end && isInsideEscapedPart) {
-      isInsideEscapedPart = false;
-      escapedParts.push({ start: currentEscapeStart, end: i });
-    } else if (char === utils.escapedCharacters.start && !isInsideEscapedPart) {
-      currentEscapeStart = i;
-      isInsideEscapedPart = true;
-    }
+  let match: RegExpExecArray | null = null;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = regExp.exec(expandedFormat))) {
+    escapedParts.push({ start: match.index, end: regExp.lastIndex - 1 });
   }
 
   return escapedParts;

@@ -54,4 +54,20 @@ describe('<DateField /> - Format', () => {
     setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'January Escaped [ 2019');
   });
+
+  it('should support several escaped parts', function test() {
+    const { start: startChar, end: endChar } = adapterToUse.escapedCharacters;
+
+    // For Day.js: "[Escaped] MMMM [Escaped] YYYY"
+    const { setProps } = render(
+      <DateField
+        format={`${startChar}Escaped${endChar} ${adapterToUse.formats.month} ${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
+      />,
+    );
+    const input = screen.getByRole('textbox');
+    expectInputValue(input, 'Escaped MMMM Escaped YYYY');
+
+    setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });
+    expectInputValue(input, 'Escaped January Escaped 2019');
+  });
 });
