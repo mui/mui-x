@@ -74,14 +74,14 @@ function CustomColumnMenuComponent(props) {
 
 CustomColumnMenuComponent.propTypes = {
   colDef: PropTypes.object.isRequired,
-  color: PropTypes.oneOf(['success', 'warning']).isRequired,
+  color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
 
 export { CustomColumnMenuComponent };
 
 export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState('success');
+  const [color, setColor] = React.useState('primary');
   const apiRef = useGridApiRef();
 
   return (
@@ -91,7 +91,7 @@ export default function CustomColumnMenu() {
         size="small"
         onClick={(event) => {
           event.stopPropagation();
-          setColor((current) => (current === 'success' ? 'warning' : 'success'));
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
           apiRef.current.showColumnMenu('default');
         }}
       >

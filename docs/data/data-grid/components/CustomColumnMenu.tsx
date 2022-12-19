@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-type PaletteColorKey = 'success' | 'warning';
+type PaletteColorKey = 'primary' | 'secondary';
 type OwnerState = {
   color: PaletteColorKey;
 };
@@ -80,7 +80,7 @@ export function CustomColumnMenuComponent(props: GridColumnMenuProps & OwnerStat
 }
 
 export default function CustomColumnMenu() {
-  const [color, setColor] = React.useState<PaletteColorKey>('success');
+  const [color, setColor] = React.useState<PaletteColorKey>('primary');
   const apiRef = useGridApiRef();
 
   return (
@@ -90,7 +90,7 @@ export default function CustomColumnMenu() {
         size="small"
         onClick={(event) => {
           event.stopPropagation();
-          setColor((current) => (current === 'success' ? 'warning' : 'success'));
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
           apiRef.current.showColumnMenu('default');
         }}
       >
