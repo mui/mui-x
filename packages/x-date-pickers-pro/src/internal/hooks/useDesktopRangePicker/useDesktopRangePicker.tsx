@@ -93,6 +93,7 @@ export const useDesktopRangePicker = <
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange: setRangePosition,

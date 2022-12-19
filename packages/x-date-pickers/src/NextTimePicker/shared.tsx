@@ -17,6 +17,7 @@ import {
   TimePickerToolbar,
 } from '../TimePicker/TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
+import { applyDefaultViewProps } from '../internals/utils/views';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -71,7 +72,6 @@ export function useNextTimePickerDefaultizedProps<
     name,
   });
 
-  const views = themeProps.views ?? ['hours', 'minutes'];
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
@@ -89,8 +89,12 @@ export function useNextTimePickerDefaultizedProps<
     ...themeProps,
     ampm,
     localeText,
-    views,
-    openTo: themeProps.openTo ?? 'hours',
+    ...applyDefaultViewProps({
+      views: themeProps.views,
+      openTo: themeProps.openTo,
+      defaultViews: ['hours', 'minutes'],
+      defaultOpenTo: 'hours',
+    }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     components: {

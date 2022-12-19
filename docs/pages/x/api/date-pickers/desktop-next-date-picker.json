@@ -78,6 +78,12 @@
       }
     },
     "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      }
+    },
     "views": {
       "type": {
         "name": "arrayOf",
