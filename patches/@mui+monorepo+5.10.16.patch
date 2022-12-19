@@ -1,0 +1,22 @@
+diff --git a/node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/generator.ts b/node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/generator.ts
+index 2e243512..6314afe4 100644
+--- a/node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/generator.ts
++++ b/node_modules/@mui/monorepo/packages/typescript-to-proptypes/src/generator.ts
+@@ -224,6 +224,17 @@ export function generate(component: t.Component, options: GenerateOptions = {}):
+         (type): type is t.LiteralType => type.type === 'LiteralNode',
+       );
+ 
++      if (context.propTypeDefinition.name === 'type') {
++        // patch to avoid having ugly proptypes, because of `(string & {})` in input `type` field type
++        let shouldIgnoreRest = false;
++        context.propTypeDefinition.filenames.forEach(filename => {
++          if (filename.includes('TextField/TextField.d.ts')) {
++            shouldIgnoreRest = true;
++          }
++        });
++        rest = [];
++      }
++
+       const sortLiteralUnions =
+         getSortLiteralUnions(context.component, context.propTypeDefinition) ||
+         defaultSortLiteralUnions;
