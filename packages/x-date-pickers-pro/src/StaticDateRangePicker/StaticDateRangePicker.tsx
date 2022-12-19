@@ -306,11 +306,6 @@ StaticDateRangePicker.propTypes = {
    */
   onMonthChange: PropTypes.func,
   /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
-  /**
    * Props to pass to keyboard adornment button.
    */
   OpenPickerButtonProps: PropTypes.object,

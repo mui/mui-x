@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
   DateOrTimeView,
   onSpaceOrEnter,
@@ -17,6 +18,7 @@ interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
   onBlur?: () => void;
   rangePosition: RangePosition;
   onRangePositionChange: (newPosition: RangePosition) => void;
+  localeText: PickersInputLocaleText<TDate> | undefined;
 }
 
 export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
@@ -29,9 +31,9 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
   onBlur,
   rangePosition,
   onRangePositionChange,
+  localeText: inLocaleText,
 }: UseRangePickerFieldParams<TDate, TView>) => {
   const localeText = useLocaleText<TDate>();
-
   const startRef = React.useRef<HTMLInputElement>(null);
   const endRef = React.useRef<HTMLInputElement>(null);
 
@@ -83,7 +85,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
 
   const startInputProps = {
     inputRef: startRef,
-    label: localeText.start,
+    label: inLocaleText?.start ?? localeText.start,
     onKeyDown: onSpaceOrEnter(openRangeStartSelection),
     onFocus: focusOnRangeStart,
     focused: open ? rangePosition === 'start' : undefined,
@@ -102,7 +104,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
 
   const endInputProps = {
     inputRef: endRef,
-    label: localeText.end,
+    label: inLocaleText?.end ?? localeText.end,
     onKeyDown: onSpaceOrEnter(openRangeEndSelection),
     onFocus: focusOnRangeEnd,
     focused: open ? rangePosition === 'end' : undefined,

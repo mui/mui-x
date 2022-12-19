@@ -12,11 +12,13 @@ export default function ViewsDatePicker() {
         <NextDatePicker
           label="Year only"
           views={['year']}
+          openTo="year"
           defaultValue={dayjs('2022-04-07')}
         />
         <NextDatePicker
           label="Year and Month"
           views={['year', 'month']}
+          openTo="year"
           defaultValue={dayjs('2022-04-07')}
         />
         <NextDatePicker
