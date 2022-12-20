@@ -80,10 +80,7 @@ export const rangeFieldValueManager: FieldValueManager<
           return {
             ...section,
             dateName: position,
-            endSeparator:
-              position === 'start'
-                ? `${section.endSeparator}\u2069 – \u2066`
-                : section.endSeparator,
+            endSeparator: `${section.endSeparator}\u2069 – \u2066`
           };
         }
 
