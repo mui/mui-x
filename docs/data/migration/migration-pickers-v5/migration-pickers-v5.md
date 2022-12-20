@@ -40,7 +40,7 @@ If you do not find the adapter you were using—there probably was a reason for 
 
 ### Increased Luxon minimal version
 
-The v6 `AdapterLuxon` now requires `luxon` in version `3.0.2` or higher in order to work.
+The v6 `AdapterLuxon` now requires `luxon` version `3.0.2` or higher in order to work.
 
 Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
 
