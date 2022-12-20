@@ -1,5 +1,9 @@
 ---
+product: date-pickers
 title: React Time Field component
+components: TimeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Time Field

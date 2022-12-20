@@ -17,7 +17,9 @@ const MultiInputDateRangeFieldRoot = styled(
     slot: 'Root',
     overridesResolver: (props, styles) => styles.root,
   },
-)({});
+)({
+  alignItems: 'baseline',
+});
 
 const MultiInputDateRangeFieldSeparator = styled(
   (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
@@ -57,6 +59,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    autoFocus,
     ...other
   } = themeProps;
 
@@ -77,6 +80,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const startInputProps: TextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
+    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
 
@@ -146,6 +150,7 @@ MultiInputDateRangeField.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}

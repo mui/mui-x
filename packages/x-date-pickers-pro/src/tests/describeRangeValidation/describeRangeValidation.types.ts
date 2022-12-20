@@ -6,6 +6,7 @@ import {
 
 export interface DescribeRangeValidationInputOptions extends DescribeValidationInputOptions {
   isSingleInput?: boolean;
+  variant?: 'mobile' | 'desktop';
 }
 
 export interface DescribeRangeValidationOptions extends DescribeValidationOptions {

@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import useControlled from '@mui/utils/useControlled';
-import { MuiPickerFieldAdapter } from '../../models/muiPickersAdapter';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
 import {
   FieldSection,
@@ -12,7 +12,7 @@ import {
   FieldSelectedSections,
   FieldBoundaries,
   FieldChangeHandlerContext,
-} from './useField.interfaces';
+} from './useField.types';
 import {
   addPositionPropertiesToSections,
   splitFormatIntoSections,
@@ -39,9 +39,11 @@ export const useFieldState = <
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ) => {
-  const utils = useUtils<TDate>() as MuiPickerFieldAdapter<TDate>;
+  const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
   const adapter = useLocalizationContext<TDate>();
+  const theme = useTheme();
+  const isRTL = theme.direction === 'rtl';
 
   const {
     valueManager,
@@ -62,6 +64,13 @@ export const useFieldState = <
   const firstDefaultValue = React.useRef(defaultValue);
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
   const boundaries = React.useMemo(() => getSectionBoundaries<TDate, TSection>(utils), [utils]);
+
+  const [sectionOrder, setSectionOrder] = React.useState(() =>
+    fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
+  );
+  React.useEffect(() => {
+    setSectionOrder(fieldValueManager.getSectionOrder(utils, localeText, format, isRTL));
+  }, [fieldValueManager, format, isRTL, localeText, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(
@@ -322,5 +331,6 @@ export const useFieldState = <
     updateSectionValue,
     updateValueFromValueStr,
     setTempAndroidValueStr,
+    sectionOrder,
   };
 };

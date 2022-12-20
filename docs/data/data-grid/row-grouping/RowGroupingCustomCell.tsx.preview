@@ -1,0 +1,5 @@
+<DataGridPremium
+  {...data}
+  columns={columns}
+  initialState={{ rowGrouping: { model: ['imdbRating'] } }}
+/>

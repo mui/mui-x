@@ -21,7 +21,7 @@ import {
 } from './pickersDayClasses';
 
 export interface PickersDayProps<TDate>
-  extends Omit<ExtendMui<ButtonBaseProps>, 'onKeyDown' | 'onFocus' | 'onBlur'> {
+  extends Omit<ExtendMui<ButtonBaseProps>, 'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter'> {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -49,6 +49,7 @@ export interface PickersDayProps<TDate>
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
+  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: TDate) => void;
   onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
@@ -69,10 +70,6 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   today?: boolean;
-  /**
-   * Currently selected days.
-   */
-  selectedDays: TDate[];
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -112,44 +109,50 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   borderRadius: '50%',
   padding: 0,
   // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: theme.palette.background.paper,
-  color: theme.palette.text.primary,
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  color: (theme.vars || theme).palette.text.primary,
+  '@media (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    },
   },
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
     transition: theme.transitions.create('background-color', {
       duration: theme.transitions.duration.short,
     }),
     '&:hover': {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.disabled}`]: {
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
-      color: theme.palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     }),
   ...(!ownerState.disableHighlightToday &&
     ownerState.today && {
       [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${theme.palette.text.secondary}`,
+        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
       },
     }),
 });
@@ -218,13 +221,13 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     onFocus = noop,
     onBlur = noop,
     onKeyDown = noop,
-    onMouseDown,
+    onMouseDown = noop,
+    onMouseEnter = noop,
     outsideCurrentMonth,
     selected = false,
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
-    selectedDays,
     ...other
   } = props;
   const ownerState = {
@@ -256,9 +259,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   // For day outside of current month, move focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (onMouseDown) {
-      onMouseDown(event);
-    }
+    onMouseDown(event);
     if (outsideCurrentMonth) {
       event.preventDefault();
     }
@@ -299,6 +300,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onKeyDown={(event) => onKeyDown(event, day)}
       onFocus={(event) => onFocus(event, day)}
       onBlur={(event) => onBlur(event, day)}
+      onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
@@ -308,28 +310,6 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     </PickersDayRoot>
   );
 });
-
-export const areDayPropsEqual = (
-  prevProps: PickersDayProps<any>,
-  nextProps: PickersDayProps<any>,
-) => {
-  return (
-    prevProps.autoFocus === nextProps.autoFocus &&
-    prevProps.isAnimating === nextProps.isAnimating &&
-    prevProps.today === nextProps.today &&
-    prevProps.disabled === nextProps.disabled &&
-    prevProps.selected === nextProps.selected &&
-    prevProps.disableMargin === nextProps.disableMargin &&
-    prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
-    prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
-    prevProps.className === nextProps.className &&
-    prevProps.sx === nextProps.sx &&
-    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
-    prevProps.onFocus === nextProps.onFocus &&
-    prevProps.onBlur === nextProps.onBlur &&
-    prevProps.onDaySelect === nextProps.onDaySelect
-  );
-};
 
 PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -364,6 +344,7 @@ PickersDayRaw.propTypes = {
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseEnter: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -373,10 +354,6 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   selected: PropTypes.bool,
-  /**
-   * Currently selected days.
-   */
-  selectedDays: PropTypes.array.isRequired,
   /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
@@ -399,4 +376,4 @@ PickersDayRaw.propTypes = {
  *
  * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)
  */
-export const PickersDay = React.memo(PickersDayRaw, areDayPropsEqual) as PickersDayComponent;
+export const PickersDay = React.memo(PickersDayRaw) as PickersDayComponent;

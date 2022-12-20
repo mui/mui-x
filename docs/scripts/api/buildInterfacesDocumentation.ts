@@ -38,6 +38,7 @@ interface ParsedProperty {
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowSelectionApi',
   'GridRowMultiSelectionApi',
+  'GridCellSelectionApi',
   'GridFilterApi',
   'GridSortApi',
   'GridPaginationApi',
@@ -227,14 +228,6 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   const projectImports = Array.from(projects.values())
     .map((project) => {
       const objectsInProject = objects.filter((object) => {
-        // TODO: Remove after opening the apiRef on the community plan
-        if (
-          ['GridApiCommunity', 'GridApi'].includes(object.name) &&
-          project.name === 'x-data-grid'
-        ) {
-          return false;
-        }
-
         return !!project.exports[object.name];
       });
 
@@ -281,11 +274,11 @@ function generateMarkdown(
 
 interface BuildInterfacesDocumentationOptions {
   projects: Projects;
-  documentationRoot: string;
+  apiPagesFolder: string;
 }
 
 export default function buildInterfacesDocumentation(options: BuildInterfacesDocumentationOptions) {
-  const { projects, documentationRoot } = options;
+  const { projects, apiPagesFolder } = options;
 
   const allProjectsName = Array.from(projects.keys());
 
@@ -327,7 +320,7 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
         })),
       };
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.json`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.json`),
         JSON.stringify(json),
         project,
       );
@@ -336,13 +329,13 @@ export default function buildInterfacesDocumentation(options: BuildInterfacesDoc
     } else {
       const markdown = generateMarkdown(parsedInterface, projects, documentedInterfaces);
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.md`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.md`),
         markdown,
         project,
       );
 
       writePrettifiedFile(
-        path.resolve(documentationRoot, project.documentationFolderName, `${slug}.js`),
+        path.resolve(apiPagesFolder, project.documentationFolderName, `${slug}.js`),
         `import * as React from 'react';
     import MarkdownDocs from '@mui/monorepo/docs/src/modules/components/MarkdownDocs';
     import * as pageProps from './${slug}.md?@mui/markdown';

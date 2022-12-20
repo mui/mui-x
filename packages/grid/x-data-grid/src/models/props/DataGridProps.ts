@@ -69,7 +69,6 @@ export interface DataGridProcessedProps<R extends GridValidRowModel = any>
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
-  | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
@@ -295,15 +294,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: boolean;
+  showColumnVerticalBorder: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
@@ -346,9 +345,7 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
-   * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @ignore - do not document.
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**

@@ -22,6 +22,7 @@ type MaskedInputProps<TDate> = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
+// TODO v6: Drop with the legacy pickers
 export const useMaskedInput = <TDate extends unknown>({
   acceptRegex = /[\d]/gi,
   disabled,

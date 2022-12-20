@@ -2,13 +2,15 @@
   {
     "name": "gridAggregationLookupSelector",
     "returnType": "GridAggregationLookup",
-    "description": "",
+    "category": "Aggregation",
+    "description": "Get the aggregation results as a lookup.",
     "supportsApiRef": true
   },
   {
     "name": "gridAggregationModelSelector",
     "returnType": "GridAggregationModel",
-    "description": "",
+    "category": "Aggregation",
+    "description": "Get the aggregation model, containing the aggregation function of each column.\nIf a column is not in the model, it is not aggregated.",
     "supportsApiRef": true
   },
   {
@@ -101,13 +103,6 @@
     "category": "Filtering",
     "description": "Get the current filter model.",
     "supportsApiRef": true
-  },
-  {
-    "name": "gridFilterStateSelector",
-    "returnType": "GridFilterState",
-    "category": "Filtering",
-    "description": "",
-    "supportsApiRef": false
   },
   {
     "name": "gridFilteredSortedRowEntriesSelector",

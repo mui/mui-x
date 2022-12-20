@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   DesktopTooltipWrapper,
@@ -48,6 +49,10 @@ export interface DesktopDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -75,9 +80,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     'MuiDesktopDateRangePicker',
   );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<'start' | 'end'>('start');
 
   const validationError = useDateRangeValidation(props);
 
@@ -89,8 +92,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     ...other,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     ref,
   };
@@ -107,8 +110,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       <DateRangePickerView<TDate>
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         {...pickerProps}
         components={components}
         componentsProps={componentsProps}
@@ -128,7 +131,6 @@ DesktopDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -305,11 +307,6 @@ DesktopDateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onOpen: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
    */

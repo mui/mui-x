@@ -1,5 +1,9 @@
 ---
+product: date-pickers
 title: React Time Range Field components
+components: MultiInputTimeRangeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers-pro'
 ---
 
 # Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)

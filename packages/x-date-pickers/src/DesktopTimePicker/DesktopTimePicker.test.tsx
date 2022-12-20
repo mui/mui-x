@@ -619,7 +619,7 @@ describe('<DesktopTimePicker />', () => {
         <WrappedDesktopTimePicker
           initialValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'time', variant: 'desktop' });

@@ -25,14 +25,6 @@ describe('<MobileNextDateTimePicker />', () => {
     componentFamily: 'new-picker',
   }));
 
-  it('prop: open – overrides open state', () => {
-    render(
-      <MobileNextDateTimePicker open defaultValue={adapterToUse.date(new Date(2018, 0, 1))} />,
-    );
-
-    expect(screen.getByRole('dialog')).toBeVisible();
-  });
-
   it('should render date and time by default', () => {
     render(
       <MobileNextDateTimePicker
@@ -133,6 +125,7 @@ describe('<MobileNextDateTimePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
+          ampm
         />,
       );
 
@@ -153,7 +146,7 @@ describe('<MobileNextDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(3);
@@ -162,8 +155,9 @@ describe('<MobileNextDateTimePicker />', () => {
       );
 
       // Change the minutes
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', getClockTouchEvent());
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', getClockTouchEvent());
+      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date(new Date(2010, 0, 15, 11, 53)),
@@ -171,176 +165,6 @@ describe('<MobileNextDateTimePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
-
-    it('should call onClose and onAccept when selecting the minutes if props.closeOnSelect = true', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDateTimePicker
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          closeOnSelect
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Change the minutes (already tested)
-      const minuteClockEvent = getClockTouchEvent();
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
-
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 15, 11, 53)),
-      );
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onChange with the initial value when clicking the "Cancel" button', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(3); // Date change + hours change + reset
-      expect(onChange.lastCall.args[0]).toEqualDateTime(defaultValue);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Accept the modifications
-      userEvent.mousePress(screen.getByText(/ok/i));
-      expect(onChange.callCount).to.equal(2); // Date change + hours change
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 15, 11)),
-      );
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).to.equal(null);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.equal(null);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <MobileNextDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
   });
 
   describe('localization', () => {

@@ -208,6 +208,14 @@ function ApiRefPrivateMethods() {
     apiRef.current.setColumnGroupHeaderFocus;
     // @ts-expect-error Property 'getColumnGroupHeaderFocus' does not exist on type 'GridApiCommunity'
     apiRef.current.getColumnGroupHeaderFocus;
+    // @ts-expect-error Property 'setColumnIndex' does not exist on type 'GridApiCommunity'
+    apiRef.current.setColumnIndex;
+    // @ts-expect-error Property 'setRowIndex' does not exist on type 'GridApiCommunity'
+    apiRef.current.setRowIndex;
+    // @ts-expect-error Property 'setRowChildrenExpansion' does not exist on type 'GridApiCommunity'
+    apiRef.current.setRowChildrenExpansion;
+    // @ts-expect-error Property 'getRowGroupChildren' does not exist on type 'GridApiCommunity'
+    apiRef.current.getRowGroupChildren;
   });
 
   return null;

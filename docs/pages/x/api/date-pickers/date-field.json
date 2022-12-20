@@ -1,0 +1,35 @@
+{
+  "props": {
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultValue": { "type": { "name": "any" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "format": { "type": { "name": "string" } },
+    "maxDate": { "type": { "name": "any" } },
+    "minDate": { "type": { "name": "any" } },
+    "onChange": { "type": { "name": "func" } },
+    "onError": { "type": { "name": "func" } },
+    "onSelectedSectionsChange": { "type": { "name": "func" } },
+    "readOnly": { "type": { "name": "bool" } },
+    "selectedSections": {
+      "type": {
+        "name": "union",
+        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+      }
+    },
+    "shouldDisableDate": { "type": { "name": "func" } },
+    "shouldDisableMonth": { "type": { "name": "func" } },
+    "shouldDisableYear": { "type": { "name": "func" } },
+    "value": { "type": { "name": "any" } }
+  },
+  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "name": "DateField",
+  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateField" },
+  "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_DateField" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_DateField" }
+  ]
+}

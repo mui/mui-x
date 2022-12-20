@@ -28,24 +28,6 @@ describe('<PickersActionBar />', () => {
     expect(screen.queryByRole('button')).to.equal(null);
   });
 
-  it('should not render buttons if actions function returns an empty array', () => {
-    const onAccept = () => {};
-    const onClear = () => {};
-    const onCancel = () => {};
-    const onSetToday = () => {};
-    render(
-      <PickersActionBar
-        actions={() => []}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
-
-    expect(screen.queryByRole('button')).to.equal(null);
-  });
-
   it('should render button for "clear" action calling the associated callback', () => {
     const onAccept = spy();
     const onClear = spy();
@@ -126,7 +108,7 @@ describe('<PickersActionBar />', () => {
     expect(onSetToday.callCount).to.equal(1);
   });
 
-  it('should respect actions order (actions provided as an array)', () => {
+  it('should respect actions order', () => {
     const onAccept = () => {};
     const onClear = () => {};
     const onCancel = () => {};
@@ -147,28 +129,5 @@ describe('<PickersActionBar />', () => {
     expect(buttons[1]).to.have.text('OK');
     expect(buttons[2]).to.have.text('Clear');
     expect(buttons[3]).to.have.text('Cancel');
-  });
-
-  it('should respect actions order (actions provided as a function)', () => {
-    const onAccept = () => {};
-    const onClear = () => {};
-    const onCancel = () => {};
-    const onSetToday = () => {};
-    render(
-      <PickersActionBar
-        actions={() => ['clear', 'cancel', 'today', 'accept']}
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-      />,
-    );
-
-    const buttons = screen.getAllByRole('button');
-
-    expect(buttons[0]).to.have.text('Clear');
-    expect(buttons[1]).to.have.text('Cancel');
-    expect(buttons[2]).to.have.text('Today');
-    expect(buttons[3]).to.have.text('OK');
   });
 });

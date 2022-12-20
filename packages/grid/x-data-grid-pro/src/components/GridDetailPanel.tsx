@@ -12,7 +12,7 @@ const DetailPanel = styled(Box, {
   zIndex: 2,
   width: '100%',
   position: 'absolute',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: (theme.vars || theme).palette.background.default,
   overflow: 'auto',
 }));
 

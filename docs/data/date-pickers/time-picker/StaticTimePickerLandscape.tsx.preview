@@ -1,12 +1,6 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <StaticTimePicker
-    ampm
-    orientation="landscape"
-    openTo="minutes"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(params) => <TextField {...params} />}
-  />
-</LocalizationProvider>
+<StaticNextTimePicker
+  ampm
+  orientation="landscape"
+  openTo="minutes"
+  defaultValue={dayjs('2022-04-07')}
+/>

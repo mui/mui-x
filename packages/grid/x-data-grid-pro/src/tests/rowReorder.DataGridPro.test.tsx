@@ -88,9 +88,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0).firstChild!;
     fireEvent.dragStart(rowReorderCell);
-    expect(
-      (rowReorderCell as HTMLElement).classList.contains(gridClasses['row--dragging']),
-    ).to.equal(false);
+    expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {

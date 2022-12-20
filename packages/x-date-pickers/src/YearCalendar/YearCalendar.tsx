@@ -107,7 +107,7 @@ export interface YearCalendarProps<TDate>
   disableHighlightToday?: boolean;
   onYearFocus?: (year: number) => void;
   hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (hasFocus: boolean) => void;
 }
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
@@ -154,7 +154,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     default: defaultValue ?? null,
   });
 
-  const selectedDateOrToday = value ?? now;
+  const selectedDateOrStartOfYear = React.useMemo(
+    () => value ?? utils.startOfYear(now),
+    [now, utils, value],
+  );
+
   const todayYear = React.useMemo(() => utils.getYear(now), [utils, now]);
   const selectedYear = React.useMemo(() => {
     if (value != null) {
@@ -169,11 +173,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
@@ -208,13 +212,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
       return;
     }
 
-    const newDate = utils.setYear(selectedDateOrToday, year);
+    const newDate = utils.setYear(selectedDateOrStartOfYear, year);
     setValue(newDate);
     onChange?.(newDate);
   });
 
   const focusYear = useEventCallback((year: number) => {
-    if (!isYearDisabled(utils.setYear(selectedDateOrToday, year))) {
+    if (!isYearDisabled(utils.setYear(selectedDateOrStartOfYear, year))) {
       setFocusedYear(year);
       changeHasFocus(true);
       onYearFocus?.(year);

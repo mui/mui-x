@@ -128,6 +128,9 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDateTimePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDateTimePicker/DesktopDateTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-time-picker/\">Date Time Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDateTimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDateTimePicker" }
+  ]
 }

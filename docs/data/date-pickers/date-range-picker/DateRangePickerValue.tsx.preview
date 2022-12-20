@@ -1,0 +1,11 @@
+<DemoItem label="Uncontrolled picker">
+  <NextDateRangePicker
+    defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+  />
+</DemoItem>
+<DemoItem label="Controlled picker">
+  <NextDateRangePicker
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoItem>

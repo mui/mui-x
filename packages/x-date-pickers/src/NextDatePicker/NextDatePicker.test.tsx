@@ -2,20 +2,17 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
-import { createPickerRenderer, openPicker, stubMatchMedia } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
+import {
+  createPickerRenderer,
+  openPicker,
+  stubMatchMedia,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<NextDatePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(NextDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
-  }));
+  const { render } = createPickerRenderer();
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
@@ -29,10 +26,10 @@ describe('<NextDatePicker />', () => {
   describe('rendering', () => {
     it('should handle controlled `onChange` in desktop mode', () => {
       render(<NextDatePicker />);
+      const input: HTMLInputElement = screen.getByRole('textbox');
 
-      fireEvent.change(screen.getByRole('textbox'), { target: { value: '02/22/2022' } });
-
-      expect(screen.getByDisplayValue('02 / 22 / 2022')).not.to.equal(null);
+      fireEvent.change(input, { target: { value: '02/22/2022' } });
+      expectInputValue(input, '02 / 22 / 2022');
     });
 
     it('should render in mobile mode when `useMediaQuery` returns `false`', () => {

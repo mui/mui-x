@@ -37,15 +37,15 @@ const CustomPickersDay = styled(PickersDay, {
   }),
 })) as React.ComponentType<CustomPickerDayProps>;
 
-function Day(props: PickersDayProps<Dayjs>) {
-  const { day, selectedDays } = props;
+function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
+  const { day, selectedDay, ...other } = props;
 
-  if (selectedDays.length === 0) {
-    return <PickersDay {...props} />;
+  if (selectedDay == null) {
+    return <PickersDay day={day} {...other} />;
   }
 
-  const start = selectedDays[0].startOf('week');
-  const end = selectedDays[0].endOf('week');
+  const start = selectedDay.startOf('week');
+  const end = selectedDay.endOf('week');
 
   const dayIsBetween = day.isBetween(start, end, null, '[]');
   const isFirstDay = day.isSame(start, 'day');
@@ -53,7 +53,8 @@ function Day(props: PickersDayProps<Dayjs>) {
 
   return (
     <CustomPickersDay
-      {...props}
+      {...other}
+      day={day}
       disableMargin
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}
@@ -63,12 +64,20 @@ function Day(props: PickersDayProps<Dayjs>) {
 }
 
 export default function CustomDay() {
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
-        defaultValue={dayjs('2022-04-07')}
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
         components={{ Day }}
+        componentsProps={{
+          day: {
+            selectedDay: value,
+          } as any,
+        }}
       />
     </LocalizationProvider>
   );
