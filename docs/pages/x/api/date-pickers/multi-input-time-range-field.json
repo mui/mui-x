@@ -4,9 +4,17 @@
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "direction": {
+      "type": {
+        "name": "union",
+        "description": "'column-reverse'<br>&#124;&nbsp;'column'<br>&#124;&nbsp;'row-reverse'<br>&#124;&nbsp;'row'<br>&#124;&nbsp;Array&lt;'column-reverse'<br>&#124;&nbsp;'column'<br>&#124;&nbsp;'row-reverse'<br>&#124;&nbsp;'row'&gt;<br>&#124;&nbsp;object"
+      },
+      "default": "'column'"
+    },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "divider": { "type": { "name": "node" } },
     "format": { "type": { "name": "string" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
@@ -22,6 +30,19 @@
       }
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "spacing": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;object<br>&#124;&nbsp;string"
+      },
+      "default": "0"
+    },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
