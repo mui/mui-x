@@ -357,7 +357,7 @@ const getEscapedPartsFromExpandedFormat = <TDate>(
 ) => {
   const escapedParts: { start: number; end: number }[] = [];
   const { start: startChar, end: endChar } = utils.escapedCharacters;
-  const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${startChar})+`, 'g');
+  const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
 
   let match: RegExpExecArray | null = null;
   // eslint-disable-next-line no-cond-assign
