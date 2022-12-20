@@ -88,7 +88,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       );
     });
 
-  // Rename the import sage
+  // Rename the import usage
   // - <CalendarPicker />
   // + <DateCalendar />
   root
