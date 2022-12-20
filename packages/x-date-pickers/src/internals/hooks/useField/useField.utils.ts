@@ -351,6 +351,21 @@ const getSectionPlaceholder = <TDate>(
   }
 };
 
+export const changeSectionValueFormat = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  valueStr: string,
+  currentFormat: string,
+  newFormat: string,
+) => utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
+
+export const doesSectionHaveTrailingZeros = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  contentType: 'digit' | 'letter',
+  formatValue: string,
+) =>
+  contentType === 'digit' &&
+  changeSectionValueFormat(utils, '1', formatValue, formatValue).length > 1;
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
@@ -369,9 +384,11 @@ export const splitFormatIntoSections = <TDate>(
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
     const sectionValue = date == null ? '' : utils.formatByString(date, currentTokenValue);
 
-    const hasTrailingZeroes =
-      sectionConfig.contentType === 'digit' &&
-      utils.formatByString(utils.parse('1', currentTokenValue)!, currentTokenValue).length > 1;
+    const hasTrailingZeroes = doesSectionHaveTrailingZeros(
+      utils,
+      sectionConfig.contentType,
+      currentTokenValue,
+    );
 
     sections.push({
       ...sectionConfig,
@@ -447,34 +464,6 @@ export const createDateStrFromSections = (
   return formattedArray.join('');
 };
 
-export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
-  section: TSection,
-  query: string,
-) => {
-  switch (section.dateSectionName) {
-    case 'month': {
-      const monthList = utils
-        .getMonthArray(utils.date()!)
-        .map((month) => utils.formatByString(month, section.formatValue));
-      return monthList.filter((month) => month.toLowerCase().startsWith(query));
-    }
-
-    case 'meridiem': {
-      const now = utils.date()!;
-      return [utils.endOfDay(now), utils.startOfDay(now)]
-        .map((date) => utils.formatByString(date, section.formatValue))
-        .filter((meridiem) => meridiem.toLowerCase().startsWith(query));
-    }
-
-    default: {
-      throw new Error(
-        `MUI: The section ${section.dateSectionName} does not support letter edition`,
-      );
-    }
-  }
-};
-
 export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
 ): FieldBoundaries<TDate, TSection> => {
@@ -526,34 +515,28 @@ export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
   };
 };
 
-export const applySectionValueToDate = <TDate>({
-  utils,
-  dateSectionName,
-  date,
-  getNumericSectionValue,
-  getMeridiemSectionValue,
-}: {
-  utils: MuiPickersAdapter<TDate>;
-  dateSectionName: MuiDateSectionName;
-  date: TDate;
-  getNumericSectionValue: (getter: (date: TDate) => number) => number;
-  getMeridiemSectionValue: () => string;
-}) => {
-  if (dateSectionName === 'meridiem') {
-    const isAM = getMeridiemSectionValue().toLowerCase() === 'am';
-    const hours = utils.getHours(date);
+export const applyMeridiemChange = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  date: TDate,
+  value: string,
+) => {
+  const isAM = value.toLowerCase() === 'am';
+  const hours = utils.getHours(date);
 
-    if (isAM && hours >= 12) {
-      return utils.addHours(date, -12);
-    }
-
-    if (!isAM && hours < 12) {
-      return utils.addHours(date, 12);
-    }
-
-    return date;
+  if (isAM && hours >= 12) {
+    return utils.addHours(date, -12);
+  }
+  if (!isAM && hours < 12) {
+    return utils.addHours(date, 12);
   }
 
+  return date;
+};
+
+export const getSectionGetterAndSetter = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateSectionName: Exclude<MuiDateSectionName, 'meridiem'>,
+) => {
   const adapterMethods = {
     seconds: {
       getter: utils.getSeconds,
@@ -581,15 +564,13 @@ export const applySectionValueToDate = <TDate>({
     },
   };
 
-  const methods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
-
+  const methods = adapterMethods[dateSectionName];
   if (!methods) {
     throw new Error(`MUI: The section name ${dateSectionName} can't be applied to a date`);
   }
 
-  return methods.setter(date, getNumericSectionValue(methods.getter));
+  return methods;
 };
-
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
   const maximumStr = maximum.toString();
   let cleanValue = value;
@@ -642,13 +623,16 @@ export const mergeDateIntoReferenceDate = <
 
   sections.forEach((section) => {
     if (!shouldLimitToEditedSections || section.edited) {
-      mergedDate = applySectionValueToDate({
-        utils,
-        date: mergedDate,
-        dateSectionName: section.dateSectionName,
-        getNumericSectionValue: (getter) => getter(date),
-        getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
-      });
+      if (section.dateSectionName === 'meridiem') {
+        mergedDate = applyMeridiemChange(
+          utils,
+          mergedDate,
+          utils.getHours(date) < 12 ? 'AM' : 'PM',
+        );
+      } else {
+        const { getter, setter } = getSectionGetterAndSetter(utils, section.dateSectionName);
+        mergedDate = setter(mergedDate, getter(date));
+      }
     }
   });
 

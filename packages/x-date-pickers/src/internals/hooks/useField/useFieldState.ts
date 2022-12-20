@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ponyfillGlobal } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
@@ -24,10 +25,15 @@ import {
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
-interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
+export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
   activeSection: TSection;
-  setSectionValueOnDate: (activeDate: TDate, boundaries: FieldBoundaries<TDate, TSection>) => TDate;
-  setSectionValueOnSections: (boundaries: FieldBoundaries<TDate, TSection>) => string;
+  setSectionValueOnDate: (
+    activeDate: TDate,
+    boundaries: FieldBoundaries<TDate, TSection>,
+  ) => { date: TDate; shouldGoToNextSection: boolean } | null;
+  setSectionValueOnSections: (
+    boundaries: FieldBoundaries<TDate, TSection>,
+  ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 }
 
 export const useFieldState = <
@@ -231,22 +237,75 @@ export const useFieldState = <
   }: UpdateSectionValueParams<TDate, TSection>) => {
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
 
-    if (
-      selectedSectionIndexes &&
-      selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex
-    ) {
-      setSelectedSections(selectedSectionIndexes.startIndex);
-    }
+    const commit = (
+      commitParams: {
+        shouldGoToNextSection: boolean;
+        shouldPublish: boolean;
+        values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
+        sections?: TSection[];
+      } | null,
+    ) => {
+      if (commitParams === null) {
+        return setState((prev) => ({ ...prev, tempValueStrAndroid: null }));
+      }
+
+      const { shouldGoToNextSection, shouldPublish, values, sections } = commitParams;
+
+      if (
+        // eslint-disable-next-line no-underscore-dangle
+        ponyfillGlobal.__MUI__PICKERS_ENABLE_AUTOMATIC_SECTION_SWTICH__ &&
+        shouldGoToNextSection &&
+        selectedSectionIndexes &&
+        selectedSectionIndexes.startIndex < state.sections.length - 1
+      ) {
+        setSelectedSections(selectedSectionIndexes.startIndex + 1);
+      } else if (
+        selectedSectionIndexes &&
+        selectedSectionIndexes.startIndex !== selectedSectionIndexes.endIndex
+      ) {
+        setSelectedSections(selectedSectionIndexes.startIndex);
+      }
+
+      if (shouldPublish) {
+        return publishValue(values);
+      }
+
+      return setState((prev) => ({
+        ...prev,
+        tempValueStrAndroid: null,
+        ...values,
+        sections: sections ?? prev.sections,
+      }));
+    };
 
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const newDate = setSectionValueOnDate(activeDateManager.activeDate, boundaries);
-      return publishValue(activeDateManager.getNewValueFromNewActiveDate(newDate));
+      const validDateResponse = setSectionValueOnDate(activeDateManager.activeDate, boundaries);
+      if (validDateResponse == null) {
+        // The section was not updated
+        return commit(null);
+      }
+
+      return commit({
+        shouldGoToNextSection: validDateResponse.shouldGoToNextSection,
+        shouldPublish: true,
+        values: activeDateManager.getNewValueFromNewActiveDate(validDateResponse.date),
+      });
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const newSectionValue = setSectionValueOnSections(boundaries);
-    const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
+    const invalidDateResponse = setSectionValueOnSections(boundaries);
+
+    // The section was not updated
+    if (invalidDateResponse == null) {
+      return commit(null);
+    }
+
+    const newSections = setSectionValue(
+      selectedSectionIndexes!.startIndex,
+      invalidDateResponse.sectionValue,
+    );
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
+
     let newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
@@ -271,15 +330,19 @@ export const useFieldState = <
         true,
       );
 
-      return publishValue(activeDateManager.getNewValueFromNewActiveDate(mergedDate));
+      return commit({
+        shouldGoToNextSection: invalidDateResponse.shouldGoToNextSection,
+        shouldPublish: true,
+        values: activeDateManager.getNewValueFromNewActiveDate(mergedDate),
+      });
     }
 
-    return setState((prevState) => ({
-      ...prevState,
+    return commit({
+      shouldGoToNextSection: invalidDateResponse.shouldGoToNextSection,
+      shouldPublish: false,
+      values: activeDateManager.getNewValueFromNewActiveDate(newDate),
       sections: newSections,
-      tempValueStrAndroid: null,
-      ...activeDateManager.getNewValueFromNewActiveDate(newDate),
-    }));
+    });
   };
 
   const setTempAndroidValueStr = (tempValueStrAndroid: string) =>

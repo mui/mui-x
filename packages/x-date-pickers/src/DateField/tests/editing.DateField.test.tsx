@@ -317,7 +317,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should concatenate the digit pressed to the current section value if the output is valid', () => {
+    it('should concatenate the digit pressed to the current section value if the output is valid (digit format)', () => {
       testChange({
         format: adapterToUse.formats.dayOfMonth,
         defaultValue: adapterToUse.date(new Date(2022, 5, 0)),
@@ -326,12 +326,30 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided', () => {
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (digit format)', () => {
       testChange({
         format: adapterToUse.formats.dayOfMonth,
         defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
         inputValue: '1',
         expectedValue: '1',
+      });
+    });
+
+    it('should concatenate the digit pressed to the current section value if the output is valid (letter format)', () => {
+      testChange({
+        format: adapterToUse.formats.month,
+        defaultValue: adapterToUse.date(new Date(2022, 1, 0)),
+        inputValue: '1',
+        expectedValue: 'November',
+      });
+    });
+
+    it('should set the day to the digit pressed if the concatenated value exceeds the maximum value for the section when a value is provided (letter format)', () => {
+      testChange({
+        format: adapterToUse.formats.month,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 0)),
+        inputValue: '1',
+        expectedValue: 'January',
       });
     });
 
@@ -424,7 +442,7 @@ describe('<DateField /> - Editing', () => {
   });
 
   describe('Letter editing', () => {
-    it('should select the first month starting with the typed letter when no letter has been typed before and no value is provided', () => {
+    it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
       testChange({
         format: adapterToUse.formats.month,
         inputValue: 'm',
@@ -432,7 +450,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should select the first month starting with the typed letter when no letter has been typed before and a value is provided', () => {
+    it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
       testChange({
         format: adapterToUse.formats.month,
         defaultValue: adapterToUse.date(),
@@ -441,7 +459,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should use the previously typed letters as long as it matches at least one month', () => {
+    it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
       render(<DateField format={adapterToUse.formats.month} />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -461,6 +479,50 @@ describe('<DateField /> - Editing', () => {
       // Current query: "JULO" => 0 match => fallback set the query to "O"
       fireEvent.change(input, { target: { value: 'o' } });
       expectInputValue(input, 'October');
+    });
+
+    it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
+      testChange({
+        format: 'MM', // The adapter formats have no digit month registered
+        inputValue: 'm',
+        expectedValue: '03',
+      });
+    });
+
+    it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
+      testChange({
+        format: 'MM', // The adapter formats have no digit month registered
+        defaultValue: adapterToUse.date(),
+        inputValue: 'm',
+        expectedValue: '03',
+      });
+    });
+
+    it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
+      render(
+        <DateField
+          // The adapter formats have no digit month registered
+          format="MM"
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Current query: "J" => 3 matches
+      fireEvent.change(input, { target: { value: 'j' } });
+      expectInputValue(input, '01');
+
+      // Current query: "JU" => 2 matches
+      fireEvent.change(input, { target: { value: 'u' } });
+      expectInputValue(input, '06');
+
+      // Current query: "JUL" => 1 match
+      fireEvent.change(input, { target: { value: 'l' } });
+      expectInputValue(input, '07');
+
+      // Current query: "JULO" => 0 match => fallback set the query to "O"
+      fireEvent.change(input, { target: { value: 'o' } });
+      expectInputValue(input, '10');
     });
 
     it('should not edit when props.readOnly = true and no value is provided', () => {
