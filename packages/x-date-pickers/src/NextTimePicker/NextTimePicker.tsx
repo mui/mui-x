@@ -251,6 +251,16 @@ NextTimePicker.propTypes = {
    */
   view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
+  }),
+  /**
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
