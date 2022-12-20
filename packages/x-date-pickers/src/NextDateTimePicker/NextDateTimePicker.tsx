@@ -44,7 +44,10 @@ NextDateTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
-   * If `true`, the `input` element is focused during the first mount.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
   /**
@@ -234,8 +237,8 @@ NextDateTimePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -250,7 +253,9 @@ NextDateTimePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -338,7 +343,26 @@ NextDateTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,

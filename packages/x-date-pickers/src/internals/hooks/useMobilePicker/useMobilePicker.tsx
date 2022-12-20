@@ -22,12 +22,11 @@ import { InferError } from '../validation/useValidation';
 export const useMobilePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
   const { components, componentsProps, className, format, disabled, localeText } = props;
@@ -41,10 +40,9 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
     inputRef,
-    viewLookup,
     valueManager,
     validator,
     autoFocusView: true,

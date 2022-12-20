@@ -33,6 +33,12 @@ NextDateRangePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render on **desktop**.
@@ -258,6 +264,14 @@ NextDateRangePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+  }),
 } as any;
 
 export { NextDateRangePicker };

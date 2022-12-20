@@ -1,22 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { extractValidationProps } from '@mui/x-date-pickers/internals';
+import { extractValidationProps, PickerViewRendererLookup } from '@mui/x-date-pickers/internals';
 import { resolveComponentProps } from '@mui/base/utils';
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { MobileNextDateRangePickerProps } from './MobileNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
-import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
+import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
 import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
-import { renderDateRangeView } from '../internal/utils/viewRenderers';
+import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
+import { DateRange } from '../internal/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateRangeView,
-};
 
 const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangePicker<TDate>(
   inProps: MobileNextDateRangePickerProps<TDate>,
@@ -28,8 +25,14 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
     MobileNextDateRangePickerProps<TDate>
   >(inProps, 'MuiMobileNextDateRangePicker');
 
+  const viewRenderers: PickerViewRendererLookup<DateRange<TDate>, 'day', any, {}> = {
+    day: renderDateRangeViewCalendar,
+    ...defaultizedProps.viewRenderers,
+  };
+
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     calendars: defaultizedProps.calendars ?? 1,
     views: ['day'] as const,
     openTo: 'day' as const,
@@ -53,7 +56,6 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
   const { renderPicker } = useMobileRangePicker<TDate, 'day', typeof props>({
     props,
     valueManager: rangeValueManager,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDateRange,
   });
 
@@ -65,6 +67,12 @@ MobileNextDateRangePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render on **desktop**.
@@ -284,6 +292,14 @@ MobileNextDateRangePicker.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+  }),
 } as any;
 
 export { MobileNextDateRangePicker };

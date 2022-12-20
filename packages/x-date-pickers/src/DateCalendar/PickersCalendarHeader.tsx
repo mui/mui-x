@@ -78,7 +78,7 @@ export interface PickersCalendarHeaderProps<TDate>
   disabled?: boolean;
   views: readonly DateView[];
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  openView: DateView;
+  view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
   labelId?: string;
@@ -150,7 +150,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>(({ ownerState }) => ({
   marginRight: 'auto',
-  ...(ownerState.openView === 'year' && {
+  ...(ownerState.view === 'year' && {
     [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
       transform: 'rotate(180deg)',
     },
@@ -187,7 +187,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     minDate,
     onMonthChange,
     onViewChange,
-    openView: currentView,
+    view,
     reduceAnimations,
     views,
     labelId,
@@ -203,7 +203,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     externalSlotProps: componentsProps.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(currentView),
+      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
     },
     ownerState,
     className: classes.switchViewButton,
@@ -236,10 +236,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     }
 
     if (views.length === 2) {
-      onViewChange(views.find((view) => view !== currentView) || views[0]);
+      onViewChange(views.find((el) => el !== view) || views[0]);
     } else {
       // switching only between first 2
-      const nextIndexToOpen = views.indexOf(currentView) !== 0 ? 0 : 1;
+      const nextIndexToOpen = views.indexOf(view) !== 0 ? 0 : 1;
       onViewChange(views[nextIndexToOpen]);
     }
   };
@@ -278,7 +278,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
-      <Fade in={currentView === 'day'}>
+      <Fade in={view === 'day'}>
         <PickersArrowSwitcher
           components={components}
           componentsProps={componentsProps}

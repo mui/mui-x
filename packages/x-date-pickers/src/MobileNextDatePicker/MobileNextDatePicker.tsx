@@ -7,21 +7,21 @@ import {
   getDatePickerFieldFormat,
   useNextDatePickerDefaultizedProps,
 } from '../NextDatePicker/shared';
-import { useLocaleText, useUtils, validateDate } from '../internals';
+import {
+  PickerViewRendererLookup,
+  DateView,
+  useLocaleText,
+  useUtils,
+  validateDate,
+} from '../internals';
 import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView } from '../internals/utils/viewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { renderDateViewCalendar } from '../dateViewRenderers';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-};
 
 const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDate>(
   inProps: MobileNextDatePickerProps<TDate>,
@@ -36,9 +36,17 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     MobileNextDatePickerProps<TDate>
   >(inProps, 'MuiMobileNextDatePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
     components: {
@@ -59,11 +67,10 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     },
   };
 
-  const { renderPicker } = useMobilePicker({
+  const { renderPicker } = useMobilePicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDate,
   });
 
@@ -75,6 +82,13 @@ MobileNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
+  autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
@@ -228,8 +242,8 @@ MobileNextDatePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -244,7 +258,9 @@ MobileNextDatePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -325,7 +341,23 @@ MobileNextDatePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    month: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;
