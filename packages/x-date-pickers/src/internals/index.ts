@@ -167,7 +167,7 @@ export type { TimeValidationError } from './hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps } from './models/fields';
+export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BaseNextPickerProps,
