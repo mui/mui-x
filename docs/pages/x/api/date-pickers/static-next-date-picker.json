@@ -68,6 +68,9 @@
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
       }
     },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ day?: func, month?: func, year?: func }" }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

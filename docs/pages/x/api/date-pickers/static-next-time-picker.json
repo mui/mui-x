@@ -50,6 +50,9 @@
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
       }
     },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ hours?: func, minutes?: func, seconds?: func }" }
+    },
     "views": {
       "type": {
         "name": "arrayOf",

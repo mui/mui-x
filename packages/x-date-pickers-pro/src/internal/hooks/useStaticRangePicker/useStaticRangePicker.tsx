@@ -29,11 +29,10 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
 export const useStaticRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
@@ -41,9 +40,14 @@ export const useStaticRangePicker = <
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
-  const { layoutProps, renderCurrentView } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    {}
+  >({
     props,
-    viewLookup,
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,

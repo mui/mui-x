@@ -2,12 +2,6 @@
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
-import { buildWarning } from '../internals/utils/warning';
-
-const luxonVersionWarning = buildWarning([
-  'Your luxon version does not support `expandFormat`.',
-  'Consider upgrading it to v3.0.2 or above to have access to the helper text.',
-]);
 
 const formatTokenMap: MuiFormatTokenMap = {
   s: 'seconds',
@@ -63,10 +57,6 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<
 
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
-    if (!DateTime.expandFormat) {
-      luxonVersionWarning();
-      return '';
-    }
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };
 
