@@ -3,13 +3,13 @@ import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { GridCellParams, GridColDef } from '../models';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { isObject } from '../utils/utils';
 
 const parseObjectValue = (value: unknown) => {
-  if (value == null || typeof value !== 'object') {
+  if (value == null || !isObject<{ value: unknown }>(value)) {
     return value;
   }
-
-  return (value as { value: unknown }).value;
+  return value.value;
 };
 
 export const getGridSingleSelectQuickFilterFn = (
