@@ -26,6 +26,36 @@ This is the first step towards moving to a [better implementation](https://githu
 The behavior on mobile mode is still the same.
 If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/getting-started/#testing-caveats) to choose the best replacement for it.
 
+You can manually re-enable the clock using the new `viewRenderers` prop.
+The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
+
+Take a look at the [default props via theme documentation](/material-ui/customization/theme-components/#default-props) for more information.
+
+```tsx
+const theme = createTheme({
+  components: {
+    MuiDesktopNextTimePicker: {
+      defaultProps: {
+        viewRenderers: {
+          hours: renderTimeViewClock,
+          minutes: renderTimeViewClock,
+          seconds: renderTimeViewClock,
+        },
+      },
+    },
+    MuiDesktopNextDateTimePicker: {
+      defaultProps: {
+        viewRenderers: {
+          hours: renderTimeViewClock,
+          minutes: renderTimeViewClock,
+          seconds: renderTimeViewClock,
+        },
+      },
+    },
+  },
+});
+```
+
 ### Extended `@date-io` adapters
 
 In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.

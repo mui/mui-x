@@ -1,11 +1,19 @@
 import * as React from 'react';
-import { DateRangeCalendar, DateRangeCalendarProps } from '../../DateRangeCalendar';
+import { DateOrTimeView } from '@mui/x-date-pickers/internals';
+import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
+
+export interface DateRangeViewRendererProps<TDate, TView extends DateOrTimeView>
+  extends DateRangeCalendarProps<TDate> {
+  view: TView;
+  onViewChange?: (view: TView) => void;
+  views: readonly TView[];
+}
 
 /**
  * We don't pass all the props down to `DateRangeCalendar`,
  * because otherwise some unwanted props would be passed to the HTML element.
  */
-export const renderDateRangeView = <TDate extends unknown>({
+export const renderDateRangeViewCalendar = <TDate extends unknown>({
   value,
   defaultValue,
   onChange,
@@ -37,7 +45,7 @@ export const renderDateRangeView = <TDate extends unknown>({
   fixedWeekNumber,
   disableDragEditing,
   displayWeekNumber,
-}: DateRangeCalendarProps<TDate>) => (
+}: DateRangeViewRendererProps<TDate, any>) => (
   <DateRangeCalendar
     value={value}
     defaultValue={defaultValue}
