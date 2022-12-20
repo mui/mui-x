@@ -76,7 +76,7 @@ export const rangeFieldValueManager: FieldValueManager<
 
       const sections = splitFormatIntoSections(utils, localeText, format, newDate);
       return sections.map((section, sectionIndex) => {
-        if (sectionIndex === sections.length - 1) {
+        if (sectionIndex === sections.length - 1 && position === 'start') {
           return {
             ...section,
             dateName: position,
