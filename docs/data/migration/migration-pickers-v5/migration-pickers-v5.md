@@ -15,7 +15,7 @@ Using `next` ensures that it will always use the latest v6 alpha release, but yo
 
 Since v6 is a major release, it contains some changes that affect the public API.
 These changes were done for consistency, improve stability and make room for new features.
-Below are described the steps you need to make to migrate from v5 to v6.
+Below are described the steps you need to take to migrate from v5 to v6.
 
 ## Picker components rewrite
 
