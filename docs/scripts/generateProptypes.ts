@@ -68,14 +68,30 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
       if (['children', 'state'].includes(prop.name) && component.name.startsWith('DataGrid')) {
         return false;
       }
-      let shouldDocument = true;
+      let shouldExclude = false;
       prop.filenames.forEach((filename) => {
-        // Don't include props from external dependencies
-        if (/node_modules/.test(filename)) {
-          shouldDocument = false;
+        const definedInNodeModule = /node_modules/.test(filename);
+
+        if (definedInNodeModule) {
+          // TODO: xGrid team should consider removing this to generate more correct proptypes as well
+          if (component.name.includes('Grid')) {
+            shouldExclude = true;
+          } else {
+            const definedInInternalModule = /node_modules\/@mui/.test(filename);
+            // we want to include props if they are from our internal components
+            // avoid including inherited `children` and `classes` as they (might) need custom implementation to work
+            if (
+              !definedInInternalModule ||
+              (definedInInternalModule && ['children', 'classes'].includes(prop.name))
+            ) {
+              shouldExclude = true;
+            }
+          }
         }
       });
-      return shouldDocument;
+
+      // filtering out `prop.filenames.size > 0` removes props from unknown origin
+      return prop.filenames.size > 0 && !shouldExclude;
     },
   });
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
@@ -12,6 +12,7 @@ import {
   TimeValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
+import { FieldsTextFieldProps } from '../internals';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -53,7 +54,7 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
   UseDateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldProps<TDate>
-  extends UseDateTimeFieldComponentProps<TDate, TextFieldProps> {
+  extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
    * Overrideable components.
    * @default {}

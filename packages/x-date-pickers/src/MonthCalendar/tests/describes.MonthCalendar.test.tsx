@@ -36,6 +36,7 @@ describe('<MonthCalendar /> - Describes', () => {
     componentFamily: 'calendar',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 1, 1))],
     emptyValue: null,
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const selectedCells = document.querySelectorAll(`.${pickersMonthClasses.selected}`);
       if (expectedValue == null) {

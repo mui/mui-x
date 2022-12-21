@@ -6,6 +6,7 @@ import {
   createPickerRenderer,
   expectInputValue,
   getCleanedSelectedContent,
+  adapterToUse,
 } from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Selection', () => {
@@ -40,6 +41,14 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
     });
 
+    it('should select all on mount focus (`autoFocus = true`) with start separator', () => {
+      render(<DateField autoFocus format={`- ${adapterToUse.formats.year}`} />);
+      const input = screen.getByRole('textbox');
+
+      expectInputValue(input, '- YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
+    });
+
     it('should select all on <Tab> focus', () => {
       render(<DateField />);
       const input = screen.getByRole('textbox');
@@ -51,6 +60,19 @@ describe('<DateField /> - Selection', () => {
 
       expectInputValue(input, 'MM / DD / YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+    });
+
+    it('should select all on <Tab> focus with start separator', () => {
+      render(<DateField format={`- ${adapterToUse.formats.year}`} />);
+      const input = screen.getByRole('textbox');
+      // Simulate a <Tab> focus interaction on desktop
+      act(() => {
+        input.focus();
+        input.select();
+      });
+
+      expectInputValue(input, '- YYYY');
+      expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
     });
 
     it('should select day on mobile', () => {
@@ -108,6 +130,15 @@ describe('<DateField /> - Selection', () => {
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
+    });
+
+    it('should select all sections with start separator', () => {
+      render(<DateField format={`- ${adapterToUse.formats.year}`} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+      expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
     });
   });
 
