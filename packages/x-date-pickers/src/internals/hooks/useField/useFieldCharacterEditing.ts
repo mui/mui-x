@@ -3,14 +3,14 @@ import { ponyfillGlobal } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiDateSectionName } from '../../models/muiPickersAdapter';
 import { useUtils } from '../useUtils';
-import { FieldBoundaries, FieldSection } from './useField.types';
+import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
 import {
   applyMeridiemChange,
   changeSectionValueFormat,
   cleanTrailingZeroInNumericSectionValue,
   doesSectionHaveTrailingZeros,
   getDateSectionConfigFromFormatToken,
-  getSectionGetterAndSetter,
+  getDateSectionGetterAndSetter,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
@@ -38,7 +38,7 @@ interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
  */
 type CharacterEditingApplier<TDate, TSection extends FieldSection> = (
   params: ApplyCharacterEditingParams,
-  boundaries: FieldBoundaries<TDate, TSection>,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
   activeDate: TDate | null,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 
@@ -221,12 +221,15 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
   const applyLegacyNumericEditing: CharacterEditingApplier<TDate, TSection> = (
     params,
-    boundaries,
+    sectionsValueBoundaries,
     activeDate,
   ) => {
     const { keyPressed, sectionIndex } = params;
     const activeSection = sections[sectionIndex];
-    const sectionBoundaries = boundaries[activeSection.dateSectionName](activeDate, activeSection);
+    const sectionBoundaries = sectionsValueBoundaries[activeSection.dateSectionName](
+      activeDate,
+      activeSection,
+    );
 
     const getNewSectionValue = (
       sectionValue: string,
@@ -294,7 +297,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
   const applyNumericEditing: CharacterEditingApplier<TDate, TSection> = (
     params,
-    boundaries,
+    sectionsValueBoundaries,
     activeDate,
   ) => {
     const getNewSectionValue = (
@@ -303,7 +306,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       hasTrailingZeroes: boolean,
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
-      const sectionBoundaries = boundaries[activeSection.dateSectionName](
+      const sectionBoundaries = sectionsValueBoundaries[activeSection.dateSectionName](
         activeDate,
         activeSection,
       );
@@ -392,8 +395,8 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
     updateSectionValue({
       activeSection,
-      setSectionValueOnDate: (activeDate, boundaries) => {
-        const response = getNewSectionValue(params, boundaries, activeDate);
+      setSectionValueOnDate: (activeDate, sectionsValueBoundaries) => {
+        const response = getNewSectionValue(params, sectionsValueBoundaries, activeDate);
         if (response == null) {
           return null;
         }
@@ -407,7 +410,10 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           };
         }
 
-        const { getter, setter } = getSectionGetterAndSetter(utils, activeSection.dateSectionName);
+        const { getter, setter } = getDateSectionGetterAndSetter(
+          utils,
+          activeSection.dateSectionName,
+        );
 
         let newSectionValue: number;
         // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
@@ -429,7 +435,8 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           shouldGoToNextSection: response.shouldGoToNextSection,
         };
       },
-      setSectionValueOnSections: (boundaries) => getNewSectionValue(params, boundaries, null),
+      setSectionValueOnSections: (sectionsValueBoundaries) =>
+        getNewSectionValue(params, sectionsValueBoundaries, null),
     });
   });
 };

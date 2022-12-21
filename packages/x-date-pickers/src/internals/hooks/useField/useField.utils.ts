@@ -1,7 +1,7 @@
 import {
   FieldSection,
   AvailableAdjustKeyCode,
-  FieldBoundaries,
+  FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
 } from './useField.types';
@@ -507,9 +507,9 @@ export const createDateStrForInputFromSections = (sections: FieldSection[]) => {
   return `\u2066${formattedArray.join('')}\u2069`;
 };
 
-export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
+export const getSectionsBoundaries = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
-): FieldBoundaries<TDate, TSection> => {
+): FieldSectionsValueBoundaries<TDate, TSection> => {
   const today = utils.date()!;
 
   const endOfYear = utils.endOfYear(today);
@@ -558,12 +558,19 @@ export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
   };
 };
 
+/**
+ * @template TDate
+ * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
+ * @param {TDate} date The date on which the meridiem must be applied.
+ * @param {string} sectionValue The new value of the meridiem section.
+ * @returns {TDate} The date with the new meridiem.
+ */
 export const applyMeridiemChange = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
-  value: string,
+  sectionValue: string,
 ) => {
-  const isAM = value.toLowerCase() === 'am';
+  const isAM = sectionValue.toLowerCase() === 'am';
   const hours = utils.getHours(date);
 
   if (isAM && hours >= 12) {
@@ -576,7 +583,7 @@ export const applyMeridiemChange = <TDate>(
   return date;
 };
 
-export const getSectionGetterAndSetter = <TDate>(
+export const getDateSectionGetterAndSetter = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   dateSectionName: Exclude<MuiDateSectionName, 'meridiem'>,
 ) => {
@@ -607,12 +614,7 @@ export const getSectionGetterAndSetter = <TDate>(
     },
   };
 
-  const methods = adapterMethods[dateSectionName];
-  if (!methods) {
-    throw new Error(`MUI: The section name ${dateSectionName} can't be applied to a date`);
-  }
-
-  return methods;
+  return adapterMethods[dateSectionName];
 };
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
   const maximumStr = maximum.toString();
@@ -673,7 +675,7 @@ export const mergeDateIntoReferenceDate = <
           utils.getHours(date) < 12 ? 'AM' : 'PM',
         );
       } else {
-        const { getter, setter } = getSectionGetterAndSetter(utils, section.dateSectionName);
+        const { getter, setter } = getDateSectionGetterAndSetter(utils, section.dateSectionName);
         mergedDate = setter(mergedDate, getter(date));
       }
     }
@@ -687,7 +689,7 @@ export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('androi
 export const clampDaySection = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
-  boundaries: FieldBoundaries<TDate, TSection>,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
 ) => {
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
@@ -695,7 +697,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
       return section;
     }
 
-    const dayBoundaries = boundaries.day(null, section);
+    const dayBoundaries = sectionsValueBoundaries.day(null, section);
 
     return {
       ...section,
@@ -721,7 +723,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
       return section;
     }
 
-    const dayBoundaries = boundaries.day(startOfMonth, section);
+    const dayBoundaries = sectionsValueBoundaries.day(startOfMonth, section);
     if (Number(section.value) <= dayBoundaries.maximum) {
       return section;
     }

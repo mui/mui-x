@@ -11,7 +11,7 @@ import {
   UseFieldState,
   FieldSelectedSectionsIndexes,
   FieldSelectedSections,
-  FieldBoundaries,
+  FieldSectionsValueBoundaries,
   FieldChangeHandlerContext,
 } from './useField.types';
 import {
@@ -19,20 +19,40 @@ import {
   splitFormatIntoSections,
   clampDaySection,
   mergeDateIntoReferenceDate,
-  getSectionBoundaries,
+  getSectionsBoundaries,
   validateSections,
   getDateFromDateSections,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
 export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
+  /**
+   * The section on which we want to apply the new value.
+   */
   activeSection: TSection;
+  /**
+   * Function called if the current date is valid.
+   * It must return a new date with the value of the active section updated.
+   * If it returns null, the update will be ignored.
+   * @template TDate, TSection
+   * @param {TDate} activeDate The date to modify.
+   * @param {FieldSectionsValueBoundaries<TDate, TSection>} sectionsValueBoundaries The minimum and maximum value of each section.
+   * @returns {{ date: TDate; shouldGoToNextSection: boolean } | null} The modified active date and a boolean indicating if the focus should move to the next section.
+   */
   setSectionValueOnDate: (
     activeDate: TDate,
-    boundaries: FieldBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
   ) => { date: TDate; shouldGoToNextSection: boolean } | null;
+  /**
+   * Function called if the current date is not valid.
+   * It must return the new value of the active section.
+   * If it returns null, the update will be ignored.
+   * @template TDate, TSection
+   * @param {FieldSectionsValueBoundaries<TDate, TSection>} sectionsValueBoundaries The minimum and maximum value of each section.
+   * @returns {{ sectionValue: string; shouldGoToNextSection: boolean } | null} The new value of the active section and a boolean indicating if the focus should move to the next section.
+   */
   setSectionValueOnSections: (
-    boundaries: FieldBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
   ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 }
 
@@ -69,7 +89,11 @@ export const useFieldState = <
 
   const firstDefaultValue = React.useRef(defaultValue);
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
-  const boundaries = React.useMemo(() => getSectionBoundaries<TDate, TSection>(utils), [utils]);
+
+  const sectionsValueBoundaries = React.useMemo(
+    () => getSectionsBoundaries<TDate, TSection>(utils),
+    [utils],
+  );
 
   const [sectionOrder, setSectionOrder] = React.useState(() =>
     fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
@@ -239,8 +263,6 @@ export const useFieldState = <
     setSectionValueOnDate,
     setSectionValueOnSections,
   }: UpdateSectionValueParams<TDate, TSection>) => {
-    const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-
     const commit = (
       commitParams: {
         shouldGoToNextSection: boolean;
@@ -282,8 +304,12 @@ export const useFieldState = <
       }));
     };
 
+    const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const validDateResponse = setSectionValueOnDate(activeDateManager.activeDate, boundaries);
+      const validDateResponse = setSectionValueOnDate(
+        activeDateManager.activeDate,
+        sectionsValueBoundaries,
+      );
       if (validDateResponse == null) {
         // The section was not updated
         return commit(null);
@@ -297,7 +323,7 @@ export const useFieldState = <
     }
 
     // The date is not valid, we have to update the section value rather than date itself.
-    const invalidDateResponse = setSectionValueOnSections(boundaries);
+    const invalidDateResponse = setSectionValueOnSections(sectionsValueBoundaries);
 
     if (invalidDateResponse == null) {
       // The section was not updated
@@ -318,7 +344,7 @@ export const useFieldState = <
       activeDateSections.every((section) => section.value !== '') &&
       activeDateSections.some((section) => section.dateSectionName === 'day')
     ) {
-      const cleanSections = clampDaySection(utils, activeDateSections, boundaries);
+      const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);
       if (cleanSections != null) {
         newDate = getDateFromDateSections(utils, cleanSections);
       }
