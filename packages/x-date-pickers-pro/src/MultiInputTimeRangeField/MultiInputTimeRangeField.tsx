@@ -50,6 +50,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     format,
     onChange,
     readOnly,
+    disabled,
     onError,
     minTime,
     maxTime,
@@ -96,8 +97,20 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   });
 
   const {
-    startDate: { onKeyDown: onStartInputKeyDown, ref: startInputRef, ...startDateProps },
-    endDate: { onKeyDown: onEndInputKeyDown, ref: endInputRef, ...endDateProps },
+    startDate: {
+      onKeyDown: onStartInputKeyDown,
+      ref: startInputRef,
+      readOnly: startReadOnly,
+      inputMode: startInputMode,
+      ...startDateProps
+    },
+    endDate: {
+      onKeyDown: onEndInputKeyDown,
+      ref: endInputRef,
+      readOnly: endReadOnly,
+      inputMode: endInputMode,
+      ...endDateProps
+    },
   } = useMultiInputTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: {
       value,
@@ -105,6 +118,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       format,
       onChange,
       readOnly,
+      disabled,
       onError,
       minTime,
       maxTime,
@@ -128,6 +142,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
         inputProps={{
           ...startDateProps.inputProps,
           ref: startInputRef,
+          readOnly: startReadOnly,
+          inputMode: startInputMode,
           onKeyDown: onStartInputKeyDown,
         }}
       />
@@ -137,6 +153,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
         inputProps={{
           ...endDateProps.inputProps,
           ref: endInputRef,
+          readOnly: endReadOnly,
+          inputMode: endInputMode,
           onKeyDown: onEndInputKeyDown,
         }}
       />
@@ -179,6 +197,11 @@ MultiInputTimeRangeField.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row'])),
     PropTypes.object,
   ]),
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled: PropTypes.bool,
   /**
    * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false

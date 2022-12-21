@@ -5,7 +5,7 @@ import {
   MakeOptional,
   UseFieldInternalProps,
 } from '@mui/x-date-pickers/internals';
-import { DayRangeValidationProps } from './dateRange';
+import { BaseRangeProps, DayRangeValidationProps } from './dateRange';
 import { DateRange } from './range';
 import { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
 
@@ -16,7 +16,8 @@ export interface UseDateTimeRangeFieldProps<TDate>
     >,
     DayRangeValidationProps<TDate>,
     TimeValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
+    BaseDateValidationProps<TDate>,
+    BaseRangeProps {
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */

@@ -35,6 +35,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     ref: inputRef,
     onPaste,
     inputMode,
+    readOnly,
     ...fieldProps
   } = useSingleInputDateRangeField<TDate, typeof inputProps>({
     props: inputProps,
@@ -45,7 +46,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     <Input
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
 }) as DateRangeFieldComponent;
