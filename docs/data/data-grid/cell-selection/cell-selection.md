@@ -82,7 +82,7 @@ The grid exposes a set of methods that enables all of these features using the i
 Only use this API as the last option. Give preference to the props to control the grid.
 :::
 
-{{"demo": "SelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "CellSelectionApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
