@@ -109,6 +109,42 @@ export const useGridKeyboardNavigation = (
     [currentPageRows],
   );
 
+  const goToRightCell = React.useCallback(
+    (colIndexBefore: number, lastColIndex: number, rowIndexBefore: number) => {
+      if (colIndexBefore < lastColIndex) {
+        goToCell(colIndexBefore + 1, getRowIdFromIndex(rowIndexBefore), 'right');
+      }
+    },
+    [goToCell, getRowIdFromIndex],
+  );
+
+  const goToLeftCell = React.useCallback(
+    (colIndexBefore: number, firstColIndex: number, rowIndexBefore: number) => {
+      if (colIndexBefore > firstColIndex) {
+        goToCell(colIndexBefore - 1, getRowIdFromIndex(rowIndexBefore));
+      }
+    },
+    [goToCell, getRowIdFromIndex],
+  );
+
+  const goToRightColumnHeader = React.useCallback(
+    (colIndexBefore: number, lastColIndex: number, event: React.KeyboardEvent<HTMLElement>) => {
+      if (colIndexBefore < lastColIndex) {
+        goToHeader(colIndexBefore + 1, event);
+      }
+    },
+    [goToHeader],
+  );
+
+  const goToLeftColumnHeader = React.useCallback(
+    (colIndexBefore: number, firstColIndex: number, event: React.KeyboardEvent<HTMLElement>) => {
+      if (colIndexBefore > firstColIndex) {
+        goToHeader(colIndexBefore - 1, event);
+      }
+    },
+    [goToHeader],
+  );
+
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
       const headerTitleNode = event.currentTarget.querySelector(
@@ -352,6 +388,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const direction = theme.direction;
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = (params as GridCellParams).field
@@ -383,15 +420,19 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'ArrowRight': {
-          if (colIndexBefore < lastColIndex) {
-            goToCell(colIndexBefore + 1, getRowIdFromIndex(rowIndexBefore), 'right');
+          if (direction === 'ltr') {
+            goToRightCell(colIndexBefore, lastColIndex, rowIndexBefore);
+          } else if (direction === 'rtl') {
+            goToLeftCell(colIndexBefore, firstColIndex, rowIndexBefore);
           }
           break;
         }
 
         case 'ArrowLeft': {
-          if (colIndexBefore > firstColIndex) {
-            goToCell(colIndexBefore - 1, getRowIdFromIndex(rowIndexBefore));
+          if (direction === 'ltr') {
+            goToLeftCell(colIndexBefore, firstColIndex, rowIndexBefore);
+          } else if (direction === 'rtl') {
+            goToRightCell(colIndexBefore, lastColIndex, rowIndexBefore);
           }
           break;
         }
@@ -472,7 +513,16 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, currentPageRows, getRowIdFromIndex, goToCell, goToHeader],
+    [
+      apiRef,
+      currentPageRows,
+      theme.direction,
+      getRowIdFromIndex,
+      goToCell,
+      goToHeader,
+      goToRightCell,
+      goToLeftCell,
+    ],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
