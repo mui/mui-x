@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
   DateOrTimeView,
   BaseNextPickerProps,

@@ -6,7 +6,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
   DateOrTimeView,
   UsePickerParams,
