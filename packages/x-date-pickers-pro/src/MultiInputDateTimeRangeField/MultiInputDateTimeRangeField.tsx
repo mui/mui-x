@@ -1,16 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
 
 const MultiInputDateTimeRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} {...props} spacing={2} direction="row" alignItems="center" />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
   )),
   {
     name: 'MuiMultiInputDateTimeRangeField',
@@ -81,13 +82,13 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
 
   const Input = components?.Input ?? TextField;
-  const startInputProps: TextFieldProps = useSlotProps({
+  const startInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'start' },
   });
 
-  const endInputProps: TextFieldProps = useSlotProps({
+  const endInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'end' },
@@ -115,7 +116,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       inputMode: endInputMode,
       ...endDateProps
     },
-  } = useMultiInputDateTimeRangeField<TDate, TextFieldProps>({
+  } = useMultiInputDateTimeRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: {
       value,
       defaultValue,
@@ -181,6 +182,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  className: PropTypes.string,
   /**
    * Overrideable components.
    * @default {}
@@ -195,6 +197,16 @@ MultiInputDateTimeRangeField.propTypes = {
    * The default value. Use when the component is not controlled.
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
+  /**
+   * Defines the `flex-direction` style property.
+   * It is applied for all screen sizes.
+   * @default 'column'
+   */
+  direction: PropTypes.oneOfType([
+    PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row']),
+    PropTypes.arrayOf(PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row'])),
+    PropTypes.object,
+  ]),
   /**
    * If `true`, the field is disabled
    * @default false
@@ -215,6 +227,10 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Add an element between each child.
+   */
+  divider: PropTypes.node,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -285,7 +301,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -307,6 +323,25 @@ MultiInputDateTimeRangeField.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * Defines the space between immediate children.
+   * @default 0
+   */
+  spacing: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+  ]),
+  style: PropTypes.object,
+  /**
+   * The system prop, which allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The selected value.
    * Used when the component is controlled.

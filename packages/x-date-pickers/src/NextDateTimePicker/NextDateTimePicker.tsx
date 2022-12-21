@@ -284,7 +284,7 @@ NextDateTimePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -348,6 +348,19 @@ NextDateTimePicker.propTypes = {
    * Must be a valid option from `views` list.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
   /**
    * Available views.
    */

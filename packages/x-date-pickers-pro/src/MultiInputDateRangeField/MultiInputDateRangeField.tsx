@@ -1,25 +1,24 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 
 const MultiInputDateRangeFieldRoot = styled(
   React.forwardRef((props: StackProps, ref: React.Ref<HTMLDivElement>) => (
-    <Stack ref={ref} {...props} spacing={2} direction="row" alignItems="center" />
+    <Stack ref={ref} spacing={2} direction="row" alignItems="baseline" {...props} />
   )),
   {
     name: 'MuiMultiInputDateRangeField',
     slot: 'Root',
     overridesResolver: (props, styles) => styles.root,
   },
-)({
-  alignItems: 'baseline',
-});
+)({});
 
 const MultiInputDateRangeFieldSeparator = styled(
   (props: TypographyProps) => <Typography {...props}>{props.children ?? ' — '}</Typography>,
@@ -78,14 +77,14 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
 
   const Input = components?.Input ?? TextField;
-  const startInputProps: TextFieldProps = useSlotProps({
+  const startInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
 
-  const endInputProps: TextFieldProps = useSlotProps({
+  const endInputProps: FieldsTextFieldProps = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
     ownerState: { ...ownerState, position: 'end' },
@@ -113,7 +112,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       inputMode: endInputMode,
       ...endDateProps
     },
-  } = useMultiInputDateRangeField<TDate, TextFieldProps>({
+  } = useMultiInputDateRangeField<TDate, FieldsTextFieldProps>({
     sharedProps: {
       value,
       defaultValue,
@@ -169,6 +168,7 @@ MultiInputDateRangeField.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocus: PropTypes.bool,
+  className: PropTypes.string,
   /**
    * Overrideable components.
    * @default {}
@@ -184,6 +184,16 @@ MultiInputDateRangeField.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
+   * Defines the `flex-direction` style property.
+   * It is applied for all screen sizes.
+   * @default 'column'
+   */
+  direction: PropTypes.oneOfType([
+    PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row']),
+    PropTypes.arrayOf(PropTypes.oneOf(['column-reverse', 'column', 'row-reverse', 'row'])),
+    PropTypes.object,
+  ]),
+  /**
    * If `true`, the field is disabled
    * @default false
    */
@@ -198,6 +208,10 @@ MultiInputDateRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * Add an element between each child.
+   */
+  divider: PropTypes.node,
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -245,7 +259,7 @@ MultiInputDateRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -260,6 +274,25 @@ MultiInputDateRangeField.propTypes = {
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
+  /**
+   * Defines the space between immediate children.
+   * @default 0
+   */
+  spacing: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+  ]),
+  style: PropTypes.object,
+  /**
+   * The system prop, which allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The selected value.
    * Used when the component is controlled.

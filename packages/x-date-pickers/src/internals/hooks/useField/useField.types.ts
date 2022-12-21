@@ -124,16 +124,17 @@ export interface FieldSection {
   value: string;
   placeholder: string;
   /**
-   * Separator used in the input.
+   * Separator displayed before the value of the section in the input.
+   * If it contains escaped characters, then it must not have the escaping characters.
+   * For example, on Day.js, the `year` section of the format `YYYY [year]` has an end separator equal to `year` not `[year]`
    */
-  separator: string | null;
+  startSeparator: string;
   /**
-   * Separator used to recreate the date from the sections.
-   * Can be useful when the separator rendered in the input is not the same as the one used for parsing.
-   * e.g: ` / ` in the input and `/` in parsing.
-   * @default `section.separator`
+   * Separator displayed after the value of the section in the input.
+   * If it contains escaped characters, then it must not have the escaping characters.
+   * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
-  parsingSeparator?: string;
+  endSeparator: string;
   dateSectionName: MuiDateSectionName;
   contentType: 'digit' | 'letter';
   formatValue: string;
@@ -179,13 +180,22 @@ interface FieldActiveDateManager<TValue, TDate> {
   ) => Pick<UseFieldState<TValue, any>, 'value' | 'referenceValue'>;
 }
 
-export type FieldSelectedSectionsIndexes = { startIndex: number; endIndex: number };
+export type FieldSelectedSectionsIndexes = {
+  startIndex: number;
+  endIndex: number;
+  /**
+   * If `true`, the selectors at the very beginning and very end of the input will be selected.
+   * @default false
+   */
+  shouldSelectBoundarySelectors?: boolean;
+};
 
 export type FieldSelectedSections =
   | number
-  | FieldSelectedSectionsIndexes
   | MuiDateSectionName
-  | null;
+  | null
+  | 'all'
+  | { startIndex: number; endIndex: number };
 
 export interface FieldValueManager<TValue, TDate, TSection extends FieldSection, TError> {
   /**
