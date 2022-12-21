@@ -13,8 +13,8 @@ import { buildWarning } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
