@@ -82,7 +82,7 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
             // avoid including inherited `children` and `classes` as they (might) need custom implementation to work
             if (
               !definedInInternalModule ||
-              (definedInInternalModule && ['children', 'classes'].includes(prop.name))
+              (definedInInternalModule && ['children', 'classes', 'theme'].includes(prop.name))
             ) {
               shouldExclude = true;
             }
