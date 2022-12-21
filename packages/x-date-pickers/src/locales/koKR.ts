@@ -20,7 +20,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
+    isKeyboardInputOpen
+      ? `텍스트 입력 화면에서 ${viewType} 화면으로 전환하기`
+      : `${viewType} 화면에서 텍스트 입력 화면으로 전환하기`,
 
   // DateRange placeholders
   start: '시작',
@@ -33,10 +36,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '오늘',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: '날짜 선택하기',
+  dateTimePickerDefaultToolbarTitle: '날짜 & 시간 선택하기',
+  timePickerDefaultToolbarTitle: '시간 선택하기',
+  dateRangePickerDefaultToolbarTitle: '날짜 범위 선택하기',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
