@@ -67,7 +67,7 @@
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 16,
+    "missingKeysCount": 0,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/koKR.ts/"
   },
