@@ -265,16 +265,17 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     },
   );
 
-  const { view, setView, focusedView, setFocusedView, goToNextView } = useViews({
-    view: inView,
-    views,
-    openTo,
-    onChange: handleValueChange,
-    onViewChange,
-    autoFocus,
-    focusedView: inFocusedView,
-    onFocusedViewChange,
-  });
+  const { view, setView, focusedView, setFocusedView, goToNextView, setValueAndGoToNextView } =
+    useViews({
+      view: inView,
+      views,
+      openTo,
+      onChange: handleValueChange,
+      onViewChange,
+      autoFocus,
+      focusedView: inFocusedView,
+      onFocusedViewChange,
+    });
 
   const {
     calendarState,
@@ -312,7 +313,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       : newDate;
 
     if (closestEnabledDate) {
-      handleValueChange(closestEnabledDate, 'finish');
+      setValueAndGoToNextView(closestEnabledDate, 'finish');
       onMonthChange?.(startOfMonth);
     } else {
       goToNextView();
@@ -339,7 +340,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       : newDate;
 
     if (closestEnabledDate) {
-      handleValueChange(closestEnabledDate, 'finish');
+      setValueAndGoToNextView(closestEnabledDate, 'finish');
       onYearChange?.(closestEnabledDate);
     } else {
       goToNextView();
@@ -349,16 +350,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     changeFocusedDay(closestEnabledDate, true);
   });
 
-  const handleSelectedDayChange = useEventCallback(
-    (day: TDate | null, selectionState?: PickerSelectionState) => {
-      if (value && day) {
-        // If there is a date already selected, then we want to keep its time
-        return handleValueChange(utils.mergeDateAndTime(day, value), selectionState);
-      }
+  const handleSelectedDayChange = useEventCallback((day: TDate | null) => {
+    if (value && day) {
+      // If there is a date already selected, then we want to keep its time
+      return setValueAndGoToNextView(utils.mergeDateAndTime(day, value), 'finish');
+    }
 
-      return handleValueChange(day, selectionState);
-    },
-  );
+    return setValueAndGoToNextView(day, 'finish');
+  });
 
   React.useEffect(() => {
     if (value != null && utils.isValid(value)) {
