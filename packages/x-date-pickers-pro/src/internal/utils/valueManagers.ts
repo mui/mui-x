@@ -80,7 +80,7 @@ export const rangeFieldValueManager: FieldValueManager<
           return {
             ...section,
             dateName: position,
-            endSeparator: `${section.endSeparator}\u2069 – \u2066`
+            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
           };
         }
 
