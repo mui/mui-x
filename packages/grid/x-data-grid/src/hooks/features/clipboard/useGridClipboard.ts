@@ -25,15 +25,17 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
-function hasNativeSelection(element: Element) {
+function hasNativeSelection(element: HTMLInputElement) {
   if (window.getSelection()?.toString() !== '') {
     return true;
   }
 
-  if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-    if ((element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
-      return true;
-    }
+  if (!element) {
+    return false;
+  }
+
+  if ((element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
+    return true;
   }
 
   return false;
@@ -79,7 +81,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
       }
 
       // Do nothing if there's a native selection
-      if (hasNativeSelection(event.target as Element)) {
+      if (hasNativeSelection(event.target as HTMLInputElement)) {
         return;
       }
 
