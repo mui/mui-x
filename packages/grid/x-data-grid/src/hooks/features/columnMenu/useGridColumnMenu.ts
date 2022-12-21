@@ -4,7 +4,11 @@ import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../u
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { gridVisibleColumnFieldsSelector } from '../columns';
+import {
+  gridColumnLookupSelector,
+  gridColumnVisibilityModelSelector,
+  gridColumnFieldsSelector,
+} from '../columns/gridColumnsSelector';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -50,14 +54,28 @@ export const useGridColumnMenu = (
     const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
 
     if (columnMenuState.field) {
-      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+      const columnLookup = gridColumnLookupSelector(apiRef);
+      const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+      const orderedFields = gridColumnFieldsSelector(apiRef);
       let fieldToFocus = columnMenuState.field;
 
-      // If the column was removed from the grid, we need to focus to the first visible field
-      if (visibleColumnFields.length > 0 && !visibleColumnFields.includes(fieldToFocus)) {
-        fieldToFocus = visibleColumnFields[0];
+      // If the column was removed from the grid, we need to find the closest visible field
+      if (!columnLookup[fieldToFocus]) {
+        fieldToFocus = orderedFields[0];
       }
 
+      // If the field to focus is hidden, we need to find the closest visible field
+      if (columnVisibilityModel[fieldToFocus] === false) {
+        // contains visible column fields + the field that was just hidden
+        const visibleOrderedFields = orderedFields.filter((field) => {
+          if (field === fieldToFocus) {
+            return true;
+          }
+          return columnVisibilityModel[field] !== false;
+        });
+        const fieldIndex = visibleOrderedFields.indexOf(fieldToFocus);
+        fieldToFocus = visibleOrderedFields[fieldIndex + 1] || visibleOrderedFields[fieldIndex - 1];
+      }
       apiRef.current.setColumnHeaderFocus(fieldToFocus);
     }
 
