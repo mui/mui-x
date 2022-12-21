@@ -7,7 +7,6 @@ export interface GridDensityOption {
   value: GridDensityTypes;
 }
 
-// TODO v6: turns `setDensity` parameters in an object
 /**
  * The density API interface that is available in the grid `apiRef`.
  */
