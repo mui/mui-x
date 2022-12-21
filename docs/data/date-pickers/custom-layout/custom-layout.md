@@ -5,7 +5,7 @@ title: Date and Time pickers - Custom layout
 
 # Custom layout
 
-<p class="description">The date picker lets you reorganize its layout</p>
+<p class="description">The Date and Time Pickers let you reorganize the layout</p>
 
 ## Default layout structure
 
@@ -34,7 +34,7 @@ The layout is structured as follows:
 
 A `<PickersLayoutRoot />` wraps all the sub-components to provide the structure.
 By default it renders a `div` with `display: grid`.
-Such that all sub-components take place into a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
+Such that all sub-components are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
 
 Subcomponents are wrapped inside layout helper, responsible for placing it into the grid.
 Here is an overview of the structure.
