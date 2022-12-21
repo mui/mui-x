@@ -234,6 +234,7 @@ MobileNextTimePicker.propTypes = {
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
+  readOnly: PropTypes.bool,
   /**
    * The currently selected sections.
    * This prop accept four formats:

@@ -232,6 +232,7 @@ MobileNextDateRangePicker.propTypes = {
    * @default false
    */
   open: PropTypes.bool,
+  readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
