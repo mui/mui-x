@@ -9,27 +9,27 @@ import {
 } from '@mui/x-date-pickers/NextTimePicker';
 import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
-const shouldDisableTime: NextTimePickerProps<Dayjs>['shouldDisableTime'] = (
+const shouldDisableClock: NextTimePickerProps<Dayjs>['shouldDisableClock'] = (
   timeValue,
   view,
 ) => view === 'minutes' && timeValue >= 45;
 
 const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute');
 
-export default function TimeValidationShouldDisableTime() {
+export default function TimeValidationshouldDisableClock() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label="TimePicker">
           <NextTimePicker
             defaultValue={defaultValue}
-            shouldDisableTime={shouldDisableTime}
+            shouldDisableClock={shouldDisableClock}
           />
         </DemoItem>
         <DemoItem label="DateTimePicker">
           <NextDateTimePicker
             defaultValue={defaultValue}
-            shouldDisableTime={shouldDisableTime}
+            shouldDisableClock={shouldDisableClock}
           />
         </DemoItem>
       </DemoContainer>

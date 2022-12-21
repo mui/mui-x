@@ -32,7 +32,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableClock": { "type": { "name": "func" } },
     "showToolbar": {
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"

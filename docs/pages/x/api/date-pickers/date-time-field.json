@@ -58,7 +58,7 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableClock": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
     "sx": {

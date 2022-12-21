@@ -182,7 +182,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disableFuture,
     disablePast,
     minutesStep = 1,
-    shouldDisableTime,
+    shouldDisableClock,
     showViewSwitcher,
     onChange,
     defaultValue,
@@ -263,8 +263,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return false;
         }
 
-        if (shouldDisableTime) {
-          return !shouldDisableTime(timeValue, viewType);
+        if (shouldDisableClock) {
+          return !shouldDisableClock(timeValue, viewType);
         }
 
         return true;
@@ -308,7 +308,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       meridiemMode,
       minTime,
       minutesStep,
-      shouldDisableTime,
+      shouldDisableClock,
       utils,
       disableFuture,
       disablePast,
@@ -547,8 +547,17 @@ TimeClock.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * @deprecated Consider using `shouldDisableTime`.
+   *
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

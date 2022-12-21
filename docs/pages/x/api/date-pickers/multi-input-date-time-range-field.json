@@ -34,7 +34,7 @@
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableClock": { "type": { "name": "func" } },
     "spacing": {
       "type": {
         "name": "union",

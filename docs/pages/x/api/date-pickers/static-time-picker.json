@@ -55,7 +55,7 @@
     },
     "readOnly": { "type": { "name": "bool" } },
     "rifmFormatter": { "type": { "name": "func" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableClock": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
     "sx": {
       "type": {

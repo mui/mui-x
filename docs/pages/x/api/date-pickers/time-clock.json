@@ -24,7 +24,7 @@
       "default": "'hours'"
     },
     "readOnly": { "type": { "name": "bool" } },
-    "shouldDisableTime": { "type": { "name": "func" } },
+    "shouldDisableClock": { "type": { "name": "func" } },
     "sx": {
       "type": {
         "name": "union",

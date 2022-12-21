@@ -15,9 +15,9 @@ export type TimeValidationError =
   | 'minutesStep'
   | 'minTime'
   | 'maxTime'
-  | 'shouldDisableTime-hours'
-  | 'shouldDisableTime-minutes'
-  | 'shouldDisableTime-seconds';
+  | 'shouldDisableClock-hours'
+  | 'shouldDisableClock-minutes'
+  | 'shouldDisableClock-seconds';
 
 export const validateTime: Validator<
   any | null,
@@ -29,7 +29,7 @@ export const validateTime: Validator<
     minTime,
     maxTime,
     minutesStep,
-    shouldDisableTime,
+    shouldDisableClock,
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
@@ -62,18 +62,18 @@ export const validateTime: Validator<
     case Boolean(disablePast && adapter.utils.isBefore(date, now)):
       return 'disablePast';
 
-    case Boolean(shouldDisableTime && shouldDisableTime(adapter.utils.getHours(value), 'hours')):
-      return 'shouldDisableTime-hours';
+    case Boolean(shouldDisableClock && shouldDisableClock(adapter.utils.getHours(value), 'hours')):
+      return 'shouldDisableClock-hours';
 
     case Boolean(
-      shouldDisableTime && shouldDisableTime(adapter.utils.getMinutes(value), 'minutes'),
+      shouldDisableClock && shouldDisableClock(adapter.utils.getMinutes(value), 'minutes'),
     ):
-      return 'shouldDisableTime-minutes';
+      return 'shouldDisableClock-minutes';
 
     case Boolean(
-      shouldDisableTime && shouldDisableTime(adapter.utils.getSeconds(value), 'seconds'),
+      shouldDisableClock && shouldDisableClock(adapter.utils.getSeconds(value), 'seconds'),
     ):
-      return 'shouldDisableTime-seconds';
+      return 'shouldDisableClock-seconds';
 
     case Boolean(minutesStep && adapter.utils.getMinutes(value) % minutesStep !== 0):
       return 'minutesStep';
