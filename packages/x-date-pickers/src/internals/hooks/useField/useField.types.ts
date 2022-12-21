@@ -60,7 +60,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    */
   readOnly?: boolean;
   /**
-   * If `true`, the field is disabled
+   * If `true`, the field is disabled.
    * @default false
    */
   disabled?: boolean;

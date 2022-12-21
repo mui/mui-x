@@ -84,7 +84,7 @@ SingleInputDateRangeField.propTypes = {
    */
   defaultValue: PropTypes.arrayOf(PropTypes.any),
   /**
-   * If `true`, the field is disabled
+   * If `true`, the field is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
