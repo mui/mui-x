@@ -299,8 +299,8 @@ export const useFieldState = <
     // The date is not valid, we have to update the section value rather than date itself.
     const invalidDateResponse = setSectionValueOnSections(boundaries);
 
-    // The section was not updated
     if (invalidDateResponse == null) {
+      // The section was not updated
       return commit(null);
     }
 
@@ -309,7 +309,6 @@ export const useFieldState = <
       invalidDateResponse.sectionValue,
     );
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-
     let newDate = getDateFromDateSections(utils, activeDateSections);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.

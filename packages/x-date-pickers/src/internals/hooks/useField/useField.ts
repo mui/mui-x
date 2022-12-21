@@ -209,15 +209,6 @@ export const useField = <
       return;
     }
 
-    // TODO: Improve condition
-    if (['/', ' ', '-'].includes(keyPressed)) {
-      if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-        setSelectedSections(selectedSectionIndexes.startIndex + 1);
-      }
-
-      return;
-    }
-
     applyCharacterEditing({ keyPressed, sectionIndex: selectedSectionIndexes.startIndex });
   });
 

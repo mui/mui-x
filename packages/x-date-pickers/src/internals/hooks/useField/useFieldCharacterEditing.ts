@@ -30,12 +30,32 @@ interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
   updateSectionValue: (params: UpdateSectionValueParams<TDate, TSection>) => void;
 }
 
+/**
+ * The letter editing and the numeric editing each define a `CharacterEditingApplier`.
+ * This function decides what the new section value should be and if the focus should switch to the next section.
+ *
+ * If it returns `null`, then the section value is not updated and the focus does not move.
+ */
 type CharacterEditingApplier<TDate, TSection extends FieldSection> = (
   params: ApplyCharacterEditingParams,
   boundaries: FieldBoundaries<TDate, TSection>,
   activeDate: TDate | null,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 
+/**
+ * Function called by `applyQuery` which decides:
+ * - what is the new section value ?
+ * - should the query used to get this value be stored for the next key press ?
+ *
+ * If it returns `{ sectionValue: string; shouldGoToNextSection: boolean }`,
+ * Then we store the query and update the section with the new value.
+ *
+ * If it returns `{ saveQuery: true` },
+ * Then we store the query and don't update the section.
+ *
+ * If it returns `{ saveQuery: false },
+ * Then we do nothing.
+ */
 type QueryApplier<TSection extends FieldSection> = (
   queryValue: string,
   activeSection: TSection,
