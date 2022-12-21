@@ -13,7 +13,6 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
-// Math.floor(height * COMPACT_DENSITY_FACTOR)
 const getUpdatedDensityState = (newDensity: GridDensity): GridDensityState => {
   switch (newDensity) {
     case GridDensityTypes.Compact:
