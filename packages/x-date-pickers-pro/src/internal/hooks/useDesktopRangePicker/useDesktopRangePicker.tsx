@@ -92,7 +92,7 @@ export const useDesktopRangePicker = <
   };
 
   const fieldSlotsProps = useRangePickerInputProps({
-    wrapperVariant: 'mobile',
+    wrapperVariant: 'desktop',
     open,
     actions,
     readOnly,
@@ -151,7 +151,6 @@ export const useDesktopRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },

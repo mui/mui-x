@@ -12,7 +12,6 @@ import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersDayClasses,
   PickersDayClassKey,
@@ -53,7 +52,7 @@ export interface PickersDayProps<TDate>
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
   onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: TDate) => void;
-  onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
+  onDaySelect: (day: TDate) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -270,7 +269,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      onDaySelect(day, 'finish');
+      onDaySelect(day);
     }
 
     if (outsideCurrentMonth) {

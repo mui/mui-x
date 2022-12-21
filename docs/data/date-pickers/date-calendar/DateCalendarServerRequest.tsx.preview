@@ -1,4 +1,4 @@
-<NextDatePicker
+<DateCalendar
   defaultValue={initialValue}
   loading={isLoading}
   onMonthChange={handleMonthChange}
