@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { GridFilterInputValueProps } from '../components/panel/filterPanel/GridFilterInputValueProps';
-import { GridFilterInputMultipleValueProps } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
-import { GridFilterInputMultipleSingleSelectProps } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 import type { GridColDef } from './colDef/gridColDef';
@@ -34,10 +31,7 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
   /**
    * The input component to render in the filter panel for this filter operator.
    */
-  InputComponent?:
-    | React.JSXElementConstructor<GridFilterInputValueProps>
-    | React.JSXElementConstructor<GridFilterInputMultipleValueProps>
-    | React.JSXElementConstructor<GridFilterInputMultipleSingleSelectProps>;
+  InputComponent?: React.JSXElementConstructor<any>;
   /**
    * The props to pass to the input component in the filter panel for this filter operator.
    */

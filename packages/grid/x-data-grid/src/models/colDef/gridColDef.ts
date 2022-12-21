@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
-import { GridFilterOperator } from '../gridFilterOperator';
+import type { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
   GridRenderCellParams,

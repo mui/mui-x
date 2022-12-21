@@ -532,8 +532,13 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should apply the value formatter to the options provided', () => {
-      defaultData.columns[0].valueFormatter = ({ value }) => (value as string).toLowerCase();
+    it('should apply getOptionLabel to the options provided', () => {
+      defaultData.columns[0].renderEditCell = (params) => {
+        return renderEditSingleSelectCell({
+          ...params,
+          getOptionLabel: (value) => (value as string).toLowerCase(),
+        });
+      };
       render(<TestCase />);
 
       const cell = getCell(0, 0);
