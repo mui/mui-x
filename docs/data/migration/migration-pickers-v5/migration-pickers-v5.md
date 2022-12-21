@@ -502,7 +502,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 ## Rename remaining `private` components
 
-Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
+The four components prefixed with `Private` are now stable.
 These components were renamed:
 
 - `PrivatePickersMonth` -> `MuiPickersMonth`
