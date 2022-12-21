@@ -1,0 +1,13 @@
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+  <DateField label="English locale (default)" />
+</LocalizationProvider>
+<LocalizationProvider
+  dateAdapter={AdapterDayjs}
+  // Define the date locale to have the right format `day.month.year`.
+  adapterLocale="de"
+  // Define the translations (component localization) to have the right placeholders.
+  // (e.g. `JJJJ` for the year)
+  localeText={germanLocale}
+>
+  <DateField label="German locale" />
+</LocalizationProvider>

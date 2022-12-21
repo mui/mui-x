@@ -1,5 +1,6 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
@@ -59,7 +60,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
@@ -77,6 +78,15 @@
       }
     },
     "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      }
+    },
+    "viewRenderers": {
+      "type": { "name": "shape", "description": "{ day?: func, month?: func, year?: func }" }
+    },
     "views": {
       "type": {
         "name": "arrayOf",
@@ -104,7 +114,7 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileNextDatePicker" },
   "filename": "/packages/x-date-pickers/src/MobileNextDatePicker/MobileNextDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker/\">Date Picker</a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_MobileNextDatePicker" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_MobileNextDatePicker" }

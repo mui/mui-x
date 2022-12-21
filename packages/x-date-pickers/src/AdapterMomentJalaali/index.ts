@@ -3,6 +3,8 @@ import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
+type Moment = defaultMoment.Moment;
+
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: MuiFormatTokenMap = {
   // Month
@@ -52,6 +54,8 @@ export class AdapterMomentJalaali
 
   public formatTokenMap = formatTokenMap;
 
+  public escapedCharacters = { start: '[', end: ']' };
+
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.
    * We should use this one in the future to support all localized formats.
@@ -88,5 +92,26 @@ export class AdapterMomentJalaali
 
   public getWeekNumber = (date: defaultMoment.Moment) => {
     return date.jWeek();
+  };
+
+  public addYears = (date: Moment, count: number) => {
+    return count < 0
+      ? date.clone().subtract(Math.abs(count), 'jYear')
+      : date.clone().add(count, 'jYear');
+  };
+
+  public addMonths = (date: Moment, count: number) => {
+    return count < 0
+      ? date.clone().subtract(Math.abs(count), 'jMonth')
+      : date.clone().add(count, 'jMonth');
+  };
+
+  public isValid = (value: any) => {
+    // We can't to `this.moment(value)` because moment-jalaali looses the invalidity information when creating a new moment object from an existing one
+    if (!this.moment.isMoment(value)) {
+      return false;
+    }
+
+    return value.isValid(value);
   };
 }

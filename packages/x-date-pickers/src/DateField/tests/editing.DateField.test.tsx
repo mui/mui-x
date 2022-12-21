@@ -7,10 +7,8 @@ import {
   createPickerRenderer,
   adapterToUse,
   buildFieldInteractions,
+  expectInputValue,
 } from 'test/utils/pickers-utils';
-
-const expectInputValue = (input: HTMLInputElement, expectedValue: string) =>
-  expect(input.value.replace(/‎/g, '')).to.equal(expectedValue);
 
 describe('<DateField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -24,11 +22,23 @@ describe('<DateField /> - Editing', () => {
     key,
     expectedValue,
     cursorPosition = 1,
+    valueToSelect,
     ...props
-  }: DateFieldProps<TDate> & { key: string; expectedValue: string; cursorPosition?: number }) => {
+  }: DateFieldProps<TDate> & {
+    key: string;
+    expectedValue: string;
+    cursorPosition?: number;
+    valueToSelect?: string;
+  }) => {
     render(<DateField {...props} />);
     const input = screen.getByRole('textbox');
-    clickOnInput(input, cursorPosition);
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
     userEvent.keyPress(input, { key });
     expectInputValue(input, expectedValue);
   };
@@ -118,7 +128,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowDown',
         expectedValue: 'May 31',
         // To select the date and not the month
-        cursorPosition: 5,
+        valueToSelect: '1',
       });
     });
 
@@ -210,7 +220,7 @@ describe('<DateField /> - Editing', () => {
         key: 'ArrowUp',
         expectedValue: 'July 1',
         // To select the date and not the month
-        cursorPosition: 5,
+        valueToSelect: '30',
       });
     });
 
@@ -571,6 +581,26 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, 'MM / DD / YYYY');
     });
 
+    it('should set the date when all sections are selected and the format contains escaped characters', () => {
+      const { start: startChar, end: endChar } = adapterToUse.escapedCharacters;
+      const onChange = spy();
+      render(
+        <DateField
+          onChange={onChange}
+          format={`${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, `Escaped 2014`);
+      expect(onChange.callCount).to.equal(1);
+      expect(adapterToUse.getYear(onChange.lastCall.firstArg)).to.equal(2014);
+    });
+
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
       const onChange = spy();
       render(<DateField onChange={onChange} readOnly />);
@@ -638,7 +668,7 @@ describe('<DateField /> - Editing', () => {
         />,
       );
       const input = screen.getByRole('textbox');
-      clickOnInput(input, 10);
+      clickOnInput(input, input.value.indexOf('2010'));
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));

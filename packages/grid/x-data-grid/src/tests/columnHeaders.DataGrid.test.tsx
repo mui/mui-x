@@ -117,4 +117,24 @@ describe('<DataGrid /> - Column Headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
   });
+
+  it('should display sort column menu items as per sortingOrder prop', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          sortingOrder={['desc', 'asc']}
+          columns={[{ field: 'brand', headerClassName: 'foobar' }]}
+        />
+      </div>,
+    );
+    const columnCell = getColumnHeaderCell(0);
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    fireEvent.click(menuIconButton);
+    clock.runToLast();
+
+    expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);
+    expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
+  });
 });

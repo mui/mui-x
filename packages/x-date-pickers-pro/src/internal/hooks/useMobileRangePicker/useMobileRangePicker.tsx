@@ -13,6 +13,7 @@ import {
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
+  MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
@@ -26,11 +27,10 @@ const releaseInfo = getReleaseInfo();
 export const useMobileRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -55,12 +55,18 @@ export const useMobileRangePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    MobileRangePickerAdditionalViewProps
+  >({
     props,
     valueManager,
     wrapperVariant: 'mobile',
-    viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange: setRangePosition,
@@ -74,6 +80,7 @@ export const useMobileRangePicker = <
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
     rangePosition,
     onRangePositionChange: setRangePosition,
   });
@@ -87,7 +94,7 @@ export const useMobileRangePicker = <
     externalSlotProps: componentsProps.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly,
+      readOnly: readOnly ?? true,
       disabled,
       className,
       format,
@@ -122,7 +129,6 @@ export const useMobileRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },

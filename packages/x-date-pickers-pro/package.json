@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "6.0.0-alpha.11",
+  "version": "6.0.0-alpha.12",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -47,7 +47,7 @@
     "@date-io/luxon": "^2.16.1",
     "@date-io/moment": "^2.16.1",
     "@mui/utils": "^5.10.16",
-    "@mui/x-date-pickers": "6.0.0-alpha.11",
+    "@mui/x-date-pickers": "6.0.0-alpha.12",
     "@mui/x-license-pro": "6.0.0-alpha.9",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
@@ -59,7 +59,7 @@
     "@mui/system": "^5.4.1",
     "date-fns": "^2.25.0",
     "dayjs": "^1.10.7",
-    "luxon": "^1.28.0 || ^2.0.0 || ^3.0.2",
+    "luxon": "^3.0.2",
     "moment": "^2.29.1",
     "react": "^17.0.2 || ^18.0.0",
     "react-dom": "^17.0.2 || ^18.0.0"
@@ -81,8 +81,8 @@
   "devDependencies": {
     "@types/luxon": "^3.1.0",
     "date-fns": "^2.29.3",
-    "dayjs": "^1.11.6",
-    "luxon": "^1.28.0 || ^2.0.0 || ^3.0.2",
+    "dayjs": "^1.11.7",
+    "luxon": "^3.1.1",
     "moment": "^2.29.4"
   },
   "setupFiles": [
