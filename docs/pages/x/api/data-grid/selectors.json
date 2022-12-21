@@ -17,14 +17,14 @@
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
-    "description": "Get the columns as an array.",
+    "description": "Get an array of column definitions in the order rendered on screen..",
     "supportsApiRef": true
   },
   {
     "name": "gridColumnFieldsSelector",
     "returnType": "string[]",
     "category": "Columns",
-    "description": "Get the field of each column.",
+    "description": "Get an array of column fields in the order rendered on screen.",
     "supportsApiRef": true
   },
   {
