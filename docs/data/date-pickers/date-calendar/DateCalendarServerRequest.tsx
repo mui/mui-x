@@ -1,14 +1,13 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 
-function getRandomNumber(min, max) {
+function getRandomNumber(min: number, max: number) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
@@ -16,8 +15,8 @@ function getRandomNumber(min, max) {
  * Mimic fetch with abort controller https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort
  * ⚠️ No IE11 support
  */
-function fakeFetch(date, { signal }) {
-  return new Promise((resolve, reject) => {
+function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
+  return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
     const timeout = setTimeout(() => {
       const daysInMonth = date.daysInMonth();
       const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
@@ -34,7 +33,7 @@ function fakeFetch(date, { signal }) {
 
 const initialValue = dayjs('2022-04-07');
 
-function ServerDay(props) {
+function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const isSelected =
@@ -51,24 +50,12 @@ function ServerDay(props) {
   );
 }
 
-ServerDay.propTypes = {
-  /**
-   * The date to show.
-   */
-  day: PropTypes.object.isRequired,
-  highlightedDays: PropTypes.arrayOf(PropTypes.number),
-  /**
-   * If `true`, day is outside of month and will be hidden.
-   */
-  outsideCurrentMonth: PropTypes.bool.isRequired,
-};
-
-export default function ServerRequestDatePicker() {
-  const requestAbortController = React.useRef(null);
+export default function DateCalendarServerRequest() {
+  const requestAbortController = React.useRef<AbortController | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
 
-  const fetchHighlightedDays = (date) => {
+  const fetchHighlightedDays = (date: Dayjs) => {
     const controller = new AbortController();
     fakeFetch(date, {
       signal: controller.signal,
@@ -93,7 +80,7 @@ export default function ServerRequestDatePicker() {
     return () => requestAbortController.current?.abort();
   }, []);
 
-  const handleMonthChange = (date) => {
+  const handleMonthChange = (date: Dayjs) => {
     if (requestAbortController.current) {
       // make sure that you are aborting useless requests
       // because it is possible to switch between months pretty quickly
@@ -107,7 +94,7 @@ export default function ServerRequestDatePicker() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDatePicker
+      <DateCalendar
         defaultValue={initialValue}
         loading={isLoading}
         onMonthChange={handleMonthChange}
@@ -118,7 +105,7 @@ export default function ServerRequestDatePicker() {
         componentsProps={{
           day: {
             highlightedDays,
-          },
+          } as any,
         }}
       />
     </LocalizationProvider>

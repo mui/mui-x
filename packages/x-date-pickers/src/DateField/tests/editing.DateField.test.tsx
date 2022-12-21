@@ -581,6 +581,26 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, 'MM / DD / YYYY');
     });
 
+    it('should set the date when all sections are selected and the format contains escaped characters', () => {
+      const { start: startChar, end: endChar } = adapterToUse.escapedCharacters;
+      const onChange = spy();
+      render(
+        <DateField
+          onChange={onChange}
+          format={`${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
+        />,
+      );
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      // Select all sections
+      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+      firePasteEvent(input, `Escaped 2014`);
+      expect(onChange.callCount).to.equal(1);
+      expect(adapterToUse.getYear(onChange.lastCall.firstArg)).to.equal(2014);
+    });
+
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
       const onChange = spy();
       render(<DateField onChange={onChange} readOnly />);

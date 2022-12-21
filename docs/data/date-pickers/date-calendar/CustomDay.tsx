@@ -1,19 +1,24 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import { styled } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 
 dayjs.extend(isBetweenPlugin);
+
+interface CustomPickerDayProps extends PickersDayProps<Dayjs> {
+  dayIsBetween: boolean;
+  isFirstDay: boolean;
+  isLastDay: boolean;
+}
 
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) =>
     prop !== 'dayIsBetween' && prop !== 'isFirstDay' && prop !== 'isLastDay',
-})(({ theme, dayIsBetween, isFirstDay, isLastDay }) => ({
+})<CustomPickerDayProps>(({ theme, dayIsBetween, isFirstDay, isLastDay }) => ({
   ...(dayIsBetween && {
     borderRadius: 0,
     backgroundColor: theme.palette.primary.main,
@@ -30,9 +35,9 @@ const CustomPickersDay = styled(PickersDay, {
     borderTopRightRadius: '50%',
     borderBottomRightRadius: '50%',
   }),
-}));
+})) as React.ComponentType<CustomPickerDayProps>;
 
-function Day(props) {
+function Day(props: PickersDayProps<Dayjs> & { selectedDay?: Dayjs | null }) {
   const { day, selectedDay, ...other } = props;
 
   if (selectedDay == null) {
@@ -58,28 +63,19 @@ function Day(props) {
   );
 }
 
-Day.propTypes = {
-  /**
-   * The date to show.
-   */
-  day: PropTypes.object.isRequired,
-  selectedDay: PropTypes.object,
-};
-
 export default function CustomDay() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        displayStaticWrapperAs="desktop"
+      <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
         components={{ Day }}
         componentsProps={{
           day: {
             selectedDay: value,
-          },
+          } as any,
         }}
       />
     </LocalizationProvider>
