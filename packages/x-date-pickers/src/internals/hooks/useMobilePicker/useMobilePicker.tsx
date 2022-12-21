@@ -76,9 +76,11 @@ export const useMobilePicker = <
       return {
         ...inputPropsPassedByField,
         ...externalInputProps,
-        disabled: props.disabled,
-        onClick: props.readOnly || props.disabled ? undefined : actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        disabled,
+        ...(!(disabled || readOnly) && {
+          onClick: actions.onOpen,
+          onKeyDown: onSpaceOrEnter(actions.onOpen),
+        }),
         inputProps: {
           'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
           ...inputPropsPassedByField?.inputProps,
