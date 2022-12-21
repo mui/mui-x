@@ -129,7 +129,6 @@ export const useMobileRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },

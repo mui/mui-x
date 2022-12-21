@@ -151,7 +151,6 @@ export const useDesktopRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },
