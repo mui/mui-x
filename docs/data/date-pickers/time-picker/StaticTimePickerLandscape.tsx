@@ -8,10 +8,8 @@ export default function StaticTimePickerLandscape() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextTimePicker
-        ampm
-        orientation="landscape"
-        openTo="minutes"
         defaultValue={dayjs('2022-04-07')}
+        orientation="landscape"
       />
     </LocalizationProvider>
   );
