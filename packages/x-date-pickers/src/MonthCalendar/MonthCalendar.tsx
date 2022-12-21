@@ -61,7 +61,7 @@ export interface MonthCalendarProps<TDate>
   disableHighlightToday?: boolean;
   onMonthFocus?: (month: number) => void;
   hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (hasFocus: boolean) => void;
 }
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
@@ -102,11 +102,11 @@ const MonthCalendarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: MonthCalendarProps<any> }>({
-  width: 310,
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
-  margin: '0 4px',
+  padding: '0 4px',
+  width: 320,
 });
 
 type MonthCalendarComponent = (<TDate>(

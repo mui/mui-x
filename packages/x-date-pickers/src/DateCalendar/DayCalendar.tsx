@@ -13,7 +13,6 @@ import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersSlideTransition,
   SlideDirection,
@@ -360,15 +359,13 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
     () => focusedDay || now,
   );
 
-  const handleDaySelect = useEventCallback(
-    (day: TDate, isFinish: PickerSelectionState = 'finish') => {
-      if (readOnly) {
-        return;
-      }
+  const handleDaySelect = useEventCallback((day: TDate) => {
+    if (readOnly) {
+      return;
+    }
 
-      onSelectedDaysChange(day, isFinish);
-    },
-  );
+    onSelectedDaysChange(day);
+  });
 
   const focusDay = (day: TDate) => {
     if (!isDateDisabled(day)) {
