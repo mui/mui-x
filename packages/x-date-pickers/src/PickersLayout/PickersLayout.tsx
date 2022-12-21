@@ -25,7 +25,7 @@ export const PickersLayoutRoot = styled('div', {
 
 export const PickersLayoutContentWrapper = styled('div', {
   name: 'MuiPickersLayout',
-  slot: 'Content',
+  slot: 'ContentWrapper',
   overridesResolver: (props, styles) => styles.contentWrapper,
 })({
   gridColumn: 2,

@@ -17,7 +17,7 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
   ActionBar?: React.ElementType<PickersActionBarProps>;
   /**
    * Custom component for wrapping the layout.
-   * It wrapps the toolbar, views, and action bar
+   * It wraps the toolbar, views, and action bar
    */
   Layout?: React.JSXElementConstructor<
     PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
