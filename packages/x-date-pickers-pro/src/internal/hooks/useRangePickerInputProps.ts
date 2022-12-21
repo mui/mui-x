@@ -92,14 +92,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
-    // required to disable field editing
     readOnly: readOnlyInput,
-    // passing same props down to both fields and input props
     disabled,
-    inputProps: {
-      readOnly: readOnlyInput,
-      disabled,
-    },
   };
 
   const endInputProps = {
@@ -111,14 +105,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeEndSelection }),
-    // required to disable field editing
     readOnly: readOnlyInput,
-    // passing same props down to both fields and input props
     disabled,
-    inputProps: {
-      readOnly: readOnlyInput,
-      disabled,
-    },
   };
 
   const rootProps = {
