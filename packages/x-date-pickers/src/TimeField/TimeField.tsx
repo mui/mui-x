@@ -89,7 +89,7 @@ TimeField.propTypes = {
    */
   defaultValue: PropTypes.any,
   /**
-   * If `true`, the field is disabled.
+   * If `true`, the component is disabled.
    * @default false
    */
   disabled: PropTypes.bool,
