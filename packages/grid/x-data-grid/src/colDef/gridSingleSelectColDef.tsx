@@ -22,6 +22,10 @@ export const GRID_SINGLE_SELECT_COL_DEF: GridColTypeDef = {
       valueOptions = colDef.valueOptions!;
     }
 
+    if (value == null) {
+      return '';
+    }
+
     if (!valueOptions) {
       return value;
     }
@@ -31,12 +35,7 @@ export const GRID_SINGLE_SELECT_COL_DEF: GridColTypeDef = {
     }
 
     const valueOption = valueOptions.find((option) => option.value === value);
-
-    if (!valueOption) {
-      return '';
-    }
-
-    return getLabelFromValueOption(valueOption);
+    return valueOption ? getLabelFromValueOption(valueOption) : '';
   },
   renderEditCell: renderEditSingleSelectCell,
   filterOperators: getGridSingleSelectOperators(),
