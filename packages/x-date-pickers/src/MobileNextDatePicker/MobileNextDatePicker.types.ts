@@ -21,7 +21,7 @@ export interface MobileNextDatePickerSlotsComponentsProps<TDate>
     UseMobilePickerSlotsComponentsProps<TDate, DateView> {}
 
 export interface MobileNextDatePickerProps<TDate>
-  extends BaseNextDatePickerProps<TDate>,
+  extends Omit<BaseNextDatePickerProps<TDate>, 'readOnly'>,
     MobileOnlyPickerProps<TDate>,
     BaseNextNonStaticPickerExternalProps {
   /**

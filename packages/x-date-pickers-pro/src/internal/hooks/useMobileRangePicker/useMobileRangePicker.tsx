@@ -89,7 +89,7 @@ export const useMobileRangePicker = <
     externalSlotProps: componentsProps.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly: fieldSlotsProps.startInput.readOnly,
+      readOnly: true,
       disabled,
       className,
       format,

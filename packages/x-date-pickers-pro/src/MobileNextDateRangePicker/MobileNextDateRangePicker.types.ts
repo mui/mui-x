@@ -19,7 +19,7 @@ export interface MobileNextDateRangePickerSlotsComponentsProps<TDate>
     UseMobileRangePickerSlotsComponentsProps<TDate, 'day'> {}
 
 export interface MobileNextDateRangePickerProps<TDate>
-  extends BaseNextDateRangePickerProps<TDate>,
+  extends Omit<BaseNextDateRangePickerProps<TDate>, 'readOnly'>,
     MobileRangeOnlyPickerProps<TDate> {
   /**
    * The number of calendars to render on **desktop**.
