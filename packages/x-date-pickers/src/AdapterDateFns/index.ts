@@ -34,6 +34,8 @@ export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdap
 
   public formatTokenMap = formatTokenMap;
 
+  public escapedCharacters = { start: "'", end: "'" };
+
   public expandFormat = (format: string) => {
     const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
 

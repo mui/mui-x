@@ -18,9 +18,9 @@ import {
   splitFormatIntoSections,
   clampDaySection,
   mergeDateIntoReferenceDate,
-  createDateStrFromSections,
   getSectionBoundaries,
   validateSections,
+  getDateFromDateSections,
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
@@ -116,6 +116,14 @@ export const useFieldState = <
       return null;
     }
 
+    if (selectedSections === 'all') {
+      return {
+        startIndex: 0,
+        endIndex: state.sections.length - 1,
+        shouldSelectBoundarySelectors: true,
+      };
+    }
+
     if (typeof selectedSections === 'number') {
       return { startIndex: selectedSections, endIndex: selectedSections };
     }
@@ -196,7 +204,7 @@ export const useFieldState = <
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
-    const getValueFromDateStr = (dateStr: string, referenceDate: TDate) => {
+    const parseDateStr = (dateStr: string, referenceDate: TDate) => {
       const date = utils.parse(dateStr, format);
       if (date == null || !utils.isValid(date)) {
         return null;
@@ -206,11 +214,7 @@ export const useFieldState = <
       return mergeDateIntoReferenceDate(utils, date, sections, referenceDate, false);
     };
 
-    const newValue = fieldValueManager.parseValueStr(
-      valueStr,
-      state.referenceValue,
-      getValueFromDateStr,
-    );
+    const newValue = fieldValueManager.parseValueStr(valueStr, state.referenceValue, parseDateStr);
 
     const newReferenceValue = fieldValueManager.updateReferenceValue(
       utils,
@@ -247,7 +251,8 @@ export const useFieldState = <
     const newSectionValue = setSectionValueOnSections(boundaries);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    let newDate = utils.parse(createDateStrFromSections(activeDateSections, false), format);
+
+    let newDate = getDateFromDateSections(utils, activeDateSections);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
     // We can try to set the day to the maximum boundary.
@@ -256,9 +261,9 @@ export const useFieldState = <
       activeDateSections.every((section) => section.value !== '') &&
       activeDateSections.some((section) => section.dateSectionName === 'day')
     ) {
-      const cleanSections = clampDaySection(utils, activeDateSections, boundaries, format);
+      const cleanSections = clampDaySection(utils, activeDateSections, boundaries);
       if (cleanSections != null) {
-        newDate = utils.parse(createDateStrFromSections(cleanSections, false), format);
+        newDate = getDateFromDateSections(utils, cleanSections);
       }
     }
 
@@ -294,6 +299,7 @@ export const useFieldState = <
         valueFromTheOutside,
         format,
       );
+
       setState((prevState) => ({
         ...prevState,
         value: valueFromTheOutside,
