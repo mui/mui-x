@@ -49,7 +49,7 @@ export const useGridColumnMenu = (
     const field = apiRef.current.state.columnMenu.field;
     const columnLookup = apiRef.current.state.columns.lookup;
     // next visible column to fallback to if target column gets removed
-    const fallbackField = apiRef.current.getVisibleColumns()[0]?.field || field;
+    const fallbackField = (apiRef.current.getVisibleColumns()[0]?.field || field) as string;
     if (field) {
       apiRef.current.setColumnHeaderFocus(columnLookup[field] ? field : fallbackField);
     }
