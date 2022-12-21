@@ -224,9 +224,6 @@ const buildComponentDocumentation = async (options: {
   const { filename, project, apiPagesFolder, documentedInterfaces, projects, pagesMarkdown } =
     options;
 
-  if (path.basename(filename).startsWith('use')) {
-    return;
-  }
   const src = fse.readFileSync(filename, 'utf8');
   const reactApi = parseComponentSource(src, { filename });
   reactApi.filename = filename; // Some components don't have props
