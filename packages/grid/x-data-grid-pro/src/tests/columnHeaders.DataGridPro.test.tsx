@@ -241,9 +241,8 @@ describe('<DataGridPro /> - Column Headers', () => {
 
       fireEvent.keyDown(menu, { key: 'ArrowDown' });
       expect(descMenuitem).toHaveFocus();
-      // TODO: Fix
-      // fireEvent.keyDown(descMenuitem, { key: 'Enter' });
-      // expect(columnCell).toHaveFocus();
+      fireEvent.keyDown(descMenuitem, { key: 'Enter' });
+      expect(columnCell).toHaveFocus();
     });
 
     it('should restore focus to the column header when dismissing the menu without selecting any item', () => {
