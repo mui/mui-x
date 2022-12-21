@@ -4,7 +4,7 @@ title: Data Grid - Cell selection
 
 # Data Grid - Cell selection [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-<p class="description">Cell selection allows the user to select cells individually or a range of cells.</p>
+<p class="description">Cell selection allows the user to select individual cells or a range of cells.</p>
 
 The Data Grid has, by default, the ability to select rows.
 On the `DataGridPremium`, you can also enable the ability to select cells with the `unstable_cellSelection` prop.
@@ -76,7 +76,7 @@ If a single cell is selected, all classes above are applied to the same element.
 
 ## apiRef
 
-The grid exposes a set of methods that enables all of these features using the imperative apiRef.
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`.
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
