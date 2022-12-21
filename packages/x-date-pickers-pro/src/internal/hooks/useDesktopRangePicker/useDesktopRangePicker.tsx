@@ -17,6 +17,7 @@ import {
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
+  DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
@@ -30,11 +31,10 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -46,6 +46,7 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
@@ -61,12 +62,18 @@ export const useDesktopRangePicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    DesktopRangePickerAdditionalViewProps
+  >({
     props,
     valueManager,
     wrapperVariant: 'desktop',
-    viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
       rangePosition,
       onRangePositionChange: setRangePosition,
@@ -93,6 +100,7 @@ export const useDesktopRangePicker = <
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange: setRangePosition,
@@ -111,6 +119,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
       ref: fieldRef,
     },
     ownerState: props,

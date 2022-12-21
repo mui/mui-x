@@ -61,7 +61,8 @@ const YearCalendarRoot = styled('div', {
   overflowY: 'auto',
   height: '100%',
   padding: '0 4px',
-  maxHeight: '304px',
+  width: 320,
+  maxHeight: 304,
 });
 
 export interface YearCalendarProps<TDate>
@@ -107,7 +108,7 @@ export interface YearCalendarProps<TDate>
   disableHighlightToday?: boolean;
   onYearFocus?: (year: number) => void;
   hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
+  onFocusedViewChange?: (hasFocus: boolean) => void;
 }
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
@@ -173,11 +174,11 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedYear, setFocusedYear] = React.useState(() => selectedYear || todayYear);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'YearCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {

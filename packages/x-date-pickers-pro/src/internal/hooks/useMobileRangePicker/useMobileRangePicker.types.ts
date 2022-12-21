@@ -15,6 +15,7 @@ import {
   PickersModalDialogSlotsComponentsProps,
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
+  UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -48,9 +49,20 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
 
 export interface MobileRangeOnlyPickerProps<TDate> extends MobileOnlyPickerProps<TDate> {}
 
-export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends MobileRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
+export interface UseMobileRangePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends MobileRangeOnlyPickerProps<TDate>,
+    BaseNextPickerProps<
+      DateRange<TDate>,
+      TDate,
+      TView,
+      TError,
+      TExternalProps,
+      MobileRangePickerAdditionalViewProps
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -63,12 +75,12 @@ export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, 
   componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseMobileRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,
@@ -77,7 +89,7 @@ export interface UseMobileRangePickerParams<
       TExternalProps,
       MobileRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
 }

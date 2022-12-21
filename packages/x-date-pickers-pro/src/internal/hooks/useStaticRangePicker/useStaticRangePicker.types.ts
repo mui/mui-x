@@ -22,8 +22,12 @@ export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends D
 
 export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
 
-export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError>,
+export interface UseStaticRangePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
+> extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
    * Overrideable components.
@@ -40,10 +44,10 @@ export interface UseStaticRangePickerProps<TDate, TView extends DateOrTimeView, 
 export interface UseStaticRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
   /**

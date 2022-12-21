@@ -8,5 +8,6 @@
     "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
     "../../node_modules/@mui/material/themeCssVarsAugmentation",
     "../../node_modules/date-fns"
-  ]
+  ],
+  "exclude": ["src/**/actual*.ts*"]
 }

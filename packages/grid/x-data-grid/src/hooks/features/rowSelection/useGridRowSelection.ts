@@ -149,6 +149,19 @@ export const useGridRowSelection = (
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model) => {
+      if (
+        props.signature === GridSignature.DataGrid &&
+        !props.checkboxSelection &&
+        Array.isArray(model) &&
+        model.length > 1
+      ) {
+        throw new Error(
+          [
+            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
+          ].join('\n'),
+        );
+      }
       const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
@@ -159,7 +172,7 @@ export const useGridRowSelection = (
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger, props.rowSelection],
+    [apiRef, logger, props.rowSelection, props.signature, props.checkboxSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(

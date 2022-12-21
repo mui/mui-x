@@ -33,6 +33,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
+  | `showCellRightBorder`      | `showCellVerticalBorder`      |
+  | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
 
 ### Removed props
 
@@ -108,6 +110,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | ------------------------------------------------- |
   | `getLogger`                                       |
   | `windowRef`                                       |
+  | `footerRef`                                       |
+  | `headerRef`                                       |
+  | `columnHeadersElementRef`                         |
+  | `columnHeadersContainerElementRef`                |
   | `unstable_caches`                                 |
   | `unstable_eventManager`                           |
   | `unstable_requestPipeProcessorsApplication`       |
@@ -147,18 +153,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
 - The `useGridState` hook was removed. Use `apiRef.current.state`, `apiRef.current.setState` and `apiRef.current.forceUpdate` instead.
 - The `getGridColDef` utility function was removed.
+- The `GridHeaderPlaceholder` component was removed.
 - The `GridValueGetterFullParams` type was removed.
 - The `GridSortModelParams` interface was removed.
 - The `GridApiRef` type was removed. Use `React.MutableRefObject<GridApi>` instead.
 - The `GridCellValue` type was removed. Use `any` or the `V` generic passed to most interfaces.
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
 - The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
+- The `MAX_PAGE_SIZE` constant was removed.
+- The `useGridScrollFn` hook was removed.
 
-<!--
 ### CSS classes
 
-TBD
+- Some CSS classes were removed or renamed
 
+  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
+  | ------------------------- | ------------------------------ | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+
+<!--
 ### Virtualization
 
 TBD

@@ -15,6 +15,7 @@ import {
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
+  UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -48,9 +49,20 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
 
 export interface DesktopRangeOnlyPickerProps<TDate> extends DesktopOnlyPickerProps<TDate> {}
 
-export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends DesktopRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
+export interface UseDesktopRangePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends DesktopRangeOnlyPickerProps<TDate>,
+    BaseNextPickerProps<
+      DateRange<TDate>,
+      TDate,
+      TView,
+      TError,
+      TExternalProps,
+      DesktopRangePickerAdditionalViewProps
+    > {
   /**
    * Overrideable components.
    * @default {}
@@ -63,12 +75,12 @@ export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView,
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,
@@ -77,7 +89,7 @@ export interface UseDesktopRangePickerParams<
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
 }

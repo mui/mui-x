@@ -8,7 +8,7 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
  * Props used to create the layout of the views.
  * Those props are exposed on all the pickers.
  */
-export interface UsePickerLayoutPropsProps {
+export interface UsePickerLayoutProps {
   disabled?: boolean;
   readOnly?: boolean;
   showToolbar?: boolean;
@@ -21,7 +21,7 @@ export interface UsePickerLayoutPropsProps {
 export interface UsePickerLayoutPropsResponseLayoutProps<TValue, TView extends DateOrTimeView>
   extends UsePickerValueLayoutResponse<TValue>,
     UsePickerViewsLayoutResponse<TView>,
-    UsePickerLayoutPropsProps {
+    UsePickerLayoutProps {
   isLandscape: boolean;
   wrapperVariant: WrapperVariant;
 }
@@ -31,7 +31,7 @@ export interface UsePickerLayoutPropsResponse<TValue, TView extends DateOrTimeVi
 }
 
 export interface UsePickerLayoutPropsParams<TValue, TView extends DateOrTimeView> {
-  props: UsePickerLayoutPropsProps;
+  props: UsePickerLayoutProps;
   propsFromPickerValue: UsePickerValueLayoutResponse<TValue>;
   propsFromPickerViews: UsePickerViewsLayoutResponse<TView>;
   wrapperVariant: WrapperVariant;
