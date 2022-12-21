@@ -2,9 +2,20 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
-import { pickersLayoutClasses } from './pickersLayoutClasses';
+import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
+
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
+  const { isLandscape, classes } = ownerState;
+  const slots = {
+    root: ['root', isLandscape && 'landscape'],
+    contentWrapper: ['contentWrapper'],
+  };
+
+  return composeClasses(slots, getPickersLayoutUtilityClass, classes);
+};
 
 const PickersLayoutRoot = styled('div', {
   name: 'MuiPickersLayout',
@@ -59,17 +70,20 @@ const PickersLayout = React.forwardRef(function PickersLayout(
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
-  const { sx, className, isLandscape } = props;
+  const { sx, className } = props;
+
+  const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersLayoutRoot
       ref={ref}
       sx={sx}
-      className={clsx(className, pickersLayoutClasses.root)}
-      ownerState={{ isLandscape }}
+      className={clsx(className, classes.root)}
+      ownerState={ownerState}
     >
       {toolbar}
-      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+      <PickersLayoutContentWrapper className={classes.contentWrapper}>
         {tabs}
         {content}
       </PickersLayoutContentWrapper>
