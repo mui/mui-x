@@ -12,7 +12,6 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const timeoutRef = React.useRef<any>();
 
   const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
@@ -29,18 +28,11 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
       if (disabled) {
         return;
       }
+      apiRef.current.setColumnVisibility(colDef.field, false);
       onClick(event);
-      // time for the transition
-      timeoutRef.current = setTimeout(() => {
-        apiRef.current.setColumnVisibility(colDef.field, false);
-      }, 100);
     },
     [apiRef, colDef.field, onClick, disabled],
   );
-
-  React.useEffect(() => {
-    return () => clearTimeout(timeoutRef.current);
-  }, []);
 
   if (rootProps.disableColumnSelector) {
     return null;

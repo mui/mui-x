@@ -4,6 +4,7 @@ import { useGridLogger, useGridApiMethod, useGridApiEventHandler } from '../../u
 import { gridColumnMenuSelector } from './columnMenuSelector';
 import { GridColumnMenuApi } from '../../../models';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { gridVisibleColumnFieldsSelector } from '../columns';
 
 export const columnMenuStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -46,12 +47,18 @@ export const useGridColumnMenu = (
   );
 
   const hideColumnMenu = React.useCallback<GridColumnMenuApi['hideColumnMenu']>(() => {
-    const field = apiRef.current.state.columnMenu.field;
-    const columnLookup = apiRef.current.state.columns.lookup;
-    // next visible column to fallback to if target column gets removed
-    const fallbackField = (apiRef.current.getVisibleColumns()[0]?.field || field) as string;
-    if (field) {
-      apiRef.current.setColumnHeaderFocus(columnLookup[field] ? field : fallbackField);
+    const columnMenuState = gridColumnMenuSelector(apiRef.current.state);
+
+    if (columnMenuState.field) {
+      const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+      let fieldToFocus = columnMenuState.field;
+
+      // If the column was removed from the grid, we need to focus to the first visible field
+      if (visibleColumnFields.length > 0 && !visibleColumnFields.includes(fieldToFocus)) {
+        fieldToFocus = visibleColumnFields[0];
+      }
+
+      apiRef.current.setColumnHeaderFocus(fieldToFocus);
     }
 
     const shouldUpdate = apiRef.current.setState((state) => {
