@@ -94,6 +94,7 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
+    readOnly: boolean;
   };
 
 export interface FieldSection {

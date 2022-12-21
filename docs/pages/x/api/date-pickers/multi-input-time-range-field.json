@@ -11,6 +11,7 @@
       },
       "default": "'column'"
     },
+    "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
