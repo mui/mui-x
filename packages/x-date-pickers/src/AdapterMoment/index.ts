@@ -52,6 +52,8 @@ export class AdapterMoment
 
   public formatTokenMap = formatTokenMap;
 
+  public escapedCharacters = { start: '[', end: ']' };
+
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.
    * We should use this one in the future to support all localized formats.
