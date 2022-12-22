@@ -61,12 +61,6 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   ampm: PropTypes.bool,
   /**
-   * This prop helps users to fill forms faster, especially on mobile devices.
-   * The name can be confusing, as it's more like an autofill.
-   * You can learn more about it [following the specification](https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill).
-   */
-  autoComplete: PropTypes.string,
-  /**
    * If `true`, the `input` element is focused during the first mount.
    * @default false
    */
@@ -113,11 +107,6 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
-  /**
-   * If `true`, the label is displayed in an error state.
-   * @default false
-   */
-  error: PropTypes.bool,
   /**
    * If `true`, the component is displayed in focused state.
    */
@@ -194,10 +183,6 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   maxDateTime: PropTypes.any,
   /**
-   * Maximum number of rows to display when multiline option is set to true.
-   */
-  maxRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
    * Maximal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -211,10 +196,6 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   minDateTime: PropTypes.any,
   /**
-   * Minimum number of rows to display when multiline option is set to true.
-   */
-  minRows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
    * Minimal selectable time.
    * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
@@ -224,11 +205,6 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
-  /**
-   * If `true`, a `textarea` element is rendered instead of an input.
-   * @default false
-   */
-  multiline: PropTypes.bool,
   /**
    * Name attribute of the `input` element.
    */
@@ -255,10 +231,6 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   onSelectedSectionsChange: PropTypes.func,
   /**
-   * The short hint displayed in the `input` before the user enters a value.
-   */
-  placeholder: PropTypes.string,
-  /**
    * It prevents the user from changing the value of the field
    * (not from interacting with the field).
    * @default false
@@ -269,16 +241,6 @@ SingleInputDateTimeRangeField.propTypes = {
    * @default false
    */
   required: PropTypes.bool,
-  /**
-   * Number of rows to display when multiline option is set to true.
-   */
-  rows: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  /**
-   * Render a [`Select`](/material-ui/api/select/) element while passing the Input element to `Select` as `input` parameter.
-   * If this option is set you must pass the options of the select as children.
-   * @default false
-   */
-  select: PropTypes.bool,
   /**
    * The currently selected sections.
    * This prop accept four formats:
@@ -296,10 +258,6 @@ SingleInputDateTimeRangeField.propTypes = {
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
-  /**
-   * Props applied to the [`Select`](/material-ui/api/select/) element.
-   */
-  SelectProps: PropTypes.object,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -327,87 +285,6 @@ SingleInputDateTimeRangeField.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
-  ]),
-  /**
-   * Type of the `input` element. It should be [a valid HTML5 input type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types).
-   */
-  type: PropTypes.oneOfType([
-    PropTypes.oneOf([
-      'button',
-      'checkbox',
-      'color',
-      'date',
-      'datetime-local',
-      'email',
-      'file',
-      'hidden',
-      'image',
-      'month',
-      'number',
-      'password',
-      'radio',
-      'range',
-      'reset',
-      'search',
-      'submit',
-      'tel',
-      'text',
-      'time',
-      'url',
-      'week',
-    ]),
-    PropTypes.shape({
-      '__@iterator@24598': PropTypes.func.isRequired,
-      anchor: PropTypes.func.isRequired,
-      at: PropTypes.func.isRequired,
-      big: PropTypes.func.isRequired,
-      blink: PropTypes.func.isRequired,
-      bold: PropTypes.func.isRequired,
-      charAt: PropTypes.func.isRequired,
-      charCodeAt: PropTypes.func.isRequired,
-      codePointAt: PropTypes.func.isRequired,
-      concat: PropTypes.func.isRequired,
-      endsWith: PropTypes.func.isRequired,
-      fixed: PropTypes.func.isRequired,
-      fontcolor: PropTypes.func.isRequired,
-      fontsize: PropTypes.func.isRequired,
-      includes: PropTypes.func.isRequired,
-      indexOf: PropTypes.func.isRequired,
-      italics: PropTypes.func.isRequired,
-      lastIndexOf: PropTypes.func.isRequired,
-      length: PropTypes.number.isRequired,
-      link: PropTypes.func.isRequired,
-      localeCompare: PropTypes.func.isRequired,
-      match: PropTypes.func.isRequired,
-      matchAll: PropTypes.func.isRequired,
-      normalize: PropTypes.func.isRequired,
-      padEnd: PropTypes.func.isRequired,
-      padStart: PropTypes.func.isRequired,
-      repeat: PropTypes.func.isRequired,
-      replace: PropTypes.func.isRequired,
-      replaceAll: PropTypes.func.isRequired,
-      search: PropTypes.func.isRequired,
-      slice: PropTypes.func.isRequired,
-      small: PropTypes.func.isRequired,
-      split: PropTypes.func.isRequired,
-      startsWith: PropTypes.func.isRequired,
-      strike: PropTypes.func.isRequired,
-      sub: PropTypes.func.isRequired,
-      substr: PropTypes.func.isRequired,
-      substring: PropTypes.func.isRequired,
-      sup: PropTypes.func.isRequired,
-      toLocaleLowerCase: PropTypes.func.isRequired,
-      toLocaleUpperCase: PropTypes.func.isRequired,
-      toLowerCase: PropTypes.func.isRequired,
-      toString: PropTypes.func.isRequired,
-      toUpperCase: PropTypes.func.isRequired,
-      trim: PropTypes.func.isRequired,
-      trimEnd: PropTypes.func.isRequired,
-      trimLeft: PropTypes.func.isRequired,
-      trimRight: PropTypes.func.isRequired,
-      trimStart: PropTypes.func.isRequired,
-      valueOf: PropTypes.func.isRequired,
-    }),
   ]),
   /**
    * The selected value.

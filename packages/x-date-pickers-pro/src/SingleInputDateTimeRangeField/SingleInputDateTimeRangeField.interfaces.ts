@@ -1,4 +1,4 @@
-import { TextFieldProps } from '@mui/material/TextField';
+import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
 import { UseDateTimeRangeFieldProps } from '../internal/models';
 
 export interface UseSingleInputDateTimeRangeFieldProps<TDate>
@@ -11,4 +11,4 @@ export type UseSingleInputDateTimeRangeFieldComponentProps<TDate, ChildProps ext
   UseSingleInputDateTimeRangeFieldProps<TDate>;
 
 export type SingleInputDateTimeRangeFieldProps<TDate> =
-  UseSingleInputDateTimeRangeFieldComponentProps<TDate, TextFieldProps>;
+  UseSingleInputDateTimeRangeFieldComponentProps<TDate, FieldsTextFieldProps>;
