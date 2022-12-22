@@ -21,9 +21,9 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseDesktopPickerSlotsComponent<TDate>
+export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<any, any> {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -92,7 +92,7 @@ export interface UseDesktopPickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseDesktopPickerSlotsComponent<TDate>;
+  components: UseDesktopPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

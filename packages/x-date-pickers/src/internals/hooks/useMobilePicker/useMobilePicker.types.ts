@@ -19,9 +19,9 @@ import {
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseMobilePickerSlotsComponent<TDate>
+export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<any, any> {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -64,7 +64,7 @@ export interface UseMobilePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseMobilePickerSlotsComponent<TDate>;
+  components: UseMobilePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
