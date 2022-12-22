@@ -2,7 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
@@ -12,7 +12,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns', () => {
   const { render } = createRenderer();

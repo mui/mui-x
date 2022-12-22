@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GRID_STRING_COL_DEF,
   GridColDef,
-  GridStateColDef,
   GridComparatorFn,
   GridRenderCellParams,
   GridGroupingColDefOverride,
@@ -91,10 +90,7 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   },
 });
 
-const getGroupingCriteriaProperties = (
-  groupedByColDef: GridColDef | GridStateColDef,
-  applyHeaderName: boolean,
-) => {
+const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
@@ -143,7 +139,7 @@ interface CreateGroupingColDefMonoCriteriaParams {
   /**
    * The col def from which we are grouping the rows.
    */
-  groupedByColDef: GridColDef | GridStateColDef;
+  groupedByColDef: GridColDef;
   /**
    * The col def properties the user wants to override.
    * This value comes `prop.groupingColDef`.

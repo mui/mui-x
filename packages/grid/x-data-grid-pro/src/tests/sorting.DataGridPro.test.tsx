@@ -5,7 +5,7 @@ import {
   GridApi,
   GridSortModel,
   useGridApiRef,
-  GridColumns,
+  GridColDef,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
@@ -188,7 +188,7 @@ describe('<DataGridPro /> - Sorting', () => {
       return <React.Fragment>{props.value}</React.Fragment>;
     }
 
-    const columns: GridColumns = [
+    const columns: GridColDef[] = [
       {
         field: 'brand',
         renderCell: (params) => <CounterRender value={params.value} />,

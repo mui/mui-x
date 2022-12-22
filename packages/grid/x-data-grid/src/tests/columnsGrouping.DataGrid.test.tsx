@@ -2,12 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, ErrorBoundary, screen } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowModel, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const getDefaultProps = (nbColumns: number) => {
-  const columns: GridColumns = [];
+  const columns: GridColDef[] = [];
   const row: GridRowModel = {};
 
   for (let i = 1; i <= nbColumns; i += 1) {

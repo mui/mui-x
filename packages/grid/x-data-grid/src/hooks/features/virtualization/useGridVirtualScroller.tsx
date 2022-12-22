@@ -556,7 +556,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return prevRenderContext.current!;
   }, []);
 
-  apiRef.current.getRenderContext = getRenderContext;
+  apiRef.current.register('private', { getRenderContext });
 
   return {
     renderContext,

@@ -3,7 +3,7 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridRowId,
-  GridColumns,
+  GridColDef,
 } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -78,7 +78,7 @@ export default function ColumnTypesGrid() {
     [],
   );
 
-  const columns = React.useMemo<GridColumns<Row>>(
+  const columns = React.useMemo<GridColDef<Row>[]>(
     () => [
       { field: 'name', type: 'string' },
       { field: 'age', type: 'number' },

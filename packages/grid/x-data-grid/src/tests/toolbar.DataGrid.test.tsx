@@ -8,7 +8,7 @@ import {
   DataGridProps,
   GridToolbar,
   gridClasses,
-  GridStateColDef,
+  GridColumnsPanelProps,
 } from '@mui/x-data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
@@ -259,7 +259,10 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const columnSearchPredicate = (column: GridStateColDef, searchValue: string) => {
+      const columnSearchPredicate: GridColumnsPanelProps['searchPredicate'] = (
+        column,
+        searchValue,
+      ) => {
         return (
           (column.headerName || column.field).toLowerCase().indexOf(searchValue) > -1 ||
           (column.description || '').toLowerCase().indexOf(searchValue) > -1

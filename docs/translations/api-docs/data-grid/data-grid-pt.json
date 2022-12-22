@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
@@ -10,7 +11,7 @@
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "columnBuffer": "Number of extra columns to be rendered before/after the visible slice.",
     "columnHeaderHeight": "Set the height in pixel of the column headers in the grid.",
-    "columns": "Set of columns of type GridColumns.",
+    "columns": "Set of columns of type GridColDef[].",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
