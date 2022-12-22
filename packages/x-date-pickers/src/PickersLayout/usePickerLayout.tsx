@@ -53,7 +53,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   } = props;
 
   const classes = useUtilityClasses(props);
-  
+
   // Action bar
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;

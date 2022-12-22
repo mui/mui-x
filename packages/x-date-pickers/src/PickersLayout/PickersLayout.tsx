@@ -67,7 +67,6 @@ export const PickersLayoutContentWrapper = styled('div', {
 const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeView>(
   inProps: PickersLayoutProps<TValue, TView>,
 ) {
-
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
