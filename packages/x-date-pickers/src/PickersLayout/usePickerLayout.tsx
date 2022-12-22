@@ -8,7 +8,7 @@ import { DateOrTimeView } from '../internals/models';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 
 function toolbarHasView<TValue, TView extends DateOrTimeView>(
-  toolbarProps,
+  toolbarProps: BaseToolbarProps<TValue, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
   return toolbarProps.view !== null;
 }
