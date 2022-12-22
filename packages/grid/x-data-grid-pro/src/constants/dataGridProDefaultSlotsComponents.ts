@@ -1,4 +1,4 @@
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '@mui/x-data-grid/internals';
 import { GridProSlotsComponent, GridProIconSlotsComponent } from '../models';
 import { GridPushPinRightIcon, GridPushPinLeftIcon } from '../components';
 import { GridProColumnMenu } from '../components/GridProColumnMenu';
