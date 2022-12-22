@@ -18,16 +18,11 @@ const blacklist = [
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
   'docs-date-pickers-date-picker/CustomInput.png', // Redundant
   'docs-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
-  'docs-date-pickers-date-picker/ServerRequestDatePicker.png', // Redundant
   'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
   'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/CustomDateRangeInputs.png', // Redundant
-  'docs-date-pickers-date-range-picker/MinMaxDateRangePicker.png', // Redundant
   'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
   'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
   'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
-  'docs-date-pickers-localization/LocalizedTimePicker.png', // Redundant
-  'docs-date-pickers-localization/LocalizedDatePicker.png', // Redundant
   'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
   // 'docs-system-typography',
 ];

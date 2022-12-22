@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
-import { useGridApiContext } from '../../utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -76,7 +76,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
@@ -164,7 +164,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
   }, [renderContext, updateInnerPosition]);
 
-  const handleScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
+  const handleScroll = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     ({ left, renderContext: nextRenderContext = null }, event) => {
       if (!innerRef.current) {
         return;
@@ -235,7 +235,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   useGridApiEventHandler(apiRef, 'columnHeaderDragStart', handleColumnReorderStart);
   useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleColumnReorderStop);
 
-  useGridApiEventHandler(apiRef, 'rowsScroll', handleScroll);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleScroll);
 
   // Helper for computation common between getColumnHeaders and getColumnGroupHeaders
   const getColumnsToRender = (params?: GetHeadersParams) => {

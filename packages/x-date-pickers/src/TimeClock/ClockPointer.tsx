@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { CLOCK_WIDTH, CLOCK_HOUR_WIDTH } from './shared';
-import { ClockPickerView } from '../internals/models';
+import { TimeView } from '../internals/models';
 import { ClockPointerClasses, getClockPointerUtilityClass } from './clockPointerClasses';
 
 export interface ClockPointerProps extends React.HTMLAttributes<HTMLDivElement> {
   hasSelected: boolean;
   isInner: boolean;
-  type: ClockPickerView;
+  type: TimeView;
   viewValue: number;
   classes?: Partial<ClockPointerClasses>;
 }
@@ -36,7 +36,7 @@ const ClockPointerRoot = styled('div', {
   ownerState: ClockPointerProps & ClockPointerState;
 }>(({ theme, ownerState }) => ({
   width: 2,
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: (theme.vars || theme).palette.primary.main,
   position: 'absolute',
   left: 'calc(50% - 1px)',
   bottom: '50%',
@@ -55,15 +55,15 @@ const ClockPointerThumb = styled('div', {
 }>(({ theme, ownerState }) => ({
   width: 4,
   height: 4,
-  backgroundColor: theme.palette.primary.contrastText,
+  backgroundColor: (theme.vars || theme).palette.primary.contrastText,
   borderRadius: '50%',
   position: 'absolute',
   top: -21,
   left: `calc(50% - ${CLOCK_HOUR_WIDTH / 2}px)`,
-  border: `${(CLOCK_HOUR_WIDTH - 4) / 2}px solid ${theme.palette.primary.main}`,
+  border: `${(CLOCK_HOUR_WIDTH - 4) / 2}px solid ${(theme.vars || theme).palette.primary.main}`,
   boxSizing: 'content-box',
   ...(ownerState.hasSelected && {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
   }),
 }));
 
@@ -73,7 +73,7 @@ const ClockPointerThumb = styled('div', {
 export function ClockPointer(inProps: ClockPointerProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiClockPointer' });
   const { className, hasSelected, isInner, type, viewValue, ...other } = props;
-  const previousType = React.useRef<ClockPickerView | null>(type);
+  const previousType = React.useRef<TimeView | null>(type);
   React.useEffect(() => {
     previousType.current = type;
   }, [type]);

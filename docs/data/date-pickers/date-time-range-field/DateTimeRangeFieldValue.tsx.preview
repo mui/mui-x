@@ -1,15 +1,11 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Grid container spacing={4} width={550}>
-    <GridItem label="Uncontrolled field">
-      <MultiInputDateTimeRangeField
-        defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-13T18:30')]}
-      />
-    </GridItem>
-    <GridItem label="Controlled field">
-      <MultiInputDateTimeRangeField
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-      />
-    </GridItem>
-  </Grid>
-</LocalizationProvider>
+<DemoItem label="Uncontrolled field">
+  <MultiInputDateTimeRangeField
+    defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-13T18:30')]}
+  />
+</DemoItem>
+<DemoItem label="Controlled field">
+  <MultiInputDateTimeRangeField
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoItem>

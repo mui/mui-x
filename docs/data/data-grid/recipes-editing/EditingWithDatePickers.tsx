@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   useGridApiContext,
   GridRenderEditCellParams,
@@ -267,7 +267,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {

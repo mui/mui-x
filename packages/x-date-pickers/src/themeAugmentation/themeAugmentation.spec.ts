@@ -505,7 +505,7 @@ createTheme({
     MuiStaticTimePicker: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiStaticDatePicker prop
+        // @ts-expect-error invalid MuiStaticTimePicker prop
         someRandomProp: true,
       },
     },

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, GridCellParams } from '@mui/x-data-grid';
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'city' },
   { field: 'oct', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
   { field: 'nov', type: 'number', valueFormatter: ({ value }) => `${value} °C` },

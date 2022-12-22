@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
-import { CalendarOrClockPickerView, MuiPickersAdapter } from '../../models';
+import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
   BaseNextNonStaticPickerProps,
   BaseNextPickerProps,
@@ -17,7 +17,7 @@ import {
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from '../../components/PickersViewLayout';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
-import { UsePickerViewsNonStaticProps } from '../usePicker/usePickerViews';
+import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 
 export interface UseMobilePickerSlotsComponent<TDate>
   extends PickersModalDialogSlotsComponent,
@@ -33,17 +33,17 @@ export interface UseMobilePickerSlotsComponent<TDate>
   Input?: React.ElementType<TextFieldProps>;
 }
 
-export interface UseMobilePickerSlotsComponentsProps<TDate>
+export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
   extends Pick<
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps {
+    ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},
-    UsePickerProps<TDate | null, any, any>
+    UsePickerProps<TDate | null, any, any, any, any>
   >;
   input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
@@ -53,8 +53,12 @@ export interface MobileOnlyPickerProps<TDate>
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {}
 
-export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
-  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
+export interface UseMobilePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     MobileOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
@@ -65,16 +69,16 @@ export interface UseMobilePickerProps<TDate, TView extends CalendarOrClockPicker
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseMobilePickerSlotsComponentsProps<TDate>;
+  componentsProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseMobilePickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
   getOpenDialogAriaText: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;

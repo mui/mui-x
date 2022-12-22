@@ -1,5 +1,9 @@
 ---
+product: date-pickers
 title: React Time Range Field components
+components: MultiInputTimeRangeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers-pro'
 ---
 
 # Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
@@ -21,6 +25,6 @@ A single input version of the Time Range Field will soon be available just like 
 
 ## Uncontrolled vs. Controlled
 
-The component can be controlled or uncontrolled
+The component can be uncontrolled or controlled
 
 {{"demo": "TimeRangeFieldValue.js"}}

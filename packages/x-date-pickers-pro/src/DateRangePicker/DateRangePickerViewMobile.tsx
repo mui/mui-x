@@ -31,7 +31,7 @@ export interface DateRangePickerViewMobileSlotsComponent<TDate>
 }
 
 export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps,
+  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
     Omit<DayCalendarSlotsComponentsProps<TDate>, 'day'> {
   day?: SlotComponentProps<typeof DateRangePickerDay, {}, DayCalendarProps<TDate> & { day: TDate }>;
 }
@@ -128,7 +128,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
-        openView="day"
+        view="day"
         views={onlyDayView}
         disabled={disabled}
         {...other}

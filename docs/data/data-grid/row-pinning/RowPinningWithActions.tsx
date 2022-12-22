@@ -3,7 +3,7 @@ import {
   DataGridPro,
   GridRowModel,
   GridActionsCellItem,
-  GridColumns,
+  GridColDef,
   GridRowId,
 } from '@mui/x-data-grid-pro';
 import ArrowUpIcon from '@mui/icons-material/ArrowUpward';
@@ -65,7 +65,7 @@ export default function RowPinningWithActions() {
     };
   }, [pinnedRowsIds]);
 
-  const columns = React.useMemo<GridColumns<typeof data[number]>>(
+  const columns = React.useMemo<GridColDef<typeof data[number]>[]>(
     () => [
       {
         field: 'actions',

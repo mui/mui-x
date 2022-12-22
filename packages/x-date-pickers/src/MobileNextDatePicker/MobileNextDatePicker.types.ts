@@ -10,6 +10,7 @@ import {
 } from '../NextDatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
+import { DateView } from '../internals/models/views';
 
 export interface MobileNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
@@ -17,7 +18,7 @@ export interface MobileNextDatePickerSlotsComponent<TDate>
 
 export interface MobileNextDatePickerSlotsComponentsProps<TDate>
   extends BaseNextDatePickerSlotsComponentsProps<TDate>,
-    UseMobilePickerSlotsComponentsProps<TDate> {}
+    UseMobilePickerSlotsComponentsProps<TDate, DateView> {}
 
 export interface MobileNextDatePickerProps<TDate>
   extends BaseNextDatePickerProps<TDate>,

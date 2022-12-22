@@ -14,7 +14,7 @@ import {
   withPickerControls,
   openPicker,
 } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedDesktopDatePicker = withPickerControls(DesktopDatePicker)({
   components: { DesktopTransition: FakeTransitionComponent },
@@ -28,7 +28,7 @@ describe('<DesktopDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    isLegacyPicker: true,
+    componentFamily: 'legacy-picker',
   }));
 
   describe('Component slots: OpenPickerIcon', () => {
@@ -774,21 +774,13 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('should throw console warning when invalid `openTo` prop is provided', () => {
-    expect(() => {
-      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
-
-      openPicker({ type: 'date', variant: 'desktop' });
-    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
-  });
-
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
       render(
         <WrappedDesktopDatePicker
           initialValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

@@ -21,6 +21,7 @@ import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import { getActiveElement } from '../utils/utils';
 
 export interface PickersPopperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
@@ -301,7 +302,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
 
     if (open) {
-      lastFocusedElementRef.current = document.activeElement;
+      lastFocusedElementRef.current = getActiveElement(document);
     } else if (
       lastFocusedElementRef.current &&
       lastFocusedElementRef.current instanceof HTMLElement
@@ -336,6 +337,19 @@ export function PickersPopper(inProps: PickerPopperProps) {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions: [],
+    },
+    ownerState: { wrapperVariant: 'desktop' },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
@@ -397,14 +411,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
             >
               <PaperContent {...componentsProps?.paperContent}>
                 {children}
-                <ActionBar
-                  onAccept={onAccept}
-                  onClear={onClear}
-                  onCancel={onCancel}
-                  onSetToday={onSetToday}
-                  actions={[]}
-                  {...componentsProps?.actionBar}
-                />
+                <ActionBar {...actionBarProps} />
               </PaperContent>
             </Paper>
           </Transition>

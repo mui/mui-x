@@ -19,6 +19,7 @@ import {
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { RangePosition } from '../internal/models/range';
 
 const releaseInfo = getReleaseInfo();
 
@@ -70,9 +71,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     'MuiStaticDateRangePicker',
   );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const validationError = useDateRangeValidation(props);
 
@@ -93,8 +92,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
   const DateInputProps = {
     ...inputProps,
     ...other,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     components,
     componentsProps,
@@ -114,8 +113,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         components={components}
         componentsProps={componentsProps}
         {...pickerProps}
@@ -212,6 +211,10 @@ StaticDateRangePicker.propTypes = {
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
    * @default undefined
@@ -302,11 +305,6 @@ StaticDateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Props to pass to keyboard adornment button.
    */

@@ -119,12 +119,18 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**

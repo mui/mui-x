@@ -9,17 +9,17 @@ import {
   MobileNextDateTimePickerSlotsComponentsProps,
 } from '../MobileNextDateTimePicker';
 
-export interface NextDateTimePickerSlotsComponents<TDateTime>
-  extends DesktopNextDateTimePickerSlotsComponent<TDateTime>,
-    MobileNextDateTimePickerSlotsComponent<TDateTime> {}
+export interface NextDateTimePickerSlotsComponents<TDate>
+  extends DesktopNextDateTimePickerSlotsComponent<TDate>,
+    MobileNextDateTimePickerSlotsComponent<TDate> {}
 
-export interface NextDateTimePickerSlotsComponentsProps<TDateTime>
-  extends DesktopNextDateTimePickerSlotsComponentsProps<TDateTime>,
-    MobileNextDateTimePickerSlotsComponentsProps<TDateTime> {}
+export interface NextDateTimePickerSlotsComponentsProps<TDate>
+  extends DesktopNextDateTimePickerSlotsComponentsProps<TDate>,
+    MobileNextDateTimePickerSlotsComponentsProps<TDate> {}
 
-export interface NextDateTimePickerProps<TDateTime>
-  extends DesktopNextDateTimePickerProps<TDateTime>,
-    MobileNextDateTimePickerProps<TDateTime> {
+export interface NextDateTimePickerProps<TDate>
+  extends DesktopNextDateTimePickerProps<TDate>,
+    MobileNextDateTimePickerProps<TDate> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -30,10 +30,10 @@ export interface NextDateTimePickerProps<TDateTime>
    * Overrideable components.
    * @default {}
    */
-  components?: NextDateTimePickerSlotsComponents<TDateTime>;
+  components?: NextDateTimePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: NextDateTimePickerSlotsComponentsProps<TDateTime>;
+  componentsProps?: NextDateTimePickerSlotsComponentsProps<TDate>;
 }

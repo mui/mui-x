@@ -13,7 +13,7 @@ import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -69,13 +69,13 @@ export interface DataGridProcessedProps<R extends GridValidRowModel = any>
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
-  | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -294,15 +294,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: boolean;
+  showColumnVerticalBorder: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
@@ -331,6 +331,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 /**
@@ -339,9 +345,7 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
-   * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @ignore - do not document.
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
@@ -701,9 +705,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColumns<R>;
+  columns: GridColDef<R>[];
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

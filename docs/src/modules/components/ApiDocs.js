@@ -31,7 +31,7 @@ const SecondaryHeading = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const PlanIcon = ({ plan }) => {
+function PlanIcon({ plan }) {
   let href;
   let title;
 
@@ -53,13 +53,13 @@ const PlanIcon = ({ plan }) => {
       <span className={`plan-${plan}`} title={title} />
     </a>
   );
-};
+}
 
 PlanIcon.propTypes = {
   plan: PropTypes.string,
 };
 
-const ApiProperty = ({ index, property, plan }) => {
+function ApiProperty({ index, property, plan }) {
   return (
     <Accordion>
       <AccordionSummary
@@ -91,7 +91,7 @@ const ApiProperty = ({ index, property, plan }) => {
       </AccordionDetails>
     </Accordion>
   );
-};
+}
 
 ApiProperty.propTypes = {
   index: PropTypes.number.isRequired,
@@ -104,13 +104,14 @@ ApiProperty.propTypes = {
 };
 
 function ApiDocs(props) {
-  const { api, proApi = null, premiumApi = null } = props;
+  const { api = null, proApi = null, premiumApi = null } = props;
 
   return (
     <Box sx={{ width: '100%' }}>
-      {api.properties.map((property, index) => (
-        <ApiProperty key={index} property={property} index={index} />
-      ))}
+      {api &&
+        api.properties.map((property, index) => (
+          <ApiProperty key={index} property={property} index={index} />
+        ))}
       {proApi &&
         proApi.properties.map((property, index) => (
           <ApiProperty key={index} property={property} index={index} plan="pro" />
@@ -124,7 +125,7 @@ function ApiDocs(props) {
 }
 
 ApiDocs.propTypes = {
-  api: PropTypes.object.isRequired,
+  api: PropTypes.object,
   premiumApi: PropTypes.object,
   proApi: PropTypes.object,
 };

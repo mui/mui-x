@@ -2,7 +2,7 @@ import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
 import { usePicker } from '../usePicker';
 import { onSpaceOrEnter } from '../../utils/utils';
@@ -21,16 +21,15 @@ import { InferError } from '../validation/useValidation';
  */
 export const useMobilePicker = <
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, format, disabled, localeText } = props;
+  const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -41,12 +40,12 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
     inputRef,
-    viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
   });
@@ -57,7 +56,7 @@ export const useMobilePicker = <
     externalSlotProps: componentsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly: true,
+      readOnly: readOnly ?? true,
       disabled,
       className,
       format,
@@ -77,9 +76,11 @@ export const useMobilePicker = <
       return {
         ...inputPropsPassedByField,
         ...externalInputProps,
-        disabled: props.disabled,
-        onClick: props.readOnly || props.disabled ? undefined : actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        disabled,
+        ...(!(disabled || readOnly) && {
+          onClick: actions.onOpen,
+          onKeyDown: onSpaceOrEnter(actions.onOpen),
+        }),
         inputProps: {
           'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
           ...inputPropsPassedByField?.inputProps,
@@ -113,7 +114,10 @@ export const useMobilePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
         >
           <PickersViewLayout
             {...layoutProps}

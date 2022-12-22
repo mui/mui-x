@@ -4,7 +4,7 @@ import { spy } from 'sinon';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
 
 describe('<StaticNextDateTimePicker />', () => {
@@ -16,7 +16,7 @@ describe('<StaticNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    skip: ['textField'],
+    componentFamily: 'new-static-picker',
   }));
 
   it('should allow to select the same day and move to the next view', () => {

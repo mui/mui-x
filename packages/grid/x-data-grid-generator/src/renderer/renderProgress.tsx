@@ -8,7 +8,7 @@ interface ProgressBarProps {
 }
 
 const Root = styled('div')(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
+  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   position: 'relative',
   overflow: 'hidden',
   width: '100%',

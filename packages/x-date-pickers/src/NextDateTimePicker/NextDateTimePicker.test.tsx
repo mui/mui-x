@@ -3,7 +3,7 @@ import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-p
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<NextDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
@@ -12,6 +12,7 @@ describe('<NextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
+    componentFamily: 'new-picker',
   }));
 
   it('should render in mobile mode when `useMediaQuery` returns `false`', () => {

@@ -86,9 +86,7 @@ export default function CustomInputComponent() {
           filter: {
             ...data.initialState?.filter,
             filterModel: {
-              items: [
-                { id: 1, columnField: 'rating', value: '3.5', operatorValue: '>=' },
-              ],
+              items: [{ id: 1, field: 'rating', value: '3.5', operator: '>=' }],
             },
           },
         }}

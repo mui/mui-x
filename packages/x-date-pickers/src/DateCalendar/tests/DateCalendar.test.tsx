@@ -1,47 +1,16 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { fireEvent, userEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { DateCalendar, dateCalendarClasses as classes } from '@mui/x-date-pickers/DateCalendar';
+import { fireEvent, userEvent, screen } from '@mui/monorepo/test/utils';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import {
-  AdapterClassToUse,
-  adapterToUse,
-  wrapPickerMount,
-  createPickerRenderer,
-} from 'test/utils/pickers-utils';
-import describeValidation from '@mui/x-date-pickers/tests/describeValidation';
+import { AdapterClassToUse, adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DateCalendar />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
-
-  describeValidation(DateCalendar, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    skip: ['textField'],
-  }));
-
-  describeConformance(<DateCalendar defaultValue={adapterToUse.date()} />, () => ({
-    classes,
-    inheritComponent: 'div',
-    render,
-    muiName: 'MuiDateCalendar',
-    wrapMount: wrapPickerMount,
-    refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: [
-      'componentProp',
-      'componentsProp',
-      'propsSpread',
-      'reactTestRenderer',
-      // TODO: Fix DateCalendar is not spreading props on root
-      'themeDefaultProps',
-      'themeVariants',
-    ],
-  }));
 
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
@@ -163,6 +132,20 @@ describe('<DateCalendar />', () => {
     });
   });
 
+  it('should render week number when `displayWeekNumber=true`', () => {
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse}>
+        <DateCalendar
+          value={adapterToUse.date(new Date(2019, 0, 1))}
+          onChange={() => {}}
+          displayWeekNumber
+        />
+      </LocalizationProvider>,
+    );
+
+    expect(screen.getAllByRole('rowheader').length).to.equal(5);
+  });
+
   describe('view: day', () => {
     it('renders day calendar standalone', () => {
       render(<DateCalendar defaultValue={adapterToUse.date(new Date(2019, 0, 1))} />);
@@ -213,7 +196,7 @@ describe('<DateCalendar />', () => {
       );
     });
 
-    it('should complet weeks when showDaysOutsideCurrentMonth=true', () => {
+    it('should complete weeks when showDaysOutsideCurrentMonth=true', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
@@ -225,7 +208,7 @@ describe('<DateCalendar />', () => {
       expect(screen.getAllByRole('gridcell', { name: '31' }).length).to.equal(2);
     });
 
-    it('should complet weeks up to match `fixedWeekNumber`', () => {
+    it('should complete weeks up to match `fixedWeekNumber`', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2018, 0, 3, 11, 11, 11, 111))}
@@ -443,8 +426,6 @@ describe('<DateCalendar />', () => {
         />,
       );
 
-      // const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-      //
       const rootElement = document.querySelector('.MuiDateCalendar-root')!;
       const selectedButton = document.querySelector('.Mui-selected')!;
 
@@ -456,6 +437,41 @@ describe('<DateCalendar />', () => {
 
       expect(parentBoundingBox.top).not.to.greaterThan(buttonBoundingBox.top);
       expect(parentBoundingBox.bottom).not.to.lessThan(buttonBoundingBox.bottom);
+    });
+  });
+
+  describe('Performance', () => {
+    it('should only render newly selected day when selecting a day without a previously selected day', () => {
+      const RenderCount = spy((props) => <PickersDay {...props} />);
+
+      render(
+        <DateCalendar
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(2); // 2 render * 1 day
+    });
+
+    it('should only re-render previously selected day and newly selected day when selecting a day', () => {
+      const RenderCount = spy((props) => <PickersDay {...props} />);
+
+      render(
+        <DateCalendar
+          defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
+          components={{
+            Day: React.memo(RenderCount),
+          }}
+        />,
+      );
+
+      const renderCountBeforeChange = RenderCount.callCount;
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '2' }));
+      expect(RenderCount.callCount - renderCountBeforeChange).to.equal(4); // 2 render * 2 days
     });
   });
 });

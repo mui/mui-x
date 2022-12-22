@@ -3,9 +3,12 @@ import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
 import { PickerStateProps } from '../../hooks/usePickerState';
-import { CalendarOrClockPickerView } from '../views';
+import { DateOrTimeView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
+import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
+import { MakeOptional } from '../helpers';
 
+// TODO v6: Drop with the legacy pickers
 export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
   /**
    * className applied to the root component.
@@ -40,10 +43,16 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
 }
 
 /**
- * Props common to all pickers.
+ * Props common to all pickers after applying the default props on each picker.
  */
-export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrClockPickerView, TError>
-  extends UsePickerBaseProps<TValue, TView, TError> {
+export interface BaseNextPickerProps<
+  TValue,
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
+  TAdditionalProps extends {},
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps, TAdditionalProps> {
   /**
    * Class name applied to the root element.
    */
@@ -63,6 +72,15 @@ export interface BaseNextPickerProps<TValue, TDate, TView extends CalendarOrCloc
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
 }
+
+/**
+ * Props common to all pickers before applying the default props on each picker.
+ */
+export interface BaseNextPickerInputProps<TValue, TDate, TView extends DateOrTimeView, TError>
+  extends Omit<
+    MakeOptional<BaseNextPickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
+    'viewRenderers'
+  > {}
 
 /**
  * Props common to all non-static pickers.

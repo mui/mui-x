@@ -8,7 +8,7 @@ import {
   DataGridProProps,
   GridApi,
   gridClasses,
-  GridColumns,
+  GridColDef,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,
   GridRowsProp,
@@ -20,7 +20,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });

@@ -3,21 +3,15 @@ import {
   ExportedPickersViewLayoutSlotsComponent,
   ExportedPickersViewLayoutSlotsComponentsProps,
 } from '../../components/PickersViewLayout';
-import { CalendarOrClockPickerView } from '../../models';
+import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
-import {
-  PickersSlotsComponent,
-  PickersSlotsComponentsProps,
-} from '../../components/wrappers/WrapperProps';
+import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseStaticPickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent,
-    Pick<PickersSlotsComponent, 'PaperContent'> {}
+export interface UseStaticPickerSlotsComponent extends ExportedPickersViewLayoutSlotsComponent {}
 
-export interface UseStaticPickerSlotsComponentsProps
-  extends ExportedPickersViewLayoutSlotsComponentsProps,
-    Pick<PickersSlotsComponentsProps, 'paperContent'> {}
+export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -25,10 +19,18 @@ export interface StaticOnlyPickerProps {
    * @default "mobile"
    */
   displayStaticWrapperAs: 'desktop' | 'mobile';
+  /**
+   * If `true`, the view is focused during the first mount.
+   */
+  autoFocus?: boolean;
 }
 
-export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPickerView, TError>
-  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
+export interface UseStaticPickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
@@ -39,16 +41,16 @@ export interface UseStaticPickerProps<TDate, TView extends CalendarOrClockPicker
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticPickerSlotsComponentsProps;
+  componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<
   TDate,
-  TView extends CalendarOrClockPickerView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TView extends DateOrTimeView,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
   /**
