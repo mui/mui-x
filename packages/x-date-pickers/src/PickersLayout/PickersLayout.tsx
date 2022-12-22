@@ -6,6 +6,7 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersLayoutProps } from './PickersLayout.types';
 import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import usePickerLayout from './usePickerLayout';
+import { DateOrTimeView } from '../internals/models/views';
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { isLandscape, classes } = ownerState;
@@ -63,24 +64,24 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = React.forwardRef(function PickersLayout(
-  inProps: PickersLayoutProps<any, any>,
-  ref: React.Ref<HTMLDivElement>,
+const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeView>(
+  inProps: PickersLayoutProps<TValue, TView>,
 ) {
+
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
-  const { sx, className } = props;
+  const { sx, className, ref } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersLayoutRoot
-      ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
+      ref={ref}
     >
       {toolbar}
       <PickersLayoutContentWrapper className={classes.contentWrapper}>
@@ -90,7 +91,7 @@ const PickersLayout = React.forwardRef(function PickersLayout(
       {actionBar}
     </PickersLayoutRoot>
   );
-});
+};
 
 PickersLayout.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -133,8 +134,10 @@ PickersLayout.propTypes = {
     PropTypes.object,
   ]),
   value: PropTypes.any.isRequired,
-  view: PropTypes.any.isRequired,
-  views: PropTypes.array.isRequired,
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
   wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 

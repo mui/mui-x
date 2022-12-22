@@ -30,7 +30,7 @@ export interface UseStaticPickerProps<
   TDate,
   TView extends DateOrTimeView,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
 > extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
@@ -57,5 +57,5 @@ export interface UseStaticPickerParams<
   /**
    * Ref to pass to the root element
    */
-  ref: React.Ref<HTMLDivElement> | undefined;
+  ref?: React.Ref<HTMLDivElement>;
 }

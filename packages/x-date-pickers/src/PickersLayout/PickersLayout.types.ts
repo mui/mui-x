@@ -19,9 +19,7 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, and action bar.
    */
-  Layout?: React.JSXElementConstructor<
-    PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
-  >;
+  Layout?: React.JSXElementConstructor<PickersLayoutProps<TValue, TView>>;
 }
 
 interface PickersLayoutActionBarOwnerState<TValue, TView extends DateOrTimeView>
@@ -76,6 +74,10 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
   className?: string;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
+  /**
+   * Ref to pass to the root element
+   */
+  ref?: React.Ref<HTMLDivElement>;
   classes?: Partial<PickersLayoutClasses>;
   /**
    * Overrideable components.
