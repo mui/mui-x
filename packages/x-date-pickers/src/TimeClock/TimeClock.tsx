@@ -277,11 +277,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
                 utils.setMinutes(selectedTimeOrMidnight, timeValue),
                 'minutes',
               );
+
             case 'seconds':
               return !shouldDisableTime(
                 utils.setSeconds(selectedTimeOrMidnight, timeValue),
                 'seconds',
               );
+
             default:
               return false;
           }
