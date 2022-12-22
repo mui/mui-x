@@ -28,6 +28,7 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
 
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
@@ -84,10 +85,8 @@ function GridBody(props: GridBodyProps) {
             width: size.width,
             // If `autoHeight` is on, there will be no height value.
             // In this case, let the container to grow whatever it needs.
-            height: size.height
-              ? size.height - getTotalHeaderHeight(apiRef, rootProps.headerHeight)
-              : 'auto',
-            marginTop: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
+            height: size.height ? size.height - totalHeaderHeight : 'auto',
+            marginTop: totalHeaderHeight,
           } as React.CSSProperties;
 
           return (

@@ -106,6 +106,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
   const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
 
   React.useEffect(() => {
@@ -462,8 +463,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   };
 
   const rootStyle = {
-    minHeight: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
-    maxHeight: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
+    minHeight: totalHeaderHeight,
+    maxHeight: totalHeaderHeight,
     lineHeight: `${headerHeight}px`,
   };
 
