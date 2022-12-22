@@ -47,7 +47,7 @@ export interface TimeValidationProps<TDate> {
   shouldDisableTime?: (value: TDate, view: TimeView) => boolean;
   /**
    * @deprecated Consider using `shouldDisableTime`.
-   * 
+   *
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
    * @param {TimeView} view The clock type of the timeValue.

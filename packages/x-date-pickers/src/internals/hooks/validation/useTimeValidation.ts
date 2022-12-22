@@ -17,7 +17,10 @@ export type TimeValidationError =
   | 'maxTime'
   | 'shouldDisableClock-hours'
   | 'shouldDisableClock-minutes'
-  | 'shouldDisableClock-seconds';
+  | 'shouldDisableClock-seconds'
+  | 'shouldDisableTime-hours'
+  | 'shouldDisableTime-minutes'
+  | 'shouldDisableTime-seconds';
 
 export const validateTime: Validator<
   any | null,
@@ -30,6 +33,7 @@ export const validateTime: Validator<
     maxTime,
     minutesStep,
     shouldDisableClock,
+    shouldDisableTime,
     disableIgnoringDatePartForTimeValidation = false,
     disablePast,
     disableFuture,
@@ -61,6 +65,15 @@ export const validateTime: Validator<
 
     case Boolean(disablePast && adapter.utils.isBefore(date, now)):
       return 'disablePast';
+
+    case Boolean(shouldDisableTime && shouldDisableTime(value, 'hours')):
+      return 'shouldDisableTime-hours';
+
+    case Boolean(shouldDisableTime && shouldDisableTime(value, 'minutes')):
+      return 'shouldDisableTime-minutes';
+
+    case Boolean(shouldDisableTime && shouldDisableTime(value, 'seconds')):
+      return 'shouldDisableTime-seconds';
 
     case Boolean(shouldDisableClock && shouldDisableClock(adapter.utils.getHours(value), 'hours')):
       return 'shouldDisableClock-hours';

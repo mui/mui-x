@@ -183,6 +183,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disablePast,
     minutesStep = 1,
     shouldDisableClock,
+    shouldDisableTime,
     showViewSwitcher,
     onChange,
     defaultValue,
@@ -267,6 +268,25 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return !shouldDisableClock(timeValue, viewType);
         }
 
+        if (shouldDisableTime) {
+          switch (viewType) {
+            case 'hours':
+              return !shouldDisableTime(utils.setHours(selectedTimeOrMidnight, timeValue), 'hours');
+            case 'minutes':
+              return !shouldDisableTime(
+                utils.setMinutes(selectedTimeOrMidnight, timeValue),
+                'minutes',
+              );
+            case 'seconds':
+              return !shouldDisableTime(
+                utils.setSeconds(selectedTimeOrMidnight, timeValue),
+                'seconds',
+              );
+            default:
+              return false;
+          }
+        }
+
         return true;
       };
 
@@ -309,6 +329,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       minTime,
       minutesStep,
       shouldDisableClock,
+      shouldDisableTime,
       utils,
       disableFuture,
       disablePast,

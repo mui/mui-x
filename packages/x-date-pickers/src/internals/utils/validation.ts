@@ -11,6 +11,7 @@ const VALIDATION_PROP_NAMES = [
   'shouldDisableMonth',
   'shouldDisableYear',
   'shouldDisableClock',
+  'shouldDisableTime',
   'minuteStep',
 ] as const;
 
