@@ -20,9 +20,9 @@ import {
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-export interface UseMobileRangePickerSlotsComponent
+export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<any, any> {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -67,7 +67,7 @@ export interface UseMobileRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseMobileRangePickerSlotsComponent;
+  components: UseMobileRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
