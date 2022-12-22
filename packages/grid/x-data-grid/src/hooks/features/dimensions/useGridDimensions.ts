@@ -73,6 +73,7 @@ export function useGridDimensions(
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.headerHeight);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -116,7 +117,7 @@ export function useGridDimensions(
     } else {
       viewportOuterSize = {
         width: rootDimensionsRef.current.width,
-        height: rootDimensionsRef.current.height - getTotalHeaderHeight(apiRef, props.headerHeight),
+        height: rootDimensionsRef.current.height - totalHeaderHeight,
       };
 
       const scrollInformation = hasScroll({
@@ -156,10 +157,10 @@ export function useGridDimensions(
     }
   }, [
     apiRef,
-    props.headerHeight,
     props.scrollbarSize,
     props.autoHeight,
     rowsMeta.currentPageTotalHeight,
+    totalHeaderHeight,
   ]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
