@@ -72,11 +72,7 @@ export function useGridDimensions(
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-
-  const derivedRowHeight = React.useMemo(
-    () => Math.floor(props.rowHeight * densityFactor),
-    [props.rowHeight, densityFactor],
-  );
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
 
   const updateGridDimensionsRef = React.useCallback(() => {
     const rootElement = apiRef.current.rootElementRef?.current;
@@ -198,11 +194,11 @@ export function useGridDimensions(
     }
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
-      dimensions.viewportInnerSize.height / derivedRowHeight,
+      dimensions.viewportInnerSize.height / rowHeight,
     );
 
     return Math.min(maximumPageSizeWithoutScrollBar, currentPage.rows.length);
-  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, derivedRowHeight]);
+  }, [apiRef, props.pagination, props.paginationMode, props.getRowHeight, rowHeight]);
 
   const dimensionsApi: GridDimensionsApi = {
     resize,

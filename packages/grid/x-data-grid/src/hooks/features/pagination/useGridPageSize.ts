@@ -38,10 +38,7 @@ export const useGridPageSize = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const derivedRowHeight = React.useMemo(
-    () => Math.floor(props.rowHeight * densityFactor),
-    [props.rowHeight, densityFactor],
-  );
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
 
   apiRef.current.registerControlState({
     stateId: 'pageSize',
@@ -136,10 +133,10 @@ export const useGridPageSize = (
 
     const maximumPageSizeWithoutScrollBar = Math.floor(
       (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
-        derivedRowHeight,
+        rowHeight,
     );
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
-  }, [apiRef, props.autoPageSize, derivedRowHeight]);
+  }, [apiRef, props.autoPageSize, rowHeight]);
 
   useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
 

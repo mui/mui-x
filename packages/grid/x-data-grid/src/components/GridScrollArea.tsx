@@ -72,11 +72,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
-
-  const derivedHeaderHeight = React.useMemo(
-    () => Math.floor(rootProps.headerHeight * densityFactor),
-    [rootProps.headerHeight, densityFactor],
-  );
+  const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
 
   const handleScrolling = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     (newScrollPosition) => {
@@ -130,7 +126,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       ref={rootRef}
       className={clsx(classes.root)}
       onDragOver={handleDragOver}
-      style={{ height: derivedHeaderHeight }}
+      style={{ height: headerHeight }}
     />
   ) : null;
 }

@@ -18,13 +18,10 @@ export const GridErrorOverlay = React.forwardRef<HTMLDivElement, GridErrorOverla
     const rootProps = useGridRootProps();
     const defaultLabel = apiRef.current.getLocaleText('errorOverlayDefaultLabel');
     const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-    const derivedRowHeight = React.useMemo(
-      () => Math.floor(rootProps.rowHeight * densityFactor),
-      [rootProps.rowHeight, densityFactor],
-    );
+    const rowHeight = Math.floor(rootProps.rowHeight * densityFactor);
 
     return (
-      <GridOverlay ref={ref} sx={{ width: '100%', minHeight: 2 * derivedRowHeight }} {...other}>
+      <GridOverlay ref={ref} sx={{ width: '100%', minHeight: 2 * rowHeight }} {...other}>
         {error?.message || defaultLabel}
       </GridOverlay>
     );

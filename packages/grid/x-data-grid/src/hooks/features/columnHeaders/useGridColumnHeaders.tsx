@@ -106,11 +106,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-
-  const derivedHeaderHeight = React.useMemo(
-    () => Math.floor(rootProps.headerHeight * densityFactor),
-    [rootProps.headerHeight, densityFactor],
-  );
+  const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
@@ -322,7 +318,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           filterItemsCounter={
             filterColumnLookup[column.field] && filterColumnLookup[column.field].length
           }
-          headerHeight={derivedHeaderHeight}
+          headerHeight={headerHeight}
           isDragging={column.field === dragCol}
           column={column}
           colIndex={columnIndex}
@@ -432,7 +428,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       columns.push(
         <GridColumnHeaderRow
           style={{
-            height: `${derivedHeaderHeight}px`,
+            height: `${headerHeight}px`,
             transform: `translateX(-${depthInfo.leftOverflow}px)`,
           }}
           key={depthIndex}
@@ -452,7 +448,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                   isLastColumn={colIndex === visibleColumns.length - fields.length}
                   extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                   maxDepth={headerToRender.length}
-                  height={derivedHeaderHeight}
+                  height={headerHeight}
                   hasFocus={hasFocus}
                   tabIndex={tabIndex}
                 />
@@ -468,7 +464,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const rootStyle = {
     minHeight: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
     maxHeight: getTotalHeaderHeight(apiRef, rootProps.headerHeight),
-    lineHeight: `${derivedHeaderHeight}px`,
+    lineHeight: `${headerHeight}px`,
   };
 
   return {
