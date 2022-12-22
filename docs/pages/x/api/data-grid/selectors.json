@@ -14,6 +14,20 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnDefinitionsSelector",
+    "returnType": "GridStateColDef<any, any, any>[]",
+    "category": "Columns",
+    "description": "Get an array of column definitions in the order rendered on screen..",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridColumnFieldsSelector",
+    "returnType": "string[]",
+    "category": "Columns",
+    "description": "Get an array of column fields in the order rendered on screen.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnGroupsHeaderMaxDepthSelector",
     "returnType": "number",
     "description": "",
@@ -38,10 +52,24 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridColumnLookupSelector",
+    "returnType": "GridColumnLookup",
+    "category": "Columns",
+    "description": "Get the columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridColumnMenuSelector",
     "returnType": "GridColumnMenuState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridColumnPositionsSelector",
+    "returnType": "number[]",
+    "category": "Visible Columns",
+    "description": "Get the left position in pixel of each visible columns relative to the left of the first column.",
+    "supportsApiRef": true
   },
   {
     "name": "gridColumnReorderDragColSelector",
@@ -62,6 +90,26 @@
     "supportsApiRef": false
   },
   {
+    "name": "gridColumnVisibilityModelSelector",
+    "returnType": "GridColumnVisibilityModel",
+    "category": "Visible Columns",
+    "description": "Get the column visibility model, containing the visibility status of each column.\nIf a column is not registered in the model, it is visible.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridColumnsTotalWidthSelector",
+    "returnType": "number",
+    "category": "Visible Columns",
+    "description": "Get the summed width of all the visible columns.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridDataRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridDensityFactorSelector",
     "returnType": "number",
     "description": "",
@@ -80,6 +128,24 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridDetailPanelExpandedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridDetailPanelExpandedRowsContentCacheSelector",
+    "returnType": "Record<GridRowId, ReactNode>",
+    "description": "",
+    "supportsApiRef": false
+  },
+  {
+    "name": "gridDetailPanelExpandedRowsHeightCacheSelector",
+    "returnType": "Record<GridRowId, number>",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridEditRowsStateSelector",
     "returnType": "GridEditRowsModel",
     "description": "",
@@ -90,6 +156,20 @@
     "returnType": "GridFilterModel",
     "category": "Filtering",
     "description": "Get the current filter model.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilterableColumnDefinitionsSelector",
+    "returnType": "GridStateColDef<any, any, any>[]",
+    "category": "Columns",
+    "description": "Get the filterable columns as an array.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilterableColumnLookupSelector",
+    "returnType": "GridColumnLookup",
+    "category": "Columns",
+    "description": "Get the filterable columns as a lookup (an object containing the field for keys and the definition for values).",
     "supportsApiRef": true
   },
   {
@@ -192,8 +272,20 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowCountSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridRowGroupingModelSelector",
     "returnType": "GridRowGroupingModel",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowGroupingNameSelector",
+    "returnType": "string",
     "description": "",
     "supportsApiRef": true
   },
@@ -204,10 +296,46 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridRowMaximumTreeDepthSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridRowSelectionStateSelector",
     "returnType": "GridRowSelectionModel",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridRowTreeDepthsSelector",
+    "returnType": "GridTreeDepths",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowTreeSelector",
+    "returnType": "GridRowTreeConfig",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsDataRowIdToIdLookupSelector",
+    "returnType": "GridRowIdToIdLookup",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsLoadingSelector",
+    "returnType": "boolean | undefined",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridRowsLookupSelector",
+    "returnType": "GridRowIdToModelLookup<GridValidRowModel>",
+    "description": "",
+    "supportsApiRef": true
   },
   {
     "name": "gridRowsMetaSelector",
@@ -253,6 +381,26 @@
     "returnType": "GridTabIndexState",
     "description": "",
     "supportsApiRef": false
+  },
+  {
+    "name": "gridTopLevelRowCountSelector",
+    "returnType": "number",
+    "description": "",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVisibleColumnDefinitionsSelector",
+    "returnType": "GridStateColDef<any, any, any>[]",
+    "category": "Visible Columns",
+    "description": "Get the visible columns as a lookup (an object containing the field for keys and the definition for values).",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridVisibleColumnFieldsSelector",
+    "returnType": "string[]",
+    "category": "Visible Columns",
+    "description": "Get the field of each visible column.",
+    "supportsApiRef": true
   },
   {
     "name": "gridVisibleRowCountSelector",

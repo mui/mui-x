@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -11,7 +11,7 @@ export default function OrderSortingPerColumnGrid() {
     rowLength: 100,
   });
 
-  const columns = React.useMemo<GridColumns>(
+  const columns = React.useMemo<GridColDef[]>(
     () =>
       data.columns.map((column) => {
         if (column.field === 'rating') {

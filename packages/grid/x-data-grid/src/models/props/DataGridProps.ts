@@ -13,7 +13,7 @@ import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -69,7 +69,6 @@ export interface DataGridProcessedProps<R extends GridValidRowModel = any>
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
-  | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
@@ -346,9 +345,7 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
-   * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @ignore - do not document.
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
@@ -708,9 +705,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColumns<R>;
+  columns: GridColDef<R>[];
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
-import { useGridApiContext } from '../../utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
 import {
   gridVisibleColumnDefinitionsSelector,
@@ -75,7 +75,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);

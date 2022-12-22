@@ -1,0 +1,10 @@
+<DateCalendar
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+  components={{ Day }}
+  componentsProps={{
+    day: {
+      selectedDay: value,
+    } as any,
+  }}
+/>

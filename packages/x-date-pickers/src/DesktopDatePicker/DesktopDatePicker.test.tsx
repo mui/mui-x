@@ -774,14 +774,6 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('should throw console warning when invalid `openTo` prop is provided', () => {
-    expect(() => {
-      render(<WrappedDesktopDatePicker initialValue={null} openTo="month" />);
-
-      openPicker({ type: 'date', variant: 'desktop' });
-    }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
-  });
-
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
       render(

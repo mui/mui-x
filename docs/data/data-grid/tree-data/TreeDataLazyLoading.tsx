@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   getDataGridUtilityClass,
-  GridColumns,
+  GridColDef,
   DataGridProProps,
   GridEventListener,
   GridGroupingColDefOverride,
@@ -128,7 +128,7 @@ const ALL_ROWS: GridRowModel<Row>[] = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',

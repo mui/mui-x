@@ -97,7 +97,7 @@ export interface DataGridPremiumPropsWithDefaultValue extends DataGridProPropsWi
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridProPropsWithoutDefaultValue<R>, 'initialState' | 'apiRef'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPremium>;
   /**

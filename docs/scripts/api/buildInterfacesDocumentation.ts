@@ -38,6 +38,7 @@ interface ParsedProperty {
 const GRID_API_INTERFACES_WITH_DEDICATED_PAGES = [
   'GridRowSelectionApi',
   'GridRowMultiSelectionApi',
+  'GridCellSelectionApi',
   'GridFilterApi',
   'GridSortApi',
   'GridPaginationApi',
@@ -111,12 +112,7 @@ const parseInterfaceSymbol = (
 
       const exportedSymbol = project.exports[interfaceName];
       const type = project.checker.getDeclaredTypeOfSymbol(exportedSymbol);
-      const typeDeclaration = type.symbol.declarations?.[0];
       const symbol = resolveExportSpecifier(exportedSymbol, project);
-
-      if (!typeDeclaration || !ts.isInterfaceDeclaration(typeDeclaration)) {
-        return null;
-      }
 
       return {
         symbol,
@@ -227,14 +223,6 @@ function generateImportStatement(objects: ParsedObject[], projects: Projects) {
   const projectImports = Array.from(projects.values())
     .map((project) => {
       const objectsInProject = objects.filter((object) => {
-        // TODO: Remove after opening the apiRef on the community plan
-        if (
-          ['GridApiCommunity', 'GridApi'].includes(object.name) &&
-          project.name === 'x-data-grid'
-        ) {
-          return false;
-        }
-
         return !!project.exports[object.name];
       });
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
@@ -40,6 +41,10 @@ export interface MobileDateTimePickerProps<TDate>
    * @default {}
    */
   componentsProps?: MobileDateTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type MobileDateTimePickerComponent = (<TDate>(
