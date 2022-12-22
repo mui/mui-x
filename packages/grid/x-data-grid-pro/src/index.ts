@@ -19,7 +19,6 @@ export * from './DataGridPro';
 export * from './hooks';
 export * from './models';
 export * from './components';
-export * from './constants';
 export * from './utils';
 
 export type { DataGridProProps, GridExperimentalProFeatures } from './models/dataGridProProps';
@@ -32,3 +31,4 @@ export {
   GRID_COLUMN_MENU_COMPONENTS,
   GRID_COLUMN_MENU_COMPONENTS_PROPS,
 } from './components/reexports';
+export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS as DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from './constants/dataGridProDefaultSlotsComponents';

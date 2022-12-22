@@ -11,7 +11,7 @@ import {
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
 import { GridProSlotsComponent } from '../models';
-import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants';
+import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 /**
  * The default values of `DataGridProPropsWithDefaultValue` to inject in the props of DataGridPro.

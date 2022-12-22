@@ -8,7 +8,7 @@ import {
 } from '../models/dataGridPremiumProps';
 import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
-import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants';
+import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.

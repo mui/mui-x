@@ -6,7 +6,8 @@ import {
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridDensityTypes, GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {

@@ -222,7 +222,6 @@ describe('<DataGridPro /> - Column Headers', () => {
             <DataGridPro
               {...baselineProps}
               columns={[{ field: 'brand' }]}
-              components={{ ColumnMenu: GridColumnMenu }}
               initialState={{ sorting: { sortModel: [{ field: 'brand', sort: 'asc' }] } }}
               {...props}
             />

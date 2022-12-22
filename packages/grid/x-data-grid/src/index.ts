@@ -28,6 +28,7 @@ export {
   GRID_COLUMN_MENU_COMPONENTS,
   GRID_COLUMN_MENU_COMPONENTS_PROPS,
 } from './components/reexportable';
+export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from './constants/defaultGridSlotsComponents';
 
 /**
  * The full grid API.
