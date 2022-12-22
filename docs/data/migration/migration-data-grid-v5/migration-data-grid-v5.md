@@ -178,6 +178,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridRowData` type was removed. Use `GridRowModel` instead.
 - The `filterPanelOperators` translation key was renamed to `filterPanelOperator`
 - The `MAX_PAGE_SIZE` constant was removed.
+- The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
 
 ### CSS classes
