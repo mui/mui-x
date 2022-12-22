@@ -75,7 +75,7 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    */
   autoFocusSearchField?: boolean;
   /*
-   * If `true`, the `Hide all` button will be disabled
+   * If `true`, the `Hide all` button will not be displayed.
    * @default false
    */
   disableHideAllButton?: boolean;

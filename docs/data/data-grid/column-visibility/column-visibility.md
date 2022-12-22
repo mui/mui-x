@@ -62,7 +62,7 @@ The user can then choose which columns are visible using the _Columns_ button.
 
 ### Disable action buttons
 
-To disable `Hide all` or `Show all` buttons in column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` in `componentsProps.columnsPanel`.
+To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `componentsProps.columnsPanel`.
 
 ```tsx
 <DataGrid
