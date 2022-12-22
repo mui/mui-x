@@ -1,12 +1,12 @@
 <DemoItem label="TimePicker">
   <NextTimePicker
     defaultValue={defaultValue}
-    shouldDisableClock={shouldDisableClock}
+    shouldDisableTime={shouldDisableTime}
   />
 </DemoItem>
 <DemoItem label="DateTimePicker">
   <NextDateTimePicker
     defaultValue={defaultValue}
-    shouldDisableClock={shouldDisableClock}
+    shouldDisableTime={shouldDisableTime}
   />
 </DemoItem>
