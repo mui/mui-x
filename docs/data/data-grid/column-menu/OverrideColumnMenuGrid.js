@@ -4,7 +4,6 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconFilter from '@mui/icons-material/FilterAlt';
-import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import { DataGrid, GridColumnMenu, useGridApiContext } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -34,18 +33,6 @@ CustomFilterItem.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-function CustomUserItem(props) {
-  const { myCustomHandler, myCustomValue } = props;
-  return (
-    <MenuItem onClick={myCustomHandler}>
-      <ListItemIcon>
-        <SettingsApplicationsIcon fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>{myCustomValue}</ListItemText>
-    </MenuItem>
-  );
-}
-
 function CustomColumnMenu(props) {
   return (
     <GridColumnMenu
@@ -53,32 +40,12 @@ function CustomColumnMenu(props) {
       components={{
         // Override slot for `ColumnMenuFilterItem`
         ColumnMenuFilterItem: CustomFilterItem,
-        // Hide `ColumnMenuColumnsItem`
-        ColumnMenuColumnsItem: null,
-        // Add new item
-        ColumnMenuUserItem: CustomUserItem,
-      }}
-      componentsProps={{
-        // Swap positions of filter and sort items
-        columnMenuFilterItem: {
-          displayOrder: 0, // Previously `10`
-        },
-        columnMenuSortItem: {
-          displayOrder: 10, // Previously `0`
-        },
-        columnMenuUserItem: {
-          // set `displayOrder` for new item
-          displayOrder: 15,
-          // pass additional props
-          myCustomValue: 'Do custom action',
-          myCustomHandler: () => alert('Custom handler fired'),
-        },
       }}
     />
   );
 }
 
-export default function ReuseColumnMenuGrid() {
+export default function OverrideColumnMenuGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,

@@ -76,10 +76,6 @@ GridColumnMenu.propTypes = {
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
-  /**
-   * Props of type `Partial<MenuListProps>` to override MenuList default props
-   */
-  MenuListProps: PropTypes.object,
   open: PropTypes.bool.isRequired,
 } as any;
 

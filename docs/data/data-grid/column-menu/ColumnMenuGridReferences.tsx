@@ -77,7 +77,7 @@ const columns = [
   },
   {
     field: 'defaultComponent',
-    headerName: 'Default Components',
+    headerName: 'Default Component',
     width: 300,
     renderCell: (params: GridRenderCellParams<string>) => (
       <ComponentTag value={params.value} />
@@ -125,7 +125,7 @@ const rows = [
   {
     id: 13,
     slot: 'ColumnMenuGroupingItem',
-    defaultComponent: 'GridColumnMenuRowGroupItem,GridColumnMenuRowUngroupItem',
+    defaultComponent: 'GridColumnMenuGroupingItem',
     displayOrder: 27,
     plan: 'Premium',
   },

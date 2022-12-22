@@ -2,36 +2,14 @@ import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import IconFilter from '@mui/icons-material/FilterAlt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import {
   DataGrid,
   GridColumnMenu,
   GridColumnMenuProps,
   GridColumnMenuItemProps,
-  useGridApiContext,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
-
-function CustomFilterItem(props: GridColumnMenuItemProps) {
-  const { onClick, colDef } = props;
-  const apiRef = useGridApiContext();
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      apiRef.current.showFilterPanel(colDef.field);
-      onClick(event);
-    },
-    [apiRef, colDef.field, onClick],
-  );
-  return (
-    <MenuItem onClick={handleClick}>
-      <ListItemIcon>
-        <IconFilter fontSize="small" />
-      </ListItemIcon>
-      <ListItemText>Show Filters</ListItemText>
-    </MenuItem>
-  );
-}
 
 function CustomUserItem(props: GridColumnMenuItemProps) {
   const { myCustomHandler, myCustomValue } = props;
@@ -50,21 +28,10 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
     <GridColumnMenu
       {...props}
       components={{
-        // Override slot for `ColumnMenuFilterItem`
-        ColumnMenuFilterItem: CustomFilterItem,
-        // Hide `ColumnMenuColumnsItem`
-        ColumnMenuColumnsItem: null,
         // Add new item
         ColumnMenuUserItem: CustomUserItem,
       }}
       componentsProps={{
-        // Swap positions of filter and sort items
-        columnMenuFilterItem: {
-          displayOrder: 0, // Previously `10`
-        },
-        columnMenuSortItem: {
-          displayOrder: 10, // Previously `0`
-        },
         columnMenuUserItem: {
           // set `displayOrder` for new item
           displayOrder: 15,
@@ -77,7 +44,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
   );
 }
 
-export default function ReuseColumnMenuGrid() {
+export default function AddNewColumnMenuGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,

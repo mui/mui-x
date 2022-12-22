@@ -12,7 +12,7 @@ import { isGroupingColumn } from '../hooks/features/rowGrouping';
 import { GridColumnMenuRowGroupItem } from './GridColumnMenuRowGroupItem';
 import { GridColumnMenuRowUngroupItem } from './GridColumnMenuRowUngroupItem';
 
-function GroupingItem(props: GridColumnMenuItemProps) {
+export function GridColumnMenuGroupingItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   if (isGroupingColumn(colDef.field)) {
     return <GridColumnMenuRowGroupItem {...props} />;
@@ -23,14 +23,10 @@ function GroupingItem(props: GridColumnMenuItemProps) {
   return null;
 }
 
-function AggregationItem(props: GridColumnMenuItemProps) {
-  return <GridColumnMenuAggregationItem {...props} />;
-}
-
 export const GRID_COLUMN_MENU_COMPONENTS_PREMIUM = {
   ...GRID_COLUMN_MENU_COMPONENTS,
-  ColumnMenuAggregationItem: AggregationItem,
-  ColumnMenuGroupingItem: GroupingItem,
+  ColumnMenuAggregationItem: GridColumnMenuAggregationItem,
+  ColumnMenuGroupingItem: GridColumnMenuGroupingItem,
 };
 
 export const GRID_COLUMN_MENU_COMPONENTS_PROPS_PREMIUM = {

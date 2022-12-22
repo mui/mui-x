@@ -10,17 +10,16 @@ title: Data Grid - Column menu
 
 Each column header comes with a column menu with quickly accessible grid features like column visibility, sorting, filtering, and others.
 
-It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or when focusing on a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd>.
+It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or when focusing on a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
 
 {{"demo": "ColumnMenuGrid.js", "bg": "inline"}}
 
 ## Customize column menu items
 
-You can customize the column menu items by passing `components` and `componentsProps` props to the column menu component.
+You can customize the column menu items by passing the `components` and `componentsProps` props to the `<GridColumnMenu />` component:
 
-**components**: Prop accepted by default column menu component `<GridColumnMenu />`, could be used to override default column menu components or add new components.
-
-**componentsProps**: Use this prop to override or pass [`displayOrder`](/x/react-data-grid/column-menu/#reordering-menu-items) for column menu items. You can also use this to pass extra props to custom column menu components.
+- `components` - use this prop to override default column menu components or add new components.
+- `componentsProps` - use this prop to override or pass [`displayOrder`](/x/react-data-grid/column-menu/#reordering-menu-items) for column menu items. You can also use this to pass extra props to custom column menu components.
 
 :::warning
 The `components` prop uses pascal case (`ColumnMenuFilterItem`), while `componentsProps` uses camel case (`columnMenuFilterItem`).
@@ -54,10 +53,12 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
+{{"demo": "AddNewColumnMenuGrid.js", "bg": "inline"}}
+
 ### Overriding default menu items
 
 Use the `components` prop to override default menu items.
-Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-configurations) to know the overridable slot name for each menu item.
+Check [this table](/x/react-data-grid/column-menu/#default-column-menu-items) to know the overridable slot name for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -73,10 +74,12 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
+{{"demo": "OverrideColumnMenuGrid.js", "bg": "inline"}}
+
 ### Hiding a menu item
 
 To hide a menu item, you can set its respective slot in `components` to `null`.
-Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-configurations) to know the slot name for each menu item.
+Check [this table](/x/react-data-grid/column-menu/#default-column-menu-items) to know the slot name for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -92,13 +95,15 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
+{{"demo": "HideColumnMenuGrid.js", "bg": "inline"}}
+
 ### Reordering menu items
 
 Every item is assigned a `displayOrder` based on which it is shown before or after other items. It works in ascending order; the smaller the number is, the earlier it is displayed on the list. For new items default value for `displayOrder` is **100**.
 
 You can override `displayOrder` for the default or new items in `componentsProps`.
 
-Check [this table](/x/react-data-grid/column-menu/#column-menu-items-and-their-configurations) to see default `displayOrder` for each menu item.
+Check [this table](/x/react-data-grid/column-menu/#default-column-menu-items) to see default `displayOrder` for each menu item.
 
 ```tsx
 function CustomColumnMenu(props: GridColumnMenuProps) {
@@ -119,11 +124,9 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
 }
 ```
 
-The following demo implements adding, overriding, hiding, and re-ordering of column menu items.
+{{"demo": "ReorderColumnMenuGrid.js", "bg": "inline"}}
 
-{{"demo": "ReuseColumnMenuGrid.js", "bg": "inline"}}
-
-### Column menu items and their configurations
+### Default column menu items
 
 As a reference, here are the column menu `components` along with the default item components and `displayOrder`.
 
@@ -136,14 +139,8 @@ You can also customize and replace the column menu by [passing a fully custom co
 {{"demo": "CustomColumnMenuGrid.js", "bg": "inline"}}
 
 :::info
-<strong>Tip</strong>: In the `ColumnMenu` component and its items, you receive the prop `colDef` corresponding to the current column; you can use this to conditionally render some items or change some logic.
+<strong>Tip</strong>: The `ColumnMenu` component and its components slots receive the `colDef` prop corresponding to the current column; you can use this to conditionally render some items or change some logic.
 :::
-
-## Customize Menu List props
-
-The column menu uses a [`<MenuList />`](https://mui.com/material-ui/api/menu-list/) internally, you can use `MenuListProps` component prop to update its properties. The following example sets the menu layout to `dense`.
-
-{{"demo": "ColumnMenuDense.js", "bg": "inline"}}
 
 ## Disable column menu
 
