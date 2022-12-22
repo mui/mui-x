@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridRenderCellParams,
   GridRowParams,
@@ -77,7 +77,7 @@ function CustomDetailPanelToggle(props: Pick<GridRenderCellParams, 'id' | 'value
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'date', type: 'date', headerName: 'Placed at' },

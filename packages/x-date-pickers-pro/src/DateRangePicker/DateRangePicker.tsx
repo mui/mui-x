@@ -274,11 +274,6 @@ DateRangePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
-  /**
    * Control the popup or dialog open state.
    */
   open: PropTypes.bool,

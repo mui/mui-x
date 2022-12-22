@@ -217,6 +217,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: (theme.vars || theme).palette.action.hover,
     },
     [`& .${gridClasses.columnSeparator}`]: {
+      visibility: 'hidden',
       position: 'absolute',
       zIndex: 100,
       display: 'flex',
@@ -224,6 +225,11 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
+    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
+      {
+        visibility: 'visible',
+        width: 'auto',
+      },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },

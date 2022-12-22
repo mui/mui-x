@@ -25,4 +25,7 @@ export * from './DesktopNextDateRangePicker';
 export * from './MobileNextDateRangePicker';
 export * from './StaticNextDateRangePicker';
 
+// View renderers
+export * from './dateRangeViewRenderers';
+
 export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';

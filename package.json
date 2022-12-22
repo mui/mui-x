@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0-alpha.11",
+  "version": "6.0.0-alpha.12",
   "private": true,
   "scripts": {
     "start": "yarn && yarn docs:dev",
