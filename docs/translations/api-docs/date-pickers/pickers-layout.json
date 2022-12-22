@@ -23,6 +23,6 @@
     "Tabs": "Tabs enabling toggling between views.",
     "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views.",
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar"
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar."
   }
 }
