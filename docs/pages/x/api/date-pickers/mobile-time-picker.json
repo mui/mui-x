@@ -54,7 +54,12 @@
     },
     "readOnly": { "type": { "name": "bool" } },
     "rifmFormatter": { "type": { "name": "func" } },
-    "shouldDisableClock": { "type": { "name": "func" } },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
+    "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
     "value": { "type": { "name": "any" } },
     "views": {

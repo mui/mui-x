@@ -24,7 +24,12 @@
       "default": "'hours'"
     },
     "readOnly": { "type": { "name": "bool" } },
-    "shouldDisableClock": { "type": { "name": "func" } },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
+    "shouldDisableTime": { "type": { "name": "func" } },
     "sx": {
       "type": {
         "name": "union",
