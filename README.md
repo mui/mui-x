@@ -28,7 +28,7 @@ Read the Data Grid [Installation instructions](https://mui.com/x/react-data-grid
 
 ### Date and Time Pickers
 
-Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#setup) in the MUI X docs.
+Read the Date and Time Pickers [Installation instructions](https://mui.com/x/react-date-pickers/getting-started/#installation) in the MUI X docs.
 
 ## MIT vs. commercial licenses
 

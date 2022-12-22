@@ -11,7 +11,7 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
+import { DateRange, RangePositionProps } from '../internal/models';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -32,7 +32,7 @@ export interface DateRangePickerToolbarProps<TDate>
       BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
-    CurrentlySelectingRangeEndProps {
+    RangePositionProps {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
@@ -69,15 +69,15 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
   const {
-    currentlySelectingRangeEnd,
     value: [start, end],
     isMobileKeyboardViewOpen,
-    setCurrentlySelectingRangeEnd,
     toggleMobileKeyboardView,
+    rangePosition,
+    onRangePositionChange,
     toolbarFormat,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -104,15 +104,15 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
         <PickersToolbarButton
           variant={start !== null ? 'h5' : 'h6'}
           value={startDateValue}
-          selected={currentlySelectingRangeEnd === 'start'}
-          onClick={() => setCurrentlySelectingRangeEnd('start')}
+          selected={rangePosition === 'start'}
+          onClick={() => onRangePositionChange('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
           variant={end !== null ? 'h5' : 'h6'}
           value={endDateValue}
-          selected={currentlySelectingRangeEnd === 'end'}
-          onClick={() => setCurrentlySelectingRangeEnd('end')}
+          selected={rangePosition === 'end'}
+          onClick={() => onRangePositionChange('end')}
         />
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>

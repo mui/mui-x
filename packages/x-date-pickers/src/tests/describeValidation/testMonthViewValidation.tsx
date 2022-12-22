@@ -15,13 +15,17 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
   describe('month view:', () => {
     const defaultProps = {
       onChange: () => {},
-      renderInput: (params) => <TextField {...params} />,
-      open: true,
-      views: ['month'],
-      view: 'month',
-      openTo: 'month',
-      reduceAnimations: true,
-      showToolbar: false,
+      ...(views.length > 1 && {
+        views: ['month'],
+        view: 'month',
+        openTo: 'month',
+      }),
+      ...(componentFamily !== 'calendar' && {
+        renderInput: (params) => <TextField {...params} />,
+        open: true,
+        reduceAnimations: true,
+        showToolbar: false,
+      }),
     };
 
     it('should apply shouldDisableMonth', function test() {
@@ -33,9 +37,9 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(screen.getByText('Apr').getAttribute('disabled')).not.to.equal(null);
-      expect(screen.getByText('Jan').getAttribute('disabled')).to.equal(null);
-      expect(screen.getByText('May').getAttribute('disabled')).to.equal(null);
+      expect(screen.getByText('Apr')).to.have.attribute('disabled');
+      expect(screen.getByText('Jan')).not.to.have.attribute('disabled');
+      expect(screen.getByText('May')).not.to.have.attribute('disabled');
     });
 
     it('should apply disablePast', function test() {
@@ -115,11 +119,11 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(screen.getByText('Jan').getAttribute('disabled')).not.to.equal(null);
-      expect(screen.getByText('May').getAttribute('disabled')).not.to.equal(null);
-      expect(screen.getByText('Jun').getAttribute('disabled')).to.equal(null);
-      expect(screen.getByText('Jul').getAttribute('disabled')).to.equal(null);
-      expect(screen.getByText('Dec').getAttribute('disabled')).to.equal(null);
+      expect(screen.getByText('Jan')).to.have.attribute('disabled');
+      expect(screen.getByText('May')).to.have.attribute('disabled');
+      expect(screen.getByText('Jun')).not.to.have.attribute('disabled');
+      expect(screen.getByText('Jul')).not.to.have.attribute('disabled');
+      expect(screen.getByText('Dec')).not.to.have.attribute('disabled');
 
       // TODO: define what appends when value is `null`
     });
@@ -133,10 +137,10 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         />,
       );
 
-      expect(screen.getByText('Jan').getAttribute('disabled')).to.equal(null);
-      expect(screen.getByText('Jun').getAttribute('disabled')).to.equal(null);
-      expect(screen.getByText('Jul').getAttribute('disabled')).not.to.equal(null);
-      expect(screen.getByText('Dec').getAttribute('disabled')).not.to.equal(null);
+      expect(screen.getByText('Jan')).not.to.have.attribute('disabled');
+      expect(screen.getByText('Jun')).not.to.have.attribute('disabled');
+      expect(screen.getByText('Jul')).to.have.attribute('disabled');
+      expect(screen.getByText('Dec')).to.have.attribute('disabled');
 
       // TODO: define what appends when value is `null`
     });

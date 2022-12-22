@@ -371,7 +371,7 @@ describe('<DataGridPro /> - Row Selection', () => {
     it('should select only filtered rows selecting a range', () => {
       render(
         <TestDataGridSelection
-          filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
+          filterModel={{ items: [{ field: 'id', value: 1, operator: '!=' }] }}
         />,
       );
       act(() => apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true));
@@ -388,9 +388,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       apiRef.current.setFilterModel({
         items: [
           {
-            columnField: 'currencyPair',
+            field: 'currencyPair',
             value: 'usd',
-            operatorValue: 'startsWith',
+            operator: 'startsWith',
           },
         ],
       }),

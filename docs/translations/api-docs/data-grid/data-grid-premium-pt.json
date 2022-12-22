@@ -4,7 +4,7 @@
     "aggregationFunctions": "Aggregation functions available on the grid.",
     "aggregationModel": "Set the aggregation model of the grid.",
     "aggregationRowsScope": "Rows used to generate the aggregated value. If <code>filtered</code>, the aggregated values are generated using only the rows currently passing the filtering process. If <code>all</code>, the aggregated values are generated using all the rows.",
-    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
@@ -14,7 +14,7 @@
     "checkboxSelectionVisibleOnly": "If <code>true</code>, the &quot;Select All&quot; header checkbox selects only the rows on the current page. To be used in combination with <code>checkboxSelection</code>. It only works if the pagination is enabled.",
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "columnBuffer": "Number of extra columns to be rendered before/after the visible slice.",
-    "columns": "Set of columns of type GridColumns.",
+    "columns": "Set of columns of type GridColDef[].",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
@@ -139,14 +139,17 @@
     "rowThreshold": "Number of rows from the <code>rowBuffer</code> that can be visible before a new slice is rendered.",
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
     "scrollEndThreshold": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called.",
-    "showCellRightBorder": "If <code>true</code>, the right border of the cells are displayed.",
-    "showColumnRightBorder": "If <code>true</code>, the right border of the column headers are displayed.",
+    "showCellVerticalBorder": "If <code>true</code>, the vertical borders of the cells are displayed.",
+    "showColumnVerticalBorder": "If <code>true</code>, the right border of the column headers are displayed.",
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "throttleRowsMs": "If positive, the Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.",
-    "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop."
+    "treeData": "If <code>true</code>, the rows will be gathered in a tree structure according to the <code>getTreeDataPath</code> prop.",
+    "unstable_cellSelection": "If <code>true</code>, the cell selection mode is enabled.",
+    "unstable_cellSelectionModel": "Set the cell selection model of the grid.",
+    "unstable_onCellSelectionModelChange": "Callback fired when the selection state of one or multiple cells changes.<br><br><strong>Signature:</strong><br><code>function(cellSelectionModel: GridCellSelectionModel, details: GridCallbackDetails) =&gt; void</code><br><em>cellSelectionModel:</em> Object in the shape of GridCellSelectionModel containg the selected cells.<br><em>details:</em> Additional details for this callback."
   },
   "classDescriptions": {
     "actionsCell": {
@@ -216,6 +219,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
+    },
+    "cell--rangeTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of a cell selection range"
+    },
+    "cell--rangeBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of a cell selection range"
+    },
+    "cell--rangeLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of a cell selection range"
+    },
+    "cell--rangeRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -550,6 +573,11 @@
       "nodeName": "the root element",
       "conditions": "density is \"compact\""
     },
+    "root--disableUserSelection": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "user selection is disabled"
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",
@@ -622,14 +650,20 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the toolbar filter list element"
     },
-    "withBorder": {
-      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
-      "nodeName": "both the cell and the column header",
-      "conditions": "<code>showColumnRightBorder={true}</code>"
+    "withBorderColor": {
+      "description": "Styles applied to {{nodeName}}, {{conditions}}.\nSets border color only.",
+      "nodeName": "cells",
+      "conditions": "column header and other elements that have border"
+    },
+    "cell--withRightBorder": {
+      "description": "Styles applied the cell if `showColumnVerticalBorder={true}`."
+    },
+    "columnHeader--withRightBorder": {
+      "description": "Styles applied the column header if `showColumnVerticalBorder={true}`."
     },
     "treeDataGroupingCell": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the root of the grouping cell of the tree data"
+      "nodeName": "the root of the grouping column of the tree data"
     },
     "treeDataGroupingCellToggle": {
       "description": "Styles applied to {{nodeName}}.",
@@ -673,7 +707,6 @@
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "Footer": "Footer component rendered at the bottom of the grid viewport.",
-    "Header": "Header component rendered above the grid column header bar.\nPrefer using the <code>Toolbar</code> slot. You should never need to use this slot.",
     "Toolbar": "Toolbar component rendered inside the Header component.",
     "PreferencesPanel": "PreferencesPanel component rendered inside the Header component.",
     "LoadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",

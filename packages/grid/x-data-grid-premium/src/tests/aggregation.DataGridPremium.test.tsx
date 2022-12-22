@@ -2,7 +2,7 @@ import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
 import {
   DataGridPremium,
@@ -139,6 +139,13 @@ describe('<DataGridPremium /> - Aggregation', () => {
       it('should ignore aggregation rules with invalid aggregation functions', () => {
         render(<Test initialState={{ aggregation: { model: { id: 'mux' } } }} />);
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
+      });
+
+      it('should correctly restore the column when changing from aggregated to non-aggregated', () => {
+        const { setProps } = render(<Test aggregationModel={{ id: 'max' }} />);
+        expect(getColumnHeaderCell(0, 0).textContent).to.equal('idmax');
+        setProps({ aggregationModel: {} });
+        expect(getColumnHeaderCell(0, 0).textContent).to.equal('id');
       });
     });
   });
@@ -385,7 +392,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -399,7 +406,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -414,7 +421,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
         <Test
           initialState={{
             filter: {
-              filterModel: { items: [{ columnField: 'id', operatorValue: '<', value: 4 }] },
+              filterModel: { items: [{ field: 'id', operator: '<', value: 4 }] },
             },
             aggregation: { model: { id: 'max' } },
           }}
@@ -704,7 +711,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
             aggregation: { model: { id: 'sum' } },
             filter: {
               filterModel: {
-                items: [{ columnField: 'id', operatorValue: '!=', value: 15 }],
+                items: [{ field: 'id', operator: '!=', value: 15 }],
               },
             },
           }}

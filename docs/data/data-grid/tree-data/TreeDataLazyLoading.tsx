@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   DataGridPro,
   getDataGridUtilityClass,
-  GridColumns,
+  GridColDef,
   DataGridProProps,
   GridEventListener,
   GridGroupingColDefOverride,
@@ -128,7 +128,7 @@ const ALL_ROWS: GridRowModel<Row>[] = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',
@@ -193,15 +193,6 @@ function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const handleKeyDown: IconButtonProps['onKeyDown'] = (event) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
-
   const handleClick: IconButtonProps['onClick'] = (event) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
@@ -215,7 +206,6 @@ function GroupingCellWithLazyLoading(props: GroupingCellWithLazyLoadingProps) {
           <IconButton
             size="small"
             onClick={handleClick}
-            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               rowNode.childrenExpanded

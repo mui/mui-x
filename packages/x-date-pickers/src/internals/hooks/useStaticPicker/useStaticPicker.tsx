@@ -11,7 +11,7 @@ import { DIALOG_WIDTH } from '../../constants/dimensions';
 const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
 })) as unknown as typeof PickersViewLayout;
 
 /**
@@ -23,21 +23,26 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
 export const useStaticPicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
   ref,
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
+  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, renderCurrentView } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker<
+    TDate | null,
+    TDate,
+    TView,
+    TExternalProps,
+    {}
+  >({
     props,
-    viewLookup,
     valueManager,
     validator,
+    autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });

@@ -19,7 +19,7 @@ import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -66,7 +66,7 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
-  searchPredicate?: (column: GridStateColDef, searchValue: string) => boolean;
+  searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
   /*
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
@@ -177,7 +177,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   }, [autoFocusSearchField]);
 
   let firstHideableColumnFound = false;
-  const isFirstHideableColumn = (column: GridStateColDef) => {
+  const isFirstHideableColumn = (column: GridColDef) => {
     if (firstHideableColumnFound === false && column.hideable !== false) {
       firstHideableColumnFound = true;
       return true;

@@ -12,7 +12,6 @@ import { alpha, styled, useThemeProps, Theme } from '@mui/material/styles';
 import { ExtendMui } from '../internals/models/helpers';
 import { useUtils } from '../internals/hooks/useUtils';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import {
   PickersDayClasses,
   PickersDayClassKey,
@@ -21,7 +20,10 @@ import {
 } from './pickersDayClasses';
 
 export interface PickersDayProps<TDate>
-  extends Omit<ExtendMui<ButtonBaseProps>, 'onKeyDown' | 'onFocus' | 'onBlur'> {
+  extends Omit<
+    ExtendMui<ButtonBaseProps>,
+    'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
+  > {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -49,7 +51,8 @@ export interface PickersDayProps<TDate>
   onFocus?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onBlur?: (event: React.FocusEvent<HTMLButtonElement>, day: TDate) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLButtonElement>, day: TDate) => void;
-  onDaySelect: (day: TDate, isFinish: PickerSelectionState) => void;
+  onMouseEnter?: (event: React.MouseEvent<HTMLButtonElement>, day: TDate) => void;
+  onDaySelect: (day: TDate) => void;
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -69,10 +72,6 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   today?: boolean;
-  /**
-   * Currently selected days.
-   */
-  selectedDays: TDate[];
 }
 
 type OwnerState = Partial<PickersDayProps<any>>;
@@ -112,44 +111,50 @@ const styleArg = ({ theme, ownerState }: { theme: Theme; ownerState: OwnerState 
   borderRadius: '50%',
   padding: 0,
   // background required here to prevent collides with the other days when animating with transition group
-  backgroundColor: theme.palette.background.paper,
-  color: theme.palette.text.primary,
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+  backgroundColor: (theme.vars || theme).palette.background.paper,
+  color: (theme.vars || theme).palette.text.primary,
+  '@media (pointer: fine)': {
+    '&:hover': {
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+        : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    },
   },
   '&:focus': {
-    backgroundColor: alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})`
+      : alpha(theme.palette.action.active, theme.palette.action.hoverOpacity),
     [`&.${pickersDayClasses.selected}`]: {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.selected}`]: {
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
+    color: (theme.vars || theme).palette.primary.contrastText,
+    backgroundColor: (theme.vars || theme).palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
     transition: theme.transitions.create('background-color', {
       duration: theme.transitions.duration.short,
     }),
     '&:hover': {
       willChange: 'background-color',
-      backgroundColor: theme.palette.primary.dark,
+      backgroundColor: (theme.vars || theme).palette.primary.dark,
     },
   },
   [`&.${pickersDayClasses.disabled}`]: {
-    color: theme.palette.text.disabled,
+    color: (theme.vars || theme).palette.text.disabled,
   },
   ...(!ownerState.disableMargin && {
     margin: `0 ${DAY_MARGIN}px`,
   }),
   ...(ownerState.outsideCurrentMonth &&
     ownerState.showDaysOutsideCurrentMonth && {
-      color: theme.palette.text.secondary,
+      color: (theme.vars || theme).palette.text.secondary,
     }),
   ...(!ownerState.disableHighlightToday &&
     ownerState.today && {
       [`&:not(.${pickersDayClasses.selected})`]: {
-        border: `1px solid ${theme.palette.text.secondary}`,
+        border: `1px solid ${(theme.vars || theme).palette.text.secondary}`,
       },
     }),
 });
@@ -218,13 +223,13 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     onFocus = noop,
     onBlur = noop,
     onKeyDown = noop,
-    onMouseDown,
+    onMouseDown = noop,
+    onMouseEnter = noop,
     outsideCurrentMonth,
     selected = false,
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
-    selectedDays,
     ...other
   } = props;
   const ownerState = {
@@ -256,9 +261,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   // For day outside of current month, move focus from mouseDown to mouseUp
   // Goal: have the onClick ends before sliding to the new month
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (onMouseDown) {
-      onMouseDown(event);
-    }
+    onMouseDown(event);
     if (outsideCurrentMonth) {
       event.preventDefault();
     }
@@ -266,7 +269,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      onDaySelect(day, 'finish');
+      onDaySelect(day);
     }
 
     if (outsideCurrentMonth) {
@@ -299,6 +302,7 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
       onKeyDown={(event) => onKeyDown(event, day)}
       onFocus={(event) => onFocus(event, day)}
       onBlur={(event) => onBlur(event, day)}
+      onMouseEnter={(event) => onMouseEnter(event, day)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       {...other}
@@ -309,37 +313,34 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
   );
 });
 
-export const areDayPropsEqual = (
-  prevProps: PickersDayProps<any>,
-  nextProps: PickersDayProps<any>,
-) => {
-  return (
-    prevProps.autoFocus === nextProps.autoFocus &&
-    prevProps.isAnimating === nextProps.isAnimating &&
-    prevProps.today === nextProps.today &&
-    prevProps.disabled === nextProps.disabled &&
-    prevProps.selected === nextProps.selected &&
-    prevProps.disableMargin === nextProps.disableMargin &&
-    prevProps.showDaysOutsideCurrentMonth === nextProps.showDaysOutsideCurrentMonth &&
-    prevProps.disableHighlightToday === nextProps.disableHighlightToday &&
-    prevProps.className === nextProps.className &&
-    prevProps.sx === nextProps.sx &&
-    prevProps.outsideCurrentMonth === nextProps.outsideCurrentMonth &&
-    prevProps.onFocus === nextProps.onFocus &&
-    prevProps.onBlur === nextProps.onBlur &&
-    prevProps.onDaySelect === nextProps.onDaySelect
-  );
-};
-
 PickersDayRaw.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * A ref for imperative actions.
+   * It currently only supports `focusVisible()` action.
+   */
+  action: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focusVisible: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * If `true`, the ripples are centered.
+   * They won't start at the cursor interaction position.
+   * @default false
+   */
+  centerRipple: PropTypes.bool,
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The date to show.
    */
@@ -359,11 +360,44 @@ PickersDayRaw.propTypes = {
    * @default false
    */
   disableMargin: PropTypes.bool,
+  /**
+   * If `true`, the ripple effect is disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `.Mui-focusVisible` class.
+   * @default false
+   */
+  disableRipple: PropTypes.bool,
+  /**
+   * If `true`, the touch ripple effect is disabled.
+   * @default false
+   */
+  disableTouchRipple: PropTypes.bool,
+  /**
+   * If `true`, the base button will have a keyboard focus ripple.
+   * @default false
+   */
+  focusRipple: PropTypes.bool,
+  /**
+   * This prop can help identify which element has keyboard focus.
+   * The class name will be applied when the element gains the focus through keyboard interaction.
+   * It's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
+   * The rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).
+   * A [polyfill can be used](https://github.com/WICG/focus-visible) to apply a `focus-visible` class to other components
+   * if needed.
+   */
+  focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
+  /**
+   * Callback fired when the component is focused with a keyboard.
+   * We trigger a `onFocus` callback too.
+   */
+  onFocusVisible: PropTypes.func,
   onKeyDown: PropTypes.func,
+  onMouseEnter: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -374,19 +408,45 @@ PickersDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * Currently selected days.
-   */
-  selectedDays: PropTypes.array.isRequired,
-  /**
    * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  style: PropTypes.object,
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  /**
+   * @default 0
+   */
+  tabIndex: PropTypes.number,
   /**
    * If `true`, renders as today date.
    * @default false
    */
   today: PropTypes.bool,
+  /**
+   * Props applied to the `TouchRipple` element.
+   */
+  TouchRippleProps: PropTypes.object,
+  /**
+   * A ref that points to the `TouchRipple` element.
+   */
+  touchRippleRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        pulsate: PropTypes.func.isRequired,
+        start: PropTypes.func.isRequired,
+        stop: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
 } as any;
 
 /**
@@ -399,4 +459,4 @@ PickersDayRaw.propTypes = {
  *
  * - [PickersDay API](https://mui.com/x/api/date-pickers/pickers-day/)
  */
-export const PickersDay = React.memo(PickersDayRaw, areDayPropsEqual) as PickersDayComponent;
+export const PickersDay = React.memo(PickersDayRaw) as PickersDayComponent;

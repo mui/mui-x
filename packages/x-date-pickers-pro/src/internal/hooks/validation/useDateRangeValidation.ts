@@ -65,12 +65,6 @@ export type DateRangeValidationError = [
   DateRangeValidationErrorValue,
   DateRangeValidationErrorValue,
 ];
-
-export const isSameDateRangeError = (
-  a: DateRangeValidationError,
-  b: DateRangeValidationError | null,
-) => b !== null && a[1] === b[1] && a[0] === b[0];
-
 export const useDateRangeValidation = <TDate>(
   props: ValidationProps<
     DateRangeValidationError,

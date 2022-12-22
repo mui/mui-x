@@ -1,5 +1,6 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -14,9 +15,11 @@
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableDragEditing": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
@@ -50,7 +53,7 @@
   },
   "name": "DateRangeCalendar",
   "styles": {
-    "classes": ["root", "monthContainer"],
+    "classes": ["root", "monthContainer", "dayDragging"],
     "globalClasses": {},
     "name": "MuiDateRangeCalendar"
   },
@@ -58,6 +61,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
+  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangeCalendar" }]
 }

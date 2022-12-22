@@ -34,6 +34,7 @@ export interface InternalMobileWrapperProps<TDate>
   localeText?: PickersInputLocaleText<TDate>;
 }
 
+// TODO v6: Drop with the legacy pickers
 export function MobileWrapper<TDate>(props: InternalMobileWrapperProps<TDate>) {
   const {
     children,

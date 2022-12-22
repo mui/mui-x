@@ -6,17 +6,9 @@ import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
 import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<MobileNextDatePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake', clockConfig: new Date() });
-
-  describeValidation(MobileNextDatePicker, () => ({
-    render,
-    clock,
-    views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
-  }));
 
   it('allows to change only year', () => {
     const onChangeMock = spy();
@@ -160,17 +152,6 @@ describe('<MobileNextDatePicker />', () => {
     expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
-  ['readOnly', 'disabled'].forEach((prop) => {
-    it(`should not be opened when "Choose date" is clicked when ${prop}={true}`, () => {
-      const handleOpen = spy();
-      render(<MobileNextDatePicker {...{ [prop]: true }} onOpen={handleOpen} open={false} />);
-
-      userEvent.mousePress(screen.getByLabelText(/Choose date/));
-
-      expect(handleOpen.callCount).to.equal(0);
-    });
-  });
-
   describe('picker state', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
@@ -182,201 +163,6 @@ describe('<MobileNextDatePicker />', () => {
       expect(onOpen.callCount).to.equal(1);
       expect(screen.queryByRole('dialog')).toBeVisible();
     });
-
-    it('should call onChange when selecting a date', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
-
-      // Change the date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
-
-      // Change the date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '6' }));
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 6));
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(0);
-    });
-
-    it('should call onClose and onAccept when selecting a date and props.closeOnSelect = true', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          closeOnSelect
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Change the date
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(new Date(2018, 0, 8));
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onChange with the initial value when clicking the "Cancel" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
-
-      // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0]).toEqualDateTime(defaultValue);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onAccept with the live value when clicking the "OK" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '8' }));
-
-      // Accept the modifications
-      userEvent.mousePress(screen.getByText(/ok/i));
-      expect(onChange.callCount).to.equal(1); // The accepted value as already been committed, don't call onChange again
-      expect(onAccept.callCount).to.equal(1);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange when clicking the "Cancel" button without prior value modification', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          defaultValue={defaultValue}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).to.equal(null);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.equal(null);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <MobileNextDatePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
   });
 
   describe('localization', () => {

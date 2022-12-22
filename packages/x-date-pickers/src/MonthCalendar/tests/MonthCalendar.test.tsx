@@ -1,32 +1,39 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { MonthCalendar, monthCalendarClasses as classes } from '@mui/x-date-pickers/MonthCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { fireEvent, screen } from '@mui/monorepo/test/utils';
+import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<MonthCalendar />', () => {
-  const { render } = createPickerRenderer();
+  const { render } = createPickerRenderer({ clock: 'fake', clockConfig: new Date(2019, 0, 1) });
 
-  describeConformance(<MonthCalendar defaultValue={adapterToUse.date()} />, () => ({
-    classes,
-    inheritComponent: 'div',
-    render,
-    wrapMount: wrapPickerMount,
-    muiName: 'MuiMonthCalendar',
-    refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-  }));
+  it('allows to pick month standalone by click, `Enter` and `Space`', () => {
+    const onChange = spy();
+    render(<MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
+    const targetMonth = screen.getByRole('button', { name: 'Feb' });
 
-  it('allows to pick month standalone', () => {
-    const onChangeMock = spy();
-    render(
-      <MonthCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
-    );
+    // A native button implies Enter and Space keydown behavior
+    // These keydown events only trigger click behavior if they're trusted (programmatically dispatched events aren't trusted).
+    // If this breaks, make sure to add tests for
+    // - fireEvent.keyDown(targetDay, { key: 'Enter' })
+    // - fireEvent.keyUp(targetDay, { key: 'Space' })
+    expect(targetMonth.tagName).to.equal('BUTTON');
 
-    fireEvent.click(screen.getByText('May', { selector: 'button' }));
-    expect((onChangeMock.args[0][0] as Date).getMonth()).to.equal(4); // month index starting from 0
+    fireEvent.click(targetMonth);
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 2));
+  });
+
+  it('should select start of month without time when no initial value is present', () => {
+    const onChange = spy();
+    render(<MonthCalendar onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Feb' }));
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2019, 1, 1, 0, 0, 0));
   });
 
   it('does not allow to pick months if readOnly prop is passed', () => {

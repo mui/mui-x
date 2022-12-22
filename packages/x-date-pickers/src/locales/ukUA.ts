@@ -2,8 +2,6 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { DateView } from '../internals/models';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
 const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Попередній місяць',
@@ -45,6 +43,12 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} годин`,
   minutesClockNumberText: (minutes) => `${minutes} хвилин`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
+
+  // Calendar labels
+  calendarWeekNumberHeaderLabel: 'Номер тижня',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Тиждень ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

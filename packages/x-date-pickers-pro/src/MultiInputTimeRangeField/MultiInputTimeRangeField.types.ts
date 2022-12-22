@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
 } from '../internal/models/timeRange';
+import { RangePosition } from '../internal/models/range';
 
 export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
@@ -26,7 +27,7 @@ export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends
   UseMultiInputTimeRangeFieldProps<TDate>;
 
 export interface MultiInputTimeRangeFieldProps<TDate>
-  extends UseMultiInputTimeRangeFieldComponentProps<TDate, {}> {
+  extends UseMultiInputTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   /**
    * Overrideable components.
    * @default {}
@@ -64,7 +65,7 @@ export interface MultiInputTimeRangeFieldSlotsComponentsProps<TDate> {
   input?: SlotComponentProps<
     typeof TextField,
     {},
-    MultiInputTimeRangeFieldOwnerState<TDate> & { position: 'start' | 'end' }
+    MultiInputTimeRangeFieldOwnerState<TDate> & { position: RangePosition }
   >;
   separator?: SlotComponentProps<typeof Typography, {}, MultiInputTimeRangeFieldOwnerState<TDate>>;
 }

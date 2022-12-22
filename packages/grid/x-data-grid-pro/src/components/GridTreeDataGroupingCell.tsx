@@ -10,7 +10,6 @@ import {
   GridRenderCellParams,
   GridGroupNode,
 } from '@mui/x-data-grid';
-import { isNavigationKey } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
@@ -55,15 +54,6 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
     ? rootProps.components.TreeDataCollapseIcon
     : rootProps.components.TreeDataExpandIcon;
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === ' ') {
-      event.stopPropagation();
-    }
-    if (isNavigationKey(event.key) && !event.shiftKey) {
-      apiRef.current.publishEvent('cellNavigationKeyDown', props, event);
-    }
-  };
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
     apiRef.current.setCellFocus(id, field);
@@ -77,7 +67,6 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
           <IconButton
             size="small"
             onClick={handleClick}
-            onKeyDown={handleKeyDown}
             tabIndex={-1}
             aria-label={
               rowNode.childrenExpanded

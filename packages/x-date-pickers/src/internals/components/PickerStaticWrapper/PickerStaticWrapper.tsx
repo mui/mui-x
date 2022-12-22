@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useSlotProps } from '@mui/base/utils';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -10,7 +11,7 @@ import {
   getStaticWrapperUtilityClass,
   PickerStaticWrapperClasses,
 } from './pickerStaticWrapperClasses';
-import { PickersActionBar } from '../../../PickersActionBar';
+import { PickersActionBar, PickersActionBarAction } from '../../../PickersActionBar';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -42,6 +43,7 @@ export interface ExportedPickerStaticWrapperProps {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  autoFocus?: boolean;
 }
 
 export interface PickerStaticWrapperProps<TDate>
@@ -87,9 +89,10 @@ const PickerStaticWrapperContent = styled('div', {
   minWidth: DIALOG_WIDTH,
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: (theme.vars || theme).palette.background.paper,
 }));
 
+// TODO v6: Drop with the legacy pickers
 function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
   const {
@@ -111,6 +114,22 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const classes = useUtilityClasses(props);
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions:
+        displayStaticWrapperAs === 'desktop'
+          ? []
+          : (['cancel', 'accept'] as PickersActionBarAction[]),
+    },
+    ownerState: { wrapperVariant: displayStaticWrapperAs },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
 
   return (
@@ -120,14 +139,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
           <PickerStaticWrapperContent className={classes.content}>
             <PaperContent {...componentsProps?.paperContent}>{children}</PaperContent>
           </PickerStaticWrapperContent>
-          <ActionBar
-            onAccept={onAccept}
-            onClear={onClear}
-            onCancel={onCancel}
-            onSetToday={onSetToday}
-            actions={displayStaticWrapperAs === 'desktop' ? [] : ['cancel', 'accept']}
-            {...componentsProps?.actionBar}
-          />
+          <ActionBar {...actionBarProps} />
         </PickerStaticWrapperRoot>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
@@ -139,6 +151,7 @@ PickerStaticWrapper.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.

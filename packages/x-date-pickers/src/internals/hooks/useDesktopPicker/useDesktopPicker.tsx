@@ -23,15 +23,23 @@ import { InferError } from '../validation/useValidation';
 export const useDesktopPicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
+  const {
+    components,
+    componentsProps,
+    className,
+    format,
+    readOnly,
+    disabled,
+    autoFocus,
+    localeText,
+  } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -44,12 +52,12 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
     inputRef,
-    viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
   });
@@ -64,6 +72,7 @@ export const useDesktopPicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
     },
     ownerState: props,
   });
@@ -146,7 +155,10 @@ export const useDesktopPicker = <
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <PickersViewLayout

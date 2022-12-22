@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier } from '@mui/x-license-pro';
+import { SxProps } from '@mui/system';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -21,6 +22,7 @@ import {
   BaseDateRangePickerSlotsComponent,
   BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { RangePosition } from '../internal/models/range';
 
 const releaseInfo = getReleaseInfo();
 
@@ -48,6 +50,10 @@ export interface MobileDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -77,9 +83,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
 
   const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const pickerStateProps = {
     ...other,
@@ -99,8 +103,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     ...other,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     ref,
     mobile: true,
@@ -119,8 +123,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         {...pickerProps}
         components={components}
         componentsProps={componentsProps}
@@ -140,7 +144,6 @@ MobileDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -212,6 +215,10 @@ MobileDateRangePicker.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
   /**
    * Calendar will show more weeks in order to match this value.
    * Put it to 6 for having fix number of week in Gregorian calendars
@@ -313,11 +320,6 @@ MobileDateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onOpen: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
    */

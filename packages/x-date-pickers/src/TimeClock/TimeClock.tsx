@@ -2,7 +2,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses, unstable_useId as useId } from '@mui/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useControlled as useControlled,
+  unstable_useId as useId,
+} from '@mui/utils';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
@@ -13,7 +18,7 @@ import {
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import { PickerOnChangeFn, useViews } from '../internals/hooks/useViews';
+import { useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
@@ -75,13 +80,22 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
-  value: TDate | null;
+  value?: TDate | null;
   /**
-   * On change callback @DateIOType.
+   * The default selected value.
+   * Used when the component is not controlled.
    */
-  onChange: PickerOnChangeFn<TDate>;
+  defaultValue?: TDate | null;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
+   */
+  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
   showViewSwitcher?: boolean;
   /**
    * Controlled open view.
@@ -137,7 +151,7 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop showViewSwitcher once the legacy pickers are removed
+// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:
@@ -148,6 +162,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   inProps: TimeClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
+  const localeText = useLocaleText<TDate>();
+
   const props = useThemeProps({
     props: inProps,
     name: 'MuiTimeClock',
@@ -159,7 +175,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
-    value,
+    value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
     minTime,
@@ -169,7 +185,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     shouldDisableTime,
     showViewSwitcher,
     onChange,
-    view,
+    defaultValue,
+    view: inView,
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
@@ -179,14 +196,26 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     readOnly,
   } = props;
 
-  const localeText = useLocaleText();
+  const [value, setValue] = useControlled({
+    name: 'DateCalendar',
+    state: 'value',
+    controlled: valueProp,
+    default: defaultValue ?? null,
+  });
 
-  const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
-    view,
+  const handleValueChange = useEventCallback(
+    (newValue: TDate | null, selectionState?: PickerSelectionState) => {
+      setValue(newValue);
+      onChange?.(newValue, selectionState);
+    },
+  );
+
+  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
+    view: inView,
     views,
     openTo,
     onViewChange,
-    onChange,
+    onChange: handleValueChange,
   });
 
   const now = useNow<TDate>();
@@ -200,7 +229,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     selectedTimeOrMidnight,
     ampm,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
   );
 
   const isTimeDisabled = React.useCallback(
@@ -293,11 +322,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const viewProps = React.useMemo<
     Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
   >(() => {
-    switch (openView) {
+    switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
           const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
-          handleChangeAndOpenNext(
+          setValueAndGoToNextView(
             utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
             isFinish,
           );
@@ -321,7 +350,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'minutes': {
         const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
+          setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
         };
 
         return {
@@ -341,7 +370,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'seconds': {
         const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
+          setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
         };
 
         return {
@@ -362,7 +391,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         throw new Error('You must provide the type for ClockView');
     }
   }, [
-    openView,
+    view,
     utils,
     value,
     ampm,
@@ -370,7 +399,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     localeText.minutesClockNumberText,
     localeText.secondsClockNumberText,
     meridiemMode,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
     selectedTimeOrMidnight,
     isTimeDisabled,
     selectedId,
@@ -392,10 +421,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
-          onGoToPrevious={() => setOpenView(previousView)}
+          onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}
-          onGoToNext={() => setOpenView(nextView)}
+          onGoToNext={() => setView(nextView!)}
           isNextDisabled={!nextView}
           nextLabel={localeText.openNextView}
           ownerState={ownerState}
@@ -406,7 +435,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         autoFocus={autoFocus}
         ampmInClock={ampmInClock}
         value={value}
-        type={openView}
+        type={view}
         ampm={ampm}
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
@@ -456,6 +485,11 @@ TimeClock.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
@@ -491,9 +525,12 @@ TimeClock.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * On change callback @DateIOType.
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {TDate | null} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   /**
    * Callback fired on view change.
    * @param {TimeView} view The new view.
@@ -526,7 +563,8 @@ TimeClock.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Selected date @DateIOType.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**

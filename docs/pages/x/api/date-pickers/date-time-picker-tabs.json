@@ -9,7 +9,7 @@
       "required": true
     },
     "classes": { "type": { "name": "object" } },
-    "dateRangeIcon": { "type": { "name": "node" }, "default": "DateRange" },
+    "dateIcon": { "type": { "name": "node" }, "default": "DateRange" },
     "hidden": {
       "type": { "name": "bool" },
       "default": "`window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`"
@@ -20,6 +20,9 @@
   "name": "DateTimePickerTabs",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
   "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom components</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateTimePickerTabs" }
+  ]
 }
