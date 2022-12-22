@@ -102,7 +102,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
           (animationStyle ? animationStyle : '') +
           'visibility: hidden; opacity: 0; } ' +
           '.Mui-resizeTriggers, .Mui-resizeTriggers > div, .contract-trigger:before { content: " "; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; z-index: -1; } .Mui-resizeTriggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }',
-        head = root instanceof ShadowRoot ? root : doc.head || doc.getElementsByTagName('head')[0],
+        container = root.constructor.name === 'ShadowRoot' ? root : doc.head || doc.getElementsByTagName('head')[0],
         style = doc.createElement('style');
 
       style.id = 'muiDetectElementResize';
@@ -118,7 +118,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
         style.appendChild(doc.createTextNode(css));
       }
 
-      head.appendChild(style);
+      container.appendChild(style);
     }
   };
 
