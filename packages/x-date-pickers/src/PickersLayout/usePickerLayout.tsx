@@ -4,7 +4,14 @@ import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
-import { DateOrTimeView } from '../internals';
+import { DateOrTimeView } from '../internals/models';
+import { BaseToolbarProps } from '../internals/models/props/toolbar';
+
+function toolbarHasView<TValue, TView extends DateOrTimeView>(
+  toolbarProps,
+): toolbarProps is BaseToolbarProps<TValue, TView> {
+  return toolbarProps.view !== null;
+}
 
 const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   const { classes, isLandscape } = ownerState;
@@ -85,7 +92,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     },
     ownerState: { ...props, wrapperVariant },
   });
-  const toolbar = view && shouldRenderToolbar && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
+  const toolbar =
+    toolbarHasView(toolbarProps) && shouldRenderToolbar && !!Toolbar ? (
+      <Toolbar {...toolbarProps} />
+    ) : null;
 
   // Content
 
