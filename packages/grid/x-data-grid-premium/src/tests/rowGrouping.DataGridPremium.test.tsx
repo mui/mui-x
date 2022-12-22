@@ -1527,7 +1527,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             {
               field: 'category1',
               valueGetter: (params) => `value ${params.row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams) =>
+              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
                 `groupingValue ${params.row.category1}`,
             },
           ]}

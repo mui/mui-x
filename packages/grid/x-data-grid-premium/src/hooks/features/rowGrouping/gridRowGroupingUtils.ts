@@ -264,8 +264,8 @@ export const getGroupingRules = ({
  * Compares two sets of grouping rules to determine if they are equal or not.
  */
 export const areGroupingRulesEqual = (
-  previousValue: GridGroupingRules = [],
   newValue: GridGroupingRules,
+  previousValue: GridGroupingRules = [],
 ) => {
   if (previousValue.length !== newValue.length) {
     return false;

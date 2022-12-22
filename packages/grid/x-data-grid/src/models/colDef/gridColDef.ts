@@ -125,10 +125,10 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
    * @template R, V
-   * @param {GridValueGetterParams<any, R>} params Object containing parameters for the getter.
+   * @param {GridValueGetterParams<R, any>} params Object containing parameters for the getter.
    * @returns {V} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams<any, R>) => V;
+  valueGetter?: (params: GridValueGetterParams<R, any>) => V;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.

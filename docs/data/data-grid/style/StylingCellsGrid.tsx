@@ -12,7 +12,7 @@ const columns: GridColumns = [
     field: 'score',
     type: 'number',
     width: 140,
-    cellClassName: (params: GridCellParams) => {
+    cellClassName: (params: GridCellParams<any, number>) => {
       if (params.value == null) {
         return '';
       }

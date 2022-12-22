@@ -8,11 +8,11 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid';
 
-function renderRating(params: GridRenderCellParams) {
+function renderRating(params: GridRenderCellParams<any, number>) {
   return <Rating readOnly value={params.value} />;
 }
 
-function RatingEditInputCell(props: GridRenderCellParams) {
+function RatingEditInputCell(props: GridRenderCellParams<any, number>) {
   const { id, value, field } = props;
   const apiRef = useGridApiContext();
 

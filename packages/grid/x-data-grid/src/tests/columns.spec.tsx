@@ -16,7 +16,7 @@ function RenderCellParamsExplicitTyping() {
         },
         {
           field: 'price2',
-          renderCell: (params: GridRenderCellParams) => {
+          renderCell: (params: GridRenderCellParams<any, any, number>) => {
             return params.value.toUpperCase();
           },
         },
@@ -108,7 +108,7 @@ function CellParamsValue() {
       onCellClick={(params: GridCellParams) => {
         params.value!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams) => {
+      onCellDoubleClick={(params: GridCellParams<any, any, number>) => {
         params.value!.toUpperCase();
       }}
     />

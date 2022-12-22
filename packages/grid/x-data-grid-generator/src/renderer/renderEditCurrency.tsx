@@ -19,7 +19,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 })) as typeof Autocomplete;
 
-function EditCurrency(props: GridRenderEditCellParams) {
+function EditCurrency(props: GridRenderEditCellParams<any, string>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -80,6 +80,6 @@ function EditCurrency(props: GridRenderEditCellParams) {
   );
 }
 
-export function renderEditCurrency(params: GridRenderEditCellParams) {
+export function renderEditCurrency(params: GridRenderEditCellParams<any, string>) {
   return <EditCurrency {...params} />;
 }
