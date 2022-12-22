@@ -70,7 +70,8 @@ export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrT
 }
 
 export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
-  extends UsePickerLayoutPropsResponseLayoutProps<TValue, TView> {
+  extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
+  value?: TValue;
   className?: string;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
