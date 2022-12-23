@@ -9,8 +9,8 @@ _Dec 23, 2022_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- 🚀 Improved column menu design and API
-- 🌍 Improve Korean and Russian locales
+- 🚀 New column menu design and API
+- 🌍 Update Korean and Russian locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
