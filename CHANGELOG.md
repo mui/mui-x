@@ -56,46 +56,46 @@ From https://github.com/mui/mui-x/pull/6619
 
   **Community Package:**
   ```diff
-  - <GridFilterMenuItem />
-  + <GridColumnMenuFilterItem />
+  -<GridFilterMenuItem />
+  +<GridColumnMenuFilterItem />
   ```
 
   ```diff
-  - <HideGridColMenuItem />
-  + <GridColumnMenuHideItem />
+  -<HideGridColMenuItem />
+  +<GridColumnMenuHideItem />
   ```
 
   ```diff
-  - <GridColumnsMenuItem />
-  + <GridColumnMenuColumnsItem />
+  -<GridColumnsMenuItem />
+  +<GridColumnMenuColumnsItem />
   ```
 
   ```diff
-  - <SortGridMenuItems />
-  + <GridColumnMenuSortItem />
+  -<SortGridMenuItems />
+  +<GridColumnMenuSortItem />
   ```
 
   ```diff
-  - interface GridFilterItemProps
-  + interface GridColumnMenuItemProps
+  -interface GridFilterItemProps
+  +interface GridColumnMenuItemProps
   ```
 
   **Pro package:**
   ```diff
-  - <GridColumnPinningMenuItems />
-  + <GridColumnMenuPinningItem />
+  -<GridColumnPinningMenuItems />
+  +<GridColumnMenuPinningItem />
   ```
 
   **Premium package:**
   ```diff
-  - <GridAggregationColumnMenuItem />
-  + <GridColumnMenuAggregationItem />
+  -<GridAggregationColumnMenuItem />
+  +<GridColumnMenuAggregationItem />
   ```
 
   ```diff
-  - <GridRowGroupingColumnMenuItems />
-  - <GridRowGroupableColumnMenuItems />
-  + <GridColumnMenuGroupingItem />
+  -<GridRowGroupingColumnMenuItems />
+  -<GridRowGroupableColumnMenuItems />
+  +<GridColumnMenuGroupingItem />
   ```
 
 
