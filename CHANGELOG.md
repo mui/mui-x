@@ -41,7 +41,7 @@ From https://github.com/mui/mui-x/pull/6619
 
 ### Breaking changes
 
-- `column` and `currentColumn` is now renamed to `colDef`
+- `column` and `currentColumn` recieved by `<GridColumnMenu />` and column menu items was renamed to `colDef`
 - `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed
 
 - Some of the components have been renamed for consistency.
