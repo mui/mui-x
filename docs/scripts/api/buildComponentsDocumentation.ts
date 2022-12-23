@@ -2,27 +2,27 @@ import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import fs from 'fs';
 import path from 'path';
-import parseStyles, { Styles } from '@mui/monorepo/docs/src/modules/utils/parseStyles';
+import parseStyles, { Styles } from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
-} from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
-import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
+} from '@mui/monorepo/packages/api-docs-builder/utils/createDescribeableProp';
+import generatePropDescription from '@mui/monorepo/packages/api-docs-builder/utils/generatePropDescription';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
-} from '@mui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
-import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
+} from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
+import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdownNew } from '@mui/monorepo/docs/src/modules/utils/find';
+import { LANGUAGES } from 'docs/config';
+import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
 import {
   renderInline as renderMarkdownInline,
   getHeaders,
   getTitle,
-} from '@mui/monorepo/docs/packages/markdown';
-import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
+} from '@mui/monorepo/packages/markdown';
+import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import {
   DocumentedInterfaces,

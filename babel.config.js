@@ -14,7 +14,7 @@ const defaultAlias = {
   '@mui/x-license-pro': resolveAliasPath('./packages/x-license-pro/src'),
   '@mui/x-date-pickers': resolveAliasPath('./packages/x-date-pickers/src'),
   '@mui/x-date-pickers-pro': resolveAliasPath('./packages/x-date-pickers-pro/src'),
-  '@mui/markdown': '@mui/monorepo/docs/packages/markdown',
+  '@mui/markdown': '@mui/monorepo/packages/markdown',
   'typescript-to-proptypes': '@mui/monorepo/packages/typescript-to-proptypes/src',
   docs: resolveAliasPath('./node_modules/@mui/monorepo/docs'),
   test: resolveAliasPath('./test'),
