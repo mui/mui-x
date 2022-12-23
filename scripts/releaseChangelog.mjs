@@ -135,6 +135,7 @@ async function main(argv) {
   const coreCommits = [];
   const docsCommits = [];
   const otherCommits = [];
+  const codemodCommits = [];
 
   commitsItems.forEach((commitItem) => {
     const tag = parseTags(commitItem.commit.message);
@@ -159,6 +160,9 @@ async function main(argv) {
         break;
       case 'core':
         coreCommits.push(commitItem);
+        break;
+      case 'codemod':
+        codemodCommits.push(commitItem);
         break;
       default:
         otherCommits.push(commitItem);
@@ -208,8 +212,16 @@ ${changeLogMessages.length > 0 ? '\n\n' : ''}${changeLogMessages.join('\n')}
 ### \`@mui/x-data-grid@v__VERSION__\` / \`@mui/x-data-grid-pro@v__VERSION__\` / \`@mui/x-data-grid-premium@v__VERSION__\`
 ${logChangelogSection(dataGridCommits, '#### Changes')}
 
-### \`@mui/x-date-pickers@v__PICKERS_VERSION__\` / \`@mui/x-date-pickers-pro@v__PICKERS_VERSION__\`
+### \`@mui/x-date-pickers@v__VERSION__\` / \`@mui/x-date-pickers-pro@v__VERSION__\`
 ${logChangelogSection(pickersCommits, '#### Changes')}
+${
+  codemodCommits.length > 0
+    ? `\n### \`@mui/x-codemod@v__VERSION__\`\n${logChangelogSection(
+        codemodCommits,
+        '#### Changes',
+      )}`
+    : ''
+}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}

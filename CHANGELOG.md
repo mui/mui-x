@@ -3,6 +3,159 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.13
+
+_Dec 23, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Improved column menu design and API
+
+From https://github.com/mui/mui-x/pull/7304
+
+
+#### Breaking changes
+
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
+From https://github.com/mui/mui-x/pull/7067
+
+
+- [x] Remove column separator
+- [x] Remove unused `disableHeaderSeparator`
+
+## Design
+- [Figma Process](https://www.figma.com/file/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=1227%3A62449&t=MAO4kO2qvUssZFTG-0)
+- Figma Final
+From https://github.com/mui/mui-x/pull/7249
+
+
+#### Breaking changes
+
+- `AdapterLuxon` now required `luxon` in version `3.0.2` or higher in order to work.
+
+  Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
+
+From https://github.com/mui/mui-x/pull/6619
+
+
+- New column menu design with improved look and feel
+- Ability to add new menu items and place them on any order
+- Replaced all the items to be injected via pipe processor for better control through respective hooks
+- Added ability to override/reorder column menu items which may help add more items in any order e.g. for https://github.com/mui/mui-x/issues/5307
+- Ability to customize the menu by passing a component in column menu slot
+- New l10n labels added
+- Added dedicated component and icon slots for Pro and Premium packages for shipping only required components per package
+- Fix accessibility bug of focus shifting to body when an item gets hidden
+
+### Breaking changes
+
+- `column` and `currentColumn` is now renamed to `colDef`
+- `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed
+
+- Some of the components have been renamed for consistency.
+
+  **Community Package:**
+  ```diff
+  - <GridFilterMenuItem />
+  + <GridColumnMenuFilterItem />
+  ```
+
+  ```diff
+  - <HideGridColMenuItem />
+  + <GridColumnMenuHideItem />
+  ```
+
+  ```diff
+  - <GridColumnsMenuItem />
+  + <GridColumnMenuColumnsItem />
+  ```
+
+  ```diff
+  - <SortGridMenuItems />
+  + <GridColumnMenuSortItem />
+  ```
+
+  ```diff
+  - interface GridFilterItemProps
+  + interface GridColumnMenuItemProps
+  ```
+
+  **Pro package:**
+  ```diff
+  - <GridColumnPinningMenuItems />
+  + <GridColumnMenuPinningItem />
+  ```
+
+  **Premium package:**
+  ```diff
+  - <GridAggregationColumnMenuItem />
+  + <GridColumnMenuAggregationItem />
+  ```
+
+  ```diff
+  - <GridRowGroupingColumnMenuItems />
+  - <GridRowGroupableColumnMenuItems />
+  + <GridColumnMenuGroupingItem />
+  ```
+
+
+## Design
+- [Figma Process](https://www.figma.com/file/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=679%3A38262&t=aFUzX2phxDdIDwFL-0)
+- [Final](https://www.figma.com/proto/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=1239%3A64017&scaling=min-zoom&page-id=679%3A38262)
+From https://github.com/mui/mui-x/pull/7224
+
+
+#### Breaking changes
+
+- The `GridColumns` type was removed. Use `GridColDef[]` instead.
+- The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
+- The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
+- The `GridStateColDef` type was removed.
+  If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
+  If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
+
+### `@mui/x-data-grid@6.0.0-alpha.13` / `@mui/x-data-grid-pro@6.0.0-alpha.13` / `@mui/x-data-grid-premium@6.0.0-alpha.13`
+
+#### Changes
+
+- [DataGrid] Allow disabling of buttons in column panel (#6947) @MBilalShafi
+- [DataGrid] Improve column definition typing (#7224) @cherniavskii
+- [DataGrid] Improved column menu design and api (#6619) @MBilalShafi
+- [DataGrid] Remove `GridDensityType` enum (#7304) @cherniavskii
+- [DataGrid] Remove `rowHeight` and `headerHeight` from state (#7199) @DanailH
+- [DataGrid] Remove column separator to match table styles (#7067) @MBilalShafi
+- [DataGrid] Update Russian (ru-RU) locale (#7220) @VeceluXa
+- [DataGridPremium] Fix `exceljs` import with parcel (#7284) @alexfauquette
+
+### `@mui/x-date-pickers@6.0.0-alpha.13` / `@mui/x-date-pickers-pro@6.0.0-alpha.13`
+
+#### Changes
+
+- [DateRangePicker] Fix to propagate `disabled` and `readOnly` on multi input picker (#7135) @LukasTy
+- [fields] Fix multi input fields root element props order and types (#7225) @LukasTy
+- [fields] Support escaped characters (#7184) @flaviendelangle
+- [pickers] Allow to define custom view renderers on the pickers (#7176) @flaviendelangle
+- [pickers] Avoid running validation methods several times in `DateCalendar` (#7247) @flaviendelangle
+- [pickers] Improve Korean (ko-KR) locale (#7266) @hanbin9775
+- [pickers] Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
+- [pickers] Rework view internals (#7097) @flaviendelangle
+
+### `@mui/x-codemod@6.0.0-alpha.12`
+
+#### Changes
+
+- [codemod] New codemod for view component renaming (#7264) @flaviendelangle
+
+### Docs
+
+- [docs] Fix some selectors not being documented (#7218) @cherniavskii
+- [docs] New page for `DateCalendar` (#7053) @flaviendelangle
+- [docs] Split selection docs (#7213) @m4theushw
+
+### Core
+
+- [core] Fix API demos callout spacing @oliviertassinari
+
 ## 6.0.0-alpha.12
 
 _Dec 16, 2022_
