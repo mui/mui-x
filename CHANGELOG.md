@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.17
+
+_Dec 23, 2022_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Russian (ru-RU) and Korean (ko-KR) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@5.17.17` / `@mui/x-data-grid-pro@5.17.17` / `@mui/x-data-grid-premium@5.17.17`
+
+#### Changes
+
+- [DataGrid] Update Russian (ru-RU) locale (#7291) @m4theushw
+- [DataGridPremium] Fix `exceljs` import with parcel (#7285) @alexfauquette
+
+### `@mui/x-date-pickers@5.0.12` / `@mui/x-date-pickers-pro@5.0.12`
+
+#### Changes
+
+- [pickers] Improve Korean (ko-KR) locale @hanbin9775 (#7283) @alexfauquette
+
 ## 5.17.16
 
 _Dec 16, 2022_
