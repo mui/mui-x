@@ -145,12 +145,12 @@ const ptBRGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Reorganizar linhas',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Conjunto',
+  aggregationFunctionLabelSum: 'Soma',
+  aggregationFunctionLabelAvg: 'Média',
+  aggregationFunctionLabelMin: 'Mínimo',
+  aggregationFunctionLabelMax: 'Máximo',
+  aggregationFunctionLabelSize: 'Tamanho',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);
