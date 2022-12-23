@@ -13,32 +13,21 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
-// TODO v6: revise keeping headerHeight and rowHeight in state
-const getUpdatedDensityState = (
-  newDensity: GridDensity,
-  newHeaderHeight: number,
-  newRowHeight: number,
-): GridDensityState => {
+const getUpdatedDensityState = (newDensity: GridDensity): GridDensityState => {
   switch (newDensity) {
     case GridDensityTypes.Compact:
       return {
         value: newDensity,
-        headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
-        rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
         factor: COMPACT_DENSITY_FACTOR,
       };
     case GridDensityTypes.Comfortable:
       return {
         value: newDensity,
-        headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
-        rowHeight: Math.floor(newRowHeight * COMFORTABLE_DENSITY_FACTOR),
         factor: COMFORTABLE_DENSITY_FACTOR,
       };
     default:
       return {
         value: newDensity,
-        headerHeight: newHeaderHeight,
-        rowHeight: newRowHeight,
         factor: 1,
       };
   }
@@ -48,7 +37,7 @@ export const densityStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'density' | 'headerHeight' | 'rowHeight'>
 > = (state, props) => ({
   ...state,
-  density: getUpdatedDensityState(props.density, props.headerHeight, props.rowHeight),
+  density: getUpdatedDensityState(props.density),
 });
 
 export const useGridDensity = (
@@ -58,11 +47,11 @@ export const useGridDensity = (
   const logger = useGridLogger(apiRef, 'useDensity');
 
   const setDensity = React.useCallback<GridDensityApi['setDensity']>(
-    (newDensity, newHeaderHeight = props.headerHeight, newRowHeight = props.rowHeight): void => {
+    (newDensity): void => {
       logger.debug(`Set grid density to ${newDensity}`);
       apiRef.current.setState((state) => {
         const currentDensityState = gridDensitySelector(state);
-        const newDensityState = getUpdatedDensityState(newDensity, newHeaderHeight, newRowHeight);
+        const newDensityState = getUpdatedDensityState(newDensity);
 
         if (isDeepEqual(currentDensityState, newDensityState)) {
           return state;
@@ -75,12 +64,12 @@ export const useGridDensity = (
       });
       apiRef.current.forceUpdate();
     },
-    [logger, apiRef, props.headerHeight, props.rowHeight],
+    [logger, apiRef],
   );
 
   React.useEffect(() => {
-    apiRef.current.setDensity(props.density, props.headerHeight, props.rowHeight);
-  }, [apiRef, props.density, props.rowHeight, props.headerHeight]);
+    apiRef.current.setDensity(props.density);
+  }, [apiRef, props.density]);
 
   const densityApi: GridDensityApi = {
     setDensity,
