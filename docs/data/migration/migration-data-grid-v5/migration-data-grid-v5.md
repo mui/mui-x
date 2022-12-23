@@ -103,7 +103,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
-- The `apiRef.current.setDensity` signiture was changed. It only accepts `density: GridDensity` as a single parameter
+- The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
