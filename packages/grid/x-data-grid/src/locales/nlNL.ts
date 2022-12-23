@@ -80,6 +80,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Toon kolommen',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filteren',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Annuleer sortering',

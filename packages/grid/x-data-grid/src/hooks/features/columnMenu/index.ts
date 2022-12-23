@@ -1,2 +1,2 @@
-export * from './columnMenuState';
+export * from './columnMenuInterfaces';
 export * from './columnMenuSelector';

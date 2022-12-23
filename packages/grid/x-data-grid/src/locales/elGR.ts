@@ -79,6 +79,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
   columnMenuHideColumn: 'Απόκρυψη',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',

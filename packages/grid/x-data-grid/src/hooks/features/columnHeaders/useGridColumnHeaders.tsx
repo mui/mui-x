@@ -294,7 +294,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
     const columns: JSX.Element[] = [];
     for (let i = 0; i < renderedColumns.length; i += 1) {
-      const column = renderedColumns[i];
+      const colDef = renderedColumns[i];
 
       const columnIndex = firstColumnToRender + i;
       const isFirstColumn = columnIndex === 0;
@@ -304,26 +304,26 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
         cellTabIndexState === null
       );
       const tabIndex =
-        (columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === column.field) ||
+        (columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === colDef.field) ||
         (isFirstColumn && !hasTabbableElement)
           ? 0
           : -1;
-      const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === column.field;
-      const open = columnMenuState.open && columnMenuState.field === column.field;
+      const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;
+      const open = columnMenuState.open && columnMenuState.field === colDef.field;
 
       columns.push(
         <GridColumnHeaderItem
-          key={column.field}
-          {...sortColumnLookup[column.field]}
+          key={colDef.field}
+          {...sortColumnLookup[colDef.field]}
           columnMenuOpen={open}
           filterItemsCounter={
-            filterColumnLookup[column.field] && filterColumnLookup[column.field].length
+            filterColumnLookup[colDef.field] && filterColumnLookup[colDef.field].length
           }
           headerHeight={headerHeight}
-          isDragging={column.field === dragCol}
-          column={column}
+          isDragging={colDef.field === dragCol}
+          colDef={colDef}
           colIndex={columnIndex}
-          isResizing={resizeCol === column.field}
+          isResizing={resizeCol === colDef.field}
           isLastColumn={columnIndex === visibleColumns.length - 1}
           extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
           hasFocus={hasFocus}

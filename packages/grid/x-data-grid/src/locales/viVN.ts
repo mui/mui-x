@@ -80,6 +80,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',
