@@ -1,3 +1,0 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <ClockPicker value={value} onChange={(newValue) => setValue(newValue)} />
-</LocalizationProvider>

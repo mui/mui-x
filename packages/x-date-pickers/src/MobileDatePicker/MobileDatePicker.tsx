@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
-  datePickerValueManager,
+  BaseDatePickerSlotsComponent,
+  BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
-import { DatePickerToolbar } from '../DatePicker/DatePickerToolbar';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -16,32 +17,33 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateValidation } from '../internals/hooks/validation/useDateValidation';
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import {
-  CalendarPickerSlotsComponent,
-  CalendarPickerSlotsComponentsProps,
-} from '../CalendarPicker/CalendarPicker';
+import { singleItemValueManager } from '../internals/utils/valueManagers';
 
-export interface MobileDatePickerSlotsComponent
-  extends MobileWrapperSlotsComponent,
-    CalendarPickerSlotsComponent {}
+export interface MobileDatePickerSlotsComponent<TDate>
+  extends BaseDatePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent {}
 
-export interface MobileDatePickerSlotsComponentsProps
-  extends MobileWrapperSlotsComponentsProps,
-    CalendarPickerSlotsComponentsProps {}
+export interface MobileDatePickerSlotsComponentsProps<TDate>
+  extends BaseDatePickerSlotsComponentsProps<TDate>,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDatePickerSlotsComponent>;
+  components?: MobileDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDatePickerSlotsComponentsProps>;
+  componentsProps?: MobileDatePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type MobileDatePickerComponent = (<TDate>(
@@ -68,19 +70,11 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
   );
 
   const validationError = useDateValidation(props) !== null;
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, datePickerValueManager);
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
   // Note that we are passing down all the value without spread.
   // It saves us >1kb gzip and make any prop available automatically on any level down.
-  const {
-    ToolbarComponent = DatePickerToolbar,
-    value,
-    onChange,
-    components,
-    componentsProps,
-    localeText,
-    ...other
-  } = props;
+  const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
   const DateInputProps = {
     ...inputProps,
@@ -104,8 +98,6 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
-        toolbarTitle={props.label || props.toolbarTitle}
-        ToolbarComponent={ToolbarComponent}
         DateInputProps={DateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -125,7 +117,6 @@ MobileDatePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   children: PropTypes.node,
   /**
    * className applied to the root component.
@@ -158,16 +149,12 @@ MobileDatePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -187,10 +174,20 @@ MobileDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -235,11 +232,11 @@ MobileDatePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -287,7 +284,7 @@ MobileDatePicker.propTypes = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -325,15 +322,6 @@ MobileDatePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
-  /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
    * Pay specific attention to the `ref` and `inputProps` keys.
@@ -357,26 +345,24 @@ MobileDatePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -396,25 +382,6 @@ MobileDatePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

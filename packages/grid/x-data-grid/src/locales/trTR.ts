@@ -48,10 +48,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operatör',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'Mantıksal operatörler',
+  filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
   filterPanelColumns: 'Sütunlar',
@@ -81,6 +79,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre uygula',
   columnMenuHideColumn: 'Gizle',
   columnMenuUnsort: 'Sıralama',
@@ -104,14 +103,14 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seçim',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Tüm satırları seç',
+  checkboxSelectionUnselectAllRows: 'Tüm satırların seçimini kaldır',
+  checkboxSelectionSelectRow: 'Satırı seç',
+  checkboxSelectionUnselectRow: 'Satır seçimini bırak',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'Evet',
+  booleanCellFalseLabel: 'Hayır',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
@@ -132,20 +131,20 @@ const trTRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `${name} için gruplamayı kaldır`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Detay görünümüne geçiş',
   expandDetailPanel: 'Genişlet',
   collapseDetailPanel: 'Gizle',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Satırı yeniden sırala',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Toplama',
+  aggregationFunctionLabelSum: 'top',
+  aggregationFunctionLabelAvg: 'ort',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'maks',
+  aggregationFunctionLabelSize: 'boyut',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);

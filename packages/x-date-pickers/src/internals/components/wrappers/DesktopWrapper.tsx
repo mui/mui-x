@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersPopper,
-  ExportedPickerPopperProps,
-  ExportedPickerPaperProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../PickersPopper';
@@ -14,14 +12,8 @@ import { DateInputSlotsComponent } from '../PureDateInput';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface DesktopWrapperProps<TDate>
-  extends ExportedPickerPopperProps,
-    ExportedPickerPaperProps {
+export interface DesktopWrapperProps {
   children?: React.ReactNode;
-  /**
-   * Locale for components texts
-   */
-  localeText?: PickersInputLocaleText<TDate>;
 }
 
 export interface DesktopWrapperSlotsComponent
@@ -31,7 +23,7 @@ export interface DesktopWrapperSlotsComponent
 export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
 export interface InternalDesktopWrapperProps<TDate>
-  extends DesktopWrapperProps<TDate>,
+  extends DesktopWrapperProps,
     PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
@@ -41,14 +33,19 @@ export interface InternalDesktopWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopWrapperSlotsComponent>;
+  components?: DesktopWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
+  componentsProps?: DesktopWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
+// TODO v6: Drop with the legacy pickers
 export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,
@@ -60,9 +57,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
     onAccept,
     onSetToday,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     components,
     componentsProps,
     localeText,
@@ -78,9 +72,6 @@ export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>)
           role="dialog"
           open={open}
           anchorEl={ownInputRef.current}
-          TransitionComponent={TransitionComponent}
-          PopperProps={PopperProps}
-          PaperProps={PaperProps}
           onDismiss={onDismiss}
           onCancel={onCancel}
           onClear={onClear}

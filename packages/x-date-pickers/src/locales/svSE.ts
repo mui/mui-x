@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const svSEPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +10,11 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'öppna föregående vy',
   openNextView: 'öppna nästa vy',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'årsvyn är öppen, byt till kalendervy'
       : 'kalendervyn är öppen, byt till årsvy',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -27,10 +27,10 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Idag',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  // datePickerToolbarTitle: 'Select date',
+  // dateTimePickerToolbarTitle: 'Select date & time',
+  // timePickerToolbarTitle: 'Select time',
+  // dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -40,6 +40,12 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} timmar`,
   minutesClockNumberText: (minutes) => `${minutes} minuter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -54,6 +60,15 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'välj tid',
   dateTableLabel: 'välj datum',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const svSE = getPickersLocalization(svSEPickers);

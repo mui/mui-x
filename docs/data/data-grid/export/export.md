@@ -1,8 +1,4 @@
----
-title: Data Grid - Export
----
-
-# Data grid - Export
+# Data Grid - Export
 
 <p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
 
@@ -43,7 +39,9 @@ You can customize their respective behavior by passing an options object either 
 
 ```tsx
 <DataGrid componentsProps={{ toolbar: { csvOptions } }} />
+
 // same as
+
 <GridToolbarExport csvOptions={csvOptions} />
 ```
 
@@ -139,7 +137,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
 ### File encoding
 
 You can use `csvOptions` to specify the format of the export, such as the `delimiter` character used to separate fields, the `fileName`, or `utf8WithBom` to prefix the exported file with UTF-8 Byte Order Mark (BOM).
-For more details on these options, please visit the [`csvOptions` api page](/x/api/data-grid/grid-csv-export-options/).
+For more details on these options, please visit the [`csvOptions` API page](/x/api/data-grid/grid-csv-export-options/).
 
 ```jsx
 <GridToolbarExport
@@ -178,7 +176,7 @@ With `pageStyle` option, you can override the main content color with a [more sp
 ```jsx
 <DataGrid
   componentsProps={{
-    GridToolbar: {
+    toolbar: {
       printOptions:{
         pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
       }
@@ -201,13 +199,7 @@ By default, the print export display all the DataGrid. It is possible to remove 
 />
 ```
 
-For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
-
-:::warning
-Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
-
-In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN` or unset the `X-Frame-Options` header.
-:::
+For more option to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
 
@@ -242,7 +234,7 @@ Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'da
 
 #### Customizing the columns
 
-You can use the property `columnsStyles` to customize the column style.
+You can use the `columnsStyles` property to customize the column style.
 This property accepts an object in which keys are the column field and values an [exceljs style object](https://github.com/exceljs/exceljs#styles).
 
 This can be used to specify value formatting or to add some colors.
@@ -319,7 +311,7 @@ This feature isn't implemented yet. It's coming.
 You will be able to copy and paste items to and from the grid using the system clipboard.
 :::
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -339,9 +331,9 @@ Only use this API as the last option. Give preference to the props to control th
 
 ## API
 
-- [csvOptions](/x/api/data-grid/grid-csv-export-options/)
-- [printOptions](/x/api/data-grid/grid-print-export-options/)
-- [excelOptions](/x/api/data-grid/grid-excel-export-options/)
+- [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options/)
+- [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options/)
+- [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)

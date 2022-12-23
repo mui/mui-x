@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
@@ -63,7 +63,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isEditable,
     tabIndex,
     className,
-    getValue,
     hasFocus,
     isValidating,
     isProcessingProps,
@@ -112,34 +111,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       await onValueChange(event, formattedTargetValue);
     }
 
-    const isValid = await apiRef.current.setEditCellValue(
-      { id, field, value: formattedTargetValue },
-      event,
-    );
-
-    if (rootProps.experimentalFeatures?.newEditingApi) {
-      return;
-    }
-
-    // We use isValid === false because the default return is undefined which evaluates to true with !isValid
-    if (rootProps.editMode === GridEditModes.Row || isValid === false) {
-      return;
-    }
-
-    const canCommit = await Promise.resolve(apiRef.current.commitCellChange({ id, field }, event));
-    if (canCommit) {
-      apiRef.current.setCellMode(id, field, 'view');
-
-      if ((event as any).key) {
-        // TODO v6: remove once we stop ignoring events fired from portals
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent(
-          'cellNavigationKeyDown',
-          params,
-          event as any as React.KeyboardEvent<HTMLElement>,
-        );
-      }
-    }
+    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
   };
 
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
@@ -148,11 +120,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      if (rootProps.experimentalFeatures?.newEditingApi) {
-        apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-      } else {
-        apiRef.current.setCellMode(id, field, 'view');
-      }
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
@@ -200,9 +168,8 @@ GridEditSingleSelectCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
@@ -220,14 +187,6 @@ GridEditSingleSelectCell.propTypes = {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: PropTypes.any,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
   /**
    * If true, the cell is the active element.
    */

@@ -8,7 +8,7 @@ import {
   DataGridProProps,
   GridApi,
   gridClasses,
-  GridColumns,
+  GridColDef,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,
   GridRowsProp,
@@ -20,17 +20,17 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestDataGridPro = (
+  function TestDataGridPro(
     props: Omit<DataGridProProps, 'columns' | 'rows' | 'apiRef'> &
       Partial<Pick<DataGridProProps, 'rows' | 'columns'>>,
-  ) => {
+  ) {
     apiRef = useGridApiRef();
 
     return (
@@ -44,7 +44,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: updateColumns', () => {
     it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {

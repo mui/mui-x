@@ -1,8 +1,4 @@
----
-title: Data Grid - Column visibility
----
-
-# Data grid - Column visibility
+# Data Grid - Column visibility
 
 <p class="description">Define which columns are visible.</p>
 
@@ -63,6 +59,24 @@ To enable it, you need to add `Toolbar: GridToolbar` to the grid `components` pr
 The user can then choose which columns are visible using the _Columns_ button.
 
 {{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
+
+### Disable action buttons
+
+To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `componentsProps.columnsPanel`.
+
+```tsx
+<DataGrid
+  components={{
+    Toolbar: GridToolbar,
+  }}
+  componentsProps={{
+    columnsPanel: {
+      disableHideAllButton: true,
+      disableShowAllButton: true,
+    },
+  }}
+/>
+```
 
 :::info
 To hide the column visibility panel from the toolbar, set the prop `disableColumnSelector={true}`.

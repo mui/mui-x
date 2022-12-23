@@ -4,9 +4,10 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<DateTimePicker />', () => {
-  const ControlledDateTimePicker = () => {
+  function ControlledDateTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <DateTimePicker
@@ -15,8 +16,16 @@ describe('<DateTimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
-  const { render } = createPickerRenderer();
+  }
+
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DateTimePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    componentFamily: 'legacy-picker',
+  }));
 
   it('should handle controlled `onChange` in desktop mode', () => {
     render(<ControlledDateTimePicker />);

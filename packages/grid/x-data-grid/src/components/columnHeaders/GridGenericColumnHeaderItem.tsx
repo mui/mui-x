@@ -1,9 +1,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import {
   GridColumnHeaderSeparator,
@@ -39,7 +39,6 @@ interface GridGenericColumnHeaderItemProps
   label: string;
   draggableContainerProps?: Partial<React.HTMLProps<HTMLDivElement>>;
   columnHeaderSeparatorProps?: Partial<GridColumnHeaderSeparatorProps>;
-  disableHeaderSeparator?: boolean;
 }
 
 const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnHeaderItem(
@@ -69,11 +68,10 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
     resizable,
     draggableContainerProps,
     columnHeaderSeparatorProps,
-    disableHeaderSeparator,
     ...other
   } = props;
 
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
@@ -135,15 +133,13 @@ const GridGenericColumnHeaderItem = React.forwardRef(function GridGenericColumnH
         </div>
         {columnMenuIconButton}
       </div>
-      {!disableHeaderSeparator && (
-        <GridColumnHeaderSeparator
-          resizable={!rootProps.disableColumnResize && !!resizable}
-          resizing={isResizing}
-          height={height}
-          side={separatorSide}
-          {...columnHeaderSeparatorProps}
-        />
-      )}
+      <GridColumnHeaderSeparator
+        resizable={!rootProps.disableColumnResize && !!resizable}
+        resizing={isResizing}
+        height={height}
+        side={separatorSide}
+        {...columnHeaderSeparatorProps}
+      />
       {columnMenu}
     </div>
   );

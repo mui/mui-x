@@ -14,6 +14,6 @@
     { "path": "../x-date-pickers/tsconfig.build.json" },
     { "path": "../x-license-pro/tsconfig.build.json" }
   ],
-  "include": ["src/**/*.ts*"],
-  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*"]
+  "include": ["src/**/*.ts*", "../../node_modules/@mui/material/themeCssVarsAugmentation"],
+  "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }

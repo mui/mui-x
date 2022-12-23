@@ -6,7 +6,9 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import { useLocation } from 'react-router-dom';
 import { useFakeTimers } from 'sinon';
 
-const StyledBox = styled(Box)(({ theme, isDataGridTest }) => ({
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'isDataGridTest',
+})(({ theme, isDataGridTest }) => ({
   backgroundColor: theme.palette.background.default,
   display: 'flex',
   padding: theme.spacing(1),

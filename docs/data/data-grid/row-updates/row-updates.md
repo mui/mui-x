@@ -1,8 +1,4 @@
----
-title: Data Grid - Row updates
----
-
-# Data grid - Row updates
+# Data Grid - Row updates
 
 <p class="description">Always keep your rows up to date.</p>
 
@@ -16,7 +12,7 @@ It replaces the previous values. This approach has some drawbacks:
 
 {{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
 
-## The `updateRows` method [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
@@ -30,6 +26,9 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 ```ts
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
+
+> The free version of the `DataGrid` is limited to a single row update per `apiRef.current.updateRows` call.
+> Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 

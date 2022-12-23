@@ -7,11 +7,10 @@ import {
   useGridApiOptionHandler,
   gridVisibleColumnDefinitionsSelector,
   gridRowsMetaSelector,
-  GridFeatureModeConstant,
 } from '@mui/x-data-grid';
 import { useGridVisibleRows } from '@mui/x-data-grid/internals';
 import { GridRowScrollEndParams } from '../../../models';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
@@ -20,7 +19,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
  * @requires useGridScroll (method
  */
 export const useGridInfiniteLoader = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
     'onRowsScrollEnd' | 'scrollEndThreshold' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
@@ -38,12 +37,12 @@ export const useGridInfiniteLoader = (
       const dimensions = apiRef.current.getRootDimensions();
 
       // Prevent the infite loading working in combination with lazy loading
-      if (!dimensions || props.rowsLoadingMode !== GridFeatureModeConstant.client) {
+      if (!dimensions || props.rowsLoadingMode !== 'client') {
         return;
       }
 
       const scrollPositionBottom = scrollPosition.top + dimensions.viewportOuterSize.height;
-      const viewportPageSize = apiRef.current.unstable_getViewportPageSize();
+      const viewportPageSize = apiRef.current.getViewportPageSize();
 
       if (scrollPositionBottom < contentHeight - props.scrollEndThreshold) {
         isInScrollBottomArea.current = false;
@@ -72,13 +71,13 @@ export const useGridInfiniteLoader = (
     ],
   );
 
-  const handleGridScroll = React.useCallback<GridEventListener<'rowsScroll'>>(
+  const handleGridScroll = React.useCallback<GridEventListener<'scrollPositionChange'>>(
     ({ left, top }) => {
       handleRowsScrollEnd({ left, top });
     },
     [handleRowsScrollEnd],
   );
 
-  useGridApiEventHandler(apiRef, 'rowsScroll', handleGridScroll);
+  useGridApiEventHandler(apiRef, 'scrollPositionChange', handleGridScroll);
   useGridApiOptionHandler(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
 };

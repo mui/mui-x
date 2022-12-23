@@ -83,7 +83,6 @@ export default function ValidateServerNameGrid() {
         rows={rows}
         columns={columns}
         isCellEditable={(params) => params.row.id === 5}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </StyledBox>
   );

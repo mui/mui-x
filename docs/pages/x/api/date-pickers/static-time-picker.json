@@ -63,8 +63,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -81,7 +79,8 @@
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "StaticTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticTimePicker" },
@@ -89,6 +88,9 @@
   "forwardsRefTo": "undefined",
   "filename": "/packages/x-date-pickers/src/StaticTimePicker/StaticTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-time-picker/\">Time Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticTimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "StaticTimePicker" }
+  ]
 }

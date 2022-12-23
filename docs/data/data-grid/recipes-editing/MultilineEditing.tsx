@@ -32,7 +32,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const EditTextarea = (props: GridRenderEditCellParams<string>) => {
+function EditTextarea(props: GridRenderEditCellParams<string>) {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();
@@ -98,7 +98,7 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
       )}
     </div>
   );
-};
+}
 
 const multilineColumn: GridColTypeDef = {
   type: 'string',
@@ -138,11 +138,7 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGridPro rows={rows} columns={columns} />
     </div>
   );
 }

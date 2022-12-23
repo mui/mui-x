@@ -61,7 +61,7 @@ describe('<DataGridPremium /> - Row pinning', () => {
   }
 
   it('should render pinned rows outside of row groups', () => {
-    const Test = () => {
+    function Test() {
       const [pinnedRow0, pinnedRow1, ...rowsData] = rows;
 
       return (
@@ -78,7 +78,7 @@ describe('<DataGridPremium /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 

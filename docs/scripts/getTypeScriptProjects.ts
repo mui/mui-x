@@ -124,7 +124,15 @@ const createProject = (options: CreateProgramOptions): Project => {
  * @param {string[]} files The files from which we want to extract components
  */
 const getComponentPaths =
-  ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
+  ({
+    folders = [],
+    files = [],
+    includeUnstableComponents = false,
+  }: {
+    folders?: string[];
+    files?: string[];
+    includeUnstableComponents?: boolean;
+  }) =>
   (project: Project) => {
     const paths: string[] = [];
 
@@ -140,7 +148,9 @@ const getComponentPaths =
       const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder));
       componentFiles.forEach((file) => {
         const componentName = path.basename(file).replace('.tsx', '');
-        const isExported = !!project.exports[componentName];
+        const isExported =
+          !!project.exports[componentName] ||
+          (includeUnstableComponents && !!project.exports[`Unstable_${componentName}`]);
         if (isExported) {
           paths.push(file);
         }
@@ -231,9 +241,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
@@ -246,9 +258,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );

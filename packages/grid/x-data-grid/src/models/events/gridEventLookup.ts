@@ -1,10 +1,8 @@
 import * as React from 'react';
 import type {
-  GridCellEditCommitParams,
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
@@ -12,13 +10,14 @@ import type {
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
+  GridColumnGroupHeaderParams,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
-import type { GridSelectionModel } from '../gridSelectionModel';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
 import type { GridGroupNode, GridRowId } from '../gridRows';
@@ -186,6 +185,31 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridColumnGroupHeaderEventLookup {
+  /**
+   * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
+   */
+  columnGroupHeaderKeyDown: {
+    params: GridColumnGroupHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header gains focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderFocus: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header loses focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderBlur: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+}
 export interface GridCellEventLookup {
   /**
    * Fired when a cell is clicked.
@@ -216,9 +240,23 @@ export interface GridCellEventLookup {
     event: React.MouseEvent<HTMLElement>;
   };
   /**
+   * Fired when a `mouseover` event happens in a cell.
+   */
+  cellMouseOver: {
+    params: GridCellParams;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
+    params: GridCellParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `keyup` event happens in a cell.
+   */
+  cellKeyUp: {
     params: GridCellParams;
     event: React.KeyboardEvent<HTMLElement>;
   };
@@ -265,7 +303,7 @@ export interface GridControlledStateEventLookup {
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
-  selectionChange: { params: GridSelectionModel };
+  rowSelectionChange: { params: GridRowSelectionModel };
   /**
    * Fired when the column visibility model changes.
    */
@@ -284,6 +322,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
@@ -407,17 +446,6 @@ export interface GridEventLookup
     event: MuiBaseEvent;
   };
   /**
-   * Fired when the props of the edit input are committed.
-   */
-  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  /**
-   * Fired when the props of the edit cell changes.
-   */
-  editCellPropsChange: {
-    params: GridEditCellPropsParams;
-    event: React.SyntheticEvent<HTMLElement> | {};
-  };
-  /**
    * Fired when the row turns to edit mode.
    */
   rowEditStart: {
@@ -446,29 +474,11 @@ export interface GridEventLookup
    */
   cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
 
-  // Navigation
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
-   * @ignore - do not document.
-   */
-  cellNavigationKeyDown: {
-    params: GridCellParams | GridRowParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
-   * @ignore - do not document.
-   */
-  columnHeaderNavigationKeyDown: {
-    params: GridColumnHeaderParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
-
   // Scroll
   /**
    * Fired during the scroll of the grid viewport.
    */
-  rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
+  scrollPositionChange: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   /**
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.

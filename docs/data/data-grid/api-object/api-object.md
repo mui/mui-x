@@ -1,29 +1,23 @@
 # Data Grid - API object
 
-<p class="description">Interact with the grid using its API.</p>
+<p class="description">Interact with the Data Grid using its API.</p>
 
-## What is the API object
-
-The API object is an interface containing the state and all the methods available to programmatically interact with the grid.
+The API object is an interface containing the state and all the methods available to programmatically interact with the Data Grid.
 
 You can find the list of all the API methods on the [GridApi page](/x/api/data-grid/grid-api/).
 
 :::warning
-All the methods prefixed by `unstable_` are private.
-We don't recommend using them as they can be removed, renamed, or reworked at any time.
-If you need to use a private method, please open a GitHub issue describing your use case.
-We will help you to achieve the same goal with public methods, or we will discuss making this specific method public.
+All methods prefixed by `unstable_` are related to experimental features and may be removed, renamed, or reworked at any time.
 :::
 
 ## How to use the API object
 
 The API object is accessible through the `apiRef` variable.
-Depending on where you are trying to access this variable, you will have to use either `useGridApiContext` or `useGridApiRef`.
+To access this variable, use `useGridApiContext` (inside the Data Grid) or `useGridApiRef` (outside the Data Grid).
 
-### Use it inside the grid
+### Inside the Data Grid
 
-If you need to access the API object inside component slots or inside renders (e.g: `renderCell`, `renderHeader`),
-you can use the `useGridApiContext` hook.
+To access the API object inside component slots or inside renders (for instance, `renderCell` or `renderHeader`), use the `useGridApiContext` hook:
 
 ```tsx
 function CustomFooter() {
@@ -34,15 +28,15 @@ function CustomFooter() {
 ```
 
 :::info
-You don't need to initialize the API object using `useGridApiRef` to be able to use it inside the grid components.
+You don't need to initialize the API object using `useGridApiRef` to be able to use it inside the Data Grid components.
 :::
 
 {{"demo": "UseGridApiContext.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Use it outside the grid [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Outside the Data Grid
 
 When using the API object outside the grid components, you need to initialize it using the `useGridApiRef` hook.
-You can then pass it to the `apiRef` prop of the grid.
+You can then pass it to the Data Grid's `apiRef` prop:
 
 ```tsx
 function CustomDataGrid(props) {
@@ -51,15 +45,15 @@ function CustomDataGrid(props) {
   return (
     <div>
       <Button onClick={() => apiRef.current.setPage(1)}>Go to page 1</Button>
-      <DataGridPro apiRef={apiRef} {...other} />
+      <DataGrid apiRef={apiRef} {...other} />
     </div>
   );
 }
 ```
 
 :::warning
-The API object is populated by the various plugins of the grid during the first render of the component.
-If you try to use it in the first render of the component, it will crash since all methods are not registered yet.
+The API object is populated by the Data Grid's various plugins during the first render of the component.
+If you try to use it in the first render of the component, it will crash because not all methods are registered yet.
 :::
 
 {{"demo": "UseGridApiRef.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -68,11 +62,11 @@ If you try to use it in the first render of the component, it will crash since a
 
 ### Retrieve data from the state
 
-You can find a detailed example in the [State page](/x/react-data-grid/state/#access-the-state).
+You can find a detailed example on the [State page](/x/react-data-grid/state/#access-the-state).
 
 ### Listen to grid events
 
-You can find a detailed example in the [Events page](/x/react-data-grid/events/#subscribing-to-events).
+You can find a detailed example on the [Events page](/x/react-data-grid/events/#subscribing-to-events).
 
 ## API
 

@@ -1,8 +1,4 @@
----
-title: Data Grid - Sorting
----
-
-# Data grid - Sorting
+# Data Grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
 
@@ -138,7 +134,7 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -146,9 +142,9 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
-{{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Sorting"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 

@@ -7,11 +7,11 @@ import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider, PickersLocaleText } from '@mui/x-date-pickers';
 import { AdapterClassToUse } from 'test/utils/pickers-utils';
 
-const ContextListener = ({
+function ContextListener({
   onContextChange,
 }: {
   onContextChange: (context: ReturnType<typeof useLocalizationContext>) => void;
-}) => {
+}) {
   const context = useLocalizationContext();
 
   React.useEffect(() => {
@@ -19,9 +19,9 @@ const ContextListener = ({
   }, [onContextChange, context]);
 
   return null;
-};
+}
 
-describe('component <LocalizationProvider />', () => {
+describe('<LocalizationProvider />', () => {
   const { render } = createRenderer();
 
   it('should respect localeText from the theme', () => {
@@ -88,5 +88,20 @@ describe('component <LocalizationProvider />', () => {
 
     const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
     expect(localeText.start).to.equal('Début');
+  });
+
+  it("should not loose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
+    const handleContextChange = spy();
+
+    render(
+      <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ start: 'Empezar' }}>
+        <LocalizationProvider dateAdapter={AdapterClassToUse} localeText={{ end: 'Fin' }}>
+          <ContextListener onContextChange={handleContextChange} />
+        </LocalizationProvider>
+      </LocalizationProvider>,
+    );
+
+    const localeText: PickersLocaleText<any> = handleContextChange.lastCall.args[0].localeText;
+    expect(localeText.start).to.equal('Empezar');
   });
 });

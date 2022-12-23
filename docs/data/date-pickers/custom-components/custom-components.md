@@ -1,6 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time pickers - Custom components
+components: DateTimePickerTabs
 ---
 
 # Custom components
@@ -46,13 +47,14 @@ You can override the action displayed by passing the `actions` prop to the `acti
 ```jsx
 <DatePicker
   componentsProps={{
+    // The actions will be the same between desktop and mobile
     actionBar: {
-      // The actions will be the same between desktop and mobile
       actions: ['clear'],
-
-      // The actions will be different between desktop and mobile
-      actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
     },
+    // The actions will be different between desktop and mobile
+    actionBar: ({ wrapperVariant }) => ({
+      actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+    }),
   }}
 />
 ```
@@ -83,7 +85,7 @@ In the example below, the actions are the same as in the section above, but they
 
 ## Paper content
 
-The paper content is available on all desktop picker components.
+The paper content is available on all desktop and static picker components.
 It adds a flexible way to extend what is rendered in the picker paper.
 
 You can provide any custom component to this slot as long as it passes `children` down maintaining original picker behavior.
@@ -94,8 +96,6 @@ In the examples below we provide ways of implementing date range shortcuts using
 ## Tabs
 
 The tabs are available on all date time picker components.
-By default, it is `hidden` on desktop, and `visible` on mobile.
-This behavior can be overridden by setting `hideTabs` prop.
 
 ### Component props
 
@@ -105,8 +105,21 @@ You can override the icons displayed by passing props to the `tabs` within `comp
 <DateTimePicker
   componentsProps={{
     tabs: {
-      dateRangeIcon: <LightModeIcon />,
+      dateIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
+    },
+  }}
+/>
+```
+
+By default, the tabs are `hidden` on desktop, and `visible` on mobile.
+This behavior can be overridden by setting the `hidden` prop:
+
+```jsx
+<DateTimePicker
+  componentsProps={{
+    tabs: {
+      hidden: false,
     },
   }}
 />

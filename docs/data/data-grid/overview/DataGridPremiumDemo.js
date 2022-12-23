@@ -27,7 +27,6 @@ export default function DataGridPremiumDemo() {
       'incoTerm',
     ],
   });
-
   const apiRef = useGridApiRef();
 
   const initialState = useKeepGroupedColumnsHidden({
@@ -50,10 +49,9 @@ export default function DataGridPremiumDemo() {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
         components={{ Toolbar: GridToolbar }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

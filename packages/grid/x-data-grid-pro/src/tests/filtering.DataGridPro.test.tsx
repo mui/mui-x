@@ -9,9 +9,12 @@ import {
   SUBMIT_FILTER_STROKE_TIME,
   useGridApiRef,
   DataGridPro,
+  GetColumnForNewFilterArgs,
+  FilterColumnsArgs,
+  GridToolbar,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
@@ -43,7 +46,7 @@ describe('<DataGridPro /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  const TestCase = (props: Partial<DataGridProProps>) => {
+  function TestCase(props: Partial<DataGridProProps>) {
     const { rows, ...other } = props;
     apiRef = useGridApiRef();
     return (
@@ -57,17 +60,118 @@ describe('<DataGridPro /> - Filter', () => {
         />
       </div>
     );
-  };
+  }
 
   const filterModel = {
     items: [
       {
-        columnField: 'brand',
+        field: 'brand',
         value: 'a',
-        operatorValue: 'contains',
+        operator: 'contains',
       },
     ],
   };
+
+  it('componentsProps `filterColumns` and `getColumnForNewFilter` should allow custom filtering', () => {
+    const filterColumns = ({ field, columns, currentFilters }: FilterColumnsArgs) => {
+      // remove already filtered fields from list of columns
+      const filteredFields = currentFilters?.map((item) => item.field);
+      return columns
+        .filter(
+          (colDef) =>
+            colDef.filterable && (colDef.field === field || !filteredFields.includes(colDef.field)),
+        )
+        .map((column) => column.field);
+    };
+
+    const getColumnForNewFilter = ({ currentFilters, columns }: GetColumnForNewFilterArgs) => {
+      const filteredFields = currentFilters?.map(({ field }) => field);
+      const columnForNewFilter = columns
+        .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
+        .find((colDef) => colDef.filterOperators?.length);
+      return columnForNewFilter?.field;
+    };
+
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            filterFormProps: {
+              filterColumns,
+            },
+            getColumnForNewFilter,
+          },
+        }}
+      />,
+    );
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    fireEvent.click(addButton);
+    // Shouldn't allow adding multi-filters for same column
+    // Since we have only one column, filter shouldn't be applied onClick
+    const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
+    expect(filterForms).to.have.length(1);
+  });
+
+  it('should call `getColumnForNewFilter` when filters are added', () => {
+    const getColumnForNewFilter = spy();
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            getColumnForNewFilter,
+          },
+        }}
+      />,
+    );
+    // TODO: Debug two calls each filter
+    expect(getColumnForNewFilter.callCount).to.equal(2);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    fireEvent.click(addButton);
+    expect(getColumnForNewFilter.callCount).to.equal(4);
+    fireEvent.click(addButton);
+    expect(getColumnForNewFilter.callCount).to.equal(6);
+  });
+
+  it('should pass columns filtered by `filterColumns` to filters column list', () => {
+    const filterColumns = () => ['testField'];
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        components={{ Toolbar: GridToolbar }}
+        componentsProps={{
+          filterPanel: {
+            filterFormProps: {
+              filterColumns,
+            },
+          },
+        }}
+        columns={[...baselineProps.columns, { field: 'testField' }]}
+      />,
+    );
+
+    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
+    const availableColumns = within(selectListOfColumns).getAllByRole('option');
+    expect(availableColumns.length).to.equal(1);
+  });
 
   it('should apply the filterModel prop correctly', () => {
     render(<TestCase filterModel={filterModel} />);
@@ -82,14 +186,14 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
-              operatorValue: 'contains',
+              field: 'brand',
+              operator: 'contains',
             },
           ],
           linkOperator: GridLinkOperator.And,
@@ -107,14 +211,14 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
-              operatorValue: 'contains',
+              field: 'brand',
+              operator: 'contains',
             },
           ],
         }}
@@ -157,9 +261,9 @@ describe('<DataGridPro /> - Filter', () => {
       apiRef.current.setFilterModel({
         items: [
           {
-            columnField: 'brand',
+            field: 'brand',
             value: 'a',
-            operatorValue: 'startsWith',
+            operator: 'startsWith',
           },
         ],
       }),
@@ -172,15 +276,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'contains',
+          operator: 'contains',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'm',
-          operatorValue: 'contains',
+          operator: 'contains',
         },
       ],
     };
@@ -194,15 +298,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 's',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
     };
@@ -215,15 +319,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
       linkOperator: GridLinkOperator.Or,
@@ -238,15 +342,15 @@ describe('<DataGridPro /> - Filter', () => {
       items: [
         {
           id: 1,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
         {
           id: 2,
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'endsWith',
+          operator: 'endsWith',
         },
       ],
     };
@@ -282,9 +386,9 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
           ],
         }}
@@ -309,15 +413,15 @@ describe('<DataGridPro /> - Filter', () => {
           items: [
             {
               id: 1,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'contains',
+              operator: 'contains',
             },
             {
               id: 2,
-              columnField: 'brand',
+              field: 'brand',
               value: 'a',
-              operatorValue: 'endsWith',
+              operator: 'endsWith',
             },
           ],
         }}
@@ -338,7 +442,7 @@ describe('<DataGridPro /> - Filter', () => {
       <TestCase
         onFilterModelChange={onFilterModelChange}
         filterModel={{
-          items: [{ id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' }],
+          items: [{ id: 1, field: 'brand', value: 'a', operator: 'contains' }],
         }}
         initialState={{
           preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
@@ -371,9 +475,9 @@ describe('<DataGridPro /> - Filter', () => {
     const newModel: GridFilterModel = {
       items: [
         {
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
       ],
       linkOperator: GridLinkOperator.Or,
@@ -381,16 +485,16 @@ describe('<DataGridPro /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.state.selection).to.deep.equal([1]);
+    expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
     const newModel: GridFilterModel = {
       items: [
         {
-          columnField: 'brand',
+          field: 'brand',
           value: 'a',
-          operatorValue: 'startsWith',
+          operator: 'startsWith',
         },
       ],
     };
@@ -439,8 +543,8 @@ describe('<DataGridPro /> - Filter', () => {
               filterModel: {
                 linkOperator: GridLinkOperator.Or,
                 items: [
-                  { id: 1, columnField: 'brand', value: 'a', operatorValue: 'contains' },
-                  { id: 2, columnField: 'brand', value: 'm', operatorValue: 'contains' },
+                  { id: 1, field: 'brand', value: 'a', operator: 'contains' },
+                  { id: 2, field: 'brand', value: 'm', operator: 'contains' },
                 ],
               },
             },
@@ -473,7 +577,7 @@ describe('<DataGridPro /> - Filter', () => {
             filter: {
               filterModel: {
                 linkOperator: GridLinkOperator.Or,
-                items: [{ id: 1, columnField: 'brand', operatorValue: 'isAnyOf' }],
+                items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
               },
             },
           }}
@@ -637,7 +741,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should control filter state when the model and the onChange are set', () => {
-      const ControlCase = (props: Partial<DataGridProProps>) => {
+      function ControlCase(props: Partial<DataGridProProps>) {
         const { rows, columns, ...others } = props;
         const [caseFilterModel, setFilterModel] = React.useState(getDefaultGridFilterModel);
         const handleFilterChange: DataGridProProps['onFilterModelChange'] = (newModel) => {
@@ -662,7 +766,7 @@ describe('<DataGridPro /> - Filter', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<ControlCase />);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
@@ -8,7 +8,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface ColumnHeaderMenuIconProps {
-  column: GridStateColDef;
+  colDef: GridStateColDef;
   columnMenuId: string;
   columnMenuButtonId: string;
   open: boolean;
@@ -31,7 +31,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
-  const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
+  const { colDef, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const ownerState = { ...props, classes: rootProps.classes };
@@ -41,9 +41,9 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef.current.toggleColumnMenu(column.field);
+      apiRef.current.toggleColumnMenu(colDef.field);
     },
-    [apiRef, column.field],
+    [apiRef, colDef.field],
   );
 
   return (

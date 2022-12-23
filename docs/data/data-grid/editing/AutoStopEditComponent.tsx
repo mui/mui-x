@@ -39,11 +39,7 @@ const renderSelectEditInputCell: GridColDef['renderCell'] = (params) => {
 export default function AutoStopEditComponent() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

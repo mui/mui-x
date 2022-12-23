@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   DataGrid,
   GridRowModel,
-  GridColumns,
+  GridColDef,
   GridRowId,
   GridRowsProp,
 } from '@mui/x-data-grid';
@@ -30,15 +30,15 @@ interface User {
 const useFakeMutation = () => {
   return React.useCallback(
     (user: Partial<User>) =>
-      new Promise<Partial<User>>((resolve, reject) =>
+      new Promise<Partial<User>>((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject();
           } else {
             resolve(user);
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };
@@ -139,12 +139,7 @@ export default function AskConfirmationBeforeSave() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       {renderConfirmDialog()}
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        processRowUpdate={processRowUpdate}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} processRowUpdate={processRowUpdate} />
       {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>
           <Alert {...snackbar} onClose={handleCloseSnackbar} />
@@ -154,7 +149,7 @@ export default function AskConfirmationBeforeSave() {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {

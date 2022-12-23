@@ -1,6 +1,7 @@
+/* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: MuiFormatTokenMap = {
@@ -8,8 +9,8 @@ const formatTokenMap: MuiFormatTokenMap = {
   M: 'month',
   Mo: 'month',
   MM: 'month',
-  MMM: 'month',
-  MMMM: 'month',
+  MMM: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionName: 'month', contentType: 'letter' },
 
   // Day of Month
   D: 'day',
@@ -17,37 +18,41 @@ const formatTokenMap: MuiFormatTokenMap = {
   DD: 'day',
 
   // Year
+  Y: 'year',
   YY: 'year',
   YYYY: 'year',
   YYYYYY: 'year',
-  Y: 'year',
 
   // AM / PM
-  A: 'am-pm',
-  a: 'am-pm',
+  A: 'meridiem',
+  a: 'meridiem',
 
   // Hour
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  k: 'hour',
-  kk: 'hour',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  k: 'hours',
+  kk: 'hours',
 
   // Minute
-  m: 'minute',
-  mm: 'minute',
+  m: 'minutes',
+  mm: 'minutes',
 
   // Second
-  s: 'second',
-  ss: 'second',
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterMoment
   extends BaseAdapterMoment
-  implements MuiPickerFieldAdapter<defaultMoment.Moment>
+  implements MuiPickersAdapter<defaultMoment.Moment>
 {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: '[', end: ']' };
 
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.
@@ -62,7 +67,9 @@ export class AdapterMoment
       .map((token) => {
         const firstCharacter = token[0];
         if (firstCharacter === 'L' || firstCharacter === ';') {
-          return this.moment.localeData().longDateFormat(token as LongDateFormatKey);
+          return this.moment
+            .localeData(this.getCurrentLocaleCode())
+            .longDateFormat(token as LongDateFormatKey);
         }
 
         return token;
@@ -73,5 +80,9 @@ export class AdapterMoment
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.week();
   };
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -26,11 +26,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
-  overridesResolver: (props, styles) => styles.toolbarContainer,
+  overridesResolver: (_, styles) => styles.toolbarContainer,
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
+  gap: theme.spacing(1),
   padding: theme.spacing(0.5, 0.5, 0),
 }));
 

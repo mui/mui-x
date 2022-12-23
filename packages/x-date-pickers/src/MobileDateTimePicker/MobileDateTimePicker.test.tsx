@@ -12,17 +12,25 @@ import {
   getClockTouchEvent,
   withPickerControls,
 } from 'test/utils/pickers-utils';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<MobileDateTimePicker />', () => {
-  const { render } = createPickerRenderer({
+  const { render, clock } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date('2018-01-01T00:00:00.000'),
   });
+
+  describeValidation(MobileDateTimePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day', 'hours', 'minutes'],
+    componentFamily: 'legacy-picker',
+  }));
 
   it('prop: open – overrides open state', () => {
     render(
@@ -84,21 +92,6 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render tabs when `hideTabs` is `true`', () => {
-    render(
-      <MobileDateTimePicker
-        open
-        hideTabs
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
-    expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
-  });
-
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
@@ -112,6 +105,25 @@ describe('<MobileDateTimePicker />', () => {
       />,
     );
     expect(screen.getByMuiTest('seconds')).to.have.text('22');
+  });
+
+  describe('Component slots: Tabs', () => {
+    it('should not render tabs when `hidden` is `true`', () => {
+      render(
+        <MobileDateTimePicker
+          open
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+          componentsProps={{
+            tabs: { hidden: true },
+          }}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
   });
 
   describe('picker state', () => {
@@ -162,7 +174,7 @@ describe('<MobileDateTimePicker />', () => {
       expect(onChange.lastCall.args[0]).toEqualDateTime(new Date(2010, 0, 15));
 
       // Change the hours
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
       expect(onChange.callCount).to.equal(3);
@@ -171,8 +183,9 @@ describe('<MobileDateTimePicker />', () => {
       );
 
       // Change the minutes
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', getClockTouchEvent());
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', getClockTouchEvent());
+      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
+      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
       expect(onChange.callCount).to.equal(4);
       expect(onChange.lastCall.args[0]).toEqualDateTime(
         adapterToUse.date(new Date(2010, 0, 15, 11, 53)),
@@ -205,12 +218,12 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
       // Change the minutes (already tested)
-      const minuteClockEvent = getClockTouchEvent();
+      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
 
@@ -246,7 +259,7 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 
@@ -283,7 +296,7 @@ describe('<MobileDateTimePicker />', () => {
       userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
 
       // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent();
+      const hourClockEvent = getClockTouchEvent(11, '12hours');
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
       fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
 

@@ -1,71 +1,75 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { CalendarPickerView, MuiPickersAdapter } from '../internals/models';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { DateView, MuiPickersAdapter } from '../internals/models';
+import {
+  DateCalendarSlotsComponent,
+  DateCalendarSlotsComponentsProps,
+  ExportedDateCalendarProps,
+} from '../DateCalendar/DateCalendar';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { applyDefaultDate, replaceInvalidDateByNull } from '../internals/utils/date-utils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
+import {
+  DatePickerToolbar,
+  DatePickerToolbarProps,
+  ExportedDatePickerToolbarProps,
+} from './DatePickerToolbar';
+import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+
+export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DatePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDatePickerSlotsComponentsProps<TDate>
+  extends DateCalendarSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDatePickerToolbarProps;
+}
 
 export interface BaseDatePickerProps<TDate>
-  extends ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TDate | null>,
+  extends Omit<ExportedDateCalendarProps<TDate>, 'value' | 'onChange' | 'defaultValue'>,
+    BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {
   /**
    * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
+   * @param {DateView} view The new view.
    */
-  onViewChange?: (view: CalendarPickerView) => void;
+  onViewChange?: (view: DateView) => void;
   /**
    * First view to show.
    * Must be a valid option from `views` list
    * @default 'day'
    */
-  openTo?: CalendarPickerView;
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DatePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder?: React.ReactNode;
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat?: string;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date'
-   */
-  toolbarTitle?: React.ReactNode;
+  openTo?: DateView;
   /**
    * Array of views to show.
    * @default ['year', 'day']
    */
-  views?: readonly CalendarPickerView[];
+  views?: readonly DateView[];
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDatePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDatePickerSlotsComponentsProps<TDate>;
 }
 
-export const isYearOnlyView = (
-  views: readonly CalendarPickerView[],
-): views is ReadonlyArray<'year'> => views.length === 1 && views[0] === 'year';
-
-export const isYearAndMonthViews = (
-  views: readonly CalendarPickerView[],
-): views is ReadonlyArray<'month' | 'year'> =>
-  views.length === 2 && views.indexOf('month') !== -1 && views.indexOf('year') !== -1;
-
 const getFormatAndMaskByViews = <TDate>(
-  views: readonly CalendarPickerView[],
+  views: readonly DateView[],
   utils: MuiPickersAdapter<TDate>,
 ): { disableMaskedInput?: boolean; inputFormat: string; mask?: string } => {
   if (isYearOnlyView(views)) {
@@ -89,10 +93,13 @@ const getFormatAndMaskByViews = <TDate>(
 export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePickerProps<TDate>>(
   props: Props,
   name: string,
-): DefaultizedProps<
-  Props,
-  'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
-  { inputFormat: string }
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseDateValidationProps<TDate>,
+    { inputFormat: string }
+  >
 > {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -106,6 +113,17 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
 
   const views = themeProps.views ?? ['year', 'day'];
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      datePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     openTo: 'day',
     disableFuture: false,
@@ -115,12 +133,7 @@ export function useDatePickerDefaultizedProps<TDate, Props extends BaseDatePicke
     views,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    localeText,
+    components: { Toolbar: DatePickerToolbar, ...themeProps.components },
   };
 }
-
-export const datePickerValueManager: PickerStateValueManager<any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  cleanValue: replaceInvalidDateByNull,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

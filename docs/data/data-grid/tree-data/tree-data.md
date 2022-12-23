@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+# Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
@@ -16,7 +16,7 @@ The `getTreeDataPath` function returns an array of strings which represents the 
 //         - Robert
 //         - Karen
 
-const columns: GridColumns = [{ field: 'jobTitle', width: 250 }];
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
 // Without transformation
 const rows: GridRowsProp = [

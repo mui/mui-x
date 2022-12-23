@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
@@ -17,17 +17,17 @@ interface TouchRippleActions {
   stop: (event: any, callback?: () => void) => void;
 }
 
-interface GridActionsCellProps extends Omit<GridRenderCellParams, 'value' | 'formattedValue'> {
+interface GridActionsCellProps
+  extends Omit<GridRenderCellParams, 'value' | 'formattedValue' | 'api'> {
   value?: GridRenderCellParams['value'];
   formattedValue?: GridRenderCellParams['formattedValue'];
   position?: GridMenuProps['position'];
 }
 
-const GridActionsCell = (props: GridActionsCellProps) => {
+function GridActionsCell(props: GridActionsCellProps) {
   const {
     colDef,
     id,
-    api,
     hasFocus,
     isEditable,
     field,
@@ -36,7 +36,6 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     row,
     rowNode,
     cellMode,
-    getValue,
     tabIndex,
     position = 'bottom-end',
     focusElementRef,
@@ -73,7 +72,7 @@ const GridActionsCell = (props: GridActionsCellProps) => {
     }
 
     const child = rootRef.current.children[focusedButtonIndex] as HTMLElement;
-    child.focus();
+    child.focus({ preventScroll: true });
   }, [focusedButtonIndex]);
 
   React.useEffect(() => {
@@ -227,18 +226,13 @@ const GridActionsCell = (props: GridActionsCellProps) => {
       )}
     </div>
   );
-};
+}
 
 GridActionsCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
-   */
-  api: PropTypes.any.isRequired,
   /**
    * The mode of the cell.
    */
@@ -265,14 +259,6 @@ GridActionsCell.propTypes = {
     }),
   ]),
   formattedValue: PropTypes.any,
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
   /**
    * If true, the cell is the active element.
    */

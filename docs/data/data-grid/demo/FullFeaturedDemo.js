@@ -309,9 +309,8 @@ export default function FullFeaturedDemo() {
         }}
         loading={loading}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         rowThreshold={0}
-        experimentalFeatures={{ newEditingApi: true }}
         initialState={{
           ...data.initialState,
           pinnedColumns: { left: [GRID_CHECKBOX_SELECTION_FIELD, 'desk'] },

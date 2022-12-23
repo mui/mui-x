@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { styled } from '@mui/material/styles';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
+import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
@@ -8,12 +13,45 @@ import {
 } from '../../hooks/features/rows/gridRowsSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { gridDensityTotalHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { getMinimalContentHeight } from '../../hooks/features/rows/gridRowsUtils';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+
+const GridOverlayWrapperRoot = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'OverlayWrapper',
+  overridesResolver: (props, styles) => styles.overlayWrapper,
+})({
+  position: 'sticky', // To stay in place while scrolling
+  top: 0,
+  left: 0,
+  width: 0, // To stay above the content instead of shifting it down
+  height: 0, // To stay above the content instead of shifting it down
+  zIndex: 4, // Should be above pinned columns, pinned rows and detail panel
+});
+
+const GridOverlayWrapperInner = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'OverlayWrapperInner',
+  overridesResolver: (props, styles) => styles.overlayWrapperInner,
+})({});
+
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['overlayWrapper'],
+    inner: ['overlayWrapperInner'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridDensityTotalHeaderHeightSelector);
 
   const [viewportInnerSize, setViewportInnerSize] = React.useState(
     () => apiRef.current.getRootDimensions()?.viewportInnerSize ?? null,
@@ -29,24 +67,26 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
-    height = 'auto';
+    height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
+
+  const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
 
   if (!viewportInnerSize) {
     return null;
   }
 
   return (
-    <div
-      style={{
-        height,
-        width: viewportInnerSize?.width ?? 0,
-        position: 'absolute',
-        top: totalHeaderHeight,
-        bottom: height === 'auto' ? 0 : undefined,
-      }}
-      {...props}
-    />
+    <GridOverlayWrapperRoot className={clsx(classes.root)}>
+      <GridOverlayWrapperInner
+        className={clsx(classes.inner)}
+        style={{
+          height,
+          width: viewportInnerSize?.width ?? 0,
+        }}
+        {...props}
+      />
+    </GridOverlayWrapperRoot>
   );
 }
 

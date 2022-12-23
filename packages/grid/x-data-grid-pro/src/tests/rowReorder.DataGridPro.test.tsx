@@ -38,7 +38,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} rowReordering />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -74,7 +74,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -82,15 +82,13 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0).firstChild!;
     fireEvent.dragStart(rowReorderCell);
-    expect(
-      (rowReorderCell as HTMLElement).classList.contains(gridClasses['row--dragging']),
-    ).to.equal(false);
+    expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
   it('should keep the order of the rows when dragEnd is fired and rowReordering=false', () => {
@@ -102,7 +100,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     ];
     const columns = [{ field: 'brand' }];
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -110,7 +108,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} rows={rows} columns={columns} />
         </div>
       );
-    };
+    }
 
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -123,7 +121,7 @@ describe('<DataGridPro /> - Row reorder', () => {
   it('should call onRowOrderChange after the row stops being dragged', () => {
     const handleOnRowOrderChange = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
       const rows = [
         { id: 0, brand: 'Nike' },
@@ -143,7 +141,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -169,7 +167,7 @@ describe('<DataGridPro /> - Row reorder', () => {
     const handleDragOver = spy();
     const handleDragEnd = spy();
     let apiRef: React.MutableRefObject<GridApi>;
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
       const data = useBasicDemoData(3, 3);
 
@@ -185,7 +183,7 @@ describe('<DataGridPro /> - Row reorder', () => {
           <DataGridPro apiRef={apiRef} {...data} rowReordering />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 

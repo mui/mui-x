@@ -11,15 +11,15 @@ import Alert from '@mui/material/Alert';
 const useFakeMutation = () => {
   return React.useCallback(
     (user) =>
-      new Promise((resolve, reject) =>
+      new Promise((resolve, reject) => {
         setTimeout(() => {
           if (user.name?.trim() === '') {
             reject(new Error("Error while saving user: name can't be empty."));
           } else {
             resolve({ ...user, name: user.name?.toUpperCase() });
           }
-        }, 200),
-      ),
+        }, 200);
+      }),
     [],
   );
 };
@@ -52,7 +52,6 @@ export default function ServerSidePersistence() {
         columns={columns}
         processRowUpdate={processRowUpdate}
         onProcessRowUpdateError={handleProcessRowUpdateError}
-        experimentalFeatures={{ newEditingApi: true }}
       />
       {!!snackbar && (
         <Snackbar

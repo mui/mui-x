@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const views = {
   hours: '小时',
@@ -16,9 +16,9 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前一个视图',
   openNextView: '下一个视图',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: '开始',
@@ -31,10 +31,10 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: '今天',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  // datePickerToolbarTitle: 'Select date',
+  // dateTimePickerToolbarTitle: 'Select date & time',
+  // timePickerToolbarTitle: 'Select time',
+  // dateRangePickerToolbarTitle: 'Select date range',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -44,6 +44,12 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours}小时`,
   minutesClockNumberText: (minutes) => `${minutes}分钟`,
   secondsClockNumberText: (seconds) => `${seconds}秒`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -58,6 +64,15 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: '选择时间',
   dateTableLabel: '选择日期',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const zhCN = getPickersLocalization(zhCNPickers);

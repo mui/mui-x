@@ -40,7 +40,7 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = ({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) => {
+  function TestCase({ nbCols = 20, ...other }: Partial<DataGridProProps> & { nbCols?: number }) {
     apiRef = useGridApiRef();
     const data = useBasicDemoData(1, nbCols);
     return (
@@ -48,7 +48,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         <DataGridPro {...data} apiRef={apiRef} {...other} />
       </div>
     );
-  };
+  }
 
   function ResizeObserverMock(
     callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
@@ -277,7 +277,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         this.skip();
       }
 
-      const Test = ({ bioHeight }: { bioHeight: number }) => {
+      function Test({ bioHeight }: { bioHeight: number }) {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
         const columns = [
@@ -293,7 +293,7 @@ describe('<DataGridPro /> - Column pinning', () => {
             initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
           />
         );
-      };
+      }
 
       render(<Test bioHeight={100} />);
       await act(() => Promise.resolve());
@@ -315,7 +315,7 @@ describe('<DataGridPro /> - Column pinning', () => {
         this.skip();
       }
 
-      const Test = ({ bioHeight }: { bioHeight: number }) => {
+      function Test({ bioHeight }: { bioHeight: number }) {
         const data = React.useMemo(() => getBasicGridData(1, 2), []);
 
         const columns = [
@@ -331,7 +331,7 @@ describe('<DataGridPro /> - Column pinning', () => {
             initialState={{ pinnedColumns: { left: ['id'], right: ['bio'] } }}
           />
         );
-      };
+      }
 
       const { setProps } = render(<Test bioHeight={100} />);
       await act(() => Promise.resolve());
@@ -360,7 +360,29 @@ describe('<DataGridPro /> - Column pinning', () => {
     });
   });
 
-  describe('prop: onPinnedColumnsChange', () => {
+  it('should add border to right pinned columns section when `showCellVerticalBorder={true}`', function test() {
+    if (isJSDOM) {
+      // Doesn't work with mocked window.getComputedStyle
+      this.skip();
+    }
+
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <TestCase showCellVerticalBorder initialState={{ pinnedColumns: { right: ['id'] } }} />
+      </div>,
+    );
+
+    const computedStyle = window.getComputedStyle(
+      document.querySelector('.MuiDataGrid-pinnedColumns--right') as HTMLElement,
+    );
+    const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
+    const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
+    expect(borderLeftWidth).to.equal('1px');
+    // should not be transparent
+    expect(borderLeftColor).to.not.equal('rgba(0, 0, 0, 0)');
+  });
+
+  describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', () => {
       const handlePinnedColumnsChange = spy();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
@@ -581,7 +603,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('column menu', () => {
-    it('should pin the column to the left when clicking the "Pin to left" button', () => {
+    it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -592,7 +614,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should pin the column to the right when clicking the "Pin to right" button', () => {
+    it('should pin the column to the right when clicking the "Pin to right" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -603,7 +625,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to right" on a left pinned column', () => {
+    it('should allow to invert the side when clicking on "Pin to right" pinning button on a left pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -617,7 +639,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to invert the side when clicking on "Pin to left" on a right pinned column', () => {
+    it('should allow to invert the side when clicking on "Pin to left" pinning button on a right pinned column', () => {
       render(<TestCase initialState={{ pinnedColumns: { right: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
@@ -631,7 +653,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).not.to.equal(null);
     });
 
-    it('should allow to unpin a pinned column when clicking "Unpin"', () => {
+    it('should allow to unpin a pinned left column when clicking "Unpin" pinning button', () => {
       render(<TestCase initialState={{ pinnedColumns: { left: ['id'] } }} />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');

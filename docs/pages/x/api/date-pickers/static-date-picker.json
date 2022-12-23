@@ -28,6 +28,8 @@
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
+    "displayWeekNumber": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
@@ -63,7 +65,6 @@
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
-    "renderDay": { "type": { "name": "func" } },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
@@ -80,10 +81,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DatePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -95,6 +92,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
@@ -102,12 +100,16 @@
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "StaticDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiStaticDatePicker" },
   "filename": "/packages/x-date-pickers/src/StaticDatePicker/StaticDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker/\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "StaticDatePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "StaticDatePicker" }
+  ]
 }

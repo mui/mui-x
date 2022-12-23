@@ -1,4 +1,5 @@
 export * from './gridColumnHeaderParams';
+export * from './gridColumnGroupHeaderParams';
 export * from './gridColumnOrderChangeParams';
 export * from './gridColumnResizeParams';
 export * from './gridEditCellParams';
@@ -8,7 +9,6 @@ export * from './gridRowSelectionCheckboxParams';
 export * from './gridHeaderSelectionCheckboxParams';
 export * from './gridValueOptionsParams';
 export * from './gridCellParams';
-export * from './gridSortModelParams';
 export * from './gridPreferencePanelParams';
 export * from './gridMenuParams';
 export * from './gridRenderedRowsIntervalChangeParams';

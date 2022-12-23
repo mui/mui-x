@@ -70,6 +70,21 @@ export const findClosestEnabledDate = <TDate>({
   return null;
 };
 
+export const clamp = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: TDate,
+  minDate: TDate,
+  maxDate: TDate,
+): TDate => {
+  if (utils.isBefore(value, minDate)) {
+    return minDate;
+  }
+  if (utils.isAfter(value, maxDate)) {
+    return maxDate;
+  }
+  return value;
+};
+
 export const replaceInvalidDateByNull = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   value: TDate | null,

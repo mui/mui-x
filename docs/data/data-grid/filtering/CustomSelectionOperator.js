@@ -21,26 +21,27 @@ export default function CustomSelectionOperator() {
     filterModel: {
       items: [
         {
-          columnField: 'col1',
-          operatorValue: 'contains',
+          field: 'col1',
+          operator: 'contains',
           value: 'lo',
         },
       ],
     },
-    selectionModel: [5],
+    rowSelectionModel: [5],
   }));
 
-  const selectionModelLookup = React.useMemo(
+  const rowSelectionModelLookup = React.useMemo(
     () =>
-      models.selectionModel.reduce((lookup, rowId) => {
+      models.rowSelectionModel.reduce((lookup, rowId) => {
         lookup[rowId] = rowId;
         return lookup;
       }, {}),
-    [models.selectionModel],
+    [models.rowSelectionModel],
   );
 
-  const selectionModelLookupRef = React.useRef(selectionModelLookup);
-  selectionModelLookupRef.current = selectionModelLookup;
+  const rowSelectionModelLookupRef = React.useRef(rowSelectionModelLookup);
+
+  rowSelectionModelLookupRef.current = rowSelectionModelLookup;
 
   const columns = React.useMemo(() => {
     /**
@@ -54,7 +55,7 @@ export default function CustomSelectionOperator() {
         }
 
         return (params) => {
-          if (selectionModelLookupRef.current[params.id]) {
+          if (rowSelectionModelLookupRef.current[params.id]) {
             return true;
           }
 
@@ -80,11 +81,11 @@ export default function CustomSelectionOperator() {
     });
   }, [data.columns]);
 
-  const handleSelectionModelChange = React.useCallback(
-    (newSelectionModel) =>
+  const handleRowSelectionModelChange = React.useCallback(
+    (newRowSelectionModel) =>
       setModels((prev) => ({
         ...prev,
-        selectionModel: newSelectionModel,
+        rowSelectionModel: newRowSelectionModel,
         // Forces the re-application of the filtering process
         filterModel: { ...prev.filterModel },
       })),
@@ -102,7 +103,7 @@ export default function CustomSelectionOperator() {
       <DataGrid
         {...data}
         columns={columns}
-        onSelectionModelChange={handleSelectionModelChange}
+        onRowSelectionModelChange={handleRowSelectionModelChange}
         onFilterModelChange={handleFilterModelChange}
       />
     </div>

@@ -3,12 +3,16 @@ export type {
   FieldValueManager,
   FieldSection,
   UseFieldInternalProps,
+  UseFieldForwardedProps,
   UseFieldParams,
   UseFieldResponse,
   FieldSelectedSections,
-} from './useField.interfaces';
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
+} from './useField.types';
 export {
   splitFormatIntoSections,
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
+  getSectionOrder,
 } from './useField.utils';

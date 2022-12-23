@@ -5,7 +5,6 @@
 /* eslint-disable react/no-danger */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useRouter } from 'next/router';
 import clsx from 'clsx';
 import { exactProp } from '@mui/utils';
 import { alpha, styled } from '@mui/material/styles';
@@ -15,7 +14,7 @@ import { useTranslate, useUserLanguage } from 'docs/src/modules/utils/i18n';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
-import replaceHtmlLinks from 'docs/src/modules/utils/replaceHtmlLinks';
+import Ad from 'docs/src/modules/components/Ad';
 
 const Asterisk = styled('abbr')(({ theme }) => ({ color: theme.palette.error.main }));
 
@@ -50,7 +49,6 @@ const Table = styled('table')(({ theme }) => {
 function PropsTable(props) {
   const { componentProps, propDescriptions } = props;
   const t = useTranslate();
-  const router = useRouter();
 
   return (
     <Wrapper>
@@ -105,7 +103,7 @@ function PropsTable(props) {
                     )}
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: replaceHtmlLinks(propDescriptions[propName] || '', router.asPath),
+                        __html: propDescriptions[propName] || '',
                       }}
                     />
                   </td>
@@ -173,12 +171,12 @@ ClassesTable.propTypes = {
 
 function getTranslatedHeader(t, header) {
   const translations = {
+    demos: t('api-docs.demos'),
     import: t('api-docs.import'),
     'component-name': t('api-docs.componentName'),
     props: t('api-docs.props'),
     slots: t('api-docs.slots'),
     inheritance: t('api-docs.inheritance'),
-    demos: t('api-docs.demos'),
     css: 'CSS',
   };
 
@@ -215,9 +213,8 @@ Heading.propTypes = {
   level: PropTypes.string,
 };
 
-function ApiDocs(props) {
-  const router = useRouter();
-  const { descriptions, pageContent } = props;
+export default function ApiPage(props) {
+  const { descriptions, disableAd = false, pageContent } = props;
   const t = useTranslate();
   const userLanguage = useUserLanguage();
 
@@ -265,13 +262,13 @@ function ApiDocs(props) {
   }
 
   const toc = [
+    createTocEntry('demos'),
     createTocEntry('import'),
     ...componentDescriptionToc,
     componentStyles.name && createTocEntry('component-name'),
     createTocEntry('props'),
     Object.keys(slots).length && createTocEntry('slots'),
     componentStyles.classes.length > 0 && createTocEntry('css'),
-    createTocEntry('demos'),
   ].filter(Boolean);
 
   // The `ref` is forwarded to the root element.
@@ -301,20 +298,20 @@ function ApiDocs(props) {
 
   if (source === '@mui/x-date-pickers' || source === '@mui/x-date-pickers-pro') {
     packages.forEach((pkg) => {
-      // e.g. import DatePicker from '@mui/x-date-pickers/DatePicker';
-      imports.push(`import ${componentName} from '${pkg}/${componentName}';`);
+      // e.g. import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+      imports.push(`import { ${pkg.componentName} } from '${pkg.packageName}/${componentName}';`);
     });
   }
 
   packages.forEach((pkg) => {
     // e.g. import { DatePicker } from '@mui/x-date-pickers';
-    imports.push(`import { ${componentName} } from '${pkg}';`);
+    imports.push(`import { ${pkg.componentName} } from '${pkg.packageName}';`);
   });
 
   return (
     <AppLayoutDocs
       description={description}
-      disableAd={false}
+      disableAd={disableAd}
       disableToc={false}
       location={apiSourceLocation}
       title={`${componentName} API`}
@@ -322,9 +319,23 @@ function ApiDocs(props) {
     >
       <MarkdownElement>
         <h1>{componentName} API</h1>
-        <Typography variant="h5" component="p" className="description" gutterBottom>
+        <Typography
+          variant="h5"
+          component="p"
+          className={`description${disableAd ? '' : ' ad'}`}
+          gutterBottom
+        >
           {description}
+          {disableAd ? null : <Ad />}
         </Typography>
+        <Heading hash="demos" />
+        <div
+          className="MuiCallout-root MuiCallout-info"
+          dangerouslySetInnerHTML={{
+            __html: `<p>For examples and details on the usage of this React component, visit the component demo pages:</p>
+              ${demos}`,
+          }}
+        />
         <Heading hash="import" />
         <HighlightedCode code={imports.join(`\n// ${t('or')}\n`)} language="jsx" />
         <span dangerouslySetInnerHTML={{ __html: t('api-docs.importDifference') }} />
@@ -334,7 +345,7 @@ function ApiDocs(props) {
             <br />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(componentDescription, router.asPath),
+                __html: componentDescription,
               }}
             />
           </React.Fragment>
@@ -344,19 +355,16 @@ function ApiDocs(props) {
             <Heading hash="component-name" />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(
-                  t('api-docs.styleOverrides').replace(
-                    /{{componentStyles\.name}}/,
-                    componentStyles.name,
-                  ),
-                  router.asPath,
+                __html: t('api-docs.styleOverrides').replace(
+                  /{{componentStyles\.name}}/,
+                  componentStyles.name,
                 ),
               }}
             />
           </React.Fragment>
         )}
         <Heading hash="props" />
-        <p dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(spreadHint, router.asPath) }} />
+        <p dangerouslySetInnerHTML={{ __html: spreadHint }} />
         <PropsTable componentProps={componentProps} propDescriptions={propDescriptions} />
         <br />
         {Object.keys(slots).length ? (
@@ -382,14 +390,11 @@ function ApiDocs(props) {
             <Heading hash="inheritance" level="h3" />
             <span
               dangerouslySetInnerHTML={{
-                __html: replaceHtmlLinks(
-                  t('api-docs.inheritanceDescription')
-                    .replace(/{{component}}/, inheritance.component)
-                    .replace(/{{pathname}}/, inheritance.pathname)
-                    .replace(/{{suffix}}/, inheritanceSuffix)
-                    .replace(/{{componentName}}/, componentName),
-                  router.asPath,
-                ),
+                __html: t('api-docs.inheritanceDescription')
+                  .replace(/{{component}}/, inheritance.component)
+                  .replace(/{{pathname}}/, inheritance.pathname)
+                  .replace(/{{suffix}}/, inheritanceSuffix)
+                  .replace(/{{componentName}}/, componentName),
               }}
             />
           </React.Fragment>
@@ -397,11 +402,7 @@ function ApiDocs(props) {
         {Object.keys(componentStyles.classes).length ? (
           <React.Fragment>
             <Heading hash="css" />
-            <ClassesTable
-              componentName={componentName}
-              componentStyles={componentStyles}
-              classDescriptions={classDescriptions}
-            />
+            <ClassesTable componentStyles={componentStyles} classDescriptions={classDescriptions} />
             <br />
             <span dangerouslySetInnerHTML={{ __html: t('api-docs.overrideStyles') }} />
             <span
@@ -409,8 +410,6 @@ function ApiDocs(props) {
             />
           </React.Fragment>
         ) : null}
-        <Heading hash="demos" />
-        <span dangerouslySetInnerHTML={{ __html: replaceHtmlLinks(demos, router.asPath) }} />
       </MarkdownElement>
       <svg style={{ display: 'none' }} xmlns="http://www.w3.org/2000/svg">
         <symbol id="anchor-link-icon" viewBox="0 0 16 16">
@@ -421,13 +420,12 @@ function ApiDocs(props) {
   );
 }
 
-ApiDocs.propTypes = {
+ApiPage.propTypes = {
   descriptions: PropTypes.object.isRequired,
+  disableAd: PropTypes.bool,
   pageContent: PropTypes.object.isRequired,
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  ApiDocs.propTypes = exactProp(ApiDocs.propTypes);
+  ApiPage.propTypes = exactProp(ApiPage.propTypes);
 }
-
-export default ApiDocs;

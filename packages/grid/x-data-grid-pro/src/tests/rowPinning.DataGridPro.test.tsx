@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     return container.contains(row);
   }
 
-  const BaselineTestCase = ({
+  function BaselineTestCase({
     rowCount,
     colCount,
     height = 300,
@@ -61,7 +61,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     rowCount: number;
     colCount: number;
     height?: number | string;
-  } & Partial<DataGridProProps>) => {
+  } & Partial<DataGridProProps>) {
     const data = getBasicGridData(rowCount, colCount);
     const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
@@ -79,7 +79,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         />
       </div>
     );
-  };
+  }
 
   it('should render pinned rows in pinned containers', () => {
     render(<BaselineTestCase rowCount={20} colCount={5} />);
@@ -91,7 +91,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   it('should treat row as pinned even if row with the same id is present in `rows` prop', () => {
     const rowCount = 5;
 
-    const TestCase = ({ pinRows = true }) => {
+    function TestCase({ pinRows = true }) {
       const data = getBasicGridData(rowCount, 5);
 
       const pinnedRows = React.useMemo(() => {
@@ -114,7 +114,7 @@ describe('<DataGridPro /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase />);
 
@@ -162,7 +162,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
   it('should update pinned rows when `pinnedRows` prop change', () => {
     const data = getBasicGridData(20, 5);
-    const TestCase = (props: any) => {
+    function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
       return (
         <div style={{ width: 302, height: 300 }}>
@@ -178,7 +178,7 @@ describe('<DataGridPro /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     const { setProps } = render(<TestCase />);
 
@@ -201,7 +201,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     const data = getBasicGridData(20, 5);
     let apiRef!: React.MutableRefObject<GridApi>;
 
-    const TestCase = (props: any) => {
+    function TestCase(props: any) {
       const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
       apiRef = useGridApiRef();
       return (
@@ -219,7 +219,7 @@ describe('<DataGridPro /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<TestCase />);
 
@@ -258,7 +258,7 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should work with `getRowId`', () => {
-    const TestCase = () => {
+    function TestCase() {
       const data = getBasicGridData(20, 5);
 
       const rowsData = data.rows.map((row) => {
@@ -290,7 +290,7 @@ describe('<DataGridPro /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<TestCase />);
 
@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'GBPEUR' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'GBPEUR' }],
       },
     });
 
@@ -336,7 +336,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     // should show pinned rows even if there's no filtering results
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'whatever' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'whatever' }],
       },
     });
 
@@ -361,7 +361,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     }
 
     it('should work with top pinned rows', () => {
-      const TestCase = () => {
+      function TestCase() {
         const data = getBasicGridData(20, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
@@ -377,7 +377,7 @@ describe('<DataGridPro /> - Row pinning', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCase />);
 
@@ -404,7 +404,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     });
 
     it('should work with bottom pinned rows', () => {
-      const TestCase = () => {
+      function TestCase() {
         const data = getBasicGridData(5, 5);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
@@ -420,7 +420,7 @@ describe('<DataGridPro /> - Row pinning', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCase />);
 
@@ -449,7 +449,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         this.skip();
       }
 
-      const TestCase = () => {
+      function TestCase() {
         const data = getBasicGridData(5, 7);
         const [pinnedRow0, pinnedRow1, ...rows] = data.rows;
 
@@ -472,7 +472,7 @@ describe('<DataGridPro /> - Row pinning', () => {
             />
           </div>
         );
-      };
+      }
 
       render(<TestCase />);
 
@@ -694,7 +694,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     const columns = [{ field: 'name', width: 200 }];
 
-    const Test = () => {
+    function Test() {
       const [pinnedRow0, pinnedRow1, ...rowsData] = rows;
 
       return (
@@ -712,7 +712,7 @@ describe('<DataGridPro /> - Row pinning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
@@ -723,10 +723,10 @@ describe('<DataGridPro /> - Row pinning', () => {
   it('should not be selectable', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = () => {
+    function TestCase() {
       apiRef = useGridApiRef();
       return <BaselineTestCase rowCount={20} colCount={5} apiRef={apiRef} />;
-    };
+    }
 
     render(<TestCase />);
 
@@ -744,10 +744,10 @@ describe('<DataGridPro /> - Row pinning', () => {
   it('should export pinned rows to CSV', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const TestCase = () => {
+    function TestCase() {
       apiRef = useGridApiRef();
       return <BaselineTestCase rowCount={20} colCount={1} apiRef={apiRef} />;
-    };
+    }
 
     render(<TestCase />);
 
@@ -765,7 +765,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
-    expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+    expect(screen.getByRole('grid')).to.have.attribute('aria-rowcount', `${rowCount + 1}`); // +1 for header row
   });
 
   // https://github.com/mui/mui-x/issues/5845
@@ -775,7 +775,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
     );
 
-    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
-    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(0)!).to.have.class(className);
+    expect(getRowById(1)!).to.have.class(className);
   });
 });

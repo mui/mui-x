@@ -53,10 +53,19 @@ const getAggregationCellValue = ({
       return;
     }
 
-    values.push(apiRef.current.getCellValue(rowId, field));
+    if (typeof aggregationFunction.getCellValue === 'function') {
+      const row = apiRef.current.getRow(rowId);
+      values.push(aggregationFunction.getCellValue({ row }));
+    } else {
+      values.push(apiRef.current.getCellValue(rowId, field));
+    }
   });
 
-  return aggregationFunction.apply({ values });
+  return aggregationFunction.apply({
+    values,
+    groupId,
+    field, // Added per user request in https://github.com/mui/mui-x/issues/6995#issuecomment-1327423455
+  });
 };
 
 const getGroupAggregatedValue = ({

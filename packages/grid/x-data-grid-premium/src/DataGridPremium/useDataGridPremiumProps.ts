@@ -1,23 +1,21 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import {
-  DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
-  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
-  GRID_DEFAULT_LOCALE_TEXT,
-  GridSlotsComponent,
-} from '@mui/x-data-grid-pro';
+import { DATA_GRID_PRO_PROPS_DEFAULT_VALUES, GRID_DEFAULT_LOCALE_TEXT } from '@mui/x-data-grid-pro';
 import {
   DataGridPremiumProps,
   DataGridPremiumProcessedProps,
   DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
+import { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
+import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 
 /**
  * The default values of `DataGridPremiumPropsWithDefaultValue` to inject in the props of DataGridPremium.
  */
 export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDefaultValue = {
   ...DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
+  unstable_cellSelection: false,
   disableAggregation: false,
   disableRowGrouping: false,
   rowGroupingColumnMode: 'single',
@@ -34,20 +32,24 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     [themedProps.localeText],
   );
 
-  const components = React.useMemo<GridSlotsComponent>(() => {
+  const components = React.useMemo<GridPremiumSlotsComponent>(() => {
     const overrides = themedProps.components;
 
     if (!overrides) {
-      return { ...DATA_GRID_DEFAULT_SLOTS_COMPONENTS };
+      return { ...DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS };
     }
 
-    const mergedComponents = {} as GridSlotsComponent;
+    const mergedComponents = {} as GridPremiumSlotsComponent;
 
-    type GridSlots = keyof GridSlotsComponent;
-    Object.entries(DATA_GRID_DEFAULT_SLOTS_COMPONENTS).forEach(([key, defaultComponent]) => {
-      mergedComponents[key as GridSlots] =
-        overrides[key as GridSlots] === undefined ? defaultComponent : overrides[key as GridSlots];
-    });
+    type GridSlots = keyof GridPremiumSlotsComponent;
+    Object.entries(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS).forEach(
+      ([key, defaultComponent]) => {
+        mergedComponents[key as GridSlots] =
+          overrides[key as GridSlots] === undefined
+            ? defaultComponent
+            : overrides[key as GridSlots];
+      },
+    );
 
     return mergedComponents;
   }, [themedProps.components]);
@@ -56,8 +58,6 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     () => ({
       ...DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES,
       ...themedProps,
-      disableAggregation:
-        themedProps.disableAggregation || !themedProps.experimentalFeatures?.aggregation,
       localeText,
       components,
       signature: 'DataGridPremium',

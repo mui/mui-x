@@ -4,5 +4,4 @@
   onCellEditStart={handleCellEditStart}
   onCellEditStop={handleCellEditStop}
   processRowUpdate={processRowUpdate}
-  experimentalFeatures={{ newEditingApi: true }}
 />

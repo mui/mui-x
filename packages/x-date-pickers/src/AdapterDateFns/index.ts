@@ -2,31 +2,39 @@ import BaseAdapterDateFns from '@date-io/date-fns';
 import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import getWeek from 'date-fns/getWeek';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
-  MMMM: 'month',
+  M: 'month',
   MM: 'month',
-  DD: 'day',
+  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionName: 'month', contentType: 'letter' },
+  LLL: { sectionName: 'month', contentType: 'letter' },
+  LLLL: { sectionName: 'month', contentType: 'letter' },
   d: 'day',
   dd: 'day',
-  H: 'hour',
-  HH: 'hour',
-  h: 'hour',
-  hh: 'hour',
-  mm: 'minute',
-  ss: 'second',
-  a: 'am-pm',
-  aa: 'am-pm',
-  aaa: 'am-pm',
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+  mm: 'minutes',
+  ss: 'seconds',
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
 };
 
-export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerFieldAdapter<Date> {
+export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdapter<Date> {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: "'", end: "'" };
 
   public expandFormat = (format: string) => {
     const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
@@ -51,5 +59,9 @@ export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerField
     return this.expandFormat(format)
       .replace(/(aaa|aa|a)/g, '(a|p)m')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: Date) => {
+    return getWeek(date, { locale: this.locale });
   };
 }

@@ -1,79 +1,24 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { GridColumnNode, isLeaf } from '../../../models/gridColumnGrouping';
 import {
-  GridColumnGroupingModel,
-  GridColumnNode,
-  GridColumnGroup,
-  isLeaf,
-} from '../../../models/gridColumnGrouping';
-import { gridColumnGroupsLookupSelector } from './gridColumnGroupsSelector';
-import { gridColumnLookupSelector } from '../columns/gridColumnsSelector';
+  gridColumnGroupsLookupSelector,
+  gridColumnGroupsUnwrappedModelSelector,
+} from './gridColumnGroupsSelector';
 import { GridColumnGroupLookup } from './gridColumnGroupsInterfaces';
 import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridStateColDef, GridColDef } from '../../../models/colDef';
-
-export function hasGroupPath(
-  lookupElement: GridColDef | GridStateColDef,
-): lookupElement is GridStateColDef {
-  return (<GridStateColDef>lookupElement).groupPath !== undefined;
-}
-
-type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
-
-// This is the recurrence function that help writing `unwrapGroupingColumnModel()`
-const recurrentUnwrapGroupingColumnModel = (
-  columnGroupNode: GridColumnNode,
-  parents: GridColumnGroup['groupId'][],
-  unwrappedGroupingModelToComplet: UnwrappedGroupingModel,
-): void => {
-  if (isLeaf(columnGroupNode)) {
-    if (unwrappedGroupingModelToComplet[columnGroupNode.field] !== undefined) {
-      throw new Error(
-        [
-          `MUI: columnGroupingModel contains duplicated field`,
-          `column field ${columnGroupNode.field} occurrs two times in the grouping model:`,
-          `- ${unwrappedGroupingModelToComplet[columnGroupNode.field].join(' > ')}`,
-          `- ${parents.join(' > ')}`,
-        ].join('\n'),
-      );
-    }
-    unwrappedGroupingModelToComplet[columnGroupNode.field] = parents;
-    return;
-  }
-
-  const { groupId, children } = columnGroupNode;
-  children.forEach((child) => {
-    recurrentUnwrapGroupingColumnModel(
-      child,
-      [...parents, groupId],
-      unwrappedGroupingModelToComplet,
-    );
-  });
-};
-
-/**
- * This is a function that provide for each column the array of its parents.
- * Parents are ordered from the root to the leaf.
- * @param columnGroupingModel The model such as provided in DataGrid props
- * @returns An object `{[field]: groupIds}` where `groupIds` is the parents of the column `field`
- */
-export const unwrapGroupingColumnModel = (
-  columnGroupingModel?: GridColumnGroupingModel,
-): UnwrappedGroupingModel => {
-  if (!columnGroupingModel) {
-    return {};
-  }
-
-  const unwrappedSubTree: UnwrappedGroupingModel = {};
-  columnGroupingModel.forEach((columnGroupNode) => {
-    recurrentUnwrapGroupingColumnModel(columnGroupNode, [], unwrappedSubTree);
-  });
-
-  return unwrappedSubTree;
-};
+import { getColumnGroupsHeaderStructure, unwrapGroupingColumnModel } from './gridColumnGroupsUtils';
+import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
+import { GridEventListener } from '../../../models/events';
+import {
+  gridColumnFieldsSelector,
+  // GridColumnsState,
+  gridVisibleColumnFieldsSelector,
+} from '../columns';
+import { useGridSelector } from '../../utils/useGridSelector';
 
 const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
   let groupLookup: GridColumnGroupLookup = {};
@@ -103,13 +48,36 @@ const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGro
 
   return { ...groupLookup };
 };
+
 export const columnGroupsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnGroupingModel'>
-> = (state, props) => {
+  Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>
+> = (state, props, apiRef) => {
+  if (!props.experimentalFeatures?.columnGrouping) {
+    return state;
+  }
+
+  const columnFields = gridColumnFieldsSelector(apiRef);
+  const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+
   const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
+  const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+  const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+    columnFields,
+    unwrappedGroupingModel,
+  );
+  const maxDepth =
+    visibleColumnFields.length === 0
+      ? 0
+      : Math.max(...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0));
+
   return {
     ...state,
-    columnGrouping: { lookup: groupLookup, groupCollapsedModel: {} },
+    columnGrouping: {
+      lookup: groupLookup,
+      unwrappedGroupingModel,
+      headerStructure: columnGroupsHeaderStructure,
+      maxDepth,
+    },
   };
 };
 
@@ -118,7 +86,7 @@ export const columnGroupsStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method)
  */
 export const useGridColumnGrouping = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel' | 'experimentalFeatures'>,
 ) => {
   /**
@@ -128,9 +96,9 @@ export const useGridColumnGrouping = (
     GridColumnGroupingApi['unstable_getColumnGroupPath']
   >(
     (field) => {
-      const columnLookup = gridColumnLookupSelector(apiRef);
+      const unwrappedGroupingModel = gridColumnGroupsUnwrappedModelSelector(apiRef);
 
-      return columnLookup[field]?.groupPath ?? [];
+      return unwrappedGroupingModel[field] ?? [];
     },
     [apiRef],
   );
@@ -147,26 +115,70 @@ export const useGridColumnGrouping = (
     unstable_getAllGroupDetails: getAllGroupDetails,
   };
 
-  useGridApiMethod(apiRef, columnGroupingApi, 'GridColumnGroupingApi');
+  useGridApiMethod(apiRef, columnGroupingApi, 'public');
 
+  const handleColumnReorderChange = React.useCallback<
+    GridEventListener<'columnOrderChange'>
+  >(() => {
+    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+
+    apiRef.current.setState((state) => {
+      const orderedFields = state.columns?.orderedFields ?? [];
+
+      const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+        orderedFields as string[],
+        unwrappedGroupingModel,
+      );
+      return {
+        ...state,
+        columnGrouping: {
+          ...state.columnGrouping,
+          headerStructure: columnGroupsHeaderStructure,
+        },
+      };
+    });
+  }, [apiRef, props.columnGroupingModel]);
+
+  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
+
+  const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
+  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   /**
    * EFFECTS
    */
-  // The effect does not track any value defined synchronously during the 1st render by hooks called after `useGridColumns`
-  // As a consequence, the state generated by the 1st run of this useEffect will always be equal to the initialization one
-  const isFirstRender = React.useRef(true);
   React.useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
     if (!props.experimentalFeatures?.columnGrouping) {
       return;
     }
     const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
-    apiRef.current.setState((state) => ({
-      ...state,
-      columnGrouping: { ...state.columnGrouping, lookup: groupLookup },
-    }));
-  }, [apiRef, props.columnGroupingModel, props.experimentalFeatures?.columnGrouping]);
+    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
+    const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
+      columnFields,
+      unwrappedGroupingModel,
+    );
+    const maxDepth =
+      visibleColumnFields.length === 0
+        ? 0
+        : Math.max(
+            ...visibleColumnFields.map((field) => unwrappedGroupingModel[field]?.length ?? 0),
+          );
+
+    apiRef.current.setState((state) => {
+      return {
+        ...state,
+        columnGrouping: {
+          lookup: groupLookup,
+          unwrappedGroupingModel,
+          headerStructure: columnGroupsHeaderStructure,
+          maxDepth,
+        },
+      };
+    });
+  }, [
+    apiRef,
+    columnFields,
+    visibleColumnFields,
+    props.columnGroupingModel,
+    props.experimentalFeatures?.columnGrouping,
+  ]);
 };

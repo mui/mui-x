@@ -61,7 +61,7 @@ export default function BreakingGroupDemo() {
         columns={columns}
         experimentalFeatures={{ columnGrouping: true }}
         checkboxSelection
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         columnGroupingModel={columnGroupingModel}
       />
     </div>

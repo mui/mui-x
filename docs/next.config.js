@@ -18,9 +18,12 @@ module.exports = withDocsInfra({
     LIB_VERSION: pkg.version,
     DATA_GRID_VERSION: dataGridPkg.version,
     DATE_PICKERS_VERSION: datePickersPkg.version,
+    FEEDBACK_URL: process.env.FEEDBACK_URL,
+    SLACK_FEEDBACKS_TOKEN: process.env.SLACK_FEEDBACKS_TOKEN,
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
@@ -43,6 +46,14 @@ module.exports = withDocsInfra({
     return {
       ...config,
       plugins,
+      resolve: {
+        ...config.resolve,
+        alias: {
+          ...config.resolve.alias,
+          docs: path.resolve(__dirname, '../node_modules/@mui/monorepo/docs'),
+          docsx: path.resolve(__dirname, '../docs'),
+        },
+      },
       module: {
         ...config.module,
         rules: config.module.rules.concat([

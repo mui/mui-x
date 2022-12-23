@@ -50,9 +50,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Ajouter un filtre',
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLinkOperator: 'Opérateur logique',
-  filterPanelOperators: 'Opérateur',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',
@@ -82,6 +80,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',

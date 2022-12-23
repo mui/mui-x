@@ -13,7 +13,7 @@ import {
   GridTreeNode,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridRowsFullUpdate,
   GridRowsInternalCache,
@@ -25,6 +25,7 @@ import {
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
+import { gridDensityFactorSelector } from '../density/densitySelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
 
@@ -78,7 +79,11 @@ export const createRowsInternalCache = ({
   rows,
   getRowId,
   loading,
-}: Pick<DataGridProcessedProps, 'rows' | 'getRowId' | 'loading'>): GridRowsInternalCache => {
+  rowCount,
+}: Pick<
+  DataGridProcessedProps,
+  'rows' | 'getRowId' | 'loading' | 'rowCount'
+>): GridRowsInternalCache => {
   const updates: GridRowsFullUpdate = {
     type: 'full',
     rows: [],
@@ -98,6 +103,7 @@ export const createRowsInternalCache = ({
   return {
     rowsBeforePartialUpdates: rows,
     loadingPropBeforePartialUpdates: loading,
+    rowCountPropBeforePartialUpdates: rowCount,
     updates,
     dataRowIdToIdLookup,
     dataRowIdToModelLookup,
@@ -126,11 +132,11 @@ export const getRowsStateFromCache = ({
   previousTree,
   previousTreeDepths,
 }: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
 }): GridRowsState => {
-  const cache = apiRef.current.unstable_caches.rows;
+  const cache = apiRef.current.caches.rows;
 
   // 1. Apply the "rowTreeCreation" family processing.
   const {
@@ -138,7 +144,7 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     dataRowIds: unProcessedDataRowIds,
     groupingName,
-  } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+  } = apiRef.current.applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
@@ -156,7 +162,7 @@ export const getRowsStateFromCache = ({
   });
 
   // 3. Reset the cache updates
-  apiRef.current.unstable_caches.rows.updates = {
+  apiRef.current.caches.rows.updates = {
     type: 'partial',
     actions: {
       insert: [],
@@ -353,6 +359,7 @@ export const updateCacheWithNewRows = ({
     updates: partialUpdates,
     rowsBeforePartialUpdates: previousCache.rowsBeforePartialUpdates,
     loadingPropBeforePartialUpdates: previousCache.loadingPropBeforePartialUpdates,
+    rowCountPropBeforePartialUpdates: previousCache.rowCountPropBeforePartialUpdates,
   };
 };
 
@@ -374,4 +381,12 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
     top: topPinnedRowsHeight,
     bottom: bottomPinnedRowsHeight,
   };
+}
+
+export function getMinimalContentHeight(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  rowHeight: number,
+) {
+  const densityFactor = gridDensityFactorSelector(apiRef);
+  return 2 * Math.floor(rowHeight * densityFactor);
 }

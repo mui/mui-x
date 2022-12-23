@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   PickersToolbar,
   PickersToolbarButton,
@@ -9,8 +9,9 @@ import {
   useUtils,
   BaseToolbarProps,
   useLocaleText,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, CurrentlySelectingRangeEndProps } from '../internal/models';
+import { DateRange, RangePositionProps } from '../internal/models';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -27,17 +28,15 @@ const useUtilityClasses = (ownerState: DateRangePickerToolbarProps<any>) => {
 };
 
 export interface DateRangePickerToolbarProps<TDate>
-  extends CurrentlySelectingRangeEndProps,
-    Pick<
-      BaseToolbarProps<TDate, DateRange<TDate>>,
-      | 'isMobileKeyboardViewOpen'
-      | 'toggleMobileKeyboardView'
-      | 'toolbarTitle'
-      | 'toolbarFormat'
-      | 'value'
-    > {
+  extends Omit<
+      BaseToolbarProps<DateRange<TDate>, 'day'>,
+      'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
+    >,
+    RangePositionProps {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
+
+export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {}
 
 const DateRangePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateRangePickerToolbar',
@@ -70,17 +69,15 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
   const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerToolbar' });
 
   const {
-    currentlySelectingRangeEnd,
     value: [start, end],
     isMobileKeyboardViewOpen,
-    setCurrentlySelectingRangeEnd,
     toggleMobileKeyboardView,
+    rangePosition,
+    onRangePositionChange,
     toolbarFormat,
-    toolbarTitle: toolbarTitleProp,
   } = props;
 
-  const localeText = useLocaleText();
-  const toolbarTitle = toolbarTitleProp ?? localeText.dateRangePickerDefaultToolbarTitle;
+  const localeText = useLocaleText<TDate>();
 
   const startDateValue = start
     ? utils.formatByString(start, toolbarFormat || utils.formats.shortDate)
@@ -95,7 +92,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   return (
     <DateRangePickerToolbarRoot
-      toolbarTitle={toolbarTitle}
+      toolbarTitle={localeText.dateRangePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
@@ -107,15 +104,15 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
         <PickersToolbarButton
           variant={start !== null ? 'h5' : 'h6'}
           value={startDateValue}
-          selected={currentlySelectingRangeEnd === 'start'}
-          onClick={() => setCurrentlySelectingRangeEnd('start')}
+          selected={rangePosition === 'start'}
+          onClick={() => onRangePositionChange('start')}
         />
         <Typography variant="h5">&nbsp;{'–'}&nbsp;</Typography>
         <PickersToolbarButton
           variant={end !== null ? 'h5' : 'h6'}
           value={endDateValue}
-          selected={currentlySelectingRangeEnd === 'end'}
-          onClick={() => setCurrentlySelectingRangeEnd('end')}
+          selected={rangePosition === 'end'}
+          onClick={() => onRangePositionChange('end')}
         />
       </DateRangePickerToolbarContainer>
     </DateRangePickerToolbarRoot>

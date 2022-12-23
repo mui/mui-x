@@ -53,7 +53,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) => {
+  function TestCase(props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
 
     return (
@@ -68,13 +68,10 @@ describe('<DataGridPremium /> - State Persistence', () => {
           {...props}
           defaultGroupingExpansionDepth={-1}
           groupingColDef={{ headerName: 'Group' }}
-          experimentalFeatures={{
-            aggregation: true,
-          }}
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: exportState', () => {
     it('should export the initial values of the models', () => {

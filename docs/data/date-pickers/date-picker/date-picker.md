@@ -1,15 +1,23 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: CalendarPicker, CalendarPickerSkeleton, DatePicker, DesktopDatePicker, MobileDatePicker, MonthPicker, PickersDay, StaticDatePicker, YearPicker
+components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
-materialDesign: https://material.io/components/date-pickers
+materialDesign: https://m2.material.io/components/date-pickers
 ---
 
-# Date picker
+# Date Picker
 
 <p class="description">The date picker let the user select a date.</p>
+
+:::warning
+The new date pickers are unstable.
+They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+(`NextDatePicker` will become `DatePicker`, ...)
+:::
 
 Date pickers are displayed with:
 
@@ -22,25 +30,42 @@ The date picker is rendered as a modal dialog on mobile, and a textbox with a po
 
 {{"demo": "BasicDatePicker.js"}}
 
-## Static mode
+## Component composition
 
-It's possible to render any date picker without the modal/popover and text field. This can be helpful when building custom popover/modal containers.
+The Date Picker components are built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
+All the documented props of those two components can also be passed to the Date Picker components.
 
-{{"demo": "StaticDatePickerDemo.js", "bg": true}}
+Check-out their documentation page for more information:
+
+- [Date Field](/x/react-date-pickers/date-field/)
+- [Date Calendar](/x/react-date-pickers/date-calendar/)
+
+## Uncontrolled vs. Controlled
+
+The component can be uncontrolled or controlled
+
+{{"demo": "DatePickerValue.js"}}
 
 ## Responsiveness
 
 The date picker component is designed and optimized for the device it runs on.
 
-- The `MobileDatePicker` component works best for touch devices and small screens.
-- The `DesktopDatePicker` component works best for mouse devices and large screens.
+- The `MobileNextDatePicker` component works best for touch devices and small screens.
+- The `DesktopNextDatePicker` component works best for mouse devices and large screens.
 
-By default, the `DatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `NextDatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
 
 {{"demo": "ResponsiveDatePickers.js"}}
+
+## Static mode
+
+It is also possible to render any date picker without the modal/popover and text field.
+This can be helpful when building custom popover/modal containers.
+
+{{"demo": "StaticDatePickerDemo.js", "bg": true}}
 
 ## Form props
 
@@ -48,20 +73,10 @@ The date picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDatePickers.js"}}
 
-## Localization
-
-Use `LocalizationProvider` to change the date-library locale that is used to render the date picker.
-See the documentation page [about localization](/x/react-date-pickers/date-picker/#localization) for more details.
-
-## Jalali calendar system
-
-Install `date-fns-jalali` and use `@date-io/date-fns-jalali` adapter to support [Jalali calendar](https://en.wikipedia.org/wiki/Jalali_calendar).
-
-{{"demo": "JalaliDatePicker.js"}}
-
 ## Views playground
 
-It's possible to combine `year`, `month`, and `date` selection views. Views will appear in the order they're included in the `views` array.
+It's possible to combine `year`, `month`, and `date` selection views.
+The views will appear in the order they're included in the `views` array.
 
 {{"demo": "ViewsDatePicker.js"}}
 
@@ -71,33 +86,23 @@ For ease of use, the date picker will automatically change the layout between po
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
-## Sub-components
-
-Some lower-level sub-components (`CalendarPicker`, `MonthPicker`, and `YearPicker`) are also exported.
-
-{{"demo": "SubComponentsPickers.js"}}
-
-## Custom input component
-
-You can customize the rendering of the input with the `renderInput` prop. Make sure to spread `ref` and `inputProps` correctly to the custom input component.
-
-{{"demo": "CustomInput.js"}}
-
-## Customized day rendering
-
-The displayed days are customizable with the `renderDay` function prop.
-You can take advantage of the [PickersDay](/x/api/date-pickers/pickers-day/) component.
-
-{{"demo": "CustomDay.js"}}
-
-## Dynamic data
-
-Sometimes it may be necessary to display additional info right in the calendar. Here's an example of prefetching and displaying server-side data using the `onMonthChange`, `loading`, and `renderDay` props.
-
-{{"demo": "ServerRequestDatePicker.js"}}
-
 ## Helper text
 
 You can show a helper text with the date format accepted.
 
 {{"demo": "HelperText.js"}}
+
+## Custom input component
+
+You can customize the rendering of the input with the `Input` component slot.
+Make sure to spread `inputProps` correctly to the custom input component.
+
+{{"demo": "CustomInput.js"}}
+
+## Validation
+
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/).
+
+## Localization
+
+You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).

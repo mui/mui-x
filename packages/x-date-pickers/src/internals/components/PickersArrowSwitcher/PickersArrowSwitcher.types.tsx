@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SlotComponentProps } from '@mui/base';
+import { SlotComponentProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
@@ -9,12 +9,12 @@ export interface ExportedPickersArrowSwitcherProps {
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<PickersArrowSwitcherSlotsComponent>;
+  components?: PickersArrowSwitcherSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<PickersArrowSwitcherSlotsComponentsProps>;
+  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
 }
 
@@ -41,22 +41,22 @@ export interface PickersArrowSwitcherSlotsComponent {
    * Button allowing to switch to the left view.
    * @default IconButton
    */
-  PreviousIconButton: React.ElementType;
+  PreviousIconButton?: React.ElementType;
   /**
    * Button allowing to switch to the right view.
    * @default IconButton
    */
-  NextIconButton: React.ElementType;
+  NextIconButton?: React.ElementType;
   /**
    * Icon displayed in the left view switch button.
    * @default ArrowLeft
    */
-  LeftArrowIcon: React.ElementType;
+  LeftArrowIcon?: React.ElementType;
   /**
    * Icon displayed in the right view switch button.
    * @default ArrowRight
    */
-  RightArrowIcon: React.ElementType;
+  RightArrowIcon?: React.ElementType;
 }
 
 export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSwitcherOwnerState {
@@ -64,22 +64,22 @@ export interface PickersArrowSwitcherButtonSlotOwnerState extends PickersArrowSw
 }
 
 export interface PickersArrowSwitcherSlotsComponentsProps {
-  previousIconButton: SlotComponentProps<
+  previousIconButton?: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
     PickersArrowSwitcherButtonSlotOwnerState
   >;
-  nextIconButton: SlotComponentProps<
+  nextIconButton?: SlotComponentProps<
     typeof IconButton,
     PickersArrowSwitcherComponentsPropsOverrides,
     PickersArrowSwitcherButtonSlotOwnerState
   >;
-  leftArrowIcon: SlotComponentProps<
+  leftArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherComponentsPropsOverrides,
     undefined
   >;
-  rightArrowIcon: SlotComponentProps<
+  rightArrowIcon?: SlotComponentProps<
     typeof SvgIcon,
     PickersArrowSwitcherComponentsPropsOverrides,
     undefined

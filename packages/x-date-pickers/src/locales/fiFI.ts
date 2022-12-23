@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const views = {
   hours: 'tunnit',
@@ -9,8 +9,8 @@ const views = {
 };
 
 const viewTranslation = {
-  calendar: 'kalenteri',
-  clock: 'kello',
+  date: 'kalenteri',
+  time: 'kello',
 };
 
 const fiFIPickers: Partial<PickersLocaleText<any>> = {
@@ -21,11 +21,11 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'avaa edellinen kuukausi',
   openNextView: 'avaa seuraava kuukausi',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
       : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `tekstikenttä on auki, mene ${viewTranslation[viewType]}näkymään`
       : `${viewTranslation[viewType]}näkymä on auki, mene tekstikenttään`,
@@ -41,10 +41,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Tänään',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'Valitse päivä',
-  dateTimePickerDefaultToolbarTitle: 'Valitse päivä ja aika',
-  timePickerDefaultToolbarTitle: 'Valitse aika',
-  dateRangePickerDefaultToolbarTitle: 'Valitse aikaväli',
+  datePickerToolbarTitle: 'Valitse päivä',
+  dateTimePickerToolbarTitle: 'Valitse päivä ja aika',
+  timePickerToolbarTitle: 'Valitse aika',
+  dateRangePickerToolbarTitle: 'Valitse aikaväli',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -54,6 +54,12 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} tuntia`,
   minutesClockNumberText: (minutes) => `${minutes} minuuttia`,
   secondsClockNumberText: (seconds) => `${seconds} sekunttia`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -68,6 +74,15 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'valitse aika',
   dateTableLabel: 'valitse päivä',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const fiFI = getPickersLocalization(fiFIPickers);

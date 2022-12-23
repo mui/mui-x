@@ -1,18 +1,33 @@
-import { GridApiCommon, GridStateApi, GridStatePersistenceApi } from '@mui/x-data-grid';
+import {
+  GridApiCommon,
+  GridColumnReorderApi,
+  GridRowMultiSelectionApi,
+  GridRowProApi,
+} from '@mui/x-data-grid';
+import { GridPrivateOnlyApiCommon } from '@mui/x-data-grid/internals';
 import { GridInitialStatePro, GridStatePro } from './gridStatePro';
-import type { GridColumnPinningApi, GridDetailPanelApi, GridRowPinningApi } from '../hooks';
-
-type GridStateApiUntyped = {
-  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
-};
+import type {
+  GridColumnPinningApi,
+  GridDetailPanelApi,
+  GridRowPinningApi,
+  GridDetailPanelPrivateApi,
+} from '../hooks';
 
 /**
  * The api of `DataGridPro`.
  */
 export interface GridApiPro
-  extends Omit<GridApiCommon, keyof GridStateApiUntyped>,
-    GridStateApi<GridStatePro>,
-    GridStatePersistenceApi<GridInitialStatePro>,
+  extends GridApiCommon<GridStatePro, GridInitialStatePro>,
+    GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
-    GridRowPinningApi {}
+    GridRowPinningApi,
+    // APIs that are private in Community plan, but public in Pro and Premium plans
+    GridRowMultiSelectionApi,
+    GridColumnReorderApi,
+    GridRowProApi {}
+
+export interface GridPrivateApiPro
+  extends GridApiPro,
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro>,
+    GridDetailPanelPrivateApi {}

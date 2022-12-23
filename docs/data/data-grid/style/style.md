@@ -1,8 +1,4 @@
----
-title: Data Grid - Styling
----
-
-# Data grid - Styling
+# Data Grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
 
@@ -27,7 +23,7 @@ The `GridColDef` type has properties to apply class names and custom CSS on the 
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -45,7 +41,7 @@ const columns: GridColumns = [
 
 ## Styling rows
 
-The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string.
+The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string. Sometimes it might be needed to override the existing rules using higher specificity CSS selectors.
 
 ```tsx
 interface GridRowParams<R extends GridRowModel = GridRowModel> {
@@ -60,14 +56,7 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   */
-  getValue: (id: GridRowId, field: string) => any;
+  columns: GridColDef[];
 }
 ```
 
@@ -83,7 +72,7 @@ This property allows to set a CSS class that is applied on every cell of the col
 It can also be a function, which is called with a `GridCellParams` object.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',

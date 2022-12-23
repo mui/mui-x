@@ -4,13 +4,21 @@ import TextField from '@mui/material/TextField';
 import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { createPickerRenderer, adapterToUse, withPickerControls } from 'test/utils/pickers-utils';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const WrappedStaticDatePicker = withPickerControls(StaticDatePicker)({
   renderInput: (params) => <TextField {...params} />,
 });
 
 describe('<StaticDatePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(StaticDatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'legacy-static-picker',
+  }));
 
   it('render proper month', () => {
     render(

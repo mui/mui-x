@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageSizeApi } from './gridPaginationInterfaces';
 import {
@@ -8,13 +8,30 @@ import {
   useGridApiMethod,
   useGridApiEventHandler,
   useGridSelector,
+  GridSignature,
 } from '../../utils';
 import { gridPageSizeSelector } from './gridPaginationSelector';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityFactorSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
 export const defaultPageSize = (autoPageSize: boolean) => (autoPageSize ? 0 : 100);
+
+const MAX_PAGE_SIZE = 100;
+
+export const throwIfPageSizeExceedsTheLimit = (
+  pageSize: number,
+  signatureProp: DataGridProcessedProps['signature'],
+) => {
+  if (signatureProp === GridSignature.DataGrid && pageSize > MAX_PAGE_SIZE) {
+    throw new Error(
+      [
+        'MUI: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.',
+        'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
+      ].join('\n'),
+    );
+  }
+};
 
 const mergeStateWithPageSize =
   (pageSize: number) =>
@@ -30,16 +47,17 @@ const mergeStateWithPageSize =
  * @requires useGridDimensions (event) - can be after
  */
 export const useGridPageSize = (
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState'
+    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState' | 'signature' | 'rowHeight'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'pageSize',
     propModel: props.pageSize,
     propOnChange: props.onPageSizeChange,
@@ -56,19 +74,21 @@ export const useGridPageSize = (
         return;
       }
 
+      throwIfPageSizeExceedsTheLimit(pageSize, props.signature);
+
       logger.debug(`Setting page size to ${pageSize}`);
 
       apiRef.current.setState(mergeStateWithPageSize(pageSize));
       apiRef.current.forceUpdate();
     },
-    [apiRef, logger],
+    [apiRef, logger, props.signature],
   );
 
   const pageSizeApi: GridPageSizeApi = {
     setPageSize,
   };
 
-  useGridApiMethod(apiRef, pageSizeApi, 'GridPageSizeApi');
+  useGridApiMethod(apiRef, pageSizeApi, 'public');
 
   /**
    * PRE-PROCESSING
@@ -109,11 +129,12 @@ export const useGridPageSize = (
     (params, context) => {
       const pageSize = context.stateToRestore.pagination?.pageSize;
       if (pageSize != null) {
+        throwIfPageSizeExceedsTheLimit(pageSize, props.signature);
         apiRef.current.setState(mergeStateWithPageSize(pageSize));
       }
       return params;
     },
-    [apiRef],
+    [apiRef, props.signature],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);

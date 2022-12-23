@@ -2,12 +2,13 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { expect } from 'chai';
 import { createPickerRenderer, stubMatchMedia, wrapPickerMount } from 'test/utils/pickers-utils';
-import { TimePicker } from './TimePicker';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 describe('<TimePicker />', () => {
-  const ControlledTimePicker = () => {
+  function ControlledTimePicker() {
     const [value, setValue] = React.useState<Date | null>(null);
     return (
       <TimePicker
@@ -16,7 +17,7 @@ describe('<TimePicker />', () => {
         onChange={(newValue) => setValue(newValue)}
       />
     );
-  };
+  }
 
   describeConformance(
     <TimePicker
@@ -43,7 +44,14 @@ describe('<TimePicker />', () => {
     }),
   );
 
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(TimePicker, () => ({
+    render,
+    clock,
+    views: ['hours', 'minutes'],
+    componentFamily: 'legacy-picker',
+  }));
 
   it('should handle controlled `onChange` in desktop mode', () => {
     render(<ControlledTimePicker />);

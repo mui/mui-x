@@ -1,42 +1,45 @@
 import { GridColumnApi } from './gridColumnApi';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
-import { GridCoreApi } from './gridCoreApi';
+import { GridCoreApi, GridCorePrivateApi } from './gridCoreApi';
 import { GridClipboardApi } from './gridClipboardApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 import { GridDensityApi } from './gridDensityApi';
-import { GridEditingApi } from './gridEditingApi';
+import { GridEditingApi, GridEditingPrivateApi } from './gridEditingApi';
 import { GridFilterApi } from './gridFilterApi';
-import { GridFocusApi } from './gridFocusApi';
+import { GridFocusApi, GridFocusPrivateApi } from './gridFocusApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
 import type { GridParamsApi } from './gridParamsApi';
 import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridPrintExportApi } from './gridPrintExportApi';
 import { GridDisableVirtualizationApi } from './gridDisableVirtualizationApi';
 import { GridRowApi } from './gridRowApi';
-import { GridRowsMetaApi } from './gridRowsMetaApi';
-import { GridSelectionApi } from './gridSelectionApi';
+import { GridRowsMetaApi, GridRowsMetaPrivateApi } from './gridRowsMetaApi';
+import { GridRowSelectionApi } from './gridRowSelectionApi';
 import { GridSortApi } from './gridSortApi';
-import { GridStateApi } from './gridStateApi';
+import { GridStateApi, GridStatePrivateApi } from './gridStateApi';
 import { GridLoggerApi } from './gridLoggerApi';
 import { GridScrollApi } from './gridScrollApi';
 import { GridVirtualScrollerApi } from './gridVirtualScrollerApi';
-import type { GridPipeProcessingApi } from '../../hooks/core/pipeProcessing';
-import { GridColumnSpanningApi } from './gridColumnSpanning';
+import type {
+  GridPipeProcessingApi,
+  GridPipeProcessingPrivateApi,
+} from '../../hooks/core/pipeProcessing';
+import { GridColumnSpanningApi, GridColumnSpanningPrivateApi } from './gridColumnSpanning';
 import type { GridStrategyProcessingApi } from '../../hooks/core/strategyProcessing';
-import type { GridDimensionsApi } from '../../hooks/features/dimensions';
+import type {
+  GridDimensionsApi,
+  GridDimensionsPrivateApi,
+} from '../../hooks/features/dimensions/gridDimensionsApi';
 import type { GridPaginationApi } from '../../hooks/features/pagination';
 import type { GridStatePersistenceApi } from '../../hooks/features/statePersistence';
 import { GridColumnGroupingApi } from './gridColumnGroupingApi';
+import type { GridInitialStateCommunity, GridStateCommunity } from '../gridStateCommunity';
 
-type GridStateApiUntyped = {
-  [key in keyof (GridStateApi<any> & GridStatePersistenceApi<any>)]: any;
-};
-
-export interface GridApiCommon
-  extends GridCoreApi,
-    GridLoggerApi,
+export interface GridApiCommon<
+  GridState extends GridStateCommunity = any,
+  GridInitialState extends GridInitialStateCommunity = any,
+> extends GridCoreApi,
     GridPipeProcessingApi,
-    GridStrategyProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
     GridRowApi,
@@ -44,7 +47,7 @@ export interface GridApiCommon
     GridEditingApi,
     GridParamsApi,
     GridColumnApi,
-    GridSelectionApi,
+    GridRowSelectionApi,
     GridSortApi,
     GridPaginationApi,
     GridCsvExportApi,
@@ -54,10 +57,29 @@ export interface GridApiCommon
     GridPreferencesPanelApi,
     GridPrintExportApi,
     GridDisableVirtualizationApi,
-    GridVirtualScrollerApi,
     GridLocaleTextApi,
     GridClipboardApi,
     GridScrollApi,
     GridColumnSpanningApi,
-    GridStateApiUntyped,
+    GridStateApi<GridState>,
+    GridStatePersistenceApi<GridInitialState>,
     GridColumnGroupingApi {}
+
+export interface GridPrivateOnlyApiCommon<
+  Api extends GridApiCommon,
+  PrivateApi extends GridPrivateApiCommon,
+> extends GridCorePrivateApi<Api, PrivateApi>,
+    GridStatePrivateApi<PrivateApi['state']>,
+    GridPipeProcessingPrivateApi,
+    GridStrategyProcessingApi,
+    GridColumnSpanningPrivateApi,
+    GridRowsMetaPrivateApi,
+    GridDimensionsPrivateApi,
+    GridVirtualScrollerApi,
+    GridEditingPrivateApi,
+    GridLoggerApi,
+    GridFocusPrivateApi {}
+
+export interface GridPrivateApiCommon
+  extends GridApiCommon,
+    GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon> {}

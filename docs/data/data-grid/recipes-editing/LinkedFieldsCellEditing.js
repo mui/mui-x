@@ -32,7 +32,7 @@ const initialRows = [
   },
 ];
 
-const CustomTypeEditComponent = (props) => {
+function CustomTypeEditComponent(props) {
   const { setRows, ...other } = props;
 
   const handleValueChange = () => {
@@ -45,7 +45,7 @@ const CustomTypeEditComponent = (props) => {
   };
 
   return <GridEditSingleSelectCell onValueChange={handleValueChange} {...other} />;
-};
+}
 
 CustomTypeEditComponent.propTypes = {
   /**
@@ -137,7 +137,6 @@ export default function LinkedFieldsCellEditing() {
         onCellEditStart={handleCellEditStart}
         onCellEditStop={handleCellEditStop}
         processRowUpdate={processRowUpdate}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

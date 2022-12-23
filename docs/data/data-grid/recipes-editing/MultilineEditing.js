@@ -26,7 +26,7 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
-const EditTextarea = (props) => {
+function EditTextarea(props) {
   const { id, field, value, colDef } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState();
@@ -92,7 +92,7 @@ const EditTextarea = (props) => {
       )}
     </div>
   );
-};
+}
 
 EditTextarea.propTypes = {
   /**
@@ -152,11 +152,7 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro
-        rows={rows}
-        columns={columns}
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGridPro rows={rows} columns={columns} />
     </div>
   );
 }

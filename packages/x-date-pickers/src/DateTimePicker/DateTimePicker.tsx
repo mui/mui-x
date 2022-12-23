@@ -15,13 +15,13 @@ import {
   MobileDateTimePickerSlotsComponentsProps,
 } from '../MobileDateTimePicker';
 
-export interface DateTimePickerSlotsComponent
-  extends MobileDateTimePickerSlotsComponent,
-    DesktopDateTimePickerSlotsComponent {}
+export interface DateTimePickerSlotsComponent<TDate>
+  extends MobileDateTimePickerSlotsComponent<TDate>,
+    DesktopDateTimePickerSlotsComponent<TDate> {}
 
-export interface DateTimePickerSlotsComponentsProps
-  extends MobileDateTimePickerSlotsComponentsProps,
-    DesktopDateTimePickerSlotsComponentsProps {}
+export interface DateTimePickerSlotsComponentsProps<TDate>
+  extends MobileDateTimePickerSlotsComponentsProps<TDate>,
+    DesktopDateTimePickerSlotsComponentsProps<TDate> {}
 
 export interface DateTimePickerProps<TDate>
   extends Omit<DesktopDateTimePickerProps<TDate>, 'components' | 'componentsProps'>,
@@ -36,12 +36,12 @@ export interface DateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateTimePickerSlotsComponent>;
+  components?: DateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DateTimePickerSlotsComponentsProps>;
+  componentsProps?: DateTimePickerSlotsComponentsProps<TDate>;
 }
 
 type DateTimePickerComponent = (<TDate>(
@@ -64,29 +64,16 @@ const DateTimePicker = React.forwardRef(function DateTimePicker<TDate>(
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePicker' });
-  const {
-    desktopModeMediaQuery = '@media (pointer: fine)',
-    DialogProps,
-    PopperProps,
-    TransitionComponent,
-    ...other
-  } = props;
+  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
 
   if (isDesktop) {
-    return (
-      <DesktopDateTimePicker
-        ref={ref}
-        PopperProps={PopperProps}
-        TransitionComponent={TransitionComponent}
-        {...other}
-      />
-    );
+    return <DesktopDateTimePicker ref={ref} {...other} />;
   }
 
-  return <MobileDateTimePicker ref={ref} DialogProps={DialogProps} {...other} />;
+  return <MobileDateTimePicker ref={ref} {...other} />;
 }) as DateTimePickerComponent;
 
 DateTimePicker.propTypes = {
@@ -109,7 +96,6 @@ DateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  autoFocus: PropTypes.bool,
   children: PropTypes.node,
   /**
    * className applied to the root component.
@@ -152,16 +138,12 @@ DateTimePicker.propTypes = {
    */
   desktopModeMediaQuery: PropTypes.string,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -186,10 +168,20 @@ DateTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -199,11 +191,6 @@ DateTimePicker.propTypes = {
    * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Toggles visibility of date time switching tabs
-   * @default false for mobile, true for desktop
-   */
-  hideTabs: PropTypes.bool,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -239,7 +226,7 @@ DateTimePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
@@ -247,12 +234,12 @@ DateTimePicker.propTypes = {
    */
   maxDateTime: PropTypes.any,
   /**
-   * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Maximal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -260,8 +247,8 @@ DateTimePicker.propTypes = {
    */
   minDateTime: PropTypes.any,
   /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Minimal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime: PropTypes.any,
   /**
@@ -314,7 +301,7 @@ DateTimePicker.propTypes = {
   onOpen: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @param {CalendarOrClockPickerView} view The new view.
+   * @param {DateOrTimeView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -342,14 +329,6 @@ DateTimePicker.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   /**
-   * Paper props passed down to [Paper](https://mui.com/material-ui/api/paper/) component.
-   */
-  PaperProps: PropTypes.object,
-  /**
-   * Popper props passed down to [Popper](https://mui.com/material-ui/api/popper/) component.
-   */
-  PopperProps: PropTypes.object,
-  /**
    * Make picker read only.
    * @default false
    */
@@ -359,15 +338,6 @@ DateTimePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for day. Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {Array<TDate | null>} selectedDays The days currently selected.
-   * @param {PickersDayProps<TDate>} pickersDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
@@ -392,34 +362,31 @@ DateTimePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
+   * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -443,29 +410,6 @@ DateTimePicker.propTypes = {
    * Time tab icon.
    */
   timeIcon: PropTypes.node,
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent: PropTypes.elementType,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder: PropTypes.node,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle: PropTypes.node,
-  /**
-   * Custom component for popper [Transition](https://mui.com/material-ui/transitions/#transitioncomponent-prop).
-   */
-  TransitionComponent: PropTypes.elementType,
   /**
    * The value of the picker.
    */

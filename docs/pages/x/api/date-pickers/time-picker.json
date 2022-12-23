@@ -19,7 +19,6 @@
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
     },
-    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
@@ -57,15 +56,10 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "PaperProps": { "type": { "name": "object" } },
-    "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
-    "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -77,12 +71,26 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "TimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiTimePicker" },
@@ -90,6 +98,9 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimePicker/TimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-time-picker/\">Time Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "TimePicker" }
+  ]
 }

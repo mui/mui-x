@@ -1,8 +1,10 @@
+export type { GridBaseColDef, GridStateColDef } from '../models/colDef/gridColDef';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
 export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
+export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
 export { useGridRegisterPipeProcessor } from '../hooks/core/pipeProcessing';
 export type { GridPipeProcessor } from '../hooks/core/pipeProcessing';
@@ -25,7 +27,6 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
-export { useGridColumnGroupingPreProcessors } from '../hooks/features/columnGrouping/useGridColumnGroupingPreProcessors';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -47,14 +48,7 @@ export {
   useGridPreferencesPanel,
   preferencePanelStateInitializer,
 } from '../hooks/features/preferencesPanel/useGridPreferencesPanel';
-export {
-  useGridEditing as useGridEditing_new,
-  editingStateInitializer as editingStateInitializer_new,
-} from '../hooks/features/editRows/useGridEditing.new';
-export {
-  useGridEditing as useGridEditing_old,
-  editingStateInitializer as editingStateInitializer_old,
-} from '../hooks/features/editRows/useGridEditing.old';
+export { useGridEditing, editingStateInitializer } from '../hooks/features/editing/useGridEditing';
 export { useGridRows, rowsStateInitializer } from '../hooks/features/rows/useGridRows';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
@@ -78,10 +72,10 @@ export {
 } from '../hooks/features/rows/gridRowsSelector';
 export { calculatePinnedRowsHeight } from '../hooks/features/rows/gridRowsUtils';
 export {
-  useGridSelection,
-  selectionStateInitializer,
-} from '../hooks/features/selection/useGridSelection';
-export { useGridSelectionPreProcessors } from '../hooks/features/selection/useGridSelectionPreProcessors';
+  useGridRowSelection,
+  rowSelectionStateInitializer,
+} from '../hooks/features/rowSelection/useGridRowSelection';
+export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
 export type { GridSortingModelApplier } from '../hooks/features/sorting/gridSortingState';
 export { useGridScroll } from '../hooks/features/scroll/useGridScroll';
@@ -113,6 +107,8 @@ export { isNavigationKey } from '../utils/keyboardUtils';
 export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
+export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
+export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';

@@ -1,10 +1,11 @@
-export type DateRange<TDate> = [TDate | null, TDate | null];
-export type NonEmptyDateRange<TDate> = [TDate, TDate];
-
-export interface CurrentlySelectingRangeEndProps {
-  currentlySelectingRangeEnd: 'start' | 'end';
-  setCurrentlySelectingRangeEnd: (newSelectingEnd: 'start' | 'end') => void;
-}
+import {
+  BaseDateValidationProps,
+  DefaultizedProps,
+  MakeOptional,
+  UseFieldInternalProps,
+} from '@mui/x-date-pickers/internals';
+import { DateRange } from './range';
+import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 
 /**
  * Props used to validate a day value in range pickers.
@@ -19,3 +20,25 @@ export interface DayRangeValidationProps<TDate> {
    */
   shouldDisableDate?: (day: TDate, position: 'start' | 'end') => boolean;
 }
+
+/**
+ * Props used in every range picker.
+ */
+export interface BaseRangeProps {
+  /**
+   * If `true`, the component is disabled.
+   * @default false
+   */
+  disabled?: boolean;
+}
+
+export interface UseDateRangeFieldProps<TDate>
+  extends MakeOptional<UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>, 'format'>,
+    DayRangeValidationProps<TDate>,
+    BaseDateValidationProps<TDate>,
+    BaseRangeProps {}
+
+export type UseDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
+  UseDateRangeFieldProps<TDate>,
+  keyof BaseDateValidationProps<TDate> | 'format'
+>;

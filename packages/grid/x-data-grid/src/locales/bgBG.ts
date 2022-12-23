@@ -49,9 +49,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Добави Филтър',
   filterPanelDeleteIconLabel: 'Изтрий',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Оператори',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Колони',
@@ -81,6 +79,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Покажи колоните',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Филтри',
   columnMenuHideColumn: 'Скрий',
   columnMenuUnsort: 'Отмени сортирането',
@@ -99,7 +98,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} избран ред`,
 
   // Total row amount footer text
-  footerTotalRows: 'Общо Rедове:',
+  footerTotalRows: 'Общо Редове:',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>

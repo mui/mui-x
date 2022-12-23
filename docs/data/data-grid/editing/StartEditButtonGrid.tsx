@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   DataGrid,
   GridRowId,
@@ -137,6 +137,7 @@ export default function StartEditButtonGrid() {
         columns={columns}
         onCellKeyDown={handleCellKeyDown}
         cellModesModel={cellModesModel}
+        onCellModesModelChange={(model) => setCellModesModel(model)}
         components={{
           Toolbar: EditToolbar,
         }}
@@ -152,13 +153,12 @@ export default function StartEditButtonGrid() {
             onFocus: handleCellFocus,
           },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </div>
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {

@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -25,14 +25,14 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProProps(inProps);
-  const apiRef = useDataGridProComponent(props.apiRef, props);
+  const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -61,7 +61,7 @@ DataGridProRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -117,7 +117,7 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -210,11 +210,6 @@ DataGridProRaw.propTypes = {
    */
   disableExtendRowFullWidth: PropTypes.bool,
   /**
-   * If `true`, modification to a cell will not be discarded if the mode is changed from "edit" to "view" while processing props.
-   * @default false
-   */
-  disableIgnoreModificationsIfProcessingProps: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -228,12 +223,12 @@ DataGridProRaw.propTypes = {
    * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
-  disableMultipleSelection: PropTypes.bool,
+  disableMultipleRowSelection: PropTypes.bool,
   /**
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: PropTypes.bool,
+  disableRowSelectionOnClick: PropTypes.bool,
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -253,14 +248,12 @@ DataGridProRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    newEditingApi: PropTypes.bool,
-    preventCommitWhileValidating: PropTypes.bool,
     rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
@@ -283,9 +276,9 @@ DataGridProRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        operatorValue: PropTypes.string,
+        operator: PropTypes.string.isRequired,
         value: PropTypes.any,
       }),
     ).isRequired,
@@ -414,6 +407,12 @@ DataGridProRaw.propTypes = {
    */
   isRowSelectable: PropTypes.func,
   /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
+  /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
    * when changing pages.
@@ -462,13 +461,6 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick: PropTypes.func,
-  /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit: PropTypes.func,
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -583,14 +575,6 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
-  /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange: PropTypes.func,
   /**
    * Callback fired when the `editRowsModel` changes.
    * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
@@ -722,18 +706,18 @@ DataGridProRaw.propTypes = {
    */
   onRowOrderChange: PropTypes.func,
   /**
+   * Callback fired when the selection state of one or multiple rows changes.
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowSelectionModelChange: PropTypes.func,
+  /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowsScrollEnd: PropTypes.func,
-  /**
-   * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
@@ -787,7 +771,6 @@ DataGridProRaw.propTypes = {
   }),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
@@ -823,6 +806,19 @@ DataGridProRaw.propTypes = {
    */
   rows: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
+   * Sets the row selection model of the grid.
+   */
+  rowSelectionModel: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  /**
    * Loading rows can be processed on the server or client-side.
    * Set it to 'client' if you would like enable infnite loading.
    * Set it to 'server' if you would like to enable lazy loading.
@@ -854,23 +850,15 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * Set the selection model of the grid.
-   */
-  selectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-  /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

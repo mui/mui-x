@@ -4,11 +4,19 @@ import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { fireEvent, screen } from '@mui/monorepo/test/utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers-utils';
+import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DatePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+
+  describeValidation(DatePicker, () => ({
+    render,
+    clock,
+    views: ['year', 'month', 'day'],
+    componentFamily: 'legacy-picker',
+  }));
 
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
@@ -27,7 +35,7 @@ describe('<DatePicker />', () => {
   });
 
   describe('rendering', () => {
-    const ControlledDatePicker = () => {
+    function ControlledDatePicker() {
       const [value, setValue] = React.useState<Date | null>(null);
       return (
         <DatePicker
@@ -36,7 +44,7 @@ describe('<DatePicker />', () => {
           onChange={(newValue) => setValue(newValue)}
         />
       );
-    };
+    }
 
     it('should handle controlled `onChange` in desktop mode', () => {
       render(<ControlledDatePicker />);

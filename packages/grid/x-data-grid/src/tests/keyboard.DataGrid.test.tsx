@@ -12,7 +12,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -22,17 +22,25 @@ const ROW_HEIGHT = 52;
 const HEADER_HEIGHT = 56;
 const HEIGHT = 360;
 
+const expectAriaCoordinate = (
+  element: Element | null,
+  { colIndex, rowIndex }: { colIndex: number; rowIndex: number },
+) => {
+  expect(element).to.have.attribute('aria-colindex', colIndex.toString());
+  expect(element?.closest('[role="row"]')).to.have.attribute('aria-rowindex', rowIndex.toString());
+};
+
 describe('<DataGrid /> - Keyboard', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  const NavigationTestCaseNoScrollX = (
+  function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
       'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
     > & {},
-  ) => {
+  ) {
     const data = useBasicDemoData(100, 3);
-    const transformColSizes = (columns: GridColumns) =>
+    const transformColSizes = (columns: GridColDef[]) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
@@ -47,13 +55,13 @@ describe('<DataGrid /> - Keyboard', () => {
           rowHeight={ROW_HEIGHT}
           headerHeight={HEADER_HEIGHT}
           hideFooter
-          filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
-          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+          filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
           {...props}
         />
       </div>
     );
-  };
+  }
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   describe('cell navigation', () => {
@@ -432,6 +440,182 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
+  describe('column group header navigation', () => {
+    /**
+     * Grouping structure
+     *
+     *                    | prices                                |
+     *                    |         | prices234                   |
+     * id | currencyPair  | price1M | price2M | price3M | price4M | price5M
+     */
+    const columnGroupingModel = [
+      {
+        groupId: 'prices',
+        children: [
+          { field: 'price1M' },
+          {
+            groupId: 'prices234',
+            children: [{ field: 'price2M' }, { field: 'price3M' }, { field: 'price4M' }],
+          },
+        ],
+      },
+    ];
+
+    function NavigationTestGroupingCaseNoScrollX(
+      props: Omit<
+        DataGridProps,
+        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+      > & {},
+    ) {
+      const data = getBasicGridData(10, 10);
+      const transformColSizes = (columns: GridColDef[]) =>
+        columns.map((column) => ({ ...column, width: 60 }));
+
+      return (
+        <div style={{ width: 300, height: HEIGHT }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={data.rows}
+            columns={transformColSizes(data.columns)}
+            pageSize={PAGE_SIZE}
+            rowsPerPageOptions={[PAGE_SIZE]}
+            rowBuffer={PAGE_SIZE}
+            rowHeight={ROW_HEIGHT}
+            headerHeight={HEADER_HEIGHT}
+            hideFooter
+            disableVirtualization
+            columnGroupingModel={columnGroupingModel}
+            experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should scroll horizontally when navigating between column group headers with arrows', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={columnGroupingModel}
+            autoHeight={isJSDOM}
+            {...getBasicGridData(10, 10)}
+          />
+        </div>,
+      );
+      act(() => getColumnHeaderCell(0, 0).focus());
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+    });
+
+    it('should scroll horizontally when navigating between column headers with arrows even if rows are empty', function test() {
+      if (isJSDOM) {
+        // Need layouting for column virtualization
+        this.skip();
+      }
+      render(
+        <div style={{ width: 60, height: 300 }}>
+          <DataGrid
+            experimentalFeatures={{ columnGrouping: true }}
+            columnGroupingModel={columnGroupingModel}
+            autoHeight={isJSDOM}
+            {...getBasicGridData(10, 10)}
+            rows={[]}
+          />
+        </div>,
+      );
+      act(() => getColumnHeaderCell(0, 0).focus());
+      const virtualScroller = document.querySelector<HTMLElement>('.MuiDataGrid-virtualScroller')!;
+      expect(virtualScroller.scrollLeft).to.equal(0);
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expect(virtualScroller.scrollLeft).not.to.equal(0);
+      expect(document.activeElement!).toHaveAccessibleName('prices');
+    });
+
+    it('should move to the group header below when pressing "ArrowDown" on a column group header', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(2, 0).focus());
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 3 });
+    });
+
+    it('should go back to the same group header when pressing "ArrowUp" and "ArrowDown"', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(3, 1).focus());
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
+    });
+
+    it('should go to next group header when pressing "ArrowRight"', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(0, 0).focus());
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
+    });
+
+    it('should go to previous group header when pressing "ArrowLeft"', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(6, 0).focus());
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 7 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 3 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+      expectAriaCoordinate(document.activeElement, { rowIndex: 1, colIndex: 1 });
+    });
+
+    it('should go to group header when pressing "ArrowUp" from column header', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(4, 2).focus());
+      // column with field "price3M"
+      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      // group "prices 234"
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
+    });
+
+    it('should go back to same header when pressing "ArrowUp" and "ArrowDown" from column header', () => {
+      render(<NavigationTestGroupingCaseNoScrollX />);
+
+      act(() => getColumnHeaderCell(4, 2).focus());
+      // column with field "price3M"
+      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+      // group "prices 234"
+      expectAriaCoordinate(document.activeElement, { rowIndex: 2, colIndex: 4 });
+
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      // column with field "price3M"
+      expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
+    });
+  });
+
   it('should ignore events coming from a portal inside the cell', () => {
     const handleCellKeyDown = spy();
     render(
@@ -514,7 +698,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should select a row when pressing Space key + shiftKey', () => {
-    render(<NavigationTestCaseNoScrollX disableSelectionOnClick />);
+    render(<NavigationTestCaseNoScrollX disableRowSelectionOnClick />);
     const cell = getCell(0, 0);
     userEvent.mousePress(cell);
     expect(getActiveCell()).to.equal('0-0');

@@ -49,9 +49,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: '添加筛选器',
   filterPanelDeleteIconLabel: '删除',
   filterPanelLinkOperator: '逻辑操作器',
-  filterPanelOperators: '操作器',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: '操作器',
   filterPanelOperatorAnd: '与',
   filterPanelOperatorOr: '或',
   filterPanelColumns: '列',
@@ -81,6 +79,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',

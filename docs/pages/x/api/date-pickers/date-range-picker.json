@@ -27,7 +27,6 @@
       "type": { "name": "string" },
       "default": "'@media (pointer: fine)'"
     },
-    "DialogProps": { "type": { "name": "object" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -35,6 +34,8 @@
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
@@ -54,17 +55,13 @@
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
-    "onViewChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
     "OpenPickerButtonProps": { "type": { "name": "object" } },
-    "PaperProps": { "type": { "name": "object" } },
-    "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
-    "renderDay": { "type": { "name": "func" } },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
@@ -80,21 +77,33 @@
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date range'" },
-    "TransitionComponent": { "type": { "name": "elementType" } }
+    }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
+    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "DateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateRangePicker" },
@@ -102,6 +111,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-range-picker/\">Date Range Picker </a></li></ul>",
+  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangePicker" }]
 }

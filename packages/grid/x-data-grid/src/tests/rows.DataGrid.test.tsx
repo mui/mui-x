@@ -19,6 +19,8 @@ import {
   GridRowClassNameParams,
   GridRowModel,
   GridRenderCellParams,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
@@ -67,11 +69,13 @@ describe('<DataGrid /> - Rows', () => {
     it('should support new dataset', () => {
       const { rows, columns } = getBasicGridData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} disableVirtualization />
-        </div>
-      );
+      function Test(props: Pick<DataGridProps, 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} columns={columns} disableVirtualization />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
@@ -82,12 +86,16 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should ignore events coming from a portal in the cell', () => {
     const handleRowClick = spy();
-    const InputCell = () => <input type="text" name="input" />;
-    const PortalCell = () => (
-      <Portal>
-        <input type="text" name="portal-input" />
-      </Portal>
-    );
+    function InputCell() {
+      return <input type="text" name="input" />;
+    }
+    function PortalCell() {
+      return (
+        <Portal>
+          <input type="text" name="portal-input" />
+        </Portal>
+      );
+    }
 
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -154,10 +162,10 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    const TestCase = ({
+    function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) => {
+    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -177,7 +185,7 @@ describe('<DataGrid /> - Rows', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should throw an error if getActions is missing', function test() {
       if (!isJSDOM) {
@@ -224,9 +232,9 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -235,18 +243,18 @@ describe('<DataGrid /> - Rows', () => {
           getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
         />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when opening the menu', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should close other menus before opening a new one', () => {
@@ -373,7 +381,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should focus the last button if the clicked button removes itself', () => {
       let canDelete = true;
-      const Test = () => {
+      function Test() {
         return (
           <TestCase
             getActions={() =>
@@ -392,7 +400,7 @@ describe('<DataGrid /> - Rows', () => {
             }
           />
         );
-      };
+      }
       render(<Test />);
       fireEvent.click(screen.getByRole('menuitem', { name: 'delete' }));
       expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
@@ -424,14 +432,14 @@ describe('<DataGrid /> - Rows', () => {
 
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
-      const TestCase = (props: Partial<DataGridProps>) => {
+      function TestCase(props: Partial<DataGridProps>) {
         const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
           </div>
         );
-      };
+      }
 
       it('should set each row height whe rowHeight prop is used', () => {
         const { setProps } = render(<TestCase />);
@@ -522,13 +530,13 @@ describe('<DataGrid /> - Rows', () => {
         window.ResizeObserver = originalResizeObserver;
       });
 
-      const TestCase = (
+      function TestCase(
         props: Partial<DataGridProps> & {
           getBioContentHeight: (row: GridRowModel) => number;
           height?: number;
           width?: number;
         },
-      ) => {
+      ) {
         const { getBioContentHeight, width = 300, height = 300, ...other } = props;
 
         const customCellRenderer = React.useCallback(
@@ -554,7 +562,7 @@ describe('<DataGrid /> - Rows', () => {
             />
           </div>
         );
-      };
+      }
 
       it('should measure all rows and update the content size', async () => {
         const border = 1;
@@ -817,19 +825,65 @@ describe('<DataGrid /> - Rows', () => {
           transform: 'translate3d(0px, 0px, 0px)',
         });
       });
+
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // In Chrome non-headless and Edge this test is flacky
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={25}
+            rowsPerPageOptions={[10, 25]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+
+        setProps({ pageSize: 10 });
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
     });
   });
 
   describe('prop: getRowSpacing', () => {
     const { rows, columns } = getBasicGridData(4, 2);
 
-    const TestCase = (props: Partial<DataGridProps>) => {
+    function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid rows={rows} columns={columns} {...props} />
         </div>
       );
-    };
+    }
 
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
@@ -940,6 +994,71 @@ describe('<DataGrid /> - Rows', () => {
         borderTopWidth: `${borderTop}px`,
         borderBottomWidth: `${borderBottom}px`,
       });
+    });
+  });
+
+  describe('apiRef: updateRows', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand', headerName: 'Brand' }];
+
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    function TestCase(props: Partial<DataGridProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            {...props}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    it('should throw when updating more than one row at once', () => {
+      render(<TestCase />);
+      expect(() =>
+        apiRef.current.updateRows([
+          { id: 1, brand: 'Fila' },
+          { id: 0, brand: 'Pata' },
+          { id: 2, brand: 'Pum' },
+          { id: 3, brand: 'Jordan' },
+        ]),
+      ).to.throw(/You can't update several rows at once/);
+    });
+
+    it('should allow to update one row at the time', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
+    });
+
+    it('should allow adding rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+    });
+
+    it('should allow to delete rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
   });
 });

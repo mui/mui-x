@@ -50,9 +50,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
   filterPanelLinkOperator: 'אופרטור לוגי',
-  filterPanelOperators: 'אופרטור',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
   filterPanelColumns: 'עמודות',
@@ -82,6 +80,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
   columnMenuUnsort: 'בטל מיון',
@@ -122,7 +121,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  unpin: 'בטל נעיצה',
+  // unpin: 'Unpin',
 
   // Tree Data
   treeDataGroupingHeaderName: 'קבוצה',

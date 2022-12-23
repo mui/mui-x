@@ -12,12 +12,14 @@ import {
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
-const CustomTabs = (props: DateTimePickerTabsProps) => (
-  <React.Fragment>
-    <DateTimePickerTabs {...props} />
-    <Box sx={{ backgroundColor: 'blueviolet', height: 5 }} />
-  </React.Fragment>
-);
+function CustomTabs(props: DateTimePickerTabsProps) {
+  return (
+    <React.Fragment>
+      <DateTimePickerTabs {...props} />
+      <Box sx={{ backgroundColor: 'blueviolet', height: 5 }} />
+    </React.Fragment>
+  );
+}
 
 export default function Tabs() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07'));
@@ -30,11 +32,11 @@ export default function Tabs() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        hideTabs={false}
         components={{ Tabs: CustomTabs }}
         componentsProps={{
           tabs: {
-            dateRangeIcon: <LightModeIcon />,
+            hidden: false,
+            dateIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },
         }}

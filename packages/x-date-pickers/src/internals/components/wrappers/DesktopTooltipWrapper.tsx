@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
-import { executeInTheNextEventLoopTick } from '../../utils/utils';
+import { executeInTheNextEventLoopTick, getActiveElement } from '../../utils/utils';
 import { PickersPopper } from '../PickersPopper';
 import { InternalDesktopWrapperProps } from './DesktopWrapper';
 import { LocalizationProvider } from '../../../LocalizationProvider';
@@ -12,9 +12,6 @@ export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<
     DateInputProps,
     KeyboardDateInputComponent,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     onClear,
     onDismiss,
     onCancel,
@@ -30,8 +27,8 @@ export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        inputContainerRef.current?.contains(document.activeElement) ||
-        popperRef.current?.contains(document.activeElement)
+        inputContainerRef.current?.contains(getActiveElement(document)) ||
+        popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
       }
@@ -55,9 +52,6 @@ export function DesktopTooltipWrapper<TDate>(props: InternalDesktopWrapperProps<
           open={open}
           containerRef={popperRef}
           anchorEl={inputContainerRef.current}
-          TransitionComponent={TransitionComponent}
-          PopperProps={PopperProps}
-          PaperProps={PaperProps}
           onBlur={handleBlur}
           onDismiss={onDismiss}
           onClear={onClear}

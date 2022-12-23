@@ -24,6 +24,8 @@
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
+    "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
       "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
@@ -57,14 +59,11 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "PaperProps": { "type": { "name": "object" } },
-    "PopperProps": { "type": { "name": "object" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
-    "renderDay": { "type": { "name": "func" } },
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
@@ -81,11 +80,6 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "DatePickerToolbar" },
-    "toolbarFormat": { "type": { "name": "string" } },
-    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "'–'" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select date'" },
-    "TransitionComponent": { "type": { "name": "elementType" } },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
@@ -97,19 +91,34 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "DesktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "DesktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
+      "type": { "name": "elementType" }
+    },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } }
+    "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopDatePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDesktopDatePicker" },
   "filename": "/packages/x-date-pickers/src/DesktopDatePicker/DesktopDatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker/\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DesktopDatePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DesktopDatePicker" }
+  ]
 }

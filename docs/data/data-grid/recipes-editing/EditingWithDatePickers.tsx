@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   useGridApiContext,
   GridRenderEditCellParams,
@@ -272,7 +272,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {
@@ -295,11 +295,7 @@ export default function EditingWithDatePickers() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          experimentalFeatures={{ newEditingApi: true }}
-        />
+        <DataGrid rows={rows} columns={columns} />
       </LocalizationProvider>
     </div>
   );

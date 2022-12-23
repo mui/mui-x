@@ -27,7 +27,7 @@ const ExportIcon = createSvgIcon(
   'SaveAlt',
 );
 
-const CustomToolbar = () => {
+function CustomToolbar() {
   const apiRef = useGridApiContext();
 
   const handleExport = (options: GridCsvExportOptions) =>
@@ -61,7 +61,7 @@ const CustomToolbar = () => {
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 export default function CsvGetRowsToExport() {
   const { data, loading } = useDemoData({
@@ -83,9 +83,7 @@ export default function CsvGetRowsToExport() {
           filter: {
             ...data.initialState?.filter,
             filterModel: {
-              items: [
-                { columnField: 'quantity', operatorValue: '>', value: '20000' },
-              ],
+              items: [{ field: 'quantity', operator: '>', value: '20000' }],
             },
           },
         }}

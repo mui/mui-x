@@ -32,7 +32,7 @@ const rows = [
   },
 ];
 
-const CustomTypeEditComponent = (props) => {
+function CustomTypeEditComponent(props) {
   const apiRef = useGridApiContext();
 
   const handleValueChange = async () => {
@@ -44,7 +44,7 @@ const CustomTypeEditComponent = (props) => {
   };
 
   return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
-};
+}
 
 CustomTypeEditComponent.propTypes = {
   /**
@@ -100,12 +100,7 @@ export default function LinkedFieldsRowEditing() {
 
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} editMode="row" />
     </Box>
   );
 }

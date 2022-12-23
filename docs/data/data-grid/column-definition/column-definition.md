@@ -1,8 +1,4 @@
----
-title: Data Grid - Column definition
----
-
-# Data grid - Column definition
+# Data Grid - Column definition
 
 <p class="description">Define your columns.</p>
 
@@ -271,19 +267,19 @@ const usdPrice: GridColTypeDef = {
 If an unsupported column type is used, the `string` column type will be used instead.
 :::
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
 ### Visible columns
 
 Those selectors do not take into account hidden columns.
 
-{{"demo": "VisibleColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Visible Columns"}}
 
 ### Defined columns
 
 Those selectors consider all the defined columns, including hidden ones.
 
-{{"demo": "ColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Columns"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state).
 

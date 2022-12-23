@@ -20,7 +20,6 @@ import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellI
 import { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColumnGroup } from '../gridColumnGrouping';
 /**
  * Alignment used in position elements in Cells.
  */
@@ -34,9 +33,9 @@ export type ValueOptions = string | number | { value: any; label: string };
 export type GridKeyValue = string | number | boolean;
 
 /**
- * Column Definition interface.
+ * Column Definition base interface.
  */
-export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
+export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -244,7 +243,7 @@ export interface GridColDef<R extends GridValidRowModel = any, V = any, F = V> {
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridColDef<R, V, F> {
+  extends GridBaseColDef<R, V, F> {
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
    * @default 'actions'
@@ -258,17 +257,18 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
   getActions: (params: GridRowParams<R>) => React.ReactElement<GridActionsCellItemProps>[];
 }
 
-export type GridEnrichedColDef<R extends GridValidRowModel = any, V = any, F = V> =
-  | GridColDef<R, V, F>
+/**
+ * Column Definition interface.
+ */
+export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
+  | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>;
 
-export type GridColumns<R extends GridValidRowModel = any> = GridEnrichedColDef<R>[];
-
-export type GridColTypeDef<V = any, F = V> = Omit<GridColDef<any, V, F>, 'field'> & {
+export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;
 };
 
-export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridEnrichedColDef<
+export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> = GridColDef<
   R,
   V,
   F
@@ -278,13 +278,6 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
    * If `true`, it means that at least one of the dimension's property of this column has been modified since the last time the column prop has changed.
    */
   hasBeenResized?: boolean;
-  /**
-   * The id of the groups leading to the column.
-   * The array is ordered by increasing depth (the last element is the direct parent of the column).
-   * If not defined, the column is in no group (equivalent to a path equal to `[]`).
-   * This parameter is computed from the `columnGroupingModel` prop.
-   */
-  groupPath?: GridColumnGroup['groupId'][];
 };
 
 /**

@@ -1,22 +1,32 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useId as useId,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { capitalize, unstable_useId as useId } from '@mui/material/utils';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+
+export interface FilterColumnsArgs {
+  field: GridColDef['field'];
+  columns: GridStateColDef[];
+  currentFilters: GridFilterItem[];
+}
 
 export interface GridFilterFormProps {
   /**
@@ -60,6 +70,12 @@ export interface GridFilterFormProps {
    * @param {GridFilterItem} item The deleted [[GridFilterItem]].
    */
   deleteFilter: (item: GridFilterItem) => void;
+  /**
+   * Allows to filter the columns displayed in the filter form.
+   * @param {FilterColumnsArgs} args The columns of the grid and name of field.
+   * @returns {GridColDef['field'][]} The filtered fields array.
+   */
+  filterColumns?: (args: FilterColumnsArgs) => GridColDef['field'][];
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]
@@ -195,6 +211,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       focusElementRef,
       linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
       columnsSort,
+      filterColumns,
       deleteIconProps = {},
       linkOperatorInputProps = {},
       operatorInputProps = {},
@@ -205,6 +222,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     } = props;
     const apiRef = useGridApiContext();
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+    const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const columnSelectId = useId();
     const columnSelectLabelId = useId();
     const operatorSelectId = useId();
@@ -225,39 +243,51 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
-    const sortedFilterableColumns = React.useMemo(() => {
+    const filteredColumns = React.useMemo(() => {
+      if (filterColumns === undefined || typeof filterColumns !== 'function') {
+        return filterableColumns;
+      }
+
+      const filteredFields = filterColumns({
+        field: item.field,
+        columns: filterableColumns,
+        currentFilters: filterModel?.items || [],
+      });
+
+      return filterableColumns.filter((column) => filteredFields.includes(column.field));
+    }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
+
+    const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
         case 'asc':
-          return filterableColumns.sort((a, b) =>
+          return filteredColumns.sort((a, b) =>
             collator.compare(getColumnLabel(a), getColumnLabel(b)),
           );
 
         case 'desc':
-          return filterableColumns.sort(
+          return filteredColumns.sort(
             (a, b) => -collator.compare(getColumnLabel(a), getColumnLabel(b)),
           );
 
         default:
-          return filterableColumns;
+          return filteredColumns;
       }
-    }, [filterableColumns, columnsSort]);
+    }, [filteredColumns, columnsSort]);
 
-    const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+    const currentColumn = item.field ? apiRef.current.getColumn(item.field) : null;
 
     const currentOperator = React.useMemo(() => {
-      if (!item.operatorValue || !currentColumn) {
+      if (!item.operator || !currentColumn) {
         return null;
       }
 
-      return currentColumn.filterOperators?.find(
-        (operator) => operator.value === item.operatorValue,
-      );
+      return currentColumn.filterOperators?.find((operator) => operator.value === item.operator);
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
       (event: SelectChangeEvent) => {
-        const columnField = event.target.value as string;
-        const column = apiRef.current.getColumn(columnField)!;
+        const field = event.target.value as string;
+        const column = apiRef.current.getColumn(field)!;
 
         if (column.field === currentColumn!.field) {
           // column did not change
@@ -266,7 +296,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         // try to keep the same operator when column change
         const newOperator =
-          column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+          column.filterOperators!.find((operator) => operator.value === item.operator) ||
           column.filterOperators![0];
 
         // Erase filter value if the input component is modified
@@ -276,8 +306,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          columnField,
-          operatorValue: newOperator.value,
+          field,
+          operator: newOperator.value,
           value: eraseItemValue ? undefined : item.value,
         });
       },
@@ -286,11 +316,9 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const changeOperator = React.useCallback(
       (event: SelectChangeEvent) => {
-        const operatorValue = event.target.value as string;
+        const operator = event.target.value as string;
 
-        const newOperator = currentColumn?.filterOperators!.find(
-          (operator) => operator.value === operatorValue,
-        );
+        const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
 
         const eraseItemValue =
           !newOperator?.InputComponent ||
@@ -298,7 +326,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          operatorValue,
+          operator,
           value: eraseItemValue ? undefined : item.value,
         });
       },
@@ -344,7 +372,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     return (
-      <GridFilterFormRoot ref={ref} className={classes.root} {...other}>
+      <GridFilterFormRoot ref={ref} className={classes.root} data-id={item.id} {...other}>
         <FilterFormDeleteIcon
           variant="standard"
           as={rootProps.components.BaseFormControl}
@@ -417,12 +445,12 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.columnField || ''}
+            value={item.field || ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
           >
-            {sortedFilterableColumns.map((col) => (
+            {sortedFilteredColumns.map((col) => (
               <OptionComponent key={col.field} value={col.field}>
                 {getColumnLabel(col)}
               </OptionComponent>
@@ -441,13 +469,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
         >
           <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
-            {apiRef.current.getLocaleText('filterPanelOperators')}
+            {apiRef.current.getLocaleText('filterPanelOperator')}
           </InputLabel>
           <rootProps.components.BaseSelect
             labelId={operatorSelectLabelId}
-            label={apiRef.current.getLocaleText('filterPanelOperators')}
+            label={apiRef.current.getLocaleText('filterPanelOperator')}
             id={operatorSelectId}
-            value={item.operatorValue}
+            value={item.operator}
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
@@ -534,6 +562,12 @@ GridFilterForm.propTypes = {
    */
   disableMultiFilterOperator: PropTypes.bool,
   /**
+   * Allows to filter the columns displayed in the filter form.
+   * @param {FilterColumnsArgs} args The columns of the grid and name of field.
+   * @returns {GridColDef['field'][]} The filtered fields array.
+   */
+  filterColumns: PropTypes.func,
+  /**
    * A ref allowing to set imperative focus.
    * It can be passed to the el
    */
@@ -550,9 +584,9 @@ GridFilterForm.propTypes = {
    * The [[GridFilterItem]] representing this form.
    */
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   /**

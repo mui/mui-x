@@ -50,9 +50,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLinkOperator: 'عامل منطقي',
-  filterPanelOperators: 'عامل',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'عامل',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',
   filterPanelColumns: 'الأعمدة',
@@ -68,7 +66,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorNot: 'ليس',
   filterOperatorAfter: 'بعد',
   filterOperatorOnOrAfter: 'عند أو بعد',
-  filterOperatorBefore: 'بعد',
+  filterOperatorBefore: 'قبل',
   filterOperatorOnOrBefore: 'عند أو قبل',
   filterOperatorIsEmpty: 'خالي',
   filterOperatorIsNotEmpty: 'غير خالي',
@@ -82,6 +80,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',

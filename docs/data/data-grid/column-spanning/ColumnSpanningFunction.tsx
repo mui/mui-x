@@ -128,10 +128,10 @@ export default function ColumnSpanningFunction() {
         autoHeight
         disableExtendRowFullWidth
         disableColumnFilter
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         hideFooter
-        showCellRightBorder
-        showColumnRightBorder
+        showCellVerticalBorder
+        showColumnVerticalBorder
         getCellClassName={getCellClassName}
         columns={columns}
         rows={rows}

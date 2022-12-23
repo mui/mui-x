@@ -2,12 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, ErrorBoundary, screen } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowModel, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const getDefaultProps = (nbColumns: number) => {
-  const columns: GridColumns = [];
+  const columns: GridColDef[] = [];
   const row: GridRowModel = {};
 
   for (let i = 1; i <= nbColumns; i += 1) {
@@ -30,14 +30,14 @@ type TestDataGridProps = Omit<DataGridProps, 'columns' | 'rows'> &
 describe('<DataGrid /> - Column grouping', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (props: TestDataGridProps) => {
+  function TestDataGrid(props: TestDataGridProps) {
     const { nbColumns, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...getDefaultProps(nbColumns)} {...other} />
       </div>
     );
-  };
+  }
 
   describe('Header grouping columns', () => {
     it('should add one header row when columns have a group', () => {
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Column grouping', () => {
       expect(screen.queryAllByRole('row')).to.have.length(3);
     });
 
-    it('should add header rows to match max depth oc column groups', () => {
+    it('should add header rows to match max depth of column groups', () => {
       render(
         <TestDataGrid
           nbColumns={3}
@@ -261,16 +261,43 @@ describe('<DataGrid /> - Column grouping', () => {
         Array.from(row2Headers).map((header) => header.getAttribute('aria-colindex')),
       ).to.deep.equal(['1', '3']);
     });
+
+    it('should not throw warning when all columns are hidden', () => {
+      const { setProps } = render(
+        <TestDataGrid
+          nbColumns={3}
+          columnGroupingModel={[
+            {
+              groupId: 'col123',
+              children: [
+                { groupId: 'A', children: [{ field: 'col1' }, { field: 'col2' }] },
+                { field: 'col3' },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      setProps({
+        columnVisibilityModel: {
+          col1: false,
+          col2: false,
+          col3: false,
+        },
+      });
+    });
   });
 
   // TODO: remove the skip. I failed to test if an error is thrown
   // eslint-disable-next-line mocha/no-skipped-tests
   describe.skip('error messages', () => {
-    const TestWithError = (props: TestDataGridProps) => (
-      <ErrorBoundary logger={console}>
-        <TestDataGrid {...props} />
-      </ErrorBoundary>
-    );
+    function TestWithError(props: TestDataGridProps) {
+      return (
+        <ErrorBoundary logger={console}>
+          <TestDataGrid {...props} />
+        </ErrorBoundary>
+      );
+    }
 
     it('should log an error if two groups have the same id', () => {
       expect(() => {

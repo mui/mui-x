@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridEditSingleSelectCell,
   GridEditSingleSelectCellProps,
@@ -34,7 +34,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
+function CustomTypeEditComponent(props: GridEditSingleSelectCellProps) {
   const apiRef = useGridApiContext();
 
   const handleValueChange = async () => {
@@ -46,10 +46,10 @@ const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
   };
 
   return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
-};
+}
 
 export default function LinkedFieldsRowEditing() {
-  const columns: GridColumns = [
+  const columns: GridColDef[] = [
     { field: 'description', headerName: 'Description', width: 160, editable: true },
     {
       field: 'value',
@@ -95,12 +95,7 @@ export default function LinkedFieldsRowEditing() {
 
   return (
     <Box sx={{ width: '100%', height: 300 }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editMode="row"
-        experimentalFeatures={{ newEditingApi: true }}
-      />
+      <DataGrid rows={rows} columns={columns} editMode="row" />
     </Box>
   );
 }

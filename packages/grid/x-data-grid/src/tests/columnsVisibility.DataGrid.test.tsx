@@ -3,26 +3,28 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColumns, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowsProp, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent } from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (
+  function TestDataGrid(
     props: Omit<DataGridProps, 'columns' | 'rows'> &
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => (
-    <div style={{ width: 300, height: 300 }}>
-      <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
-    </div>
-  );
+  ) {
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
+      </div>
+    );
+  }
 
   describe('prop: columnVisibilityModel and onColumnVisibilityModelChange', () => {
     it('should allow to set the columnVisibilityModel prop', () => {
@@ -215,5 +217,60 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
+  });
+
+  it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            autoFocusSearchField: false,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+
+    expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
+  });
+
+  it('should hide `Hide all` in columns panel when `disableHideAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableHideAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Hide all' })).to.equal(null);
+  });
+
+  it('should hide `Show all` in columns panel when `disableShowAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableShowAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
   });
 });

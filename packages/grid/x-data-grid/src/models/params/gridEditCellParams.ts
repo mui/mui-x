@@ -1,13 +1,5 @@
-import { GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId, GridValidRowModel } from '../gridRows';
 import { GridCellParams } from './gridCellParams';
-
-// TODO v6 - remove
-export interface GridEditCellPropsParams {
-  id: GridRowId;
-  field: string;
-  props: GridEditCellProps;
-}
 
 /**
  * Params passed to `apiRef.current.setEditCellValue`.
@@ -35,19 +27,6 @@ export interface GridEditCellValueParams {
   unstable_skipValueParser?: boolean;
 }
 
-// TODO v6 - remove
-export interface GridCommitCellChangeParams {
-  id: GridRowId;
-  field: string;
-}
-
-// TODO v6 - remove
-export interface GridCellEditCommitParams {
-  id: GridRowId;
-  field: string;
-  value: any;
-}
-
 enum GridCellEditStartReasons {
   enterKeyDown = 'enterKeyDown',
   cellDoubleClick = 'cellDoubleClick',
@@ -62,9 +41,12 @@ export interface GridCellEditStartParams<V = any, R extends GridValidRowModel = 
   extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridCellEditStartReasons;
+  /**
+   * If the reason is related to a keyboard event, it contains which key was pressed.
+   */
+  key?: string;
 }
 
 enum GridCellEditStopReasons {
@@ -82,7 +64,6 @@ export interface GridCellEditStopParams<V = any, R extends GridValidRowModel = a
   extends GridCellParams<V, R, F> {
   /**
    * The reason for this event to be triggered.
-   * Only available if `props.experimentalFeatures.newEditingApi: true`.
    */
   reason?: GridCellEditStopReasons;
 }

@@ -2,12 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import ClickAwayListener, { ClickAwayListenerProps } from '@mui/material/ClickAwayListener';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses, HTMLElementType } from '@mui/utils';
 import Grow, { GrowProps } from '@mui/material/Grow';
 import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { styled } from '@mui/material/styles';
-import { HTMLElementType } from '@mui/utils';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -43,7 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-  overridesResolver: (props, styles) => styles.menu,
+  overridesResolver: (_, styles) => styles.menu,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
@@ -65,26 +64,17 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-const GridMenu = (props: GridMenuProps) => {
+function GridMenu(props: GridMenuProps) {
   const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
-  const prevTarget = React.useRef(target);
-  const prevOpen = React.useRef(open);
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   React.useEffect(() => {
-    if (prevOpen.current && prevTarget.current) {
-      (prevTarget.current as HTMLElement).focus();
-    }
-
     // Emit menuOpen or menuClose events
     const eventName = open ? 'menuOpen' : 'menuClose';
     apiRef.current.publishEvent(eventName, { target });
-
-    prevOpen.current = open;
-    prevTarget.current = target;
   }, [apiRef, open, target]);
 
   const handleExited = (popperOnExited: (() => {}) | undefined) => (node: HTMLElement) => {
@@ -121,7 +111,7 @@ const GridMenu = (props: GridMenuProps) => {
       )}
     </GridMenuRoot>
   );
-};
+}
 
 GridMenu.propTypes = {
   // ----------------------------- Warning --------------------------------

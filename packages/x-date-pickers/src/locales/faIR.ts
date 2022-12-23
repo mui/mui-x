@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +10,11 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'نمای قبلی',
   openNextView: 'نمای بعدی',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'نمای سال باز است، رفتن به نمای تقویم'
       : 'نمای تقویم باز است، رفتن به نمای سال',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `نمای ورودی متن باز است، رفتن به نمای ${viewType}`
       : `نمای ${viewType} باز است، رفتن به نمای ورودی متن`,
@@ -30,10 +30,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'امروز',
 
   // Toolbar titles
-  datePickerDefaultToolbarTitle: 'تاریخ را انتخاب کنید',
-  dateTimePickerDefaultToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
-  timePickerDefaultToolbarTitle: 'ساعت را انتخاب کنید',
-  dateRangePickerDefaultToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
+  datePickerToolbarTitle: 'تاریخ را انتخاب کنید',
+  dateTimePickerToolbarTitle: 'تاریخ و ساعت را انتخاب کنید',
+  timePickerToolbarTitle: 'ساعت را انتخاب کنید',
+  dateRangePickerToolbarTitle: 'محدوده تاریخ را انتخاب کنید',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -45,6 +45,12 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} ساعت ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه ها`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -59,6 +65,15 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Table labels
   timeTableLabel: 'انتخاب تاریخ',
   dateTableLabel: 'انتخاب ساعت',
+
+  // Field section placeholders
+  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
+  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  // fieldDayPlaceholder: () => 'DD',
+  // fieldHoursPlaceholder: () => 'hh',
+  // fieldMinutesPlaceholder: () => 'mm',
+  // fieldSecondsPlaceholder: () => 'ss',
+  // fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const faIR = getPickersLocalization(faIRPickers);

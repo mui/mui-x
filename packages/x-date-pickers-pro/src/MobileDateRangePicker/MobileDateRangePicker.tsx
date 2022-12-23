@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier } from '@mui/x-license-pro';
+import { SxProps } from '@mui/system';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -11,45 +12,48 @@ import {
   DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  DateRangePickerView,
-  DateRangePickerViewSlotsComponent,
-  DateRangePickerViewSlotsComponentsProps,
-} from '../DateRangePicker/DateRangePickerView';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import {
   BaseDateRangePickerProps,
   useDateRangePickerDefaultizedProps,
-  dateRangePickerValueManager,
+  BaseDateRangePickerSlotsComponent,
+  BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { RangePosition } from '../internal/models/range';
 
 const releaseInfo = getReleaseInfo();
 
 const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateInputPropsLike>;
 
-export interface MobileDateRangePickerSlotsComponent
-  extends MobileWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent,
+export interface MobileDateRangePickerSlotsComponent<TDate>
+  extends BaseDateRangePickerSlotsComponent<TDate>,
+    MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface MobileDateRangePickerSlotsComponentsProps
-  extends MobileWrapperSlotsComponentsProps,
-    DateRangePickerViewSlotsComponentsProps {}
+export interface MobileDateRangePickerSlotsComponentsProps<TDate>
+  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
+    MobileWrapperSlotsComponentsProps {}
 
 export interface MobileDateRangePickerProps<TDate>
   extends BaseDateRangePickerProps<TDate>,
-    MobileWrapperProps<TDate> {
+    MobileWrapperProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<MobileDateRangePickerSlotsComponent>;
+  components?: MobileDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<MobileDateRangePickerSlotsComponentsProps>;
+  componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -79,9 +83,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
 
   const { value, onChange, components, componentsProps, localeText, ...other } = props;
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const pickerStateProps = {
     ...other,
@@ -91,7 +93,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(
     pickerStateProps,
-    dateRangePickerValueManager,
+    rangeValueManager,
   );
 
   const validationError = useDateRangeValidation(props);
@@ -101,10 +103,11 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
     ...other,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     ref,
+    mobile: true,
   };
 
   return (
@@ -120,8 +123,8 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         {...pickerProps}
         components={components}
         componentsProps={componentsProps}
@@ -141,7 +144,6 @@ MobileDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -179,10 +181,6 @@ MobileDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * Props applied to the [`Dialog`](https://mui.com/material-ui/api/dialog/) element.
-   */
-  DialogProps: PropTypes.object,
-  /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
    */
@@ -193,7 +191,7 @@ MobileDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -213,10 +211,20 @@ MobileDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
+  /**
+   * If `true`, the week number will be display in the calendar.
+   */
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
    * @template TDate
@@ -262,11 +270,11 @@ MobileDateRangePicker.propTypes = {
    */
   mask: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -313,11 +321,6 @@ MobileDateRangePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
-   * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
-   */
-  onViewChange: PropTypes.func,
-  /**
    * Control the popup or dialog open state.
    */
   open: PropTypes.bool,
@@ -335,15 +338,6 @@ MobileDateRangePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for `<DateRangePicker />` days. @DateIOType
-   * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
@@ -387,19 +381,17 @@ MobileDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -419,15 +411,6 @@ MobileDateRangePicker.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle: PropTypes.node,
   /**
    * The value of the picker.
    */

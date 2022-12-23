@@ -1,21 +1,21 @@
-import { ClockPickerView } from '../../models/views';
+import { TimeView } from '../../models/views';
 
 interface FutureAndPastValidationProps {
   /**
-   * If `true` disable values after the current time.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast?: boolean;
   /**
-   * If `true` disable values before the current time
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture?: boolean;
 }
 
 /**
- * Validation props common to all time views.
- * All these props have a default value when used inside a picker component.
+ * Validation props common to all the time views.
+ * All these props have a default value when used inside a field / picker / clock.
  */
 export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
 
@@ -24,13 +24,13 @@ export interface BaseTimeValidationProps extends FutureAndPastValidationProps {}
  */
 export interface TimeValidationProps<TDate> {
   /**
-   * Min time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Minimal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   minTime?: TDate;
   /**
-   * Max time acceptable time.
-   * For input validation date part of passed object will be ignored if `disableIgnoringDatePartForTimeValidation` not specified.
+   * Maximal selectable time.
+   * The date part of the object will be ignored unless `props.disableIgnoringDatePartForTimeValidation === true`.
    */
   maxTime?: TDate;
   /**
@@ -39,13 +39,12 @@ export interface TimeValidationProps<TDate> {
    */
   minutesStep?: number;
   /**
-   * Dynamically check if time is disabled or not.
-   * If returns `false` appropriate time point will ot be acceptable.
+   * Disable specific time.
    * @param {number} timeValue The value to check.
-   * @param {ClockPickerView} clockType The clock type of the timeValue.
-   * @returns {boolean} Returns `true` if the time should be disabled
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
    */
-  shouldDisableTime?: (timeValue: number, clockType: ClockPickerView) => boolean;
+  shouldDisableTime?: (timeValue: number, view: TimeView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -54,29 +53,29 @@ export interface TimeValidationProps<TDate> {
 }
 
 /**
- * Validation props common to all date views.
- * All these props have a default value when used inside a picker component.
+ * Validation props common to all the date views.
+ * All these props have a default value when used inside a field / picker / calendar.
  */
 export interface BaseDateValidationProps<TDate> extends FutureAndPastValidationProps {
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate?: TDate;
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate?: TDate;
 }
 
 /**
- * Props used to validate a day value.
+ * Props used to validate a date value (validates day + month + year).
  */
 export interface DayValidationProps<TDate> {
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
-   * @returns {boolean} Returns `true` if the date should be disabled.
+   * @returns {boolean} If `true` the date will be disabled.
    */
   shouldDisableDate?: (day: TDate) => boolean;
 }
@@ -86,10 +85,9 @@ export interface DayValidationProps<TDate> {
  */
 export interface MonthValidationProps<TDate> {
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth?: (month: TDate) => boolean;
@@ -100,11 +98,10 @@ export interface MonthValidationProps<TDate> {
  */
 export interface YearValidationProps<TDate> {
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }

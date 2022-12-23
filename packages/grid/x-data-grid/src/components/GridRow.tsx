@@ -1,7 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_useForkRef as useForkRef,
+} from '@mui/utils';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
 import {
@@ -27,7 +30,7 @@ import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
-import { gridDensityHeaderGroupingMaxDepthSelector } from '../hooks/features/density/densitySelector';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
 import { GridCellProps } from './cell/GridCell';
 
@@ -81,17 +84,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const EmptyCell = ({ width }: { width: number }) => {
+function EmptyCell({ width }: { width: number }) {
   if (!width) {
     return null;
   }
 
   const style = { width };
 
-  return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
-};
+  return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+}
 
-function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
+const GridRow = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & GridRowProps
+>(function GridRow(props, refProp) {
   const {
     selected,
     rowId,
@@ -123,7 +129,8 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridDensityHeaderGroupingMaxDepthSelector);
+  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
+  const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
   const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
@@ -266,7 +273,10 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
         column.field,
       );
 
-      const classNames: string[] = [];
+      const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field: column.field,
+      });
 
       const disableDragEvents =
         (rootProps.disableColumnReorder && column.disableReorder) ||
@@ -286,7 +296,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       }
 
       const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode = null;
+      let content: React.ReactNode;
 
       if (editCellState == null && column.renderCell) {
         content = column.renderCell({ ...cellParams, api: apiRef.current });
@@ -333,6 +343,11 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           ? 0
           : -1;
 
+      const isSelected = apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+        id: rowId,
+        field: column.field,
+      });
+
       return (
         <rootProps.components.Cell
           key={column.field}
@@ -347,6 +362,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
+          isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           className={clsx(classNames)}
@@ -407,7 +423,13 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   if (sizes?.spacingBottom) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
-    style[property] = sizes.spacingBottom;
+    let propertyValue = style[property];
+    // avoid overriding existing value
+    if (typeof propertyValue !== 'number') {
+      propertyValue = parseInt(propertyValue || '0', 10);
+    }
+    propertyValue += sizes.spacingBottom;
+    style[property] = propertyValue;
   }
 
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
@@ -435,7 +457,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
+      ? rootProps.showCellVerticalBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
@@ -478,7 +500,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
 
   return (
     <div
-      ref={ref}
+      ref={handleRef}
       data-id={rowId}
       data-rowindex={index}
       role="row"
@@ -493,7 +515,7 @@ function GridRow(props: React.HTMLAttributes<HTMLDivElement> & GridRowProps) {
       {emptyCellWidth > 0 && <EmptyCell width={emptyCellWidth} />}
     </div>
   );
-}
+});
 
 GridRow.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  GridColumns,
+  GridColDef,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -20,7 +20,7 @@ export default function RowGroupingColDefCanBeGrouped() {
     },
   });
 
-  const columnWithNoDirectorGroup = React.useMemo<GridColumns>(
+  const columnWithNoDirectorGroup = React.useMemo<GridColDef[]>(
     () =>
       data.columns.map((colDef) =>
         colDef.field === 'director' ? { ...colDef, groupable: false } : colDef,
@@ -34,7 +34,7 @@ export default function RowGroupingColDefCanBeGrouped() {
         {...data}
         apiRef={apiRef}
         columns={columnWithNoDirectorGroup}
-        disableSelectionOnClick
+        disableRowSelectionOnClick
         initialState={initialState}
       />
     </div>

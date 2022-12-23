@@ -265,7 +265,7 @@ GridFilterDateInput.propTypes = {
     /**
      * The column from which we want to filter the rows.
      */
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     /**
      * Must be unique.
      * Only useful when the model contains several items.
@@ -273,9 +273,8 @@ GridFilterDateInput.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     /**
      * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
      */
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     /**
      * The filtering value.
      * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -326,11 +325,7 @@ export default function EditingWithDatePickers() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          experimentalFeatures={{ newEditingApi: true }}
-        />
+        <DataGrid rows={rows} columns={columns} />
       </LocalizationProvider>
     </div>
   );

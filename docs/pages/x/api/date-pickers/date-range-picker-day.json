@@ -8,13 +8,39 @@
     "isStartOfHighlighting": { "type": { "name": "bool" }, "required": true },
     "isStartOfPreviewing": { "type": { "name": "bool" }, "required": true },
     "outsideCurrentMonth": { "type": { "name": "bool" }, "required": true },
+    "action": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { focusVisible: func } }"
+      }
+    },
+    "centerRipple": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
     "disableMargin": { "type": { "name": "bool" } },
+    "disableRipple": { "type": { "name": "bool" } },
+    "disableTouchRipple": { "type": { "name": "bool" } },
+    "focusRipple": { "type": { "name": "bool" } },
+    "focusVisibleClassName": { "type": { "name": "string" } },
+    "isVisuallySelected": { "type": { "name": "bool" } },
+    "onFocusVisible": { "type": { "name": "func" } },
     "selected": { "type": { "name": "bool" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "today": { "type": { "name": "bool" } }
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "today": { "type": { "name": "bool" } },
+    "TouchRippleProps": { "type": { "name": "object" } },
+    "touchRippleRef": {
+      "type": {
+        "name": "union",
+        "description": "func<br>&#124;&nbsp;{ current?: { pulsate: func, start: func, stop: func } }"
+      }
+    }
   },
   "slots": {},
   "name": "DateRangePickerDay",
@@ -40,6 +66,6 @@
   "forwardsRefTo": "HTMLButtonElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangePickerDay/DateRangePickerDay.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
+  "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangePickerDay" }]
 }
