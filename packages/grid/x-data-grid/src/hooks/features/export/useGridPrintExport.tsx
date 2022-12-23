@@ -46,7 +46,7 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'headerHeight'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'columnHeaderHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
@@ -155,7 +155,7 @@ export const useGridPrintExport = (
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
         rowsMeta.currentPageTotalHeight +
-        getTotalHeaderHeight(apiRef, props.headerHeight) +
+        getTotalHeaderHeight(apiRef, props.columnHeaderHeight) +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;
@@ -223,7 +223,7 @@ export const useGridPrintExport = (
         printWindow.contentWindow!.print();
       }
     },
-    [apiRef, doc, props.headerHeight],
+    [apiRef, doc, props.columnHeaderHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(
