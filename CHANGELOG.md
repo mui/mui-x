@@ -86,7 +86,7 @@ From https://github.com/mui/mui-x/pull/7304
 From https://github.com/mui/mui-x/pull/7067
 
 - Show column header separators on hover
-- Remove unused `disableHeaderSeparator`.
+- Remove unused `disableHeaderSeparator` prop.
 
 #### Changes
 
