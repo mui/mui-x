@@ -94,6 +94,7 @@ From https://github.com/mui/mui-x/pull/7224
 - [DataGrid] Remove `rowHeight` and `headerHeight` from state (#7199) @DanailH
 - [DataGrid] Remove column separator to match table styles (#7067) @MBilalShafi
 - [DataGrid] Update Russian (ru-RU) locale (#7220) @VeceluXa
+- [DataGridPro] Use row ID as `key` of the detail panels (#7302) @m4theushw
 - [DataGridPremium] Fix `exceljs` import with parcel (#7284) @alexfauquette
 
 ### `@mui/x-date-pickers@6.0.0-alpha.13` / `@mui/x-date-pickers-pro@6.0.0-alpha.13`
