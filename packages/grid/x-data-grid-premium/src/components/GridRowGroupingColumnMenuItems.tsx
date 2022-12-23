@@ -10,7 +10,7 @@ import {
   isGroupingColumn,
 } from '../hooks/features/rowGrouping/gridRowGroupingUtils';
 
-export interface GridRowGroupingColumnMenuItemsProps {
+interface GridRowGroupingColumnMenuItemsProps {
   column?: GridColDef;
   onClick?: (event: React.MouseEvent<any>) => void;
 }
