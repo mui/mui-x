@@ -53,6 +53,7 @@ From https://github.com/mui/mui-x/pull/6619
   ```
 
   **Pro package:**
+
   ```diff
   -<GridColumnPinningMenuItems />
   +<GridColumnMenuPinningItem />
