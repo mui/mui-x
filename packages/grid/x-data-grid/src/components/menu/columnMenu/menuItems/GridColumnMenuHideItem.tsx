@@ -1,16 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
-import { GridFilterItemProps } from './GridFilterItemProps';
-import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { gridVisibleColumnDefinitionsSelector } from '../../../hooks/features/columns';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
+import { useGridApiContext } from '../../../../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
+import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features/columns';
 
-function HideGridColMenuItem(props: GridFilterItemProps) {
-  const { column, onClick } = props;
+function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
+  const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const timeoutRef = React.useRef<any>();
 
   const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
@@ -27,41 +28,37 @@ function HideGridColMenuItem(props: GridFilterItemProps) {
       if (disabled) {
         return;
       }
+      apiRef.current.setColumnVisibility(colDef.field, false);
       onClick(event);
-      // time for the transition
-      timeoutRef.current = setTimeout(() => {
-        apiRef.current.setColumnVisibility(column?.field, false);
-      }, 100);
     },
-    [apiRef, column?.field, onClick, disabled],
+    [apiRef, colDef.field, onClick, disabled],
   );
-
-  React.useEffect(() => {
-    return () => clearTimeout(timeoutRef.current);
-  }, []);
 
   if (rootProps.disableColumnSelector) {
     return null;
   }
 
-  if (column.hideable === false) {
+  if (colDef.hideable === false) {
     return null;
   }
 
   return (
     <MenuItem onClick={toggleColumn} disabled={disabled}>
-      {apiRef.current.getLocaleText('columnMenuHideColumn')}
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuHideIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('columnMenuHideColumn')}</ListItemText>
     </MenuItem>
   );
 }
 
-HideGridColMenuItem.propTypes = {
+GridColumnMenuHideItem.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  column: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 } as any;
 
-export { HideGridColMenuItem };
+export { GridColumnMenuHideItem };

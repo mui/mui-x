@@ -11,7 +11,6 @@ import {
   gridColumnDefinitionsSelector,
   gridColumnVisibilityModelSelector,
 } from '../columns/gridColumnsSelector';
-import { gridTotalHeaderHeightSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -21,6 +20,7 @@ import {
   GridExportDisplayOptions,
   GridPrintExportMenuItem,
 } from '../../../components/toolbar/GridToolbarExport';
+import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 
 function raf() {
   return new Promise<void>((resolve) => {
@@ -46,7 +46,7 @@ type PrintWindowOnLoad = (
  */
 export const useGridPrintExport = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'headerHeight'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridPrintExport');
   const doc = React.useRef<Document | null>(null);
@@ -113,7 +113,6 @@ export const useGridPrintExport = (
         return;
       }
 
-      const totalHeaderHeight = gridTotalHeaderHeightSelector(apiRef);
       const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
       const gridRootElement = apiRef.current.rootElementRef!.current;
@@ -156,7 +155,7 @@ export const useGridPrintExport = (
       // Expand container height to accommodate all rows
       gridClone.style.height = `${
         rowsMeta.currentPageTotalHeight +
-        totalHeaderHeight +
+        getTotalHeaderHeight(apiRef, props.headerHeight) +
         gridToolbarElementHeight +
         gridFooterElementHeight
       }px`;
@@ -224,7 +223,7 @@ export const useGridPrintExport = (
         printWindow.contentWindow!.print();
       }
     },
-    [apiRef, doc],
+    [apiRef, doc, props.headerHeight],
   );
 
   const handlePrintWindowAfterPrint = React.useCallback(

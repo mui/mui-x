@@ -42,7 +42,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-  overridesResolver: (props, styles) => styles.menu,
+  overridesResolver: (_, styles) => styles.menu,
 })(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
@@ -67,23 +67,14 @@ const transformOrigin = {
 function GridMenu(props: GridMenuProps) {
   const { open, target, onClickAway, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
-  const prevTarget = React.useRef(target);
-  const prevOpen = React.useRef(open);
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   React.useEffect(() => {
-    if (prevOpen.current && prevTarget.current) {
-      (prevTarget.current as HTMLElement).focus();
-    }
-
     // Emit menuOpen or menuClose events
     const eventName = open ? 'menuOpen' : 'menuClose';
     apiRef.current.publishEvent(eventName, { target });
-
-    prevOpen.current = open;
-    prevTarget.current = target;
   }, [apiRef, open, target]);
 
   const handleExited = (popperOnExited: (() => {}) | undefined) => (node: HTMLElement) => {

@@ -8,16 +8,6 @@ export const gridDensityValueSelector = createSelector(
   (density) => density.value,
 );
 
-export const gridDensityRowHeightSelector = createSelector(
-  gridDensitySelector,
-  (density) => density.rowHeight,
-);
-
-export const gridDensityHeaderHeightSelector = createSelector(
-  gridDensitySelector,
-  (density) => density.headerHeight,
-);
-
 export const gridDensityFactorSelector = createSelector(
   gridDensitySelector,
   (density) => density.factor,
