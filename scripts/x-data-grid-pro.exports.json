@@ -200,7 +200,6 @@
   { "name": "GridDensityOption", "kind": "Interface" },
   { "name": "gridDensitySelector", "kind": "Variable" },
   { "name": "GridDensityState", "kind": "Interface" },
-  { "name": "GridDensityTypes", "kind": "Enum" },
   { "name": "gridDensityValueSelector", "kind": "Variable" },
   { "name": "GridDetailPanelApi", "kind": "Interface" },
   { "name": "gridDetailPanelExpandedRowIdsSelector", "kind": "Variable" },
