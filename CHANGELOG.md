@@ -24,7 +24,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - The `column` prop passed to the items of the column menu was renamed to `colDef`.
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
 
-    The following components and interfaces were been renamed for consistency:
+  The following components and interfaces were been renamed for consistency:
 
   **Community Package:**
 
