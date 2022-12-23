@@ -8,9 +8,9 @@
       }
     },
     "getColumnForNewFilter": { "type": { "name": "func" } },
-    "linkOperators": {
+    "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
     },
     "sx": {
       "type": {

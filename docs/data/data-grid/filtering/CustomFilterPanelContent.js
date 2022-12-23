@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'dateCreated', 'isAdmin'];
@@ -23,7 +23,7 @@ export default function CustomFilterPanelContent() {
         componentsProps={{
           filterPanel: {
             // Force usage of "And" operator
-            linkOperators: [GridLinkOperator.And],
+            logicOperators: [GridLogicOperator.And],
             // Display columns by ascending alphabetical order
             columnsSort: 'asc',
             filterFormProps: {

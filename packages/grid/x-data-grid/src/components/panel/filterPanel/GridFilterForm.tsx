@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -45,7 +45,7 @@ export interface GridFilterFormProps {
   /**
    * The current logic operator applied.
    */
-  multiFilterOperator?: GridLinkOperator;
+  multiFilterOperator?: GridLogicOperator;
   /**
    * If `true`, disables the logic operator field but still renders it.
    */
@@ -62,9 +62,9 @@ export interface GridFilterFormProps {
   applyFilterChanges: (item: GridFilterItem) => void;
   /**
    * Callback called when the logic operator is changed.
-   * @param {GridLinkOperator} operator The new logic operator.
+   * @param {GridLogicOperator} operator The new logic operator.
    */
-  applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
+  applyMultiFilterOperatorChanges: (operator: GridLogicOperator) => void;
   /**
    * Callback called when the delete button is clicked.
    * @param {GridFilterItem} item The deleted [[GridFilterItem]].
@@ -78,9 +78,9 @@ export interface GridFilterFormProps {
   filterColumns?: (args: FilterColumnsArgs) => GridColDef['field'][];
   /**
    * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
    */
-  linkOperators?: GridLinkOperator[];
+  logicOperators?: GridLogicOperator[];
   /**
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
@@ -182,14 +182,14 @@ const FilterFormValueInput = styled(FormControl, {
   overridesResolver: (_, styles) => styles.filterFormValueInput,
 })({ width: 190 });
 
-const getLinkOperatorLocaleKey = (linkOperator: GridLinkOperator) => {
-  switch (linkOperator) {
-    case GridLinkOperator.And:
+const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
+  switch (logicOperator) {
+    case GridLogicOperator.And:
       return 'filterPanelOperatorAnd';
-    case GridLinkOperator.Or:
+    case GridLogicOperator.Or:
       return 'filterPanelOperatorOr';
     default:
-      throw new Error('MUI: Invalid `linkOperator` property in the `GridFilterPanel`.');
+      throw new Error('MUI: Invalid `logicOperator` property in the `GridFilterPanel`.');
   }
 };
 
@@ -209,7 +209,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       disableMultiFilterOperator,
       applyMultiFilterOperatorChanges,
       focusElementRef,
-      linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
+      logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
       columnsSort,
       filterColumns,
       deleteIconProps = {},
@@ -233,7 +233,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const valueRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
-    const hasLinkOperatorColumn: boolean = hasMultipleFilters && linkOperators.length > 0;
+    const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
     const baseFormControlProps = rootProps.componentsProps?.baseFormControl || {};
 
@@ -333,13 +333,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       [applyFilterChanges, item, currentColumn, currentOperator],
     );
 
-    const changeLinkOperator = React.useCallback(
+    const changeLogicOperator = React.useCallback(
       (event: SelectChangeEvent) => {
-        const linkOperator =
-          (event.target.value as string) === GridLinkOperator.And.toString()
-            ? GridLinkOperator.And
-            : GridLinkOperator.Or;
-        applyMultiFilterOperatorChanges(linkOperator);
+        const logicOperator =
+          (event.target.value as string) === GridLogicOperator.And.toString()
+            ? GridLogicOperator.And
+            : GridLogicOperator.Or;
+        applyMultiFilterOperatorChanges(logicOperator);
       },
       [applyMultiFilterOperatorChanges],
     );
@@ -399,7 +399,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           {...baseFormControlProps}
           {...linkOperatorInputProps}
           sx={{
-            display: hasLinkOperatorColumn ? 'flex' : 'none',
+            display: hasLogicOperatorColumn ? 'flex' : 'none',
             visibility: showMultiFilterOperators ? 'visible' : 'hidden',
             ...(baseFormControlProps.sx || {}),
             ...(linkOperatorInputProps.sx || {}),
@@ -415,14 +415,14 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
             }}
             value={multiFilterOperator}
-            onChange={changeLinkOperator}
-            disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
+            onChange={changeLogicOperator}
+            disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
           >
-            {linkOperators.map((linkOperator) => (
-              <OptionComponent key={linkOperator.toString()} value={linkOperator.toString()}>
-                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+            {logicOperators.map((logicOperator) => (
+              <OptionComponent key={logicOperator.toString()} value={logicOperator.toString()}>
+                {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
               </OptionComponent>
             ))}
           </rootProps.components.BaseSelect>
@@ -530,7 +530,7 @@ GridFilterForm.propTypes = {
   applyFilterChanges: PropTypes.func.isRequired,
   /**
    * Callback called when the logic operator is changed.
-   * @param {GridLinkOperator} operator The new logic operator.
+   * @param {GridLogicOperator} operator The new logic operator.
    */
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   /**
@@ -596,9 +596,9 @@ GridFilterForm.propTypes = {
   linkOperatorInputProps: PropTypes.any,
   /**
    * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
    */
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
+  logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
    * The current logic operator applied.
    */

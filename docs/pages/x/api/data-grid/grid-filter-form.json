@@ -18,9 +18,9 @@
     "filterColumns": { "type": { "name": "func" } },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
     "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
-    "linkOperators": {
+    "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
     },
     "multiFilterOperator": {
       "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" }

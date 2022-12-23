@@ -12,7 +12,7 @@ import {
   DataGrid,
   DataGridProps,
   gridClasses,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   GridApi,
   useGridApiRef,
@@ -198,7 +198,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       setProps({
         filterModel: {
-          linkOperator: GridLinkOperator.And,
+          logicOperator: GridLogicOperator.And,
           items: [
             {
               field: 'id',

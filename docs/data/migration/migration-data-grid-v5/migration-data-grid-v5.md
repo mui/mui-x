@@ -121,6 +121,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -170,6 +171,9 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
+- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
 
 ### Other exports
 
