@@ -2,13 +2,13 @@
 title: Data Grid - Column menu
 ---
 
-# Data grid - Column menu
+# Data Grid - Column menu
 
 <p class="description">Customize your columns menu.</p>
 
 ## Column menu
 
-Each column header comes with a column menu with quickly accessible grid features like column visibility, sorting, filtering, and others.
+Each column header comes with a column menu with quickly accessible Data Grid features like column visibility, sorting, filtering, and others.
 
 It can be accessed by clicking on the 3-dots icon that appears on hover on a header cell or when focusing on a column header and pressing <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS).
 
@@ -150,7 +150,7 @@ By default, each column header has the column menu enabled. To disable the colum
 
 ## Column menu with Pro/Premium features [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)[<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
-In the following demo, in addition to data grid MIT features, you can see commercial features like [grouping](/x/react-data-grid/row-grouping/), and [aggregation](/x/react-data-grid/aggregation/) in action. Try tweaking the values from respective column menu items.
+In the following demo, in addition to Data Grid MIT features, you can see commercial features like [grouping](/x/react-data-grid/row-grouping/), and [aggregation](/x/react-data-grid/aggregation/) in action. Try tweaking the values from respective column menu items.
 
 {{"demo": "ColumnMenuGridPremium.js", "bg": "inline"}}
 

@@ -61,9 +61,9 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 
 {{"demo": "StaticTimePickerLandscape.js", "bg": true}}
 
-## Sub-components
+## Subcomponents
 
-Some lower-level sub-components (`ClockPicker`) are also exported.
+Some lower-level subcomponents (`ClockPicker`) are also exported.
 
 {{"demo": "SubComponentsTimeCalendars.js"}}
 

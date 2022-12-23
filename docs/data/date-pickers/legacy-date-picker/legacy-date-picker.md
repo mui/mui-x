@@ -83,9 +83,9 @@ For ease of use, the date picker will automatically change the layout between po
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
-## Sub-components
+## Subcomponents
 
-Some lower-level sub-components (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported.
+Some lower-level subcomponents (`DateCalendar`, `MonthCalendar`, and `YearCalendar`) are also exported.
 
 {{"demo": "SubComponentsCalendars.js"}}
 
