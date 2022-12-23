@@ -34,6 +34,7 @@ export default function ColumnMenuGridPremium() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         {...data}
+        apiRef={apiRef}
         groupingColDef={{
           leafField: 'title',
         }}
