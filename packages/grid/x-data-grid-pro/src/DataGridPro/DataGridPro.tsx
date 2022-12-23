@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -32,7 +32,7 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -61,7 +61,7 @@ DataGridProRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -117,7 +117,7 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -276,9 +276,9 @@ DataGridProRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        operatorValue: PropTypes.string,
+        operator: PropTypes.string.isRequired,
         value: PropTypes.any,
       }),
     ).isRequired,
@@ -406,6 +406,12 @@ DataGridProRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -837,15 +843,15 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

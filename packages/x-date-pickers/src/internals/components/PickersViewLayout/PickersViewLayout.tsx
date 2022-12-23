@@ -1,9 +1,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useSlotProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
-import { PickersActionBar } from '../../../PickersActionBar';
-import { CalendarOrClockPickerView } from '../../models/views';
+import { PickersActionBar, PickersActionBarAction } from '../../../PickersActionBar';
+import { DateOrTimeView } from '../../models/views';
 import { PickersViewLayoutProps } from './PickersViewLayout.types';
 import {
   getPickersViewLayoutUtilityClass,
@@ -41,13 +42,13 @@ const useUtilityClasses = (ownerState: PickersViewLayoutProps<any, any>) => {
   return composeClasses(slots, getPickersViewLayoutUtilityClass, classes);
 };
 
-type PickersViewLayoutComponent = <TValue, TView extends CalendarOrClockPickerView>(
+type PickersViewLayoutComponent = <TValue, TView extends DateOrTimeView>(
   props: PickersViewLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element;
 
 export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   TValue,
-  TView extends CalendarOrClockPickerView,
+  TView extends DateOrTimeView,
 >(inProps: PickersViewLayoutProps<TValue, TView>, ref: React.Ref<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersViewLayout' });
 
@@ -75,6 +76,20 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
   const classes = useUtilityClasses(props);
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions:
+        wrapperVariant === 'desktop' ? [] : (['cancel', 'accept'] as PickersActionBarAction[]),
+    },
+    ownerState: { ...props, wrapperVariant },
+  });
+
   const Tabs = components?.Tabs;
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
@@ -103,14 +118,7 @@ export const PickersViewLayout = React.forwardRef(function PickersViewLayout<
         {!!Tabs && <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />}
         {children}
       </PickersViewLayoutContent>
-      <ActionBar
-        onAccept={onAccept}
-        onClear={onClear}
-        onCancel={onCancel}
-        onSetToday={onSetToday}
-        actions={wrapperVariant === 'desktop' ? [] : ['cancel', 'accept']}
-        {...componentsProps?.actionBar}
-      />
+      <ActionBar {...actionBarProps} />
     </PickersViewLayoutRoot>
   );
 }) as PickersViewLayoutComponent;

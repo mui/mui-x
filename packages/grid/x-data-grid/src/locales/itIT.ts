@@ -50,9 +50,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Aggiungi un filtro',
   filterPanelDeleteIconLabel: 'Rimuovi',
   filterPanelLinkOperator: 'Operatore logico',
-  filterPanelOperators: 'Operatori',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
   filterPanelColumns: 'Colonne',
@@ -82,6 +80,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",

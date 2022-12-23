@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -35,7 +35,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -80,7 +80,7 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -136,7 +136,7 @@ DataGridPremiumRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -305,9 +305,9 @@ DataGridPremiumRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        operatorValue: PropTypes.string,
+        operator: PropTypes.string.isRequired,
         value: PropTypes.any,
       }),
     ).isRequired,
@@ -442,6 +442,12 @@ DataGridPremiumRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -895,15 +901,15 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -944,4 +950,19 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  unstable_cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  unstable_cellSelectionModel: PropTypes.object,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  unstable_onCellSelectionModelChange: PropTypes.func,
 } as any;

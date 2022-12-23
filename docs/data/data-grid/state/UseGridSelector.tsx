@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   gridPageSelector,
   gridPageCountSelector,
   useGridApiContext,
   useGridSelector,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
@@ -34,7 +34,7 @@ export default function UseGridSelector() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         {...data}
         loading={loading}
         pagination

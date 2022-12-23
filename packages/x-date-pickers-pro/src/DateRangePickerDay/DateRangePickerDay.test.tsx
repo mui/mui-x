@@ -12,7 +12,6 @@ describe('<DateRangePickerDay />', () => {
   describeConformance(
     <DateRangePickerDay
       day={adapterToUse.date()}
-      selectedDays={[]}
       outsideCurrentMonth={false}
       selected
       onDaySelect={() => {}}

@@ -13,7 +13,7 @@ import {
   GridTreeNode,
 } from '../../../models';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridApiCommunity, GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import {
   GridRowsFullUpdate,
   GridRowsInternalCache,
@@ -25,7 +25,7 @@ import {
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { gridDensityFactorSelector } from '../density/densitySelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
 
@@ -132,11 +132,11 @@ export const getRowsStateFromCache = ({
   previousTree,
   previousTreeDepths,
 }: Pick<GridRowTreeCreationParams, 'previousTree' | 'previousTreeDepths'> & {
-  apiRef: React.MutableRefObject<GridApiCommunity>;
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>;
   rowCountProp: number | undefined;
   loadingProp: boolean | undefined;
 }): GridRowsState => {
-  const cache = apiRef.current.unstable_caches.rows;
+  const cache = apiRef.current.caches.rows;
 
   // 1. Apply the "rowTreeCreation" family processing.
   const {
@@ -144,7 +144,7 @@ export const getRowsStateFromCache = ({
     treeDepths: unProcessedTreeDepths,
     dataRowIds: unProcessedDataRowIds,
     groupingName,
-  } = apiRef.current.unstable_applyStrategyProcessor('rowTreeCreation', {
+  } = apiRef.current.applyStrategyProcessor('rowTreeCreation', {
     previousTree,
     previousTreeDepths,
     updates: cache.updates,
@@ -162,7 +162,7 @@ export const getRowsStateFromCache = ({
   });
 
   // 3. Reset the cache updates
-  apiRef.current.unstable_caches.rows.updates = {
+  apiRef.current.caches.rows.updates = {
     type: 'partial',
     actions: {
       insert: [],
@@ -383,7 +383,10 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
   };
 }
 
-export function getMinimalContentHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
-  const rowHeight = gridDensityRowHeightSelector(apiRef);
-  return 2 * rowHeight;
+export function getMinimalContentHeight(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  rowHeight: number,
+) {
+  const densityFactor = gridDensityFactorSelector(apiRef);
+  return 2 * Math.floor(rowHeight * densityFactor);
 }

@@ -14,7 +14,6 @@ describe('<PickersDay />', () => {
       outsideCurrentMonth={false}
       selected
       onDaySelect={() => {}}
-      selectedDays={[]}
     />,
     () => ({
       classes,
@@ -32,14 +31,7 @@ describe('<PickersDay />', () => {
   it('selects the date on click, Enter and Space', () => {
     const handleDaySelect = spy();
     const day = adapterToUse.date();
-    render(
-      <PickersDay
-        day={day}
-        outsideCurrentMonth={false}
-        onDaySelect={handleDaySelect}
-        selectedDays={[]}
-      />,
-    );
+    render(<PickersDay day={day} outsideCurrentMonth={false} onDaySelect={handleDaySelect} />);
     const targetDay = screen.getByRole('button', { name: adapterToUse.format(day, 'dayOfMonth') });
 
     // A native button implies Enter and Space keydown behavior
@@ -61,7 +53,6 @@ describe('<PickersDay />', () => {
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         onDaySelect={() => {}}
         outsideCurrentMonth={false}
-        selectedDays={[]}
       />,
     );
 
@@ -76,7 +67,6 @@ describe('<PickersDay />', () => {
         day={adapterToUse.date('2020-02-02T02:02:02.000')}
         outsideCurrentMonth={false}
         onDaySelect={() => {}}
-        selectedDays={[]}
       >
         2 (free)
       </PickersDay>,

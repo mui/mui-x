@@ -16,7 +16,7 @@ The `getTreeDataPath` function returns an array of strings which represents the 
 //         - Robert
 //         - Karen
 
-const columns: GridColumns = [{ field: 'jobTitle', width: 250 }];
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
 // Without transformation
 const rows: GridRowsProp = [

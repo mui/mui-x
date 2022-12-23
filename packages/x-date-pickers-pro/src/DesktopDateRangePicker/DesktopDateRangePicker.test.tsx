@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import {
-  describeConformance,
-  screen,
-  fireEvent,
-  userEvent,
-  act,
-  getByRole,
-} from '@mui/monorepo/test/utils';
+import { describeConformance, screen, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import describeValidation from '@mui/x-date-pickers-pro/tests/describeValidation';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -22,6 +15,7 @@ import {
   AdapterClassToUse,
   withPickerControls,
   openPicker,
+  getPickerDay,
 } from 'test/utils/pickers-utils';
 
 const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)({
@@ -33,9 +27,6 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
     </React.Fragment>
   ),
 });
-
-const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -68,11 +59,11 @@ describe('<DesktopDateRangePicker />', () => {
     }),
   );
 
-  describeValidation(DesktopDateRangePicker, () => ({
+  describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
     clock,
-    isLegacyPicker: true,
-    withDate: true,
+    componentFamily: 'legacy-picker',
+    views: ['day'],
   }));
 
   // TODO: Remove on new pickers, has been moved to `DateRangeCalendar` tests
@@ -979,7 +970,7 @@ describe('<DesktopDateRangePicker />', () => {
         <WrappedDesktopDateRangePicker
           initialValue={[null, null]}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });

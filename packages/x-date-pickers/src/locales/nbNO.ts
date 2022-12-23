@@ -1,6 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
+import { DateView } from '../internals/models';
 
 const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,11 +10,11 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'åpne forrige visning',
   openNextView: 'åpne neste visning',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
     view === 'year'
       ? 'årsvisning er åpen, bytt til kalendervisning'
       : 'kalendervisning er åpen, bytt til årsvisning',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -40,6 +40,12 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   hoursClockNumberText: (hours) => `${hours} timer`,
   minutesClockNumberText: (minutes) => `${minutes} minutter`,
   secondsClockNumberText: (seconds) => `${seconds} sekunder`,
+
+  // Calendar labels
+  // calendarWeekNumberHeaderLabel: 'Week number',
+  // calendarWeekNumberHeaderText: '#',
+  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
+  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>

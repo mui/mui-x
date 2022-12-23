@@ -1,7 +1,6 @@
 export * from './gridRowsMetaSelector';
 export * from './gridRowsMetaState';
 export {
-  gridRowsStateSelector,
   gridRowCountSelector,
   gridRowsLoadingSelector,
   gridTopLevelRowCountSelector,

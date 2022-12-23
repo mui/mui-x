@@ -8,6 +8,7 @@ import {
 } from '@mui/x-date-pickers/internals';
 import { isRangeValid } from '../../utils/date-utils';
 import { DateRange } from '../../models/range';
+import { rangeValueManager } from '../../utils/valueManagers';
 
 export interface TimeRangeComponentValidationProps extends Required<BaseTimeValidationProps> {}
 
@@ -55,11 +56,6 @@ export type TimeRangeValidationError = [
   TimeRangeValidationErrorValue,
 ];
 
-export const isSameTimeRangeError = (
-  a: TimeRangeValidationError,
-  b: TimeRangeValidationError | null,
-) => b !== null && a[1] === b[1] && a[0] === b[0];
-
 export const useDateRangeValidation = <TDate>(
   props: ValidationProps<
     TimeRangeValidationError,
@@ -67,5 +63,10 @@ export const useDateRangeValidation = <TDate>(
     TimeRangeComponentValidationProps
   >,
 ): TimeRangeValidationError => {
-  return useValidation(props, validateTimeRange, isSameTimeRangeError);
+  return useValidation(
+    props,
+    validateTimeRange,
+    rangeValueManager.isSameError,
+    rangeValueManager.defaultErrorState,
+  );
 };

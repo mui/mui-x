@@ -1,6 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time pickers - Custom components
+components: DateTimePickerTabs
 ---
 
 # Custom components
@@ -46,13 +47,14 @@ You can override the action displayed by passing the `actions` prop to the `acti
 ```jsx
 <DatePicker
   componentsProps={{
+    // The actions will be the same between desktop and mobile
     actionBar: {
-      // The actions will be the same between desktop and mobile
       actions: ['clear'],
-
-      // The actions will be different between desktop and mobile
-      actions: (variant) => (variant === 'desktop' ? [] : ['clear']),
     },
+    // The actions will be different between desktop and mobile
+    actionBar: ({ wrapperVariant }) => ({
+      actions: wrapperVariant === 'desktop' ? [] : ['clear'],
+    }),
   }}
 />
 ```
@@ -103,7 +105,7 @@ You can override the icons displayed by passing props to the `tabs` within `comp
 <DateTimePicker
   componentsProps={{
     tabs: {
-      dateRangeIcon: <LightModeIcon />,
+      dateIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
     },
   }}

@@ -1,5 +1,9 @@
 ---
+product: date-pickers
 title: React Date Field component
+components: DateTimeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Date Time Field
@@ -17,7 +21,7 @@ It might receive breaking changes on its props to have the best component possib
 
 ## Uncontrolled vs. Controlled
 
-The component can be controlled or uncontrolled
+The component can be uncontrolled or controlled
 
 {{"demo": "DateTimeFieldValue.js"}}
 

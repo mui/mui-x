@@ -1,41 +1,29 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
+import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '@mui/x-date-pickers/DesktopNextTimePicker';
 
 export default function ResponsiveTimePickers() {
-  const [value, setValue] = React.useState(dayjs('2018-01-01T00:00:00.000Z'));
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
-        <MobileTimePicker
+      <DemoContainer>
+        <MobileNextTimePicker
           label="For mobile"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <DesktopTimePicker
+        <DesktopNextTimePicker
           label="For desktop"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <TimePicker
-          value={value}
-          onChange={setValue}
-          renderInput={(params) => <TextField {...params} />}
+        <NextTimePicker
+          label="Responsive"
+          defaultValue={dayjs('2022-04-07T15:30')}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

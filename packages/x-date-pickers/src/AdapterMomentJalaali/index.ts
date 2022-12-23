@@ -1,6 +1,9 @@
+/* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+
+type Moment = defaultMoment.Moment;
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: MuiFormatTokenMap = {
@@ -45,9 +48,13 @@ const formatTokenMap: MuiFormatTokenMap = {
 
 export class AdapterMomentJalaali
   extends BaseAdapterMomentJalaali
-  implements MuiPickerFieldAdapter<defaultMoment.Moment>
+  implements MuiPickersAdapter<defaultMoment.Moment>
 {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: '[', end: ']' };
 
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.
@@ -81,5 +88,30 @@ export class AdapterMomentJalaali
       .replace('jM', 'M')
       .replace('jD', 'D')
       .toLocaleLowerCase();
+  };
+
+  public getWeekNumber = (date: defaultMoment.Moment) => {
+    return date.jWeek();
+  };
+
+  public addYears = (date: Moment, count: number) => {
+    return count < 0
+      ? date.clone().subtract(Math.abs(count), 'jYear')
+      : date.clone().add(count, 'jYear');
+  };
+
+  public addMonths = (date: Moment, count: number) => {
+    return count < 0
+      ? date.clone().subtract(Math.abs(count), 'jMonth')
+      : date.clone().add(count, 'jMonth');
+  };
+
+  public isValid = (value: any) => {
+    // We can't to `this.moment(value)` because moment-jalaali looses the invalidity information when creating a new moment object from an existing one
+    if (!this.moment.isMoment(value)) {
+      return false;
+    }
+
+    return value.isValid(value);
   };
 }

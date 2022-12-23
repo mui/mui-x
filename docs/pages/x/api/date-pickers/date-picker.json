@@ -28,6 +28,7 @@
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
@@ -122,6 +123,9 @@
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDatePicker" },
   "filename": "/packages/x-date-pickers/src/DatePicker/DatePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-picker/\">Date Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DatePicker" }
+  ]
 }

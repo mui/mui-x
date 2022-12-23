@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -28,18 +27,12 @@ import {
   areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
-import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
-import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-
-function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
-}
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rowGrouping = {
+  apiRef.current.caches.rowGrouping = {
     rulesOnLastRowTreeCreation: [],
   };
 
@@ -68,6 +61,8 @@ export const useGridRowGrouping = (
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
+    | 'componentsProps'
+    | 'components'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -158,25 +153,14 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+    (columnMenuItems, colDef) => {
       if (props.disableRowGrouping) {
-        return initialValue;
+        return columnMenuItems;
       }
-
-      let menuItems: React.ReactNode;
-      if (isGroupingColumn(column.field)) {
-        menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (column.groupable) {
-        menuItems = <GridRowGroupableColumnMenuItems />;
-      } else {
-        menuItems = null;
+      if (isGroupingColumn(colDef.field) || colDef.groupable) {
+        return [...columnMenuItems, 'ColumnMenuGroupingItem'];
       }
-
-      if (menuItems == null) {
-        return initialValue;
-      }
-
-      return [...initialValue, <Divider />, menuItems];
+      return columnMenuItems;
     },
     [props.disableRowGrouping],
   );
@@ -260,7 +244,7 @@ export const useGridRowGrouping = (
   >(() => {
     const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
     const rulesOnLastRowTreeCreation =
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation;
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation || [];
 
     const groupingRules = getGroupingRules({
       sanitizedRowGroupingModel,
@@ -268,13 +252,13 @@ export const useGridRowGrouping = (
     });
 
     if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
-      apiRef.current.unstable_caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.unstable_getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }

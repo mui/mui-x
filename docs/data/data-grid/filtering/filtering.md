@@ -53,10 +53,10 @@ The filter model is composed of a list of `items` and a `linkOperator`:
 
 A filter item represents a filtering rule and is composed of several elements:
 
-- `filterItem.columnField`: the field on which the rule applies.
+- `filterItem.field`: the field on which the rule applies.
 - `filterItem.value`: the value to look for.
-- `filterItem.operatorValue`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
-- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): only useful when multiple filters are used.
+- `filterItem.operator`: name of the operator method to use (e.g. _contains_), matches the `value` key of the operator object.
+- `filterItem.id` ([<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)): required when multiple filter items are used.
 
 :::info
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
@@ -70,8 +70,8 @@ The `linkOperator` tells the data grid if a row should satisfy all (`AND`) filte
 // Example 1: get rows with rating > 4 OR isAdmin = true
 const filterModel: GridFilterModel = {
   items: [
-    { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
-    { id: 2, columnField: 'isAdmin', operatorValue: 'is', value: 'true' },
+    { id: 1, field: 'rating', operator: '>', value: '4' },
+    { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
   ],
   linkOperator: GridLinkOperator.Or,
 };
@@ -79,8 +79,8 @@ const filterModel: GridFilterModel = {
 // Example 2: get rows with rating > 4 AND isAdmin = true
 const filterModel: GridFilterModel = {
   items: [
-    { id: 1, columnField: 'rating', operatorValue: '>', value: '4' },
-    { id: 2, columnField: 'isAdmin', operatorValue: 'is', value: 'true' },
+    { id: 1, field: 'rating', operator: '>', value: '4' },
+    { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
   ],
   linkOperator: GridLinkOperator.And,
 };
@@ -97,7 +97,7 @@ To initialize the filters without controlling them, provide the model to the `in
   initialState={{
     filter: {
       filterModel: {
-        items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+        items: [{ field: 'rating', operator: '>', value: '2.5' }],
       },
     },
   }}
@@ -115,7 +115,7 @@ You can use the `onFilterModelChange` prop to listen to changes to the filters a
 ```jsx
 <DataGrid
   filterModel={{
-    items: [{ columnField: 'rating', operatorValue: '>', value: '2.5' }],
+    items: [{ field: 'rating', operator: '>', value: '2.5' }],
   }}
 />
 ```
@@ -182,7 +182,7 @@ const operator: GridFilterOperator = {
   label: 'From',
   value: 'from',
   getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
-    if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+    if (!filterItem.field || !filterItem.value || !filterItem.operator) {
       return null;
     }
 
@@ -408,7 +408,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the data grid.
@@ -416,7 +416,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "Filtering"}}
 

@@ -13,7 +13,7 @@ Here we will discuss how the code is structured, to simplify codebase navigation
 
 In folder `packages` you will find one subfolder per exported package (`@mui/x-data-grid`, `@mui/x-data-grid-pro`, ...)
 
-Since `@mui/x-data-grid-pro` is an extension of `@mui/x-data-grid`, it imports all the common features from `@mui/x-data-grid` and the internal logic are imported from `@mui/x-data-grid/internals` which is defined in `x-data-grid/src/internals/index.ts`.
+Since `@mui/x-data-grid-pro` is an extension of `@mui/x-data-grid`, it imports all the common features from `@mui/x-data-grid` and the internal logic are imported from `@mui/x-data-grid/internals` which is defined in `x-data-grid/src/internals/index.ts`. And `@mui/x-data-grid-premium` is a further extension of `@mui/x-data-grid-pro`, it imports all the common features from both `@mui/x-data-grid` and `@mui/x-data-grid-pro` and adds some new features on top of that.
 
 In each package, the most used folders are:
 
@@ -22,7 +22,7 @@ In each package, the most used folders are:
   - `hooks/core` defines logics for developers: initialization of the grid, error handling, translations, ...
   - `hooks/utils` defines logics for contributors: manipulating the state, managing events, ...
   - `hooks/features` defines logics for end-users: selection, filtering, editing, ...
-- `DataGrid[Pro]/useDataGrid[Pro]Component.tsx` is the file in which all the hooks are added to the grid
+- `DataGrid[Pro|Premium]/useDataGrid[Pro|Premium]Component.tsx` is the file in which all the hooks are added to the grid
 - `colDef` contains the default values for each [column type](https://mui.com/x/react-data-grid/column-definition/#column-types): rendering cell, filter operators, sorting method, ...
 - `models` define the TypeScript interfaces of the gird
 
@@ -68,7 +68,7 @@ Notice that all the events do not have an associated prop `on<Event>`
 
 Here you will find more precision about how some features are designed.
 
-- [filtering](./filtering)
-- [virtualization](./virtualization)
-- [processing](./processing)
+- [filtering](./filtering.md)
+- [virtualization](./virtualization.md)
+- [processing](./processing.md)
 - print (TODO)

@@ -90,7 +90,7 @@ This means you have to give the rows of all pages to the data grid.
 If your dataset is too big, and you only want to fetch the current page, you can use server-side pagination.
 
 :::info
-For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/selection/#usage-with-server-side-pagination)
+For more information regarding server-side pagination in combination with controlled selection check [here](/x/react-data-grid/row-selection/#usage-with-server-side-pagination)
 :::
 
 ### Basic implementation
@@ -126,7 +126,7 @@ To do so, you just have to keep track of the next cursor associated with each pa
 
 You can customize the rendering of the pagination in the footer following [the component section](/x/react-data-grid/components/#pagination) of the documentation.
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the data grid.
@@ -134,7 +134,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PaginationApiNoSnap.js", "bg": "inline", "hideToolbar": true, "defaultCodeOpen": false }}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "Pagination"}}
 

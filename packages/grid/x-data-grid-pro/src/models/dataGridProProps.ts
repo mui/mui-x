@@ -23,6 +23,7 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
+import { GridProSlotsComponent } from './gridProSlotsComponent';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
@@ -35,23 +36,36 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   rowPinning: boolean;
 }
 
+interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
+  /**
+   * Overrideable components.
+   */
+  components?: Partial<GridProSlotsComponent>;
+}
+
 /**
  * The props users can give to the `DataGridProProps` component.
  */
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue> &
-      DataGridPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
   > {}
+
+interface DataGridProPropsWithComplexDefaultValueAfterProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'components'> {
+  components: GridProSlotsComponent;
+}
 
 /**
  * The props of the `DataGridPro` component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridProPropsWithComplexDefaultValueAfterProcessing,
     DataGridProPropsWithoutDefaultValue<R> {}
 
 export type DataGridProForcedPropsKey = 'signature';
@@ -119,12 +133,18 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
    * * @default "client"
    */
   rowsLoadingMode: GridFeatureMode;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**

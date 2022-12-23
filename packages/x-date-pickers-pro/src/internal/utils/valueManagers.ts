@@ -1,33 +1,42 @@
-import { PickerStateValueManager, replaceInvalidDateByNull } from '@mui/x-date-pickers/internals';
 import {
+  PickerStateValueManager,
+  replaceInvalidDateByNull,
   FieldValueManager,
   splitFormatIntoSections,
   addPositionPropertiesToSections,
-  createDateStrFromSections,
-} from '@mui/x-date-pickers/internals-fields';
-import { DateRange, DateRangeFieldSection } from '../models/range';
+  createDateStrForInputFromSections,
+  getSectionOrder,
+} from '@mui/x-date-pickers/internals';
+import { DateRange, RangePosition } from '../models/range';
 import { splitDateRangeSections, removeLastSeparator } from './date-fields-utils';
 import type { DateRangeValidationError } from '../hooks/validation/useDateRangeValidation';
 import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeValidation';
 import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
+import { RangeFieldSection } from '../models/fields';
 
-export const rangeValueManager: PickerStateValueManager<
-  [any, any],
-  any,
-  DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
-> = {
+export type RangePickerStateValueManager<
+  TValue = [any, any],
+  TDate = any,
+  TError extends
+    | DateRangeValidationError
+    | TimeRangeValidationError
+    | DateTimeRangeValidationError = any,
+> = PickerStateValueManager<TValue, TDate, TError>;
+
+export const rangeValueManager: RangePickerStateValueManager = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>
     value.map((date) => replaceInvalidDateByNull(utils, date)) as DateRange<any>,
   areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
   isSameError: (a, b) => b !== null && a[1] === b[1] && a[0] === b[0],
+  defaultErrorState: [null, null],
 };
 
 export const rangeFieldValueManager: FieldValueManager<
   DateRange<any>,
   any,
-  DateRangeFieldSection,
+  RangeFieldSection,
   DateRangeValidationError | TimeRangeValidationError | DateTimeRangeValidationError
 > = {
   updateReferenceValue: (utils, value, prevReferenceValue) => {
@@ -54,47 +63,45 @@ export const rangeFieldValueManager: FieldValueManager<
         ? { startDate: null, endDate: null }
         : splitDateRangeSections(prevSections);
 
-    const getSections = (newDate: any | null, prevDateSections: DateRangeFieldSection[] | null) => {
+    const getSections = (
+      newDate: any | null,
+      prevDateSections: RangeFieldSection[] | null,
+      position: RangePosition,
+    ) => {
       const shouldReUsePrevDateSections = !utils.isValid(newDate) && !!prevDateSections;
 
       if (shouldReUsePrevDateSections) {
         return prevDateSections;
       }
 
-      return splitFormatIntoSections(utils, localeText, format, newDate);
-    };
+      const sections = splitFormatIntoSections(utils, localeText, format, newDate);
+      return sections.map((section, sectionIndex) => {
+        if (sectionIndex === sections.length - 1 && position === 'start') {
+          return {
+            ...section,
+            dateName: position,
+            endSeparator: `${section.endSeparator}\u2069 – \u2066`,
+          };
+        }
 
-    const rawSectionsOfStartDate = getSections(start, prevDateRangeSections.startDate);
-    const rawSectionsOfEndDate = getSections(end, prevDateRangeSections.endDate);
-
-    const sectionsOfStartDate = rawSectionsOfStartDate.map((section, sectionIndex) => {
-      if (sectionIndex === rawSectionsOfStartDate.length - 1) {
         return {
           ...section,
-          dateName: 'start' as const,
-          separator: ' – ',
+          dateName: position,
         };
-      }
+      });
+    };
 
-      return {
-        ...section,
-        dateName: 'start' as const,
-      };
-    });
-
-    const sectionsOfEndDate = rawSectionsOfEndDate.map((section) => ({
-      ...section,
-      dateName: 'end' as const,
-    }));
-
-    return addPositionPropertiesToSections([...sectionsOfStartDate, ...sectionsOfEndDate]);
+    return addPositionPropertiesToSections<RangeFieldSection>([
+      ...getSections(start, prevDateRangeSections.startDate, 'start'),
+      ...getSections(end, prevDateRangeSections.endDate, 'end'),
+    ]);
   },
   getValueStrFromSections: (sections) => {
     const dateRangeSections = splitDateRangeSections(sections);
-    const startDateStr = createDateStrFromSections(dateRangeSections.startDate, true);
-    const endDateStr = createDateStrFromSections(dateRangeSections.endDate, true);
-
-    return `${startDateStr}${endDateStr}`;
+    return createDateStrForInputFromSections([
+      ...dateRangeSections.startDate,
+      ...dateRangeSections.endDate,
+    ]);
   },
   getActiveDateSections: (sections, activeSection) => {
     const index = activeSection.dateName === 'start' ? 0 : 1;
@@ -135,4 +142,15 @@ export const rangeFieldValueManager: FieldValueManager<
     };
   },
   hasError: (error) => error[0] != null || error[1] != null,
+  getSectionOrder: (utils, localeText, format, isRTL) => {
+    const splitedFormat = splitFormatIntoSections(utils, localeText, format, null);
+    return getSectionOrder(
+      [
+        ...splitedFormat.slice(0, splitedFormat.length - 1),
+        { ...splitedFormat[splitedFormat.length - 1], endSeparator: ' – ' },
+        ...splitedFormat,
+      ],
+      isRTL,
+    );
+  },
 };

@@ -1,6 +1,5 @@
 import type * as Excel from 'exceljs';
 import {
-  GridStateColDef,
   GridRowId,
   GridColDef,
   GridValueFormatterParams,
@@ -9,12 +8,13 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning } from '@mui/x-data-grid/internals';
+import { buildWarning, GridStateColDef } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
+import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
@@ -50,7 +50,7 @@ const getFormattedValueOptions = (
 const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
-  api: GridApi,
+  api: GridPrivateApiPremium,
   defaultValueOptionsFormulae: { [field: string]: string },
 ) => {
   const row: { [colField: string]: undefined | number | boolean | string | Date } = {};
@@ -61,7 +61,7 @@ const serializeRow = (
   const outlineLevel = firstCellParams.rowNode.depth;
 
   // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
-  api.unstable_calculateColSpan({
+  api.calculateColSpan({
     rowId: id,
     minFirstColumn: 0,
     maxLastColumn: columns.length,
@@ -172,7 +172,7 @@ const defaultColumnsStyles = {
   [GRID_DATETIME_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy hh:mm' },
 };
 
-const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesInterface) => {
+const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStylesInterface) => {
   const { field, type } = column;
 
   return {
@@ -187,7 +187,7 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
 
 const addColumnGroupingHeaders = (
   worksheet: Excel.Worksheet,
-  columns: GridStateColDef[],
+  columns: GridColDef[],
   api: GridApi,
 ) => {
   const maxDepth = Math.max(
@@ -212,7 +212,7 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName || group.groupId)),
+      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
@@ -256,7 +256,7 @@ interface BuildExcelOptions {
 
 export async function buildExcel(
   options: BuildExcelOptions,
-  api: GridApi,
+  api: GridPrivateApiPremium,
 ): Promise<Excel.Workbook> {
   const {
     columns,
@@ -287,7 +287,7 @@ export async function buildExcel(
   }
 
   if (includeHeaders) {
-    worksheet.addRow(columns.map((column) => column.headerName || column.field));
+    worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
   const columnsWithArrayValueOptions = columns.filter(
@@ -311,7 +311,7 @@ export async function buildExcel(
         api,
       );
       valueOptionsWorksheet.getColumn(column.field).values = [
-        column.headerName || column.field,
+        column.headerName ?? column.field,
         ...formattedValueOptions,
       ];
 

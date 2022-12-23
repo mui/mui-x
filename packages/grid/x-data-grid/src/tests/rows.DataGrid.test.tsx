@@ -19,6 +19,8 @@ import {
   GridRowClassNameParams,
   GridRowModel,
   GridRenderCellParams,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
@@ -230,9 +232,9 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -241,18 +243,18 @@ describe('<DataGrid /> - Rows', () => {
           getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
         />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when opening the menu', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should close other menus before opening a new one', () => {
@@ -992,6 +994,71 @@ describe('<DataGrid /> - Rows', () => {
         borderTopWidth: `${borderTop}px`,
         borderBottomWidth: `${borderBottom}px`,
       });
+    });
+  });
+
+  describe('apiRef: updateRows', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand', headerName: 'Brand' }];
+
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    function TestCase(props: Partial<DataGridProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            {...props}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    it('should throw when updating more than one row at once', () => {
+      render(<TestCase />);
+      expect(() =>
+        apiRef.current.updateRows([
+          { id: 1, brand: 'Fila' },
+          { id: 0, brand: 'Pata' },
+          { id: 2, brand: 'Pum' },
+          { id: 3, brand: 'Jordan' },
+        ]),
+      ).to.throw(/You can't update several rows at once/);
+    });
+
+    it('should allow to update one row at the time', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
+    });
+
+    it('should allow adding rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+    });
+
+    it('should allow to delete rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
   });
 });

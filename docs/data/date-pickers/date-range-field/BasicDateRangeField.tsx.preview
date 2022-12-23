@@ -1,12 +1,8 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={4}>
-    <MultiInputDateRangeField
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-    />
-    <SingleInputDateRangeField
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-    />
-  </Stack>
-</LocalizationProvider>
+<MultiInputDateRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
+<SingleInputDateRangeField
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>

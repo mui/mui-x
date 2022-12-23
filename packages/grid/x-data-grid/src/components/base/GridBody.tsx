@@ -5,8 +5,7 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
+import { getTotalHeaderHeight } from '../../hooks/features/columns/gridColumnsUtils';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -29,7 +28,8 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
+
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -57,13 +57,13 @@ function GridBody(props: GridBodyProps) {
 
   const columnHeadersRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-  const windowRef = React.useRef<HTMLDivElement>(null);
-  const renderingZoneRef = React.useRef<HTMLDivElement>(null);
+  const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
-  apiRef.current.columnHeadersElementRef = columnHeadersRef;
-  apiRef.current.windowRef = windowRef; // TODO rename, it's not attached to the window anymore
-  apiRef.current.renderingZoneRef = renderingZoneRef; // TODO remove, nobody should have access to internal parts of the virtualization
+  apiRef.current.register('private', {
+    columnHeadersContainerElementRef: columnsContainerRef,
+    columnHeadersElementRef: columnHeadersRef,
+    virtualScrollerRef,
+  });
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
@@ -91,7 +91,7 @@ function GridBody(props: GridBodyProps) {
 
           return (
             <VirtualScrollerComponent
-              ref={windowRef}
+              ref={virtualScrollerRef}
               style={style}
               disableVirtualization={isVirtualizationDisabled}
             />

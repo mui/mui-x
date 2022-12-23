@@ -15,13 +15,11 @@ import {
   GridCheckIcon,
   GridCloseIcon,
   GridColumnIcon,
-  GridColumnMenu,
   GridColumnsPanel,
   GridFilterAltIcon,
   GridFilterListIcon,
   GridFilterPanel,
   GridFooter,
-  GridHeader,
   GridLoadingOverlay,
   GridNoRowsOverlay,
   GridPagination,
@@ -42,9 +40,13 @@ import {
   GridDragIcon,
   GridColumnHeaderFilterIconButton,
   GridSearchIcon,
+  GridVisibilityOffIcon,
+  GridViewColumnIcon,
+  GridClearIcon,
 } from '../components';
+import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { ErrorOverlay } from '../components/ErrorOverlay';
+import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
@@ -73,11 +75,14 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   RowReorderIcon: GridDragIcon,
   QuickFilterIcon: GridSearchIcon,
   QuickFilterClearIcon: GridCloseIcon,
+  ColumnMenuHideIcon: GridVisibilityOffIcon,
+  ColumnMenuSortAscendingIcon: GridArrowUpwardIcon,
+  ColumnMenuSortDescendingIcon: GridArrowDownwardIcon,
+  ColumnMenuFilterIcon: GridFilterAltIcon,
+  ColumnMenuManageColumnsIcon: GridViewColumnIcon,
+  ColumnMenuClearIcon: GridClearIcon,
 };
 
-/**
- * TODO: Differentiate community and pro value and interface
- */
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
   BaseCheckbox: MUICheckbox,
@@ -92,9 +97,8 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay,
+  ErrorOverlay: GridErrorOverlay,
   Footer: GridFooter,
-  Header: GridHeader,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,

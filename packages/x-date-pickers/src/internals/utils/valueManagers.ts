@@ -6,20 +6,24 @@ import type { FieldSection, FieldValueManager } from '../hooks/useField';
 import { replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   splitFormatIntoSections,
+  getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
-export const singleItemValueManager: PickerStateValueManager<
-  any,
-  any,
-  DateValidationError | TimeValidationError | DateTimeValidationError
-> = {
+export type SingleItemPickerStateValueManager<
+  TValue = any,
+  TDate = any,
+  TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
+> = PickerStateValueManager<TValue, TDate, TError>;
+
+export const singleItemValueManager: SingleItemPickerStateValueManager = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
   cleanValue: replaceInvalidDateByNull,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
   isSameError: (a, b) => a === b,
+  defaultErrorState: null,
 };
 
 export const singleItemFieldValueManager: FieldValueManager<
@@ -32,7 +36,7 @@ export const singleItemFieldValueManager: FieldValueManager<
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
+  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
@@ -50,4 +54,6 @@ export const singleItemFieldValueManager: FieldValueManager<
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   hasError: (error) => error != null,
+  getSectionOrder: (utils, localeText, format, isRTL) =>
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };
