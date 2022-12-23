@@ -47,6 +47,7 @@ From https://github.com/mui/mui-x/pull/6619
 - Some of the components have been renamed for consistency.
 
   **Community Package:**
+
   ```diff
   - <GridFilterMenuItem />
   + <GridColumnMenuFilterItem />
