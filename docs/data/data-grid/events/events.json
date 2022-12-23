@@ -40,22 +40,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusIn",
-    "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onCellFocusIn"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellFocusOut"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
     "params": "GridCellParams",

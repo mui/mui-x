@@ -21,8 +21,6 @@ export function useGridEvents(
     | 'onCellClick'
     | 'onCellDoubleClick'
     | 'onCellKeyDown'
-    | 'onCellFocusOut'
-    | 'onCellFocusIn'
     | 'onPreferencePanelClose'
     | 'onPreferencePanelOpen'
     | 'onRowDoubleClick'
@@ -44,8 +42,6 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, 'cellClick', props.onCellClick);
   useGridApiOptionHandler(apiRef, 'cellDoubleClick', props.onCellDoubleClick);
   useGridApiOptionHandler(apiRef, 'cellKeyDown', props.onCellKeyDown);
-  useGridApiOptionHandler(apiRef, 'cellFocusOut', props.onCellFocusOut);
-  useGridApiOptionHandler(apiRef, 'cellFocusIn', props.onCellFocusIn);
 
   useGridApiOptionHandler(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
   useGridApiOptionHandler(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
