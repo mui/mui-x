@@ -140,7 +140,7 @@ From https://github.com/mui/mui-x/pull/7224
 - [pickers] Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
 - [pickers] Rework view internals (#7097) @flaviendelangle
 
-### `@mui/x-codemod@6.0.0-alpha.12`
+### `@mui/x-codemod@6.0.0-alpha.13`
 
 #### Changes
 
