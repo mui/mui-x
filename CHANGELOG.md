@@ -92,7 +92,7 @@ From https://github.com/mui/mui-x/pull/7067
 
 - [DataGrid] Allow disabling of buttons in column panel (#6947) @MBilalShafi
 - [DataGrid] Improve column definition typing (#7224) @cherniavskii
-- [DataGrid] Improved column menu design and api (#6619) @MBilalShafi
+- [DataGrid] Improve column menu design and API (#6619) @MBilalShafi
 - [DataGrid] Remove `GridDensityType` enum (#7304) @cherniavskii
 - [DataGrid] Remove `rowHeight` and `headerHeight` from state (#7199) @DanailH
 - [DataGrid] Remove column separator to match table styles (#7067) @MBilalShafi
