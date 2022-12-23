@@ -10,6 +10,9 @@ _Dec 23, 2022_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Improved column menu design and API
+- 🌍 Improve Korean and Russian locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 From https://github.com/mui/mui-x/pull/7304
 
@@ -38,23 +41,16 @@ From https://github.com/mui/mui-x/pull/7249
 From https://github.com/mui/mui-x/pull/6619
 
 
-- New column menu design with improved look and feel
-- Ability to add new menu items and place them on any order
-- Replaced all the items to be injected via pipe processor for better control through respective hooks
-- Added ability to override/reorder column menu items which may help add more items in any order e.g. for https://github.com/mui/mui-x/issues/5307
-- Ability to customize the menu by passing a component in column menu slot
-- New l10n labels added
-- Added dedicated component and icon slots for Pro and Premium packages for shipping only required components per package
-- Fix accessibility bug of focus shifting to body when an item gets hidden
 
 ### Breaking changes
 
-- `column` and `currentColumn` is now renamed to `colDef`
+- `column` and `currentColumn` recieved by `<GridColumnMenu />` and column menu items was renamed to `colDef`
 - `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed
 
 - Some of the components have been renamed for consistency.
 
   **Community Package:**
+
   ```diff
   -<GridFilterMenuItem />
   +<GridColumnMenuFilterItem />
@@ -98,10 +94,6 @@ From https://github.com/mui/mui-x/pull/6619
   +<GridColumnMenuGroupingItem />
   ```
 
-
-## Design
-- [Figma Process](https://www.figma.com/file/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=679%3A38262&t=aFUzX2phxDdIDwFL-0)
-- [Final](https://www.figma.com/proto/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=1239%3A64017&scaling=min-zoom&page-id=679%3A38262)
 From https://github.com/mui/mui-x/pull/7224
 
 
