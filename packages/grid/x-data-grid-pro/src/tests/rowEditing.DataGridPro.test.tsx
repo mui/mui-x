@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act, userEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row Editing', () => {
@@ -27,7 +27,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const ref = React.useRef<HTMLInputElement>(null);
     React.useLayoutEffect(() => {
       if (hasFocus) {
-        ref.current!.focus();
+        ref.current!.focus({ preventScroll: true });
       }
     }, [hasFocus]);
     return <input ref={ref} />;
@@ -1121,7 +1121,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 2);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        await waitFor(() => {
+        await act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
         });
         fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
