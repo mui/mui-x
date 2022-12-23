@@ -18,10 +18,11 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Breaking changes
 
-From https://github.com/mui/mui-x/pull/6619
+- Rename column menu props and interfaces for consistency (#6619) MBilalShafi
 
-- `column` and `currentColumn` recieved by `<GridColumnMenu />` and column menu items was renamed to `colDef`.
-- `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
+- The `currentColumn` prop passed to `components.ColumnMenu` was renamed to `colDef`.
+- The `column` prop passed to the items of the column menu was renamed to `colDef`.
+- The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
 
 - Some of the components have been renamed for consistency.
 
