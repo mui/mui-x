@@ -85,10 +85,6 @@ From https://github.com/mui/mui-x/pull/7304
 
 - The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
-From https://github.com/mui/mui-x/pull/7067
-
-- Show column header separators on hover
-- Remove unused `disableHeaderSeparator` prop.
 
 #### Changes
 
