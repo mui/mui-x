@@ -171,9 +171,12 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
 - The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
 - The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
-- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
+- The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
+- The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
+- The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
 
 ### Other exports
 
@@ -205,9 +208,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
-  | ------------------------- | ------------------------------ | ----------------------------------------------- |
-  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
+  | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 
 <!--
 ### Virtualization

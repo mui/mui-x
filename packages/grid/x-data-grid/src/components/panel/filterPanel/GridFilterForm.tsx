@@ -95,7 +95,7 @@ export interface GridFilterFormProps {
    * Props passed to the logic operator input component.
    * @default {}
    */
-  linkOperatorInputProps?: any;
+  logicOperatorInputProps?: any;
   /**
    * Props passed to the operator input component.
    * @default {}
@@ -125,7 +125,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['filterForm'],
     deleteIcon: ['filterFormDeleteIcon'],
-    linkOperatorInput: ['filterFormLinkOperatorInput'],
+    logicOperatorInput: ['filterFormLogicOperatorInput'],
     columnInput: ['filterFormColumnInput'],
     operatorInput: ['filterFormOperatorInput'],
     valueInput: ['filterFormValueInput'],
@@ -154,10 +154,10 @@ const FilterFormDeleteIcon = styled(FormControl, {
   marginBottom: theme.spacing(0.2),
 }));
 
-const FilterFormLinkOperatorInput = styled(FormControl, {
+const FilterFormLogicOperatorInput = styled(FormControl, {
   name: 'MuiDataGrid',
-  slot: 'FilterFormLinkOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
+  slot: 'FilterFormLogicOperatorInput',
+  overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })({
   minWidth: 55,
   marginRight: 5,
@@ -213,7 +213,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       columnsSort,
       filterColumns,
       deleteIconProps = {},
-      linkOperatorInputProps = {},
+      logicOperatorInputProps = {},
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
@@ -393,26 +393,26 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
           </IconButton>
         </FilterFormDeleteIcon>
-        <FilterFormLinkOperatorInput
+        <FilterFormLogicOperatorInput
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...linkOperatorInputProps}
+          {...logicOperatorInputProps}
           sx={{
             display: hasLogicOperatorColumn ? 'flex' : 'none',
             visibility: showMultiFilterOperators ? 'visible' : 'hidden',
             ...(baseFormControlProps.sx || {}),
-            ...(linkOperatorInputProps.sx || {}),
+            ...(logicOperatorInputProps.sx || {}),
           }}
           className={clsx(
-            classes.linkOperatorInput,
+            classes.logicOperatorInput,
             baseFormControlProps.className,
-            linkOperatorInputProps.className,
+            logicOperatorInputProps.className,
           )}
         >
           <rootProps.components.BaseSelect
             inputProps={{
-              'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
+              'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
             value={multiFilterOperator}
             onChange={changeLogicOperator}
@@ -426,7 +426,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
               </OptionComponent>
             ))}
           </rootProps.components.BaseSelect>
-        </FilterFormLinkOperatorInput>
+        </FilterFormLogicOperatorInput>
         <FilterFormColumnInput
           variant="standard"
           as={rootProps.components.BaseFormControl}
@@ -593,7 +593,7 @@ GridFilterForm.propTypes = {
    * Props passed to the logic operator input component.
    * @default {}
    */
-  linkOperatorInputProps: PropTypes.any,
+  logicOperatorInputProps: PropTypes.any,
   /**
    * Sets the available logic operators.
    * @default [GridLogicOperator.And, GridLogicOperator.Or]

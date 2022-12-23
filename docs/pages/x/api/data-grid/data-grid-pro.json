@@ -396,7 +396,7 @@
       "editBooleanCell",
       "filterForm",
       "filterFormDeleteIcon",
-      "filterFormLinkOperatorInput",
+      "filterFormLogicOperatorInput",
       "filterFormColumnInput",
       "filterFormOperatorInput",
       "filterFormValueInput",

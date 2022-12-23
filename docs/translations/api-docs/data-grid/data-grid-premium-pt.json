@@ -446,7 +446,7 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the delete icon of the filter form component"
     },
-    "filterFormLinkOperatorInput": {
+    "filterFormLogicOperatorInput": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the link operator inout of the filter form component"
     },

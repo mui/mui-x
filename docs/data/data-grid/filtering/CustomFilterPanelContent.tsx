@@ -29,7 +29,7 @@ export default function CustomFilterPanelContent() {
             columnsSort: 'asc',
             filterFormProps: {
               // Customize inputs by passing props
-              linkOperatorInputProps: {
+              logicOperatorInputProps: {
                 variant: 'outlined',
                 size: 'small',
               },
@@ -62,7 +62,7 @@ export default function CustomFilterPanelContent() {
                 backgroundColor: (theme: Theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
-              '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+              '& .MuiDataGrid-filterFormLogicOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 150 },
               '& .MuiDataGrid-filterFormOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormValueInput': { width: 200 },

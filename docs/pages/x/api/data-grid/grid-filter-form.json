@@ -17,7 +17,7 @@
     "disableMultiFilterOperator": { "type": { "name": "bool" } },
     "filterColumns": { "type": { "name": "func" } },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "logicOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
     "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
       "default": "[GridLogicOperator.And, GridLogicOperator.Or]"

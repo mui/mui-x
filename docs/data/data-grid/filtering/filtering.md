@@ -300,13 +300,13 @@ Input components can be [customized](/material-ui/customization/how-to-customize
 You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
 More details are available in the demo.
 
-| Props                    | CSS class                                 |
-| :----------------------- | :---------------------------------------- |
-| `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
-| `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
-| `columnInputProps`       | `MuiDataGrid-filterFormColumnInput`       |
-| `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
-| `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
+| Props                     | CSS class                                  |
+| :------------------------ | :----------------------------------------- |
+| `deleteIconProps`         | `MuiDataGrid-filterFormDeleteIcon`         |
+| `logicOperatorInputProps` | `MuiDataGrid-filterFormLogicOperatorInput` |
+| `columnInputProps`        | `MuiDataGrid-filterFormColumnInput`        |
+| `operatorInputProps`      | `MuiDataGrid-filterFormOperatorInput`      |
+| `valueInputProps`         | `MuiDataGrid-filterFormValueInput`         |
 
 The value input is a special case, because it can contain a wide variety of components (the one provided or [your custom `InputComponent`](#create-a-custom-operator)).
 To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
