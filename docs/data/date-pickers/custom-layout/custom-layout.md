@@ -55,6 +55,11 @@ To move an element, you can override its position in the layout with [`gridColum
 In the next example, the action bar is replaced by a list and then placed on the left side of the content.
 It's achieved by applying the `{ gridColumn: 1, gridRow: 2 }` style.
 
+:::warning
+If you are using custom components, you should pay attention to `className`.
+To make CSS selectors work, you can either propagate `className` to the root element like in the demo, or use your own CSS class.
+:::
+
 {{"demo": "MovingActions.js"}}
 
 ## DOM customization
