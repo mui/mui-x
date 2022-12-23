@@ -215,13 +215,12 @@ ${logChangelogSection(dataGridCommits, '#### Changes')}
 ### \`@mui/x-date-pickers@v__VERSION__\` / \`@mui/x-date-pickers-pro@v__VERSION__\`
 ${logChangelogSection(pickersCommits, '#### Changes')}
 ${
-  codemodCommits.length > 0
-    ? `\n### \`@mui/x-codemod@v__VERSION__\`\n${logChangelogSection(
-        codemodCommits,
-        '#### Changes',
-      )}`
-    : ''
-}
+logChangelogSection(
+  codemodCommits,
+  `
+### \`@mui/x-codemod@v__VERSION__\`
+
+#### Changes`)}
 ${logChangelogSection(docsCommits, '### Docs')}
 ${logChangelogSection(coreCommits, '### Core')}
 ${logChangelogSection(otherCommits, '')}
