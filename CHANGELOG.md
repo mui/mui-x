@@ -60,6 +60,7 @@ From https://github.com/mui/mui-x/pull/6619
   ```
 
   **Premium package:**
+
   ```diff
   -<GridAggregationColumnMenuItem />
   +<GridColumnMenuAggregationItem />
