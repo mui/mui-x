@@ -85,7 +85,7 @@ From https://github.com/mui/mui-x/pull/7304
 
 From https://github.com/mui/mui-x/pull/7067
 
-- Remove column separator.
+- Show column header separators on hover
 - Remove unused `disableHeaderSeparator`.
 
 #### Changes
