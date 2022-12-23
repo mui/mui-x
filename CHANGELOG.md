@@ -38,14 +38,6 @@ From https://github.com/mui/mui-x/pull/7249
 From https://github.com/mui/mui-x/pull/6619
 
 
-- New column menu design with improved look and feel
-- Ability to add new menu items and place them on any order
-- Replaced all the items to be injected via pipe processor for better control through respective hooks
-- Added ability to override/reorder column menu items which may help add more items in any order e.g. for https://github.com/mui/mui-x/issues/5307
-- Ability to customize the menu by passing a component in column menu slot
-- New l10n labels added
-- Added dedicated component and icon slots for Pro and Premium packages for shipping only required components per package
-- Fix accessibility bug of focus shifting to body when an item gets hidden
 
 ### Breaking changes
 
