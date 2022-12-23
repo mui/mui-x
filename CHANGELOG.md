@@ -17,6 +17,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Update Russian (ru-RU) locale (#7291) @VeceluXa
+- [DataGridPro] Use row ID as `key` of the detail panels (#7311) @m4theushw
 - [DataGridPremium] Fix `exceljs` import with parcel (#7285) @alexfauquette
 
 ### `@mui/x-date-pickers@5.0.12` / `@mui/x-date-pickers-pro@5.0.12`
