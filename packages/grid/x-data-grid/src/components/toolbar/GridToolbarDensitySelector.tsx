@@ -5,7 +5,7 @@ import { ButtonProps } from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
-import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
+import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -31,25 +31,25 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
       {
         icon: <rootProps.components.DensityCompactIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityCompact'),
-        value: GridDensityTypes.Compact,
+        value: 'compact',
       },
       {
         icon: <rootProps.components.DensityStandardIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityStandard'),
-        value: GridDensityTypes.Standard,
+        value: 'standard',
       },
       {
         icon: <rootProps.components.DensityComfortableIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
-        value: GridDensityTypes.Comfortable,
+        value: 'comfortable',
       },
     ];
 
     const startIcon = React.useMemo<React.ReactElement>(() => {
       switch (densityValue) {
-        case GridDensityTypes.Compact:
+        case 'compact':
           return <rootProps.components.DensityCompactIcon />;
-        case GridDensityTypes.Comfortable:
+        case 'comfortable':
           return <rootProps.components.DensityComfortableIcon />;
         default:
           return <rootProps.components.DensityStandardIcon />;

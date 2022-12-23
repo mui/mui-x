@@ -180,6 +180,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
 - The `GridStateColDef` type was removed.
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
 
