@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {
   DataGridPro,
   GridColumnMenuContainer,
-  SortGridMenuItems,
-  HideGridColMenuItem,
-  GridColumnsMenuItem,
-  GridFilterMenuItem,
+  GridColumnMenuSortItem,
+  GridColumnMenuHideItem,
+  GridColumnMenuColumnsItem,
+  GridColumnMenuFilterItem,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -16,25 +16,21 @@ import {
 } from '@mui/x-data-grid-generator';
 
 function CustomColumnMenu(props) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+  const { hideMenu, colDef, color, ...other } = props;
 
   return (
-    <GridColumnMenuContainer
-      hideMenu={hideMenu}
-      currentColumn={currentColumn}
-      {...other}
-    >
-      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-      <HideGridColMenuItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn} />
+    <GridColumnMenuContainer hideMenu={hideMenu} colDef={colDef} {...other}>
+      <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuHideItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuColumnsItem onClick={hideMenu} colDef={colDef} />
     </GridColumnMenuContainer>
   );
 }
 
 CustomColumnMenu.propTypes = {
+  colDef: PropTypes.object.isRequired,
   color: PropTypes.string,
-  currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
 
