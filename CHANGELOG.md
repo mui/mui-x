@@ -14,38 +14,14 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
-From https://github.com/mui/mui-x/pull/7304
-
-
-#### Breaking changes
-
-- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
-From https://github.com/mui/mui-x/pull/7067
-
-
-- [x] Remove column separator
-- [x] Remove unused `disableHeaderSeparator`
-
-## Design
-- [Figma Process](https://www.figma.com/file/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=1227%3A62449&t=MAO4kO2qvUssZFTG-0)
-- Figma Final
-From https://github.com/mui/mui-x/pull/7249
-
+### `@mui/x-data-grid@6.0.0-alpha.13` / `@mui/x-data-grid-pro@6.0.0-alpha.13` / `@mui/x-data-grid-premium@6.0.0-alpha.13`
 
 #### Breaking changes
-
-- `AdapterLuxon` now required `luxon` in version `3.0.2` or higher in order to work.
-
-  Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
 
 From https://github.com/mui/mui-x/pull/6619
 
-
-
-### Breaking changes
-
-- `column` and `currentColumn` recieved by `<GridColumnMenu />` and column menu items was renamed to `colDef`
-- `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed
+- `column` and `currentColumn` recieved by `<GridColumnMenu />` and column menu items was renamed to `colDef`.
+- `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
 
 - Some of the components have been renamed for consistency.
 
@@ -96,9 +72,6 @@ From https://github.com/mui/mui-x/pull/6619
 
 From https://github.com/mui/mui-x/pull/7224
 
-
-#### Breaking changes
-
 - The `GridColumns` type was removed. Use `GridColDef[]` instead.
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
@@ -106,7 +79,14 @@ From https://github.com/mui/mui-x/pull/7224
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
   If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
 
-### `@mui/x-data-grid@6.0.0-alpha.13` / `@mui/x-data-grid-pro@6.0.0-alpha.13` / `@mui/x-data-grid-premium@6.0.0-alpha.13`
+From https://github.com/mui/mui-x/pull/7304
+
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
+
+From https://github.com/mui/mui-x/pull/7067
+
+- Remove column separator.
+- Remove unused `disableHeaderSeparator`.
 
 #### Changes
 
@@ -120,6 +100,14 @@ From https://github.com/mui/mui-x/pull/7224
 - [DataGridPremium] Fix `exceljs` import with parcel (#7284) @alexfauquette
 
 ### `@mui/x-date-pickers@6.0.0-alpha.13` / `@mui/x-date-pickers-pro@6.0.0-alpha.13`
+
+#### Breaking changes
+
+From https://github.com/mui/mui-x/pull/7249
+
+- `AdapterLuxon` now required `luxon` in version `3.0.2` or higher in order to work.
+
+  Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
 
 #### Changes
 
