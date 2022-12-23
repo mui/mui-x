@@ -91,10 +91,6 @@ From https://github.com/mui/mui-x/pull/6619
   + <GridColumnMenuGroupingItem />
   ```
 
-
-## Design
-- [Figma Process](https://www.figma.com/file/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=679%3A38262&t=aFUzX2phxDdIDwFL-0)
-- [Final](https://www.figma.com/proto/W6TItYkiGJZjL5zLnfeSjy/Data-grid?node-id=1239%3A64017&scaling=min-zoom&page-id=679%3A38262)
 From https://github.com/mui/mui-x/pull/7224
 
 
