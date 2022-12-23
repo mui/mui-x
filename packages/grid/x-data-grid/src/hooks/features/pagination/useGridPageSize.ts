@@ -11,7 +11,7 @@ import {
   GridSignature,
 } from '../../utils';
 import { gridPageSizeSelector } from './gridPaginationSelector';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityFactorSelector } from '../density';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
 
@@ -50,11 +50,12 @@ export const useGridPageSize = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState' | 'signature'
+    'pageSize' | 'onPageSizeChange' | 'autoPageSize' | 'initialState' | 'signature' | 'rowHeight'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPageSize');
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
 
   apiRef.current.registerControlState({
     stateId: 'pageSize',

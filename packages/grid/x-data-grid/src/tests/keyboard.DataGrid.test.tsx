@@ -12,7 +12,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -40,7 +40,7 @@ describe('<DataGrid /> - Keyboard', () => {
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
-    const transformColSizes = (columns: GridColumns) =>
+    const transformColSizes = (columns: GridColDef[]) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
@@ -468,7 +468,7 @@ describe('<DataGrid /> - Keyboard', () => {
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
-      const transformColSizes = (columns: GridColumns) =>
+      const transformColSizes = (columns: GridColDef[]) =>
         columns.map((column) => ({ ...column, width: 60 }));
 
       return (

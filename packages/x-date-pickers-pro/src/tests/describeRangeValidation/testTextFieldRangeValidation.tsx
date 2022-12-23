@@ -27,7 +27,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 ) => {
   const { componentFamily, render, isSingleInput, withDate, withTime } = getOptions();
 
-  if (!['legacy-picker', 'picker'].includes(componentFamily)) {
+  if (!['legacy-picker', 'new-picker'].includes(componentFamily)) {
     return;
   }
 

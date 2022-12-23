@@ -37,6 +37,8 @@ export class AdapterDateFnsJalali
 
   public formatTokenMap = formatTokenMap;
 
+  public escapedCharacters = { start: "'", end: "'" };
+
   public expandFormat = (format: string) => {
     // @see https://github.com/date-fns/date-fns/blob/master/src/format/index.js#L31
     const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;

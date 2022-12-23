@@ -51,6 +51,7 @@ describe('<DesktopNextTimePicker /> - Describes', () => {
       adapterToUse.date(new Date(2018, 0, 1, 18, 30)),
     ],
     emptyValue: null,
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       let expectedValueStr: string;

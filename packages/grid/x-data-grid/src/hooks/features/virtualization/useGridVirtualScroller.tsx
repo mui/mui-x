@@ -544,7 +544,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    contentSize.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    contentSize.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
 
   const rootStyle = {} as React.CSSProperties;

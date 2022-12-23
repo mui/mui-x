@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
-  BaseNextPickerProps,
-  MakeOptional,
+  BaseNextPickerInputProps,
   UsePickerValueNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { PickersSlotsComponentsProps } from '../../internals/components/wrappers/WrapperProps';
@@ -23,7 +22,7 @@ export function describeValue<TValue, C extends PickerV6ComponentFamily>(
   const { defaultProps } = getOptions();
 
   function WrappedElementToTest(
-    props: MakeOptional<BaseNextPickerProps<TValue, any, any, any>, 'openTo' | 'views'> &
+    props: BaseNextPickerInputProps<TValue, any, any, any> &
       UsePickerValueNonStaticProps<TValue> & { componentsProps?: PickersSlotsComponentsProps },
   ) {
     return <ElementToTest {...defaultProps} {...props} />;

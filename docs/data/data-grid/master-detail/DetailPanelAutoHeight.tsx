@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   DataGridProProps,
   useGridApiContext,
   GridActionsCellItem,
@@ -55,7 +55,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
     [apiRef, rowProp],
   );
 
-  const columns = React.useMemo<GridColumns>(
+  const columns = React.useMemo<GridColDef[]>(
     () => [
       { field: 'name', headerName: 'Product', flex: 1, editable: true },
       {
@@ -135,7 +135,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'date', type: 'date', headerName: 'Placed at' },
