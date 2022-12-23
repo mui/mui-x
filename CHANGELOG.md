@@ -23,7 +23,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Changes
 
-- [pickers] Improve Korean (ko-KR) locale (#7283) @hanbin9775 
+- [pickers] Improve Korean (ko-KR) locale (#7283) @hanbin9775
 
 ## 5.17.16
 
