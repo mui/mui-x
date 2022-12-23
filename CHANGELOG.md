@@ -81,9 +81,7 @@ From https://github.com/mui/mui-x/pull/7224
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
   If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
 
-From https://github.com/mui/mui-x/pull/7304
-
-- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead (#7304) @cherniavskii
 
 
 #### Changes
