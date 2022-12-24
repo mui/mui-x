@@ -21,9 +21,9 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - New column menu design and API (#6619) MBilalShafi
 
   The `currentColumn` prop passed to `components.ColumnMenu` was renamed to `colDef`.
-- The `column` prop passed to the items of the column menu was renamed to `colDef`.
-- The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
-- The following components and interfaces were been renamed for consistency:
+  The `column` prop passed to the items of the column menu was renamed to `colDef`.
+  The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
+  The following components and interfaces were been renamed for consistency:
 
   **Community Package:**
 
@@ -72,18 +72,19 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   +<GridColumnMenuGroupingItem />
   ```
 
-Improve column definition typing (#7224) @cherniavskii
+- Improve column definition typing (#7224) @cherniavskii
 
-- The `GridColumns` type was removed. Use `GridColDef[]` instead.
-- The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
-- The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
-- The `GridStateColDef` type was removed.
-  If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
-  If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
+  The `GridColumns` type was removed. Use `GridColDef[]` instead.
+  The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
+  The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
+  The `GridStateColDef` type was removed.
 
-Remove GridDensityType enum (#7304) @cherniavskii
+    If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
+    If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
 
-- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
+- Remove GridDensityType enum (#7304) @cherniavskii
+
+  The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
 #### Changes
 
@@ -101,9 +102,9 @@ Remove GridDensityType enum (#7304) @cherniavskii
 
 #### Breaking changes
 
-Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
+- Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
 
-- `AdapterLuxon` now requires `luxon` in version `3.0.2` or higher in order to work.
+  `AdapterLuxon` now requires `luxon` in version `3.0.2` or higher in order to work.
 
   Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
 
