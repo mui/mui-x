@@ -18,13 +18,12 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Breaking changes
 
-Rename column menu props and interfaces for consistency (#6619) MBilalShafi
+New column menu design and API (#6619) MBilalShafi
 
 - The `currentColumn` prop passed to `components.ColumnMenu` was renamed to `colDef`.
 - The `column` prop passed to the items of the column menu was renamed to `colDef`.
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
-
-  The following components and interfaces were been renamed for consistency:
+- The following components and interfaces were been renamed for consistency:
 
   **Community Package:**
 
