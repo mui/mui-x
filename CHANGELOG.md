@@ -85,7 +85,6 @@ Remove GridDensityType enum (#7304) @cherniavskii
 
 - The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
-
 #### Changes
 
 - [DataGrid] Allow disabling of buttons in column panel (#6947) @MBilalShafi
