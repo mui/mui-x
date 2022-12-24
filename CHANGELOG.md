@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 5.17.17
 
-_Dec 23, 2022_
+_Dec 24, 2022_
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
