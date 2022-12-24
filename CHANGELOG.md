@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 6.0.0-alpha.13
 
-_Dec 23, 2022_
+_Dec 24, 2022_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Breaking changes
 
-- Rename column menu props and interfaces for consistency (#6619) MBilalShafi
+Rename column menu props and interfaces for consistency (#6619) MBilalShafi
 
 - The `currentColumn` prop passed to `components.ColumnMenu` was renamed to `colDef`.
 - The `column` prop passed to the items of the column menu was renamed to `colDef`.
@@ -73,7 +73,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   +<GridColumnMenuGroupingItem />
   ```
 
-From https://github.com/mui/mui-x/pull/7224
+Improve column definition typing (#7224) @cherniavskii
 
 - The `GridColumns` type was removed. Use `GridColDef[]` instead.
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
@@ -82,7 +82,9 @@ From https://github.com/mui/mui-x/pull/7224
   If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
   If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
 
-- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead (#7304) @cherniavskii
+Remove GridDensityType enum (#7304) @cherniavskii
+
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
 
 #### Changes
@@ -101,7 +103,7 @@ From https://github.com/mui/mui-x/pull/7224
 
 #### Breaking changes
 
-From https://github.com/mui/mui-x/pull/7249
+Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
 
 - `AdapterLuxon` now required `luxon` in version `3.0.2` or higher in order to work.
 
