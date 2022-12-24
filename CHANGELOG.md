@@ -103,7 +103,7 @@ Remove GridDensityType enum (#7304) @cherniavskii
 
 Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
 
-- `AdapterLuxon` now required `luxon` in version `3.0.2` or higher in order to work.
+- `AdapterLuxon` now requires `luxon` in version `3.0.2` or higher in order to work.
 
   Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
 
