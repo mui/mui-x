@@ -79,8 +79,8 @@ From https://github.com/mui/mui-x/pull/7224
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
 - The `GridStateColDef` type was removed.
-  If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
-  If you use it to type `getApplyFilterFn` - use `GridFilterOperator['getApplyFilterFn']` instead.
+  If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
+  If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
 
 - The `GridDensityTypes` enum was removed. Use `GridDensity` type instead (#7304) @cherniavskii
 
