@@ -132,7 +132,7 @@ This can be used in combination with `componentsProps`.
 
 In the example below, the tabs are using different icons and have an additional component:
 
-{{"demo": "Tabs.js", "disableAd": true}}
+{{"demo": "Tabs.js"}}
 
 ## Arrow switcher
 
@@ -143,10 +143,10 @@ to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButto
 
 You can pass props to the icons and buttons as shown below:
 
-{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false, "disableAd": true}}
+{{"demo": "ArrowSwitcherComponentProps.js", "defaultCodeOpen": false}}
 
 ### Component
 
 You can pass custom components—to replace the icons, for example—as shown below:
 
-{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false, "disableAd": true}}
+{{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
