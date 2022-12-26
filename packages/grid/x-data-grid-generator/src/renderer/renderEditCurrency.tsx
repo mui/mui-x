@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+} from '@mui/x-data-grid-premium';
 import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
@@ -23,6 +27,7 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
@@ -30,11 +35,15 @@ function EditCurrency(props: GridRenderEditCellParams<string>) {
     (event, newValue) => {
       apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
       if (!(event as any).key) {
-        apiRef.current.commitCellChange({ id, field });
-        apiRef.current.setCellMode(id, field, 'view');
+        if (rootProps.experimentalFeatures?.newEditingApi) {
+          apiRef.current.stopCellEditMode({ id, field });
+        } else {
+          apiRef.current.commitCellChange({ id, field });
+          apiRef.current.setCellMode(id, field, 'view');
+        }
       }
     },
-    [apiRef, field, id],
+    [apiRef, field, id, rootProps],
   );
 
   return (
