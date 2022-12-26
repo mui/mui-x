@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+} from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,12 +15,17 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   const handleChange: SelectProps['onChange'] = (event) => {
     apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    apiRef.current.commitCellChange({ id, field });
-    apiRef.current.setCellMode(id, field, 'view');
 
+    if (rootProps.experimentalFeatures?.newEditingApi) {
+      apiRef.current.stopCellEditMode({ id, field });
+    } else {
+      apiRef.current.commitCellChange({ id, field });
+      apiRef.current.setCellMode(id, field, 'view');
+    }
     if ((event as any).key) {
       // TODO v6: remove once we stop ignoring events fired from portals
       const params = apiRef.current.getCellParams(id, field);
@@ -30,7 +39,11 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      apiRef.current.setCellMode(id, field, 'view');
+      if (rootProps.experimentalFeatures?.newEditingApi) {
+        apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+      } else {
+        apiRef.current.setCellMode(id, field, 'view');
+      }
     }
   };
 
