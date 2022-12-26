@@ -137,7 +137,6 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    // TODO: Debug two calls each filter
     expect(getColumnForNewFilter.callCount).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
@@ -312,6 +311,67 @@ describe('<DataGridPro /> - Filter', () => {
     };
     act(() => apiRef.current.setFilterModel(newModel));
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+  });
+
+  it('should work as expected with "Add filter" and "Clear all" buttons ', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    const clearButton = screen.getByRole('button', { name: /Clear All/i });
+    expect(clearButton).to.have.attribute('disabled');
+    fireEvent.click(addButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(2);
+    expect(clearButton).not.to.have.attribute('disabled');
+    fireEvent.click(clearButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    expect(clearButton).to.have.attribute('disabled');
+  });
+
+  it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableAddFilterButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+  });
+
+  it('should hide `Clear all` in filter panel when `disableClearAllButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableClearAllButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Clear all' })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {

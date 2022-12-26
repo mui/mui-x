@@ -48,6 +48,7 @@ const svSEGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
+  // filterPanelClearAll: 'Clear all',
   filterPanelDeleteIconLabel: 'Ta bort',
   filterPanelLinkOperator: 'Logisk operatör',
   filterPanelOperator: 'Operatör',

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
-import { GridAddIcon } from '../../icons';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
 import { GridPanelWrapper } from '../GridPanelWrapper';
@@ -43,6 +42,16 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+  /*
+   * If `true`, the `Add filter` button will not be displayed.
+   * @default false
+   */
+  disableAddFilterButton?: boolean;
+  /*
+   * If `true`, the `Clear all` button will be disabled
+   * @default false
+   */
+  disableClearAllButton?: boolean;
 
   /**
    * @ignore - do not document.
@@ -70,6 +79,8 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       filterFormProps,
       getColumnForNewFilter,
       children,
+      disableAddFilterButton = false,
+      disableClearAllButton = false,
       ...other
     } = props;
 
@@ -154,6 +165,10 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
+    const clearAllFilters = () => {
+      apiRef.current.setFilterModel({ ...filterModel, items: [] });
+    };
+
     const deleteFilter = React.useCallback(
       (item: GridFilterItem) => {
         const shouldCloseFilterPanel = items.length === 1;
@@ -202,17 +217,33 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             />
           ))}
         </GridPanelContent>
-        {!rootProps.disableMultipleColumnsFiltering && (
+        {!rootProps.disableMultipleColumnsFiltering &&
+        !disableAddFilterButton &&
+        !disableClearAllButton ? (
           <GridPanelFooter>
-            <rootProps.components.BaseButton
-              onClick={addNewFilter}
-              startIcon={<GridAddIcon />}
-              {...rootProps.componentsProps?.baseButton}
-            >
-              {apiRef.current.getLocaleText('filterPanelAddFilter')}
-            </rootProps.components.BaseButton>
+            {!disableAddFilterButton ? (
+              <rootProps.components.BaseButton
+                onClick={addNewFilter}
+                startIcon={<rootProps.components.FilterPanelAddIcon />}
+                {...rootProps.componentsProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelAddFilter')}
+              </rootProps.components.BaseButton>
+            ) : (
+              <span />
+            )}
+            {!disableClearAllButton ? (
+              <rootProps.components.BaseButton
+                disabled={items.length < 2}
+                onClick={clearAllFilters}
+                startIcon={<rootProps.components.FilterPanelDeleteIcon />}
+                {...rootProps.componentsProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelClearAll')}
+              </rootProps.components.BaseButton>
+            ) : null}
           </GridPanelFooter>
-        )}
+        ) : null}
       </GridPanelWrapper>
     );
   },

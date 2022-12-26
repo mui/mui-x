@@ -112,6 +112,11 @@ export interface GridIconSlotsComponent {
   DetailPanelCollapseIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed for deleting the filter from filter Panel.
+   * @default GridAddIcon
+   */
+  FilterPanelAddIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed for deleting the filter from filter Panel.
    * @default GridCloseIcon
    */
   FilterPanelDeleteIcon: React.JSXElementConstructor<any>;
