@@ -60,6 +60,11 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridFilterStateSelector` selector was removed.
 - The `gridRowsStateSelector` selector was removed.
 - The `gridSortingStateSelector` selector was removed.
+- The `gridTotalHeaderHeightSelector` selector was removed.
+- The `gridDensityRowHeightSelector` selector was removed.
+- The `gridDensityHeaderHeightSelector` selector was removed.
+- The `apiRef.current.state.density.headerHeight` property was removed.
+- The `apiRef.current.state.density.rowHeight` property was removed.
 
 ### Events
 
@@ -115,6 +120,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
+- The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -174,6 +180,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
 - The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
 - The `GridStateColDef` type was removed.
+- The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
 
   If you use it to type `searchPredicate` - use `GridColumnsPanelProps['searchPredicate']` instead.
 

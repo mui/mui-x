@@ -17,7 +17,7 @@ import {
   unstable_gridFocusColumnGroupHeaderSelector,
   unstable_gridTabIndexColumnGroupHeaderSelector,
 } from '../focus/gridFocusStateSelector';
-import { gridDensityHeaderHeightSelector } from '../density/densitySelector';
+import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
 import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
@@ -26,13 +26,12 @@ import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { GridEventListener } from '../../../models/events';
 import { GridColumnHeaderItem } from '../../../components/columnHeaders/GridColumnHeaderItem';
-import { getFirstColumnIndexToRender } from '../columns/gridColumnsUtils';
+import { getFirstColumnIndexToRender, getTotalHeaderHeight } from '../columns/gridColumnsUtils';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
 import {
-  gridTotalHeaderHeightSelector,
   gridColumnGroupsHeaderMaxDepthSelector,
   gridColumnGroupsHeaderStructureSelector,
 } from '../columnGrouping/gridColumnGroupsSelector';
@@ -90,9 +89,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     apiRef,
     unstable_gridFocusColumnGroupHeaderSelector,
   );
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
@@ -108,6 +106,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
+  const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;

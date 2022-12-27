@@ -440,17 +440,17 @@ createTheme({
         },
       },
     },
-    MuiPickersViewLayout: {
+    MuiPickersLayout: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiPickersViewLayout prop
+        // @ts-expect-error invalid MuiPickersLayout prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: {
           backgroundColor: 'red',
         },
-        content: {
+        contentWrapper: {
           backgroundColor: 'red',
         },
       },
