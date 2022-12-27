@@ -70,10 +70,16 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
       expect(onClose.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
     });
@@ -99,10 +105,16 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(1);
       expect(onClose.callCount).to.equal(1);
     });
@@ -125,6 +137,9 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
 
       // Change the value (same value)
       setNewValue(values[0], { isOpened: true, applySameValue: true });
+      if (pickerParams.type === 'date-range') {
+        setNewValue(values[0], { isOpened: true, applySameValue: true, setEndDate: true });
+      }
 
       expect(onChange.callCount).to.equal(0);
       expect(onAccept.callCount).to.equal(0);
@@ -148,18 +163,31 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       );
 
       // Change the value
-      const newValue = setNewValue(values[0], { isOpened: true });
+      let newValue = setNewValue(values[0], { isOpened: true });
       expect(onChange.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue = setNewValue(newValue, { isOpened: true, setEndDate: true });
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
 
       // Change the value
-      const newValueBis = setNewValue(newValue, { isOpened: true });
-      expect(onChange.callCount).to.equal(2);
-      // TODO: Support range
-      expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
+      let newValueBis = setNewValue(newValue, { isOpened: true });
+      if (pickerParams.type === 'date-range') {
+        expect(onChange.callCount).to.equal(3);
+        newValueBis = setNewValue(newValueBis, { isOpened: true, setEndDate: true });
+        newValueBis.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.callCount).to.equal(2);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValueBis as any);
+      }
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -187,14 +215,19 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      // TODO: Support range
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
+      if (pickerParams.type === 'date-range') {
+        newValue.forEach((value, index) => {
+          expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+        });
+      } else {
+        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+      }
       expect(onClose.callCount).to.equal(1);
     });
 
     it('should call onClose when clicking outside of the picker without prior change', () => {
-      // TODO: Fix this test and enable it on mobile
-      if (pickerParams.variant === 'mobile') {
+      // TODO: Fix this test and enable it on mobile and date-range
+      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
         return;
       }
 
@@ -221,8 +254,8 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
     });
 
     it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-      // TODO: Fix this test and enable it on mobile
-      if (pickerParams.variant === 'mobile') {
+      // TODO: Fix this test and enable it on mobile and date-range
+      if (pickerParams.variant === 'mobile' || pickerParams.type === 'date-range') {
         return;
       }
 
@@ -248,7 +281,6 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-pick
       userEvent.mousePress(document.body);
       expect(onChange.callCount).to.equal(1);
       expect(onAccept.callCount).to.equal(1);
-      // TODO: Support range
       expect(onAccept.lastCall.args[0]).toEqualDateTime(newValue as any);
       expect(onClose.callCount).to.equal(1);
     });

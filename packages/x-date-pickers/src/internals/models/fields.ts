@@ -19,3 +19,18 @@ export interface BaseFieldProps<TValue, TError>
     input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   };
 }
+
+export interface FieldsTextFieldProps
+  extends Omit<
+    TextFieldProps,
+    | 'autoComplete'
+    | 'error'
+    | 'maxRows'
+    | 'minRows'
+    | 'multiline'
+    | 'placeholder'
+    | 'rows'
+    | 'select'
+    | 'SelectProps'
+    | 'type'
+  > {}

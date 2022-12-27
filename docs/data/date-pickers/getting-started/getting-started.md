@@ -133,9 +133,29 @@ Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime
 
 ## Testing caveats
 
+### Responsive components
+
 :::info
 Some test environments (i.e. `jsdom`) do not support media query. In such cases, components will be rendered in desktop mode. To modify this behavior you can fake the `window.matchMedia`.
 :::
 
 Be aware that running tests in headless browsers might not pass the default mediaQuery (`pointer: fine`).
 In such case you can [force pointer precision](https://github.com/microsoft/playwright/issues/7769#issuecomment-1205106311) via browser flags or preferences.
+
+### Field components
+
+:::info
+To support RTL and some keyboard interactions, field components add some Unicode character that are invisible, but appears in the input value.
+:::
+
+To add tests about a field value without having to care about those characters, you can remove the specific character before testing the equality.
+Here is an example about how to do it.
+
+```js
+// Helper removing specific characters
+const cleanText = (string) =>
+  string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
+
+// Example of a test using the helper
+expect(cleanText(input.value)).to.equal('10-11-2021');
+```

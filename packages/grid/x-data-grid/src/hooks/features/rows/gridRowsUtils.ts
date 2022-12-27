@@ -25,7 +25,7 @@ import {
   GridRowsPartialUpdateAction,
 } from './gridRowsInterfaces';
 import { gridPinnedRowsSelector } from './gridRowsSelector';
-import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { gridDensityFactorSelector } from '../density/densitySelector';
 
 export const GRID_ROOT_GROUP_ID: GridRowId = `auto-generated-group-node-root`;
 
@@ -383,7 +383,10 @@ export function calculatePinnedRowsHeight(apiRef: React.MutableRefObject<GridApi
   };
 }
 
-export function getMinimalContentHeight(apiRef: React.MutableRefObject<GridApiCommunity>) {
-  const rowHeight = gridDensityRowHeightSelector(apiRef);
-  return 2 * rowHeight;
+export function getMinimalContentHeight(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  rowHeight: number,
+) {
+  const densityFactor = gridDensityFactorSelector(apiRef);
+  return 2 * Math.floor(rowHeight * densityFactor);
 }

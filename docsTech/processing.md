@@ -35,7 +35,12 @@ We can classify the pipe-processing into several categories:
 
 **Publisher**: `useGridColumns` plugin before updating `state.columns`.
 
-**Why register to this processing**: Add some columns (eg: processor of the Selection plugin) or re-order the columns (eg: processor of the Column Pinning plugin).
+**Why register to this processing**
+
+A few possible reasons could be to:
+
+- Add some columns (eg: processor of the Selection plugin)
+- Re-order the columns (eg: processor of the Column Pinning plugin).
 
 **Example**:
 
@@ -61,17 +66,19 @@ const addCustomFeatureColumn = React.useCallback<GridPipeProcessor<'hydrateColum
 
     return columnsState;
   },
-  [apiRef, classes, getSelectionColumn],
+  [apiRef, classes, getCustomFeatureColumn],
 );
 
-useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);
+useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', addCustomFeatureColumn);
 ```
 
 ##### `'rowHeight'`
 
 **Publisher**: `useGridRowsMeta` plugin before updating `state.rowsMeta` (it is called for each row).
 
-**Why register to this processing**: Modify the base height of a row of add the height of some custom elements (eg: processor of the Detail Panel plugin increase the row height when the detail panel is open).
+**Why register to this processing**
+
+- Modify the base height of a row or add the height of some custom elements (eg: processor of the Detail Panel plugin increases the row height when the detail panel is open).
 
 **Example**:
 
@@ -93,7 +100,7 @@ const addCustomFeatureHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>
   [apiRef, customFeatureHeightLookup],
 );
 
-useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight);
+useGridRegisterPipeProcessor(apiRef, 'rowHeight', addCustomFeatureHeight);
 ```
 
 ##### `'hydrateRows'`

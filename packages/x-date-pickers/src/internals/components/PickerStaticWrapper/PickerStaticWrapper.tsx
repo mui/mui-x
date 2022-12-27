@@ -43,6 +43,7 @@ export interface ExportedPickerStaticWrapperProps {
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  autoFocus?: boolean;
 }
 
 export interface PickerStaticWrapperProps<TDate>
@@ -91,6 +92,7 @@ const PickerStaticWrapperContent = styled('div', {
   backgroundColor: (theme.vars || theme).palette.background.paper,
 }));
 
+// TODO v6: Drop with the legacy pickers
 function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerStaticWrapper' });
   const {
@@ -149,6 +151,7 @@ PickerStaticWrapper.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  autoFocus: PropTypes.bool,
   children: PropTypes.node,
   /**
    * Override or extend the styles applied to the component.

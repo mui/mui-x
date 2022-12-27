@@ -5,13 +5,13 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
 } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
-import { useDataGridProps, MAX_PAGE_SIZE } from './useDataGridProps';
+import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
 import { GridValidRowModel } from '../models/gridRows';
@@ -21,13 +21,13 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridProps(inProps);
-  const privateApiRef = useDataGridComponent(props);
+  const privateApiRef = useDataGridComponent(props.apiRef, props);
 
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridColumnHeaders}
             VirtualScrollerComponent={DataGridVirtualScroller}
@@ -53,6 +53,12 @@ DataGridRaw.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
+   */
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }),
   /**
    * The label of the grid.
    */
@@ -91,7 +97,7 @@ DataGridRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: chainPropTypes(PropTypes.array.isRequired, (props) => {
     // @ts-ignore because otherwise `build:api` doesn't work
@@ -568,19 +574,7 @@ DataGridRaw.propTypes = {
    * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
    * @default 100
    */
-  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
-    if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
-      return new Error(
-        [
-          `MUI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
-          `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
-          '',
-          'You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.',
-        ].join('\n'),
-      );
-    }
-    return null;
-  }),
+  pageSize: PropTypes.number,
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
@@ -640,28 +634,11 @@ DataGridRaw.propTypes = {
   /**
    * Sets the row selection model of the grid.
    */
-  rowSelectionModel: chainPropTypes(
-    PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.array]),
-    (props: any) => {
-      if (
-        !props.checkboxSelection &&
-        Array.isArray(props.rowSelectionModel) &&
-        props.rowSelectionModel.length > 1
-      ) {
-        return new Error(
-          [
-            `MUI: \`<DataGrid rowSelectionModel={${JSON.stringify(
-              props.rowSelectionModel,
-            )}} />\` is not a valid prop.`,
-            'rowSelectionModel can only be of 1 item in DataGrid.',
-            '',
-            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
-          ].join('\n'),
-        );
-      }
-      return null;
-    },
-  ),
+  rowSelectionModel: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -682,15 +659,15 @@ DataGridRaw.propTypes = {
    */
   scrollbarSize: PropTypes.number,
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

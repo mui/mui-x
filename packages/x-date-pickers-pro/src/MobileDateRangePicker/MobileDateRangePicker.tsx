@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier } from '@mui/x-license-pro';
+import { SxProps } from '@mui/system';
 import {
   MobileWrapper,
   MobileWrapperProps,
@@ -49,6 +50,10 @@ export interface MobileDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type MobileDateRangePickerComponent = (<TDate>(
@@ -139,7 +144,6 @@ MobileDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -316,11 +320,6 @@ MobileDateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onOpen: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
    */

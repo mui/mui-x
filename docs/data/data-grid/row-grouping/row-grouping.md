@@ -197,7 +197,7 @@ The grouping value has to be either a `string`, a `number`, `null`, or `undefine
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'composer',
     groupingValueGetter: (params) => params.value.name,
@@ -334,7 +334,7 @@ With this panel, your users will be able to control which columns are used for g
 
 See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 

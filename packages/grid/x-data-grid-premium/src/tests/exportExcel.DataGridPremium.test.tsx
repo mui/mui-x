@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridColumns,
+  GridColDef,
   useGridApiRef,
   DataGridPremium,
   GridApi,
@@ -20,7 +20,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+  const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
   const rows = [
     {
       id: 0,

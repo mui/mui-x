@@ -32,19 +32,23 @@ export const useLocalizationContext = <TDate>() => {
     [localization.localeText],
   );
 
-  return {
-    ...localization,
-    localeText,
-  } as Omit<MuiPickersAdapterContextValue<TDate>, 'localeText'> & {
-    localeText: PickersLocaleText<TDate>;
-  };
+  return React.useMemo(
+    () =>
+      ({
+        ...localization,
+        localeText,
+      } as Omit<MuiPickersAdapterContextValue<TDate>, 'localeText'> & {
+        localeText: PickersLocaleText<TDate>;
+      }),
+    [localization, localeText],
+  );
 };
 
-export const useUtils = <T>() => useLocalizationContext<T>().utils;
+export const useUtils = <TDate>() => useLocalizationContext<TDate>().utils;
 
-export const useDefaultDates = <T>() => useLocalizationContext<T>().defaultDates;
+export const useDefaultDates = <TDate>() => useLocalizationContext<TDate>().defaultDates;
 
-export const useLocaleText = <T>() => useLocalizationContext<T>().localeText;
+export const useLocaleText = <TDate>() => useLocalizationContext<TDate>().localeText;
 
 export const useNow = <TDate>(): TDate => {
   const utils = useUtils<TDate>();

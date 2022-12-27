@@ -31,7 +31,7 @@ By default, when you start dragging a row, the `id` is displayed in the draggabl
 To change this, you can give a value to the `__reorder__` field for each row.
 
 ```tsx
-const columns: GridColumns = [{ field: 'brand' }];
+const columns: GridColDef[] = [{ field: 'brand' }];
 
 const rows: GridRowsProp = [
   { id: 0, brand: 'Nike', __reorder__: 'Nike' },

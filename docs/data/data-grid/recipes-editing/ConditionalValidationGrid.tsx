@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import { DataGrid, GridColumns, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 import { randomPrice } from '@mui/x-data-grid-generator';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -48,7 +48,7 @@ const rows: GridRowsProp = [
 ];
 
 export default function ConditionalValidationGrid() {
-  const columns: GridColumns = [
+  const columns: GridColDef[] = [
     { field: 'expense', headerName: 'Expense', width: 160, editable: true },
     {
       field: 'price',

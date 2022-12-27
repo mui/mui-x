@@ -5,8 +5,7 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
+import { getTotalHeaderHeight } from '../../hooks/features/columns/gridColumnsUtils';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -29,7 +28,8 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
+
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -59,9 +59,11 @@ function GridBody(props: GridBodyProps) {
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
-  apiRef.current.columnHeadersElementRef = columnHeadersRef;
-  apiRef.current.virtualScrollerRef = virtualScrollerRef;
+  apiRef.current.register('private', {
+    columnHeadersContainerElementRef: columnsContainerRef,
+    columnHeadersElementRef: columnHeadersRef,
+    virtualScrollerRef,
+  });
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {

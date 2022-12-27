@@ -114,7 +114,7 @@ export type ExportedDateInputProps<TDate> = Omit<
   | 'components'
 >;
 
-// TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
+// TODO v6: Drop with the legacy pickers
 export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
   props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

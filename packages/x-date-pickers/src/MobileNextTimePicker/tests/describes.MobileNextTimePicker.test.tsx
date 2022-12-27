@@ -58,6 +58,7 @@ describe('<MobileNextTimePicker /> - Describes', () => {
     defaultProps: {
       openTo: 'minutes',
     },
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
       let expectedValueStr: string;

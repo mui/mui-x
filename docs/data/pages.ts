@@ -31,6 +31,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/react-data-grid/column-dimensions' },
           { pathname: '/x/react-data-grid/column-visibility' },
           { pathname: '/x/react-data-grid/column-header' },
+          { pathname: '/x/react-data-grid/column-menu' },
           { pathname: '/x/react-data-grid/column-ordering', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-pinning', plan: 'pro' },
           { pathname: '/x/react-data-grid/column-spanning' },
@@ -54,7 +55,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/sorting' },
       { pathname: '/x/react-data-grid/filtering' },
       { pathname: '/x/react-data-grid/pagination' },
-      { pathname: '/x/react-data-grid/selection' },
+      {
+        pathname: '/x/react-data-grid/selection',
+        scopePathnames: ['/x/react-data-grid/row-selection', '/x/react-data-grid/cell-selection'],
+        children: [
+          { pathname: '/x/react-data-grid/row-selection' },
+          { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
+        ],
+      },
       { pathname: '/x/react-data-grid/export' },
       { pathname: '/x/react-data-grid/components' },
       { pathname: '/x/react-data-grid/style' },
@@ -154,11 +162,13 @@ const pages: MuiPage[] = [
         scopePathnames: [
           '/x/react-date-pickers/date-picker',
           '/x/react-date-pickers/date-field',
+          '/x/react-date-pickers/date-calendar',
           '/x/react-date-pickers/legacy-date-picker',
         ],
         children: [
           { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker', newFeature: true },
           { pathname: '/x/react-date-pickers/date-field', title: 'Date Field', newFeature: true },
+          { pathname: '/x/react-date-pickers/date-calendar', title: 'Date Calendar' },
           { pathname: '/x/react-date-pickers/legacy-date-picker', title: 'Legacy Date Picker' },
         ],
       },
@@ -278,7 +288,8 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
-      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom sub-components' },
+      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
+      { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
@@ -389,7 +400,9 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/next-date-time-picker', title: 'NextDateTimePicker' },
           { pathname: '/x/api/date-pickers/next-time-picker', title: 'NextTimePicker' },
+          { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
+          { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
           {
             pathname: '/x/api/date-pickers/single-input-date-range-field',
             title: 'SingleInputDateRangeField',

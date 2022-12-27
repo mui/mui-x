@@ -16,7 +16,7 @@ The default locale of MUI is English (United States). If you want to use other l
 
 :::warning
 This page focuses on date format localization.
-If you need to translate text inside of a component, check out at the [Translated components](/x/react-date-pickers/localization/) page.
+If you need to translate text inside a component, check out the [Translated components](/x/react-date-pickers/localization/) page.
 :::
 
 ## Set a custom locale
@@ -134,6 +134,22 @@ This prop is available on all fields and pickers.
 
 {{"demo": "CustomFieldFormat.js"}}
 
+### Custom field placeholder
+
+When a section is empty, the fields displays its placeholder instead of an empty value.
+For example, if you did not fill any value for the `year` section, the field will render the year placeholder.
+
+These placeholders are based on your current component localization, not on your date localization.
+
+{{"demo": "FieldPlaceholder.js"}}
+
+For more information on how to define your component localization, check out the [Translated components](/x/react-date-pickers/localization/) page.
+
+:::warning
+Placeholders translations depend on locale.
+Some locales might keep using English placeholders, because that format is commonly used in a given locale.
+:::
+
 ### Custom toolbar format
 
 To customize the format used in the toolbar, use the `toolbarFormat` prop of the toolbar slot.
@@ -146,7 +162,7 @@ This prop is available on all pickers.
 
 ### Custom day of week format
 
-Use use `dayOfWeekFormatter` to customize day names in the calendar header.
+Use `dayOfWeekFormatter` to customize day names in the calendar header.
 This prop takes the short name of the day provided by the date library as an input, and returns it's formatted version.
 The default formatter only keeps the first letter and capitalises it.
 
