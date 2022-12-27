@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
@@ -187,7 +186,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       )}
 
       {menuButtons.length > 0 && buttonId && (
-        <IconButton
+        <rootProps.components.BaseIconButton
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
@@ -199,9 +198,10 @@ function GridActionsCell(props: GridActionsCellProps) {
           onClick={showMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
+          {...rootProps.componentsProps?.baseIconButton}
         >
           <rootProps.components.MoreActionsIcon fontSize="small" />
-        </IconButton>
+        </rootProps.components.BaseIconButton>
       )}
 
       {menuButtons.length > 0 && (

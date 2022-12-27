@@ -5,7 +5,6 @@ import {
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -384,14 +383,15 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             deleteIconProps.className,
           )}
         >
-          <IconButton
+          <rootProps.components.BaseIconButton
             aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             onClick={handleDeleteFilter}
             size="small"
+            {...rootProps.componentsProps?.baseIconButton}
           >
             <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
-          </IconButton>
+          </rootProps.components.BaseIconButton>
         </FilterFormDeleteIcon>
         <FilterFormLinkOperatorInput
           variant="standard"
