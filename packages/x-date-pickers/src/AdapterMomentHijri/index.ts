@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import { DateIOFormats } from '@date-io/core/IUtils';
 import BaseAdapterMomentHijri from '@date-io/hijri';
 // @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
@@ -45,11 +46,27 @@ const formatTokenMap: MuiFormatTokenMap = {
   ss: 'seconds',
 };
 
+interface Opts {
+  locale?: string;
+  instance?: typeof defaultMoment;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterMomentHijri
   extends BaseAdapterMomentHijri
   implements MuiPickersAdapter<defaultMoment.Moment>
 {
   public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        dayOfMonthWithOrdinal: 'Do',
+      },
+    });
+  }
 
   public formatTokenMap = formatTokenMap;
 

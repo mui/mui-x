@@ -58,10 +58,18 @@ describe('<AdapterMomentHijri />', () => {
   });
 
   it('should return the correct week number', () => {
-    const adapter = new AdapterMomentHijri();
+    const adapter = new AdapterMomentHijri({ locale: 'ar' });
 
     const dateToTest = adapter.date(new Date(2022, 10, 10));
 
     expect(adapter.getWeekNumber!(dateToTest)).to.equal(16);
+  });
+
+  it('should return correct day of month with ordinal', () => {
+    const adapter = new AdapterMomentHijri({ locale: 'ar' });
+
+    const dateToTest = adapter.date(new Date(2022, 10, 10));
+
+    expect(adapter.format(dateToTest, 'dayOfMonthWithOrdinal')).to.equal('١٠');
   });
 });

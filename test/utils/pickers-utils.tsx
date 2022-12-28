@@ -74,7 +74,7 @@ if (/jsdom/.test(window.navigator.userAgent)) {
 
 export class AdapterClassToUse extends AdapterClassToExtend {}
 
-export const adapterToUse = new AdapterClassToUse();
+export const adapterToUse = new AdapterClassToUse({});
 
 export const FakeTransitionComponent = React.forwardRef<HTMLDivElement, TransitionProps>(
   function FakeTransitionComponent({ children }, ref) {

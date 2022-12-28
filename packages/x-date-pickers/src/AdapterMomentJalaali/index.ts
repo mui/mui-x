@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import { DateIOFormats } from '@date-io/core/IUtils';
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
@@ -46,11 +47,27 @@ const formatTokenMap: MuiFormatTokenMap = {
   ss: 'seconds',
 };
 
+interface Opts {
+  locale?: string;
+  instance?: typeof defaultMoment;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterMomentJalaali
   extends BaseAdapterMomentJalaali
   implements MuiPickersAdapter<defaultMoment.Moment>
 {
   public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        dayOfMonthWithOrdinal: 'Do',
+      },
+    });
+  }
 
   public formatTokenMap = formatTokenMap;
 

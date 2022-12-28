@@ -72,4 +72,12 @@ describe('<AdapterMoment />', () => {
 
     expect(adapter.getWeekNumber!(dateToTest)).to.equal(45);
   });
+
+  it('should return correct day of month with ordinal', () => {
+    const adapter = new AdapterMoment({ locale: 'de' });
+
+    const dateToTest = adapter.date(new Date(2022, 10, 10));
+
+    expect(adapter.format(dateToTest, 'dayOfMonthWithOrdinal')).to.equal('10.');
+  });
 });

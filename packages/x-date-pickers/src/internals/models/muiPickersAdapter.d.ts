@@ -32,3 +32,10 @@ export type MuiFormatTokenMap = {
     | MuiDateSectionName
     | { sectionName: MuiDateSectionName; contentType: 'digit' | 'letter' };
 };
+
+declare module '@date-io/core/IUtils' {
+  export interface DateIOFormats<TLibFormatToken = string> {
+    /** Day with ordinal format string @example "1st" */
+    dayOfMonthWithOrdinal: TLibFormatToken;
+  }
+}

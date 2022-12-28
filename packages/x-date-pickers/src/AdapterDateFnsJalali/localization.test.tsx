@@ -83,4 +83,12 @@ describe('<AdapterDateFnsJalali />', () => {
 
     expect(adapter.getWeekNumber!(dateToTest)).to.equal(34);
   });
+
+  it('should return correct day of month with ordinal', () => {
+    const adapter = new AdapterDateFnsJalali({ locale: faJalaliIR });
+
+    const dateToTest = adapter.date(new Date(2022, 10, 10));
+
+    expect(adapter.format(dateToTest, 'dayOfMonthWithOrdinal')).to.equal('19-ام');
+  });
 });

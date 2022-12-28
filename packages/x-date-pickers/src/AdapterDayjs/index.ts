@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
@@ -45,8 +46,15 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickersAdapter<
   public isMUIAdapter = true;
 
   constructor(options: Opts) {
-    super(options);
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        dayOfMonthWithOrdinal: 'Do',
+      },
+    });
     this.rawDayJsInstance.extend(weekOfYear);
+    this.rawDayJsInstance.extend(advancedFormat);
   }
 
   public formatTokenMap = formatTokenMap;

@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
+import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
@@ -44,11 +45,27 @@ const formatTokenMap: MuiFormatTokenMap = {
   ss: 'seconds',
 };
 
+interface Opts {
+  locale?: string;
+  instance?: typeof defaultMoment;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterMoment
   extends BaseAdapterMoment
   implements MuiPickersAdapter<defaultMoment.Moment>
 {
   public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        dayOfMonthWithOrdinal: 'Do',
+      },
+    });
+  }
 
   public formatTokenMap = formatTokenMap;
 

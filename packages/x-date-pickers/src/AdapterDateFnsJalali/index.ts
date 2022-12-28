@@ -3,6 +3,7 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import getWeek from 'date-fns-jalali/getWeek';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
+import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
@@ -29,11 +30,26 @@ const formatTokenMap: MuiFormatTokenMap = {
   aaa: 'meridiem',
 };
 
+interface Opts {
+  locale?: typeof defaultLocale;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterDateFnsJalali
   extends BaseAdapterDateFnsJalali
   implements MuiPickersAdapter<Date>
 {
   public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        dayOfMonthWithOrdinal: 'do',
+      },
+    });
+  }
 
   public formatTokenMap = formatTokenMap;
 

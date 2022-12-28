@@ -1,6 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
+import { DateIOFormats } from '@date-io/core/IUtils';
 import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
@@ -36,8 +37,25 @@ const formatTokenMap: MuiFormatTokenMap = {
   yyyy: 'year',
 };
 
+interface Opts {
+  locale?: string;
+  formats?: Partial<DateIOFormats>;
+}
+
 export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<DateTime> {
   public isMUIAdapter = true;
+
+  constructor(options: Opts) {
+    super({
+      ...options,
+      formats: {
+        ...options.formats,
+        // Luxon does not have the ordinal day support, using a sensible fallback
+        // https://github.com/moment/luxon/issues/118
+        dayOfMonthWithOrdinal: 'd',
+      },
+    });
+  }
 
   public formatTokenMap = formatTokenMap;
 
