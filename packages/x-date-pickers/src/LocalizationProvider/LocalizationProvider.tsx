@@ -153,6 +153,7 @@ LocalizationProvider.propTypes = {
    */
   dateFormats: PropTypes.shape({
     dayOfMonth: PropTypes.string,
+    dayOfMonthWithOrdinal: PropTypes.string,
     fullDate: PropTypes.string,
     fullDateTime: PropTypes.string,
     fullDateTime12h: PropTypes.string,
