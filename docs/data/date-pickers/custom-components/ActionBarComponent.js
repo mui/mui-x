@@ -13,7 +13,7 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
 function CustomActionBar(props) {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const localeText = useLocaleText();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -85,7 +85,7 @@ function CustomActionBar(props) {
   });
 
   return (
-    <DialogActions>
+    <DialogActions className={className}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}
@@ -119,6 +119,7 @@ CustomActionBar.propTypes = {
   actions: PropTypes.arrayOf(
     PropTypes.oneOf(['accept', 'cancel', 'clear', 'today']),
   ),
+  className: PropTypes.string,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,

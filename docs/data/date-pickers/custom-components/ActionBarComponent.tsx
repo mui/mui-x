@@ -12,7 +12,7 @@ import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
 function CustomActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const localeText = useLocaleText();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
@@ -80,7 +80,7 @@ function CustomActionBar(props: PickersActionBarProps) {
   });
 
   return (
-    <DialogActions>
+    <DialogActions className={className}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}

@@ -83,16 +83,6 @@ In the example below, the actions are the same as in the section above, but they
 
 {{"demo": "ActionBarComponent.js"}}
 
-## Paper content
-
-The paper content is available on all desktop and static picker components.
-It adds a flexible way to extend what is rendered in the picker paper.
-
-You can provide any custom component to this slot as long as it passes `children` down maintaining original picker behavior.
-In the examples below we provide ways of implementing date range shortcuts using this slot.
-
-{{"demo": "PaperContentComponent.js", "defaultCodeOpen": false, "disableAd": true}}
-
 ## Tabs
 
 The tabs are available on all date time picker components.

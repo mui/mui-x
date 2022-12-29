@@ -42,9 +42,9 @@ export default function ArrowSwitcherComponent() {
           onChange={handleCurrentComponentChange}
           exclusive
         >
-          <ToggleButton value={'date'}>date picker</ToggleButton>
-          <ToggleButton value={'time'}>time picker</ToggleButton>
-          <ToggleButton value={'dateRange'}>date range picker</ToggleButton>
+          <ToggleButton value={'date'}>date</ToggleButton>
+          <ToggleButton value={'time'}>time</ToggleButton>
+          <ToggleButton value={'dateRange'}>date range</ToggleButton>
         </ToggleButtonGroup>
         {currentComponent === 'date' && (
           <DateCalendar defaultValue={dayjs('2022-04-07')} components={components} />
