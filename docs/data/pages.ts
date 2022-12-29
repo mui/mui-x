@@ -178,11 +178,13 @@ const pages: MuiPage[] = [
         scopePathnames: [
           '/x/react-date-pickers/time-picker',
           '/x/react-date-pickers/time-field',
+          '/x/react-date-pickers/time-clock',
           '/x/react-date-pickers/legacy-time-picker',
         ],
         children: [
-          { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker' },
+          { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker', newFeature: true },
           { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
+          { pathname: '/x/react-date-pickers/time-clock', title: 'Time Clock' },
           { pathname: '/x/react-date-pickers/legacy-time-picker', title: 'Legacy Time Picker' },
         ],
       },
@@ -195,7 +197,11 @@ const pages: MuiPage[] = [
           '/x/react-date-pickers/legacy-date-time-picker',
         ],
         children: [
-          { pathname: '/x/react-date-pickers/date-time-picker', title: 'Date Time Picker' },
+          {
+            pathname: '/x/react-date-pickers/date-time-picker',
+            title: 'Date Time Picker',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-date-pickers/date-time-field',
             title: 'Date Time Field',
@@ -217,7 +223,11 @@ const pages: MuiPage[] = [
           '/x/react-date-pickers/legacy-date-range-picker',
         ],
         children: [
-          { pathname: '/x/react-date-pickers/date-range-picker', title: 'Date Range Picker' },
+          {
+            pathname: '/x/react-date-pickers/date-range-picker',
+            title: 'Date Range Picker',
+            newFeature: true,
+          },
           {
             pathname: '/x/react-date-pickers/date-range-field',
             title: 'Date Range Field',

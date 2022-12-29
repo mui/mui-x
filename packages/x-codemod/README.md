@@ -70,12 +70,37 @@ npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`view-components-rename`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 
+#### `view-components-rename`
+
+Renames the view components
+
+```diff
+-<CalendarPicker {...props} />
++<DateCalendar {...props} />
+
+-<DayPicker {...props} />
++<DayCalendar {...props} />
+
+-<CalendarPickerSkeleton {...props} />
++<DayCalendarSkeleton {...props} />
+
+-<MonthPicker {...props} />
++<MonthCalendar {...props} />
+
+-<YearPicker {...props} />
++<YearCalendar {...props} />
+
+-<ClockPicker {...props} />
++<TimeClock {...props} />
+```
+
 #### `localization-provider-rename-locale`
 
-Renames `locale` into `adapterLocale` (or `LocalizationProvider`)
+Renames the `locale` prop of the `LocalizationProvider` component into `adapterLocale`.
 
 ```diff
  <LocalizationProvider
@@ -94,7 +119,7 @@ npx @mui/x-codemod v6.0.0/localization-provider-rename-locale <path>
 
 #### `text-props-to-localeText`
 
-Replace props used for localization such as `cancelText` to their corresponding `localeText` key.
+Replace props used for localization such as `cancelText` to their corresponding `localeText` key on all the Date and Time Pickers components.
 
 ```diff
  <DatePicker
