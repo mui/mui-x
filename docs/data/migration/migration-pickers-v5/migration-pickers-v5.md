@@ -169,22 +169,22 @@ Component names in the theme have changed as well:
 +MuiTimeClock: {
 ```
 
-### Rename `date` prop to `value`
+### ✅ Rename `date` prop to `value`
 
 The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
--<MonthPicker date={dayjs()} onChange={handleMonthChange} />
-+<MonthCalendar value={dayjs()} onChange={handleMonthChange} />
+-<MonthPicker date={dayjs()} />
++<MonthCalendar value={dayjs()} />
 
--<YearPicker date={dayjs()} onChange={handleYearChange} />
-+<YearCalendar value={dayjs()} onChange={handleYearChange} />
+-<YearPicker date={dayjs()} />
++<YearCalendar value={dayjs()} />
 
--<ClockPicker date={dayjs()} onChange={handleTimeChange} />
-+<TimeClock value={dayjs()} onChange={handleTimeChange} />
+-<ClockPicker date={dayjs()} />
++<TimeClock value={dayjs()} />
 
--<CalendarPicker date={dayjs()} onChange={handleDateChange} />
-+<DateCalendar value={dayjs()} onChange={handleDateChange} />
+-<CalendarPicker date={dayjs()} />
++<DateCalendar value={dayjs()} />
 ```
 
 ### Use the 12h/24h format from the locale as the default value of the `ampm` prop on `TimeClock`

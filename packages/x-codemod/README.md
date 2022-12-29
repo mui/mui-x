@@ -98,6 +98,24 @@ Renames the view components
 +<TimeClock {...props} />
 ```
 
+#### `view-components-rename-value-prop`
+
+Renames the `date` prop of the view components into `value`
+
+```diff
+-<MonthPicker date={dayjs()} />
++<MonthCalendar value={dayjs()} />
+
+-<YearPicker date={dayjs()} />
++<YearCalendar value={dayjs()} />
+
+-<ClockPicker date={dayjs()} />
++<TimeClock value={dayjs()} />
+
+-<CalendarPicker date={dayjs()} />
++<DateCalendar value={dayjs()} />
+```
+
 #### `localization-provider-rename-locale`
 
 Renames the `locale` prop of the `LocalizationProvider` component into `adapterLocale`.
