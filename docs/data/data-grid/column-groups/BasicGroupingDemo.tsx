@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  DataGridPro,
+  DataGrid,
   GridColDef,
   GridColumnGroupingModel,
-} from '@mui/x-data-grid-pro';
+} from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -58,7 +58,7 @@ const columnGroupingModel: GridColumnGroupingModel = [
 export default function BasicGroupingDemo() {
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro
+      <DataGrid
         experimentalFeatures={{ columnGrouping: true }}
         rows={rows}
         columns={columns}
