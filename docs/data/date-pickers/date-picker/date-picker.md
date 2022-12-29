@@ -19,21 +19,14 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 (`NextDatePicker` will become `DatePicker`, ...)
 :::
 
-Date pickers are displayed with:
-
-- Dialogs on mobile
-- Text field dropdowns on desktop
-
 ## Basic usage
-
-The Date Picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
 
 {{"demo": "BasicDatePicker.js"}}
 
 ## Component composition
 
-The Date Picker components are built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
-All the documented props of those two components can also be passed to the Date Picker components.
+The Date Picker component is built using the `DateField` for the keyboard editing, and the `DateCalendar` for the view editing.
+All the documented props of those two components can also be passed to the Date Picker component.
 
 Check-out their documentation page for more information:
 
@@ -42,27 +35,34 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The Date Picker component can be uncontrolled or controlled
 
 {{"demo": "DatePickerValue.js"}}
 
 ## Responsiveness
 
-The Date Picker component is designed and optimized for the device it runs on.
+The Date Picker component is available in three variants:
 
-- The `MobileNextDatePicker` component works best for touch devices and small screens.
-- The `DesktopNextDatePicker` component works best for mouse devices and large screens.
+- The `DesktopNextDatePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
 
-By default, the `NextDatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-This can be customized with the `desktopModeMediaQuery` prop.
+- The `MobileNextDatePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+- The `NextDatePicker` component which will render `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
+
+  By default, it renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+  This can be customized with the `desktopModeMediaQuery` prop.
 
 {{"demo": "ResponsiveDatePickers.js"}}
 
+:::warning
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+:::
+
 ## Static mode
 
-It is also possible to render the Date Picker without the modal/popover and text field.
+It is also possible to render the Date Picker without the popover/modal and field.
 This can be helpful when building custom popover/modal containers.
 
 {{"demo": "StaticDatePickerDemo.js", "bg": true}}
@@ -75,7 +75,7 @@ The Date Picker component can be disabled or read-only.
 
 ## Views
 
-The component can contain three views: `day`, `month`, and `year`.
+The Date Picker component can contain three views: `day`, `month`, and `year`.
 By default, only the `day` and `year` views are enabled.
 
 You can customize the enabled views using the `views` prop.
@@ -85,7 +85,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## Landscape orientation
 
-By default, the Date Picker automatically sets the orientation based on the `window.orientation` value.
+By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.
 
 You can force a specific orientation using the `orientation` prop.
 

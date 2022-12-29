@@ -1,4 +1,1 @@
-<StaticNextTimePicker
-  defaultValue={dayjs('2022-04-07')}
-  orientation="landscape"
-/>
+<StaticNextTimePicker orientation="landscape" />

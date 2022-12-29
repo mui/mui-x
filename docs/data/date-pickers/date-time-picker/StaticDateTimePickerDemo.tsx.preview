@@ -1,4 +1,1 @@
-<StaticNextDateTimePicker
-  displayStaticWrapperAs="desktop"
-  defaultValue={dayjs('2022-04-07T15:30')}
-/>
+<StaticNextDateTimePicker />

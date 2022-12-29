@@ -6,7 +6,7 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 export default function StaticDatePickerDemo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker displayStaticWrapperAs="desktop" />
+      <StaticNextDatePicker />
     </LocalizationProvider>
   );
 }

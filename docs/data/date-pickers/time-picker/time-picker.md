@@ -19,18 +19,14 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 (`NextTimePicker` will become `TimePicker`, ...)
 :::
 
-The selected time is indicated by the filled circle at the end of the clock hand.
-
 ## Basic usage
-
-The Time Picker is rendered as a modal dialog on mobile, and in the field on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 
 ## Component composition
 
-The Time Picker components are built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
-All the documented props of those two components can also be passed to the Time Picker components.
+The Time Picker component is built using the `TimeField` for the keyboard editing, and the `TimeClock` for the view editing.
+All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
 
@@ -39,27 +35,34 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The Time Picker component can be uncontrolled or controlled
 
 {{"demo": "TimePickerValue.js"}}
 
 ## Responsiveness
 
-The Time picker Component is designed and optimized for the device it runs on.
+The Time Picker component is available in three variants:
 
-- The `MobileNextTimePicker` component works best for touch devices and small screens.
-- The `DesktopNextTimePicker` component works best for mouse devices and large screens.
+- The `DesktopNextTimePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
 
-By default, the `NextTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-This can be customized with the `desktopModeMediaQuery` prop.
+- The `MobileNextTimePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+- The `NextTimePicker` component which will render `DesktopNextTimePicker` or `MobileNextTimePicker` depending on the device it runs on.
+
+  By default, it renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+  This can be customized with the `desktopModeMediaQuery` prop.
 
 {{"demo": "ResponsiveTimePickers.js"}}
 
+:::warning
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+:::
+
 ## Static mode
 
-It is also possible to render any Time Picker without the modal/popover and text field.
+It is also possible to render any Time Picker without the popover/modal and field.
 This will enable building custom popover/modal containers.
 
 {{"demo": "StaticTimePickerDemo.js", "bg": true}}
@@ -72,7 +75,7 @@ The Time Picker component can be disabled or read-only.
 
 ## Views
 
-The component can contain three views: `hours`, `minutes`, and `seconds`.
+The Time Picker component can contain three views: `hours`, `minutes`, and `seconds`.
 By default, only the `hours` and `minutes` views are enabled.
 
 You can customize the enabled views using the `views` prop.
@@ -82,7 +85,7 @@ Views will appear in the order they're included in the `views` array.
 
 ## Landscape orientation
 
-By default, the Time Picker automatically sets the orientation based on the `window.orientation` value.
+By default, the Time Picker component automatically sets the orientation based on the `window.orientation` value.
 
 You can force a specific orientation using the `orientation` prop.
 
