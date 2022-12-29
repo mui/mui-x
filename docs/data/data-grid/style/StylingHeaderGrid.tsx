@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { GridColumns, DataGrid } from '@mui/x-data-grid';
+import { GridColDef, DataGrid } from '@mui/x-data-grid';
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',

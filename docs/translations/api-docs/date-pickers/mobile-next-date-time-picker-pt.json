@@ -71,6 +71,7 @@
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Input": "Component used to render an HTML input inside the field.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
