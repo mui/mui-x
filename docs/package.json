@@ -72,7 +72,7 @@
     "react": "^18.2.0",
     "react-docgen": "^5.4.3",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.40.0",
+    "react-hook-form": "^7.41.2",
     "react-is": "^18.2.0",
     "react-router": "^6.4.5",
     "react-router-dom": "^6.4.5",
