@@ -17,6 +17,25 @@ Since v6 is a major release, it contains some changes that affect the public API
 These changes were done for consistency, improve stability and make room for new features.
 Below are described the steps you need to take to migrate from v5 to v6.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6 for both the Date and Time Pickers and DataGrid.
+It should be only applied **once per folder.**
+
+```sh
+npx @mui/x-codemod v6.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#-preset-safe) for more details.
+:::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v6.0.0/preset-safe` codemod, then you should not need to take any further action on these items.
+
+All other changes must be handled manually.
+
 ## Picker components rewrite
 
 ### Update format of the `value` prop
@@ -104,7 +123,7 @@ Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading)
 
 ## View components
 
-### Rename components
+### ✅ Rename components
 
 The view components allowing to pick a time, a date or parts of a date without an input have been renamed to better fit their usage:
 
@@ -182,7 +201,7 @@ If you want to keep the previous behavior, you just have to set the `ampm` prop 
 
 ## Localization
 
-### Rename localization props
+### ✅ Rename localization props
 
 The props used to set the text displayed in the pickers have been replaced by keys inside the `localeText` prop:
 
@@ -211,7 +230,7 @@ For instance if you want to replace the `startText` / `endText`
  />
 ```
 
-### Rename `locale` prop on `LocalizationProvider`
+### ✅ Rename `locale` prop on `LocalizationProvider`
 
 The `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 
