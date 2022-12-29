@@ -1,16 +1,18 @@
 import * as React from 'react';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from '../../components/PickersViewLayout';
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '../../../PickersLayout/PickersLayout.types';
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
+import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseStaticPickerSlotsComponent extends ExportedPickersViewLayoutSlotsComponent {}
+export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {}
+  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -24,14 +26,18 @@ export interface StaticOnlyPickerProps {
   autoFocus?: boolean;
 }
 
-export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends BaseNextPickerProps<TDate | null, TDate, TView, TError>,
+export interface UseStaticPickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
+> extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: UseStaticPickerSlotsComponent;
+  components?: UseStaticPickerSlotsComponent<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -42,14 +48,14 @@ export interface UseStaticPickerProps<TDate, TView extends DateOrTimeView, TErro
 export interface UseStaticPickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<TDate | null, TDate, TView, TExternalProps, {}>,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
   /**
    * Ref to pass to the root element
    */
-  ref: React.Ref<HTMLDivElement> | undefined;
+  ref?: React.Ref<HTMLDivElement>;
 }

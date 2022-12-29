@@ -87,6 +87,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobrazit sloupce',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
   columnMenuUnsort: 'Zrušit filtry',

@@ -80,6 +80,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Visa kolumner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrera',
   columnMenuHideColumn: 'Dölj',
   columnMenuUnsort: 'Osortera',

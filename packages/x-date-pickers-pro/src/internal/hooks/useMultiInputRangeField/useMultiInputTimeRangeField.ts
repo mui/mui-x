@@ -57,7 +57,7 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   const sharedProps = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange } = sharedProps;
+  const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
@@ -94,6 +94,8 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   const startInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
     ...inStartInputProps,
     format,
+    disabled,
+    readOnly,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
@@ -102,6 +104,8 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   const endInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
     ...inEndInputProps,
     format,
+    disabled,
+    readOnly,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,

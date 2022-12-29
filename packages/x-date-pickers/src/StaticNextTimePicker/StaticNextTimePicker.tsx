@@ -3,20 +3,15 @@ import PropTypes from 'prop-types';
 import { TimeView } from '@mui/x-date-pickers/internals';
 import { StaticNextTimePickerProps } from './StaticNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
+import { renderTimeViewClock } from '../timeViewRenderers';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { renderTimeView } from '../internals/utils/viewRenderers';
 import { validateTime } from '../internals/hooks/validation/useTimeValidation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticTimePickerComponent = (<TDate>(
   props: StaticNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  hours: renderTimeView,
-  minutes: renderTimeView,
-  seconds: renderTimeView,
-};
 
 const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDate>(
   inProps: StaticNextTimePickerProps<TDate>,
@@ -29,9 +24,17 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDat
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     showViewSwitcher: displayStaticWrapperAs === 'desktop',
@@ -40,7 +43,6 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDat
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    viewLookup: VIEW_LOOKUP,
     ref,
     validator: validateTime,
   });
@@ -64,7 +66,10 @@ StaticNextTimePicker.propTypes = {
    */
   ampmInClock: PropTypes.bool,
   /**
-   * If `true`, the view is focused during the first mount.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
    */
   autoFocus: PropTypes.bool,
   /**
@@ -155,12 +160,14 @@ StaticNextTimePicker.propTypes = {
   onError: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
   /**
@@ -194,7 +201,23 @@ StaticNextTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    seconds: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired),
 } as any;

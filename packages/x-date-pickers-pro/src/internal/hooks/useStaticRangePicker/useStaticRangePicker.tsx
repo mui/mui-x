@@ -2,12 +2,14 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
   DateOrTimeView,
   usePicker,
   WrapperVariantContext,
-  PickersViewLayout,
   DIALOG_WIDTH,
-  PickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -16,11 +18,11 @@ import {
 } from './useStaticRangePicker.types';
 import { DateRange, RangePosition } from '../../models/range';
 
-const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersViewLayout;
+})) as unknown as typeof PickersLayout;
 
 /**
  * Hook managing all the range static pickers:
@@ -29,11 +31,10 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
 export const useStaticRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
@@ -41,9 +42,14 @@ export const useStaticRangePicker = <
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
-  const { layoutProps, renderCurrentView } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    {}
+  >({
     props,
-    viewLookup,
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,
@@ -51,7 +57,8 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const Layout = components?.Layout ?? PickerStaticLayout;
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
@@ -63,14 +70,14 @@ export const useStaticRangePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
           components={components}
           componentsProps={componentsPropsForLayout}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

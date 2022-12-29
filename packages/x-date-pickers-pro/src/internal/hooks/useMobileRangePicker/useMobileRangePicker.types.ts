@@ -4,22 +4,25 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
+import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
+  UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-export interface UseMobileRangePickerSlotsComponent
+export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -32,7 +35,7 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
@@ -46,14 +49,25 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
 
 export interface MobileRangeOnlyPickerProps<TDate> extends MobileOnlyPickerProps<TDate> {}
 
-export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends MobileRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
+export interface UseMobileRangePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends MobileRangeOnlyPickerProps<TDate>,
+    BaseNextPickerProps<
+      DateRange<TDate>,
+      TDate,
+      TView,
+      TError,
+      TExternalProps,
+      MobileRangePickerAdditionalViewProps
+    > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components: UseMobileRangePickerSlotsComponent;
+  components: UseMobileRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -61,12 +75,12 @@ export interface UseMobileRangePickerProps<TDate, TView extends DateOrTimeView, 
   componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseMobileRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobileRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,
@@ -75,7 +89,7 @@ export interface UseMobileRangePickerParams<
       TExternalProps,
       MobileRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
 }

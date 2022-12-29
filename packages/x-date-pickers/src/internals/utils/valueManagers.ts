@@ -6,7 +6,7 @@ import type { FieldSection, FieldValueManager } from '../hooks/useField';
 import { replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   splitFormatIntoSections,
   getSectionOrder,
 } from '../hooks/useField/useField.utils';
@@ -36,7 +36,7 @@ export const singleItemFieldValueManager: FieldValueManager<
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
+  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,

@@ -11,7 +11,7 @@ import {
   UseFieldInternalProps,
 } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
-import { UseFieldValidationProps } from '../useField/useField.interfaces';
+import { UseFieldValidationProps } from '../useField/useField.types';
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -200,7 +200,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 }
 
 /**
- * Props passed to `usePickerLayout`.
+ * Props passed to `usePickerLayoutProps`.
  */
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;

@@ -10,7 +10,7 @@
     "checkboxSelection": "If <code>true</code>, the grid get a first column with a checkbox that allows to select rows.",
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "columnBuffer": "Number of extra columns to be rendered before/after the visible slice.",
-    "columns": "Set of columns of type GridColumns.",
+    "columns": "Set of columns of type GridColDef[].",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
@@ -696,6 +696,12 @@
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
     "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "QuickFilterIcon": "Icon displayed on the quick filter input.",
-    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "ColumnMenuHideIcon": "Icon displayed in column menu for hiding column",
+    "ColumnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
+    "ColumnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "ColumnMenuFilterIcon": "Icon displayed in column menu for filter",
+    "ColumnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
+    "ColumnMenuClearIcon": "Icon displayed in column menu for clearing values"
   }
 }

@@ -126,7 +126,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
       </Typography>
       <PickersToolbarContent
         container
-        justifyContent="space-between"
+        justifyContent={isLandscape ? 'flex-start' : 'space-between'}
         className={classes.content}
         ownerState={ownerState}
         direction={isLandscape ? landscapeDirection : 'row'}

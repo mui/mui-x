@@ -41,7 +41,7 @@ export interface ExportedTimeClockProps<TDate>
     BaseTimeValidationProps {
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
   /**
@@ -162,6 +162,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>();
+  const utils = useUtils<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -169,7 +171,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   });
 
   const {
-    ampm = false,
+    ampm = utils.is12HourCycleInCurrentLocale(),
     ampmInClock = false,
     autoFocus,
     components,
@@ -185,7 +187,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     showViewSwitcher,
     onChange,
     defaultValue,
-    view,
+    view: inView,
     views = ['hours', 'minutes'],
     openTo,
     onViewChange,
@@ -209,16 +211,13 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     },
   );
 
-  const { openView, setOpenView, nextView, previousView, handleChangeAndOpenNext } = useViews({
-    view,
+  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
+    view: inView,
     views,
     openTo,
     onViewChange,
     onChange: handleValueChange,
   });
-
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -228,7 +227,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
     selectedTimeOrMidnight,
     ampm,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
   );
 
   const isTimeDisabled = React.useCallback(
@@ -321,11 +320,11 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   const viewProps = React.useMemo<
     Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
   >(() => {
-    switch (openView) {
+    switch (view) {
       case 'hours': {
         const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
           const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
-          handleChangeAndOpenNext(
+          setValueAndGoToNextView(
             utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
             isFinish,
           );
@@ -349,7 +348,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'minutes': {
         const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
         const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
+          setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
         };
 
         return {
@@ -369,7 +368,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       case 'seconds': {
         const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
         const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-          handleChangeAndOpenNext(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
+          setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
         };
 
         return {
@@ -390,7 +389,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         throw new Error('You must provide the type for ClockView');
     }
   }, [
-    openView,
+    view,
     utils,
     value,
     ampm,
@@ -398,7 +397,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     localeText.minutesClockNumberText,
     localeText.secondsClockNumberText,
     meridiemMode,
-    handleChangeAndOpenNext,
+    setValueAndGoToNextView,
     selectedTimeOrMidnight,
     isTimeDisabled,
     selectedId,
@@ -420,10 +419,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
-          onGoToPrevious={() => setOpenView(previousView)}
+          onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}
-          onGoToNext={() => setOpenView(nextView)}
+          onGoToNext={() => setView(nextView!)}
           isNextDisabled={!nextView}
           nextLabel={localeText.openNextView}
           ownerState={ownerState}
@@ -434,7 +433,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         autoFocus={autoFocus}
         ampmInClock={ampmInClock}
         value={value}
-        type={openView}
+        type={view}
         ampm={ampm}
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
@@ -456,7 +455,7 @@ TimeClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**

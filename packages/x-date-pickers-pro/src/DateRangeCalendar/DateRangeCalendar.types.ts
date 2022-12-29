@@ -14,6 +14,7 @@ import {
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
+  ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -44,45 +45,12 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
   >;
 }
 
-export interface DateRangeCalendarProps<TDate>
+export interface ExportedDateRangeCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
-    Partial<RangePositionProps> {
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: DateRange<TDate>;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: DateRange<TDate>;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {DateRange<TDate>} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
-   */
-  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
-  autoFocus?: boolean;
-  className?: string;
-  classes?: Partial<DateRangeCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateRangeCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+    // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
+    Pick<ExportedUseViewsOptions<'day'>, 'autoFocus'> {
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -126,6 +94,44 @@ export interface DateRangeCalendarProps<TDate>
   disableDragEditing?: boolean;
 }
 
+export interface DateRangeCalendarProps<TDate>
+  extends ExportedDateRangeCalendarProps<TDate>,
+    Partial<RangePositionProps> {
+  /**
+   * The selected value.
+   * Used when the component is controlled.
+   */
+  value?: DateRange<TDate>;
+  /**
+   * The default selected value.
+   * Used when the component is not controlled.
+   */
+  defaultValue?: DateRange<TDate>;
+  /**
+   * Callback fired when the value changes.
+   * @template TDate
+   * @param {DateRange<TDate>} value The new value.
+   * @param {PickerSelectionState | undefined} selectionState Indicates if the date range selection is complete.
+   */
+  onChange?: (value: DateRange<TDate>, selectionState?: PickerSelectionState) => void;
+  className?: string;
+  classes?: Partial<DateRangeCalendarClasses>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: DateRangeCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+}
+
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {
   isDragging: boolean;
 }
@@ -133,20 +139,4 @@ export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarPro
 export type DateRangeCalendarDefaultizedProps<TDate> = DefaultizedProps<
   DateRangeCalendarProps<TDate>,
   'reduceAnimations' | 'calendars' | 'disableDragEditing' | keyof BaseDateValidationProps<TDate>
->;
-
-export type ExportedDateRangeCalendarProps<TDate> = Omit<
-  DateRangeCalendarProps<TDate>,
-  | 'defaultValue'
-  | 'value'
-  | 'onChange'
-  | 'changeView'
-  | 'slideDirection'
-  | 'currentMonth'
-  | 'className'
-  | 'classes'
-  | 'components'
-  | 'componentsProps'
-  | 'rangePosition'
-  | 'onRangePositionChange'
 >;
