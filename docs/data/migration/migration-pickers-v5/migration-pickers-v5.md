@@ -177,7 +177,7 @@ If you want to keep the previous behavior, you just have to set the `ampm` prop 
 
 ```diff
 - <ClockPicker />
-+ <TimeClock ampm />
++ <TimeClock ampm={false} />
 ```
 
 ## Localization
