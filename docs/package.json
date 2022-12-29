@@ -65,7 +65,7 @@
     "moment": "^2.29.4",
     "next": "^13.1.1",
     "nprogress": "^0.2.0",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.20",
     "prismjs": "^1.29.0",
     "prop-types": "^15.8.1",
     "raw-loader": "^1.0.0",
