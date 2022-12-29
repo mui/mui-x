@@ -15,7 +15,7 @@ Using `next` ensures that it will always use the latest v6 alpha release, but yo
 
 Since v6 is a major release, it contains some changes that affect the public API.
 These changes were done for consistency, improve stability and make room for new features.
-Below are described the steps you need to make to migrate from v5 to v6.
+Below are described the steps you need to take to migrate from v5 to v6.
 
 ## Picker components rewrite
 
@@ -502,7 +502,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 ## Rename remaining `private` components
 
-Previously we had 4 component names with `Private` prefix in order to avoid breaking changes in v5.
+The four components prefixed with `Private` are now stable.
 These components were renamed:
 
 - `PrivatePickersMonth` -> `MuiPickersMonth`
