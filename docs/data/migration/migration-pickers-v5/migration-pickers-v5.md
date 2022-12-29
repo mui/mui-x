@@ -168,6 +168,18 @@ The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `Ti
 +<DateCalendar value={dayjs()} onChange={handleDateChange} />
 ```
 
+### Use the 12h/24h format from the locale as the default value of the `ampm` prop on `TimeClock`
+
+The default value of the `ampm` prop changed from `false` to `utils.is12HourCycleInCurrentLocale()`.
+It means that the `TimeClock` component will use a 12h time format for locales where the time is usually displayed with a 12h format.
+
+If you want to keep the previous behavior, you just have to set the `ampm` prop to `false` (components renamed in previous section):
+
+```diff
+- <ClockPicker />
++ <TimeClock ampm />
+```
+
 ## Localization
 
 ### Rename localization props
