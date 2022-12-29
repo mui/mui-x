@@ -35,4 +35,8 @@ export interface ExportedBaseToolbarProps {
    * @default "––"
    */
   toolbarPlaceholder?: React.ReactNode;
+  /**
+   * className applied to the root component.
+   */
+  className?: string;
 }

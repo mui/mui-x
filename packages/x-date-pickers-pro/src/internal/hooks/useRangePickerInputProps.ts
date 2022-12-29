@@ -81,6 +81,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     }
   };
 
+  const readOnlyInput = readOnly ?? wrapperVariant === 'mobile';
+
   const startInputProps = {
     inputRef: startRef,
     label: inLocaleText?.start ?? localeText.start,
@@ -90,9 +92,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeStartSelection }),
-    inputProps: {
-      readOnly: wrapperVariant === 'mobile',
-    },
+    readOnly: readOnlyInput,
+    disabled,
   };
 
   const endInputProps = {
@@ -104,9 +105,8 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
     // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
     ...(!readOnly && !disabled && { onClick: openRangeEndSelection }),
-    inputProps: {
-      readOnly: wrapperVariant === 'mobile',
-    },
+    readOnly: readOnlyInput,
+    disabled,
   };
 
   const rootProps = {

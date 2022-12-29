@@ -67,8 +67,6 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
 }
 
 declare module '@mui/x-data-grid-pro' {
-  interface GridColDef<R, V, F> extends GridColDefPremium<R, V, F> {}
-
   interface GridControlledStateEventLookup
     extends GridControlledStateEventLookupPro,
       GridControlledStateEventLookupPremium {}
@@ -82,4 +80,6 @@ declare module '@mui/x-data-grid-pro' {
 
 declare module '@mui/x-data-grid-pro/internals' {
   interface GridApiCaches extends GridApiCachesPremium {}
+
+  interface GridBaseColDef<R, V, F> extends GridColDefPremium<R, V, F> {}
 }

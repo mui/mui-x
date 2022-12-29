@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -213,7 +216,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     containerDimensions,
   ]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (disableVirtualization) {
       renderZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
     } else {
@@ -223,7 +226,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
   }, [disableVirtualization]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     setContainerDimensions({
       width: rootRef.current!.clientWidth,
       height: rootRef.current!.clientHeight,
@@ -312,7 +315,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     [apiRef, setRenderContext, prevRenderContext, currentPage.rows.length, rootProps.rowBuffer],
   );
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerDimensions.width == null) {
       return;
     }
@@ -541,7 +544,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [apiRef, contentSize]);
 
   if (rootProps.autoHeight && currentPage.rows.length === 0) {
-    contentSize.height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    contentSize.height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
 
   const rootStyle = {} as React.CSSProperties;
