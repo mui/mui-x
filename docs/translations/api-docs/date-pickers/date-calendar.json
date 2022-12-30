@@ -43,12 +43,12 @@
     }
   },
   "slotDescriptions": {
-    "SwitchViewButton": "Button displayed to switch between different calendar views.",
-    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "PreviousIconButton": "Button allowing to switch to the left view.",
-    "NextIconButton": "Button allowing to switch to the right view.",
+    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component."
+    "SwitchViewButton": "Button displayed to switch between different calendar views.",
+    "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;."
   }
 }
