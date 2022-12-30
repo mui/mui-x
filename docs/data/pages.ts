@@ -2,7 +2,7 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/introduction',
+    pathname: '/x/introduction-group',
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
@@ -13,7 +13,7 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/react-data-grid',
+    pathname: '/x/react-data-grid-group',
     title: 'Data Grid',
     icon: 'TableViewIcon',
     children: [
@@ -66,7 +66,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
       {
-        pathname: '/x/react-data-grid/row-grouping',
+        pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
@@ -77,7 +77,7 @@ const pages: MuiPage[] = [
       },
       {
         title: 'Advanced',
-        pathname: '/x/react-data-grid/api-object',
+        pathname: '/x/react-data-grid/advanced',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
@@ -93,7 +93,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/api/data-grid',
+        pathname: '/x/api/data-grid-group',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
@@ -139,7 +139,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
       {
-        pathname: '/x/react-date-pickers/date-picker',
+        pathname: '/x/react-date-pickers/date-pickers',
         title: 'Date components',
         children: [
           { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker', newFeature: true },
@@ -149,7 +149,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/time-picker',
+        pathname: '/x/react-date-pickers/time-pickers',
         title: 'Time components',
         children: [
           { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker', newFeature: true },
@@ -159,7 +159,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/date-time-picker',
+        pathname: '/x/react-date-pickers/date-time-pickers',
         title: 'Date Time components',
         children: [
           {
@@ -179,7 +179,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/date-range-picker',
+        pathname: '/x/react-date-pickers/date-range-pickers',
         title: 'Date Range components',
         plan: 'pro',
         children: [
@@ -200,7 +200,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/time-range-picker',
+        pathname: '/x/react-date-pickers/time-range-pickers',
         title: 'Time Range components',
         plan: 'pro',
         children: [
@@ -213,7 +213,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/react-date-pickers/date-time-range-picker',
+        pathname: '/x/react-date-pickers/date-time-range-pickers',
         title: 'Date Time Range components',
         plan: 'pro',
         children: [
@@ -230,7 +230,7 @@ const pages: MuiPage[] = [
       },
       { pathname: '/x/react-date-pickers/validation' },
       {
-        pathname: '/x/react-date-pickers/localization',
+        pathname: '/x/react-date-pickers/localization-group',
         title: 'Localization',
         children: [
           {
@@ -402,12 +402,12 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/migration',
+    pathname: '/x/migration-group',
     title: 'Migration',
     icon: 'BookIcon',
     children: [
       {
-        pathname: '/x/migration',
+        pathname: '/x/migration-v6',
         subheader: 'Upgrade to v6',
         children: [
           { pathname: '/x/migration/migration-data-grid-v5', title: 'Breaking changes: Data Grid' },
@@ -418,7 +418,7 @@ const pages: MuiPage[] = [
         ],
       },
       {
-        pathname: '/x/migration',
+        pathname: '/x/migration-earlier',
         subheader: 'Earlier versions',
         children: [
           {
