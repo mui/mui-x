@@ -71,6 +71,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 The list includes these transformers
 
 - [`view-components-rename`](#view-components-rename)
+- [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 
