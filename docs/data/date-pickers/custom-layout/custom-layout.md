@@ -72,7 +72,10 @@ Use the `usePickerLayout` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx
-import { usePickerLayout, PickersLayoutRoot } from '@mui/x-date-pickers/PickersLayout';
+import {
+  usePickerLayout,
+  PickersLayoutRoot,
+} from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
