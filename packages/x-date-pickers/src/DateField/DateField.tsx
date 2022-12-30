@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
+import { unstable_useId as useId } from '@mui/utils';
+import Box from '@mui/material/Box';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
+import { useUtils } from '../internals';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -18,6 +21,10 @@ const DateField = React.forwardRef(function DateField<TDate>(
     props: inProps,
     name: 'MuiDateField',
   });
+  const dateUsageLabelId = useId();
+  const selectedDateLabelId = useId();
+  const dateLabelId = useId();
+  const utils = useUtils<TDate>();
 
   const { components, componentsProps, ...other } = themeProps;
 
@@ -36,6 +43,7 @@ const DateField = React.forwardRef(function DateField<TDate>(
     onPaste,
     inputMode,
     readOnly,
+    a11yAttributes,
     ...fieldProps
   } = useDateField<TDate, typeof inputProps>({
     props: inputProps,
@@ -43,11 +51,51 @@ const DateField = React.forwardRef(function DateField<TDate>(
   });
 
   return (
-    <Input
-      ref={ref}
-      {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
-    />
+    <Box
+      role="group"
+      aria-labelledby={dateUsageLabelId}
+      sx={{ display: 'inline-flex', flexDirection: 'column' }}
+    >
+      <Box
+        sx={{
+          clip: 'rect(0 0 0 0)',
+          'clip-path': 'inset(50%)',
+          height: '1px',
+          overflow: 'hidden',
+          position: 'absolute',
+          'white-space': 'nowrap',
+          width: '1px',
+        }}
+      >
+        <span id={dateUsageLabelId}>Choose a date by entering text or using steppers.</span>
+        <span id={selectedDateLabelId}>
+          {a11yAttributes && a11yAttributes.value
+            ? `Selected date: ${utils.format(a11yAttributes.value, 'fullDate')}.`
+            : ''}
+        </span>
+        <span id={dateLabelId}>
+          {a11yAttributes?.sectionLabel && `${a11yAttributes?.sectionLabel}.`}
+        </span>
+      </Box>
+      <Input
+        ref={ref}
+        {...fieldProps}
+        inputProps={{
+          ...fieldProps.inputProps,
+          ref: inputRef,
+          onPaste,
+          inputMode,
+          readOnly,
+          'aria-labelledby': [
+            a11yAttributes?.labelId && `${a11yAttributes.labelId}-label`,
+            dateLabelId,
+            selectedDateLabelId,
+          ]
+            .filter(Boolean)
+            .join(' '),
+        }}
+      />
+    </Box>
   );
 }) as DateFieldComponent;
 

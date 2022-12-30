@@ -2,9 +2,9 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { MuiDateSectionName } from '../../models/muiPickersAdapter';
+import { MuiDateSectionName, MuiPickersAdapter } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
-import { useUtils } from '../useUtils';
+import { useNow, useUtils } from '../useUtils';
 import {
   FieldSection,
   UseFieldParams,
@@ -13,6 +13,9 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
   FieldBoundaries,
+  UseFieldState,
+  FieldSelectedSectionsIndexes,
+  FieldA11YAttributes,
 } from './useField.types';
 import {
   getMonthsMatchingQuery,
@@ -25,6 +28,124 @@ import {
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
 
+// interface DynamicA11YProps
+//   extends Pick<
+//     UseFieldResponse<any>['inputProps'],
+//     'aria-valuemin' | 'aria-valuemax' | 'aria-label' | 'aria-valuetext' | 'aria-valuenow'
+//   > {}
+
+// const resolveDynamicA11yProps = <TDate>(
+//   state: UseFieldState<TDate, any>,
+//   selectedSectionIndexes: FieldSelectedSectionsIndexes | null,
+//   now: TDate,
+//   utils: MuiPickersAdapter<TDate>,
+// ): SpinButtonProps | null => {
+//   // if (!selectedSectionIndexes) {
+//   //   return null;
+//   // }
+//   let valueNow = 0;
+//   const currentSection =
+//     state.sections[selectedSectionIndexes ? selectedSectionIndexes.startIndex : 0];
+//   const currentSectionValue = Number(currentSection.value);
+//   if (!Number.isNaN(currentSectionValue)) {
+//     valueNow =
+//       currentSection.dateSectionName === 'month' ? currentSectionValue - 1 : currentSectionValue;
+//   }
+
+//   let valueMin = 0;
+//   let valueMax = 11;
+//   let label = 'Month';
+//   let valueText = currentSection.value || currentSection.formatValue;
+//   const dateValue = state.value && utils.isValid(state.value) ? state.value : now;
+//   switch (currentSection.dateSectionName) {
+//     case 'year': {
+//       valueMin = 2000;
+//       valueMax = 2100;
+//       label = 'Year';
+//       break;
+//     }
+//     case 'month': {
+//       valueMin = 0;
+//       valueMax = 11;
+//       label = 'Month';
+//       if (valueNow >= 0) {
+//         const newDate = utils.setMonth(dateValue, valueNow);
+//         valueText = utils.format(newDate, 'month');
+//       }
+//       break;
+//     }
+//     case 'day': {
+//       valueMin = 1;
+//       label = 'Day';
+//       if (valueNow) {
+//         const newDay = utils.setDate(dateValue, valueNow);
+//         valueMax = utils.getDaysInMonth(newDay);
+//         valueText = utils.format(newDay, 'dayOfMonthWithOrdinal');
+//       }
+//       break;
+//     }
+//     default:
+//       break;
+//   }
+//   return {
+//     'aria-valuemin': valueMin,
+//     'aria-valuemax': valueMax,
+//     'aria-label': label,
+//     'aria-valuenow': valueNow,
+//     'aria-valuetext': valueText,
+//     sectionValue: currentSection.value || currentSection.formatValue,
+//   };
+// };
+
+const resolveA11YAttributes = <TDate>(
+  labelId: string,
+  state: UseFieldState<TDate, any>,
+  selectedSectionIndexes: FieldSelectedSectionsIndexes | null,
+  now: TDate,
+  utils: MuiPickersAdapter<TDate>,
+): FieldA11YAttributes | null => {
+  let valueNow = 0;
+  const currentSection =
+    state.sections[selectedSectionIndexes ? selectedSectionIndexes.startIndex : 0];
+  const currentSectionValue = Number(currentSection.value);
+  if (!Number.isNaN(currentSectionValue)) {
+    valueNow =
+      currentSection.dateSectionName === 'month' ? currentSectionValue - 1 : currentSectionValue;
+  }
+
+  let label = 'Month';
+  let valueText = currentSection.value || currentSection.formatValue;
+  const dateValue = state.value && utils.isValid(state.value) ? state.value : now;
+  switch (currentSection.dateSectionName) {
+    case 'year': {
+      label = 'Year';
+      break;
+    }
+    case 'month': {
+      if (valueNow >= 0) {
+        const newDate = utils.setMonth(dateValue, valueNow);
+        valueText = utils.format(newDate, 'month');
+      }
+      break;
+    }
+    case 'day': {
+      label = 'Day';
+      if (valueNow) {
+        const newDay = utils.setDate(dateValue, valueNow);
+        valueText = utils.format(newDay, 'dayOfMonthWithOrdinal');
+      }
+      break;
+    }
+    default:
+      break;
+  }
+  return {
+    labelId,
+    sectionLabel: `${label} spinbutton ${valueText}`,
+    value: utils.isValid(state.value) ? state.value : null,
+  };
+};
+
 export const useField = <
   TValue,
   TDate,
@@ -35,6 +156,7 @@ export const useField = <
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
   const utils = useUtils<TDate>();
+  const now = useNow<TDate>();
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
@@ -508,6 +630,7 @@ export const useField = <
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
+    autoComplete: 'off',
     readOnly,
     onClick: handleInputClick,
     onFocus: handleInputFocus,
@@ -518,5 +641,15 @@ export const useField = <
     onMouseUp: handleInputMouseUp,
     error: inputError,
     ref: handleRef,
+    a11yAttributes: inputRef?.current?.id
+      ? resolveA11YAttributes<TDate>(
+          inputRef?.current?.id,
+          // TODO: remove typecasting
+          state as any,
+          selectedSectionIndexes,
+          now,
+          utils,
+        )
+      : null,
   };
 };

@@ -76,6 +76,12 @@ export interface UseFieldInternalProps<TValue, TError> {
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
 }
 
+export interface FieldA11YAttributes {
+  labelId: string;
+  sectionLabel?: string;
+  value?: any;
+}
+
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
@@ -95,6 +101,8 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
     readOnly: boolean;
+    autoComplete: string;
+    a11yAttributes?: FieldA11YAttributes | null;
   };
 
 export interface FieldSection {
