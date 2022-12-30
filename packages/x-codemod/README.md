@@ -70,14 +70,24 @@ npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`adapter-change-import`](#adapter-change-import)
 - [`view-components-rename`](#view-components-rename)
 - [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 
+#### `adapter-change-import`
+
+Import the adapters from `@mui/x-date-pickers` instead of `@date-io`.
+
+```diff
+-import AdapterJalaali from '@date-io/jalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
+```
+
 #### `view-components-rename`
 
-Renames the view components
+Renames the view components.
 
 ```diff
 -<CalendarPicker {...props} />
@@ -101,7 +111,7 @@ Renames the view components
 
 #### `view-components-rename-value-prop`
 
-Renames the `date` prop of the view components into `value`
+Renames the `date` prop of the view components into `value`.
 
 ```diff
 -<MonthPicker date={dayjs()} />
