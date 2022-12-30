@@ -9,7 +9,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return renameProps({
     root,
-    componentName: 'LocalizationProvider',
+    componentNames: ['LocalizationProvider'],
     props: { locale: 'adapterLocale' },
+    j,
   }).toSource(printOptions);
 }
