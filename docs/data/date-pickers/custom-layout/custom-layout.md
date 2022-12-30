@@ -76,6 +76,7 @@ import {
   usePickerLayout,
   PickersLayoutRoot,
   pickersLayoutClasses,
+  PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
