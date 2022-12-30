@@ -85,7 +85,7 @@ The `inputFormat` prop has been renamed `format` on all the pickers components.
 ```
 
 :::warning
-This change only applies to the new picker.
+This change only applies to the new pickers.
 The legacy pickers keep the `inputFormat` prop name until there removal.
 
 For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -180,6 +180,13 @@ The picker components no longer have a keyboard view to render the input inside 
   At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
   :::
 
+  :::warning
+  This change only applies to the new pickers.
+  The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
+
+  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  :::
+
 ### Change the DOM structure
 
 - The internal `CalendarOrClockPicker` component has been removed and all its element have been moved to the new `Layout` component slot.
@@ -205,7 +212,7 @@ The picker components no longer have a keyboard view to render the input inside 
   ```
 
   :::warning
-  These changes only apply to the new picker.
+  These changes only apply to the new pickers.
   The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -249,7 +256,7 @@ The picker components no longer have a keyboard view to render the input inside 
   ```
 
   :::warning
-  These changes only apply to the new picker.
+  These changes only apply to the new pickers.
   The legacy pickers keep the `PickerStaticWrapper` internal component until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -448,7 +455,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```
 
   :::warning
-  This change only applies to the new picker.
+  This change only applies to the new pickers.
   The legacy pickers keep the `renderInput` prop until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -749,7 +756,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```
 
   :::warning
-  This change only applies to the new picker.
+  This change only applies to the new pickers.
   The legacy pickers keep the `InputProps` prop until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -767,7 +774,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```
 
   :::warning
-  This change only applies to the new picker.
+  This change only applies to the new pickers.
   The legacy pickers keep the `InputAdornmentProps` prop until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
@@ -785,7 +792,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```
 
   :::warning
-  This change only applies to the new picker.
+  This change only applies to the new pickers.
   The legacy pickers keep the `OpenPickerButtonProps` prop until there removal.
 
   For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
