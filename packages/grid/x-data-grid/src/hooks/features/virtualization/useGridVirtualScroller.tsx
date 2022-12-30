@@ -291,7 +291,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   useLayoutEffectOnce(() => {
     const triggerGridReadyEvent = debounce(() => apiRef.current.publishEvent('gridReady'), 100);
-
     // check if the row have been populated before triggering the `gridReady` event.
     const unsubscribe = apiRef.current.subscribeEvent('stateChange', (newState) => {
       if (newState.rowsMeta.currentPageTotalHeight > 0) {
