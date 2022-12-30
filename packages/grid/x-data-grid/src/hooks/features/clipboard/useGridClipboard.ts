@@ -26,15 +26,15 @@ function writeToClipboardPolyfill(data: string) {
 }
 
 function hasNativeSelection(element: HTMLInputElement) {
-  if (window.getSelection()?.toString() !== '') {
+  // When getSelection is called on an <iframe> that is not displayed Firefox will return null.
+  if (window.getSelection() && window.getSelection()!.toString() !== '') {
     return true;
   }
 
-  if (!element) {
-    return false;
-  }
-
-  if ((element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
+  // window.getSelection() returns an empty string in Firefox for selections inside a form element.
+  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=85686.
+  // Instead, we can use element.selectionStart that is only defined on form elements.
+  if (element && (element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
     return true;
   }
 
