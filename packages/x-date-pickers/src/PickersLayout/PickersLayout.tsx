@@ -33,6 +33,7 @@ const PickersLayoutRoot = styled('div', {
       }
     : { gridColumn: '1 / 4', gridRow: 1 },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
+  [`& .${pickersLayoutClasses.contentWrapper}`]: { gridColumn: '1 / 4', gridRow: 2 },
 }));
 
 PickersLayoutRoot.propTypes = {
@@ -58,8 +59,6 @@ export const PickersLayoutContentWrapper = styled('div', {
   slot: 'ContentWrapper',
   overridesResolver: (props, styles) => styles.contentWrapper,
 })({
-  gridColumn: 2,
-  gridRow: 2,
   display: 'flex',
   flexDirection: 'column',
 });

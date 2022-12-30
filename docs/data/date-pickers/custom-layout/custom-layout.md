@@ -94,3 +94,12 @@ Here is the complete example with a fix for the tabulation order and an external
 Notice the use of `pickersLayoutClasses`, `PickersLayoutRoot`, and `PickersLayoutContentWrapper` to avoid rewriting the default CSS.
 
 {{"demo": "AddComponent.js", "defaultCodeOpen": false}}
+
+### Mobile keyboard view
+
+The previous versions of the mobile pickers had the ability to switch to a keyboard view inside the modal to edit directly with the input.
+
+This feature has been removed in v6 in favor of standalone field components and future editable field inside the pickers.
+But you can add back this feature using the `Layout` component slot:
+
+{{"demo": "MobileKeyboardView.js", "defaultCodeOpen": false}}
