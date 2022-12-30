@@ -154,13 +154,101 @@ const theme = createTheme({
 });
 ```
 
+### Remove the keyboard view
+
+The picker components no longer have a keyboard view to render the input inside the modal on mobile.
+
+- If your date is easier to edit with the keyboard (e.g: a birthdate), you can directly use the new field components:
+
+  ```diff
+   function App() {
+     return (
+  -    <DatePicker />
+  +    <DateField />
+     )
+   }
+  ```
+
+- If you want users to be able to edit with both the keyboard using the input and with the touch using the views,
+  you can pass a custom `Layout` component slot to re-introduce the keyboard view.
+
+  :::warning
+  TODO: Add a demo in the "Custom layout" page to add it back.
+  :::
+
+  :::info
+  At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
+  :::
+
+### Change the DOM structure
+
+- The internal `CalendarOrClockPicker` component has been removed and all its element have been moved to the new `Layout` component slot.
+
+  The DOM node containing the toolbar and the view content (the `root` slot of the `CalendarOrClockPicker` component) no longer exists.
+  The closest equivalent is now the `contentWrapper` slot of the `PickersLayout` component, which do not contain the toolbar.
+  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization)
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    MuiCalendarOrClockPicker: {
+  +    MuiPickersLayout: {
+         styleOverrides: {
+  -        root: {
+  +        contentWrapper: {
+             backgroundColor: 'red',
+           },
+         },
+       },
+     },
+   });
+  ```
+
+- The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    MuiPickerStaticWrapper: {
+  +    MuiPickersLayout: {
+         styleOverrides: {
+           root: {
+             opacity: 0.5,
+           },
+         },
+       },
+     },
+   });
+  ```
+
+  The DOM node containing the toolbar and the view content (the `content` slot of the `PickerStaticWrapper` component) no longer exists.
+  The closest equivalent is now the `contentWrapper` slot of the `PickersLayout` component, which do not contain the toolbar.
+  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization)
+
+  ```diff
+   const theme = createTheme({
+     components: {
+  -    MuiPickerStaticWrapper: {
+  +    MuiPickersLayout: {
+         styleOverrides: {
+  -        content: {
+  +        contentWrapper: {
+             opacity: 0.5,
+           },
+         },
+       },
+     },
+   });
+  ```
+
 ## Date library and adapters
 
 ### Do not import adapter from `@date-io`
 
 In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
-Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`. Otherwise, some methods will be missing.
+Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
+Otherwise, some methods will be missing.
 If you do not find the adapter you were using—there probably was a reason for it, but you can raise an issue expressing interest in it.
 
 ```diff
