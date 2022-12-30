@@ -121,7 +121,10 @@ function extractSlots(options: {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = (propInterface as ttp.InterfaceType).types;
+  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
+    a[0] > b[0] ? 1 : -1,
+  );
+
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
