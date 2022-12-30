@@ -3,7 +3,6 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 const pages: MuiPage[] = [
   {
     pathname: '/x/introduction',
-    scopePathnames: ['/x/introduction'],
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
@@ -15,7 +14,6 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-data-grid',
-    scopePathnames: ['/x/api/data-grid'],
     title: 'Data Grid',
     icon: 'TableViewIcon',
     children: [
@@ -25,7 +23,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
-        scopePathnames: ['/x/react-data-grid/column-'],
         children: [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
@@ -40,7 +37,6 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-data-grid/rows',
-        scopePathnames: ['/x/react-data-grid/row-', '/x/react-data-grid/master-detail'],
         children: [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
@@ -57,7 +53,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/pagination' },
       {
         pathname: '/x/react-data-grid/selection',
-        scopePathnames: ['/x/react-data-grid/row-selection', '/x/react-data-grid/cell-selection'],
         children: [
           { pathname: '/x/react-data-grid/row-selection' },
           { pathname: '/x/react-data-grid/cell-selection', plan: 'premium' },
@@ -73,12 +68,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-data-grid/row-grouping',
         title: 'Group & Pivot',
-        scopePathnames: [
-          '/x/react-data-grid/row-grouping',
-          '/x/react-data-grid/tree-data',
-          '/x/react-data-grid/aggregation',
-          '/x/react-data-grid/pivoting',
-        ],
         children: [
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
@@ -89,11 +78,6 @@ const pages: MuiPage[] = [
       {
         title: 'Advanced',
         pathname: '/x/react-data-grid/api-object',
-        scopePathnames: [
-          '/x/react-data-grid/api-object',
-          '/x/react-data-grid/events',
-          '/x/react-data-grid/state',
-        ],
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
@@ -103,7 +87,6 @@ const pages: MuiPage[] = [
       {
         title: 'Recipes',
         pathname: '/x/react-data-grid/recipes',
-        scopePathnames: ['/x/react-data-grid/recipes-'],
         children: [
           { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
           { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
@@ -151,7 +134,6 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-date-pickers',
-    scopePathnames: ['/x/api/date-pickers'],
     title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
@@ -159,12 +141,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/date-picker',
         title: 'Date components',
-        scopePathnames: [
-          '/x/react-date-pickers/date-picker',
-          '/x/react-date-pickers/date-field',
-          '/x/react-date-pickers/date-calendar',
-          '/x/react-date-pickers/legacy-date-picker',
-        ],
         children: [
           { pathname: '/x/react-date-pickers/date-picker', title: 'Date Picker', newFeature: true },
           { pathname: '/x/react-date-pickers/date-field', title: 'Date Field', newFeature: true },
@@ -175,12 +151,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/time-picker',
         title: 'Time components',
-        scopePathnames: [
-          '/x/react-date-pickers/time-picker',
-          '/x/react-date-pickers/time-field',
-          '/x/react-date-pickers/time-clock',
-          '/x/react-date-pickers/legacy-time-picker',
-        ],
         children: [
           { pathname: '/x/react-date-pickers/time-picker', title: 'Time Picker', newFeature: true },
           { pathname: '/x/react-date-pickers/time-field', title: 'Time Field', newFeature: true },
@@ -191,11 +161,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/date-time-picker',
         title: 'Date Time components',
-        scopePathnames: [
-          '/x/react-date-pickers/date-time-picker',
-          '/x/react-date-pickers/date-time-field',
-          '/x/react-date-pickers/legacy-date-time-picker',
-        ],
         children: [
           {
             pathname: '/x/react-date-pickers/date-time-picker',
@@ -217,11 +182,6 @@ const pages: MuiPage[] = [
         pathname: '/x/react-date-pickers/date-range-picker',
         title: 'Date Range components',
         plan: 'pro',
-        scopePathnames: [
-          '/x/react-date-pickers/date-range-picker',
-          '/x/react-date-pickers/date-range-field',
-          '/x/react-date-pickers/legacy-date-range-picker',
-        ],
         children: [
           {
             pathname: '/x/react-date-pickers/date-range-picker',
@@ -243,10 +203,6 @@ const pages: MuiPage[] = [
         pathname: '/x/react-date-pickers/time-range-picker',
         title: 'Time Range components',
         plan: 'pro',
-        scopePathnames: [
-          '/x/react-date-pickers/time-range-picker',
-          '/x/react-date-pickers/time-range-field',
-        ],
         children: [
           { pathname: '/x/react-date-pickers/time-range-picker', title: 'Time Range Picker 🚧' },
           {
@@ -260,10 +216,6 @@ const pages: MuiPage[] = [
         pathname: '/x/react-date-pickers/date-time-range-picker',
         title: 'Date Time Range components',
         plan: 'pro',
-        scopePathnames: [
-          '/x/react-date-pickers/date-time-range-picker',
-          '/x/react-date-pickers/date-time-range-field',
-        ],
         children: [
           {
             pathname: '/x/react-date-pickers/date-time-range-picker',
@@ -280,11 +232,6 @@ const pages: MuiPage[] = [
       {
         pathname: '/x/react-date-pickers/localization',
         title: 'Localization',
-        scopePathnames: [
-          '/x/react-date-pickers/adapters-locale',
-          '/x/react-date-pickers/localization',
-          '/x/react-date-pickers/calendar-systems',
-        ],
         children: [
           {
             pathname: '/x/react-date-pickers/adapters-locale',
