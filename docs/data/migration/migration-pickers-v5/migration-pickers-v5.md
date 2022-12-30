@@ -480,7 +480,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
 
 - The `PaperContent` / `paperContent` component slot and component props slot have been removed.
 
-  You can use the new `Layout` component slot.
+  You can use the new [`Layout` component slot](/x/react-date-pickers/custom-layout/).
   The main difference is that you now receive the various parts of the UI instead of a single `children` prop:
 
   ```diff
