@@ -4,6 +4,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
+import { debounce } from '@mui/material/utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -15,6 +16,7 @@ import {
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
+import { useLayoutEffectOnce } from '../../utils/useLayoutEffectOnce';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
@@ -286,6 +288,24 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       rootProps.rowBuffer,
     ],
   );
+
+  useLayoutEffectOnce(() => {
+    const triggerGridReadyEvent = debounce(() => apiRef.current.publishEvent('gridReady'), 100);
+
+    // check if the row have been populated before triggering the `gridReady` event.
+    const unsubscribe = apiRef.current.subscribeEvent('stateChange', (newState) => {
+      if (newState.rowsMeta.currentPageTotalHeight > 0) {
+        triggerGridReadyEvent();
+        unsubscribe();
+      }
+    });
+  });
+
+  React.useLayoutEffect(() => {
+    if (renderContext) {
+      updateRenderZonePosition(renderContext);
+    }
+  }, [renderContext, updateRenderZonePosition]);
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
