@@ -75,6 +75,7 @@ Then you can fully customize the DOM structure.
 import {
   usePickerLayout,
   PickersLayoutRoot,
+  pickersLayoutClasses,
 } from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
@@ -82,10 +83,13 @@ const MyCustomLayout = (props) => {
 
   // Put the action bar before the content
   return (
-    <PickersLayoutRoot>
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
       {toolbar}
       {actionBar}
-      {content}
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersLayoutContentWrapper>
     </PickersLayoutRoot>
   );
 };
