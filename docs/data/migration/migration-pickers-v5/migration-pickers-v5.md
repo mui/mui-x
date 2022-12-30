@@ -204,6 +204,13 @@ The picker components no longer have a keyboard view to render the input inside 
    });
   ```
 
+  :::warning
+  These changes only apply to the new picker.
+  The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
+
+  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  :::
+
 - The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot
 
   ```diff
@@ -240,6 +247,13 @@ The picker components no longer have a keyboard view to render the input inside 
      },
    });
   ```
+
+  :::warning
+  These changes only apply to the new picker.
+  The legacy pickers keep the `PickerStaticWrapper` internal component until there removal.
+
+  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  :::
 
 ## Date library and adapters
 
