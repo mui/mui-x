@@ -298,7 +298,7 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
  </LocalizationProvider
 ```
 
-## Component slots (custom sub-components)
+## Component slots / component props slots
 
 All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by components props slots.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by components slots.
@@ -491,8 +491,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Action bar
 
-- The `action` prop of the `actionBar` slot is no longer supporting a callback.
-  Instead, you can pass a callback at the slot level
+- The `action` prop of the `actionBar` component slot can no longer receive a callback.
+  Instead, you can pass a callback at the component props slot level
 
   ```diff
    <DatePicker
@@ -518,8 +518,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `selectedDays` prop have been removed from the `Day` component.
-  If you need to access it, you can control the value and pass it to the slot using `componentsProps`:
+- The `Day` component slot no longer receives a `selectedDays` prop.
+  If you need to access it, you can control the value and pass it to the component props slot:
 
   ```tsx
   function CustomDay({ selectedDay, ...other }) {
