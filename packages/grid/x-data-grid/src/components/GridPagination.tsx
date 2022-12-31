@@ -50,22 +50,22 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
           pageSize: paginationState.paginationModel.pageSize,
         });
       },
-      [apiRef, paginationState.paginationModel.pageSize],
+      [apiRef, paginationState.paginationModel],
     );
 
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingPageSizeInRowsPerPageOptions = React.useRef(false);
+      const pageSize =
+        rootProps.paginationModel?.pageSize ?? paginationState.paginationModel.pageSize;
       if (
         !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.rowsPerPageOptions.includes(paginationState.paginationModel.pageSize)
+        !rootProps.rowsPerPageOptions.includes(pageSize)
       ) {
         console.warn(
           [
-            `MUI: The page size \`${
-              rootProps.paginationModel?.pageSize ?? paginationState.paginationModel.pageSize
-            }\` is not preset in the \`rowsPerPageOptions\``,
+            `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
             `Add it to show the pagination select.`,
           ].join('\n'),
         );
