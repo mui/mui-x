@@ -81,6 +81,7 @@ export const useGridRowReorder = (
       });
 
       originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
+      apiRef.current.setCellFocus(params.id, '__reorder__');
     },
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
