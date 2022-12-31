@@ -17,9 +17,7 @@ export default function PageSizeControlled() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         paginationModel={paginationModel}
-        onPaginationModelChange={(newPaginationModel) =>
-          setPaginationModel(newPaginationModel)
-        }
+        onPaginationModelChange={setPaginationModel}
         pagination
         {...data}
       />

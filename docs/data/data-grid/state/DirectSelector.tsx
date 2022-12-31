@@ -44,9 +44,7 @@ export default function DirectSelector() {
           apiRef={apiRef}
           pagination
           paginationModel={paginationModel}
-          onPaginationModelChange={(newPaginatonModel) =>
-            setPaginationModel(newPaginatonModel)
-          }
+          onPaginationModelChange={setPaginationModel}
           {...data}
         />
       </Box>

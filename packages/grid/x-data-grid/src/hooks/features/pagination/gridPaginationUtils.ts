@@ -22,6 +22,19 @@ export const noRowCountInServerMode = buildWarning(
   'error',
 );
 
+export const getDefaultGridPaginationModel = (autoPageSize: boolean) => ({
+  page: 0,
+  pageSize: autoPageSize ? 0 : 100,
+});
+
+export const getValidPage = (page: number, pageCount = 0): number => {
+  if (pageCount === 0) {
+    return page;
+  }
+
+  return Math.max(Math.min(page, pageCount - 1), 0);
+};
+
 export const throwIfPageSizeExceedsTheLimit = (
   pageSize: number,
   signatureProp: DataGridProcessedProps['signature'],

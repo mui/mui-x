@@ -139,9 +139,7 @@ export default function AntDesignGrid() {
       <StyledDataGrid
         checkboxSelection
         paginationModel={paginationModel}
-        onPaginationModelChange={(newPaginationModel) =>
-          setPaginationModel(newPaginationModel)
-        }
+        onPaginationModelChange={setPaginationModel}
         rowsPerPageOptions={[5]}
         components={{
           Pagination: CustomPagination,

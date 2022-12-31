@@ -19,9 +19,6 @@ function Pagination({
   const apiRef = useGridApiContext();
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
-  console.log('page', page);
-  console.log('onPageChange', onPageChange);
-
   return (
     <MuiPagination
       color="primary"
@@ -36,7 +33,6 @@ function Pagination({
 }
 
 function CustomPagination(props: any) {
-  console.log(props, 'props');
   return <GridPagination ActionsComponent={Pagination} {...props} />;
 }
 

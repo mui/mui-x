@@ -47,9 +47,7 @@ export default function UseGridSelector() {
         {...data}
         loading={loading}
         paginationModel={paginationModel}
-        onPaginationModelChange={(newPaginationModel) =>
-          setPaginationModel(newPaginationModel)
-        }
+        onPaginationModelChange={setPaginationModel}
         pagination
         hideFooter
         components={{

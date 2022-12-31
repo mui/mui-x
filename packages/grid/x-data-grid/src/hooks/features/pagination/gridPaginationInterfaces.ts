@@ -1,18 +1,5 @@
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
 
-export const getDefaultGridPaginationModel = (autoPageSize: boolean): GridPaginationModel => ({
-  page: 0,
-  pageSize: autoPageSize ? 0 : 100,
-});
-
-export const sanitizePaginationModel = (
-  model: Partial<GridPaginationModel>,
-  autoPageSize: boolean,
-): GridPaginationModel => ({
-  ...getDefaultGridPaginationModel(autoPageSize),
-  ...model,
-});
-
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
   pageCount: number;

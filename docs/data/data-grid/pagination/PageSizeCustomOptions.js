@@ -18,9 +18,7 @@ export default function PageSizeCustomOptions() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         paginationModel={paginationModel}
-        onPaginationModelChange={(newPaginationModel) =>
-          setPaginationModel(newPaginationModel)
-        }
+        onPaginationModelChange={setPaginationModel}
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         {...data}

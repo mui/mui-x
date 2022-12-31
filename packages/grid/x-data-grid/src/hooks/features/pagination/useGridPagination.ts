@@ -2,11 +2,7 @@ import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import {
-  GridPaginationApi,
-  getDefaultGridPaginationModel,
-  GridPaginationState,
-} from './gridPaginationInterfaces';
+import { GridPaginationApi, GridPaginationState } from './gridPaginationInterfaces';
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
@@ -25,6 +21,8 @@ import {
   noRowCountInServerMode,
   defaultPageSize,
   throwIfPageSizeExceedsTheLimit,
+  getDefaultGridPaginationModel,
+  getValidPage,
 } from './gridPaginationUtils';
 
 export const paginationStateInitializer: GridStateInitializer<
@@ -49,14 +47,6 @@ export const paginationStateInitializer: GridStateInitializer<
   };
 };
 
-const getValidPage = (page: number, pageCount = 0): number => {
-  if (pageCount === 0) {
-    return page;
-  }
-
-  return Math.max(Math.min(page, pageCount - 1), 0);
-};
-
 const mergeStateWithPaginationModel =
   (
     rowCount: number,
@@ -73,9 +63,7 @@ const mergeStateWithPaginationModel =
       const page = model.page ?? paginationModel.page;
       const validPage = getValidPage(page, pageCount);
       throwIfPageSizeExceedsTheLimit(model.pageSize, signature);
-      // TODO invalid page warning?
-      paginationModel =
-        validPage === model.page ? model : { page: validPage, pageSize: model.pageSize };
+      paginationModel = validPage !== model.page ? { page: validPage, pageSize } : model;
     }
 
     return {

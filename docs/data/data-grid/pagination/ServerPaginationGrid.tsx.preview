@@ -7,7 +7,5 @@
   pagination
   paginationModel={paginationModel}
   paginationMode="server"
-  onPaginationModelChange={(newPaginationModel) =>
-    setPaginationModel(newPaginationModel)
-  }
+  onPaginationModelChange={setPaginationModel}
 />

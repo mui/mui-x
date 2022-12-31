@@ -14,9 +14,7 @@ export default function ServerPaginationGrid() {
     pageSize: 5,
   });
 
-  const queryOptions = React.useMemo(() => paginationModel, [paginationModel]);
-
-  const { isLoading, rows, pageInfo } = useQuery(queryOptions);
+  const { isLoading, rows, pageInfo } = useQuery(paginationModel);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
@@ -42,9 +40,7 @@ export default function ServerPaginationGrid() {
         pagination
         paginationModel={paginationModel}
         paginationMode="server"
-        onPaginationModelChange={(newPaginationModel) =>
-          setPaginationModel(newPaginationModel)
-        }
+        onPaginationModelChange={setPaginationModel}
       />
     </div>
   );
