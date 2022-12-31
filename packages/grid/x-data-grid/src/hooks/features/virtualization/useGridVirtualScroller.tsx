@@ -470,7 +470,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
         if (focusedRow) {
           const index = currentPage.rows.indexOf(focusedRow);
-
           if (index > firstRowToRender) {
             renderedRows.push(focusedRow);
           } else {
