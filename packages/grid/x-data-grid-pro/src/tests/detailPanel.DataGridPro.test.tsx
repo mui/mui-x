@@ -9,6 +9,7 @@ import {
   GridRowParams,
   gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import {
@@ -36,6 +37,22 @@ describe('<DataGridPro /> - Detail panel', () => {
       <div style={{ width: 300, height: 302 }}>
         <DataGridPro {...data} apiRef={apiRef} {...other} />
       </div>
+    );
+  }
+
+  function PaginationTestCase({
+    initialModel,
+    ...rest
+  }: Partial<DataGridProProps> & { initialModel: GridPaginationModel }) {
+    const [paginationModel, setPaginationModel] = React.useState(initialModel);
+    return (
+      <TestCase
+        rowsPerPageOptions={[1]}
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        {...rest}
+      />
     );
   }
 
@@ -212,11 +229,9 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   it('should not render detail panels for non-visible rows', () => {
     render(
-      <TestCase
+      <PaginationTestCase
         getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
-        pagination
+        initialModel={{ pageSize: 1, page: 0 }}
         initialState={{ detailPanel: { expandedRowIds: [0] } }}
       />,
     );
@@ -322,16 +337,14 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should cache the content of getDetailPanelContent', () => {
     const getDetailPanelContent = spy(() => <div>Detail</div>);
     const { setProps } = render(
-      <TestCase
+      <PaginationTestCase
         columns={[{ field: 'brand' }]}
         rows={[
           { id: 0, brand: 'Nike' },
           { id: 1, brand: 'Adidas' },
         ]}
         getDetailPanelContent={getDetailPanelContent}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
-        pagination
+        initialModel={{ pageSize: 1, page: 0 }}
       />,
     );
 
@@ -357,7 +370,7 @@ describe('<DataGridPro /> - Detail panel', () => {
   it('should cache the content of getDetailPanelHeight', () => {
     const getDetailPanelHeight = spy(() => 100);
     const { setProps } = render(
-      <TestCase
+      <PaginationTestCase
         columns={[{ field: 'brand' }]}
         rows={[
           { id: 0, brand: 'Nike' },
@@ -365,9 +378,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
-        pagination
+        initialModel={{ pageSize: 1, page: 0 }}
       />,
     );
     //   2x during state initialization
@@ -396,7 +407,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
     const getDetailPanelHeight = spy(() => 100);
     const { setProps } = render(
-      <TestCase
+      <PaginationTestCase
         columns={[{ field: 'brand' }]}
         rows={[
           { id: 0, brand: 'Nike' },
@@ -404,9 +415,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        rowsPerPageOptions={[1]}
-        pageSize={1}
-        pagination
+        initialModel={{ pageSize: 1, page: 0 }}
         autoHeight
       />,
     );

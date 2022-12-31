@@ -49,7 +49,7 @@ describe('<DataGrid /> - Keyboard', () => {
           autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
-          pageSize={PAGE_SIZE}
+          paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
           rowsPerPageOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
@@ -77,7 +77,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to cell below when pressing "ArrowDown" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(18, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('18-1');
@@ -110,7 +110,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(11, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('11-1');
@@ -345,7 +345,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -477,7 +477,7 @@ describe('<DataGrid /> - Keyboard', () => {
             autoHeight={isJSDOM}
             rows={data.rows}
             columns={transformColSizes(data.columns)}
-            pageSize={PAGE_SIZE}
+            paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
             rowsPerPageOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}

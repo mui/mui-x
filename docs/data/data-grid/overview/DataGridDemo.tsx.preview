@@ -1,7 +1,8 @@
 <DataGrid
   rows={rows}
   columns={columns}
-  pageSize={5}
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
   rowsPerPageOptions={[5]}
   checkboxSelection
   disableRowSelectionOnClick

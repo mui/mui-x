@@ -118,17 +118,28 @@ function CustomPagination() {
   );
 }
 
+const PAGE_SIZE = 5;
+
 export default function AntDesignGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 10,
   });
+
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: PAGE_SIZE,
+    page: 0,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <StyledDataGrid
         checkboxSelection
-        pageSize={5}
+        paginationModel={paginationModel}
+        onPaginationModelChange={(newPaginationModel) =>
+          setPaginationModel(newPaginationModel)
+        }
         rowsPerPageOptions={[5]}
         components={{
           Pagination: CustomPagination,

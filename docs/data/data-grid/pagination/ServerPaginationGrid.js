@@ -9,16 +9,12 @@ const SERVER_OPTIONS = {
 const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function ServerPaginationGrid() {
-  const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(5);
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
 
-  const queryOptions = React.useMemo(
-    () => ({
-      page,
-      pageSize,
-    }),
-    [page, pageSize],
-  );
+  const queryOptions = React.useMemo(() => paginationModel, [paginationModel]);
 
   const { isLoading, rows, pageInfo } = useQuery(queryOptions);
 
@@ -45,11 +41,11 @@ export default function ServerPaginationGrid() {
         loading={isLoading}
         rowsPerPageOptions={[5]}
         pagination
-        page={page}
-        pageSize={pageSize}
+        paginationModel={paginationModel}
         paginationMode="server"
-        onPageChange={(newPage) => setPage(newPage)}
-        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        onPaginationModelChange={(newPaginationModel) =>
+          setPaginationModel(newPaginationModel)
+        }
       />
     </div>
   );

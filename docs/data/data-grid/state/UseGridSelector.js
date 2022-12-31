@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  gridPageSelector,
+  gridPaginationModelSelector,
   gridPageCountSelector,
   useGridApiContext,
   useGridSelector,
@@ -9,9 +9,11 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
+const PAGE_SIZE = 10;
+
 function Toolbar() {
   const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
+  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
@@ -19,8 +21,10 @@ function Toolbar() {
       sx={(theme) => ({ padding: theme.spacing(1.5, 0) })}
       color="primary"
       count={pageCount}
-      page={page + 1}
-      onChange={(event, value) => apiRef.current.setPage(value - 1)}
+      page={paginationModel.page + 1}
+      onChange={(event, value) =>
+        apiRef.current.setPaginationModel({ page: value - 1, pageSize: PAGE_SIZE })
+      }
     />
   );
 }
@@ -32,13 +36,21 @@ export default function UseGridSelector() {
     maxColumns: 10,
   });
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: PAGE_SIZE,
+    page: 0,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
         loading={loading}
+        paginationModel={paginationModel}
+        onPaginationModelChange={(newPaginationModel) =>
+          setPaginationModel(newPaginationModel)
+        }
         pagination
-        pageSize={10}
         hideFooter
         components={{
           Toolbar,

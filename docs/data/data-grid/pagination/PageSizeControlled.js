@@ -8,13 +8,18 @@ export default function PageSizeControlled() {
     rowLength: 500,
     maxColumns: 6,
   });
-  const [pageSize, setPageSize] = React.useState(25);
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 25,
+    page: 0,
+  });
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        pageSize={pageSize}
-        onPageSizeChange={(newPage) => setPageSize(newPage)}
+        paginationModel={paginationModel}
+        onPaginationModelChange={(newPaginationModel) =>
+          setPaginationModel(newPaginationModel)
+        }
         pagination
         {...data}
       />

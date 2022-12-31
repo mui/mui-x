@@ -3,5 +3,6 @@
   components={{
     Toolbar: CustomToolbar,
   }}
-  pageSize={10}
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
 />

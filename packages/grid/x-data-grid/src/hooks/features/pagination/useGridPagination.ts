@@ -1,40 +1,89 @@
 import * as React from 'react';
-import {
-  useGridPageSize,
-  defaultPageSize,
-  throwIfPageSizeExceedsTheLimit,
-} from './useGridPageSize';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { useGridPage, getPageCount } from './useGridPage';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import {
+  GridPaginationApi,
+  getDefaultGridPaginationModel,
+  GridPaginationState,
+} from './gridPaginationInterfaces';
+import { GridEventListener } from '../../../models/events';
+import { GridPaginationModel } from '../../../models/gridPaginationProps';
+import { gridVisibleTopLevelRowCountSelector } from '../filter';
+import { gridDensityRowHeightSelector } from '../density';
+import {
+  useGridLogger,
+  useGridSelector,
+  useGridApiMethod,
+  useGridApiEventHandler,
+} from '../../utils';
+import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { gridPaginationModelSelector } from './gridPaginationSelector';
+import { calculatePinnedRowsHeight } from '../rows/gridRowsUtils';
+import {
+  getPageCount,
+  noRowCountInServerMode,
+  defaultPageSize,
+  throwIfPageSizeExceedsTheLimit,
+} from './gridPaginationUtils';
 
 export const paginationStateInitializer: GridStateInitializer<
   Pick<
     DataGridProcessedProps,
-    'page' | 'pageSize' | 'rowCount' | 'initialState' | 'autoPageSize' | 'signature'
+    'paginationModel' | 'rowCount' | 'initialState' | 'autoPageSize' | 'signature'
   >
 > = (state, props) => {
-  let pageSize: number;
-  if (props.pageSize != null) {
-    pageSize = props.pageSize;
-  } else if (props.initialState?.pagination?.pageSize != null) {
-    pageSize = props.initialState.pagination.pageSize;
-    throwIfPageSizeExceedsTheLimit(pageSize, props.signature);
-  } else {
-    pageSize = defaultPageSize(props.autoPageSize);
-  }
+  const paginationModel =
+    (props.paginationModel ?? props.initialState?.pagination?.paginationModel) ||
+    getDefaultGridPaginationModel(props.autoPageSize);
+
+  throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
   return {
     ...state,
     pagination: {
-      pageSize,
-      page: props.page ?? props.initialState?.pagination?.page ?? 0,
-      pageCount: getPageCount(props.rowCount ?? 0, pageSize),
+      paginationModel,
+      pageCount: getPageCount(props.rowCount ?? 0, paginationModel.pageSize),
       rowCount: props.rowCount ?? 0,
     },
   };
 };
+
+const getValidPage = (page: number, pageCount = 0): number => {
+  if (pageCount === 0) {
+    return page;
+  }
+
+  return Math.max(Math.min(page, pageCount - 1), 0);
+};
+
+const mergeStateWithPaginationModel =
+  (
+    rowCount: number,
+    autoPageSize: DataGridProcessedProps['autoPageSize'],
+    signature: DataGridProcessedProps['signature'],
+    model?: GridPaginationModel,
+  ) =>
+  (paginationState: GridPaginationState) => {
+    let paginationModel = paginationState.paginationModel;
+    const pageSize = model?.pageSize ?? paginationModel.pageSize;
+    const pageCount = getPageCount(rowCount, pageSize);
+
+    if (model && model !== paginationModel) {
+      const page = model.page ?? paginationModel.page;
+      const validPage = getValidPage(page, pageCount);
+      throwIfPageSizeExceedsTheLimit(model.pageSize, signature);
+      // TODO invalid page warning?
+      paginationModel =
+        validPage === model.page ? model : { page: validPage, pageSize: model.pageSize };
+    }
+
+    return {
+      pageCount,
+      rowCount,
+      paginationModel,
+    };
+  };
 
 /**
  * @requires useGridFilter (state)
@@ -44,16 +93,210 @@ export const useGridPagination = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    | 'page'
-    | 'pageSize'
-    | 'onPageChange'
-    | 'onPageSizeChange'
+    | 'paginationModel'
+    | 'onPaginationModelChange'
     | 'autoPageSize'
     | 'rowCount'
     | 'initialState'
     | 'paginationMode'
+    | 'signature'
   >,
 ) => {
-  useGridPageSize(apiRef, props);
-  useGridPage(apiRef, props);
+  const logger = useGridLogger(apiRef, 'useGridPagination');
+
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+
+  apiRef.current.registerControlState({
+    stateId: 'pagination',
+    propModel: props.paginationModel,
+    propOnChange: props.onPaginationModelChange,
+    stateSelector: gridPaginationModelSelector,
+    changeEvent: 'paginationModelChange',
+  });
+
+  /**
+   * API METHODS
+   */
+  const setPage = React.useCallback<GridPaginationApi['setPage']>(
+    (page) => {
+      const currentModel = gridPaginationModelSelector(apiRef);
+      if (page === currentModel.page) {
+        return;
+      }
+      logger.debug(`Setting page to ${page}`);
+      apiRef.current.setPaginationModel({ page, pageSize: currentModel.pageSize });
+    },
+    [apiRef, logger],
+  );
+
+  const setPageSize = React.useCallback<GridPaginationApi['setPageSize']>(
+    (pageSize) => {
+      const currentModel = gridPaginationModelSelector(apiRef);
+      if (pageSize === currentModel.pageSize) {
+        return;
+      }
+
+      logger.debug(`Setting page size to ${pageSize}`);
+      apiRef.current.setPaginationModel({ pageSize, page: currentModel.page });
+    },
+    [apiRef, logger],
+  );
+
+  const setPaginationModel = React.useCallback<GridPaginationApi['setPaginationModel']>(
+    (paginationModel) => {
+      const currentModel = gridPaginationModelSelector(apiRef);
+      if (paginationModel === currentModel) {
+        return;
+      }
+      logger.debug("Setting 'paginationModel' to", paginationModel);
+
+      apiRef.current.updateControlState(
+        'pagination',
+        mergeStateWithPaginationModel(
+          props.rowCount ?? visibleTopLevelRowCount,
+          props.autoPageSize,
+          props.signature,
+          paginationModel,
+        ),
+        'setPaginationModel',
+      );
+      apiRef.current.forceUpdate();
+    },
+    [apiRef, logger, props.autoPageSize, props.rowCount, props.signature, visibleTopLevelRowCount],
+  );
+
+  const pageApi: GridPaginationApi = {
+    setPage,
+    setPageSize,
+    setPaginationModel,
+  };
+
+  useGridApiMethod(apiRef, pageApi, 'public');
+
+  /**
+   * PRE-PROCESSING
+   */
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+    (prevState, context) => {
+      const paginationModel = gridPaginationModelSelector(apiRef);
+
+      const shouldExportPaginationModel =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the `paginationModel` is controlled
+        props.paginationModel != null ||
+        // Always export if the `paginationModel` has been initialized
+        props.initialState?.pagination?.paginationModel != null ||
+        // Export if `page` or `pageSize` is not equal to the default value
+        (paginationModel.page !== 0 &&
+          paginationModel.pageSize !== defaultPageSize(props.autoPageSize));
+
+      if (!shouldExportPaginationModel) {
+        return prevState;
+      }
+
+      return {
+        ...prevState,
+        pagination: {
+          ...prevState.pagination,
+          paginationModel,
+        },
+      };
+    },
+    [
+      apiRef,
+      props.paginationModel,
+      props.initialState?.pagination?.paginationModel,
+      props.autoPageSize,
+    ],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+    (params, context) => {
+      const paginationModel =
+        context.stateToRestore.pagination?.paginationModel ?? gridPaginationModelSelector(apiRef);
+      apiRef.current.updateControlState(
+        'pagination',
+        mergeStateWithPaginationModel(
+          props.rowCount ?? visibleTopLevelRowCount,
+          props.autoPageSize,
+          props.signature,
+          paginationModel,
+        ),
+        'stateRestorePreProcessing',
+      );
+      return params;
+    },
+    [apiRef, props.autoPageSize, props.rowCount, props.signature, visibleTopLevelRowCount],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
+
+  /**
+   * EVENTS
+   */
+  const handlePaginationModelChange: GridEventListener<'paginationModelChange'> = () => {
+    const paginationModel = gridPaginationModelSelector(apiRef);
+    apiRef.current.scrollToIndexes({
+      rowIndex: paginationModel.page * paginationModel.pageSize,
+    });
+
+    apiRef.current.forceUpdate();
+  };
+
+  const handleUpdateAutoPageSize = React.useCallback(() => {
+    const dimensions = apiRef.current.getRootDimensions();
+    if (!props.autoPageSize || !dimensions) {
+      return;
+    }
+
+    const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+
+    const maximumPageSizeWithoutScrollBar = Math.floor(
+      (dimensions.viewportInnerSize.height - pinnedRowsHeight.top - pinnedRowsHeight.bottom) /
+        rowHeight,
+    );
+
+    apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
+  }, [apiRef, props.autoPageSize, rowHeight]);
+
+  useGridApiEventHandler(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
+  useGridApiEventHandler(apiRef, 'paginationModelChange', handlePaginationModelChange);
+
+  /**
+   * EFFECTS
+   */
+  React.useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      if (props.paginationMode === 'server' && props.rowCount == null) {
+        noRowCountInServerMode();
+      }
+    }
+  }, [props.rowCount, props.paginationMode]);
+
+  React.useEffect(() => {
+    apiRef.current.updateControlState(
+      'pagination',
+      mergeStateWithPaginationModel(
+        props.rowCount ?? visibleTopLevelRowCount,
+        props.autoPageSize,
+        props.signature,
+        props.paginationModel,
+      ),
+    );
+  }, [
+    apiRef,
+    props.paginationModel,
+    props.rowCount,
+    props.paginationMode,
+    props.autoPageSize,
+    visibleTopLevelRowCount,
+    props.signature,
+  ]);
+
+  React.useEffect(() => {
+    handleUpdateAutoPageSize();
+  }, [handleUpdateAutoPageSize]);
 };

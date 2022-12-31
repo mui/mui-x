@@ -21,6 +21,7 @@ import {
   GridRenderCellParams,
   useGridApiRef,
   GridApi,
+  GridPaginationModel,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
@@ -52,6 +53,23 @@ describe('<DataGrid /> - Rows', () => {
     ],
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
+
+  function PaginatedTestCase(
+    props: Partial<DataGridProps> & { initialModel: GridPaginationModel },
+  ) {
+    const data = getBasicGridData(120, 3);
+    const [paginationModel, setPaginationModel] = React.useState(props.initialModel);
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          {...data}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          {...props}
+        />
+      </div>
+    );
+  }
 
   describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
@@ -141,15 +159,13 @@ describe('<DataGrid /> - Rows', () => {
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            getRowClassName={getRowClassName}
-            pageSize={3}
-            rowsPerPageOptions={[3]}
-          />
-        </div>,
+        <PaginatedTestCase
+          rows={rows}
+          columns={columns}
+          getRowClassName={getRowClassName}
+          initialModel={{ pageSize: 3, page: 0 }}
+          rowsPerPageOptions={[3]}
+        />,
       );
       expect(getRow(0)).to.have.class('first');
       expect(getRow(1)).not.to.have.class('first');
@@ -799,20 +815,28 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
+
+        function PaginatedTestCaseBio({ initialModel }: { initialModel: GridPaginationModel }) {
+          const [paginationModel, setPaginationModel] = React.useState(initialModel);
+          return (
+            <TestCase
+              getBioContentHeight={() => measuredRowHeight}
+              getRowHeight={() => 'auto'}
+              rowBuffer={0}
+              rowThreshold={0}
+              headerHeight={headerHeight}
+              getRowId={(row) => row.id}
+              hideFooter={false}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              rowsPerPageOptions={[5, 10]}
+              height={headerHeight + 10 * measuredRowHeight}
+              {...data}
+            />
+          );
+        }
         const { setProps } = render(
-          <TestCase
-            getBioContentHeight={() => measuredRowHeight}
-            getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
-            headerHeight={headerHeight}
-            getRowId={(row) => row.id}
-            hideFooter={false}
-            pageSize={10}
-            rowsPerPageOptions={[5, 10]}
-            height={headerHeight + 10 * measuredRowHeight}
-            {...data}
-          />,
+          <PaginatedTestCaseBio initialModel={{ pageSize: 10, page: 0 }} />,
         );
         const virtualScrollerRenderZone = document.querySelector(
           '.MuiDataGrid-virtualScrollerRenderZone',
@@ -834,19 +858,32 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const headerHeight = 50;
         const measuredRowHeight = 100;
+        function PaginatedTestCaseBio({
+          initialModel,
+          ...props
+        }: Partial<DataGridProps> & { initialModel: GridPaginationModel }) {
+          const [paginationModel, setPaginationModel] = React.useState(initialModel);
+          return (
+            <TestCase
+              getBioContentHeight={() => measuredRowHeight}
+              getRowHeight={() => 'auto'}
+              rowBuffer={0}
+              rowThreshold={0}
+              headerHeight={headerHeight}
+              getRowId={(row) => row.id}
+              hideFooter={false}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              height={headerHeight + 10 * measuredRowHeight}
+              {...data}
+              {...props}
+            />
+          );
+        }
         const { setProps } = render(
-          <TestCase
-            getBioContentHeight={() => measuredRowHeight}
-            getRowHeight={() => 'auto'}
-            rowBuffer={0}
-            rowThreshold={0}
-            headerHeight={headerHeight}
-            getRowId={(row) => row.id}
-            hideFooter={false}
-            pageSize={25}
+          <PaginatedTestCaseBio
+            initialModel={{ pageSize: 25, page: 0 }}
             rowsPerPageOptions={[10, 25]}
-            height={headerHeight + 10 * measuredRowHeight}
-            {...data}
           />,
         );
 
@@ -887,7 +924,13 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
-      render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
+      render(
+        <PaginatedTestCase
+          getRowSpacing={getRowSpacing}
+          initialModel={{ pageSize: 2, page: 0 }}
+          rowsPerPageOptions={[2]}
+        />,
+      );
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,

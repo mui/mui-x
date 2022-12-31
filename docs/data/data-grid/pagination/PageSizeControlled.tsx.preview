@@ -1,6 +1,8 @@
 <DataGrid
-  pageSize={pageSize}
-  onPageSizeChange={(newPage) => setPageSize(newPage)}
+  paginationModel={paginationModel}
+  onPaginationModelChange={(newPaginationModel) =>
+    setPaginationModel(newPaginationModel)
+  }
   pagination
   {...data}
 />

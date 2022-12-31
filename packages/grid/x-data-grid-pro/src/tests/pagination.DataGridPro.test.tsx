@@ -17,13 +17,16 @@ describe('<DataGridPro /> - Pagination', () => {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
+        const [paginationModel, setPaginationModel] = React.useState({ pageSize: 1, page: 0 });
+
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
               rowsPerPageOptions={[1]}
             />
           </div>
@@ -45,6 +48,7 @@ describe('<DataGridPro /> - Pagination', () => {
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
+        const [paginationModel, setPaginationModel] = React.useState({ pageSize: 1, page: 0 });
 
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -52,7 +56,8 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              pageSize={1}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
               rowsPerPageOptions={[1]}
             />
           </div>
@@ -74,7 +79,8 @@ describe('<DataGridPro /> - Pagination', () => {
     it('should apply value', () => {
       let apiRef: React.MutableRefObject<GridApiPro>;
       function GridTest() {
-        const [pageSize, setPageSize] = React.useState(5);
+        const [paginationModel, setPaginationModel] = React.useState({ pageSize: 5, page: 0 });
+
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
 
@@ -83,9 +89,9 @@ describe('<DataGridPro /> - Pagination', () => {
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              pageSize={pageSize}
-              rowsPerPageOptions={[pageSize]}
-              onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+              paginationModel={paginationModel}
+              rowsPerPageOptions={[paginationModel.pageSize]}
+              onPaginationModelChange={setPaginationModel}
               pagination
               disableVirtualization
             />

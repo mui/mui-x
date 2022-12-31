@@ -1,1 +1,6 @@
-<DataGridPro {...data} pagination pageSize={10} />
+<DataGridPro
+  {...data}
+  pagination
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
+/>

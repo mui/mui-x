@@ -21,10 +21,9 @@ export default function PageInitialState() {
           ...data.initialState,
           pagination: {
             ...data.initialState?.pagination,
-            page: 1,
+            paginationModel: { page: 1, pageSize: 5 },
           },
         }}
-        pageSize={5}
         rowsPerPageOptions={[5]}
         pagination
       />

@@ -14,12 +14,21 @@ import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gr
 export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
 
 /**
+ * Get the pagination model
+ * @category Pagination
+ */
+export const gridPaginationModelSelector = createSelector(
+  gridPaginationSelector,
+  (pagination) => pagination.paginationModel,
+);
+
+/**
  * Get the index of the page to render if the pagination is enabled
  * @category Pagination
  */
 export const gridPageSelector = createSelector(
   gridPaginationSelector,
-  (pagination) => pagination.page,
+  (pagination) => pagination.paginationModel.page,
 );
 
 /**
@@ -28,7 +37,7 @@ export const gridPageSelector = createSelector(
  */
 export const gridPageSizeSelector = createSelector(
   gridPaginationSelector,
-  (pagination) => pagination.pageSize,
+  (pagination) => pagination.paginationModel.pageSize,
 );
 
 /**
@@ -53,11 +62,11 @@ export const gridPaginationRowRangeSelector = createSelector(
   (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
-      pagination.pageSize * pagination.page,
+      pagination.paginationModel.pageSize * pagination.paginationModel.page,
       visibleTopLevelRowCount - 1,
     );
     const topLevelLastRowIndex = Math.min(
-      topLevelFirstRowIndex + pagination.pageSize - 1,
+      topLevelFirstRowIndex + pagination.paginationModel.pageSize - 1,
       visibleTopLevelRowCount - 1,
     );
 

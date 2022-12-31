@@ -31,23 +31,26 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     const paginationState = useGridSelector(apiRef, gridPaginationSelector);
 
     const lastPage = React.useMemo(
-      () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
-      [paginationState.rowCount, paginationState.pageSize],
+      () => Math.floor(paginationState.rowCount / (paginationState.paginationModel.pageSize || 1)),
+      [paginationState.rowCount, paginationState.paginationModel],
     );
 
     const handlePageSizeChange = React.useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        const newPageSize = Number(event.target.value);
-        apiRef.current.setPageSize(newPageSize);
+        const pageSize = Number(event.target.value);
+        apiRef.current.setPaginationModel({ pageSize, page: paginationState.paginationModel.page });
       },
-      [apiRef],
+      [apiRef, paginationState.paginationModel.page],
     );
 
     const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
       (event, page) => {
-        apiRef.current.setPage(page);
+        apiRef.current.setPaginationModel({
+          page,
+          pageSize: paginationState.paginationModel.pageSize,
+        });
       },
-      [apiRef],
+      [apiRef, paginationState.paginationModel.pageSize],
     );
 
     if (process.env.NODE_ENV !== 'production') {
@@ -56,12 +59,12 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       if (
         !warnedOnceMissingPageSizeInRowsPerPageOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.rowsPerPageOptions.includes(rootProps.pageSize ?? paginationState.pageSize)
+        !rootProps.rowsPerPageOptions.includes(paginationState.paginationModel.pageSize)
       ) {
         console.warn(
           [
             `MUI: The page size \`${
-              rootProps.pageSize ?? paginationState.pageSize
+              rootProps.paginationModel?.pageSize ?? paginationState.paginationModel.pageSize
             }\` is not preset in the \`rowsPerPageOptions\``,
             `Add it to show the pagination select.`,
           ].join('\n'),
@@ -76,13 +79,17 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
         ref={ref}
         component="div"
         count={paginationState.rowCount}
-        page={paginationState.page <= lastPage ? paginationState.page : lastPage}
+        page={
+          paginationState.paginationModel.page <= lastPage
+            ? paginationState.paginationModel.page
+            : lastPage
+        }
         rowsPerPageOptions={
-          rootProps.rowsPerPageOptions?.includes(paginationState.pageSize)
+          rootProps.rowsPerPageOptions?.includes(paginationState.paginationModel.pageSize)
             ? rootProps.rowsPerPageOptions
             : []
         }
-        rowsPerPage={paginationState.pageSize}
+        rowsPerPage={paginationState.paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
         {...apiRef.current.getLocaleText('MuiTablePagination')}

@@ -47,12 +47,18 @@ const rows = [
 ];
 
 export default function DataGridDemo() {
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 5,
+  });
+
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableRowSelectionOnClick

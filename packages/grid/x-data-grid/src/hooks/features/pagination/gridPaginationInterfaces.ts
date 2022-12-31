@@ -1,38 +1,45 @@
+import { GridPaginationModel } from '../../../models/gridPaginationProps';
+
+export const getDefaultGridPaginationModel = (autoPageSize: boolean): GridPaginationModel => ({
+  page: 0,
+  pageSize: autoPageSize ? 0 : 100,
+});
+
+export const sanitizePaginationModel = (
+  model: Partial<GridPaginationModel>,
+  autoPageSize: boolean,
+): GridPaginationModel => ({
+  ...getDefaultGridPaginationModel(autoPageSize),
+  ...model,
+});
+
 export interface GridPaginationState {
-  pageSize: number;
-  page: number;
+  paginationModel: GridPaginationModel;
   pageCount: number;
   rowCount: number;
 }
 
 export interface GridPaginationInitialState {
-  pageSize?: number;
-  page?: number;
+  paginationModel?: GridPaginationModel;
 }
 
 /**
- * The apiRef methods handled by `useGridPageSize`
+ * The pagination API interface that is available in the grid `apiRef`.
  */
-export interface GridPageSizeApi {
-  /**
-   * Sets the number of displayed rows to the value given by `pageSize`.
-   * @param {number} pageSize The new number of displayed rows.
-   */
-  setPageSize: (pageSize: number) => void;
-}
-
-/**
- * The apiRef methods handled by `useGridPage`
- */
-export interface GridPageApi {
+export interface GridPaginationApi {
   /**
    * Sets the displayed page to the value given by `page`.
    * @param {number} page The new page number.
    */
   setPage: (page: number) => void;
+  /**
+   * Sets the number of displayed rows to the value given by `pageSize`.
+   * @param {number} pageSize The new number of displayed rows.
+   */
+  setPageSize: (pageSize: number) => void;
+  /**
+   * Sets the `paginationModel` to a new value.
+   * @param {GridPaginationModel} model The new model value.
+   */
+  setPaginationModel: (model: GridPaginationModel) => void;
 }
-
-/**
- * The pagination API interface that is available in the grid [[apiRef]].
- */
-export interface GridPaginationApi extends GridPageApi, GridPageSizeApi {}

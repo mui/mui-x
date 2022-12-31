@@ -155,8 +155,7 @@
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
     "onMenuOpen": { "type": { "name": "func" } },
-    "onPageChange": { "type": { "name": "func" } },
-    "onPageSizeChange": { "type": { "name": "func" } },
+    "onPaginationModelChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
     "onPreferencePanelClose": { "type": { "name": "func" } },
     "onPreferencePanelOpen": { "type": { "name": "func" } },
@@ -173,12 +172,13 @@
     "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "number" }, "default": "100" },
     "pagination": { "type": { "name": "bool" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
+    },
+    "paginationModel": {
+      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": {
       "type": {

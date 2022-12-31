@@ -10,6 +10,7 @@ import {
   DataGridPro,
   DataGridProProps,
   GridRowSelectionModel,
+  GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 
@@ -45,12 +46,30 @@ describe('<DataGridPro /> - Row Selection', () => {
     );
   }
 
+  function PaginatedTestCase({
+    initialModel,
+    ...rest
+  }: Partial<DataGridProProps> & { initialModel: GridPaginationModel }) {
+    const [paginationModel, setPaginationModel] = React.useState(initialModel);
+    return (
+      <TestDataGridSelection
+        checkboxSelection
+        checkboxSelectionVisibleOnly={false}
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+        pagination
+        rowsPerPageOptions={[2]}
+        {...rest}
+      />
+    );
+  }
+
   describe('prop: checkboxSelectionVisibleOnly = false', () => {
     it('should select all rows of all pages if no row is selected', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          paginationModel={{ pageSize: 2, page: 0 }}
           pagination
           rowsPerPageOptions={[2]}
         />,
@@ -67,7 +86,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          paginationModel={{ pageSize: 2, page: 0 }}
           pagination
           rowsPerPageOptions={[2]}
         />,
@@ -103,15 +122,7 @@ describe('<DataGridPro /> - Row Selection', () => {
     });
 
     it('should set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          checkboxSelectionVisibleOnly={false}
-          pageSize={2}
-          pagination
-          rowsPerPageOptions={[2]}
-        />,
-      );
+      render(<PaginatedTestCase initialModel={{ pageSize: 2, page: 0 }} />);
 
       const selectAllCheckbox = screen.getByRole('checkbox', {
         name: /select all rows/i,
@@ -136,15 +147,8 @@ describe('<DataGridPro /> - Row Selection', () => {
     });
 
     it('should select all the rows of the current page if no row of the current page is selected', () => {
-      render(
-        <TestDataGridSelection
-          checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
-          pagination
-          rowsPerPageOptions={[2]}
-        />,
-      );
+      render(<PaginatedTestCase initialModel={{ pageSize: 2, page: 0 }} />);
+
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -158,14 +162,9 @@ describe('<DataGridPro /> - Row Selection', () => {
 
     it('should unselect all the rows of the current page if 1 row of the current page is selected', () => {
       render(
-        <TestDataGridSelection
-          checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
-          pagination
-          rowsPerPageOptions={[2]}
-        />,
+        <PaginatedTestCase checkboxSelectionVisibleOnly initialModel={{ pageSize: 2, page: 0 }} />,
       );
+
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -181,13 +180,7 @@ describe('<DataGridPro /> - Row Selection', () => {
 
     it('should not set the header checkbox in a indeterminate state when some rows of other pages are not selected', () => {
       render(
-        <TestDataGridSelection
-          checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
-          pagination
-          rowsPerPageOptions={[2]}
-        />,
+        <PaginatedTestCase checkboxSelectionVisibleOnly initialModel={{ pageSize: 2, page: 0 }} />,
       );
 
       fireEvent.click(getCell(0, 0));

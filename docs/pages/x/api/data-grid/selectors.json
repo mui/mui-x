@@ -252,6 +252,13 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridPaginationModelSelector",
+    "returnType": "GridPaginationModel",
+    "category": "Pagination",
+    "description": "Get the pagination model",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridPaginationRowRangeSelector",
     "returnType": "{ firstRowIndex: number; lastRowIndex: number } | null",
     "category": "Pagination",

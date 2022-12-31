@@ -33,15 +33,15 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
-### Initialize the page size
+### Initialize the pagination model
 
-To initialize the page size without controlling it, provide the page size to the `initialState` prop.
+To initialize the pagination model without controlling it, provide the `paginationModel` to the `initialState` prop.
 
 ```tsx
 <DataGrid
   initialState={{
     pagination: {
-      pageSize: 10,
+      paginationModel: { pageSize: 25, page: 0 },
     },
   }}
 />
@@ -51,9 +51,9 @@ To initialize the page size without controlling it, provide the page size to the
 
 ### Controlled page size
 
-Use the `pageSize` prop to control the size of the pages.
+Use the `paginationModel` prop to control the size of the pages.
 
-You can use the `onPageSizeChange` prop to listen to changes to the page size and update the prop accordingly.
+You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
 
 {{"demo": "PageSizeControlled.js", "bg": "inline"}}
 
@@ -61,13 +61,13 @@ You can use the `onPageSizeChange` prop to listen to changes to the page size an
 
 ### Initialize the page
 
-To initialize the page without controlling it, provide the page to the `initialState` prop.
+To initialize the page without controlling it, provide the it in `paginationModel` to the `initialState` prop.
 
 ```tsx
 <DataGrid
   initialState={{
     pagination: {
-      page: 1,
+      paginationModel: { page: 1, pageSize: 5 },
     },
   }}
 />
@@ -77,9 +77,9 @@ To initialize the page without controlling it, provide the page to the `initialS
 
 ### Controlled page
 
-Use the `page` prop to control the size of the pages.
+Use the `paginationModel` prop to control the size of the pages.
 
-You can use the `onPageChange` prop to listen to changes to the page and update the prop accordingly.
+You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
 
 {{"demo": "PageControlled.js", "bg": "inline"}}
 
@@ -97,7 +97,7 @@ For more information regarding server-side pagination in combination with contro
 
 - Set the prop `paginationMode` to `server`
 - Provide a `rowCount` prop to let the grid know how many pages there are
-- Add an `onPageChange` callback to load the rows when the page changes
+- Listen to `onPaginationModelChange` callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
 To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:

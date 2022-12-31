@@ -9,9 +9,19 @@ export default function MultipleRowSelectionGrid() {
     maxColumns: 6,
   });
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} pagination pageSize={10} />
+      <DataGridPro
+        {...data}
+        pagination
+        paginationModel={paginationModel}
+        onPaginationModelChange={setPaginationModel}
+      />
     </div>
   );
 }
