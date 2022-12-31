@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -95,6 +95,8 @@ export const useMobilePicker = <
     Input: components.Input,
   };
 
+  const Layout = components?.Layout ?? PickersLayout;
+
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
@@ -119,13 +121,14 @@ export const useMobilePicker = <
             actionBar: undefined,
           }}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

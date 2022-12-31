@@ -39,33 +39,6 @@ describe('<DesktopNextDatePicker />', () => {
     });
   });
 
-  describe('Component slots: PaperContent', () => {
-    it('should render custom component', () => {
-      function CustomPaperContent({ children }) {
-        return (
-          <div>
-            <p>test custom content</p>
-            {children}
-          </div>
-        );
-      }
-      const testDate = adapterToUse.date(new Date(2000, 0, 1));
-      render(
-        <DesktopNextDatePicker
-          defaultValue={testDate}
-          components={{
-            PaperContent: CustomPaperContent,
-          }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.getByText('test custom content')).not.equal(null);
-      expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
-    });
-  });
-
   it('allows to change selected date from the field according to `format`', () => {
     const handleChange = spy();
 

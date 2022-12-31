@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -75,6 +76,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     rangePosition,
     onRangePositionChange,
     toolbarFormat,
+    className,
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -96,7 +98,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
-      className={classes.root}
+      className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
     >

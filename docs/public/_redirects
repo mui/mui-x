@@ -44,6 +44,8 @@
 /x/api/date-pickers/clock-picker/ /x/api/date-pickers/time-clock/ 301
 /:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
 
+/:lang/x/* /x/:splat 301
+
 # 2023
 
 # Proxies

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
 import { gridColumnLookupSelector } from '@mui/x-data-grid-pro';
 import {
   GridPipeProcessor,
@@ -18,20 +17,19 @@ import {
   unwrapColumnFromAggregation,
 } from './wrapColumnWithAggregation';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridAggregationColumnMenuItem } from '../../../components/GridAggregationColumnMenuItem';
 import { gridAggregationModelSelector } from './gridAggregationSelectors';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import { GridAggregationRules } from './gridAggregationInterfaces';
-
-function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
-}
 
 export const useGridAggregationPreProcessors = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition'
+    | 'aggregationFunctions'
+    | 'disableAggregation'
+    | 'getAggregationPosition'
+    | 'componentsProps'
+    | 'components'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
@@ -112,31 +110,23 @@ export const useGridAggregationPreProcessors = (
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+    (columnMenuItems, colDef) => {
       if (props.disableAggregation) {
-        return initialValue;
+        return columnMenuItems;
       }
 
       const availableAggregationFunctions = getAvailableAggregationFunctions({
         aggregationFunctions: props.aggregationFunctions,
-        column,
+        colDef,
       });
 
       if (availableAggregationFunctions.length === 0) {
-        return initialValue;
+        return columnMenuItems;
       }
 
-      return [
-        ...initialValue,
-        <Divider />,
-        <GridAggregationColumnMenuItem
-          column={column}
-          label={apiRef.current.getLocaleText('aggregationMenuItemHeader')}
-          availableAggregationFunctions={availableAggregationFunctions}
-        />,
-      ];
+      return [...columnMenuItems, 'ColumnMenuAggregationItem'];
     },
-    [apiRef, props.aggregationFunctions, props.disableAggregation],
+    [props.aggregationFunctions, props.disableAggregation],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(

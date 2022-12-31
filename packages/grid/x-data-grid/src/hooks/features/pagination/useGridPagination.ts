@@ -6,7 +6,7 @@ import { GridPaginationApi, GridPaginationState } from './gridPaginationInterfac
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
 import { gridVisibleTopLevelRowCountSelector } from '../filter';
-import { gridDensityRowHeightSelector } from '../density';
+import { gridDensityFactorSelector } from '../density';
 import {
   useGridLogger,
   useGridSelector,
@@ -88,12 +88,14 @@ export const useGridPagination = (
     | 'initialState'
     | 'paginationMode'
     | 'signature'
+    | 'rowHeight'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPagination');
 
   const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
+  const rowHeight = Math.floor(props.rowHeight * densityFactor);
 
   apiRef.current.registerControlState({
     stateId: 'pagination',
