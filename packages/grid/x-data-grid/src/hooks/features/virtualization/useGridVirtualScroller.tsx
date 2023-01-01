@@ -417,7 +417,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
     const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
-    let isFocusedCellOutOfRange = true;
+    let isFocusedCellRendered = false;
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstRowIndex,
@@ -448,7 +448,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
         if (cell && row.id === cell?.id) {
-          isFocusedCellOutOfRange = false;
+          isFocusedCellRendered = true;
         }
 
         renderedRows.push(row);
@@ -459,7 +459,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           columns: visibleColumns,
         });
       }
-      if (isFocusedCellOutOfRange && cell && !disableVirtualization) {
+      // If the selected row is not within the current range of rows being displayed,
+      // we need to render it at either the top or bottom of the rows,
+      // depending on whether it is above or below the range.
+
+      if (!isFocusedCellRendered && cell && !disableVirtualization) {
         const rows = currentPage.rows.filter((row) => row.id === cell.id);
         const focusedRow = rows.length > 0 && rows[0];
 
@@ -503,7 +507,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
 
-      const lastVisibleRowIndex = isFocusedCellOutOfRange
+      const lastVisibleRowIndex = !isFocusedCellRendered
         ? firstRowToRender + i === currentPage.rows.length
         : firstRowToRender + i === currentPage.rows.length - 1;
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
