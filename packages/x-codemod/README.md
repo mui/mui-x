@@ -62,10 +62,25 @@ npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":
 
 #### 🚀 `preset-safe`
 
-A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once.
+A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both data-grid and pickers. To run codemods for a either grid or pickers, refer to the respective section.
 
 ```sh
 npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+- [`preset-safe-for-pickers`](#preset-safe-for-pickers)
+- [`preset-safe-for-data-grid`](#preset-safe-for-data-grid)
+
+### Pickers codemods
+
+#### 🚀 `preset-safe` for pickers
+
+The `preset-safe` codemods for pickers.
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/preset-safe <path|folder>
 ```
 
 The list includes these transformers
@@ -75,7 +90,6 @@ The list includes these transformers
 - [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
-- [`column-menu-components-rename`](#column-menu-components-rename)
 
 #### `adapter-change-import`
 
@@ -144,7 +158,7 @@ Renames the `locale` prop of the `LocalizationProvider` component into `adapterL
 ```
 
 ```sh
-npx @mui/x-codemod v6.0.0/localization-provider-rename-locale <path>
+npx @mui/x-codemod v6.0.0/pickers/localization-provider-rename-locale <path>
 ```
 
 #### `text-props-to-localeText`
@@ -161,7 +175,7 @@ Replace props used for localization such as `cancelText` to their corresponding 
 ```
 
 ```sh
-npx @mui/x-codemod v6.0.0/text-props-to-localeText <path>
+npx @mui/x-codemod v6.0.0/pickers/text-props-to-localeText <path>
 ```
 
 If you were always using the same text value in all your components, consider moving those translation from the component to the `LocalizationProvider` by hand.
@@ -181,6 +195,20 @@ If you were always using the same text value in all your components, consider mo
 ```
 
 You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#rename-the-locale-prop-on-localizationprovider).
+
+### Data grid codemods
+
+#### 🚀 `preset-safe` for data grid
+
+The `preset-safe` codemods for data grid.
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`column-menu-components-rename`](#column-menu-components-rename)
 
 #### `column-menu-components-rename`
 
@@ -202,7 +230,7 @@ Replace column menu items that have been renamed.
 ```
 
 ```sh
-npx @mui/x-codemod v6.0.0/column-menu-components-rename <path>
+npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 ```
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
