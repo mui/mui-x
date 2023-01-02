@@ -5,10 +5,6 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
-import {
-  WrapperVariantContext,
-  WrapperVariant,
-} from '../internals/components/wrappers/WrapperVariantContext';
 import { DateOrTimeView } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
@@ -16,6 +12,7 @@ import {
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
+import { WrapperVariant } from '../internals/models/common';
 
 type TabValue = 'date' | 'time';
 
@@ -51,6 +48,11 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * @default Time
    */
   timeIcon?: React.ReactNode;
+  /**
+   * Variant of the component this component is inside of.
+   * @default 'desktop'
+   */
+  wrapperVariant?: WrapperVariant;
 }
 
 export interface DateTimePickerTabsProps
@@ -62,9 +64,7 @@ export interface DateTimePickerTabsProps
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
-type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -77,7 +77,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: DateTimePickerTabsProps }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
     // TODO v6: Drop `order` with the legacy pickers
@@ -98,12 +98,12 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     timeIcon = <Time />,
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
+    wrapperVariant = 'desktop',
   } = props;
 
   const localeText = useLocaleText();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
   const ownerState = { ...props, wrapperVariant };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onViewChange(tabToView(value));

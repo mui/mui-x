@@ -45,6 +45,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
       ...defaultizedProps.componentsProps,
       tabs: {
         hidden: displayStaticWrapperAs === 'desktop',
+        wrapperVariant: displayStaticWrapperAs,
         ...defaultizedProps.componentsProps?.tabs,
       },
     },

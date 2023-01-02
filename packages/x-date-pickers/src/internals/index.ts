@@ -90,7 +90,6 @@ export type {
   PickersSlotsComponentsProps,
 } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
-export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
@@ -173,6 +172,7 @@ export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
+export type { WrapperVariant } from './models/common';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';

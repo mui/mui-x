@@ -100,7 +100,13 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         autoFocus
         DateInputProps={AllDateInputProps}
         components={components}
-        componentsProps={componentsProps}
+        componentsProps={{
+          ...componentsProps,
+          tabs: {
+            wrapperVariant: 'desktop',
+            ...componentsProps?.tabs,
+          },
+        }}
         {...other}
       />
     </DesktopWrapper>
