@@ -707,23 +707,66 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
+### Paper Content
+
+- The `PaperContent` / `paperContent` component slot and component props slot have been removed.
+
+  You can use the new [`Layout` component slot](/x/react-date-pickers/custom-layout/).
+  The main difference is that you now receive the various parts of the UI instead of a single `children` prop:
+
+  ```diff
+  +import { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
+
+   function MyCustomLayout (props) {
+  -  const { children } = props;
+  -
+  -  return (
+  -    <React.Fragment>
+  -      {children}
+  -      <div>Custom component</div>
+  -    </React.Fragment>
+  -  );
+  +  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
+  +
+  +  return (
+  +    <PickersLayoutRoot>
+  +      {toolbar}
+  +      {content}
+  +      {actionBar}
+  +      <div>Custom component</div>
+  +    </PickersLayoutRoot>
+  +  );
+   }
+
+   function App() {
+     return (
+       <DatePicker
+          components={{
+  -         PaperContent: MyCustomLayout,
+  +         Layout: MyCustomLayout,
+          }}
+       />
+     );
+   }
+  ```
+
 ### Left arrow button
 
 - The component slot `LeftArrowButton` has been renamed `PreviousIconButton`:
 
-  ```diff
-   <DatePicker
-     components={{
-  -    LeftArrowButton: CustomButton,
-  +    PreviousIconButton: CustomButton,
-     }}
+```diff
+ <DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+   }}
 
-     componentsProps={{
-  -    leftArrowButton: {},
-  +    previousIconButton: {},
-     }}
-   />
-  ```
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+   }}
+ />
+```
 
 ### Right arrow button
 
