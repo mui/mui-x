@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 # Time Picker
 
-<p class="description">Time Picker let the user select a time.</p>
+<p class="description">The Time Picker component let the user select a time.</p>
 
 :::warning
 The new Time Pickers are unstable.
@@ -25,7 +25,7 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 
 ## Component composition
 
-The Time Picker component is built using the `TimeField` for the keyboard editing, and the `TimeClock` for the view editing.
+The component is built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
 All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
@@ -35,13 +35,13 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The Time Picker component can be uncontrolled or controlled
+The component can be uncontrolled or controlled
 
 {{"demo": "TimePickerValue.js"}}
 
 ## Responsiveness
 
-The Time Picker component is available in three variants:
+The component is available in three variants:
 
 - The `DesktopNextTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
@@ -62,20 +62,20 @@ There are certain caveats when testing pickers, please refer to [this section](/
 
 ## Static mode
 
-It is also possible to render any Time Picker without the popover/modal and field.
+It is also possible to render the Time Picker component without the popover/modal and field.
 This will enable building custom popover/modal containers.
 
 {{"demo": "StaticTimePickerDemo.js", "bg": true}}
 
 ## Form props
 
-The Time Picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
 ## Views
 
-The Time Picker component can contain three views: `hours`, `minutes`, and `seconds`.
+The component can contain three views: `hours`, `minutes`, and `seconds`.
 By default, only the `hours` and `minutes` views are enabled.
 
 You can customize the enabled views using the `views` prop.

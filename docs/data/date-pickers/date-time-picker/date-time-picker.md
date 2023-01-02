@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Time Picker
 
-<p class="description">This component combines the date & time pickers.</p>
+<p class="description">The Date Time Picker component let the user select a date and time.</p>
 
 :::warning
 The new Date Time Pickers are unstable.
@@ -25,7 +25,7 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 
 ## Component composition
 
-The Date Time Picker component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing, and the `TimeClock` for the time view editing.
+The component is built using the `DateTimeField` for the keyboard editing, the `DateCalendar` for the date view editing and the `TimeClock` for the time view editing.
 All the documented props of those three components can also be passed to the Date Time Picker component.
 
 Check-out their documentation page for more information:
@@ -36,13 +36,13 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The Date Time Picker component can be uncontrolled or controlled
+The component can be uncontrolled or controlled
 
 {{"demo": "DateTimePickerValue.js"}}
 
 ## Responsiveness
 
-The Date Time Picker component is available in three variants:
+The component is available in three variants:
 
 - The `DesktopNextDateTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
@@ -63,20 +63,20 @@ There are certain caveats when testing pickers, please refer to [this section](/
 
 ## Static mode
 
-It is also possible to render the Date Time Picker without the popover/modal and field.
+It is also possible to render the Date Time Picker component without the popover/modal and field.
 This can be helpful when building custom popover/modal containers.
 
 {{"demo": "StaticDateTimePickerDemo.js", "bg": true}}
 
 ## Form props
 
-The Date Time Picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsDateTimePickers.js"}}
 
 ## Views
 
-The Date Time Picker component can contain six views: `day`, `month`, `year`, `hours`, `minutes` and `seconds`.
+The component can contain six views: `day`, `month`, `year`, `hours`, `minutes` and `seconds`.
 By default, only the `year`, `day`, `hours`, and `minutes` views are enabled.
 
 You can customize the enabled views using the `views` prop.

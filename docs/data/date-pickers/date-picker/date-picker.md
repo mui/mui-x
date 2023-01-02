@@ -25,7 +25,7 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 
 ## Component composition
 
-The Date Picker component is built using the `DateField` for the keyboard editing, and the `DateCalendar` for the view editing.
+The component is built using the `DateField` for the keyboard editing and the `DateCalendar` for the view editing.
 All the documented props of those two components can also be passed to the Date Picker component.
 
 Check-out their documentation page for more information:
@@ -35,13 +35,13 @@ Check-out their documentation page for more information:
 
 ## Uncontrolled vs. Controlled
 
-The Date Picker component can be uncontrolled or controlled
+The component can be uncontrolled or controlled
 
 {{"demo": "DatePickerValue.js"}}
 
 ## Responsiveness
 
-The Date Picker component is available in three variants:
+The component is available in three variants:
 
 - The `DesktopNextDatePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
@@ -62,20 +62,20 @@ There are certain caveats when testing pickers, please refer to [this section](/
 
 ## Static mode
 
-It is also possible to render the Date Picker without the popover/modal and field.
+It is also possible to render the Date Picker component without the popover/modal and field.
 This can be helpful when building custom popover/modal containers.
 
 {{"demo": "StaticDatePickerDemo.js", "bg": true}}
 
 ## Form props
 
-The Date Picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsDatePickers.js"}}
 
 ## Views
 
-The Date Picker component can contain three views: `day`, `month`, and `year`.
+The component can contain three views: `day`, `month`, and `year`.
 By default, only the `day` and `year` views are enabled.
 
 You can customize the enabled views using the `views` prop.
