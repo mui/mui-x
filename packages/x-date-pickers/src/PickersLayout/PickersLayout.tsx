@@ -33,7 +33,7 @@ const PickersLayoutRoot = styled('div', {
       }
     : { gridColumn: '1 / 4', gridRow: 1 },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
-  [`& .${pickersLayoutClasses.contentWrapper}`]: { gridColumn: '1 / 4', gridRow: 2 },
+  [`& .${pickersLayoutClasses.contentWrapper}`]: { gridColumn: 2, gridRow: 2 },
 }));
 
 PickersLayoutRoot.propTypes = {
