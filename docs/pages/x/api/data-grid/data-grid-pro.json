@@ -202,8 +202,8 @@
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
-    "showCellRightBorder": { "type": { "name": "bool" } },
-    "showColumnRightBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" } },
+    "showColumnVerticalBorder": { "type": { "name": "bool" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -245,8 +245,31 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
+    "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenuHideIcon": { "default": "GridVisibilityOffIcon", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuManageColumnsIcon": {
+      "default": "GridViewColumnIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuPinLeftIcon": {
+      "default": "GridPushPinLeftIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuPinRightIcon": {
+      "default": "GridPushPinRightIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
     "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
@@ -320,6 +343,10 @@
       "cell--textRight",
       "cell--withRenderer",
       "cell--outlined",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -402,6 +429,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",
@@ -420,7 +448,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder",
+      "withBorderColor",
+      "cell--withRightBorder",
+      "columnHeader--withRightBorder",
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",

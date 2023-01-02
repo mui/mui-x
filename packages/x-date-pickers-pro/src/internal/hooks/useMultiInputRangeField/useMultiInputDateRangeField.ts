@@ -8,11 +8,9 @@ import {
   DateValidationError,
   useLocalizationContext,
   useValidation,
-} from '@mui/x-date-pickers/internals';
-import {
   FieldChangeHandler,
   FieldChangeHandlerContext,
-} from '@mui/x-date-pickers/internals-fields';
+} from '@mui/x-date-pickers/internals';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
@@ -37,7 +35,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   const sharedProps = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange } = sharedProps;
+  const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
@@ -73,6 +71,8 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
 
   const startInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
     ...inStartInputProps,
+    disabled,
+    readOnly,
     format,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
@@ -82,6 +82,8 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   const endInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
     ...inEndInputProps,
     format,
+    disabled,
+    readOnly,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,

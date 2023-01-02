@@ -17,7 +17,7 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onCellClick"
   },
@@ -25,7 +25,7 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellDoubleClick",
     "description": "Fired when a cell is double-clicked.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>",
     "componentProp": "onCellDoubleClick"
   },
@@ -56,14 +56,14 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellFocusOut",
     "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<MuiBaseEvent>",
     "componentProp": "onCellFocusOut"
   },
@@ -71,9 +71,16 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>",
     "componentProp": "onCellKeyDown"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellKeyUp",
+    "description": "Fired when a <code>keyup</code> event happens in a cell.",
+    "params": "GridCellParams<any>",
+    "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -86,15 +93,29 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellMouseDown",
     "description": "Fired when a <code>mousedown</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
+    "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellMouseOver",
+    "description": "Fired when a <code>mouseover</code> event happens in a cell.",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellMouseUp",
     "description": "Fired when a <code>mouseup</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid-premium"],
+    "name": "cellSelectionChange",
+    "description": "Fired when the selection state of one or multiple cells change.",
+    "params": "GridCellSelectionModel",
+    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

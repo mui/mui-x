@@ -32,6 +32,7 @@ export interface GridCellProps<V = any, F = V> {
   height: number | 'auto';
   isEditable?: boolean;
   isOutlined?: boolean;
+  isSelected?: boolean;
   showRightBorder?: boolean;
   value?: V;
   width: number;
@@ -64,12 +65,15 @@ function doesSupportPreventScroll(): boolean {
   return cachedSupportsPreventScroll;
 }
 
-type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable' | 'isOutlined'> & {
+type OwnerState = Pick<
+  GridCellProps,
+  'align' | 'showRightBorder' | 'isEditable' | 'isOutlined' | 'isSelected'
+> & {
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, isOutlined, showRightBorder, isEditable, classes } = ownerState;
+  const { align, isOutlined, showRightBorder, isEditable, isSelected, classes } = ownerState;
 
   const slots = {
     root: [
@@ -77,7 +81,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       `cell--text${capitalize(align)}`,
       isOutlined && `cell--outlined`,
       isEditable && 'cell--editable',
-      showRightBorder && 'withBorder',
+      isSelected && 'selected',
+      showRightBorder && 'cell--withRightBorder',
+      'withBorderColor',
     ],
     content: ['cellContent'],
   };
@@ -98,6 +104,7 @@ function GridCell(props: GridCellProps) {
     height,
     isEditable,
     isOutlined,
+    isSelected,
     rowId,
     tabIndex,
     value,
@@ -112,9 +119,11 @@ function GridCell(props: GridCellProps) {
     onDoubleClick,
     onMouseDown,
     onMouseUp,
+    onMouseOver,
     onKeyDown,
     onFocus,
     onBlur,
+    onKeyUp,
     onDragEnter,
     onDragOver,
     ...other
@@ -126,7 +135,14 @@ function GridCell(props: GridCellProps) {
   const apiRef = useGridApiContext();
 
   const rootProps = useGridRootProps();
-  const ownerState = { align, showRightBorder, isEditable, isOutlined, classes: rootProps.classes };
+  const ownerState = {
+    align,
+    showRightBorder,
+    isEditable,
+    classes: rootProps.classes,
+    isSelected,
+    isOutlined,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
@@ -239,11 +255,13 @@ function GridCell(props: GridCellProps) {
       tabIndex={(cellMode === 'view' || !isEditable) && !managesOwnFocus ? tabIndex : -1}
       onClick={publish('cellClick', onClick)}
       onDoubleClick={publish('cellDoubleClick', onDoubleClick)}
+      onMouseOver={publish('cellMouseOver', onMouseOver)}
       onMouseDown={publishMouseDown('cellMouseDown')}
       onMouseUp={publishMouseUp('cellMouseUp')}
       onKeyDown={publish('cellKeyDown', onKeyDown)}
       onBlur={publish('cellBlur', onBlur)}
       onFocus={publish('cellFocus', onFocus)}
+      onKeyUp={publish('cellKeyUp', onKeyUp)}
       {...draggableEventHandlers}
       {...other}
     >
@@ -270,6 +288,7 @@ GridCell.propTypes = {
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
   isOutlined: PropTypes.bool,
+  isSelected: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,
   onDragEnter: PropTypes.func,

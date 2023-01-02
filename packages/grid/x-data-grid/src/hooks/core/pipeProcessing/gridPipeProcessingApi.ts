@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GridCellIndexCoordinates, GridScrollParams, GridColDef } from '../../../models';
+import {
+  GridCellIndexCoordinates,
+  GridScrollParams,
+  GridColDef,
+  GridCellCoordinates,
+} from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
   GridExportStateParams,
@@ -14,7 +19,10 @@ import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  columnMenu: {
+    value: Array<string>;
+    context: GridColDef;
+  };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;
@@ -37,6 +45,8 @@ export interface GridPipeProcessingLookup {
     value: string[];
     context: GridRowId;
   };
+  cellClassName: { value: string[]; context: GridCellCoordinates };
+  isCellSelected: { value: boolean; context: GridCellCoordinates };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

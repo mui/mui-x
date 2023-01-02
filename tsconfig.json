@@ -23,7 +23,9 @@
       "@mui/x-date-pickers-pro/*": ["./packages/x-date-pickers-pro/src/*"],
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
-      "test/*": ["./test/*"]
+      "test/*": ["./test/*"],
+      "docs/*": ["./node_modules/@mui/monorepo/docs"],
+      "docsx/*": ["./docs/*"]
     }
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]

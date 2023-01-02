@@ -10,7 +10,7 @@ import {
   GridRowParams,
   GridCellParams,
   GridRowsProp,
-  GridColumns,
+  GridColDef,
   gridClasses,
   GridActionsCellItem,
   GridApi,
@@ -24,7 +24,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Events Params', () => {
   const { render, clock } = createRenderer();
 
-  const baselineProps: { rows: GridRowsProp; columns: GridColumns } = {
+  const baselineProps: { rows: GridRowsProp; columns: GridColDef[] } = {
     rows: [
       {
         id: 1,

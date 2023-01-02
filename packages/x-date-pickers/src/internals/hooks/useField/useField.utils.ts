@@ -1,4 +1,10 @@
-import { FieldSection, AvailableAdjustKeyCode, FieldBoundaries } from './useField.interfaces';
+import {
+  FieldSection,
+  AvailableAdjustKeyCode,
+  FieldBoundaries,
+  SectionNeighbors,
+  SectionOrdering,
+} from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -239,7 +245,7 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
 };
 
 export const getSectionVisibleValue = (
-  section: Omit<FieldSection, 'start' | 'end'>,
+  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
   willBeRenderedInInput: boolean,
 ) => {
   const value = section.value || section.placeholder;
@@ -249,26 +255,52 @@ export const getSectionVisibleValue = (
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
+  // Adding the ltr mark is not a problem because it's only for digit (which are always ltr)
+  // The \u2068 and \u2069 are cleaned, but not the \u200e to notice that an update with same digit occures
   if (willBeRenderedInInput && section.contentType === 'digit' && !section.hasTrailingZeroes) {
-    return `${value}‎`;
+    return `\u2068${value}\u200e\u2069`;
   }
 
+  if (willBeRenderedInInput) {
+    return `\u2068${value}\u2069`;
+  }
   return value;
 };
 
+export const cleanString = (dirtyString: string) =>
+  dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: Omit<TSection, 'start' | 'end'>[],
+  sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
 ): TSection[] => {
   let position = 0;
+  let positionInInput = 1;
   const newSections: TSection[] = [];
 
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
-    const end =
-      position + getSectionVisibleValue(section, true).length + (section.separator?.length ?? 0);
+    const renderedValue = getSectionVisibleValue(section, true);
+    const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
 
-    newSections.push({ ...section, start: position, end } as TSection);
-    position = end;
+    const sectionLength = cleanString(sectionStr).length;
+    const sectionLengthInInput = sectionStr.length;
+
+    // The ...InInput values consider the unicode characters but do include them in their indexes
+    const cleanedValue = cleanString(renderedValue);
+    const startInInput =
+      positionInInput + renderedValue.indexOf(cleanedValue[0]) + section.startSeparator.length;
+    const endInInput = startInInput + cleanedValue.length;
+
+    newSections.push({
+      ...section,
+      start: position,
+      end: position + sectionLength,
+      startInInput,
+      endInInput,
+    } as TSection);
+    position += sectionLength;
+    // Move position to the end of string associated to the current section
+    positionInInput += sectionLengthInInput;
   }
 
   return newSections;
@@ -319,15 +351,34 @@ const getSectionPlaceholder = <TDate>(
   }
 };
 
+const getEscapedPartsFromExpandedFormat = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  expandedFormat: string,
+) => {
+  const escapedParts: { start: number; end: number }[] = [];
+  const { start: startChar, end: endChar } = utils.escapedCharacters;
+  const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
+
+  let match: RegExpExecArray | null = null;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = regExp.exec(expandedFormat))) {
+    escapedParts.push({ start: match.index, end: regExp.lastIndex - 1 });
+  }
+
+  return escapedParts;
+};
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
 ) => {
-  let currentTokenValue = '';
-  const sections: Omit<FieldSection, 'start' | 'end'>[] = [];
   const expandedFormat = utils.expandFormat(format);
+  const escapedParts = getEscapedPartsFromExpandedFormat(utils, expandedFormat);
+  let currentTokenValue = '';
+  let startSeparator: string = '';
+  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
 
   const commitCurrentToken = () => {
     if (currentTokenValue === '') {
@@ -347,7 +398,8 @@ export const splitFormatIntoSections = <TDate>(
       value: sectionValue,
       placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, currentTokenValue),
       hasTrailingZeroes,
-      separator: '',
+      startSeparator: sections.length === 0 ? startSeparator : '',
+      endSeparator: '',
       edited: false,
     });
 
@@ -355,49 +407,88 @@ export const splitFormatIntoSections = <TDate>(
   };
 
   for (let i = 0; i < expandedFormat.length; i += 1) {
+    const escapedPartOfCurrentChar = escapedParts.find(
+      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+    );
+
     const char = expandedFormat[i];
 
-    if (char.match(/([A-zÀ-ú]+)/g)) {
+    const isEscapedChar = escapedPartOfCurrentChar != null;
+
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
       currentTokenValue += char;
     } else {
-      commitCurrentToken();
-      sections[sections.length - 1].separator += char;
+      // If we are on the opening or closing character of an escaped part of the format,
+      // Then we ignore this character.
+      const isEscapeBoundary =
+        (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
+        escapedPartOfCurrentChar?.end === i;
+
+      if (!isEscapeBoundary) {
+        commitCurrentToken();
+        if (sections.length === 0) {
+          startSeparator += char;
+        } else {
+          sections[sections.length - 1].endSeparator += char;
+        }
+      }
     }
   }
 
   commitCurrentToken();
 
-  return sections.map((section) => {
-    if (section.separator !== '/') {
-      return section;
-    }
-    return {
-      ...section,
-      separator: ' / ',
-      parsingSeparator: '/',
-    };
-  });
-};
-
-export const createDateStrFromSections = (
-  sections: FieldSection[],
-  willBeRenderedInInput: boolean,
-) =>
-  sections
-    .map((section) => {
-      let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
-
-      const separator = willBeRenderedInInput
-        ? section.separator
-        : section.parsingSeparator ?? section.separator;
-
-      if (separator != null) {
-        sectionValueStr += separator;
+  const cleanSections = sections.map((section) => {
+    const cleanSeparator = (separator: string) => {
+      let cleanedSeparator = separator;
+      if (cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
+        cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
 
-      return sectionValueStr;
-    })
-    .join('');
+      if (cleanedSeparator === '/') {
+        cleanedSeparator = ' / ';
+      }
+
+      return cleanedSeparator;
+    };
+
+    section.startSeparator = cleanSeparator(section.startSeparator);
+    section.endSeparator = cleanSeparator(section.endSeparator);
+
+    return section;
+  });
+
+  return cleanSections;
+};
+
+/**
+ * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
+ * To make sure that the parsing works, we are building a format and a date without any separator.
+ */
+export const getDateFromDateSections = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  sections: FieldSection[],
+) => {
+  const formatWithoutSeparator = sections.map((section) => section.formatValue).join(' ');
+  const dateWithoutSeparatorStr = sections
+    .map((section) => getSectionVisibleValue(section, false))
+    .join(' ');
+
+  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
+};
+
+export const createDateStrForInputFromSections = (sections: FieldSection[]) => {
+  const formattedArray = sections.map(
+    (section) =>
+      `${section.startSeparator}${getSectionVisibleValue(section, true)}${section.endSeparator}`,
+  );
+
+  // \u2066: start left-to-right isolation
+  // \u2067: start right-to-left isolation
+  // \u2068: start first strong character isolation
+  // \u2069: pop isolation
+  // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
+  return `\u2066${formattedArray.join('')}\u2069`;
+};
 
 export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
@@ -582,7 +673,7 @@ export const validateSections = <TSection extends FieldSection>(
 
 export const mergeDateIntoReferenceDate = <
   TDate,
-  TSection extends Omit<FieldSection, 'start' | 'end'>,
+  TSection extends Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
 >(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
@@ -613,7 +704,6 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
   boundaries: FieldBoundaries<TDate, TSection>,
-  format: string,
 ) => {
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
@@ -634,10 +724,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
     };
   });
 
-  const startOfMonth = utils.parse(
-    createDateStrFromSections(sectionsForStartOfMonth, false),
-    format,
-  );
+  const startOfMonth = getDateFromDateSections(utils, sectionsForStartOfMonth);
 
   // Even the start of the month is invalid, we probably have other invalid sections, the clamping failed.
   if (startOfMonth == null || !utils.isValid(startOfMonth)) {
@@ -660,4 +747,54 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
       value: dayBoundaries.maximum.toString(),
     };
   });
+};
+
+export const getSectionOrder = (
+  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
+  isRTL: boolean,
+): SectionOrdering => {
+  const neighbors: SectionNeighbors = {};
+  if (!isRTL) {
+    sections.forEach((_, index) => {
+      const leftIndex = index === 0 ? null : index - 1;
+      const rightIndex = index === sections.length - 1 ? null : index + 1;
+      neighbors[index] = { leftIndex, rightIndex };
+    });
+    return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
+  }
+
+  type PotisionMapping = { [from: number]: number };
+  const rtl2ltr: PotisionMapping = {};
+  const ltr2rtl: PotisionMapping = {};
+
+  let groupedSectionsStart = 0;
+  let groupedSectionsEnd = 0;
+  let RTLIndex = sections.length - 1;
+
+  while (RTLIndex >= 0) {
+    groupedSectionsEnd = sections.findIndex(
+      // eslint-disable-next-line @typescript-eslint/no-loop-func
+      (section, index) => index >= groupedSectionsStart && section.endSeparator?.includes(' '),
+    );
+    if (groupedSectionsEnd === -1) {
+      groupedSectionsEnd = sections.length - 1;
+    }
+
+    for (let i = groupedSectionsEnd; i >= groupedSectionsStart; i -= 1) {
+      ltr2rtl[i] = RTLIndex;
+      rtl2ltr[RTLIndex] = i;
+      RTLIndex -= 1;
+    }
+    groupedSectionsStart = groupedSectionsEnd + 1;
+  }
+
+  sections.forEach((_, index) => {
+    const rtlIndex = ltr2rtl[index];
+    const leftIndex = rtlIndex === 0 ? null : rtl2ltr[rtlIndex - 1];
+    const rightIndex = rtlIndex === sections.length - 1 ? null : rtl2ltr[rtlIndex + 1];
+
+    neighbors[index] = { leftIndex, rightIndex };
+  });
+
+  return { neighbors, startIndex: rtl2ltr[0], endIndex: rtl2ltr[sections.length - 1] };
 };

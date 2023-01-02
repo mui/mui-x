@@ -9,6 +9,8 @@ import {
   GridInputRowSelectionModel,
   GridRowId,
   GridEditModes,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -723,6 +725,30 @@ describe('<DataGrid /> - Row Selection', () => {
       fireEvent.click(getCell(1, 1));
       expect(getSelectedRowIds()).to.deep.equal([1, 2]);
     });
+
+    it('should throw if rowSelectionModel contains more than 1 row', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function ControlCase() {
+        apiRef = useGridApiRef();
+        return <TestDataGridSelection apiRef={apiRef} />;
+      }
+
+      render(<ControlCase />);
+      expect(() => apiRef.current.setRowSelectionModel([0, 1])).to.throw(
+        /`rowSelectionModel` can only contain 1 item in DataGrid/,
+      );
+    });
+
+    it('should not throw if rowSelectionModel contains more than 1 item with checkbox selection', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function ControlCase() {
+        apiRef = useGridApiRef();
+        return <TestDataGridSelection apiRef={apiRef} checkboxSelection />;
+      }
+
+      render(<ControlCase />);
+      expect(() => act(() => apiRef.current.setRowSelectionModel([0, 1]))).to.not.throw();
+    });
   });
 
   describe('prop: rowSelection = false', () => {
@@ -746,32 +772,6 @@ describe('<DataGrid /> - Row Selection', () => {
     it('should not select rows passed in the rowSelectionModel prop', () => {
       render(<TestDataGridSelection rowSelection={false} rowSelectionModel={[0]} />);
       expect(getSelectedRowIds()).to.deep.equal([]);
-    });
-  });
-
-  describe('console error', () => {
-    it('should throw console error when rowSelectionModel contains more than 1 item in DataGrid without checkbox selection', () => {
-      const onRowSelectionModelChange = spy();
-      expect(() => {
-        render(
-          <TestDataGridSelection
-            rowSelectionModel={[0, 1]}
-            onRowSelectionModelChange={onRowSelectionModelChange}
-          />,
-        );
-      }).toErrorDev('rowSelectionModel can only be of 1 item in DataGrid');
-
-      // We also assert that onRowSelectionModelChange was called here because each
-      // error coming from PropTypes is only sent once. We can't have two tests
-      // checking if a given error occured.
-      // See https://github.com/facebook/react/issues/18251
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal([0]);
-    });
-
-    it('should not throw console error when rowSelectionModel contains more than 1 item in DataGrid with checkbox selection', () => {
-      expect(() => {
-        render(<TestDataGridSelection rowSelectionModel={[0, 1]} checkboxSelection />);
-      }).not.toErrorDev();
     });
   });
 });

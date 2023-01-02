@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { gridClasses } from '../../constants/gridClasses';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -89,7 +90,17 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
     [],
   );
 
-  const anchorEl = apiRef.current.columnHeadersContainerElementRef?.current;
+  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
+
+  React.useEffect(() => {
+    const columnHeadersElement = apiRef.current.rootElementRef?.current?.querySelector(
+      `.${gridClasses.columnHeaders}`,
+    );
+
+    if (columnHeadersElement) {
+      setAnchorEl(columnHeadersElement);
+    }
+  }, [apiRef]);
 
   if (!anchorEl) {
     return null;

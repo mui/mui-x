@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "6.0.0-alpha.10",
+  "version": "6.0.0-alpha.13",
   "description": "The Pro plan edition of the data grid component (MUI X).",
   "author": "MUI Team",
   "main": "src/index.ts",
@@ -42,9 +42,9 @@
     "directory": "packages/grid/x-data-grid-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.1",
-    "@mui/utils": "^5.10.14",
-    "@mui/x-data-grid": "6.0.0-alpha.10",
+    "@babel/runtime": "^7.20.7",
+    "@mui/utils": "^5.11.2",
+    "@mui/x-data-grid": "6.0.0-alpha.13",
     "@mui/x-license-pro": "6.0.0-alpha.9",
     "@types/format-util": "^1.0.2",
     "clsx": "^1.2.1",

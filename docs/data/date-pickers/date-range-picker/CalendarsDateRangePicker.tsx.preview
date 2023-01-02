@@ -1,9 +1,9 @@
-<GridItem label="1 calendar" spacing={2}>
+<DemoItem label="1 calendar">
   <NextDateRangePicker calendars={1} />
-</GridItem>
-<GridItem label="2 calendars" spacing={2}>
+</DemoItem>
+<DemoItem label="2 calendars">
   <NextDateRangePicker calendars={2} />
-</GridItem>
-<GridItem label="3 calendars" spacing={2}>
+</DemoItem>
+<DemoItem label="3 calendars">
   <NextDateRangePicker calendars={3} />
-</GridItem>
+</DemoItem>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
 import {
   GridEventListener,
   useGridApiEventHandler,
@@ -28,13 +27,7 @@ import {
   areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
-import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
-import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-
-function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
-}
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -68,6 +61,8 @@ export const useGridRowGrouping = (
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
+    | 'componentsProps'
+    | 'components'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -158,25 +153,14 @@ export const useGridRowGrouping = (
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+    (columnMenuItems, colDef) => {
       if (props.disableRowGrouping) {
-        return initialValue;
+        return columnMenuItems;
       }
-
-      let menuItems: React.ReactNode;
-      if (isGroupingColumn(column.field)) {
-        menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (column.groupable) {
-        menuItems = <GridRowGroupableColumnMenuItems />;
-      } else {
-        menuItems = null;
+      if (isGroupingColumn(colDef.field) || colDef.groupable) {
+        return [...columnMenuItems, 'ColumnMenuGroupingItem'];
       }
-
-      if (menuItems == null) {
-        return initialValue;
-      }
-
-      return [...initialValue, <Divider />, menuItems];
+      return columnMenuItems;
     },
     [props.disableRowGrouping],
   );

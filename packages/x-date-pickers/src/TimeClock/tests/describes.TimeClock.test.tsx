@@ -15,7 +15,7 @@ import {
 } from 'test/utils/pickers-utils';
 
 describe('<TimeClock /> - Describes', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer();
 
   describeConformance(
     <TimeClock value={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
@@ -49,6 +49,7 @@ describe('<TimeClock /> - Describes', () => {
     defaultProps: {
       openTo: 'minutes',
     },
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const clockPointer = document.querySelector<HTMLDivElement>(`.${clockPointerClasses.root}`);
       if (expectedValue == null) {

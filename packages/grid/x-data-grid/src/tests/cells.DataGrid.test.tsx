@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -52,10 +52,8 @@ describe('<DataGrid /> - Cells', () => {
     });
   });
 
-  describe('prop: showCellRightBorder', () => {
+  describe('prop: showCellVerticalBorder', () => {
     function expectRightBorder(element: HTMLElement) {
-      expect(element).to.have.class(gridClasses.withBorder);
-
       const computedStyle = window.getComputedStyle(element);
       const color = computedStyle.getPropertyValue('border-right-color');
       const width = computedStyle.getPropertyValue('border-right-width');
@@ -76,7 +74,7 @@ describe('<DataGrid /> - Cells', () => {
           <DataGrid
             {...baselineProps}
             columns={[{ field: 'id' }, { field: 'brand' }]}
-            showCellRightBorder
+            showCellVerticalBorder
           />
         </div>,
       );
@@ -99,7 +97,7 @@ describe('<DataGrid /> - Cells', () => {
             {...baselineProps}
             autoHeight
             columns={[{ field: 'id' }, { field: 'brand' }]}
-            showCellRightBorder
+            showCellVerticalBorder
           />
         </div>,
       );

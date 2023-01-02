@@ -46,12 +46,13 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       headerAlign === 'center' && 'columnHeader--alignCenter',
       headerAlign === 'right' && 'columnHeader--alignRight',
       isDragging && 'columnHeader--moving',
-      showRightBorder && 'withBorder',
+      showRightBorder && 'columnHeader--withRightBorder',
       showColumnBorder && 'columnHeader--showColumnBorder',
+      'withBorderColor',
       groupId === null ? 'columnHeader--emptyGroup' : 'columnHeader--filledGroup',
     ],
     draggableContainer: ['columnHeaderDraggableContainer'],
-    titleContainer: ['columnHeaderTitleContainer'],
+    titleContainer: ['columnHeaderTitleContainer', 'withBorderColor'],
     titleContainerContent: ['columnHeaderTitleContainerContent'],
   };
 
@@ -109,10 +110,10 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
   const showRightBorder = !isLastColumn
-    ? rootProps.showColumnRightBorder
+    ? rootProps.showColumnVerticalBorder
     : !removeLastBorderRight && !extendRowFullWidth;
 
-  const showColumnBorder = rootProps.showColumnRightBorder;
+  const showColumnBorder = rootProps.showColumnVerticalBorder;
 
   const ownerState = {
     ...props,
@@ -190,7 +191,6 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
       aria-colspan={fields.length}
       // The fields are wrapped between |-...-| to avoid confusion between fields "id" and "id2" when using selector data-fields~=
       data-fields={`|-${fields.join('-|-')}-|`}
-      disableHeaderSeparator
       {...mouseEventsHandlers}
     />
   );
