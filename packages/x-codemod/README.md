@@ -74,6 +74,7 @@ The list includes these transformers
 - [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
+- [`column-menu-components-rename`](#column-menu-components-rename)
 
 #### `view-components-rename`
 
@@ -170,3 +171,30 @@ If you were always using the same text value in all your components, consider mo
 ```
 
 You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#rename-the-locale-prop-on-localizationprovider).
+
+#### `column-menu-components-rename`
+
+Replace column menu items that have been renamed.
+
+```diff
+  <CustomColumnMenu>
+-   <GridFilterMenuItem column={column} onClick={hideMenu} />
++   <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
+-   <HideGridColMenuItem column={column} onClick={hideMenu} />
++   <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
+-   <GridColumnsMenuItem column={column} onClick={hideMenu} />
++   <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
+-   <SortGridMenuItems column={column} onClick={hideMenu} />
++   <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
+-   <GridColumnPinningMenuItems column={column} onClick={hideMenu} />
++   <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
+  </CustomColumnMenu>
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/column-menu-components-rename <path>
+```
+
+If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
+
+You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/#column-menu).
