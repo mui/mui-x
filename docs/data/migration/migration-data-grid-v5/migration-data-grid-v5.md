@@ -111,6 +111,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
 - The `GridRowParams['getValue']` property was removed. Use `params.row` instead.
 - The `GridCellParams['getValue']` property was removed. Use `params.row` instead.
+- The default type of `GridCellParams['value']` was changed from `any` to `unknown`.
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
