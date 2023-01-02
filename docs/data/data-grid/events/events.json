@@ -42,14 +42,14 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellFocusIn",
     "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellFocusOut",
     "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<MuiBaseEvent>",
     "componentProp": "onCellFocusOut"
   },
@@ -65,7 +65,7 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyUp",
     "description": "Fired when a <code>keyup</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.KeyboardEvent<HTMLElement>>"
   },
   {
@@ -86,7 +86,7 @@
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellMouseOver",
     "description": "Fired when a <code>mouseover</code> event happens in a cell.",
-    "params": "GridCellParams",
+    "params": "GridCellParams<any>",
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
