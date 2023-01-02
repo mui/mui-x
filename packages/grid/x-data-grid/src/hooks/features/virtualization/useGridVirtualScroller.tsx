@@ -83,6 +83,11 @@ interface UseGridVirtualScrollerProps {
   getRowProps?: (id: GridRowId, model: GridRowModel) => any;
 }
 
+interface ContainerDimensions {
+  width: number | null;
+  height: number | null;
+}
+
 export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -112,7 +117,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const [renderContext, setRenderContext] = React.useState<GridRenderContext | null>(null);
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const scrollPosition = React.useRef({ top: 0, left: 0 });
-  const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
+  const [containerDimensions, setContainerDimensions] = React.useState<ContainerDimensions>({
+    width: null,
+    height: null,
+  });
   const prevTotalWidth = React.useRef(columnsTotalWidth);
 
   const getNearestIndexToRender = React.useCallback(
@@ -163,7 +171,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const lastRowIndex = rootProps.autoHeight
       ? firstRowIndex + currentPage.rows.length
-      : getNearestIndexToRender(top + rootRef.current!.clientHeight!);
+      : getNearestIndexToRender(top + containerDimensions.height!);
 
     let hasRowWithAutoHeight = false;
     let firstColumnIndex = 0;
@@ -184,7 +192,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     if (!hasRowWithAutoHeight) {
       firstColumnIndex = binarySearch(left, columnPositions);
-      lastColumnIndex = binarySearch(left + containerWidth!, columnPositions);
+      lastColumnIndex = binarySearch(left + containerDimensions.width!, columnPositions);
     }
 
     return {
@@ -203,7 +211,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     columnPositions,
     visibleColumns.length,
     apiRef,
-    containerWidth,
+    containerDimensions,
   ]);
 
   useEnhancedEffect(() => {
@@ -217,11 +225,17 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   }, [disableVirtualization]);
 
   useEnhancedEffect(() => {
-    setContainerWidth(rootRef.current!.clientWidth);
+    setContainerDimensions({
+      width: rootRef.current!.clientWidth,
+      height: rootRef.current!.clientHeight,
+    });
   }, [rowsMeta.currentPageTotalHeight]);
 
   const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
-    setContainerWidth(params.width);
+    setContainerDimensions({
+      width: params.width,
+      height: params.height,
+    });
   }, []);
 
   useGridApiEventHandler(apiRef, 'resize', handleResize);
@@ -300,7 +314,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   );
 
   useEnhancedEffect(() => {
-    if (containerWidth == null) {
+    if (containerDimensions.width == null) {
       return;
     }
 
@@ -310,7 +324,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const { top, left } = scrollPosition.current!;
     const params = { top, left, renderContext: initialRenderContext };
     apiRef.current.publishEvent('rowsScroll', params);
-  }, [apiRef, computeRenderContext, containerWidth, updateRenderContext]);
+  }, [apiRef, computeRenderContext, containerDimensions.width, updateRenderContext]);
 
   const handleScroll = (event: React.UIEvent) => {
     const { scrollTop, scrollLeft } = event.currentTarget;
@@ -391,7 +405,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       renderContext: nextRenderContext,
       minFirstColumn = renderZoneMinColumnIndex,
       maxLastColumn = renderZoneMaxColumnIndex,
-      availableSpace = containerWidth,
+      availableSpace = containerDimensions.width,
       rowIndexOffset = 0,
       position = 'center',
     } = params;
@@ -501,7 +515,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     return rows;
   };
 
-  const needsHorizontalScrollbar = containerWidth && columnsTotalWidth > containerWidth;
+  const needsHorizontalScrollbar =
+    containerDimensions.width && columnsTotalWidth > containerDimensions.width;
 
   const contentSize = React.useMemo(() => {
     // In cases where the columns exceed the available width,
