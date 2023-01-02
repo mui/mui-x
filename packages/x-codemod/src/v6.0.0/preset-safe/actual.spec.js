@@ -11,7 +11,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs} locale="fr">
-        <CalendarPicker value={null} onChange={() => {}} />
+        <CalendarPicker date={null} onChange={() => {}} />
         <DateRangePicker cancelText={custom_cancelText} okText="string_okText" />
       </LocalizationProvider>
     </ThemeProvider>
