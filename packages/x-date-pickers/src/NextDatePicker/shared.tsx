@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SlotComponentProps } from '@mui/base/utils';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
@@ -24,18 +25,26 @@ import {
 } from '../DatePicker/DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
+import { PickersToolbarSlotPropsOverride } from '../internals/components/PickersToolbar';
+import { PickersLayoutOwnerState } from '../PickersLayout/PickersLayout.types';
 
 export interface BaseNextDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
    * Custom component for the toolbar rendered above the views.
    * @default DatePickerToolbar
    */
-  Toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+  Toolbar?: React.JSXElementConstructor<
+    DatePickerToolbarProps<TDate> & PickersToolbarSlotPropsOverride
+  >;
 }
 
 export interface BaseNextDatePickerSlotsComponentsProps<TDate>
   extends DateCalendarSlotsComponentsProps<TDate> {
-  toolbar?: ExportedDatePickerToolbarProps;
+  toolbar?: SlotComponentProps<
+    React.ElementType<ExportedDatePickerToolbarProps>,
+    PickersToolbarSlotPropsOverride,
+    PickersLayoutOwnerState<TDate | null, DateView>
+  >;
 }
 
 export interface BaseNextDatePickerProps<TDate>

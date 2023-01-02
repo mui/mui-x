@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -14,6 +15,7 @@ import {
 
 export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
+  sx?: SxProps<Theme>;
 }
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}

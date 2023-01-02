@@ -58,9 +58,9 @@ export const useDesktopRangePicker = <
   const {
     open,
     actions,
-    layoutProps,
     renderCurrentView,
     shouldRestoreFocus,
+    layoutProps: pickerLayoutProps,
     fieldProps: pickerFieldProps,
   } = usePicker<
     DateRange<TDate>,
@@ -193,7 +193,18 @@ export const useDesktopRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
+
   const Layout = components?.Layout ?? PickersLayout;
+  const layoutProps = useSlotProps({
+    elementType: Layout,
+    externalSlotProps: componentsProps?.layout,
+    additionalProps: {
+      ...pickerLayoutProps,
+      components,
+      componentsProps: componentsPropsForLayout,
+    },
+    ownerState: {},
+  });
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -221,14 +232,7 @@ export const useDesktopRangePicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <Layout
-            {...layoutProps}
-            {...componentsProps?.layout}
-            components={components}
-            componentsProps={componentsPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
+          <Layout {...layoutProps}>{renderCurrentView()}</Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

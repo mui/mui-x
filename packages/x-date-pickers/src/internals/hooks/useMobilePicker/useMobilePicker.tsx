@@ -37,8 +37,8 @@ export const useMobilePicker = <
   const {
     open,
     actions,
-    layoutProps,
     renderCurrentView,
+    layoutProps: pickerLayoutProps,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
@@ -96,6 +96,16 @@ export const useMobilePicker = <
   };
 
   const Layout = components?.Layout ?? PickersLayout;
+  const layoutProps = useSlotProps({
+    elementType: Layout,
+    externalSlotProps: componentsProps?.layout,
+    additionalProps: {
+      ...pickerLayoutProps,
+      components,
+      componentsProps,
+    },
+    ownerState: {},
+  });
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
@@ -121,14 +131,7 @@ export const useMobilePicker = <
             actionBar: undefined,
           }}
         >
-          <Layout
-            {...layoutProps}
-            {...componentsProps?.layout}
-            components={components}
-            componentsProps={componentsProps}
-          >
-            {renderCurrentView()}
-          </Layout>
+          <Layout {...layoutProps}>{renderCurrentView()}</Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

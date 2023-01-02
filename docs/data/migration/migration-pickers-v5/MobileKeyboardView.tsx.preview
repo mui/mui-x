@@ -1,1 +1,15 @@
-<MobileNextDatePicker components={{ Layout: LayoutWithKeyboardView }} />
+<MobileNextDatePicker
+  orientation="landscape"
+  components={{
+    Layout: LayoutWithKeyboardView,
+    Toolbar: ToolbarWithKeyboardViewSwitch,
+  }}
+  componentsProps={{
+    layout: { showKeyboardView },
+    toolbar: (ownerState) => ({
+      showKeyboardViewSwitch: ownerState.wrapperVariant === 'mobile',
+      showKeyboardView,
+      setShowKeyboardView,
+    }),
+  }}
+/>

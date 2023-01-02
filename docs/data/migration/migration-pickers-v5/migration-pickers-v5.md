@@ -126,7 +126,7 @@ At some point, the mobile pickers should have a prop allowing to have an editabl
 
 :::warning
 This change only applies to the new pickers.
-The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
+The legacy pickers keep the keyboard view until there removal.
 
 For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
 :::

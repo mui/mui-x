@@ -22,10 +22,12 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
   Layout?: React.JSXElementConstructor<PickersLayoutProps<TValue, TView>>;
 }
 
-interface PickersLayoutActionBarOwnerState<TValue, TView extends DateOrTimeView>
+export interface PickersLayoutOwnerState<TValue, TView extends DateOrTimeView>
   extends PickersLayoutProps<TValue, TView> {
   wrapperVariant: WrapperVariant;
 }
+
+export interface PickersLayoutSlotPropsOverride {}
 
 export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView> {
   /**
@@ -36,12 +38,16 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
       Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>
     >,
     {},
-    PickersLayoutActionBarOwnerState<TValue, TView>
+    PickersLayoutOwnerState<TValue, TView>
   >;
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: Partial<PickersLayoutProps<TValue, TView>>;
+  layout?: SlotComponentProps<
+    React.ElementType<PickersLayoutProps<TValue, TView>>,
+    PickersLayoutSlotPropsOverride,
+    {}
+  >;
 }
 
 export interface PickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
@@ -70,7 +76,8 @@ export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrT
 }
 
 export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
-  extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
+  extends PickersLayoutSlotPropsOverride,
+    Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
   value?: TValue;
   className?: string;
   children?: React.ReactNode;

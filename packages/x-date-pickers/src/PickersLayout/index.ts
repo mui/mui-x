@@ -3,6 +3,7 @@ export type {
   PickersLayoutProps,
   PickersLayoutSlotsComponent,
   PickersLayoutSlotsComponentsProps,
+  PickersLayoutSlotPropsOverride,
 } from './PickersLayout.types';
 
 export { default as usePickerLayout } from './usePickerLayout';

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import { PickersToolbarSlotPropsOverride } from '@mui/x-date-pickers';
 import {
   pickersLayoutClasses,
   PickersLayoutContentWrapper,
@@ -15,35 +16,15 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
 
 function LayoutWithKeyboardView(props) {
-  const { value, onChange, wrapperVariant } = props;
+  const { value, onChange, showKeyboardView } = props;
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
-  const [showKeyboardView, setShowKeyboardView] = React.useState(false);
 
   return (
     <PickersLayoutRoot ownerState={props}>
       {toolbar}
-      {wrapperVariant === 'mobile' && (
-        <Box
-          sx={{
-            // Place the element in the grid layout
-            gridColumn: 3,
-            gridRow: 1,
-            display: 'flex',
-            alignItems: 'end',
-            pb: 2,
-          }}
-        >
-          <IconButton
-            color="inherit"
-            onClick={() => setShowKeyboardView((prev) => !prev)}
-          >
-            {showKeyboardView ? <CalendarMonthIcon /> : <ModeEditIcon />}
-          </IconButton>
-        </Box>
-      )}
-
       {actionBar}
       <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
         {tabs}
@@ -62,13 +43,68 @@ function LayoutWithKeyboardView(props) {
 LayoutWithKeyboardView.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.any,
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile', null]).isRequired,
+};
+
+function ToolbarWithKeyboardViewSwitch(props) {
+  const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
+    props;
+
+  if (showKeyboardViewSwitch) {
+    return (
+      <Stack
+        spacing={2}
+        direction={other.isLandscape ? 'column' : 'row'}
+        alignItems="center"
+        sx={
+          other.isLandscape
+            ? {
+                gridColumn: 1,
+                gridRow: '1 / 3',
+              }
+            : { gridColumn: '1 / 4', gridRow: 1, mr: 1 }
+        }
+      >
+        <DatePickerToolbar {...other} sx={{ flex: '1 1 100%' }} />
+        <IconButton
+          color="inherit"
+          onClick={() => setShowKeyboardView((prev) => !prev)}
+        >
+          {showKeyboardView ? <CalendarMonthIcon /> : <ModeEditIcon />}
+        </IconButton>
+      </Stack>
+    );
+  }
+
+  return <DatePickerToolbar {...other} />;
+}
+
+ToolbarWithKeyboardViewSwitch.propTypes = {
+  isLandscape: PropTypes.bool.isRequired,
+  setShowKeyboardView: PropTypes.func,
+  showKeyboardView: PropTypes.bool,
+  showKeyboardViewSwitch: PropTypes.bool,
 };
 
 export default function MobileKeyboardView() {
+  const [showKeyboardView, setShowKeyboardView] = React.useState(false);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileNextDatePicker components={{ Layout: LayoutWithKeyboardView }} />
+      <MobileNextDatePicker
+        orientation="landscape"
+        components={{
+          Layout: LayoutWithKeyboardView,
+          Toolbar: ToolbarWithKeyboardViewSwitch,
+        }}
+        componentsProps={{
+          layout: { showKeyboardView },
+          toolbar: (ownerState) => ({
+            showKeyboardViewSwitch: ownerState.wrapperVariant === 'mobile',
+            showKeyboardView,
+            setShowKeyboardView,
+          }),
+        }}
+      />
     </LocalizationProvider>
   );
 }

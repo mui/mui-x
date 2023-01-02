@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import { useSlotProps } from '@mui/base/utils';
 import { DateOrTimeView } from '../../models/views';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
@@ -32,7 +33,7 @@ export const useStaticPicker = <
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, renderCurrentView } = usePicker<
+  const { renderCurrentView, layoutProps: pickerLayoutProps } = usePicker<
     TDate | null,
     TDate,
     TView,
@@ -48,19 +49,22 @@ export const useStaticPicker = <
   });
 
   const Layout = components?.Layout ?? PickerStaticLayout;
+  const layoutProps = useSlotProps({
+    elementType: Layout,
+    externalSlotProps: componentsProps?.layout,
+    additionalProps: {
+      ...pickerLayoutProps,
+      components,
+      componentsProps,
+      ref,
+    },
+    ownerState: {},
+  });
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout
-          {...layoutProps}
-          {...componentsProps?.layout}
-          components={components}
-          componentsProps={componentsProps}
-          ref={ref}
-        >
-          {renderCurrentView()}
-        </Layout>
+        <Layout {...layoutProps}>{renderCurrentView()}</Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

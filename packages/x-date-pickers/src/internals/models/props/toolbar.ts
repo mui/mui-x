@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DateOrTimeView } from '../views';
+import type { PickersToolbarSlotPropsOverride } from '../../components/PickersToolbar';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   extends ExportedBaseToolbarProps {

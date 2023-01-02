@@ -52,6 +52,7 @@ export * from './PickersLayout';
 export * from './PickersActionBar';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
+export type { PickersToolbarSlotPropsOverride } from './internals/components/PickersToolbar';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
