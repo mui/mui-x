@@ -103,7 +103,7 @@ const theme = createTheme({
 
 ## Date library and adapters
 
-### Do not import adapter from `@date-io`
+### ✅ Do not import adapter from `@date-io`
 
 In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
@@ -112,7 +112,7 @@ If you do not find the adapter you were using—there probably was a reason for 
 
 ```diff
 -import AdapterJalaali from '@date-io/jalaali';
-+import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 ```
 
 ### Increase Luxon minimal version
