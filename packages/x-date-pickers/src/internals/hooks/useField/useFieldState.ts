@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ponyfillGlobal } from '@mui/utils';
 import { useTheme } from '@mui/material/styles';
 import useControlled from '@mui/utils/useControlled';
 import { useUtils, useLocaleText, useLocalizationContext } from '../useUtils';
@@ -278,8 +277,6 @@ export const useFieldState = <
       const { shouldGoToNextSection, shouldPublish, values, sections } = commitParams;
 
       if (
-        // eslint-disable-next-line no-underscore-dangle
-        ponyfillGlobal.__MUI__PICKERS_ENABLE_AUTOMATIC_SECTION_SWTICH__ &&
         shouldGoToNextSection &&
         selectedSectionIndexes &&
         selectedSectionIndexes.startIndex < state.sections.length - 1

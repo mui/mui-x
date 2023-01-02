@@ -44,20 +44,21 @@ describe('<DateField /> - Editing', () => {
   };
 
   const testChange = <TDate extends unknown>({
-    inputValue,
-    expectedValue,
+    keyStrokes,
     cursorPosition = 1,
     ...props
   }: DateFieldProps<TDate> & {
-    inputValue: string;
-    expectedValue: string;
+    keyStrokes: { value: string; expected: string }[];
     cursorPosition?: number;
   }) => {
     render(<DateField {...props} />);
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
-    fireEvent.change(input, { target: { value: inputValue } });
-    expectInputValue(input, expectedValue);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(input, keyStroke.expected);
+    });
   };
 
   describe('key: ArrowDown', () => {
@@ -312,8 +313,7 @@ describe('<DateField /> - Editing', () => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {
       testChange({
         format: adapterToUse.formats.dayOfMonth,
-        inputValue: '1',
-        expectedValue: '1',
+        keyStrokes: [{ value: '1', expected: '1' }],
       });
     });
 
@@ -321,8 +321,10 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.dayOfMonth,
         defaultValue: adapterToUse.date(new Date(2022, 5, 0)),
-        inputValue: '1',
-        expectedValue: '11',
+        keyStrokes: [
+          { value: '1', expected: '1' },
+          { value: '1', expected: '11' },
+        ],
       });
     });
 
@@ -330,8 +332,7 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.dayOfMonth,
         defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
-        inputValue: '1',
-        expectedValue: '1',
+        keyStrokes: [{ value: '1', expected: '1' }],
       });
     });
 
@@ -339,8 +340,10 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.month,
         defaultValue: adapterToUse.date(new Date(2022, 1, 0)),
-        inputValue: '1',
-        expectedValue: 'November',
+        keyStrokes: [
+          { value: '1', expected: 'January' },
+          { value: '1', expected: 'November' },
+        ],
       });
     });
 
@@ -348,85 +351,53 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.month,
         defaultValue: adapterToUse.date(new Date(2022, 5, 0)),
-        inputValue: '1',
-        expectedValue: 'January',
+        keyStrokes: [{ value: '1', expected: 'January' }],
       });
     });
 
     it('should support 2-digits year format', () => {
-      render(
-        <DateField
-          format="yy" // This format is not present in any of the adapter formats
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '02');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '22');
-
-      fireEvent.change(input, { target: { value: '3' } }); // Press "3"
-      expectInputValue(input, '23');
+      testChange({
+        format: 'yy', // This format is not present in any of the adapter formats
+        keyStrokes: [
+          { value: '2', expected: '02' },
+          { value: '2', expected: '22' },
+          { value: '3', expected: '03' },
+        ],
+      });
     });
 
     it('should support 4-digits year format', () => {
-      render(<DateField format={adapterToUse.formats.year} />);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '0002');
-
-      fireEvent.change(input, { target: { value: '0' } }); // Press "0"
-      expectInputValue(input, '0020');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '0202');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '2022');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '0222');
-
-      fireEvent.change(input, { target: { value: '0' } }); // Press "0"
-      expectInputValue(input, '2220');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '2202');
-
-      fireEvent.change(input, { target: { value: '3' } }); // Press "3"
-      expectInputValue(input, '2023');
+      testChange({
+        format: adapterToUse.formats.year,
+        keyStrokes: [
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '2', expected: '2022' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '3', expected: '2023' },
+        ],
+      });
     });
 
     it('should support month without trailing zeros format', () => {
-      render(
-        <DateField
-          format="M" // This format is not present in any of the adapter formats
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      fireEvent.change(input, { target: { value: '1' } }); // Press "1"
-      expectInputValue(input, '1');
-
-      fireEvent.change(input, { target: { value: '1' } }); // Press "1"
-      expectInputValue(input, '11');
-
-      fireEvent.change(input, { target: { value: '2' } }); // Press "2"
-      expectInputValue(input, '12');
+      testChange({
+        format: 'M', // This format is not present in any of the adapter formats
+        keyStrokes: [
+          { value: '1', expected: '1' },
+          { value: '1', expected: '11' },
+          { value: '2', expected: '2' },
+        ],
+      });
     });
 
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testChange({
         format: adapterToUse.formats.year,
         readOnly: true,
-        inputValue: '1',
-        expectedValue: 'YYYY',
+        keyStrokes: [{ value: '1', expected: 'YYYY' }],
       });
     });
 
@@ -435,8 +406,7 @@ describe('<DateField /> - Editing', () => {
         format: adapterToUse.formats.year,
         defaultValue: adapterToUse.date(),
         readOnly: true,
-        inputValue: '1',
-        expectedValue: '2022',
+        keyStrokes: [{ value: '1', expected: '2022' }],
       });
     });
   });
@@ -445,8 +415,7 @@ describe('<DateField /> - Editing', () => {
     it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
       testChange({
         format: adapterToUse.formats.month,
-        inputValue: 'm',
-        expectedValue: 'March',
+        keyStrokes: [{ value: 'm', expected: 'March' }],
       });
     });
 
@@ -454,75 +423,55 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.month,
         defaultValue: adapterToUse.date(),
-        inputValue: 'm',
-        expectedValue: 'March',
+        keyStrokes: [{ value: 'm', expected: 'March' }],
       });
     });
 
     it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
-      render(<DateField format={adapterToUse.formats.month} />);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      // Current query: "J" => 3 matches
-      fireEvent.change(input, { target: { value: 'j' } });
-      expectInputValue(input, 'January');
-
-      // Current query: "JU" => 2 matches
-      fireEvent.change(input, { target: { value: 'u' } });
-      expectInputValue(input, 'June');
-
-      // Current query: "JUL" => 1 match
-      fireEvent.change(input, { target: { value: 'l' } });
-      expectInputValue(input, 'July');
-
-      // Current query: "JULO" => 0 match => fallback set the query to "O"
-      fireEvent.change(input, { target: { value: 'o' } });
-      expectInputValue(input, 'October');
+      testChange({
+        format: adapterToUse.formats.month,
+        keyStrokes: [
+          // Current query: "J" => 3 matches
+          { value: 'j', expected: 'January' },
+          // Current query: "JU" => 2 matches
+          { value: 'u', expected: 'June' },
+          // Current query: "JUL" => 1 match
+          { value: 'l', expected: 'July' },
+          // Current query: "JULO" => 0 match => fallback set the query to "O"
+          { value: 'o', expected: 'October' },
+        ],
+      });
     });
 
     it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
       testChange({
-        format: 'MM', // The adapter formats have no digit month registered
-        inputValue: 'm',
-        expectedValue: '03',
+        format: 'MM', // This format is not present in any of the adapter formats
+        keyStrokes: [{ value: 'm', expected: '03' }],
       });
     });
 
     it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
       testChange({
-        format: 'MM', // The adapter formats have no digit month registered
+        format: 'MM', // This format is not present in any of the adapter formats
         defaultValue: adapterToUse.date(),
-        inputValue: 'm',
-        expectedValue: '03',
+        keyStrokes: [{ value: 'm', expected: '03' }],
       });
     });
 
     it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
-      render(
-        <DateField
-          // The adapter formats have no digit month registered
-          format="MM"
-        />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      // Current query: "J" => 3 matches
-      fireEvent.change(input, { target: { value: 'j' } });
-      expectInputValue(input, '01');
-
-      // Current query: "JU" => 2 matches
-      fireEvent.change(input, { target: { value: 'u' } });
-      expectInputValue(input, '06');
-
-      // Current query: "JUL" => 1 match
-      fireEvent.change(input, { target: { value: 'l' } });
-      expectInputValue(input, '07');
-
-      // Current query: "JULO" => 0 match => fallback set the query to "O"
-      fireEvent.change(input, { target: { value: 'o' } });
-      expectInputValue(input, '10');
+      testChange({
+        format: 'MM', // This format is not present in any of the adapter formats
+        keyStrokes: [
+          // Current query: "J" => 3 matches
+          { value: 'j', expected: '01' },
+          // Current query: "JU" => 2 matches
+          { value: 'u', expected: '06' },
+          // Current query: "JUL" => 1 match
+          { value: 'l', expected: '07' },
+          // Current query: "JULO" => 0 match => fallback set the query to "O"
+          { value: 'o', expected: '10' },
+        ],
+      });
     });
 
     it('should not edit when props.readOnly = true and no value is provided', () => {
@@ -556,13 +505,11 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '2 / DD / YYYY' } }); // Press "2"
       expectInputValue(input, '02 / DD / YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
       fireEvent.change(input, { target: { value: '02 / 3 / YYYY' } }); // Press "3"
       expectInputValue(input, '02 / 03 / YYYY');
       fireEvent.change(input, { target: { value: '02 / 1 / YYYY' } }); // Press "3"
       expectInputValue(input, '02 / 31 / YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
       fireEvent.change(input, { target: { value: '02 / 31 / 2' } }); // Press "2"
       expectInputValue(input, '02 / 28 / 0002'); // Has moved to the last day of the February
       fireEvent.change(input, { target: { value: '02 / 28 / 0' } }); // Press "0"
@@ -754,11 +701,10 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '4 / DD / YYYY' } }); // Press "4"
       expectInputValue(input, '04 / DD / YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+      fireEvent.change(input, { target: { value: '04 / 0 / YYYY' } }); // Press "0"
       fireEvent.change(input, { target: { value: '04 / 3 / YYYY' } }); // Press "3"
       expectInputValue(input, '04 / 03 / YYYY');
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
       fireEvent.change(input, { target: { value: '04 / 03 / 2' } }); // Press "2"
       fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"
       fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"

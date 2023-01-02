@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ponyfillGlobal } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { MuiDateSectionName } from '../../models/muiPickersAdapter';
 import { useUtils } from '../useUtils';
@@ -103,6 +102,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
     getFirstSectionValueMatchingWithQuery: QueryApplier<TSection>,
+    isValidQueryValue?: (queryValue: string) => boolean,
   ): ReturnType<CharacterEditingApplier<TDate, TSection>> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
     const activeSection = sections[sectionIndex];
@@ -111,7 +111,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     // We can try to concatenated value
     if (
       query != null &&
-      !Number.isNaN(Number(query.value)) &&
+      (!isValidQueryValue || isValidQueryValue(query.value)) &&
       query.sectionIndex === sectionIndex
     ) {
       const concatenatedQueryValue = `${query.value}${cleanKeyPressed}`;
@@ -225,82 +225,6 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     return applyQuery(params, getFirstSectionValueMatchingWithQuery);
   };
 
-  const applyLegacyNumericEditing: CharacterEditingApplier<TDate, TSection> = (
-    params,
-    sectionsValueBoundaries,
-    activeDate,
-  ) => {
-    const { keyPressed, sectionIndex } = params;
-    const activeSection = sections[sectionIndex];
-    const sectionBoundaries = sectionsValueBoundaries[activeSection.dateSectionName](
-      activeDate,
-      activeSection,
-    );
-
-    const getNewSectionValue = (
-      sectionValue: string,
-      hasTrailingZeroes: boolean,
-    ): ReturnType<CharacterEditingApplier<TDate, TSection>> => {
-      // Remove the trailing `0` (`01` => `1`)
-      let newSectionValue = Number(`${sectionValue}${keyPressed}`).toString();
-
-      while (newSectionValue.length > 0 && Number(newSectionValue) > sectionBoundaries.maximum) {
-        newSectionValue = newSectionValue.slice(1);
-      }
-
-      // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
-      if (newSectionValue.length === 0) {
-        newSectionValue = sectionBoundaries.minimum.toString();
-      }
-
-      const shouldGoToNextSection = Number(`${newSectionValue}0`) > sectionBoundaries.maximum;
-
-      if (hasTrailingZeroes) {
-        newSectionValue = cleanTrailingZeroInNumericSectionValue(
-          newSectionValue,
-          sectionBoundaries.maximum,
-        );
-      }
-
-      return { sectionValue: newSectionValue, shouldGoToNextSection };
-    };
-
-    if (activeSection.contentType === 'digit') {
-      return getNewSectionValue(activeSection.value, activeSection.hasTrailingZeroes);
-    }
-
-    // When editing a letter-format month and the user presses a digit,
-    // We can support the numeric editing by using the digit-format month and re-formatting the result.
-    if (activeSection.dateSectionName === 'month') {
-      const sectionValueStr =
-        activeSection.value === ''
-          ? ''
-          : changeSectionValueFormat(utils, activeSection.value, activeSection.formatValue, 'MM');
-
-      const response = getNewSectionValue(
-        sectionValueStr,
-        doesSectionHaveTrailingZeros(utils, 'digit', 'MM'),
-      );
-
-      if (response == null) {
-        return null;
-      }
-
-      const formattedValue = changeSectionValueFormat(
-        utils,
-        response.sectionValue,
-        'MM',
-        activeSection.formatValue,
-      );
-      return {
-        ...response,
-        sectionValue: formattedValue,
-      };
-    }
-
-    return null;
-  };
-
   const applyNumericEditing: CharacterEditingApplier<TDate, TSection> = (
     params,
     sectionsValueBoundaries,
@@ -380,24 +304,18 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       return { saveQuery: false };
     };
 
-    return applyQuery(params, getFirstSectionValueMatchingWithQuery);
+    return applyQuery(
+      params,
+      getFirstSectionValueMatchingWithQuery,
+      (queryValue) => !Number.isNaN(Number(queryValue)),
+    );
   };
 
   return useEventCallback((params: ApplyCharacterEditingParams) => {
     const activeSection = sections[params.sectionIndex];
     const isNumericEditing = !Number.isNaN(Number(params.keyPressed));
 
-    let getNewSectionValue: CharacterEditingApplier<TDate, TSection>;
-    if (isNumericEditing) {
-      // eslint-disable-next-line no-underscore-dangle
-      if (ponyfillGlobal.__MUI__PICKERS_ENABLE_QUERY_BASED_NUMERIC_EDITING__) {
-        getNewSectionValue = applyNumericEditing;
-      } else {
-        getNewSectionValue = applyLegacyNumericEditing;
-      }
-    } else {
-      getNewSectionValue = applyLetterEditing;
-    }
+    const getNewSectionValue = isNumericEditing ? applyNumericEditing : applyLetterEditing;
 
     updateSectionValue({
       activeSection,
