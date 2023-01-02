@@ -235,13 +235,12 @@ describe('<DataGridPro /> - Column Headers', () => {
       clock.runToLast();
 
       const menu = screen.queryByRole('menu');
-      const unsortMenuitem = screen.queryByRole('menuitem', { name: /unsort/i });
+      const descMenuitem = screen.queryByRole('menuitem', { name: /sort by desc/i });
       expect(menu).toHaveFocus();
 
       fireEvent.keyDown(menu, { key: 'ArrowDown' });
-      expect(unsortMenuitem).toHaveFocus();
-      fireEvent.keyDown(unsortMenuitem, { key: 'Enter' });
-
+      expect(descMenuitem).toHaveFocus();
+      fireEvent.keyDown(descMenuitem, { key: 'Enter' });
       expect(columnCell).toHaveFocus();
     });
 

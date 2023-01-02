@@ -78,8 +78,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
+  columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Hide',
+  columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Unsort',
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',

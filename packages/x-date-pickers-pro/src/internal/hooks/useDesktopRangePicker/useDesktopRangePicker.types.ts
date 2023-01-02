@@ -4,13 +4,15 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
+import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
   UsePickerViewsProps,
@@ -18,9 +20,9 @@ import {
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-export interface UseDesktopRangePickerSlotsComponent
+export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -31,9 +33,9 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
@@ -65,7 +67,7 @@ export interface UseDesktopRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseDesktopRangePickerSlotsComponent;
+  components: UseDesktopRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

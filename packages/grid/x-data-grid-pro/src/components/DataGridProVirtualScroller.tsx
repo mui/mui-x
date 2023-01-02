@@ -318,7 +318,7 @@ const DataGridProVirtualScroller = React.forwardRef<
 
         panels.push(
           <GridDetailPanel
-            key={i}
+            key={id}
             rowId={id}
             style={{ top }}
             height={height}

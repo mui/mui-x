@@ -31,17 +31,17 @@
 /:lang/x/advanced-components/ /:lang/x/introduction/ 301
 /x/react-data-grid/rows/ /x/react-data-grid/row-definition/ 301
 /:lang/x/react-data-grid/rows/ /:lang/x/react-data-grid/row-definition/ 301
-
+/x/react-data-grid/selection/ /x/react-data-grid/row-selection/ 301
+/:lang/x/react-data-grid/selection/ /:lang/x/react-data-grid/row-selection/ 301
 /x/react-data-grid/migration-v4/ /x/migration/migration-data-grid-v4/ 301
 /:lang/x/react-data-grid/migration-v4/ /:lang/x/migration/migration-data-grid-v4/ 301
 /x/react-data-grid/migration-v5/ /x/migration/migration-data-grid-v5/ 301
 /:lang/x/react-data-grid/migration-v5/ /:lang/x/migration/migration-data-grid-v5/ 301
 /x/react-date-pickers/migration-lab/ /x/migration/migration-pickers-lab/ 301
 /:lang/x/react-date-pickers/migration-lab/ /:lang/x/migration/migration-pickers-lab/ 301
-
 /x/api/date-pickers/clock-picker/ /x/api/date-pickers/time-clock/ 301
 /:lang/x/api/date-pickers/clock-picker/ /:lang/x/api/date-pickers/time-clock/ 301
-
+/:lang/x/* /x/:splat 301
 # 2023
 
 # Proxies
