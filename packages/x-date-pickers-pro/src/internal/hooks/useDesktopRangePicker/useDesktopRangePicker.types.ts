@@ -26,7 +26,12 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
-  Input?: React.ElementType<TextFieldProps>;
+  /**
+   * Component rendering an HTML input and a label inside the smart field.
+   * Will be rendered twice: once for the start element and once for the end element.
+   * @default TextField
+   */
+  TextField?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
@@ -43,7 +48,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
   toolbar?: ExportedBaseToolbarProps;
 }
 

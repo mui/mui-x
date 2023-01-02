@@ -38,5 +38,5 @@
     "variant": "The variant to use."
   },
   "classDescriptions": {},
-  "slotDescriptions": { "Input": "Input rendered." }
+  "slotDescriptions": { "TextField": "Component rendering the HTML input and the label." }
 }

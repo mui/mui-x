@@ -52,12 +52,12 @@
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "Root": { "default": "MultiInputDateTimeRangeFieldRoot", "type": { "name": "elementType" } },
     "Separator": {
       "default": "MultiInputDateTimeRangeFieldSeparator",
       "type": { "name": "elementType" }
-    }
+    },
+    "TextField": { "default": "TextField", "type": { "name": "elementType" } }
   },
   "name": "MultiInputDateTimeRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateTimeRangeField" },

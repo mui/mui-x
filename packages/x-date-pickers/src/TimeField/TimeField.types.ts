@@ -52,12 +52,12 @@ export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
 export interface TimeFieldSlotsComponent {
   /**
-   * Input rendered.
+   * Component rendering the HTML input and the label.
    * @default TextField
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface TimeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

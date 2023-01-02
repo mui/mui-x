@@ -9,8 +9,8 @@ import { RangePosition } from '../internal/models/range';
 export interface UseMultiInputDateRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputDateRangeFieldProps<TDate>> &
     UseMultiInputDateRangeFieldProps<TDate>;
-  startInputProps: TChildProps;
-  endInputProps: TChildProps;
+  startTextFieldProps: TChildProps;
+  endTextFieldProps: TChildProps;
   startInputRef?: React.Ref<HTMLInputElement>;
   endInputRef?: React.Ref<HTMLInputElement>;
 }
@@ -49,10 +49,11 @@ export interface MultiInputDateRangeFieldSlotsComponent {
    */
   Root?: React.ElementType;
   /**
-   * Input rendered for the start or end date.
+   * Component rendering an HTML input and a label.
+   * Will be rendered twice: once for the start date and once for the end date.
    * @default TextField
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
   /**
    * Element rendered between the two inputs.
    * @default MultiInputDateRangeFieldSeparator
@@ -62,7 +63,7 @@ export interface MultiInputDateRangeFieldSlotsComponent {
 
 export interface MultiInputDateRangeFieldSlotsComponentsProps<TDate> {
   root?: SlotComponentProps<typeof Stack, {}, MultiInputDateRangeFieldOwnerState<TDate>>;
-  input?: SlotComponentProps<
+  textField?: SlotComponentProps<
     typeof TextField,
     {},
     MultiInputDateRangeFieldOwnerState<TDate> & { position: RangePosition }

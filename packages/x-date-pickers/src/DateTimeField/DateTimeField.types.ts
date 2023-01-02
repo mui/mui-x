@@ -71,12 +71,12 @@ export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;
 
 export interface DateTimeFieldSlotsComponent {
   /**
-   * Input rendered.
+   * Component rendering the HTML input and the label.
    * @default TextField
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface DateTimeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, DateTimeFieldOwnerState<TDate>>;
 }

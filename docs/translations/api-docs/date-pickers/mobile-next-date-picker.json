@@ -55,7 +55,6 @@
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "Field": "Component used to enter the date with the keyboard.",
-    "Input": "Component used to render an HTML input inside the field.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
@@ -65,6 +64,7 @@
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "TextField": "Component rendering the HTML input and the label inside the smart field.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

@@ -80,7 +80,6 @@
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
@@ -88,6 +87,7 @@
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField", "type": { "name": "elementType" } },
     "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileNextTimePicker",

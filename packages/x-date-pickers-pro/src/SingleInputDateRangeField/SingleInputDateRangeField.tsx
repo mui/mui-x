@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MaterialTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
@@ -23,10 +23,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
-  const inputProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const TextField = components?.TextField ?? MaterialTextField;
+  const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -37,13 +37,13 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     inputMode,
     readOnly,
     ...fieldProps
-  } = useSingleInputDateRangeField<TDate, typeof inputProps>({
-    props: inputProps,
-    inputRef: inputProps.inputRef,
+  } = useSingleInputDateRangeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
+    inputRef: textFieldProps.inputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
