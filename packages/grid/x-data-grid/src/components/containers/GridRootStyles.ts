@@ -124,7 +124,7 @@ export const GridRootStyles = styled('div', {
       padding: '0 10px',
       boxSizing: 'border-box',
     },
-    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}.${gridClasses['cell--outlined']}`]:
+    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses['cell--outlined']}`]:
       {
         outline: `solid ${
           theme.vars
@@ -134,7 +134,7 @@ export const GridRootStyles = styled('div', {
         outlineWidth: 1,
         outlineOffset: -1,
       },
-    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.cell}.${gridClasses['cell--outlined']}`]:
+    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses['cell--outlined']}`]:
       {
         outline: `solid ${theme.palette.primary.main} 1px`,
       },
