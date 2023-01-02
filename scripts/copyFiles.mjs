@@ -124,8 +124,8 @@ async function addLicense(packageData) {
   const license = `/** @license MUI X v${packageData.version}
  *
  * This source code is licensed under the ${
-   packageData.license === 'MIT' ? 'MIT license' : 'commercial license'
- } found in the
+   packageData.license === 'MIT' ? 'MIT' : 'commercial'
+ } license found in the
  * LICENSE file in the root directory of this source tree.
  */
 `;
