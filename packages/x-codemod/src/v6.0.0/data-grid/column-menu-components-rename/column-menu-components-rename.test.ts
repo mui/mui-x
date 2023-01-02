@@ -16,7 +16,7 @@ describe('v6.0.0', () => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
       const expectedPath = `./expected-${testFile}.spec.tsx`;
 
-      describe(`Package (${testFile.replace(/-/g, ' ')})`, () => {
+      describe(`Package (${testFile.split(/-/g)[0]})`, () => {
         it('transforms imports as needed', () => {
           const actual = transform(
             { source: read(actualPath) },
