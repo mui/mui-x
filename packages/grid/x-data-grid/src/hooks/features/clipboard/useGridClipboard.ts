@@ -27,7 +27,7 @@ function writeToClipboardPolyfill(data: string) {
 
 function hasNativeSelection(element: HTMLInputElement) {
   // When getSelection is called on an <iframe> that is not displayed Firefox will return null.
-  if (window.getSelection() && window.getSelection()!.toString() !== '') {
+  if (window.getSelection()?.toString()) {
     return true;
   }
 
