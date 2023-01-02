@@ -243,7 +243,7 @@ export interface GridCellEventLookup {
    * Fired when a `mouseover` event happens in a cell.
    */
   cellMouseOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
@@ -257,7 +257,7 @@ export interface GridCellEventLookup {
    * Fired when a `keyup` event happens in a cell.
    */
   cellKeyUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
@@ -422,7 +422,7 @@ export interface GridEventLookup
    * Fired when the mode of a cell changes.
    * @ignore - do not document
    */
-  cellModeChange: { params: GridCellParams };
+  cellModeChange: { params: GridCellParams<any> };
   /**
    * Fired when the model that controls the cell modes changes.
    */
@@ -468,11 +468,11 @@ export interface GridEventLookup
   /**
    * Fired when a cell gains focus.
    */
-  cellFocusIn: { params: GridCellParams };
+  cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
    */
-  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
+  cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 
   // Scroll
   /**
