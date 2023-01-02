@@ -41,7 +41,7 @@ The component can be uncontrolled or controlled
 
 ## Responsiveness
 
-The component is available in three variants:
+The component is available in four variants:
 
 - The `DesktopNextDatePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
@@ -49,23 +49,18 @@ The component is available in three variants:
 - The `MobileNextDatePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDatePicker` component which will render `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
+- The `NextDatePicker` component which renders `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
 
   By default, it renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
   This can be customized with the `desktopModeMediaQuery` prop.
+
+- The `StaticDatePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDatePickers.js"}}
 
 :::warning
 There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
 :::
-
-## Static mode
-
-It is also possible to render the Date Picker component without the popover/modal and field.
-This can be helpful when building custom popover/modal containers.
-
-{{"demo": "StaticDatePickerDemo.js", "bg": true}}
 
 ## Form props
 
