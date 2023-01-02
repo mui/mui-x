@@ -74,6 +74,7 @@ export function useGridColumns(
     | 'columnTypes'
     | 'components'
     | 'componentsProps'
+    | 'disableColumnSelector'
     | 'signature'
   >,
 ): void {
@@ -354,6 +355,18 @@ export function useGridColumns(
     [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
   );
 
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems) => {
+      if (props.disableColumnSelector) {
+        return columnMenuItems;
+      }
+
+      return [...columnMenuItems, 'ColumnMenuColumnsItem'];
+    },
+    [props.disableColumnSelector],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);

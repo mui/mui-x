@@ -1,4 +1,4 @@
-import { GridColumns, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
+import { GridColDef, useGridApiRef, DataGridPro, GridApi } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
@@ -15,7 +15,7 @@ describe('<DataGridPro /> - Export', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const columns: GridColumns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+  const columns: GridColDef[] = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
 
   describe('getDataAsCsv', () => {
     it('should work with basic strings', () => {

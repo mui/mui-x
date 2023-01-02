@@ -8,7 +8,7 @@ import {
   GridToolbar,
   DataGridProps,
   ptBR,
-  GridColumns,
+  GridColDef,
   gridClasses,
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -160,7 +160,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
 
       it('should support columns.valueGetter using direct row access', () => {
-        const columns: GridColumns = [
+        const columns: GridColDef[] = [
           { field: 'id' },
           { field: 'firstName' },
           { field: 'lastName' },

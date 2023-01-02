@@ -72,9 +72,12 @@ export const useField = <
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
-        ? 1 // Special case if browser index is in invisible cheracters at the begining.
-        : state.sections.findIndex((section) => section.startInInput > browserStartIndex);
+        ? 1 // Special case if browser index is in invisible characters at the beginning.
+        : state.sections.findIndex(
+            (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+          );
     const sectionIndex = nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+
     setSelectedSections(sectionIndex);
   };
 
@@ -107,7 +110,7 @@ export const useField = <
       }
 
       if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
-        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections('all');
       } else {
         syncSelectionFromDOM();
       }
@@ -200,7 +203,7 @@ export const useField = <
       valueStr.length -
       prevValueStr.length +
       activeSection.end -
-      cleanString(activeSection.separator || '').length;
+      cleanString(activeSection.endSeparator || '').length;
     const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
@@ -349,7 +352,7 @@ export const useField = <
         // prevent default to make sure that the next line "select all" while updating
         // the internal state at the same time.
         event.preventDefault();
-        setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+        setSelectedSections('all');
         break;
       }
 
@@ -445,22 +448,22 @@ export const useField = <
       return;
     }
 
-    const updateSelectionRangeIfChanged = (selectionStart: number, selectionEnd: number) => {
-      if (
-        selectionStart !== inputRef.current!.selectionStart ||
-        selectionEnd !== inputRef.current!.selectionEnd
-      ) {
-        inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
-      }
-    };
-
     const firstSelectedSection = state.sections[selectedSectionIndexes.startIndex];
     const lastSelectedSection = state.sections[selectedSectionIndexes.endIndex];
+    let selectionStart = firstSelectedSection.startInInput;
+    let selectionEnd = lastSelectedSection.endInInput;
 
-    updateSelectionRangeIfChanged(
-      firstSelectedSection.startInInput,
-      lastSelectedSection.endInInput,
-    );
+    if (selectedSectionIndexes.shouldSelectBoundarySelectors) {
+      selectionStart -= firstSelectedSection.startSeparator.length;
+      selectionEnd += lastSelectedSection.endSeparator.length;
+    }
+
+    if (
+      selectionStart !== inputRef.current!.selectionStart ||
+      selectionEnd !== inputRef.current!.selectionEnd
+    ) {
+      inputRef.current!.setSelectionRange(selectionStart, selectionEnd);
+    }
   });
 
   const validationError = useValidation(
@@ -478,7 +481,7 @@ export const useField = <
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
     if (inputRef.current && inputRef.current === document.activeElement) {
-      setSelectedSections({ startIndex: 0, endIndex: state.sections.length - 1 });
+      setSelectedSections('all');
     }
 
     return () => window.clearTimeout(focusTimeoutRef.current);
@@ -505,6 +508,7 @@ export const useField = <
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
+    readOnly,
     onClick: handleInputClick,
     onFocus: handleInputFocus,
     onBlur: handleInputBlur,

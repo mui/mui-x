@@ -121,7 +121,7 @@ DesktopNextTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -136,7 +136,7 @@ DesktopNextTimePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -247,7 +247,7 @@ DesktopNextTimePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,

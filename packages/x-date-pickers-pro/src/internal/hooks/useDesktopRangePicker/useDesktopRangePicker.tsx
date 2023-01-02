@@ -3,15 +3,17 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
   DateOrTimeView,
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
   WrapperVariantContext,
   PickersPopper,
-  PickersViewLayout,
   InferError,
-  PickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -92,7 +94,7 @@ export const useDesktopRangePicker = <
   };
 
   const fieldSlotsProps = useRangePickerInputProps({
-    wrapperVariant: 'mobile',
+    wrapperVariant: 'desktop',
     open,
     actions,
     readOnly,
@@ -151,7 +153,6 @@ export const useDesktopRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },
@@ -184,7 +185,7 @@ export const useDesktopRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
@@ -192,6 +193,7 @@ export const useDesktopRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
+  const Layout = components?.Layout ?? PickersLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -219,13 +221,14 @@ export const useDesktopRangePicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

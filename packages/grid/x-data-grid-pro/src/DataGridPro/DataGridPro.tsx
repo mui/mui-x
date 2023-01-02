@@ -117,7 +117,7 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**

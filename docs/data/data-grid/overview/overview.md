@@ -76,7 +76,8 @@ Please see [the Licensing page](/x/introduction/licensing/) for details.
 - [Pagination](/x/react-data-grid/pagination/)
 - [Row & Cell editing](/x/react-data-grid/editing/)
 - [Sorting](/x/react-data-grid/sorting/) and [multi-sorting](/x/react-data-grid/sorting/#multi-sorting) <span class="plan-pro"></span>
-- [Selection](/x/react-data-grid/selection/)
+- [Row selection](/x/react-data-grid/row-selection/)
+- [Cell selection](/x/react-data-grid/cell-selection/) <span class="plan-premium"></span>
 - [Column virtualization](/x/react-data-grid/virtualization/#column-virtualization) and [rows virtualization](/x/react-data-grid/virtualization/#row-virtualization) <span class="plan-pro"></span>
 - [Row grouping](/x/react-data-grid/row-grouping/) <span class="plan-premium"></span>
 - [Aggregation](/x/react-data-grid/aggregation/) <span class="plan-premium"></span>

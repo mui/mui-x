@@ -4,7 +4,6 @@ import {
   GridValidRowModel,
   GridGroupNode,
   GridColDef,
-  GridStateColDef,
 } from '@mui/x-data-grid-pro';
 
 /**
@@ -30,7 +29,7 @@ export interface GridGroupingValueGetterParams<V = any, R extends GridValidRowMo
   /**
    * The column of the row that the current cell belongs to.
    */
-  colDef: GridColDef<R, V, any> | GridStateColDef<R, V, any>;
+  colDef: GridColDef<R, V, any>;
   /**
    * The node of the row that the current cell belongs to.
    * It only contains the information available before the actual grouping.

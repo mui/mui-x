@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import Stack, { StackProps } from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
@@ -28,7 +28,7 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
   UseMultiInputDateTimeRangeFieldProps<TDate>;
 
 export interface MultiInputDateTimeRangeFieldProps<TDate>
-  extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, TextFieldProps> {
+  extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   /**
    * Overrideable components.
    * @default {}

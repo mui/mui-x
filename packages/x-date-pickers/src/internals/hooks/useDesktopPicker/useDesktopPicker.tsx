@@ -11,7 +11,7 @@ import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -134,6 +134,8 @@ export const useDesktopPicker = <
     },
   };
 
+  const Layout = components?.Layout ?? PickersLayout;
+
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
   const renderPicker = () => (
@@ -161,13 +163,14 @@ export const useDesktopPicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
