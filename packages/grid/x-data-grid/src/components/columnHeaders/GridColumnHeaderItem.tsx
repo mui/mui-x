@@ -22,7 +22,6 @@ interface GridColumnHeaderItemProps {
   isDragging: boolean;
   isResizing: boolean;
   isLastColumn: boolean;
-  extendRowFullWidth: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
@@ -81,7 +80,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     filterItemsCounter,
     hasFocus,
     tabIndex,
-    extendRowFullWidth,
     disableReorder,
     separatorSide,
   } = props;
@@ -92,10 +90,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnMenuButtonId = useId();
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const isDraggable = React.useMemo(
     () => !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder,
@@ -107,15 +101,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     headerComponent = colDef.renderHeader(apiRef.current.getColumnHeaderParams(colDef.field));
   }
 
-  const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-  const showRightBorder = !isLastColumn
-    ? rootProps.showColumnVerticalBorder
-    : !removeLastBorderRight && !extendRowFullWidth;
-
   const ownerState = {
     ...props,
     classes: rootProps.classes,
-    showRightBorder,
+    showRightBorder: rootProps.showColumnVerticalBorder,
   };
 
   const classes = useUtilityClasses(ownerState);
