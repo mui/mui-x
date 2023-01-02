@@ -109,7 +109,11 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
     // The current query targets the section being editing
     // We can try to concatenated value
-    if (query != null && query.sectionIndex === sectionIndex) {
+    if (
+      query != null &&
+      !Number.isNaN(Number(query.value)) &&
+      query.sectionIndex === sectionIndex
+    ) {
       const concatenatedQueryValue = `${query.value}${cleanKeyPressed}`;
 
       const queryResponse = getFirstSectionValueMatchingWithQuery(
@@ -129,17 +133,19 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
       setQuery(null);
-    } else {
-      setQuery({
-        sectionIndex,
-        value: cleanKeyPressed,
-        dateSectionName: activeSection.dateSectionName,
-      });
+      return null;
     }
+
+    setQuery({
+      sectionIndex,
+      value: cleanKeyPressed,
+      dateSectionName: activeSection.dateSectionName,
+    });
 
     if (isQueryResponseWithoutValue(queryResponse)) {
       return null;
     }
+
     return queryResponse;
   };
 
