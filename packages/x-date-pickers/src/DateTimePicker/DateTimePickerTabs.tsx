@@ -169,6 +169,11 @@ DateTimePickerTabs.propTypes = {
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  /**
+   * Variant of the component this component is inside of.
+   * @default 'desktop'
+   */
+  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DateTimePickerTabs };
