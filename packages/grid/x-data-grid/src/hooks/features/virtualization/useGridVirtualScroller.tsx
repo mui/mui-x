@@ -417,7 +417,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
     const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
+
     let isFocusedCellRendered = false;
+    const { cell } = apiRef.current.state.focus;
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstRowIndex,
@@ -444,7 +446,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         return null;
       }
 
-      const { cell } = apiRef.current.state.focus;
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
         if (cell && row.id === cell?.id) {
@@ -507,9 +508,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
 
-      const lastVisibleRowIndex = !isFocusedCellRendered
-        ? firstRowToRender + i === currentPage.rows.length
-        : firstRowToRender + i === currentPage.rows.length - 1;
+      const lastVisibleRowIndex =
+        !isFocusedCellRendered && cell
+          ? firstRowToRender + i === currentPage.rows.length
+          : firstRowToRender + i === currentPage.rows.length - 1;
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
