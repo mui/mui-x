@@ -112,7 +112,7 @@ If you do not find the adapter you were using—there probably was a reason for 
 
 ```diff
 -import AdapterJalaali from '@date-io/jalaali';
-+import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 ```
 
 ### Increase Luxon minimal version

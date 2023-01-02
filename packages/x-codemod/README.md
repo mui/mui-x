@@ -82,7 +82,7 @@ Import the adapters from `@mui/x-date-pickers` instead of `@date-io`.
 
 ```diff
 -import AdapterJalaali from '@date-io/jalaali';
-+import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 ```
 
 #### `view-components-rename`
