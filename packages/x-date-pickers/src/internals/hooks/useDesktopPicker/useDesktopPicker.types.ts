@@ -53,7 +53,7 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
   field?: SlotComponentProps<

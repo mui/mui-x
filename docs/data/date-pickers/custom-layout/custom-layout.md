@@ -72,18 +72,28 @@ Use the `usePickerLayout` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx
-const { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
+import {
+  usePickerLayout,
+  PickersLayoutRoot,
+  pickersLayoutClasses,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
-  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   // Put the action bar before the content
-  return <div>
-    {toolbar}
-    {actionBar}
-    {content}
-  </div>
-}
+  return (
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
+      {toolbar}
+      {actionBar}
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
+  );
+};
 ```
 
 :::info

@@ -169,22 +169,22 @@ Component names in the theme have changed as well:
 +MuiTimeClock: {
 ```
 
-### Rename `date` prop to `value`
+### ✅ Rename `date` prop to `value`
 
 The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
--<MonthPicker date={dayjs()} onChange={handleMonthChange} />
-+<MonthCalendar value={dayjs()} onChange={handleMonthChange} />
+-<MonthPicker date={dayjs()} />
++<MonthCalendar value={dayjs()} />
 
--<YearPicker date={dayjs()} onChange={handleYearChange} />
-+<YearCalendar value={dayjs()} onChange={handleYearChange} />
+-<YearPicker date={dayjs()} />
++<YearCalendar value={dayjs()} />
 
--<ClockPicker date={dayjs()} onChange={handleTimeChange} />
-+<TimeClock value={dayjs()} onChange={handleTimeChange} />
+-<ClockPicker date={dayjs()} />
++<TimeClock value={dayjs()} />
 
--<CalendarPicker date={dayjs()} onChange={handleDateChange} />
-+<DateCalendar value={dayjs()} onChange={handleDateChange} />
+-<CalendarPicker date={dayjs()} />
++<DateCalendar value={dayjs()} />
 ```
 
 ### Use the 12h/24h format from the locale as the default value of the `ampm` prop on `TimeClock`
@@ -495,23 +495,66 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
    />
   ```
 
+### Paper Content
+
+- The `PaperContent` / `paperContent` component slot and component props slot have been removed.
+
+  You can use the new [`Layout` component slot](/x/react-date-pickers/custom-layout/).
+  The main difference is that you now receive the various parts of the UI instead of a single `children` prop:
+
+  ```diff
+  +import { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
+
+   function MyCustomLayout (props) {
+  -  const { children } = props;
+  -
+  -  return (
+  -    <React.Fragment>
+  -      {children}
+  -      <div>Custom component</div>
+  -    </React.Fragment>
+  -  );
+  +  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
+  +
+  +  return (
+  +    <PickersLayoutRoot>
+  +      {toolbar}
+  +      {content}
+  +      {actionBar}
+  +      <div>Custom component</div>
+  +    </PickersLayoutRoot>
+  +  );
+   }
+
+   function App() {
+     return (
+       <DatePicker
+          components={{
+  -         PaperContent: MyCustomLayout,
+  +         Layout: MyCustomLayout,
+          }}
+       />
+     );
+   }
+  ```
+
 ### Left arrow button
 
 - The component slot `LeftArrowButton` has been renamed `PreviousIconButton` on all pickers:
 
-  ```diff
-   <DatePicker
-     components={{
-  -    LeftArrowButton: CustomButton,
-  +    PreviousIconButton: CustomButton,
-     }}
+```diff
+ <DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+   }}
 
-     componentsProps={{
-  -    leftArrowButton: {},
-  +    previousIconButton: {},
-     }}
-   />
-  ```
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+   }}
+ />
+```
 
 ### Right arrow button
 
