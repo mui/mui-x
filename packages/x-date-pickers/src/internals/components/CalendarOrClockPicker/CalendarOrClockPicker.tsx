@@ -64,6 +64,11 @@ export interface CalendarOrClockPickerProps<TDate, View extends CalendarOrClockP
   autoFocus?: boolean;
   DateInputProps: DateInputPropsLike;
   ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
+  /**
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default false if toolbar is displayed
+   */
+  ampmInClock?: boolean;
 }
 
 export const MobileKeyboardInputView = styled('div')({
@@ -90,6 +95,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
   props: CalendarOrClockPickerProps<TDate, View>,
 ) {
   const {
+    ampmInClock,
     autoFocus,
     className,
     parsedValue,
@@ -156,6 +162,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
           toolbarPlaceholder={toolbarPlaceholder}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
+          ampmInClock={ampmInClock}
         />
       )}
 
@@ -195,6 +202,7 @@ export function CalendarOrClockPicker<TDate, View extends CalendarOrClockPickerV
                 onChange={handleChangeAndOpenNext}
                 onViewChange={setOpenView as (view: ClockPickerView) => void}
                 showViewSwitcher={wrapperVariant === 'desktop'}
+                ampmInClock={!toShowToolbar || ampmInClock}
               />
             )}
           </React.Fragment>

@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { ClockPointer } from './ClockPointer';
 import { useUtils } from '../internals/hooks/useUtils';
-import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { getHours, getMinutes } from './shared';
@@ -41,6 +40,7 @@ const ClockRoot = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   margin: theme.spacing(2),
+  position: 'relative',
 }));
 
 const ClockClock = styled('div')({
@@ -96,7 +96,7 @@ const ClockAmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
   ({ theme, ownerState }) => ({
     zIndex: 1,
     position: 'absolute',
-    bottom: ownerState.ampmInClock ? 64 : 8,
+    bottom: 8,
     left: 8,
     ...(ownerState.meridiemMode === 'am' && {
       backgroundColor: theme.palette.primary.main,
@@ -112,7 +112,7 @@ const ClockPmButton = styled(IconButton)<{ ownerState: ClockProps<any> }>(
   ({ theme, ownerState }) => ({
     zIndex: 1,
     position: 'absolute',
-    bottom: ownerState.ampmInClock ? 64 : 8,
+    bottom: 8,
     right: 8,
     ...(ownerState.meridiemMode === 'pm' && {
       backgroundColor: theme.palette.primary.main,
@@ -150,7 +150,6 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
   const ownerState = props;
 
   const utils = useUtils<TDate>();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
   const isMoving = React.useRef(false);
 
   const isSelectedTimeDisabled = isTimeDisabled(value, type);
@@ -296,7 +295,7 @@ export function Clock<TDate>(props: ClockProps<TDate>) {
           {children}
         </div>
       </ClockClock>
-      {ampm && (wrapperVariant === 'desktop' || ampmInClock) && (
+      {ampm && ampmInClock && (
         <React.Fragment>
           <ClockAmButton
             data-mui-test="in-clock-am-btn"

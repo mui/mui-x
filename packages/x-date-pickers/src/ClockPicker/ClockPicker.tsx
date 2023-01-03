@@ -447,21 +447,6 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
 
   return (
     <ClockPickerRoot ref={ref} className={clsx(classes.root, className)} ownerState={ownerState}>
-      {showViewSwitcher && (
-        <ClockPickerArrowSwitcher
-          className={classes.arrowSwitcher}
-          leftArrowButtonText={leftArrowButtonText}
-          rightArrowButtonText={rightArrowButtonText}
-          components={components}
-          componentsProps={componentsProps}
-          onLeftClick={() => setOpenView(previousView)}
-          onRightClick={() => setOpenView(nextView)}
-          isLeftDisabled={!previousView}
-          isRightDisabled={!nextView}
-          ownerState={ownerState}
-        />
-      )}
-
       <Clock<TDate>
         autoFocus={autoFocus}
         date={date}
@@ -478,6 +463,20 @@ export const ClockPicker = React.forwardRef(function ClockPicker<TDate extends u
         readOnly={readOnly}
         {...viewProps}
       />
+      {showViewSwitcher && (
+        <ClockPickerArrowSwitcher
+          className={classes.arrowSwitcher}
+          leftArrowButtonText={leftArrowButtonText}
+          rightArrowButtonText={rightArrowButtonText}
+          components={components}
+          componentsProps={componentsProps}
+          onLeftClick={() => setOpenView(previousView)}
+          onRightClick={() => setOpenView(nextView)}
+          isLeftDisabled={!previousView}
+          isRightDisabled={!nextView}
+          ownerState={ownerState}
+        />
+      )}
     </ClockPickerRoot>
   );
 }) as ClockPickerComponent;

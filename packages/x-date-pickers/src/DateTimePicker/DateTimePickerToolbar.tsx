@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { generateUtilityClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/material';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
 import { PickersToolbar, pickersToolbarClasses } from '../internals/components/PickersToolbar';
 import { PickersToolbarButton } from '../internals/components/PickersToolbarButton';
@@ -8,13 +8,30 @@ import { DateTimePickerTabs } from './DateTimePickerTabs';
 import { useUtils } from '../internals/hooks/useUtils';
 import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
+import {
+  dateTimePickerToolbarClasses,
+  getDateTimePickerToolbarUtilityClass,
+  DateTimePickerToolbarClasses,
+} from './dateTimePickerToolbarClasses';
 
-export const dateTimePickerToolbarClasses = generateUtilityClasses('MuiDateTimePickerToolbar', [
-  'root',
-  'dateContainer',
-  'timeContainer',
-  'separator',
-]);
+export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
+  classes?: Partial<DateTimePickerToolbarClasses>;
+}
+const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any>) => {
+  const { isLandscape, classes } = ownerState;
+
+  const slots = {
+    root: ['root'],
+    dateContainer: ['dateContainer'],
+    timeContainer: ['timeContainer'],
+    separator: ['separator'],
+    ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
+    ampmLabel: ['ampmLabel'],
+  };
+
+  return composeClasses(slots, getDateTimePickerToolbarUtilityClass, classes);
+};
 
 const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   name: 'MuiDateTimePickerToolbar',
@@ -60,6 +77,29 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   cursor: 'default',
 });
 
+// Taken from TimePickerToolbar
+const TimePickerToolbarAmPmSelection = styled('div', {
+  name: 'MuiTimePickerToolbar',
+  slot: 'AmPmSelection',
+  overridesResolver: (props, styles) => styles.ampmSelection,
+})<{
+  ownerState: BaseToolbarProps<any, any>;
+}>(({ ownerState }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  marginRight: 'auto',
+  marginLeft: 12,
+  ...(ownerState.isLandscape && {
+    margin: '4px 0 auto',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    flexBasis: '100%',
+  }),
+  [`& .${dateTimePickerToolbarClasses.ampmLabel}`]: {
+    fontSize: 17,
+  },
+}));
+
 /**
  * @ignore - internal component.
  */
@@ -68,6 +108,7 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
 ) => {
   const {
     ampm,
+    ampmInClock,
     parsedValue,
     dateRangeIcon,
     hideTabs,
@@ -81,10 +122,15 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
     toolbarPlaceholder = '––',
     toolbarTitle = 'Select date & time',
     views,
+    disabled,
+    readOnly,
     ...other
   } = props;
   const utils = useUtils<TDate>();
   const wrapperVariant = React.useContext(WrapperVariantContext);
+  const { meridiemMode, handleMeridiemChange } = useMeridiemMode(parsedValue, ampm, onChange);
+
+  const showAmPmControl = Boolean(ampm && !ampmInClock);
   const showTabs =
     wrapperVariant === 'desktop'
       ? true
@@ -107,93 +153,120 @@ export const DateTimePickerToolbar = <TDate extends unknown>(
 
   const ownerState = props;
 
+  const classes = useUtilityClasses({ ...ownerState });
+
   return (
     <React.Fragment>
-      {wrapperVariant !== 'desktop' && (
-        <DateTimePickerToolbarRoot
-          toolbarTitle={toolbarTitle}
-          isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-          toggleMobileKeyboardView={toggleMobileKeyboardView}
-          className={dateTimePickerToolbarClasses.root}
-          {...other}
-          isLandscape={false}
+      <DateTimePickerToolbarRoot
+        toolbarTitle={toolbarTitle}
+        isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
+        toggleMobileKeyboardView={toggleMobileKeyboardView}
+        className={classes.root}
+        {...other}
+        isLandscape={false}
+        ownerState={ownerState}
+      >
+        <DateTimePickerToolbarDateContainer
+          className={classes.dateContainer}
           ownerState={ownerState}
         >
-          <DateTimePickerToolbarDateContainer
-            className={dateTimePickerToolbarClasses.dateContainer}
-            ownerState={ownerState}
-          >
-            {views.includes('year') && (
-              <PickersToolbarButton
-                tabIndex={-1}
-                variant="subtitle1"
-                data-mui-test="datetimepicker-toolbar-year"
-                onClick={() => setOpenView('year')}
-                selected={openView === 'year'}
-                value={parsedValue ? utils.format(parsedValue, 'year') : '–'}
+          {views.includes('year') && (
+            <PickersToolbarButton
+              tabIndex={-1}
+              variant="subtitle1"
+              data-mui-test="datetimepicker-toolbar-year"
+              onClick={() => setOpenView('year')}
+              selected={openView === 'year'}
+              value={parsedValue ? utils.format(parsedValue, 'year') : '–'}
+            />
+          )}
+          {views.includes('day') && (
+            <PickersToolbarButton
+              tabIndex={-1}
+              variant="h4"
+              data-mui-test="datetimepicker-toolbar-day"
+              onClick={() => setOpenView('day')}
+              selected={openView === 'day'}
+              value={dateText}
+            />
+          )}
+        </DateTimePickerToolbarDateContainer>
+        <DateTimePickerToolbarTimeContainer
+          className={classes.timeContainer}
+          ownerState={ownerState}
+        >
+          {views.includes('hours') && (
+            <PickersToolbarButton
+              variant="h3"
+              data-mui-test="hours"
+              onClick={() => setOpenView('hours')}
+              selected={openView === 'hours'}
+              value={parsedValue ? formatHours(parsedValue) : '--'}
+            />
+          )}
+          {views.includes('minutes') && (
+            <React.Fragment>
+              <DateTimePickerToolbarSeparator
+                variant="h3"
+                value=":"
+                className={classes.separator}
+                ownerState={ownerState}
               />
-            )}
-            {views.includes('day') && (
-              <PickersToolbarButton
-                tabIndex={-1}
-                variant="h4"
-                data-mui-test="datetimepicker-toolbar-day"
-                onClick={() => setOpenView('day')}
-                selected={openView === 'day'}
-                value={dateText}
-              />
-            )}
-          </DateTimePickerToolbarDateContainer>
-          <DateTimePickerToolbarTimeContainer
-            className={dateTimePickerToolbarClasses.timeContainer}
-            ownerState={ownerState}
-          >
-            {views.includes('hours') && (
               <PickersToolbarButton
                 variant="h3"
-                data-mui-test="hours"
-                onClick={() => setOpenView('hours')}
-                selected={openView === 'hours'}
-                value={parsedValue ? formatHours(parsedValue) : '--'}
+                data-mui-test="minutes"
+                onClick={() => setOpenView('minutes')}
+                selected={openView === 'minutes'}
+                value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
               />
-            )}
-            {views.includes('minutes') && (
-              <React.Fragment>
-                <DateTimePickerToolbarSeparator
-                  variant="h3"
-                  value=":"
-                  className={dateTimePickerToolbarClasses.separator}
-                  ownerState={ownerState}
-                />
-                <PickersToolbarButton
-                  variant="h3"
-                  data-mui-test="minutes"
-                  onClick={() => setOpenView('minutes')}
-                  selected={openView === 'minutes'}
-                  value={parsedValue ? utils.format(parsedValue, 'minutes') : '--'}
-                />
-              </React.Fragment>
-            )}
-            {views.includes('seconds') && (
-              <React.Fragment>
-                <DateTimePickerToolbarSeparator
-                  variant="h3"
-                  value=":"
-                  className={dateTimePickerToolbarClasses.separator}
-                  ownerState={ownerState}
-                />
-                <PickersToolbarButton
-                  variant="h3"
-                  data-mui-test="seconds"
-                  onClick={() => setOpenView('seconds')}
-                  selected={openView === 'seconds'}
-                  value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
-                />
-              </React.Fragment>
-            )}
-          </DateTimePickerToolbarTimeContainer>
-        </DateTimePickerToolbarRoot>
-      )}
+            </React.Fragment>
+          )}
+          {views.includes('seconds') && (
+            <React.Fragment>
+              <DateTimePickerToolbarSeparator
+                variant="h3"
+                value=":"
+                className={classes.separator}
+                ownerState={ownerState}
+              />
+              <PickersToolbarButton
+                variant="h3"
+                data-mui-test="seconds"
+                onClick={() => setOpenView('seconds')}
+                selected={openView === 'seconds'}
+                value={parsedValue ? utils.format(parsedValue, 'seconds') : '--'}
+              />
+            </React.Fragment>
+          )}
+          {showAmPmControl && (
+            <TimePickerToolbarAmPmSelection
+              className={classes.ampmSelection}
+              ownerState={ownerState}
+            >
+              <PickersToolbarButton
+                disableRipple
+                variant="subtitle2"
+                data-mui-test="toolbar-am-btn"
+                selected={meridiemMode === 'am'}
+                typographyClassName={classes.ampmLabel}
+                value={utils.getMeridiemText('am')}
+                onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
+                disabled={disabled}
+              />
+              <PickersToolbarButton
+                disableRipple
+                variant="subtitle2"
+                data-mui-test="toolbar-pm-btn"
+                selected={meridiemMode === 'pm'}
+                typographyClassName={classes.ampmLabel}
+                value={utils.getMeridiemText('pm')}
+                onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
+                disabled={disabled}
+              />
+            </TimePickerToolbarAmPmSelection>
+          )}
+        </DateTimePickerToolbarTimeContainer>
+      </DateTimePickerToolbarRoot>
       {showTabs && (
         <DateTimePickerTabs
           dateRangeIcon={dateRangeIcon}
