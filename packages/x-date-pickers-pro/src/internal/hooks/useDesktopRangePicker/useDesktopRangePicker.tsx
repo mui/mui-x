@@ -127,7 +127,7 @@ export const useDesktopRangePicker = <
 
   const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
     ...fieldProps.components,
-    Input: components.Input,
+    TextField: components.TextField,
     Root: components.FieldRoot,
     Separator: components.FieldSeparator,
   };
@@ -137,10 +137,10 @@ export const useDesktopRangePicker = <
     unknown
   >['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =

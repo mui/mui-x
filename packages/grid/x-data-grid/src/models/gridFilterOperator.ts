@@ -30,7 +30,7 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
   getApplyFilterFn: (
     filterItem: GridFilterItem,
     column: GridColDef<R, V, F>,
-  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
+  ) => null | ((params: GridCellParams<R, V, F>) => boolean);
   /**
    * The input component to render in the filter panel for this filter operator.
    */
