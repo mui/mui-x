@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The Date Picker let the user select a date.</p>
+<p class="description">The Date Picker component let the user select a date.</p>
 
 :::warning
 The new Date Pickers are unstable.
@@ -51,15 +51,16 @@ The component is available in four variants:
 
 - The `NextDatePicker` component which renders `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
 
-  By default, it renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-  This can be customized with the `desktopModeMediaQuery` prop.
-
 - The `StaticDatePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDatePickers.js"}}
 
+By default, the `NextDatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+This can be customized with the `desktopModeMediaQuery` prop.
+
 :::warning
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
 :::
 
 ## Form props
@@ -70,25 +71,34 @@ The component can be disabled or read-only.
 
 ## Views
 
-The component can contain three views: `day`, `month`, and `year`.
-By default, only the `day` and `year` views are enabled.
+The component supports three views: `day`, `month`, and `year`.
 
-You can customize the enabled views using the `views` prop.
-Views will appear in the order they're included in the `views` array.
+By default, the `day` and `year` views are enabled.
+Use the `views` prop to change this behavior:
 
 {{"demo": "DatePickerViews.js"}}
+
+By default, the component renders the `day` view on mount.
+Use the `openTo` prop to change this behavior:
+
+{{"demo": "DatePickerOpenTo.js"}}
+
+:::info
+The views will appear in the order defined by the `views` array.
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
+(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+:::
 
 ## Landscape orientation
 
 By default, the Date Picker component automatically sets the orientation based on the `window.orientation` value.
-
-You can force a specific orientation using the `orientation` prop.
+You can force a specific orientation using the `orientation` prop:
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
 ## Helper text
 
-You can show a helper text with the date format accepted.
+You can show a helper text with the date format accepted:
 
 {{"demo": "HelperText.js"}}
 

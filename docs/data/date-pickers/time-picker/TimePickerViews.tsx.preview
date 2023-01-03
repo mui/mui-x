@@ -1,15 +1,9 @@
 <NextTimePicker
   label={'"hours", "minutes" and "seconds"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
   views={['hours', 'minutes', 'seconds']}
 />
-<NextTimePicker
-  label={'"hours"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
-  views={['hours']}
-/>
+<NextTimePicker label={'"hours"'} views={['hours']} />
 <NextTimePicker
   label={'"minutes" and "seconds"'}
-  defaultValue={dayjs('2022-04-07T15:30:25')}
   views={['minutes', 'seconds']}
 />

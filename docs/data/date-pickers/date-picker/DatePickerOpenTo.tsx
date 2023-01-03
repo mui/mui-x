@@ -4,16 +4,16 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
-export default function DatePickerViews() {
+export default function DatePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
+        <NextDatePicker label={'"year"'} openTo="year" />
         <NextDatePicker
-          label={'"year", "month" and "day"'}
+          label={'"month"'}
+          openTo="month"
           views={['year', 'month', 'day']}
         />
-        <NextDatePicker label={'"day"'} views={['day']} />
-        <NextDatePicker label={'"month" and "year"'} views={['month', 'year']} />
       </DemoContainer>
     </LocalizationProvider>
   );
