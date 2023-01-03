@@ -2,6 +2,11 @@ import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
+import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
+import { gridVisibleColumnFieldsSelector } from '../columns/gridColumnsSelector';
+import { getVisibleRows } from '../../utils/useGridVisibleRows';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import { GridValidRowModel } from '../../../models/gridRows';
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -45,7 +50,10 @@ function hasNativeSelection(element: HTMLInputElement) {
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
-export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
+export const useGridClipboard = (
+  apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
+): void => {
   const copySelectedRowsToClipboard = React.useCallback<
     GridClipboardApi['unstable_copySelectedRowsToClipboard']
   >(() => {
@@ -86,7 +94,60 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
     [apiRef],
   );
 
+  const handlePaste = React.useCallback(
+    async (event: KeyboardEvent) => {
+      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
+      if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
+        return;
+      }
+
+      const selectedCell = gridFocusCellSelector(apiRef);
+      if (!selectedCell || !selectedCell.id || !selectedCell.field) {
+        return;
+      }
+
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        return;
+      }
+
+      const rowsData = text.split('\n');
+
+      const selectedRowId = selectedCell.id;
+      const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
+      const visibleRows = getVisibleRows(apiRef, {
+        pagination: props.pagination,
+        paginationMode: props.paginationMode,
+      });
+
+      const rowsToUpdate: GridValidRowModel[] = [];
+      rowsData.forEach((rowData, index) => {
+        const parsedData = rowData.split('\t');
+        const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
+        const targetRow = visibleRows.rows[selectedRowIndex + index];
+
+        if (!targetRow) {
+          return;
+        }
+
+        // TODO: `id` field isn't gonna work with `getRowId`
+        const newRow: GridValidRowModel = { id: targetRow.id };
+        const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
+        for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
+          const field = visibleColumnFields[i];
+          newRow[field] = parsedData[i - selectedFieldIndex];
+        }
+
+        rowsToUpdate.push(newRow);
+      });
+
+      apiRef.current.updateRows(rowsToUpdate);
+    },
+    [apiRef, props.pagination, props.paginationMode],
+  );
+
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
+  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
 
   const clipboardApi: GridClipboardApi = {
     unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
