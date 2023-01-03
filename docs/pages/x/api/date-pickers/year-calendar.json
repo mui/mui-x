@@ -24,7 +24,7 @@
   "name": "YearCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-picker\">Date Picker</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
     { "packageName": "@mui/x-date-pickers", "componentName": "YearCalendar" }

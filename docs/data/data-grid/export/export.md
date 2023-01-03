@@ -311,7 +311,7 @@ This feature isn't implemented yet. It's coming.
 You will be able to copy and paste items to and from the grid using the system clipboard.
 :::
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.

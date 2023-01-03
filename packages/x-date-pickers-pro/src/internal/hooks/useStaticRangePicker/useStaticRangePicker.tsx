@@ -18,7 +18,7 @@ import {
 } from './useStaticRangePicker.types';
 import { DateRange, RangePosition } from '../../models/range';
 
-const PickerStaticViewLayout = styled(PickersLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
@@ -31,11 +31,10 @@ const PickerStaticViewLayout = styled(PickersLayout)(({ theme }) => ({
 export const useStaticRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
@@ -43,9 +42,14 @@ export const useStaticRangePicker = <
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
-  const { layoutProps, renderCurrentView } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    {}
+  >({
     props,
-    viewLookup,
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,
@@ -53,6 +57,7 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
+  const Layout = components?.Layout ?? PickerStaticLayout;
   const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
@@ -65,14 +70,14 @@ export const useStaticRangePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
           components={components}
           componentsProps={componentsPropsForLayout}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

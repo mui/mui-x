@@ -50,16 +50,19 @@ The `getValue` receives some parameters in an object:
 - `value`
 - `view`
 - `isValid`
-  :::info
-  Review message:
+
+:::info
+
+#### Review message
 
 My initial idea was to adapt the shortcut depending on:
 
 - The current value. For example "next week"
 - the validation parameters. Next available week-end
 
-But it's not necessarly the best way to do that. Maybe using slot callback would be more interesting, because this technic does nto allows to:
+But it's not necessary the best way to do that. Maybe using slot callback would be more interesting, because this technic does nto allows to:
 
 - modify shortcuts order
 - remove/add shortcuts depending on the displayed view
-  :::
+
+:::

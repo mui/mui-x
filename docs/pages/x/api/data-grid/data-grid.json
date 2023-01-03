@@ -5,6 +5,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
@@ -121,7 +122,7 @@
     "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -134,8 +135,8 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "custom",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
     },
     "rowSpacingType": {
@@ -189,8 +190,23 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
+    "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenuHideIcon": { "default": "GridVisibilityOffIcon", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuManageColumnsIcon": {
+      "default": "GridViewColumnIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
     "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
@@ -263,6 +279,10 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -345,6 +365,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",

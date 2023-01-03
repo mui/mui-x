@@ -10,7 +10,7 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
 
 function ActionList(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday } = props;
+  const { onAccept, onClear, onCancel, onSetToday, className } = props;
   const actions = [
     { text: 'Accept', method: onAccept },
     { text: 'Clear', method: onClear },
@@ -18,7 +18,8 @@ function ActionList(props: PickersActionBarProps) {
     { text: 'Today', method: onSetToday },
   ];
   return (
-    <List>
+    // Propagate the className such that CSS selectors can be applied
+    <List className={className}>
       {actions.map(({ text, method }) => (
         <ListItem key={text} disablePadding>
           <ListItemButton onClick={method}>

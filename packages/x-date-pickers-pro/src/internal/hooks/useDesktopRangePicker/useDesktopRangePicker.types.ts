@@ -6,7 +6,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout';
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
   DateOrTimeView,
   UsePickerParams,
@@ -15,13 +15,14 @@ import {
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
+  UsePickerViewsProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
-export interface UseDesktopRangePickerSlotsComponent
+export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<any, any> {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -32,7 +33,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
@@ -48,14 +49,25 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
 
 export interface DesktopRangeOnlyPickerProps<TDate> extends DesktopOnlyPickerProps<TDate> {}
 
-export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView, TError>
-  extends DesktopRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError> {
+export interface UseDesktopRangePickerProps<
+  TDate,
+  TView extends DateOrTimeView,
+  TError,
+  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+> extends DesktopRangeOnlyPickerProps<TDate>,
+    BaseNextPickerProps<
+      DateRange<TDate>,
+      TDate,
+      TView,
+      TError,
+      TExternalProps,
+      DesktopRangePickerAdditionalViewProps
+    > {
   /**
    * Overrideable components.
    * @default {}
    */
-  components: UseDesktopRangePickerSlotsComponent;
+  components: UseDesktopRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -63,12 +75,12 @@ export interface UseDesktopRangePickerProps<TDate, TView extends DateOrTimeView,
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
 
 export interface UseDesktopRangePickerParams<
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
     UsePickerParams<
       DateRange<TDate>,
@@ -77,7 +89,7 @@ export interface UseDesktopRangePickerParams<
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,
-    'valueManager' | 'viewLookup' | 'validator'
+    'valueManager' | 'validator'
   > {
   props: TExternalProps;
 }

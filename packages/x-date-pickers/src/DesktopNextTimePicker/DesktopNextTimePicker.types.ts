@@ -14,7 +14,7 @@ import { TimeView } from '../internals/models/views';
 
 export interface DesktopNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopPickerSlotsComponent<TDate>, 'Field' | 'OpenPickerIcon'> {}
+    MakeOptional<UseDesktopPickerSlotsComponent<TDate, TimeView>, 'Field' | 'OpenPickerIcon'> {}
 
 export interface DesktopNextTimePickerSlotsComponentsProps<TDate>
   extends BaseNextTimePickerSlotsComponentsProps,

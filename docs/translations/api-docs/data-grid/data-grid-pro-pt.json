@@ -1,7 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with useGridApiRef().",
+    "apiRef": "The ref object that allows grid manipulation. Can be instantiated with <code>useGridApiRef()</code>.",
     "aria-label": "The label of the grid.",
     "aria-labelledby": "The id of the element containing a label for the grid.",
     "autoHeight": "If <code>true</code>, the grid height is dynamic and follow the number of rows in the grid.",
@@ -11,7 +11,7 @@
     "checkboxSelectionVisibleOnly": "If <code>true</code>, the &quot;Select All&quot; header checkbox selects only the rows on the current page. To be used in combination with <code>checkboxSelection</code>. It only works if the pagination is enabled.",
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "columnBuffer": "Number of extra columns to be rendered before/after the visible slice.",
-    "columns": "Set of columns of type GridColumns.",
+    "columns": "Set of columns of type GridColDef[].",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
     "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
@@ -206,6 +206,26 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
+    },
+    "cell--rangeTop": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the top edge of a cell selection range"
+    },
+    "cell--rangeBottom": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the bottom edge of a cell selection range"
+    },
+    "cell--rangeLeft": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the left edge of a cell selection range"
+    },
+    "cell--rangeRight": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "it is at the right edge of a cell selection range"
     },
     "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the cell element" },
     "cellContent": {
@@ -540,6 +560,11 @@
       "nodeName": "the root element",
       "conditions": "density is \"compact\""
     },
+    "root--disableUserSelection": {
+      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
+      "nodeName": "the root element",
+      "conditions": "user selection is disabled"
+    },
     "row--editable": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row element",
@@ -703,6 +728,14 @@
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
     "RowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "QuickFilterIcon": "Icon displayed on the quick filter input.",
-    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input."
+    "QuickFilterClearIcon": "Icon displayed on the quick filter reset input.",
+    "ColumnMenuHideIcon": "Icon displayed in column menu for hiding column",
+    "ColumnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
+    "ColumnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "ColumnMenuFilterIcon": "Icon displayed in column menu for filter",
+    "ColumnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
+    "ColumnMenuClearIcon": "Icon displayed in column menu for clearing values",
+    "ColumnMenuPinLeftIcon": "Icon displayed in column menu for left pinning",
+    "ColumnMenuPinRightIcon": "Icon displayed in column menu for right pinning"
   }
 }

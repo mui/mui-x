@@ -1,11 +1,14 @@
 ---
 product: date-pickers
 title: Date and Time pickers - Custom layout
+components: PickersActionBar, PickersLayout
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Custom layout
 
-<p class="description">The date picker lets you reorganize its layout</p>
+<p class="description">The Date and Time Pickers let you reorganize the layout</p>
 
 ## Default layout structure
 
@@ -30,14 +33,9 @@ Here is a demonstration with the 3 main blocks outlined with color borders.
 
 ## Layout structure
 
-The layout is structured as follows:
-
-A `<PickersLayoutRoot />` wraps all the sub-components to provide the structure.
+A `<PickersLayoutRoot />` wraps all the subcomponents to provide the structure.
 By default it renders a `div` with `display: grid`.
-Such that all sub-components take place into a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
-
-Subcomponents are wrapped inside layout helper, responsible for placing it into the grid.
-Here is an overview of the structure.
+Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.mozilla.org/fr/docs/Web/CSS/CSS_Grid_Layout).
 
 ```jsx
 <PickersLayoutRoot>
@@ -52,41 +50,57 @@ Here is an overview of the structure.
 
 ## CSS customization
 
-To move an element—the easiest way is to override it's wrapper position with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
+To move an element, you can override its position in the layout with [`gridColumn`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) and [`gridRow`](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row) properties.
 
-In the next example, the action bar is replaced by a list, and placed at the left of the component.
-Placing at the right is achieved by applying `{ gridColumn: 1, gridRow: 2 }` style to it.
+In the next example, the action bar is replaced by a list and then placed on the left side of the content.
+It's achieved by applying the `{ gridColumn: 1, gridRow: 2 }` style.
+
+:::warning
+If you are using custom components, you should pay attention to `className`.
+To make CSS selectors work, you can either propagate `className` to the root element like in the demo, or use your own CSS class.
+:::
 
 {{"demo": "MovingActions.js"}}
 
 ## DOM customization
 
-In the demonstration above, the layout is modified thanks to CSS.
-Such modification can lead to inconsistencies between the visual aspect, and the DOM structure.
-In the previous demonstration, the tab order is broken, because the action bar appears before the calendar whereas in the DOM the action bar is still after the calendar.
+It's important to note that by modifying the layout with CSS, the new positions can lead to inconsistencies between the visual render and the DOM structure.
+In the previous demonstration, the tab order is broken because the action bar appears before the calendar, whereas in the DOM the action bar is still after.
 
-To modify the DOM structure, you can create your own `Layout` component.
-To simplify the job, use the `usePickerLayout` hook which takes Layout's props as an input and returns React nodes.
+To modify the DOM structure, you can create a custom `Layout` wrapper.
+Use the `usePickerLayout` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx
-const { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
+import {
+  usePickerLayout,
+  PickersLayoutRoot,
+  pickersLayoutClasses,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 
 const MyCustomLayout = (props) => {
-  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
+  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   // Put the action bar before the content
-  return <div>
-    {toolbar}
-    {actionBar}
-    {content}
-  </div>
-}
+  return (
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
+      {toolbar}
+      {actionBar}
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
+  );
+};
 ```
 
+:::info
 This slot can also be used to add additional information in the layout.
+:::
 
-Here is the previous demonstration with a fix for the tabulation order and logo added into the layout.
-Notice the use of `pickersLayoutClasses`, `PickersLayoutRoot`, and `PickersLayoutContentWrapper` to avoid having to rewrite the default CSS.
+Here is the complete example with a fix for the tabulation order and an external element added to the layout.
+Notice the use of `pickersLayoutClasses`, `PickersLayoutRoot`, and `PickersLayoutContentWrapper` to avoid rewriting the default CSS.
 
 {{"demo": "AddComponent.js", "defaultCodeOpen": false}}

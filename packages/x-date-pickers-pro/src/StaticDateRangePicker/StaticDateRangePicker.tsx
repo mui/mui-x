@@ -181,7 +181,7 @@ StaticDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -201,7 +201,7 @@ StaticDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -305,11 +305,6 @@ StaticDateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Props to pass to keyboard adornment button.
    */

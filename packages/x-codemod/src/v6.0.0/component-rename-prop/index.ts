@@ -9,7 +9,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return renameProps({
     root,
-    componentName: options.component,
+    componentNames: [options.component],
     props: { [options.from]: options.to },
+    j,
   }).toSource(printOptions);
 }

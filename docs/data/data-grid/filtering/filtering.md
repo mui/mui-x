@@ -408,7 +408,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 
 {{"demo": "QuickFilteringCustomizedGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -416,7 +416,7 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Selectors
 
 {{"component": "modules/components/SelectorsDocs.js", "category": "Filtering"}}
 

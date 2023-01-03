@@ -23,7 +23,7 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
   Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TView>>;
   /**
    * Custom component for wrapping the layout.
-   * It wrapps the toolbar, views, and action bar
+   * It wrapps the toolbar, views, action bar, and shortcuts
    */
   Layout?: React.JSXElementConstructor<
     PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
@@ -91,16 +91,21 @@ export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrT
 }
 
 export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
-  extends UsePickerLayoutPropsResponseLayoutProps<TValue, TView> {
+  extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
+  value?: TValue;
   className?: string;
   children?: React.ReactNode;
   sx?: SxProps<Theme>;
+  /**
+   * Ref to pass to the root element
+   */
+  ref?: React.Ref<HTMLDivElement>;
   classes?: Partial<PickersLayoutClasses>;
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: PickersLayoutSlotsComponent<any, any>;
+  components?: PickersLayoutSlotsComponent<TValue, TView>;
   /**
    * The props used for each component slot.
    * @default {}

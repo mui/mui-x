@@ -12,7 +12,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -40,7 +40,7 @@ describe('<DataGrid /> - Keyboard', () => {
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
-    const transformColSizes = (columns: GridColumns) =>
+    const transformColSizes = (columns: GridColDef[]) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
@@ -468,7 +468,7 @@ describe('<DataGrid /> - Keyboard', () => {
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
-      const transformColSizes = (columns: GridColumns) =>
+      const transformColSizes = (columns: GridColDef[]) =>
         columns.map((column) => ({ ...column, width: 60 }));
 
       return (
@@ -716,13 +716,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(2);
+    expect(renderCell.callCount).to.equal(6);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.callCount).to.equal(8);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.callCount).to.equal(8);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {

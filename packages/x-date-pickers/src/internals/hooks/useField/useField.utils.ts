@@ -1,10 +1,10 @@
 import {
   FieldSection,
   AvailableAdjustKeyCode,
-  FieldBoundaries,
+  FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
-} from './useField.interfaces';
+} from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -280,27 +280,27 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
     const renderedValue = getSectionVisibleValue(section, true);
+    const sectionStr = `${section.startSeparator}${renderedValue}${section.endSeparator}`;
 
-    const end = position + cleanString(`${renderedValue}${section.separator || ''}`).length;
+    const sectionLength = cleanString(sectionStr).length;
+    const sectionLengthInInput = sectionStr.length;
 
     // The ...InInput values consider the unicode characters but do include them in their indexes
     const cleanedValue = cleanString(renderedValue);
-    const startInInput = positionInInput + renderedValue.indexOf(cleanedValue[0]);
+    const startInInput =
+      positionInInput + renderedValue.indexOf(cleanedValue[0]) + section.startSeparator.length;
     const endInInput = startInInput + cleanedValue.length;
 
     newSections.push({
       ...section,
       start: position,
-      end,
+      end: position + sectionLength,
       startInInput,
       endInInput,
     } as TSection);
-    position = end;
+    position += sectionLength;
     // Move position to the end of string associated to the current section
-    positionInInput =
-      positionInInput +
-      getSectionVisibleValue(section, true).length +
-      (section.separator?.length ?? 0);
+    positionInInput += sectionLengthInInput;
   }
 
   return newSections;
@@ -351,15 +351,49 @@ const getSectionPlaceholder = <TDate>(
   }
 };
 
+export const changeSectionValueFormat = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  valueStr: string,
+  currentFormat: string,
+  newFormat: string,
+) => utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
+
+export const doesSectionHaveTrailingZeros = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  contentType: 'digit' | 'letter',
+  formatValue: string,
+) =>
+  contentType === 'digit' &&
+  changeSectionValueFormat(utils, '1', formatValue, formatValue).length > 1;
+
+const getEscapedPartsFromExpandedFormat = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  expandedFormat: string,
+) => {
+  const escapedParts: { start: number; end: number }[] = [];
+  const { start: startChar, end: endChar } = utils.escapedCharacters;
+  const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
+
+  let match: RegExpExecArray | null = null;
+  // eslint-disable-next-line no-cond-assign
+  while ((match = regExp.exec(expandedFormat))) {
+    escapedParts.push({ start: match.index, end: regExp.lastIndex - 1 });
+  }
+
+  return escapedParts;
+};
+
 export const splitFormatIntoSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
   format: string,
   date: TDate | null,
 ) => {
-  let currentTokenValue = '';
-  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
   const expandedFormat = utils.expandFormat(format);
+  const escapedParts = getEscapedPartsFromExpandedFormat(utils, expandedFormat);
+  let currentTokenValue = '';
+  let startSeparator: string = '';
+  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
 
   const commitCurrentToken = () => {
     if (currentTokenValue === '') {
@@ -369,9 +403,11 @@ export const splitFormatIntoSections = <TDate>(
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
     const sectionValue = date == null ? '' : utils.formatByString(date, currentTokenValue);
 
-    const hasTrailingZeroes =
-      sectionConfig.contentType === 'digit' &&
-      utils.formatByString(utils.parse('1', currentTokenValue)!, currentTokenValue).length > 1;
+    const hasTrailingZeroes = doesSectionHaveTrailingZeros(
+      utils,
+      sectionConfig.contentType,
+      currentTokenValue,
+    );
 
     sections.push({
       ...sectionConfig,
@@ -379,7 +415,8 @@ export const splitFormatIntoSections = <TDate>(
       value: sectionValue,
       placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, currentTokenValue),
       hasTrailingZeroes,
-      separator: '',
+      startSeparator: sections.length === 0 ? startSeparator : '',
+      endSeparator: '',
       edited: false,
     });
 
@@ -387,97 +424,92 @@ export const splitFormatIntoSections = <TDate>(
   };
 
   for (let i = 0; i < expandedFormat.length; i += 1) {
+    const escapedPartOfCurrentChar = escapedParts.find(
+      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+    );
+
     const char = expandedFormat[i];
 
-    if (char.match(/([A-zÀ-ú]+)/g)) {
+    const isEscapedChar = escapedPartOfCurrentChar != null;
+
+    if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
       currentTokenValue += char;
     } else {
-      commitCurrentToken();
-      sections[sections.length - 1].separator += char;
+      // If we are on the opening or closing character of an escaped part of the format,
+      // Then we ignore this character.
+      const isEscapeBoundary =
+        (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
+        escapedPartOfCurrentChar?.end === i;
+
+      if (!isEscapeBoundary) {
+        commitCurrentToken();
+        if (sections.length === 0) {
+          startSeparator += char;
+        } else {
+          sections[sections.length - 1].endSeparator += char;
+        }
+      }
     }
   }
 
   commitCurrentToken();
 
-  return sections.map((section) => {
-    if (section.separator !== '/') {
-      if (section.separator !== null && section.separator.includes(' ')) {
-        return {
-          ...section,
-          separator: `\u2069${section.separator}\u2066`,
-          parsingSeparator: section.separator,
-        };
+  const cleanSections = sections.map((section) => {
+    const cleanSeparator = (separator: string) => {
+      let cleanedSeparator = separator;
+      if (cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
+        cleanedSeparator = `\u2069${cleanedSeparator}\u2066`;
       }
-      return section;
-    }
-    return {
-      ...section,
-      separator: ' / ',
-      parsingSeparator: '/',
+
+      if (cleanedSeparator === '/') {
+        cleanedSeparator = ' / ';
+      }
+
+      return cleanedSeparator;
     };
+
+    section.startSeparator = cleanSeparator(section.startSeparator);
+    section.endSeparator = cleanSeparator(section.endSeparator);
+
+    return section;
   });
+
+  return cleanSections;
 };
 
-export const createDateStrFromSections = (
+/**
+ * Some date libraries like `dayjs` don't support parsing from date with escaped characters.
+ * To make sure that the parsing works, we are building a format and a date without any separator.
+ */
+export const getDateFromDateSections = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
   sections: FieldSection[],
-  willBeRenderedInInput: boolean,
 ) => {
-  const formattedArray = sections.map((section) => {
-    let sectionValueStr = getSectionVisibleValue(section, willBeRenderedInInput);
+  const formatWithoutSeparator = sections.map((section) => section.formatValue).join(' ');
+  const dateWithoutSeparatorStr = sections
+    .map((section) => getSectionVisibleValue(section, false))
+    .join(' ');
 
-    const separator = willBeRenderedInInput
-      ? section.separator
-      : section.parsingSeparator ?? section.separator;
-
-    if (separator != null) {
-      sectionValueStr += separator;
-    }
-
-    return `${sectionValueStr}`;
-  });
-
-  if (willBeRenderedInInput) {
-    // \u2066: start left-to-right isolation
-    // \u2067: start right-to-left isolation
-    // \u2068: start first strong character isolation
-    // \u2069: pop isolation
-    // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
-    return `\u2066${formattedArray.join('')}\u2069`;
-  }
-  return formattedArray.join('');
+  return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
 };
 
-export const getMonthsMatchingQuery = <TDate, TSection extends FieldSection>(
-  utils: MuiPickersAdapter<TDate>,
-  section: TSection,
-  query: string,
-) => {
-  switch (section.dateSectionName) {
-    case 'month': {
-      const monthList = utils
-        .getMonthArray(utils.date()!)
-        .map((month) => utils.formatByString(month, section.formatValue));
-      return monthList.filter((month) => month.toLowerCase().startsWith(query));
-    }
+export const createDateStrForInputFromSections = (sections: FieldSection[]) => {
+  const formattedArray = sections.map(
+    (section) =>
+      `${section.startSeparator}${getSectionVisibleValue(section, true)}${section.endSeparator}`,
+  );
 
-    case 'meridiem': {
-      const now = utils.date()!;
-      return [utils.endOfDay(now), utils.startOfDay(now)]
-        .map((date) => utils.formatByString(date, section.formatValue))
-        .filter((meridiem) => meridiem.toLowerCase().startsWith(query));
-    }
-
-    default: {
-      throw new Error(
-        `MUI: The section ${section.dateSectionName} does not support letter edition`,
-      );
-    }
-  }
+  // \u2066: start left-to-right isolation
+  // \u2067: start right-to-left isolation
+  // \u2068: start first strong character isolation
+  // \u2069: pop isolation
+  // wrap into an isolated group such that separators can split the string in smaller ones by adding \u2069\u2068
+  return `\u2066${formattedArray.join('')}\u2069`;
 };
 
-export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
+export const getSectionsBoundaries = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
-): FieldBoundaries<TDate, TSection> => {
+): FieldSectionsValueBoundaries<TDate, TSection> => {
   const today = utils.date()!;
 
   const endOfYear = utils.endOfYear(today);
@@ -526,34 +558,35 @@ export const getSectionBoundaries = <TDate, TSection extends FieldSection>(
   };
 };
 
-export const applySectionValueToDate = <TDate>({
-  utils,
-  dateSectionName,
-  date,
-  getNumericSectionValue,
-  getMeridiemSectionValue,
-}: {
-  utils: MuiPickersAdapter<TDate>;
-  dateSectionName: MuiDateSectionName;
-  date: TDate;
-  getNumericSectionValue: (getter: (date: TDate) => number) => number;
-  getMeridiemSectionValue: () => string;
-}) => {
-  if (dateSectionName === 'meridiem') {
-    const isAM = getMeridiemSectionValue().toLowerCase() === 'am';
-    const hours = utils.getHours(date);
+/**
+ * @template TDate
+ * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
+ * @param {TDate} date The date on which the meridiem must be applied.
+ * @param {string} sectionValue The new value of the meridiem section.
+ * @returns {TDate} The date with the new meridiem.
+ */
+export const applyMeridiemChange = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  date: TDate,
+  sectionValue: string,
+) => {
+  const isAM = sectionValue.toLowerCase() === 'am';
+  const hours = utils.getHours(date);
 
-    if (isAM && hours >= 12) {
-      return utils.addHours(date, -12);
-    }
-
-    if (!isAM && hours < 12) {
-      return utils.addHours(date, 12);
-    }
-
-    return date;
+  if (isAM && hours >= 12) {
+    return utils.addHours(date, -12);
+  }
+  if (!isAM && hours < 12) {
+    return utils.addHours(date, 12);
   }
 
+  return date;
+};
+
+export const getDateSectionGetterAndSetter = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateSectionName: Exclude<MuiDateSectionName, 'meridiem'>,
+) => {
   const adapterMethods = {
     seconds: {
       getter: utils.getSeconds,
@@ -581,15 +614,8 @@ export const applySectionValueToDate = <TDate>({
     },
   };
 
-  const methods = adapterMethods[dateSectionName as keyof typeof adapterMethods];
-
-  if (!methods) {
-    throw new Error(`MUI: The section name ${dateSectionName} can't be applied to a date`);
-  }
-
-  return methods.setter(date, getNumericSectionValue(methods.getter));
+  return adapterMethods[dateSectionName];
 };
-
 export const cleanTrailingZeroInNumericSectionValue = (value: string, maximum: number) => {
   const maximumStr = maximum.toString();
   let cleanValue = value;
@@ -642,13 +668,16 @@ export const mergeDateIntoReferenceDate = <
 
   sections.forEach((section) => {
     if (!shouldLimitToEditedSections || section.edited) {
-      mergedDate = applySectionValueToDate({
-        utils,
-        date: mergedDate,
-        dateSectionName: section.dateSectionName,
-        getNumericSectionValue: (getter) => getter(date),
-        getMeridiemSectionValue: () => (utils.getHours(mergedDate) < 12 ? 'AM' : 'PM'),
-      });
+      if (section.dateSectionName === 'meridiem') {
+        mergedDate = applyMeridiemChange(
+          utils,
+          mergedDate,
+          utils.getHours(date) < 12 ? 'AM' : 'PM',
+        );
+      } else {
+        const { getter, setter } = getDateSectionGetterAndSetter(utils, section.dateSectionName);
+        mergedDate = setter(mergedDate, getter(date));
+      }
     }
   });
 
@@ -660,8 +689,7 @@ export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('androi
 export const clampDaySection = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   sections: TSection[],
-  boundaries: FieldBoundaries<TDate, TSection>,
-  format: string,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
 ) => {
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
@@ -669,7 +697,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
       return section;
     }
 
-    const dayBoundaries = boundaries.day(null, section);
+    const dayBoundaries = sectionsValueBoundaries.day(null, section);
 
     return {
       ...section,
@@ -682,10 +710,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
     };
   });
 
-  const startOfMonth = utils.parse(
-    createDateStrFromSections(sectionsForStartOfMonth, false),
-    format,
-  );
+  const startOfMonth = getDateFromDateSections(utils, sectionsForStartOfMonth);
 
   // Even the start of the month is invalid, we probably have other invalid sections, the clamping failed.
   if (startOfMonth == null || !utils.isValid(startOfMonth)) {
@@ -698,7 +723,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
       return section;
     }
 
-    const dayBoundaries = boundaries.day(startOfMonth, section);
+    const dayBoundaries = sectionsValueBoundaries.day(startOfMonth, section);
     if (Number(section.value) <= dayBoundaries.maximum) {
       return section;
     }
@@ -735,9 +760,7 @@ export const getSectionOrder = (
   while (RTLIndex >= 0) {
     groupedSectionsEnd = sections.findIndex(
       // eslint-disable-next-line @typescript-eslint/no-loop-func
-      (section, index) =>
-        index >= groupedSectionsStart &&
-        (section.parsingSeparator ?? section.separator)?.includes(' '),
+      (section, index) => index >= groupedSectionsStart && section.endSeparator?.includes(' '),
     );
     if (groupedSectionsEnd === -1) {
       groupedSectionsEnd = sections.length - 1;

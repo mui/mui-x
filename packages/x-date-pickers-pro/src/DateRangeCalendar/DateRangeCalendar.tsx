@@ -496,7 +496,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
           {calendars === 1 ? (
             <PickersCalendarHeader
               views={['day']}
-              openView={'day'}
+              view={'day'}
               currentMonth={calendarState.currentMonth}
               onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
               minDate={minDateWithDisabled}
@@ -560,6 +560,12 @@ DateRangeCalendar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render.
@@ -610,7 +616,7 @@ DateRangeCalendar.propTypes = {
    */
   disableDragEditing: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -620,7 +626,7 @@ DateRangeCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

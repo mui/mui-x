@@ -97,7 +97,7 @@ export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
 export {
   useField,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   addPositionPropertiesToSections,
   splitFormatIntoSections,
   getSectionOrder,
@@ -117,7 +117,11 @@ export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
 export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
-export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
+export type {
+  UsePickerViewsNonStaticProps,
+  PickerViewRendererLookup,
+  UsePickerViewsProps,
+} from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useStaticPicker } from './hooks/useStaticPicker';
@@ -133,6 +137,7 @@ export {
   useLocaleText,
   useNow,
 } from './hooks/useUtils';
+export type { ExportedUseViewsOptions } from './hooks/useViews';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -156,10 +161,11 @@ export type { TimeValidationError } from './hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps } from './models/fields';
+export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BaseNextPickerProps,
+  BaseNextPickerInputProps,
   BaseNextNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';

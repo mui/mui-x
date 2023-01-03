@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   DesktopTooltipWrapper,
@@ -48,6 +49,10 @@ export interface DesktopDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -173,7 +178,7 @@ DesktopDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -193,7 +198,7 @@ DesktopDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -302,11 +307,6 @@ DesktopDateRangePicker.propTypes = {
    * Use in controlled mode (see open).
    */
   onOpen: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
    */

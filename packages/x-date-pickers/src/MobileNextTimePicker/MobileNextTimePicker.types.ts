@@ -14,7 +14,7 @@ import { TimeView } from '../internals/models/views';
 
 export interface MobileNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
-    MakeOptional<UseMobilePickerSlotsComponent<TDate>, 'Field'> {}
+    MakeOptional<UseMobilePickerSlotsComponent<TDate, TimeView>, 'Field'> {}
 
 export interface MobileNextTimePickerSlotsComponentsProps<TDate>
   extends BaseNextTimePickerSlotsComponentsProps,

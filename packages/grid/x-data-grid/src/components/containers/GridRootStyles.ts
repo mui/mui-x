@@ -31,6 +31,10 @@ export const GridRootStyles = styled('div', {
         styles['aggregationColumnHeader--alignRight'],
     },
     { [`&.${gridClasses.aggregationColumnHeaderLabel}`]: styles.aggregationColumnHeaderLabel },
+    {
+      [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
+        styles['root--disableUserSelection'],
+    },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },
@@ -39,6 +43,10 @@ export const GridRootStyles = styled('div', {
     // TODO v6: Remove
     { [`& .${gridClasses['cell--withRenderer']}`]: styles['cell--withRenderer'] },
     { [`& .${gridClasses.cell}`]: styles.cell },
+    { [`& .${gridClasses['cell--rangeTop']}`]: styles['cell--rangeTop'] },
+    { [`& .${gridClasses['cell--rangeBottom']}`]: styles['cell--rangeBottom'] },
+    { [`& .${gridClasses['cell--rangeLeft']}`]: styles['cell--rangeLeft'] },
+    { [`& .${gridClasses['cell--rangeRight']}`]: styles['cell--rangeRight'] },
     { [`& .${gridClasses.cellContent}`]: styles.cellContent },
     { [`& .${gridClasses.cellCheckbox}`]: styles.cellCheckbox },
     { [`& .${gridClasses.cellSkeleton}`]: styles.cellSkeleton },
@@ -209,6 +217,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: (theme.vars || theme).palette.action.hover,
     },
     [`& .${gridClasses.columnSeparator}`]: {
+      visibility: 'hidden',
       position: 'absolute',
       zIndex: 100,
       display: 'flex',
@@ -216,6 +225,11 @@ export const GridRootStyles = styled('div', {
       justifyContent: 'center',
       color: borderColor,
     },
+    [`& .${gridClasses.columnHeaders}:hover .${gridClasses.columnSeparator}, .${gridClasses['columnSeparator--resizing']}`]:
+      {
+        visibility: 'visible',
+        width: 'auto',
+      },
     [`& .${gridClasses['columnSeparator--sideLeft']}`]: {
       left: -12,
     },
@@ -301,6 +315,30 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       alignItems: 'center',
       borderBottom: '1px solid',
+      '&.Mui-selected': {
+        backgroundColor: theme.vars
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+          : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+        '&:hover, &.Mui-hovered': {
+          backgroundColor: theme.vars
+            ? `rgba(${theme.vars.palette.primary.mainChannel} / ${
+                theme.vars.palette.action.selectedOpacity + theme.palette.action.hoverOpacity
+              })`
+            : alpha(
+                theme.palette.primary.main,
+                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+              ),
+          // Reset on touch devices, it doesn't add specificity
+          '@media (hover: none)': {
+            backgroundColor: theme.vars
+              ? `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.selectedOpacity})`
+              : alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+          },
+        },
+      },
+    },
+    [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]: {
+      userSelect: 'none',
     },
     [`& .${gridClasses.row}:not(.${gridClasses['row--dynamicHeight']}) > .${gridClasses.cell}`]: {
       overflow: 'hidden',

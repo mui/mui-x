@@ -13,6 +13,7 @@ import {
   BaseDateValidationProps,
   DayValidationProps,
   ExportedBaseToolbarProps,
+  ExportedUseViewsOptions,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../internal/models/range';
 import { DayRangeValidationProps } from '../internal/models/dateRange';
@@ -52,7 +53,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
     DayRangeValidationProps<TDate>,
     Omit<
       ExportedDateCalendarProps<TDate>,
-      'onYearChange' | keyof BaseDateValidationProps<TDate> | keyof DayValidationProps<TDate>
+      | 'value'
+      | 'defaultValue'
+      | 'onChange'
+      | 'onYearChange'
+      | keyof BaseDateValidationProps<TDate>
+      | keyof DayValidationProps<TDate>
     > {
   /**
    * Overrideable components.
@@ -83,7 +89,8 @@ interface DateRangePickerViewProps<TDate>
   extends RangePositionProps,
     ExportedDateRangePickerViewProps<TDate>,
     PickerStatePickerProps<DateRange<TDate>>,
-    Required<BaseDateValidationProps<TDate>> {
+    Required<BaseDateValidationProps<TDate>>,
+    Pick<ExportedUseViewsOptions<'day'>, 'onFocusedViewChange'> {
   calendars: 1 | 2 | 3;
   open: boolean;
   DateInputProps: DateRangePickerInputProps<TDate>;
@@ -121,6 +128,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     toggleMobileKeyboardView,
     components,
     componentsProps,
+    onFocusedViewChange,
     ...other
   } = props;
 
@@ -225,6 +233,9 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       componentsProps,
       shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
+      onFocusedViewChange: onFocusedViewChange
+        ? (newHasFocus: boolean) => onFocusedViewChange('day', newHasFocus)
+        : undefined,
       ...other,
     };
 

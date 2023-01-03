@@ -40,9 +40,21 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'new-picker'> = (
         // Clear the date
         userEvent.mousePress(screen.getByText(/clear/i));
         expect(onChange.callCount).to.equal(1);
-        expect(onChange.lastCall.args[0]).to.equal(emptyValue);
+        if (type === 'date-range') {
+          onChange.lastCall.args[0].forEach((value, index) => {
+            expect(value).to.deep.equal(emptyValue[index]);
+          });
+        } else {
+          expect(onChange.lastCall.args[0]).to.deep.equal(emptyValue);
+        }
         expect(onAccept.callCount).to.equal(1);
-        expect(onAccept.lastCall.args[0]).to.equal(emptyValue);
+        if (type === 'date-range') {
+          onAccept.lastCall.args[0].forEach((value, index) => {
+            expect(value).to.deep.equal(emptyValue[index]);
+          });
+        } else {
+          expect(onAccept.lastCall.args[0]).to.deep.equal(emptyValue);
+        }
         expect(onClose.callCount).to.equal(1);
       });
 
@@ -93,8 +105,13 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'new-picker'> = (
         // Cancel the modifications
         userEvent.mousePress(screen.getByText(/cancel/i));
         expect(onChange.callCount).to.equal(2);
-        // TODO: Support range
-        expect(onChange.lastCall.args[0]).toEqualDateTime(values[0] as any);
+        if (type === 'date-range') {
+          values[0].forEach((value, index) => {
+            expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
+          });
+        } else {
+          expect(onChange.lastCall.args[0]).toEqualDateTime(values[0] as any);
+        }
         expect(onAccept.callCount).to.equal(0);
         expect(onClose.callCount).to.equal(1);
       });

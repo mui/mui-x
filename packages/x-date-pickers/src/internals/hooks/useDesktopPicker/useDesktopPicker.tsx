@@ -23,12 +23,11 @@ import { InferError } from '../validation/useValidation';
 export const useDesktopPicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopPickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
   const {
@@ -53,10 +52,9 @@ export const useDesktopPicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
     inputRef,
-    viewLookup,
     valueManager,
     validator,
     autoFocusView: true,

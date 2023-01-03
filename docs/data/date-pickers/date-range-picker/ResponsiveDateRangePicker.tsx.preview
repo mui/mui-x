@@ -1,15 +1,15 @@
-<GridItem label="For mobile" spacing={2}>
+<DemoItem label="For mobile">
   <MobileNextDateRangePicker
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
   />
-</GridItem>
-<GridItem label="For desktop" spacing={2}>
+</DemoItem>
+<DemoItem label="For desktop">
   <DesktopNextDateRangePicker
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
   />
-</GridItem>
-<GridItem label="Responsive" spacing={2}>
+</DemoItem>
+<DemoItem label="Responsive">
   <NextDateRangePicker
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
   />
-</GridItem>
+</DemoItem>
