@@ -6,7 +6,7 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateView, PickersToolbarSlotPropsOverride } from '@mui/x-date-pickers';
+import { DateView } from '@mui/x-date-pickers';
 import {
   pickersLayoutClasses,
   PickersLayoutContentWrapper,
@@ -21,21 +21,23 @@ import {
   DatePickerToolbarProps,
 } from '@mui/x-date-pickers/DatePicker';
 
-declare module '@mui/x-date-pickers' {
-  interface PickersLayoutSlotPropsOverride {
-    showKeyboardView?: boolean;
-  }
-
-  interface PickersToolbarSlotPropsOverride {
-    showKeyboardViewSwitch?: boolean;
-    showKeyboardView?: boolean;
-    setShowKeyboardView?: React.Dispatch<React.SetStateAction<boolean>>;
-  }
-}
-
 function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
-  const { value, onChange, showKeyboardView } = props;
-  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
+  const { value, onChange } = props;
+  const [showKeyboardView, setShowKeyboardView] = React.useState(false);
+
+  const { toolbar, tabs, content, actionBar } = usePickerLayout({
+    ...props,
+    componentsProps: {
+      ...props.componentsProps,
+      toolbar: {
+        ...props.componentsProps?.toolbar,
+        // @ts-ignore
+        showKeyboardViewSwitch: props.wrapperVariant === 'mobile',
+        showKeyboardView,
+        setShowKeyboardView,
+      },
+    },
+  });
 
   return (
     <PickersLayoutRoot ownerState={props}>
@@ -56,7 +58,11 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
 }
 
 function ToolbarWithKeyboardViewSwitch(
-  props: DatePickerToolbarProps<any> & PickersToolbarSlotPropsOverride,
+  props: DatePickerToolbarProps<any> & {
+    showKeyboardViewSwitch?: boolean;
+    showKeyboardView?: boolean;
+    setShowKeyboardView?: React.Dispatch<React.SetStateAction<boolean>>;
+  },
 ) {
   const { showKeyboardViewSwitch, showKeyboardView, setShowKeyboardView, ...other } =
     props;
@@ -90,8 +96,6 @@ function ToolbarWithKeyboardViewSwitch(
   return <DatePickerToolbar {...other} />;
 }
 export default function MobileKeyboardView() {
-  const [showKeyboardView, setShowKeyboardView] = React.useState(false);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileNextDatePicker
@@ -99,14 +103,6 @@ export default function MobileKeyboardView() {
         components={{
           Layout: LayoutWithKeyboardView,
           Toolbar: ToolbarWithKeyboardViewSwitch,
-        }}
-        componentsProps={{
-          layout: { showKeyboardView },
-          toolbar: (ownerState) => ({
-            showKeyboardViewSwitch: ownerState.wrapperVariant === 'mobile',
-            showKeyboardView,
-            setShowKeyboardView,
-          }),
         }}
       />
     </LocalizationProvider>

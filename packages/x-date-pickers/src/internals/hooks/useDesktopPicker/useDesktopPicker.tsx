@@ -48,9 +48,9 @@ export const useDesktopPicker = <
     open,
     actions,
     hasUIView,
+    layoutProps,
     renderCurrentView,
     shouldRestoreFocus,
-    layoutProps: pickerLayoutProps,
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
@@ -135,16 +135,6 @@ export const useDesktopPicker = <
   };
 
   const Layout = components?.Layout ?? PickersLayout;
-  const layoutProps = useSlotProps({
-    elementType: Layout,
-    externalSlotProps: componentsProps?.layout,
-    additionalProps: {
-      ...pickerLayoutProps,
-      components,
-      componentsProps,
-    },
-    ownerState: {},
-  });
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
@@ -173,7 +163,14 @@ export const useDesktopPicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <Layout {...layoutProps}>{renderCurrentView()}</Layout>
+          <Layout
+            {...layoutProps}
+            {...componentsProps?.layout}
+            components={components}
+            componentsProps={componentsProps}
+          >
+            {renderCurrentView()}
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

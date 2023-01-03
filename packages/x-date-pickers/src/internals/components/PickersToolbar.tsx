@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Pen, Calendar, Clock } from './icons';
 import { BaseToolbarProps } from '../models/props/toolbar';
@@ -16,16 +15,12 @@ import {
 } from './pickersToolbarClasses';
 import { DateOrTimeView } from '../models/views';
 
-export interface PickersToolbarSlotPropsOverride {}
-
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
-  extends PickersToolbarSlotPropsOverride,
-    Pick<
-      BaseToolbarProps<TValue, TView>,
-      'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
-    > {
+  extends Pick<
+    BaseToolbarProps<TValue, TView>,
+    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
+  > {
   className?: string;
-  sx?: SxProps<Theme>;
   viewType?: 'date' | 'time';
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;

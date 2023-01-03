@@ -54,8 +54,8 @@ export const useMobileRangePicker = <
   const {
     open,
     actions,
+    layoutProps,
     renderCurrentView,
-    layoutProps: pickerLayoutProps,
     fieldProps: pickerFieldProps,
   } = usePicker<
     DateRange<TDate>,
@@ -171,18 +171,8 @@ export const useMobileRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
-
   const Layout = components?.Layout ?? PickersLayout;
-  const layoutProps = useSlotProps({
-    elementType: Layout,
-    externalSlotProps: componentsProps?.layout,
-    additionalProps: {
-      ...pickerLayoutProps,
-      components,
-      componentsProps: componentsPropsForLayout,
-    },
-    ownerState: {},
-  });
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
@@ -204,7 +194,14 @@ export const useMobileRangePicker = <
             actionBar: undefined,
           }}
         >
-          <Layout {...layoutProps}>{renderCurrentView()}</Layout>
+          <Layout
+            {...layoutProps}
+            {...componentsProps?.layout}
+            components={components}
+            componentsProps={componentsPropsForLayout}
+          >
+            {renderCurrentView()}
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

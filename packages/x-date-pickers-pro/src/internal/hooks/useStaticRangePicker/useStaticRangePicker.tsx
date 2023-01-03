@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useSlotProps } from '@mui/base/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
   PickersLayout,
@@ -43,7 +42,7 @@ export const useStaticRangePicker = <
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
-  const { renderCurrentView, layoutProps: pickerLayoutProps } = usePicker<
+  const { layoutProps, renderCurrentView } = usePicker<
     DateRange<TDate>,
     TDate,
     TView,
@@ -58,6 +57,7 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
+  const Layout = components?.Layout ?? PickerStaticLayout;
   const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
@@ -67,23 +67,17 @@ export const useStaticRangePicker = <
     } as ExportedBaseToolbarProps,
   };
 
-  const Layout = components?.Layout ?? PickerStaticLayout;
-  const layoutProps = useSlotProps({
-    elementType: Layout,
-    externalSlotProps: componentsProps?.layout,
-    additionalProps: {
-      ...pickerLayoutProps,
-      components,
-      componentsProps: componentsPropsForLayout,
-      ref,
-    },
-    ownerState: {},
-  });
-
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout {...layoutProps}>{renderCurrentView()}</Layout>
+        <Layout
+          {...layoutProps}
+          components={components}
+          componentsProps={componentsPropsForLayout}
+          ref={ref}
+        >
+          {renderCurrentView()}
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );
