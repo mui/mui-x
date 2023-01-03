@@ -218,7 +218,7 @@ GridEditDateCell.propTypes = {
    * The cell value.
    * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
-  value: PropTypes.any,
+  value: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
 };
 
 function GridFilterDateInput(props) {

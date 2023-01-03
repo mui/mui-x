@@ -26,3 +26,9 @@ export type {
 
 export { useGridApiContext, useGridApiRef, useGridRootProps } from './typeOverloads/reexports';
 export type { GridApi, GridInitialState, GridState } from './typeOverloads/reexports';
+
+export {
+  GridColumnMenu,
+  GRID_COLUMN_MENU_COMPONENTS,
+  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+} from './components/reexports';

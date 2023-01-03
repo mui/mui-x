@@ -39,7 +39,7 @@ function buildApplyDateFilterFn(
 
   const filterValueMs = filterItem.value.getTime();
 
-  return ({ value }: GridCellParams<Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
       return false;
     }

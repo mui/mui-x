@@ -79,6 +79,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',

@@ -105,10 +105,10 @@ function CellParamsValue() {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams) => {
+      onCellClick={(params: GridCellParams<any, any>) => {
         params.value!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<any, any, number>) => {
+      onCellDoubleClick={(params: GridCellParams<any, any>) => {
         params.value!.toUpperCase();
       }}
     />
@@ -123,7 +123,8 @@ function CellParamsRow() {
       onCellClick={(params: GridCellParams) => {
         params.row.brand!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<any, { brand: number }>) => {
+      onCellDoubleClick={(params: GridCellParams<{ brand: number }, any>) => {
+        // @ts-expect-error `toUpperCase` doesn't exist in number
         params.row.brand!.toUpperCase();
       }}
     />
@@ -135,11 +136,10 @@ function CellParamsFormattedValue() {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams<any>) => {
+      onCellClick={(params: GridCellParams<any, any>) => {
         params.formattedValue!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<any, any, number>) => {
-        // @ts-expect-error `toUpperCase` doesn't exist in number
+      onCellDoubleClick={(params: GridCellParams<any, any>) => {
         params.formattedValue!.toUpperCase();
       }}
     />

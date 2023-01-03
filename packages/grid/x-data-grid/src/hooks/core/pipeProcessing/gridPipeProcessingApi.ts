@@ -19,7 +19,10 @@ import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;
 
 export interface GridPipeProcessingLookup {
-  columnMenu: { value: React.ReactNode[]; context: GridColDef };
+  columnMenu: {
+    value: Array<string>;
+    context: GridColDef;
+  };
   exportState: { value: GridInitialStateCommunity; context: GridExportStateParams };
   hydrateColumns: {
     value: GridHydrateColumnsValue;

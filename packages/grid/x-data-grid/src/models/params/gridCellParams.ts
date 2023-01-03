@@ -16,7 +16,7 @@ import { GridApiCommunity } from '../api/gridApiCommunity';
  */
 export interface GridCellParams<
   R extends GridValidRowModel = any,
-  V = any,
+  V = unknown,
   F = V,
   N extends GridTreeNode = GridTreeNode,
 > {
@@ -112,7 +112,7 @@ export interface GridRenderEditCellParams<
  * Parameters passed to `colDef.valueGetter`.
  */
 export interface GridValueGetterParams<
-  R extends GridValidRowModel = GridValidRowModel,
+  R extends GridValidRowModel = any,
   V = any,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
 > extends Omit<GridCellParams<R, V, any, N>, 'formattedValue' | 'isEditable'> {

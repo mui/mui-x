@@ -139,7 +139,8 @@ const getComponentPaths =
     files.forEach((file) => {
       const componentName = path.basename(file).replace('.tsx', '');
       const isExported = !!project.exports[componentName];
-      if (isExported) {
+      const isHook = path.basename(file).startsWith('use');
+      if (isExported && !isHook) {
         paths.push(path.join(project.rootPath, file));
       }
     });
@@ -151,7 +152,8 @@ const getComponentPaths =
         const isExported =
           !!project.exports[componentName] ||
           (includeUnstableComponents && !!project.exports[`Unstable_${componentName}`]);
-        if (isExported) {
+        const isHook = path.basename(file).startsWith('use');
+        if (isExported && !isHook) {
           paths.push(file);
         }
       });

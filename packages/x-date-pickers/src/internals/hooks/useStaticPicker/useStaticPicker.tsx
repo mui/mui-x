@@ -5,14 +5,14 @@ import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.t
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 
-const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersViewLayout;
+})) as unknown as typeof PickersLayout;
 
 /**
  * Hook managing all the single-date static pickers:
@@ -47,17 +47,20 @@ export const useStaticPicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
+  const Layout = components?.Layout ?? PickerStaticLayout;
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
+          {...componentsProps?.layout}
           components={components}
           componentsProps={componentsProps}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );
