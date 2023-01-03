@@ -104,15 +104,15 @@ export const useDesktopPicker = <
 
   const componentsForField: BaseFieldProps<TDate | null, unknown>['components'] = {
     ...fieldProps.components,
-    Input: components.Input,
+    TextField: components.TextField,
   };
 
   const componentsPropsForField: BaseFieldProps<TDate | null, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
 

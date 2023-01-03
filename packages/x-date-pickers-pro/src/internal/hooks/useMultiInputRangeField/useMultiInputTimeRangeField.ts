@@ -46,8 +46,8 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
 
 export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
-  startInputProps: inStartInputProps,
-  endInputProps: inEndInputProps,
+  startTextFieldProps: inStartTextFieldProps,
+  endTextFieldProps: inEndTextFieldProps,
   startInputRef,
   endInputRef,
 }: UseMultiInputTimeRangeFieldParams<
@@ -92,7 +92,7 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
   const startInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
-    ...inStartInputProps,
+    ...inStartTextFieldProps,
     format,
     disabled,
     readOnly,
@@ -102,7 +102,7 @@ export const useMultiInputTimeRangeField = <TDate, TChildProps extends {}>({
   };
 
   const endInputProps: UseTimeFieldComponentProps<TDate, TChildProps> = {
-    ...inEndInputProps,
+    ...inEndTextFieldProps,
     format,
     disabled,
     readOnly,
