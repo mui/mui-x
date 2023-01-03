@@ -35,13 +35,13 @@ You can use `componentsProps.shortcus` to customize this props. For example to a
 />
 ```
 
-{{"demo": "BasicShortcuts.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "BasicShortcuts.js", "bg": "inline"}}
 
 ## Disabled dates
 
 By default, the shortcuts are disabled if the returned value does noo pass validation. Here is an example where `minDate` is set to the half of the year.
 
-{{"demo": "DisabledDatesShortcuts.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
 
 ## Shortcuts parameters
 
