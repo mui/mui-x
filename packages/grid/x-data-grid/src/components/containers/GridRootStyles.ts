@@ -124,20 +124,18 @@ export const GridRootStyles = styled('div', {
       padding: '0 10px',
       boxSizing: 'border-box',
     },
-    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses['cell--outlined']}`]:
-      {
-        outline: `solid ${
-          theme.vars
-            ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
-            : alpha(theme.palette.primary.main, 0.5)
-        } 1px`,
-        outlineWidth: 1,
-        outlineOffset: -1,
-      },
-    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses['cell--outlined']}`]:
-      {
-        outline: `solid ${theme.palette.primary.main} 1px`,
-      },
+    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses['cell--outlined']}`]: {
+      outline: `solid ${
+        theme.vars
+          ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
+          : alpha(theme.palette.primary.main, 0.5)
+      } 1px`,
+      outlineWidth: 1,
+      outlineOffset: -1,
+    },
+    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses['cell--outlined']}`]: {
+      outline: `solid ${theme.palette.primary.main} 1px`,
+    },
     [`& .${gridClasses.columnHeaderCheckbox}, & .${gridClasses.cellCheckbox}`]: {
       padding: 0,
       justifyContent: 'center',
