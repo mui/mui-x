@@ -43,6 +43,14 @@ export * from './DesktopNextDateTimePicker';
 export * from './MobileNextDateTimePicker';
 export * from './StaticNextDateTimePicker';
 
+// View renderers
+export * from './dateViewRenderers';
+export * from './timeViewRenderers';
+
+// Layout
+export * from './PickersLayout';
+export * from './PickersActionBar';
+
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';

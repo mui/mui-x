@@ -6,7 +6,12 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 import { fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
 import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
-import { createPickerRenderer, adapterToUse, openPicker } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  openPicker,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 
 describe('<DesktopNextDatePicker />', () => {
   const { render } = createPickerRenderer({ clock: 'fake' });
@@ -34,45 +39,19 @@ describe('<DesktopNextDatePicker />', () => {
     });
   });
 
-  describe('Component slots: PaperContent', () => {
-    it('should render custom component', () => {
-      function CustomPaperContent({ children }) {
-        return (
-          <div>
-            <p>test custom content</p>
-            {children}
-          </div>
-        );
-      }
-      const testDate = adapterToUse.date(new Date(2000, 0, 1));
-      render(
-        <DesktopNextDatePicker
-          defaultValue={testDate}
-          components={{
-            PaperContent: CustomPaperContent,
-          }}
-        />,
-      );
-
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.getByText('test custom content')).not.equal(null);
-      expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
-    });
-  });
-
   it('allows to change selected date from the field according to `format`', () => {
     const handleChange = spy();
 
     render(<DesktopNextDatePicker onChange={handleChange} />);
+    const input = screen.getByRole('textbox');
 
-    fireEvent.change(screen.getByRole('textbox'), {
+    fireEvent.change(input, {
       target: {
         value: '10/11/2018',
       },
     });
 
-    expect(screen.getByRole('textbox')).to.have.value('10 / 11 / 2018');
+    expectInputValue(input, '10 / 11 / 2018');
     expect(handleChange.callCount).to.equal(1);
   });
 

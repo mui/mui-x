@@ -25,6 +25,7 @@ import {
   useUtils,
   WrapperVariantContext,
   PickerSelectionState,
+  useNow,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -149,6 +150,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 ) {
   const utils = useUtils<TDate>();
   const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
   const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
@@ -456,6 +458,28 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     [utils, calendarState.currentMonth, calendars],
   );
 
+  const focusedMonth = React.useMemo(() => {
+    if (!autoFocus) {
+      return null;
+    }
+
+    // The focus priority of the "day" view is as follows:
+    // 1. Month of the `start` date
+    // 2. Month of the `end` date
+    // 3. Month of the current date
+    // 4. First visible month
+
+    if (value[0] != null) {
+      return visibleMonths.find((month) => utils.isSameMonth(month, value[0]!));
+    }
+
+    if (value[1] != null) {
+      return visibleMonths.find((month) => utils.isSameMonth(month, value[1]!));
+    }
+
+    return visibleMonths.find((month) => utils.isSameMonth(month, now)) ?? visibleMonths[0];
+  }, [utils, value, visibleMonths, autoFocus, now]);
+
   return (
     <DateRangeCalendarRoot
       ref={ref}
@@ -472,7 +496,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
           {calendars === 1 ? (
             <PickersCalendarHeader
               views={['day']}
-              openView={'day'}
+              view={'day'}
               currentMonth={calendarState.currentMonth}
               onMonthChange={(newMonth, direction) => handleChangeMonth({ newMonth, direction })}
               minDate={minDateWithDisabled}
@@ -521,7 +545,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             renderLoading={renderLoading}
             components={componentsForDayCalendar}
             componentsProps={componentsPropsForDayCalendar}
-            autoFocus={autoFocus}
+            autoFocus={month === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
           />
@@ -536,6 +560,12 @@ DateRangeCalendar.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * The number of calendars to render.
@@ -586,7 +616,7 @@ DateRangeCalendar.propTypes = {
    */
   disableDragEditing: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -596,7 +626,7 @@ DateRangeCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

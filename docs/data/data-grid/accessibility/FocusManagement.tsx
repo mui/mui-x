@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRenderCellParams,
   GridRowsProp,
 } from '@mui/x-data-grid';
@@ -22,10 +22,10 @@ function WrongRenderLink() {
   return <Link href="/#tab-sequence">more info</Link>;
 }
 
-const correctColumns: GridColumns = [
+const correctColumns: GridColDef[] = [
   { field: 'link', renderCell: CorrectRenderLink, width: 200 },
 ];
-const wrongColumns: GridColumns = [
+const wrongColumns: GridColDef[] = [
   { field: 'link', renderCell: WrongRenderLink, width: 200 },
 ];
 

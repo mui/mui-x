@@ -6,4 +6,6 @@ export type StaticPickerProps<TDate, BaseProps extends BasePickerProps<any, TDat
   BaseProps,
   'open' | 'onOpen' | 'onClose'
 > &
-  ExportedPickerStaticWrapperProps;
+  ExportedPickerStaticWrapperProps & {
+    autoFocus?: boolean;
+  };

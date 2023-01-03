@@ -28,6 +28,7 @@ describe('<DesktopNextDatePicker /> - Describes', () => {
     variant: 'desktop',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],
     emptyValue: null,
+    clock,
     assertRenderedValue: (expectedValue: any) => {
       const expectedValueStr =
         expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
@@ -42,7 +43,7 @@ describe('<DesktopNextDatePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getByRole('textbox');
-        clickOnInput(input, 5); // Update the day
+        clickOnInput(input, 10); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }
 

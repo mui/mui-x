@@ -1,6 +1,5 @@
 import type * as Excel from 'exceljs';
 import {
-  GridStateColDef,
   GridRowId,
   GridColDef,
   GridValueFormatterParams,
@@ -9,13 +8,13 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning } from '@mui/x-data-grid/internals';
+import { buildWarning, GridStateColDef } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
@@ -173,7 +172,7 @@ const defaultColumnsStyles = {
   [GRID_DATETIME_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy hh:mm' },
 };
 
-const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesInterface) => {
+const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStylesInterface) => {
   const { field, type } = column;
 
   return {
@@ -188,7 +187,7 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
 
 const addColumnGroupingHeaders = (
   worksheet: Excel.Worksheet,
-  columns: GridStateColDef[],
+  columns: GridColDef[],
   api: GridApi,
 ) => {
   const maxDepth = Math.max(

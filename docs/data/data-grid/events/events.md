@@ -55,7 +55,7 @@ The following demo shows how to subscribe to the `rowClick` event using `useGrid
 
 {{"demo": "SubscribeToEventsHook.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### With `apiRef.current.subscribeEvent` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### With `apiRef.current.subscribeEvent`
 
 ```tsx
 apiRef.current.subscribeEvent('rowClick', handleEvent);

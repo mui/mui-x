@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -21,7 +20,6 @@ import {
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
@@ -29,10 +27,6 @@ import {
 } from './gridColumnPinningInterface';
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
-
-function Divider() {
-  return <MuiDivider onClick={(event) => event.stopPropagation()} />;
-}
 
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
@@ -66,7 +60,12 @@ export const useGridColumnPinning = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    | 'disableColumnPinning'
+    | 'initialState'
+    | 'pinnedColumns'
+    | 'onPinnedColumnsChange'
+    | 'componentsProps'
+    | 'components'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -175,17 +174,17 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, colDef) => {
       if (props.disableColumnPinning) {
-        return initialValue;
+        return columnMenuItems;
       }
 
-      if (column.pinnable === false) {
-        return initialValue;
+      if (colDef.pinnable === false) {
+        return columnMenuItems;
       }
 
-      return [...initialValue, <Divider />, <GridColumnPinningMenuItems />];
+      return [...columnMenuItems, 'ColumnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );
@@ -257,7 +256,7 @@ export const useGridColumnPinning = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
-  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);

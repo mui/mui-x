@@ -79,6 +79,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '選單',
   columnMenuShowColumns: '顯示欄位',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '篩選器',
   columnMenuHideColumn: '隱藏',
   columnMenuUnsort: '預設排序',
