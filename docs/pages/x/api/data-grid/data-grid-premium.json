@@ -67,7 +67,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
@@ -149,7 +148,6 @@
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
