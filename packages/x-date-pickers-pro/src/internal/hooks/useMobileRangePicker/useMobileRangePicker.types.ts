@@ -28,7 +28,7 @@ export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrT
   FieldSeparator?: React.ElementType<TypographyProps>;
   /**
    * Form control with an input to render a date or time inside the default field.
-   * Receives the same props as '@mui/material/TextField'.
+   * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType<TextFieldProps>;

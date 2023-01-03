@@ -29,7 +29,7 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
   /**
    * Form control with an input to render a date or time inside the default field.
    * It is rendered twice: once for the start element and once for the end element.
-   * Receives the same props as '@mui/material/TextField'.
+   * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType<TextFieldProps>;

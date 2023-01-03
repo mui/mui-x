@@ -53,7 +53,7 @@ export interface MultiInputDateTimeRangeFieldSlotsComponent {
   /**
    * Form control with an input to render a date and time.
    * It is rendered twice: once for the start date time and once for the end date time.
-   * Receives the same props as '@mui/material/TextField'.
+   * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType;

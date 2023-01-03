@@ -28,7 +28,7 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
   Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
   /**
    * Form control with an input to render the value inside the default field.
-   * Receives the same props as '@mui/material/TextField'.
+   * Receives the same props as `@mui/material/TextField`.
    * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType<TextFieldProps>;

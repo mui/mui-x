@@ -41,6 +41,6 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "TextField": "Form control with an input to render the value.\nReceives the same props as &#39;@mui/material/TextField&#39;."
+    "TextField": "Form control with an input to render the value.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }
