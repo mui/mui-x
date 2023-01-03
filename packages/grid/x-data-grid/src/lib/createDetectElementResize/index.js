@@ -94,7 +94,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
   var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 
   var createStyles = function createStyles(doc, root) {
-    if (!doc.getElementById('muiDetectElementResize')) {
+    if (!root.getElementById('muiDetectElementResize')) {
       //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
       var css =
           (animationKeyframes ? animationKeyframes : '') +
