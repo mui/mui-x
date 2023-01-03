@@ -1,5 +1,2 @@
-<NextDateTimePicker label={'"year"'} openTo="year" />
-<NextDateTimePicker
-    label={'"hours"'}
-    openTo="hours"
-/>
+<MobileNextDateTimePicker label={'"year"'} openTo="year" />
+<MobileNextDateTimePicker label={'"hours"'} openTo="hours" />
