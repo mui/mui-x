@@ -39,7 +39,7 @@ The component can be uncontrolled or controlled
 
 {{"demo": "DatePickerValue.js"}}
 
-## Responsiveness
+## Available components
 
 The component is available in four variants:
 
@@ -76,14 +76,14 @@ The component supports three views: `day`, `month`, and `year`.
 By default, the `day` and `year` views are enabled.
 Use the `views` prop to change this behavior:
 
-{{"demo": "DatePickerViews.js"}}
+{{"demo": "DateTimePickerViews.js"}}
 
 By default, the component renders the `day` view on mount.
 Use the `openTo` prop to change this behavior:
 
-{{"demo": "DatePickerOpenTo.js"}}
+{{"demo": "DateTimePickerOpenTo.js"}}
 
-:::info
+:::success
 The views will appear in the order defined by the `views` array.
 If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
 (e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).

@@ -40,9 +40,9 @@ The component can be uncontrolled or controlled
 
 {{"demo": "DateTimePickerValue.js"}}
 
-## Responsiveness
+## Available components
 
-The component is available in three variants:
+The component is available in four variants:
 
 - The `DesktopNextDateTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
@@ -50,23 +50,19 @@ The component is available in three variants:
 - The `MobileNextDateTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDateTimePicker` component which will render `DesktopNextDateTimePicker` or `MobileNextDateTimePicker` depending on the device it runs on.
+- The `NextDateTimePicker` component which renders `DesktopNextDateTimePicker` or `MobileNextDateTimePicker` depending on the device it runs on.
 
-  By default, it renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
-  This can be customized with the `desktopModeMediaQuery` prop.
+- The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 
+By default, the `NextDateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+This can be customized with the `desktopModeMediaQuery` prop.
+
 :::warning
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
 :::
-
-## Static mode
-
-It is also possible to render the Date Time Picker component without the popover/modal and field.
-This can be helpful when building custom popover/modal containers.
-
-{{"demo": "StaticDateTimePickerDemo.js", "bg": true}}
 
 ## Form props
 
@@ -76,13 +72,22 @@ The component can be disabled or read-only.
 
 ## Views
 
-The component can contain six views: `day`, `month`, `year`, `hours`, `minutes` and `seconds`.
-By default, only the `year`, `day`, `hours`, and `minutes` views are enabled.
+The component supports six views: `day`, `month`, `year`, `hours`, `minutes` and `seconds`.
 
-You can customize the enabled views using the `views` prop.
-Views will appear in the order they're included in the `views` array.
+By default, the `year`, `day`, `hours`, and `minutes` views are enabled.
+Use the `views` prop to change this behavior:
 
 {{"demo": "DateTimePickerViews.js"}}
+
+By default, the component renders the `day` view on mount.
+Use the `openTo` prop to change this behavior:
+
+:::success
+The views will appear in the order defined by the `views` array.
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow
+(e.g. view the default behaviors, the `year` is only accessible when clicking on the toolbar).
+:::
+
 
 ## Landscape orientation
 
