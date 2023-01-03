@@ -2,13 +2,13 @@ import * as React from 'react';
 import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
 
-export default function DatePicker() {
+export default function BasicDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DateCalendar />
+        <NextDatePicker label="Date Picker" />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -115,15 +115,15 @@ The first thing you want to decide, is how the user should be able to select the
 
   The _Field_ components only render one (or two) inputs with rich keyboard editing:
 
-{{"demo": "DateField.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "BasicDateField.js", "hideToolbar": true, "bg": "inline"}}
 
 - For mouse-only editing, use the _Calendar / Clock_ components.
 
-{{"demo": "DateCalendar.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "BasicDateCalendar.js", "hideToolbar": true, "bg": "inline"}}
 
 - For both keyboard and mouse editing, use the _Picker_ components.
 
-{{"demo": "DatePicker.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
 
 :::info
 Each _Picker_ is the combination of one _Field_ and one or several _Calendar / Clock_ components.
