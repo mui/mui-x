@@ -39,7 +39,7 @@
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
-    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, action bar, and shortcuts",
+    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
