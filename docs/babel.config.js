@@ -9,7 +9,7 @@ const alias = {
   '@mui/x-date-pickers-pro': '../packages/x-date-pickers-pro/src',
   '@mui/x-license-pro': '../packages/x-license-pro/src',
   '@mui/docs': '../node_modules/@mui/monorepo/packages/mui-docs/src',
-  '@mui/markdown': '../node_modules/@mui/monorepo/docs/packages/markdown',
+  '@mui/markdown': '../node_modules/@mui/monorepo/packages/markdown',
   '@mui/monorepo': '../node_modules/@mui/monorepo',
   '@mui/joy': '../node_modules/@mui/monorepo/packages/mui-joy/src',
   docs: '../node_modules/@mui/monorepo/docs',

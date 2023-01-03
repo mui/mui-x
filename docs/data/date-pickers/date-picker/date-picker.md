@@ -9,10 +9,10 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Picker
 
-<p class="description">The date picker let the user select a date.</p>
+<p class="description">The Date Picker let the user select a date.</p>
 
 :::warning
-The new date pickers are unstable.
+The new Date Pickers are unstable.
 They might receive breaking changes on their props to have the best component possible by the time of the stable release.
 
 They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
@@ -26,7 +26,7 @@ Date pickers are displayed with:
 
 ## Basic usage
 
-The date picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
+The Date Picker is rendered as a modal dialog on mobile, and a textbox with a popup on desktop.
 
 {{"demo": "BasicDatePicker.js"}}
 
@@ -48,7 +48,7 @@ The component can be uncontrolled or controlled
 
 ## Responsiveness
 
-The date picker component is designed and optimized for the device it runs on.
+The Date Picker component is designed and optimized for the device it runs on.
 
 - The `MobileNextDatePicker` component works best for touch devices and small screens.
 - The `DesktopNextDatePicker` component works best for mouse devices and large screens.
@@ -62,27 +62,32 @@ There are certain caveats when testing pickers, please refer to [this section](/
 
 ## Static mode
 
-It is also possible to render any date picker without the modal/popover and text field.
+It is also possible to render the Date Picker without the modal/popover and text field.
 This can be helpful when building custom popover/modal containers.
 
 {{"demo": "StaticDatePickerDemo.js", "bg": true}}
 
 ## Form props
 
-The date picker component can be disabled or read-only.
+The Date Picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDatePickers.js"}}
 
-## Views playground
+## Views
 
-It's possible to combine `year`, `month`, and `date` selection views.
-The views will appear in the order they're included in the `views` array.
+The component can contain three views: `day`, `month`, and `year`.
+By default, only the `day` and `year` views are enabled.
 
-{{"demo": "ViewsDatePicker.js"}}
+You can customize the enabled views using the `views` prop.
+Views will appear in the order they're included in the `views` array.
+
+{{"demo": "DatePickerViews.js"}}
 
 ## Landscape orientation
 
-For ease of use, the date picker will automatically change the layout between portrait and landscape by subscription to the `window.orientation` change. You can force a specific layout using the `orientation` prop.
+By default, the Date Picker automatically sets the orientation based on the `window.orientation` value.
+
+You can force a specific orientation using the `orientation` prop.
 
 {{"demo": "StaticDatePickerLandscape.js", "bg": true}}
 
@@ -94,7 +99,7 @@ You can show a helper text with the date format accepted.
 
 ## Custom input component
 
-You can customize the rendering of the input with the `Input` component slot.
+You can customize the rendering of the input with the `TextField` component slot.
 Make sure to spread `inputProps` correctly to the custom input component.
 
 {{"demo": "CustomInput.js"}}

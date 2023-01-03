@@ -1,0 +1,27 @@
+{
+  "props": {
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "orientation": {
+      "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
+    }
+  },
+  "slots": {
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
+    "Tabs": { "type": { "name": "elementType" } },
+    "Toolbar": { "type": { "name": "elementType" } }
+  },
+  "name": "PickersLayout",
+  "styles": {
+    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs"],
+    "globalClasses": {},
+    "name": "MuiPickersLayout"
+  },
+  "filename": "/packages/x-date-pickers/src/PickersLayout/PickersLayout.tsx",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "PickersLayout" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "PickersLayout" }
+  ]
+}

@@ -25,7 +25,7 @@ import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Detail panel', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -500,6 +500,20 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '502px' }); // 500px + 2px spacing
+  });
+
+  it('should not reuse detail panel components', () => {
+    function DetailPanel() {
+      const [today] = React.useState(() => new Date());
+      return <div>Date is {today.toISOString()}</div>;
+    }
+    const { setProps } = render(
+      <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
+    );
+    expect(screen.queryByText('Date is 1970-01-01T00:00:00.000Z')).not.to.equal(null);
+    clock.tick(100);
+    setProps({ detailPanelExpandedRowIds: [1] });
+    expect(screen.queryByText('Date is 1970-01-01T00:00:00.100Z')).not.to.equal(null);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {

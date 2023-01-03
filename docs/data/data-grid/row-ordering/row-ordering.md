@@ -15,7 +15,7 @@ To enable it, you need to add the `rowReordering` prop.
 <DataGridPro rowReordering />
 ```
 
-{{"demo": "RowOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "RowOrderingGrid.js", "bg": "inline"}}
 
 To capture changes in the order of the dragged row, you can pass a callback to the `onRowOrderChange` prop. This callback is called with a `GridRowOrderChangeParams` object.
 
