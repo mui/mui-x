@@ -6,50 +6,48 @@ import {
   usePickerState,
   StaticPickerProps,
   PickersStaticWrapperSlotsComponent,
-  DateInputSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
+  DateInputSlotsComponent,
 } from '@mui/x-date-pickers/internals';
 import { useDateRangeValidation } from '../internal/hooks/validation/useDateRangeValidation';
-import {
-  DateRangePickerView,
-  DateRangePickerViewSlotsComponent,
-  DateRangePickerViewSlotsComponentsProps,
-} from '../DateRangePicker/DateRangePickerView';
+import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
+import { rangeValueManager } from '../internal/utils/valueManagers';
 import {
   useDateRangePickerDefaultizedProps,
   BaseDateRangePickerProps,
-  dateRangePickerValueManager,
+  BaseDateRangePickerSlotsComponent,
+  BaseDateRangePickerSlotsComponentsProps,
 } from '../DateRangePicker/shared';
+import { RangePosition } from '../internal/models/range';
 
 const releaseInfo = getReleaseInfo();
 
-export interface StaticDateRangePickerSlotsComponent
-  extends PickersStaticWrapperSlotsComponent,
-    DateRangePickerViewSlotsComponent,
+export interface StaticDateRangePickerSlotsComponent<TDate>
+  extends BaseDateRangePickerSlotsComponent<TDate>,
+    PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
-export interface StaticDateRangePickersSlotsComponentsProps
-  extends PickersStaticWrapperSlotsComponentsProps,
-    DateRangePickerViewSlotsComponentsProps {}
+export interface StaticDateRangePickersSlotsComponentsProps<TDate>
+  extends BaseDateRangePickerSlotsComponentsProps<TDate>,
+    PickersStaticWrapperSlotsComponentsProps {}
 
-export type StaticDateRangePickerProps<TInputDate, TDate> = StaticPickerProps<
-  BaseDateRangePickerProps<TInputDate, TDate>
-> & {
+export interface StaticDateRangePickerProps<TDate>
+  extends StaticPickerProps<TDate, BaseDateRangePickerProps<TDate>> {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<StaticDateRangePickerSlotsComponent>;
+  components?: StaticDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<StaticDateRangePickersSlotsComponentsProps>;
-};
+  componentsProps?: StaticDateRangePickersSlotsComponentsProps<TDate>;
+}
 
-type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
-  props: StaticDateRangePickerProps<TInputDate, TDate> & React.RefAttributes<HTMLDivElement>,
+type StaticDateRangePickerComponent = (<TDate>(
+  props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
 /**
@@ -62,43 +60,40 @@ type StaticDateRangePickerComponent = (<TInputDate, TDate = TInputDate>(
  *
  * - [StaticDateRangePicker API](https://mui.com/x/api/date-pickers/static-date-range-picker/)
  */
-export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<
-  TInputDate,
-  TDate = TInputDate,
->(inProps: StaticDateRangePickerProps<TInputDate, TDate>, ref: React.Ref<HTMLDivElement>) {
+export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TDate>(
+  inProps: StaticDateRangePickerProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const props = useDateRangePickerDefaultizedProps<
-    TInputDate,
-    TDate,
-    StaticDateRangePickerProps<TInputDate, TDate>
-  >(inProps, 'MuiStaticDateRangePicker');
+  const props = useDateRangePickerDefaultizedProps<TDate, StaticDateRangePickerProps<TDate>>(
+    inProps,
+    'MuiStaticDateRangePicker',
+  );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const validationError = useDateRangeValidation(props);
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(
-    props,
-    dateRangePickerValueManager,
-  );
+  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, rangeValueManager);
 
   const {
-    displayStaticWrapperAs = 'mobile',
+    displayStaticWrapperAs,
     value,
     onChange,
     components,
     componentsProps,
+    localeText,
+    sx,
+    className,
     ...other
   } = props;
 
   const DateInputProps = {
     ...inputProps,
     ...other,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     components,
     componentsProps,
@@ -110,13 +105,16 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
       displayStaticWrapperAs={displayStaticWrapperAs}
       components={components}
       componentsProps={componentsProps}
+      localeText={localeText}
+      sx={sx}
+      className={className}
       {...wrapperProps}
     >
       <DateRangePickerView
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         components={components}
         componentsProps={componentsProps}
         {...pickerProps}
@@ -162,6 +160,13 @@ StaticDateRangePicker.propTypes = {
    */
   componentsProps: PropTypes.object,
   /**
+   * Formats the day of week displayed in the calendar header.
+   * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
+   * @returns {string} The name to display.
+   * @default (day) => day.charAt(0).toUpperCase()
+   */
+  dayOfWeekFormatter: PropTypes.func,
+  /**
    * Default calendar month displayed when `value={null}`.
    */
   defaultCalendarMonth: PropTypes.any,
@@ -176,7 +181,7 @@ StaticDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` future days are disabled.
+   * If `true` disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -196,37 +201,34 @@ StaticDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` past days are disabled.
+   * If `true` disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
   /**
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
+   * @default "mobile"
    */
   displayStaticWrapperAs: PropTypes.oneOf(['desktop', 'mobile']),
   /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * If `true`, the week number will be display in the calendar.
    */
-  endText: PropTypes.node,
+  displayWeekNumber: PropTypes.bool,
+  /**
+   * Calendar will show more weeks in order to match this value.
+   * Put it to 6 for having fix number of week in Gregorian calendars
+   * @default undefined
+   */
+  fixedWeekNumber: PropTypes.number,
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
   getOpenDialogAriaText: PropTypes.func,
-  /**
-   * Get aria-label text for switching between views button.
-   * @param {CalendarPickerView} currentView The view from which we want to get the button text.
-   * @returns {string} The label of the view.
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  getViewSwitchingButtonText: PropTypes.func,
   ignoreInvalidInputs: PropTypes.bool,
   /**
    * Props to pass to keyboard input adornment.
@@ -248,27 +250,26 @@ StaticDateRangePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * Left arrow icon aria-label text.
-   * @deprecated
-   */
-  leftArrowButtonText: PropTypes.string,
-  /**
    * If `true` renders `LoadingComponent` in calendar instead of calendar view.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
   /**
+   * Locale for components texts
+   */
+  localeText: PropTypes.object,
+  /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
   mask: PropTypes.string,
   /**
-   * Maximal selectable date. @DateIOType
+   * Maximal selectable date.
    */
   maxDate: PropTypes.any,
   /**
-   * Minimal selectable date. @DateIOType
+   * Minimal selectable date.
    */
   minDate: PropTypes.any,
   /**
@@ -280,7 +281,7 @@ StaticDateRangePicker.propTypes = {
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {DateRange<TDate>} date The new date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: PropTypes.func.isRequired,
@@ -292,9 +293,9 @@ StaticDateRangePicker.propTypes = {
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
    * @DateIOType
    *
-   * @template TError, TInputValue
+   * @template TError, TValue
    * @param {TError} reason The reason why the current value is not valid.
-   * @param {TInputValue} value The invalid value.
+   * @param {TValue} value The invalid value.
    */
   onError: PropTypes.func,
   /**
@@ -304,11 +305,6 @@ StaticDateRangePicker.propTypes = {
    * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
-  /**
-   * Callback fired on view change.
-   * @param {CalendarPickerView} view The new view.
-   */
-  onViewChange: PropTypes.func,
   /**
    * Props to pass to keyboard adornment button.
    */
@@ -323,15 +319,6 @@ StaticDateRangePicker.propTypes = {
    * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
    */
   reduceAnimations: PropTypes.bool,
-  /**
-   * Custom renderer for `<DateRangePicker />` days. @DateIOType
-   * @example (date, dateRangePickerDayProps) => <DateRangePickerDay {...dateRangePickerDayProps} />
-   * @template TDate
-   * @param {TDate} day The day to render.
-   * @param {DateRangePickerDayProps<TDate>} dateRangePickerDayProps The props of the day to render.
-   * @returns {JSX.Element} The element representing the day.
-   */
-  renderDay: PropTypes.func,
   /**
    * The `renderInput` prop allows you to customize the rendered input.
    * The `startProps` and `endProps` arguments of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props),
@@ -367,31 +354,25 @@ StaticDateRangePicker.propTypes = {
    */
   rifmFormatter: PropTypes.func,
   /**
-   * Right arrow icon aria-label text.
-   * @deprecated
-   */
-  rightArrowButtonText: PropTypes.string,
-  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
+   * @param {string} position The date to test, 'start' or 'end'.
    * @returns {boolean} Returns `true` if the date should be disabled.
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Disable specific months dynamically.
-   * Works like `shouldDisableDate` but for month selection view @DateIOType.
+   * Disable specific month.
    * @template TDate
-   * @param {TDate} month The month to check.
+   * @param {TDate} month The month to test.
    * @returns {boolean} If `true` the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
-   * Disable specific years dynamically.
-   * Works like `shouldDisableDate` but for year selection view @DateIOType.
+   * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} Returns `true` if the year should be disabled.
+   * @returns {boolean} If `true` the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -404,20 +385,13 @@ StaticDateRangePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * The system prop that allows defining system overrides as well as additional CSS styles.
    */
-  startText: PropTypes.node,
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat: PropTypes.string,
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date range'
-   */
-  toolbarTitle: PropTypes.node,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
   /**
    * The value of the picker.
    */

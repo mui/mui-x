@@ -1,0 +1,30 @@
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
+
+export interface PickersLayoutClasses {
+  /** Styles applied to the root element. */
+  root: string;
+  /** Styles applied to the root element in landscape orientation. */
+  landscape: string;
+  /** Styles applied to the contentWrapper element (which contains the tabs and the view itself). */
+  contentWrapper: string;
+  /** Styles applied to the toolbar. */
+  toolbar: string;
+  /** Styles applied to the action bar. */
+  actionBar: string;
+  /** Styles applied to the tabs. */
+  tabs: string;
+}
+
+export type PickersLayoutClassKey = keyof PickersLayoutClasses;
+
+export function getPickersLayoutUtilityClass(slot: string) {
+  return generateUtilityClass('MuiPickersLayout', slot);
+}
+
+export const pickersLayoutClasses = generateUtilityClasses<PickersLayoutClassKey>(
+  'MuiPickersLayout',
+  ['root', 'landscape', 'contentWrapper', 'toolbar', 'actionBar'],
+);

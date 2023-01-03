@@ -15,26 +15,22 @@
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
-    "DialogProps": { "type": { "name": "object" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
-    "getClockLabelText": {
-      "type": { "name": "func" },
-      "default": "<TDate extends any>(\n  view: ClockView,\n  time: TDate | null,\n  adapter: MuiPickersAdapter<TDate>,\n) =>\n  `Select ${view}. ${\n    time === null ? 'No time selected' : `Selected time is ${adapter.format(time, 'fullTime')}`\n  }`",
-      "deprecated": true,
-      "deprecationInfo": "Use the <code>localeText</code> prop of <code>LocalizationProvider</code> instead, see <a href=\"https://mui.com/x/react-date-pickers/localization\">https://mui.com/x/react-date-pickers/localization</a>"
-    },
+    "disablePast": { "type": { "name": "bool" } },
     "getOpenDialogAriaText": {
       "type": { "name": "func" },
-      "default": "(date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`"
+      "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
     },
     "InputAdornmentProps": { "type": { "name": "object" } },
     "inputFormat": { "type": { "name": "string" } },
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
+    "localeText": { "type": { "name": "object" } },
     "mask": { "type": { "name": "string" } },
     "maxTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
@@ -50,7 +46,8 @@
       "type": {
         "name": "enum",
         "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
-      }
+      },
+      "default": "'hours'"
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
@@ -59,23 +56,36 @@
     "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "ToolbarComponent": { "type": { "name": "elementType" }, "default": "TimePickerToolbar" },
-    "toolbarTitle": { "type": { "name": "node" }, "default": "'Select time'" },
     "value": { "type": { "name": "any" } },
     "views": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
-      }
+      },
+      "default": "['hours', 'minutes']"
     }
   },
-  "slots": {},
+  "slots": {
+    "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
+    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "TimePickerToolbar", "type": { "name": "elementType" } }
+  },
   "name": "MobileTimePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileTimePicker" },
   "spread": false,
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/MobileTimePicker/MobileTimePicker.tsx",
   "inheritance": null,
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-time-picker/\">Time Picker</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileTimePicker" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "MobileTimePicker" }
+  ]
 }

@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { useForkRef } from '@mui/material/utils';
+import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersPopper,
-  ExportedPickerPopperProps,
-  ExportedPickerPaperProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../PickersPopper';
 import { DateInputPropsLike } from './WrapperProps';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { DateInputSlotsComponent } from '../PureDateInput';
+import { LocalizationProvider } from '../../../LocalizationProvider';
+import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
-export interface DesktopWrapperProps extends ExportedPickerPopperProps, ExportedPickerPaperProps {
+export interface DesktopWrapperProps {
   children?: React.ReactNode;
 }
 
@@ -22,7 +22,9 @@ export interface DesktopWrapperSlotsComponent
 
 export interface DesktopWrapperSlotsComponentsProps extends PickersPopperSlotsComponentsProps {}
 
-export interface InternalDesktopWrapperProps extends DesktopWrapperProps, PickerStateWrapperProps {
+export interface InternalDesktopWrapperProps<TDate>
+  extends DesktopWrapperProps,
+    PickerStateWrapperProps {
   DateInputProps: DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> };
   KeyboardDateInputComponent: React.JSXElementConstructor<
     DateInputPropsLike & { ref?: React.Ref<HTMLDivElement> }
@@ -31,15 +33,20 @@ export interface InternalDesktopWrapperProps extends DesktopWrapperProps, Picker
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DesktopWrapperSlotsComponent>;
+  components?: DesktopWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: Partial<DesktopWrapperSlotsComponentsProps>;
+  componentsProps?: DesktopWrapperSlotsComponentsProps;
+  /**
+   * Locale for components texts
+   */
+  localeText?: PickersInputLocaleText<TDate>;
 }
 
-export function DesktopWrapper(props: InternalDesktopWrapperProps) {
+// TODO v6: Drop with the legacy pickers
+export function DesktopWrapper<TDate>(props: InternalDesktopWrapperProps<TDate>) {
   const {
     children,
     DateInputProps,
@@ -50,35 +57,32 @@ export function DesktopWrapper(props: InternalDesktopWrapperProps) {
     onAccept,
     onSetToday,
     open,
-    PopperProps,
-    PaperProps,
-    TransitionComponent,
     components,
     componentsProps,
+    localeText,
   } = props;
   const ownInputRef = React.useRef<HTMLInputElement>(null);
   const inputRef = useForkRef(DateInputProps.inputRef, ownInputRef);
 
   return (
-    <WrapperVariantContext.Provider value="desktop">
-      <KeyboardDateInputComponent {...DateInputProps} inputRef={inputRef} />
-      <PickersPopper
-        role="dialog"
-        open={open}
-        anchorEl={ownInputRef.current}
-        TransitionComponent={TransitionComponent}
-        PopperProps={PopperProps}
-        PaperProps={PaperProps}
-        onClose={onDismiss}
-        onCancel={onCancel}
-        onClear={onClear}
-        onAccept={onAccept}
-        onSetToday={onSetToday}
-        components={components}
-        componentsProps={componentsProps}
-      >
-        {children}
-      </PickersPopper>
-    </WrapperVariantContext.Provider>
+    <LocalizationProvider localeText={localeText}>
+      <WrapperVariantContext.Provider value="desktop">
+        <KeyboardDateInputComponent {...DateInputProps} inputRef={inputRef} />
+        <PickersPopper
+          role="dialog"
+          open={open}
+          anchorEl={ownInputRef.current}
+          onDismiss={onDismiss}
+          onCancel={onCancel}
+          onClear={onClear}
+          onAccept={onAccept}
+          onSetToday={onSetToday}
+          components={components}
+          componentsProps={componentsProps}
+        >
+          {children}
+        </PickersPopper>
+      </WrapperVariantContext.Provider>
+    </LocalizationProvider>
   );
 }

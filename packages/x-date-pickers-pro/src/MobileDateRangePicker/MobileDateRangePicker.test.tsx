@@ -2,8 +2,9 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import TextField from '@mui/material/TextField';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import {
   wrapPickerMount,
   createPickerRenderer,
@@ -11,10 +12,10 @@ import {
   FakeTransitionComponent,
   adapterToUse,
   openPicker,
-} from '../../../../test/utils/pickers-utils';
+} from 'test/utils/pickers-utils';
 
 const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
-  DialogProps: { TransitionComponent: FakeTransitionComponent },
+  components: { MobileTransition: FakeTransitionComponent },
   renderInput: (startProps, endProps) => (
     <React.Fragment>
       <TextField {...startProps} />
@@ -24,7 +25,7 @@ const WrappedMobileDateRangePicker = withPickerControls(MobileDateRangePicker)({
 });
 
 describe('<MobileDateRangePicker />', () => {
-  const { render } = createPickerRenderer();
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <MobileDateRangePicker
@@ -50,6 +51,14 @@ describe('<MobileDateRangePicker />', () => {
       ],
     }),
   );
+
+  describeRangeValidation(MobileDateRangePicker, () => ({
+    render,
+    clock,
+    componentFamily: 'legacy-picker',
+    views: ['day'],
+    variant: 'mobile',
+  }));
 
   describe('picker state', () => {
     it('should open when focusing the start input', () => {
@@ -79,8 +88,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -99,22 +108,16 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the start date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onChange.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 5, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '5' }));
       expect(onChange.callCount).to.equal(2);
-      expect(onChange.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-05T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 5));
 
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
@@ -125,8 +128,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -145,12 +148,10 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(0);
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onChange.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onChange.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
@@ -159,8 +160,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -175,13 +176,11 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'end' });
 
       // Change the end date
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       expect(onAccept.callCount).to.equal(1);
       expect(onAccept.lastCall.args[0][0]).toEqualDateTime(initialValue[0]);
-      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][1]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onClose.callCount).to.equal(1);
     });
 
@@ -190,8 +189,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -207,7 +206,7 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Cancel the modifications
       userEvent.mousePress(screen.getByText(/cancel/i));
@@ -223,8 +222,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -239,15 +238,13 @@ describe('<MobileDateRangePicker />', () => {
       openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
 
       // Change the start date (already tested)
-      userEvent.mousePress(screen.getByLabelText('Jan 3, 2018'));
+      userEvent.mousePress(screen.getByRole('gridcell', { name: '3' }));
 
       // Accept the modifications
       userEvent.mousePress(screen.getByText(/ok/i));
       expect(onChange.callCount).to.equal(1); // Start date change
       expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(
-        adapterToUse.date('2018-01-03T00:00:00.000'),
-      );
+      expect(onAccept.lastCall.args[0][0]).toEqualDateTime(new Date(2018, 0, 3));
       expect(onAccept.lastCall.args[0][1]).toEqualDateTime(initialValue[1]);
       expect(onClose.callCount).to.equal(1);
     });
@@ -257,8 +254,8 @@ describe('<MobileDateRangePicker />', () => {
       const onAccept = spy();
       const onClose = spy();
       const initialValue = [
-        adapterToUse.date('2018-01-01T00:00:00.000'),
-        adapterToUse.date('2018-01-06T00:00:00.000'),
+        adapterToUse.date(new Date(2018, 0, 1)),
+        adapterToUse.date(new Date(2018, 0, 6)),
       ];
 
       render(
@@ -307,8 +304,39 @@ describe('<MobileDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
+    it('should correctly set focused styles when input is focused', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      const firstInput = screen.getAllByRole('textbox')[0];
+      fireEvent.focus(firstInput);
+
+      expect(screen.getByText('Start', { selector: 'label' })).to.have.class('Mui-focused');
+    });
+
+    it('should render "readonly" input elements', () => {
+      render(<WrappedMobileDateRangePicker initialValue={[null, null]} />);
+
+      screen.getAllByRole('textbox').forEach((input) => {
+        expect(input).to.have.attribute('readonly');
+      });
+    });
+  });
+
+  // TODO: Write test
+  // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
+  // })
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedMobileDateRangePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+      openPicker({ type: 'date-range', variant: 'mobile', initialFocus: 'start' });
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

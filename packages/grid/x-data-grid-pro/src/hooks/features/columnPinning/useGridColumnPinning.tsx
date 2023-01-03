@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MuiDivider from '@mui/material/Divider';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -18,10 +17,9 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
 } from '@mui/x-data-grid/internals';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { GridInitialStatePro, GridStatePro } from '../../../models/gridStatePro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
-import { GridColumnPinningMenuItems } from '../../../components/GridColumnPinningMenuItems';
 import {
   GridColumnPinningApi,
   GridPinnedPosition,
@@ -30,12 +28,10 @@ import {
 import { gridPinnedColumnsSelector } from './gridColumnPinningSelector';
 import { filterColumns } from '../../../components/DataGridProVirtualScroller';
 
-const Divider = () => <MuiDivider onClick={(event) => event.stopPropagation()} />;
-
 export const columnPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedColumns' | 'initialState' | 'disableColumnPinning'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.columnPinning = {
+  apiRef.current.caches.columnPinning = {
     orderedFieldsBeforePinningColumns: null,
   };
 
@@ -61,10 +57,15 @@ const mergeStateWithPinnedColumns =
   (state: GridStatePro): GridStatePro => ({ ...state, pinnedColumns });
 
 export const useGridColumnPinning = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'initialState' | 'disableColumnPinning' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    | 'disableColumnPinning'
+    | 'initialState'
+    | 'pinnedColumns'
+    | 'onPinnedColumnsChange'
+    | 'componentsProps'
+    | 'components'
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
@@ -91,12 +92,15 @@ export const useGridColumnPinning = (
       }
 
       const index = event.currentTarget.dataset.rowindex;
-      const rowElements = apiRef.current.windowRef!.current!.querySelectorAll(
+      const rowElements = apiRef.current.virtualScrollerRef!.current!.querySelectorAll(
         `.${gridClasses.row}[data-rowindex="${index}"]`,
       );
       rowElements.forEach((row) => {
         // Ignore rows from other grid inside the hovered row
-        if (row.closest(`.${gridClasses.virtualScroller}`) === apiRef.current.windowRef!.current!) {
+        if (
+          row.closest(`.${gridClasses.virtualScroller}`) ===
+          apiRef.current.virtualScrollerRef!.current!
+        ) {
           if (event.type === 'mouseenter') {
             row.classList.add('Mui-hovered');
           } else {
@@ -147,8 +151,8 @@ export const useGridColumnPinning = (
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
-      const clientWidth = apiRef.current.windowRef!.current!.clientWidth;
-      const scrollLeft = apiRef.current.windowRef!.current!.scrollLeft;
+      const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
+      const scrollLeft = apiRef.current.virtualScrollerRef!.current!.scrollLeft;
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
@@ -170,17 +174,17 @@ export const useGridColumnPinning = (
     [apiRef, pinnedColumns, props.disableColumnPinning],
   );
 
-  const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, column) => {
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, colDef) => {
       if (props.disableColumnPinning) {
-        return initialValue;
+        return columnMenuItems;
       }
 
-      if (column.pinnable === false) {
-        return initialValue;
+      if (colDef.pinnable === false) {
+        return columnMenuItems;
       }
 
-      return [...initialValue, <Divider />, <GridColumnPinningMenuItems />];
+      return [...columnMenuItems, 'ColumnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );
@@ -213,12 +217,21 @@ export const useGridColumnPinning = (
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
+    (prevState, context) => {
       const pinnedColumnsToExport = gridPinnedColumnsSelector(apiRef.current.state);
-      if (
-        (!pinnedColumnsToExport.left || pinnedColumnsToExport.left.length === 0) &&
-        (!pinnedColumnsToExport.right || pinnedColumnsToExport.right.length === 0)
-      ) {
+
+      const shouldExportPinnedColumns =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.pinnedColumns != null ||
+        // Always export if the model has been initialized
+        props.initialState?.pinnedColumns != null ||
+        // Export if the model is not empty
+        (pinnedColumnsToExport.left ?? []).length > 0 ||
+        (pinnedColumnsToExport.right ?? []).length > 0;
+
+      if (!shouldExportPinnedColumns) {
         return prevState;
       }
 
@@ -227,7 +240,7 @@ export const useGridColumnPinning = (
         pinnedColumns: pinnedColumnsToExport,
       };
     },
-    [apiRef],
+    [apiRef, props.pinnedColumns, props.initialState?.pinnedColumns],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -243,12 +256,12 @@ export const useGridColumnPinning = (
   );
 
   useGridRegisterPipeProcessor(apiRef, 'scrollToIndexes', calculateScrollLeft);
-  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuButtons);
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'canBeReordered', checkIfCanBeReordered);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
     propModel: props.pinnedColumns,
     propOnChange: props.onPinnedColumnsChange,
@@ -257,7 +270,7 @@ export const useGridColumnPinning = (
   });
 
   const checkIfEnabled = React.useCallback(
-    (methodName) => {
+    (methodName: keyof GridColumnPinningApi) => {
       if (props.disableColumnPinning) {
         throw new Error(
           `MUI: You cannot call \`apiRef.current.${methodName}\` when \`disableColumnPinning\` is true.`,
@@ -336,11 +349,12 @@ export const useGridColumnPinning = (
     setPinnedColumns,
     isColumnPinned,
   };
-  useGridApiMethod(apiRef, columnPinningApi, 'columnPinningApi');
+
+  useGridApiMethod(apiRef, columnPinningApi, 'public');
 
   const handleColumnOrderChange = React.useCallback<GridEventListener<'columnOrderChange'>>(
     (params) => {
-      if (!apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns) {
+      if (!apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns) {
         return;
       }
 
@@ -369,7 +383,7 @@ export const useGridColumnPinning = (
       const siblingField = latestColumnFields[targetIndex - delta];
 
       const newOrderedFieldsBeforePinningColumns = [
-        ...apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns,
+        ...apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns,
       ];
 
       // The index to start swapping fields
@@ -397,7 +411,7 @@ export const useGridColumnPinning = (
         j = i + delta;
       }
 
-      apiRef.current.unstable_caches.columnPinning.orderedFieldsBeforePinningColumns =
+      apiRef.current.caches.columnPinning.orderedFieldsBeforePinningColumns =
         newOrderedFieldsBeforePinningColumns;
     },
 

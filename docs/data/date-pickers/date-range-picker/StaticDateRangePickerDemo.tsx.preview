@@ -1,16 +1,4 @@
-<LocalizationProvider dateAdapter={AdapterDateFns}>
-  <StaticDateRangePicker
-    displayStaticWrapperAs="desktop"
-    value={value}
-    onChange={(newValue) => {
-      setValue(newValue);
-    }}
-    renderInput={(startProps, endProps) => (
-      <React.Fragment>
-        <TextField {...startProps} />
-        <Box sx={{ mx: 2 }}> to </Box>
-        <TextField {...endProps} />
-      </React.Fragment>
-    )}
-  />
-</LocalizationProvider>
+<StaticNextDateRangePicker
+  displayStaticWrapperAs="desktop"
+  defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+/>

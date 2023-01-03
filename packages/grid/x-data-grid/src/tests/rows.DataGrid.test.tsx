@@ -1,6 +1,12 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';
@@ -13,14 +19,14 @@ import {
   GridRowClassNameParams,
   GridRowModel,
   GridRenderCellParams,
+  useGridApiRef,
+  GridApi,
 } from '@mui/x-data-grid';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
-import { getData } from 'storybook/src/data/data-service';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-const nativeSetTimeout = setTimeout;
 
 describe('<DataGrid /> - Rows', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -61,13 +67,15 @@ describe('<DataGrid /> - Rows', () => {
 
   describe('prop: rows', () => {
     it('should support new dataset', () => {
-      const { rows, columns } = getData(5, 2);
+      const { rows, columns } = getBasicGridData(5, 2);
 
-      const Test = (props: Pick<DataGridProps, 'rows'>) => (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...props} columns={columns} disableVirtualization />
-        </div>
-      );
+      function Test(props: Pick<DataGridProps, 'rows'>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} columns={columns} disableVirtualization />
+          </div>
+        );
+      }
 
       const { setProps } = render(<Test rows={rows.slice(0, 2)} />);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
@@ -78,12 +86,16 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should ignore events coming from a portal in the cell', () => {
     const handleRowClick = spy();
-    const InputCell = () => <input type="text" name="input" />;
-    const PortalCell = () => (
-      <Portal>
-        <input type="text" name="portal-input" />
-      </Portal>
-    );
+    function InputCell() {
+      return <input type="text" name="input" />;
+    }
+    function PortalCell() {
+      return (
+        <Portal>
+          <input type="text" name="portal-input" />
+        </Portal>
+      );
+    }
 
     render(
       <div style={{ width: 300, height: 300 }}>
@@ -125,7 +137,7 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
-      const { rows, columns } = getData(4, 2);
+      const { rows, columns } = getBasicGridData(4, 2);
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
@@ -150,10 +162,10 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    const TestCase = ({
+    function TestCase({
       getActions,
       ...other
-    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) => {
+    }: { getActions?: () => JSX.Element[] } & Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
@@ -173,7 +185,7 @@ describe('<DataGrid /> - Rows', () => {
           />
         </div>
       );
-    };
+    }
 
     it('should throw an error if getActions is missing', function test() {
       if (!isJSDOM) {
@@ -182,6 +194,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(() => {
         render(<TestCase />);
       }).toErrorDev([
+        'MUI: Missing the `getActions` property in the `GridColDef`.',
         'MUI: Missing the `getActions` property in the `GridColDef`.',
         'The above error occurred in the <GridActionsCell> component',
         'MUI: GridErrorHandler - An unexpected error occurred.',
@@ -219,9 +232,9 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when clicking in a menu action', async () => {
@@ -230,18 +243,18 @@ describe('<DataGrid /> - Rows', () => {
           getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
         />,
       );
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
       fireEvent.click(screen.queryByText('print'));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should not select the row when opening the menu', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(getRow(0).className).not.to.contain('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
     it('should close other menus before opening a new one', () => {
@@ -292,8 +305,7 @@ describe('<DataGrid /> - Rows', () => {
         />,
       );
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      fireEvent.mouseUp(moreButton);
-      fireEvent.click(moreButton);
+      userEvent.mousePress(moreButton);
 
       const printButton = screen.queryByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
@@ -369,7 +381,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should focus the last button if the clicked button removes itself', () => {
       let canDelete = true;
-      const Test = () => {
+      function Test() {
         return (
           <TestCase
             getActions={() =>
@@ -388,7 +400,7 @@ describe('<DataGrid /> - Rows', () => {
             }
           />
         );
-      };
+      }
       render(<Test />);
       fireEvent.click(screen.getByRole('menuitem', { name: 'delete' }));
       expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
@@ -420,14 +432,14 @@ describe('<DataGrid /> - Rows', () => {
 
     describe('static row height', () => {
       const ROW_HEIGHT = 52;
-      const TestCase = (props: Partial<DataGridProps>) => {
+      function TestCase(props: Partial<DataGridProps>) {
         const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGrid {...baselineProps} {...props} getRowId={getRowId} />
           </div>
         );
-      };
+      }
 
       it('should set each row height whe rowHeight prop is used', () => {
         const { setProps } = render(<TestCase />);
@@ -485,13 +497,46 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     describe('dynamic row height', () => {
-      const TestCase = (
+      function ResizeObserverMock(
+        callback: (entries: { borderBoxSize: [{ blockSize: number }] }[]) => void,
+      ) {
+        let timeout: NodeJS.Timeout;
+
+        return {
+          observe: (element: HTMLElement) => {
+            // Simulates the async behavior of the native ResizeObserver
+            timeout = setTimeout(() => {
+              callback([{ borderBoxSize: [{ blockSize: element.clientHeight }] }]);
+            });
+          },
+          disconnect: () => {
+            clearTimeout(timeout);
+          },
+        };
+      }
+
+      const originalResizeObserver = window.ResizeObserver;
+
+      beforeEach(() => {
+        const { userAgent } = window.navigator;
+
+        if (userAgent.includes('Chrome') && !userAgent.includes('Headless')) {
+          // Only use the mock in non-headless Chrome
+          window.ResizeObserver = ResizeObserverMock as any;
+        }
+      });
+
+      afterEach(() => {
+        window.ResizeObserver = originalResizeObserver;
+      });
+
+      function TestCase(
         props: Partial<DataGridProps> & {
           getBioContentHeight: (row: GridRowModel) => number;
           height?: number;
           width?: number;
         },
-      ) => {
+      ) {
         const { getBioContentHeight, width = 300, height = 300, ...other } = props;
 
         const customCellRenderer = React.useCallback(
@@ -517,14 +562,9 @@ describe('<DataGrid /> - Rows', () => {
             />
           </div>
         );
-      };
+      }
 
       it('should measure all rows and update the content size', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const border = 1;
         const contentHeight = 100;
         render(<TestCase getBioContentHeight={() => contentHeight} getRowHeight={() => 'auto'} />);
@@ -532,13 +572,13 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${expectedHeight}px`,
         });
-
-        window.onerror = originalErrorHandler;
       });
 
       it('should use the default row height to calculate the content size when the row has not been measured yet', async () => {
@@ -562,7 +602,9 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${expectedHeight}px`,
@@ -590,7 +632,9 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: `${expectedHeight}px`,
@@ -609,13 +653,17 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await new Promise((resolve) => nativeSetTimeout(resolve)); // Wait for ResizeObserver to send dimensions
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: '101px',
         });
-        setProps({ rows: [{ clientId: 'c1', expanded: true }] }); // Wait for ResizeObserver to send dimensions
-        await new Promise((resolve) => nativeSetTimeout(resolve));
+        setProps({ rows: [{ clientId: 'c1', expanded: true }] });
+        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScrollerContent).toHaveInlineStyle({
           width: 'auto',
           height: '201px',
@@ -649,7 +697,7 @@ describe('<DataGrid /> - Rows', () => {
         expect(document.querySelectorAll('.MuiDataGrid-cell')).to.have.length(2);
       });
 
-      it('should measure all rows before rendering a new row', async () => {
+      it('should measure rows while scrolling', async () => {
         const headerHeight = 50;
         const border = 1;
         render(
@@ -663,20 +711,25 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await waitFor(() => {
-          expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
-        });
-        virtualScroller.scrollTop = 10e6; // Scroll to the bottom
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
         expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
-        // Swallow "ResizeObserver loop limit exceeded" errors
-        // See https://github.com/WICG/resize-observer/issues/38
-        const originalErrorHandler = window.onerror;
-        window.onerror = () => {};
-
         const headerHeight = 50;
         const densityFactor = 1.3;
         const rowHeight = 52;
@@ -697,28 +750,140 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
-        await waitFor(() => {
-          expect(virtualScrollerContent).toHaveInlineStyle({
-            width: 'auto',
-            height: `${Math.floor(expectedHeight)}px`,
-          });
+        await act(() => Promise.resolve());
+        clock.runToLast(); // Run timers in the mocked ResizeObserver
+        clock.runToLast(); // Run the debounce timeout that triggers the rerender
+        expect(virtualScrollerContent).toHaveInlineStyle({
+          width: 'auto',
+          height: `${Math.floor(expectedHeight)}px`,
+        });
+      });
+
+      it('should position correctly the render zone when the 2nd page has less rows than the 1st page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // FIXME: We need a waitFor that works with fake clock
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            {...data}
+          />,
+        );
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value', async () => {
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={10}
+            rowsPerPageOptions={[5, 10]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+        setProps({ pageSize: 5 });
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
+      });
+
+      it('should position correctly the render zone when changing pageSize to a lower value and moving to next page', async function test() {
+        const { userAgent } = window.navigator;
+        if (!userAgent.includes('Headless') || /edg/i.test(userAgent)) {
+          this.skip(); // In Chrome non-headless and Edge this test is flacky
+        }
+        const data = getBasicGridData(120, 3);
+        const headerHeight = 50;
+        const measuredRowHeight = 100;
+        const { setProps } = render(
+          <TestCase
+            getBioContentHeight={() => measuredRowHeight}
+            getRowHeight={() => 'auto'}
+            rowBuffer={0}
+            rowThreshold={0}
+            headerHeight={headerHeight}
+            getRowId={(row) => row.id}
+            hideFooter={false}
+            pageSize={25}
+            rowsPerPageOptions={[10, 25]}
+            height={headerHeight + 10 * measuredRowHeight}
+            {...data}
+          />,
+        );
+
+        const virtualScrollerRenderZone = document.querySelector(
+          '.MuiDataGrid-virtualScrollerRenderZone',
+        )!;
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
         });
 
-        window.onerror = originalErrorHandler;
+        const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
+        virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
+        virtualScroller.dispatchEvent(new Event('scroll'));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+
+        setProps({ pageSize: 10 });
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        await act(() => Promise.resolve());
+        clock.runToLast();
+        expect(virtualScrollerRenderZone).toHaveInlineStyle({
+          transform: 'translate3d(0px, 0px, 0px)',
+        });
       });
     });
   });
 
   describe('prop: getRowSpacing', () => {
-    const { rows, columns } = getData(4, 2);
+    const { rows, columns } = getBasicGridData(4, 2);
 
-    const TestCase = (props: Partial<DataGridProps>) => {
+    function TestCase(props: Partial<DataGridProps>) {
       return (
         <div style={{ width: 300, height: 300 }}>
           <DataGrid rows={rows} columns={columns} {...props} />
         </div>
       );
-    };
+    }
 
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
@@ -829,6 +994,71 @@ describe('<DataGrid /> - Rows', () => {
         borderTopWidth: `${borderTop}px`,
         borderBottomWidth: `${borderBottom}px`,
       });
+    });
+  });
+
+  describe('apiRef: updateRows', () => {
+    const rows = [
+      { id: 0, brand: 'Nike' },
+      { id: 1, brand: 'Adidas' },
+      { id: 2, brand: 'Puma' },
+    ];
+    const columns = [{ field: 'brand', headerName: 'Brand' }];
+
+    let apiRef: React.MutableRefObject<GridApi>;
+
+    function TestCase(props: Partial<DataGridProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            apiRef={apiRef}
+            rows={rows}
+            columns={columns}
+            {...props}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    it('should throw when updating more than one row at once', () => {
+      render(<TestCase />);
+      expect(() =>
+        apiRef.current.updateRows([
+          { id: 1, brand: 'Fila' },
+          { id: 0, brand: 'Pata' },
+          { id: 2, brand: 'Pum' },
+          { id: 3, brand: 'Jordan' },
+        ]),
+      ).to.throw(/You can't update several rows at once/);
+    });
+
+    it('should allow to update one row at the time', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum']);
+    });
+
+    it('should allow adding rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]));
+      act(() => apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+    });
+
+    it('should allow to delete rows', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.updateRows([{ id: 1, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]));
+      act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
+      act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
     });
   });
 });

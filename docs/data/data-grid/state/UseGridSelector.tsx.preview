@@ -1,4 +1,4 @@
-<DataGridPro
+<DataGrid
   {...data}
   loading={loading}
   pagination

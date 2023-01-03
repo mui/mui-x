@@ -8,7 +8,7 @@ const SERVER_OPTIONS = {
   useCursorPagination: true,
 };
 
-const { columns, initialState, useQuery } = createFakeServer({}, SERVER_OPTIONS);
+const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function CursorPaginationGrid() {
   const mapPageToNextCursor = React.useRef<{ [page: number]: GridRowId }>({});
@@ -22,7 +22,7 @@ export default function CursorPaginationGrid() {
     }),
     [page],
   );
-  const { isLoading, data, pageInfo } = useQuery(queryOptions);
+  const { isLoading, rows, pageInfo } = useQuery(queryOptions);
 
   const handlePageChange = (newPage: number) => {
     // We have the cursor, we can allow the page transition.
@@ -54,9 +54,8 @@ export default function CursorPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data}
-        columns={columns}
-        initialState={initialState}
+        rows={rows}
+        {...data}
         pagination
         pageSize={PAGE_SIZE}
         rowsPerPageOptions={[PAGE_SIZE]}

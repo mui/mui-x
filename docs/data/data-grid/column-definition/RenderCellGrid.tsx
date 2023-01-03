@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 
-const RenderDate = (props: GridRenderCellParams<Date>) => {
+function RenderDate(props: GridRenderCellParams<Date>) {
   const { hasFocus, value } = props;
   const buttonElement = React.useRef<HTMLButtonElement | null>(null);
   const rippleRef = React.useRef<TouchRippleActions | null>(null);
@@ -26,7 +26,6 @@ const RenderDate = (props: GridRenderCellParams<Date>) => {
         ref={buttonElement}
         touchRippleRef={rippleRef}
         variant="contained"
-        color="primary"
         size="small"
         style={{ marginLeft: 16 }}
         // Remove button from tab sequence when cell does not have focus
@@ -42,7 +41,7 @@ const RenderDate = (props: GridRenderCellParams<Date>) => {
       </Button>
     </strong>
   );
-};
+}
 
 const columns: GridColDef[] = [
   {

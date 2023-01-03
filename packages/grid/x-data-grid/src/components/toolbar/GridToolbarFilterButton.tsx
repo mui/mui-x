@@ -1,11 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import Badge from '@mui/material/Badge';
 import { ButtonProps } from '@mui/material/Button';
 import { TooltipProps } from '@mui/material/Tooltip';
-import { capitalize } from '@mui/material/utils';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridFilterActiveItemsSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -69,11 +71,10 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       }
 
       const getOperatorLabel = (item: GridFilterItem): string =>
-        lookup[item.columnField!].filterOperators!.find(
-          (operator) => operator.value === item.operatorValue,
-        )!.label ||
+        lookup[item.field!].filterOperators!.find((operator) => operator.value === item.operator)!
+          .label ||
         apiRef.current
-          .getLocaleText(`filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys)!
+          .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
           .toString();
 
       return (
@@ -81,11 +82,11 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
           <GridToolbarFilterListRoot className={classes.root}>
             {activeFilters.map((item, index) => ({
-              ...(lookup[item.columnField!] && (
+              ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${lookup[item.columnField!].headerName || item.columnField}
+                  {`${lookup[item.field!].headerName || item.field}
                   ${getOperatorLabel(item)}
-                  ${item.value}`}
+                  ${item.value ?? ''}`}
                 </li>
               )),
             }))}
@@ -119,7 +120,6 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
         <rootProps.components.BaseButton
           ref={ref}
           size="small"
-          color="primary"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
             <Badge badgeContent={activeFilters.length} color="primary">

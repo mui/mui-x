@@ -1,19 +1,17 @@
 import * as React from 'react';
-import Divider from '@mui/material/Divider';
 import {
   GridEventListener,
   useGridApiEventHandler,
   useGridApiMethod,
-  gridFilteredDescendantCountLookupSelector,
+  gridColumnLookupSelector,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
   GridPipeProcessor,
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
-  isDeepEqual,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
@@ -25,17 +23,17 @@ import {
   isGroupingColumn,
   mergeStateWithRowGroupingModel,
   setStrategyAvailability,
+  getGroupingRules,
+  areGroupingRulesEqual,
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
-import { GridRowGroupableColumnMenuItems } from '../../../components/GridRowGroupableColumnMenuItems';
-import { GridRowGroupingColumnMenuItems } from '../../../components/GridRowGroupingColumnMenuItems';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
 > = (state, props, apiRef) => {
-  apiRef.current.unstable_caches.rowGrouping = {
-    sanitizedModelOnLastRowTreeCreation: [],
+  apiRef.current.caches.rowGrouping = {
+    rulesOnLastRowTreeCreation: [],
   };
 
   return {
@@ -52,7 +50,7 @@ export const rowGroupingStateInitializer: GridStateInitializer<
  * @requires useGridParamsApi (method) - can be after, async only
  */
 export const useGridRowGrouping = (
-  apiRef: React.MutableRefObject<GridApiPremium>,
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'initialState'
@@ -63,9 +61,11 @@ export const useGridRowGrouping = (
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
+    | 'componentsProps'
+    | 'components'
   >,
 ) => {
-  apiRef.current.unstable_registerControlState({
+  apiRef.current.registerControlState({
     stateId: 'rowGrouping',
     propModel: props.rowGroupingModel,
     propOnChange: props.onRowGroupingModelChange,
@@ -147,43 +147,39 @@ export const useGridRowGrouping = (
     setRowGroupingCriteriaIndex,
   };
 
-  useGridApiMethod(apiRef, rowGroupingApi, 'GridRowGroupingApi');
+  useGridApiMethod(apiRef, rowGroupingApi, 'public');
 
   /**
    * PRE-PROCESSING
    */
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
-    (initialValue, columns) => {
+    (columnMenuItems, colDef) => {
       if (props.disableRowGrouping) {
-        return initialValue;
+        return columnMenuItems;
       }
-
-      let menuItems: React.ReactNode;
-      if (isGroupingColumn(columns.field)) {
-        menuItems = <GridRowGroupingColumnMenuItems />;
-      } else if (columns.groupable) {
-        menuItems = <GridRowGroupableColumnMenuItems />;
-      } else {
-        menuItems = null;
+      if (isGroupingColumn(colDef.field) || colDef.groupable) {
+        return [...columnMenuItems, 'ColumnMenuGroupingItem'];
       }
-
-      if (menuItems == null) {
-        return initialValue;
-      }
-
-      return [...initialValue, <Divider />, menuItems];
+      return columnMenuItems;
     },
     [props.disableRowGrouping],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
-    (prevState) => {
-      if (props.disableRowGrouping) {
-        return prevState;
-      }
-
+    (prevState, context) => {
       const rowGroupingModelToExport = gridRowGroupingModelSelector(apiRef);
-      if (rowGroupingModelToExport.length === 0) {
+
+      const shouldExportRowGroupingModel =
+        // Always export if the `exportOnlyDirtyModels` property is activated
+        !context.exportOnlyDirtyModels ||
+        // Always export if the model is controlled
+        props.rowGroupingModel != null ||
+        // Always export if the model has been initialized
+        props.initialState?.rowGrouping?.model != null ||
+        // Export if the model is not empty
+        Object.keys(rowGroupingModelToExport).length > 0;
+
+      if (!shouldExportRowGroupingModel) {
         return prevState;
       }
 
@@ -194,7 +190,7 @@ export const useGridRowGrouping = (
         },
       };
     },
-    [apiRef, props.disableRowGrouping],
+    [apiRef, props.rowGroupingModel, props.initialState?.rowGrouping?.model],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -226,13 +222,14 @@ export const useGridRowGrouping = (
         event.stopPropagation();
         event.preventDefault();
 
-        const filteredDescendantCount =
-          gridFilteredDescendantCountLookupSelector(apiRef)[params.id] ?? 0;
+        if (params.rowNode.type !== 'group') {
+          return;
+        }
 
         const isOnGroupingCell =
           props.rowGroupingColumnMode === 'single' ||
           getRowGroupingFieldFromGroupingCriteria(params.rowNode.groupingField) === params.field;
-        if (!isOnGroupingCell || filteredDescendantCount === 0) {
+        if (!isOnGroupingCell) {
           return;
         }
 
@@ -245,19 +242,23 @@ export const useGridRowGrouping = (
   const checkGroupingColumnsModelDiff = React.useCallback<
     GridEventListener<'columnsChange'>
   >(() => {
-    const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
-    const lastGroupingColumnsModelApplied =
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation;
+    const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+    const rulesOnLastRowTreeCreation =
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation || [];
 
-    if (!isDeepEqual(lastGroupingColumnsModelApplied, rowGroupingModel)) {
-      apiRef.current.unstable_caches.rowGrouping.sanitizedModelOnLastRowTreeCreation =
-        rowGroupingModel;
-      apiRef.current.unstable_requestPipeProcessorsApplication('hydrateColumns');
+    const groupingRules = getGroupingRules({
+      sanitizedRowGroupingModel,
+      columnsLookup: gridColumnLookupSelector(apiRef),
+    });
+
+    if (!areGroupingRulesEqual(rulesOnLastRowTreeCreation, groupingRules)) {
+      apiRef.current.caches.rowGrouping.rulesOnLastRowTreeCreation = groupingRules;
+      apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
       setStrategyAvailability(apiRef, props.disableRowGrouping);
 
       // Refresh the row tree creation strategy processing
       // TODO: Add a clean way to re-run a strategy processing without publishing a private event
-      if (apiRef.current.unstable_getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
+      if (apiRef.current.getActiveStrategy('rowTree') === ROW_GROUPING_STRATEGY) {
         apiRef.current.publishEvent('activeStrategyProcessorChange', 'rowTreeCreation');
       }
     }

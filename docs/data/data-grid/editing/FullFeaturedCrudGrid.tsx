@@ -11,7 +11,7 @@ import {
   GridRowModesModel,
   GridRowModes,
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowParams,
   MuiEvent,
   GridToolbarContainer,
@@ -138,7 +138,11 @@ export default function FullFeaturedCrudGrid() {
     return updatedRow;
   };
 
-  const columns: GridColumns = [
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
+  const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
     { field: 'age', headerName: 'Age', type: 'number', editable: true },
     {
@@ -170,7 +174,6 @@ export default function FullFeaturedCrudGrid() {
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
-              color="primary"
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
@@ -219,6 +222,7 @@ export default function FullFeaturedCrudGrid() {
         columns={columns}
         editMode="row"
         rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
         onRowEditStart={handleRowEditStart}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
@@ -228,7 +232,6 @@ export default function FullFeaturedCrudGrid() {
         componentsProps={{
           toolbar: { setRows, setRowModesModel },
         }}
-        experimentalFeatures={{ newEditingApi: true }}
       />
     </Box>
   );

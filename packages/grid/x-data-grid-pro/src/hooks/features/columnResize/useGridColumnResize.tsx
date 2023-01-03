@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { ownerDocument, useEventCallback } from '@mui/material/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import {
   GridEventListener,
   gridClasses,
@@ -10,20 +13,21 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
-  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   GridStateInitializer,
+  GridStateColDef,
 } from '@mui/x-data-grid/internals';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
   findGridCellElementsFromCol,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
+  findGroupHeaderElementsFromField,
 } from '../../../utils/domUtils';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type ResizeDirection = keyof typeof GridColumnHeaderSeparatorSides;
@@ -125,13 +129,14 @@ export const columnResizeStateInitializer: GridStateInitializer = (state) => ({
  * TODO: improve experience for last column
  */
 export const useGridColumnResize = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'onColumnResize' | 'onColumnWidthChange'>,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
   const colDefRef = React.useRef<GridStateColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
+  const colGroupingElementRef = React.useRef<Element[]>();
   const colCellElementsRef = React.useRef<Element[]>();
   const theme = useTheme();
 
@@ -158,7 +163,7 @@ export const useGridColumnResize = (
     colElementRef.current!.style.minWidth = `${newWidth}px`;
     colElementRef.current!.style.maxWidth = `${newWidth}px`;
 
-    colCellElementsRef.current!.forEach((element) => {
+    [...colCellElementsRef.current!, ...colGroupingElementRef.current!].forEach((element) => {
       const div = element as HTMLDivElement;
       let finalWidth: `${number}px`;
 
@@ -180,7 +185,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -252,6 +257,11 @@ export const useGridColumnResize = (
           `[data-field="${colDef.field}"]`,
         )!;
 
+      colGroupingElementRef.current = findGroupHeaderElementsFromField(
+        apiRef.current.columnHeadersContainerElementRef?.current!,
+        colDef.field,
+      );
+
       colCellElementsRef.current = findGridCellElementsFromCol(
         colElementRef.current,
         apiRef.current,
@@ -282,7 +292,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current.updateColumn(colDefRef.current!);
+    apiRef.current.updateColumns([colDefRef.current!]);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -351,6 +361,10 @@ export const useGridColumnResize = (
     const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumn(field);
 
+    colGroupingElementRef.current = findGroupHeaderElementsFromField(
+      apiRef.current.columnHeadersContainerElementRef?.current!,
+      field,
+    );
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent('columnResizeStart', { field }, event);
 

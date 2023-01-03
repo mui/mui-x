@@ -1,6 +1,4 @@
-import { localStorageAvailable } from '../utils/utils';
-
-// A guide to feature toggling.
+// A guide to feature toggling (deprecated)
 //
 // The feature toggle is:
 // - independent from the NODE_ENV
@@ -18,17 +16,4 @@ import { localStorageAvailable } from '../utils/utils';
 // Developers (users) are discouraged to enable the experimental feature by setting the GRID_EXPERIMENTAL_ENABLED env.
 // Instead, prefer exposing experimental APIs, for instance, a prop or a new `unstable_` module.
 
-let experimentalEnabled = false;
-
-if (
-  typeof process !== 'undefined' &&
-  process.env.GRID_EXPERIMENTAL_ENABLED !== undefined &&
-  localStorageAvailable() &&
-  window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED')
-) {
-  experimentalEnabled = window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED') === 'true';
-} else if (typeof process !== 'undefined') {
-  experimentalEnabled = process.env.GRID_EXPERIMENTAL_ENABLED === 'true';
-}
-
-export const GRID_EXPERIMENTAL_ENABLED = experimentalEnabled as boolean;
+export const GRID_EXPERIMENTAL_ENABLED = false;

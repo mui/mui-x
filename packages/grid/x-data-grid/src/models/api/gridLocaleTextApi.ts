@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { ComponentsPropsList } from '@mui/material/styles';
 
 /**
@@ -50,7 +51,7 @@ export interface GridLocaleText {
   filterPanelAddFilter: React.ReactNode;
   filterPanelDeleteIconLabel: string;
   filterPanelLinkOperator: string;
-  filterPanelOperators: React.ReactNode;
+  filterPanelOperator: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
   filterPanelColumns: React.ReactNode;
@@ -80,6 +81,7 @@ export interface GridLocaleText {
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
+  columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
   columnMenuHideColumn: React.ReactNode;
   columnMenuUnsort: React.ReactNode;
@@ -130,17 +132,26 @@ export interface GridLocaleText {
   unGroupColumn: (name: string) => string;
 
   // Master/detail
+  detailPanelToggle: string;
   expandDetailPanel: string;
   collapseDetailPanel: string;
+
+  // Row reordering text
+  rowReorderingHeaderName: string;
+
+  // Aggregation
+  aggregationMenuItemHeader: string;
+  aggregationFunctionLabelSum: string;
+  aggregationFunctionLabelAvg: string;
+  aggregationFunctionLabelMin: string;
+  aggregationFunctionLabelMax: string;
+  aggregationFunctionLabelSize: string;
 
   // Used core components translation keys
   MuiTablePagination: Omit<
     ComponentsPropsList['MuiTablePagination'],
     'page' | 'count' | 'onChangePage' | 'rowsPerPage' | 'onPageChange'
   >;
-
-  // Row reordering text
-  rowReorderingHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

@@ -27,18 +27,16 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'активных фильтров';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'активных фильтра';
     } else if (lastDigit === 1) {
       pluralForm = 'активный фильтр';
     }
-
     return `${count} ${pluralForm}`;
   },
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Поиск...',
+  toolbarQuickFilterPlaceholder: 'Поиск…',
   toolbarQuickFilterLabel: 'Поиск',
   toolbarQuickFilterDeleteIconLabel: 'Очистить',
 
@@ -59,10 +57,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Операторы',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'Логические операторы',
+  filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
   filterPanelColumns: 'Столбцы',
@@ -92,6 +88,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',
@@ -102,13 +99,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'активных фильтров';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'активных фильтра';
     } else if (lastDigit === 1) {
       pluralForm = 'активный фильтр';
     }
-
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Показать фильтры',
@@ -118,13 +113,11 @@ const ruRUGrid: Partial<GridLocaleText> = {
   footerRowSelected: (count) => {
     let pluralForm = 'строк выбрано';
     const lastDigit = count % 10;
-
     if (lastDigit > 1 && lastDigit < 5) {
       pluralForm = 'строки выбраны';
     } else if (lastDigit === 1) {
       pluralForm = 'строка выбрана';
     }
-
     return `${count} ${pluralForm}`;
   },
 
@@ -137,10 +130,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Выбор флажка',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Выбрать все строки',
+  checkboxSelectionUnselectAllRows: 'Отменить выбор всех строк',
+  checkboxSelectionSelectRow: 'Выбрать строку',
+  checkboxSelectionUnselectRow: 'Отменить выбор строки',
 
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
@@ -165,11 +158,20 @@ const ruRUGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Разгруппировать по ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Детали',
   expandDetailPanel: 'Развернуть',
   collapseDetailPanel: 'Свернуть',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Изменение порядка строк',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Объединение данных',
+  aggregationFunctionLabelSum: 'сумм',
+  aggregationFunctionLabelAvg: 'срзнач',
+  aggregationFunctionLabelMin: 'мин',
+  aggregationFunctionLabelMax: 'макс',
+  aggregationFunctionLabelSize: 'счет',
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid, ruRUCore);

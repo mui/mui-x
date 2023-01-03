@@ -1,7 +1,6 @@
 <DataGrid
-  rows={data}
-  columns={columns}
-  initialState={initialState}
+  rows={rows}
+  {...data}
   pagination
   pageSize={PAGE_SIZE}
   rowsPerPageOptions={[PAGE_SIZE]}

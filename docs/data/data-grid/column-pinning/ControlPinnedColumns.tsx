@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridPinnedColumns,
   GridRowsProp,
 } from '@mui/x-data-grid-pro';
@@ -12,6 +12,7 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
 
 export default function ControlPinnedColumns() {
   const [pinnedColumns, setPinnedColumns] = React.useState<GridPinnedColumns>({
@@ -26,23 +27,23 @@ export default function ControlPinnedColumns() {
   );
 
   return (
-    <div style={{ width: '100%' }}>
-      <Alert severity="info" style={{ marginBottom: 8 }}>
+    <Box sx={{ width: '100%' }}>
+      <Alert severity="info">
         <code>pinnedColumns: {JSON.stringify(pinnedColumns)}</code>
       </Alert>
-      <div style={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: 400, mt: 1 }}>
         <DataGridPro
           rows={rows}
           columns={columns}
           pinnedColumns={pinnedColumns}
           onPinnedColumnsChange={handlePinnedColumnsChange}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'email', headerName: 'Email', width: 200, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },

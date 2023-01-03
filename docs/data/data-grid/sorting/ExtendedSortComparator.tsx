@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GridColumns,
+  GridColDef,
   DataGrid,
   GridValueGetterParams,
   gridNumberComparator,
@@ -45,7 +45,7 @@ export default function ExtendedSortComparator() {
     rowLength: 100,
   });
 
-  const columns = React.useMemo<GridColumns>(
+  const columns = React.useMemo<GridColDef[]>(
     () => [
       {
         field: 'nameAdmin',
@@ -76,7 +76,9 @@ export default function ExtendedSortComparator() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'nameAdmin',

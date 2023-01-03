@@ -1,0 +1,66 @@
+{
+  "props": {
+    "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "ampmInClock": { "type": { "name": "bool" } },
+    "autoFocus": { "type": { "name": "bool" } },
+    "classes": { "type": { "name": "object" } },
+    "components": { "type": { "name": "object" }, "default": "{}" },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
+    "disableFuture": { "type": { "name": "bool" } },
+    "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
+    "disablePast": { "type": { "name": "bool" } },
+    "maxTime": { "type": { "name": "any" } },
+    "minTime": { "type": { "name": "any" } },
+    "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "onChange": { "type": { "name": "func" } },
+    "onViewChange": { "type": { "name": "func" } },
+    "openTo": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      },
+      "default": "'hours'"
+    },
+    "readOnly": { "type": { "name": "bool" } },
+    "shouldDisableTime": { "type": { "name": "func" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "value": { "type": { "name": "any" } },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      }
+    },
+    "views": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'&gt;"
+      },
+      "default": "['hours', 'minutes']"
+    }
+  },
+  "slots": {
+    "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } }
+  },
+  "name": "TimeClock",
+  "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },
+  "spread": false,
+  "forwardsRefTo": "HTMLDivElement",
+  "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimeClock" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "TimeClock" }
+  ]
+}

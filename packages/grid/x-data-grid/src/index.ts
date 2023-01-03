@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridApiCommunity } from './models/api/gridApiCommunity';
 import { GridInitialStateCommunity, GridStateCommunity } from './models/gridStateCommunity';
 
@@ -22,6 +21,15 @@ export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExp
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
 /**
+ * Reexportable components.
+ */
+export {
+  GridColumnMenu,
+  GRID_COLUMN_MENU_COMPONENTS,
+  GRID_COLUMN_MENU_COMPONENTS_PROPS,
+} from './components/reexportable';
+
+/**
  * The full grid API.
  */
 export type GridApi = GridApiCommunity;
@@ -35,8 +43,3 @@ export type GridState = GridStateCommunity;
  * The initial state of `DataGrid`.
  */
 export type GridInitialState = GridInitialStateCommunity;
-
-/**
- * @deprecated Use `React.MutableRefObject<GridApi>` instead
- */
-export type GridApiRef = React.MutableRefObject<GridApiCommunity>;

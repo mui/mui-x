@@ -1,13 +1,11 @@
 import { BasePickerProps } from './basePickerProps';
-import { PickerStaticWrapperProps } from '../../components/PickerStaticWrapper';
+import { ExportedPickerStaticWrapperProps } from '../../components/PickerStaticWrapper';
 
-export type StaticPickerProps<BaseProps extends BasePickerProps<any, any>> = Omit<
+// TODO v6: Drop with the legacy pickers
+export type StaticPickerProps<TDate, BaseProps extends BasePickerProps<any, TDate>> = Omit<
   BaseProps,
   'open' | 'onOpen' | 'onClose'
-> & {
-  /**
-   * Force static wrapper inner components to be rendered in mobile or desktop mode.
-   * @default 'mobile'
-   */
-  displayStaticWrapperAs?: PickerStaticWrapperProps['displayStaticWrapperAs'];
-};
+> &
+  ExportedPickerStaticWrapperProps & {
+    autoFocus?: boolean;
+  };

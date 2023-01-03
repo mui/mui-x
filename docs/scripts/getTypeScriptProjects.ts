@@ -124,14 +124,23 @@ const createProject = (options: CreateProgramOptions): Project => {
  * @param {string[]} files The files from which we want to extract components
  */
 const getComponentPaths =
-  ({ folders = [], files = [] }: { folders?: string[]; files?: string[] }) =>
+  ({
+    folders = [],
+    files = [],
+    includeUnstableComponents = false,
+  }: {
+    folders?: string[];
+    files?: string[];
+    includeUnstableComponents?: boolean;
+  }) =>
   (project: Project) => {
     const paths: string[] = [];
 
     files.forEach((file) => {
       const componentName = path.basename(file).replace('.tsx', '');
       const isExported = !!project.exports[componentName];
-      if (isExported) {
+      const isHook = path.basename(file).startsWith('use');
+      if (isExported && !isHook) {
         paths.push(path.join(project.rootPath, file));
       }
     });
@@ -140,8 +149,11 @@ const getComponentPaths =
       const componentFiles = getComponentFilesInFolder(path.join(project.rootPath, folder));
       componentFiles.forEach((file) => {
         const componentName = path.basename(file).replace('.tsx', '');
-        const isExported = !!project.exports[componentName];
-        if (isExported) {
+        const isExported =
+          !!project.exports[componentName] ||
+          (includeUnstableComponents && !!project.exports[`Unstable_${componentName}`]);
+        const isHook = path.basename(file).startsWith('use');
+        if (isExported && !isHook) {
           paths.push(file);
         }
       });
@@ -231,9 +243,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );
@@ -246,9 +260,11 @@ export const getTypeScriptProjects = () => {
       documentationFolderName: 'date-pickers',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
       getComponentsWithApiDoc: getComponentPaths({
         folders: ['src'],
+        includeUnstableComponents: true,
       }),
     }),
   );

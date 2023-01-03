@@ -1,3 +1,5 @@
+import { GridRowId } from '@mui/x-data-grid';
+import { createSelector } from '@mui/x-data-grid/internals';
 import { GridStatePro } from '../../../models/gridStatePro';
 
 export const gridDetailPanelExpandedRowIdsSelector = (state: GridStatePro) =>
@@ -6,5 +8,15 @@ export const gridDetailPanelExpandedRowIdsSelector = (state: GridStatePro) =>
 export const gridDetailPanelExpandedRowsContentCacheSelector = (state: GridStatePro) =>
   state.detailPanel.contentCache;
 
-export const gridDetailPanelExpandedRowsHeightCacheSelector = (state: GridStatePro) =>
+export const gridDetailPanelRawHeightCacheSelector = (state: GridStatePro) =>
   state.detailPanel.heightCache;
+
+// TODO v6: Make this selector return the full object, including the autoHeight flag
+export const gridDetailPanelExpandedRowsHeightCacheSelector = createSelector(
+  gridDetailPanelRawHeightCacheSelector,
+  (heightCache) =>
+    Object.entries(heightCache).reduce<Record<GridRowId, number>>((acc, [id, { height }]) => {
+      acc[id] = height || 0;
+      return acc;
+    }, {}),
+);

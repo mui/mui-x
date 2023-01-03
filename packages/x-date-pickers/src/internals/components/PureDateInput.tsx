@@ -1,8 +1,8 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { TextFieldProps as MuiTextFieldPropsType } from '@mui/material/TextField';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { InputAdornmentProps } from '@mui/material/InputAdornment';
+import { unstable_useEventCallback as useEventCallback } from '@mui/utils';
 import { onSpaceOrEnter } from '../utils/utils';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
 import { getDisplayDate } from '../utils/text-field-helper';
@@ -12,21 +12,25 @@ import { MuiPickersAdapter } from '../models';
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
 export interface DateInputSlotsComponent {
-  // Icon displaying for open picker button.
-  OpenPickerIcon: React.ElementType;
+  /**
+   * Icon displayed in the open picker button.
+   * @default Calendar or Clock
+   */
+  OpenPickerIcon?: React.ElementType;
 }
 
-export interface DateInputProps<TInputDate, TDate> {
+export interface DateInputProps<TDate> {
   /**
    * Regular expression to detect "accepted" symbols.
    * @default /\dap/gi
    */
   acceptRegex?: RegExp;
+  className?: string;
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: Partial<DateInputSlotsComponent>;
+  components?: DateInputSlotsComponent;
   disabled?: boolean;
   /**
    * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.
@@ -40,13 +44,13 @@ export interface DateInputProps<TInputDate, TDate> {
   disableOpenPicker?: boolean;
   /**
    * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TInputDate, TDate
-   * @param {TInputDate} date The date from which we want to add an aria-text.
+   * @template TDate
+   * @param {TDate | null} date The date from which we want to add an aria-text.
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(utils.date(date), 'fullDate')}`
+   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
    */
-  getOpenDialogAriaText?: (date: TInputDate, utils: MuiPickersAdapter<TDate>) => string;
+  getOpenDialogAriaText?: (date: TDate | null, utils: MuiPickersAdapter<TDate>) => string;
   // ?? TODO when it will be possible to display "empty" date in datepicker use it instead of ignoring invalid inputs.
   ignoreInvalidInputs?: boolean;
   /**
@@ -73,7 +77,7 @@ export interface DateInputProps<TInputDate, TDate> {
    * Props to pass to keyboard adornment button.
    */
   OpenPickerButtonProps?: Partial<IconButtonProps>;
-  rawValue: TInputDate;
+  value: TDate | null;
   readOnly?: boolean;
   /**
    * The `renderInput` prop allows you to customize the rendered input.
@@ -96,24 +100,23 @@ export interface DateInputProps<TInputDate, TDate> {
   validationError?: boolean;
 }
 
-// TODO: Is it TInputDate or TInputValue ?
-export type ExportedDateInputProps<TInputDate, TDate> = Omit<
-  DateInputProps<TInputDate, TDate>,
+export type ExportedDateInputProps<TDate> = Omit<
+  DateInputProps<TDate>,
   | 'inputFormat'
   | 'inputValue'
   | 'onBlur'
   | 'onChange'
   | 'open'
   | 'openPicker'
-  | 'rawValue'
+  | 'value'
   | 'TextFieldProps'
   | 'validationError'
   | 'components'
 >;
 
-// TODO: why is this called "Pure*" when it's not memoized? Does "Pure" mean "readonly"?
-export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate, TDate>(
-  props: DateInputProps<TInputDate, TDate>,
+// TODO v6: Drop with the legacy pickers
+export const PureDateInput = React.forwardRef(function PureDateInput<TDate>(
+  props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
@@ -124,13 +127,14 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     inputRef,
     label,
     openPicker: onOpen,
-    rawValue,
+    value,
     renderInput,
     TextFieldProps = {},
     validationError,
+    className,
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   // The prop can not be deprecated
   // Default is "Choose date, ...", but time pickers override it with "Choose time, ..."
@@ -145,7 +149,12 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     [InputProps],
   );
 
-  const inputValue = getDisplayDate(utils, rawValue, inputFormat);
+  const inputValue = getDisplayDate(utils, value, inputFormat);
+
+  const handleOnClick = useEventCallback((event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    onOpen();
+  });
 
   return renderInput({
     label,
@@ -154,20 +163,19 @@ export const PureDateInput = React.forwardRef(function PureDateInput<TInputDate,
     inputRef,
     error: validationError,
     InputProps: PureDateInputProps,
+    className,
+    // registering `onClick` listener on the root element as well to correctly handle cases where user is clicking on `label`
+    // which has `pointer-events: none` and due to DOM structure the `input` does not catch the click event
+    ...(!props.readOnly && !props.disabled && { onClick: handleOnClick }),
     inputProps: {
       disabled,
       readOnly: true,
       'aria-readonly': true,
-      'aria-label': getOpenDialogAriaText(rawValue, utils),
+      'aria-label': getOpenDialogAriaText(value, utils),
       value: inputValue,
-      ...(!props.readOnly && { onClick: onOpen }),
+      ...(!props.readOnly && { onClick: handleOnClick }),
       onKeyDown: onSpaceOrEnter(onOpen),
     },
     ...TextFieldProps,
   });
 });
-
-PureDateInput.propTypes = {
-  getOpenDialogAriaText: PropTypes.func,
-  renderInput: PropTypes.func.isRequired,
-};

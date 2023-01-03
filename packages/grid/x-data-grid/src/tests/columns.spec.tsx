@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
-import { GridActionsColDef, GridColDef, GridColumns, GridRowParams } from '../models';
+import { GridColDef, GridRowParams } from '../models';
 
-const RenderCellParamsExplicitTyping = () => {
+function RenderCellParamsExplicitTyping() {
   return (
     <DataGrid
       rows={[]}
@@ -44,7 +44,7 @@ const RenderCellParamsExplicitTyping = () => {
         {
           field: 'price6',
           type: 'actions',
-          // @ts-expect-error `price` is expected to be a number because of GridEnrichedCallDef
+          // @ts-expect-error `price` is expected to be a number because of GridColDef
           getActions: (params: GridRowParams<{ price: string }>) => {
             return params.row.price.toUpperCase();
           },
@@ -60,12 +60,12 @@ const RenderCellParamsExplicitTyping = () => {
       ]}
     />
   );
-};
+}
 
-const CellParamsFromRowModel = () => {
+function CellParamsFromRowModel() {
   type PriceRowModel = { price1: number; price2: string };
 
-  const actionColumn: GridActionsColDef<PriceRowModel> = {
+  const actionColumn: GridColDef<PriceRowModel> = {
     field: 'price1',
     type: 'actions',
     getActions: (params) => {
@@ -82,7 +82,7 @@ const CellParamsFromRowModel = () => {
     },
   };
 
-  const columns: GridColumns<PriceRowModel> = [
+  const columns: GridColDef<PriceRowModel>[] = [
     {
       field: 'price1',
       type: 'actions',
@@ -101,14 +101,14 @@ const CellParamsFromRowModel = () => {
   ];
 
   return <DataGrid rows={[]} columns={columns} />;
-};
+}
 
-const CellParamsValue = () => {
+function CellParamsValue() {
   return (
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams) => {
+      onCellClick={(params) => {
         params.value!.toUpperCase();
       }}
       onCellDoubleClick={(params: GridCellParams<number>) => {
@@ -117,9 +117,9 @@ const CellParamsValue = () => {
       }}
     />
   );
-};
+}
 
-const CellParamsRow = () => {
+function CellParamsRow() {
   return (
     <DataGrid
       rows={[]}
@@ -133,9 +133,9 @@ const CellParamsRow = () => {
       }}
     />
   );
-};
+}
 
-const CellParamsFormattedValue = () => {
+function CellParamsFormattedValue() {
   return (
     <DataGrid
       rows={[]}
@@ -149,4 +149,4 @@ const CellParamsFormattedValue = () => {
       }}
     />
   );
-};
+}

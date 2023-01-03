@@ -1,0 +1,11 @@
+<DemoItem label="Uncontrolled field">
+  <MultiInputDateTimeRangeField
+    defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-13T18:30')]}
+  />
+</DemoItem>
+<DemoItem label="Controlled field">
+  <MultiInputDateTimeRangeField
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoItem>

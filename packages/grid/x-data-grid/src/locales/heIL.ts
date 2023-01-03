@@ -28,7 +28,7 @@ const heILGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} מסננים פעילים` : `מסנן אחד פעיל`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'חיפוש...',
+  toolbarQuickFilterPlaceholder: 'חיפוש…',
   toolbarQuickFilterLabel: 'חיפוש',
   toolbarQuickFilterDeleteIconLabel: 'ניקוי',
 
@@ -50,9 +50,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
   filterPanelLinkOperator: 'אופרטור לוגי',
-  filterPanelOperators: 'אופרטור',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',
   filterPanelColumns: 'עמודות',
@@ -82,6 +80,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'תפריט',
   columnMenuShowColumns: 'הצג עמודות',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'סנן',
   columnMenuHideColumn: 'הסתר',
   columnMenuUnsort: 'בטל מיון',
@@ -122,7 +121,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'נעץ משמאל',
   pinToRight: 'נעץ מימין',
-  unpin: 'בטל נעיצה',
+  // unpin: 'Unpin',
 
   // Tree Data
   treeDataGroupingHeaderName: 'קבוצה',
@@ -135,11 +134,20 @@ const heILGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `הפסק לקבץ לפי ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'הרחב',
   collapseDetailPanel: 'כווץ',
 
   // Row reordering text
   rowReorderingHeaderName: 'סידור שורות',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid, heILCore);

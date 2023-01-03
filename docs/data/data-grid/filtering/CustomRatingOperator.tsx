@@ -52,11 +52,7 @@ const ratingOnlyOperators: GridFilterOperator[] = [
     label: 'Above',
     value: 'above',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (
-        !filterItem.columnField ||
-        !filterItem.value ||
-        !filterItem.operatorValue
-      ) {
+      if (!filterItem.field || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
@@ -99,13 +95,14 @@ export default function CustomRatingOperator() {
         initialState={{
           ...data.initialState,
           filter: {
+            ...data.initialState?.filter,
             filterModel: {
               items: [
                 {
                   id: 1,
-                  columnField: 'rating',
+                  field: 'rating',
                   value: '3.5',
-                  operatorValue: 'above',
+                  operator: 'above',
                 },
               ],
             },

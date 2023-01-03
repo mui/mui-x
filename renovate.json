@@ -8,7 +8,7 @@
   "rebaseWhen": "conflicted",
   "ignoreDeps": [],
   "labels": ["dependencies"],
-  "stopUpdatingLabel": "On hold",
+  "stopUpdatingLabel": "on hold",
   "packageRules": [
     {
       "matchDepTypes": ["peerDependencies"],
@@ -70,10 +70,6 @@
       }
     },
     {
-      "groupName": "storybook",
-      "matchPackagePatterns": "@storybook/*"
-    },
-    {
       "groupName": "AG Grid",
       "matchPackagePatterns": "ag-grid-*"
     },
@@ -96,6 +92,14 @@
     {
       "groupName": "Playwright",
       "matchPackagePatterns": ["playwright", "@playwright/test"]
+    },
+    {
+      "matchDepTypes": ["action"],
+      "pinDigests": true
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"]
     }
   ],
   "postUpdateOptions": ["yarnDedupeHighest"],

@@ -107,7 +107,6 @@ export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenera
 };
 
 export const getInitialState = (options: UseDemoDataOptions, columns: GridColDefGenerator[]) => {
-  // TODO v6: Stop using `GridColDef.hide`
   const columnVisibilityModel: GridColumnVisibilityModel = {};
   columns.forEach((col) => {
     if (col.hide) {
@@ -128,7 +127,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
 
-  const getColumns = React.useCallback(() => {
+  const columns = React.useMemo(() => {
     return getColumnsFromOptions({
       dataSet: options.dataSet,
       editable: options.editable,
@@ -138,8 +137,6 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   }, [options.dataSet, options.editable, options.maxColumns, options.visibleFields]);
 
   const [data, setData] = React.useState<DemoTreeDataValue>(() => {
-    const columns = getColumns();
-
     return addTreeDataOptionsToDemoData(
       {
         columns,
@@ -169,10 +166,10 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
 
       let newData: DemoTreeDataValue;
       if (rowLength > 1000) {
-        newData = await getRealGridData(1000, getColumns());
+        newData = await getRealGridData(1000, columns);
         newData = await extrapolateSeed(rowLength, newData);
       } else {
-        newData = await getRealGridData(rowLength, getColumns());
+        newData = await getRealGridData(rowLength, columns);
       }
 
       if (!active) {
@@ -206,7 +203,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
     options.treeData?.groupingField,
     options.treeData?.averageChildren,
     index,
-    getColumns,
+    columns,
   ]);
 
   return {

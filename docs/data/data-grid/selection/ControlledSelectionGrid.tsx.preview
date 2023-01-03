@@ -1,8 +1,0 @@
-<DataGrid
-  checkboxSelection
-  onSelectionModelChange={(newSelectionModel) => {
-    setSelectionModel(newSelectionModel);
-  }}
-  selectionModel={selectionModel}
-  {...data}
-/>

@@ -50,7 +50,7 @@ export default function RowGroupingCustomGroupingColDefCallback() {
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           rowGroupingModel={rowGroupingModel}
           initialState={initialState}
           groupingColDef={(params) => {
@@ -61,7 +61,10 @@ export default function RowGroupingCustomGroupingColDefCallback() {
                 valueFormatter: (valueFormatterParams) => {
                   const rowNode = apiRef.current.getRowNode(valueFormatterParams.id);
 
-                  if (rowNode?.groupingField === 'director') {
+                  if (
+                    rowNode?.type === 'group' &&
+                    rowNode?.groupingField === 'director'
+                  ) {
                     return `by ${rowNode.groupingKey ?? ''}`;
                   }
                   return undefined;

@@ -1,27 +1,35 @@
 import * as React from 'react';
-import { GridApiCommon } from '../../models/api/gridApiCommon';
+import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
-export function useGridApiMethod<Api extends GridApiCommon, T extends Partial<Api>>(
-  apiRef: React.MutableRefObject<Api>,
-  apiMethods: T,
-  // TODO: Remove `apiName
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  apiName: string,
-) {
+type GetPublicApiType<PrivateApi> = PrivateApi extends { getPublicApi: () => infer PublicApi }
+  ? PublicApi
+  : never;
+
+export function useGridApiMethod<
+  PrivateApi extends GridPrivateApiCommon,
+  PublicApi extends GetPublicApiType<PrivateApi>,
+  PrivateOnlyApi extends Omit<PrivateApi, keyof PublicApi>,
+  V extends 'public' | 'private',
+  T extends V extends 'public' ? Partial<PublicApi> : Partial<PrivateOnlyApi>,
+>(privateApiRef: React.MutableRefObject<PrivateApi>, apiMethods: T, visibility: V) {
   const apiMethodsRef = React.useRef(apiMethods);
-  const [apiMethodsNames] = React.useState(Object.keys(apiMethods));
+  const [apiMethodsNames] = React.useState(Object.keys(apiMethods) as Array<keyof T>);
 
   const installMethods = React.useCallback(() => {
-    if (!apiRef.current) {
+    if (!privateApiRef.current) {
       return;
     }
     apiMethodsNames.forEach((methodName) => {
-      if (!apiRef.current.hasOwnProperty(methodName)) {
-        apiRef.current[methodName as keyof GridApiCommon] = (...args: any[]) =>
-          apiMethodsRef.current[methodName as keyof GridApiCommon](...args);
+      if (!privateApiRef.current.hasOwnProperty(methodName)) {
+        privateApiRef.current.register(visibility, {
+          [methodName]: (...args: any[]) => {
+            const fn = apiMethodsRef.current[methodName] as Function;
+            return fn(...args);
+          },
+        });
       }
     });
-  }, [apiMethodsNames, apiRef]);
+  }, [apiMethodsNames, privateApiRef, visibility]);
 
   React.useEffect(() => {
     apiMethodsRef.current = apiMethods;

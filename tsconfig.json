@@ -24,13 +24,9 @@
       "@mui/x-license-pro": ["./packages/x-license-pro/src"],
       "@mui/x-license-pro/*": ["./packages/x-license-pro/src/*"],
       "test/*": ["./test/*"],
-      "packages/storybook/*": ["./packages/storybook/*"] // TODO: Remove, is only used for `packages/storybook/src/hooks/useData` which could be part of `@mui/x-data-generator`
+      "docs/*": ["./node_modules/@mui/monorepo/docs"],
+      "docsx/*": ["./docs/*"]
     }
   },
-  "exclude": [
-    "**/node_modules/!(@mui)/**",
-    "**/.!(storybook)/**/*",
-    "**/build/**/*",
-    "docs/export/**/*"
-  ]
+  "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

@@ -3,29 +3,28 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
-import { DataGrid, DataGridProps, GridRowsProp, GridColumns, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridRowsProp, GridColDef, GridToolbar } from '@mui/x-data-grid';
 import { getColumnHeadersTextContent } from '../../../../../test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 const rows: GridRowsProp = [{ id: 1, idBis: 1 }];
 
-const columns: GridColumns = [{ field: 'id' }, { field: 'idBis' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
-/**
- * TODO v6: Remove deprecated tests
- */
 describe('<DataGridPro /> - Columns Visibility', () => {
   const { render } = createRenderer();
 
-  const TestDataGrid = (
+  function TestDataGrid(
     props: Omit<DataGridProps, 'columns' | 'rows'> &
       Partial<Pick<DataGridProps, 'rows' | 'columns'>>,
-  ) => (
-    <div style={{ width: 300, height: 300 }}>
-      <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
-    </div>
-  );
+  ) {
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={columns} rows={rows} {...props} autoHeight={isJSDOM} />
+      </div>
+    );
+  }
 
   describe('prop: columnVisibilityModel and onColumnVisibilityModelChange', () => {
     it('should allow to set the columnVisibilityModel prop', () => {
@@ -78,7 +77,6 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(onColumnVisibilityModelChange.callCount).to.equal(1);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
         id: false,
-        idBis: true,
       });
     });
 
@@ -105,7 +103,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       });
     });
 
-    it('should call onColumnVisibilityModelChange with the new model when toggling all rows', () => {
+    it('should call onColumnVisibilityModelChange with the new model when toggling all columns', () => {
       const onColumnVisibilityModelChange = spy();
       render(
         <TestDataGrid
@@ -130,6 +128,21 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByText('Show all'));
       expect(onColumnVisibilityModelChange.callCount).to.equal(2);
       expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+    });
+
+    it('should not hide non hideable columns when toggling all columns', () => {
+      render(
+        <TestDataGrid
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Hide all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
   });
 
@@ -206,37 +219,58 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     });
   });
 
-  describe('GridColDef: hide (deprecated)', () => {
-    it('should hide columns with `hide: true`', () => {
-      render(<TestDataGrid columns={[{ field: 'id' }, { field: 'idBis', hide: true }]} />);
+  it('should autofocus the first switch element in columns panel when `autoFocusSearchField` disabled', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            autoFocusSearchField: false,
+          },
+        }}
+      />,
+    );
 
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
 
-    it('should not hide columns with `hide: true` if the model is initialized', () => {
-      render(
-        <TestDataGrid
-          initialState={{
-            columns: {
-              columnVisibilityModel: {},
-            },
-          }}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
+    expect(screen.getByRole('checkbox', { name: columns[0].field })).toHaveFocus();
+  });
 
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
+  it('should hide `Hide all` in columns panel when `disableHideAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableHideAllButton: true,
+          },
+        }}
+      />,
+    );
 
-    it('should not hide columns with `hide: true` if the model is controlled', () => {
-      render(
-        <TestDataGrid
-          columnVisibilityModel={{}}
-          columns={[{ field: 'id' }, { field: 'idBis', hide: true }]}
-        />,
-      );
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Hide all' })).to.equal(null);
+  });
 
-      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'idBis']);
-    });
+  it('should hide `Show all` in columns panel when `disableShowAllButton` is `true`', () => {
+    render(
+      <TestDataGrid
+        components={{
+          Toolbar: GridToolbar,
+        }}
+        componentsProps={{
+          columnsPanel: {
+            disableShowAllButton: true,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+    expect(screen.queryByRole('button', { name: 'Show all' })).to.equal(null);
   });
 });

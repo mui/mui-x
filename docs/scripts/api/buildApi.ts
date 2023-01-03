@@ -1,5 +1,4 @@
 import * as yargs from 'yargs';
-import * as fse from 'fs-extra';
 import path from 'path';
 import buildComponentsDocumentation from './buildComponentsDocumentation';
 import buildInterfacesDocumentation from './buildInterfacesDocumentation';
@@ -9,44 +8,37 @@ import buildGridEventsDocumentation from './buildGridEventsDocumentation';
 import { getTypeScriptProjects } from '../getTypeScriptProjects';
 
 async function run() {
-  const documentationRoots = ['./docs/pages/x/api'];
-
   const projects = getTypeScriptProjects();
 
-  await Promise.all(
-    documentationRoots.map(async (relativeDocumentationRoot) => {
-      const documentationRoot = path.resolve(relativeDocumentationRoot);
-      fse.mkdirSync(documentationRoot, { mode: 0o777, recursive: true });
+  // Create documentation folder if it does not exist
+  const apiPagesFolder = path.resolve('./docs/pages/x/api');
+  const dataFolder = path.resolve('./docs/data');
 
-      const documentedInterfaces = buildInterfacesDocumentation({
-        projects,
-        documentationRoot,
-      });
+  const documentedInterfaces = buildInterfacesDocumentation({
+    projects,
+    apiPagesFolder,
+  });
 
-      await buildComponentsDocumentation({
-        documentationRoot,
-        documentedInterfaces,
-        projects,
-      });
+  await buildComponentsDocumentation({
+    apiPagesFolder,
+    dataFolder,
+    documentedInterfaces,
+    projects,
+  });
 
-      buildGridEventsDocumentation({
-        // TODO: Pass all the projects and add the pro / premium icon for pro-only / premium-only events
-        project: projects.get('x-data-grid-premium')!,
-        documentedInterfaces,
-      });
+  buildGridEventsDocumentation({
+    projects,
+    documentedInterfaces,
+  });
 
-      buildGridSelectorsDocumentation({
-        project: projects.get('x-data-grid-premium')!,
-        documentationRoot,
-      });
+  buildGridSelectorsDocumentation({
+    project: projects.get('x-data-grid-premium')!,
+    apiPagesFolder,
+  });
 
-      buildExportsDocumentation({
-        projects,
-      });
-
-      return Promise.resolve();
-    }),
-  );
+  buildExportsDocumentation({
+    projects,
+  });
 }
 
 yargs

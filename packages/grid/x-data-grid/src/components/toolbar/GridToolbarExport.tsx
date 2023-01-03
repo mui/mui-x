@@ -29,9 +29,9 @@ export interface GridToolbarExportProps extends ButtonProps {
   [key: string]: any;
 }
 
-export const GridCsvExportMenuItem = (props: GridCsvExportMenuItemProps) => {
+export function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   const apiRef = useGridApiContext();
-  const { hideMenu, options } = props;
+  const { hideMenu, options, ...other } = props;
 
   return (
     <MenuItem
@@ -39,15 +39,16 @@ export const GridCsvExportMenuItem = (props: GridCsvExportMenuItemProps) => {
         apiRef.current.exportDataAsCsv(options);
         hideMenu?.();
       }}
+      {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportCSV')}
     </MenuItem>
   );
-};
+}
 
-export const GridPrintExportMenuItem = (props: GridPrintExportMenuItemProps) => {
+export function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   const apiRef = useGridApiContext();
-  const { hideMenu, options } = props;
+  const { hideMenu, options, ...other } = props;
 
   return (
     <MenuItem
@@ -55,11 +56,12 @@ export const GridPrintExportMenuItem = (props: GridPrintExportMenuItemProps) => 
         apiRef.current.exportDataAsPrint(options);
         hideMenu?.();
       }}
+      {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportPrint')}
     </MenuItem>
   );
-};
+}
 
 const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
   function GridToolbarExport(props, ref) {

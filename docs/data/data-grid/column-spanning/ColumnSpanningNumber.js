@@ -3,9 +3,14 @@ import { DataGrid } from '@mui/x-data-grid';
 
 const other = {
   autoHeight: true,
-  showCellRightBorder: true,
-  showColumnRightBorder: true,
+  showCellVerticalBorder: true,
+  showColumnVerticalBorder: true,
 };
+
+const rows = [
+  { id: 1, username: '@MUI', age: 20 },
+  { id: 2, username: '@MUI-X', age: 25 },
+];
 
 export default function ColumnSpanningNumber() {
   return (
@@ -21,10 +26,7 @@ export default function ColumnSpanningNumber() {
           },
           { field: 'age', hideable: false },
         ]}
-        rows={[
-          { id: 1, username: '@MUI', age: 20 },
-          { id: 2, username: '@MUI-X', age: 25 },
-        ]}
+        rows={rows}
         {...other}
       />
     </div>

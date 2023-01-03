@@ -1,3 +1,7 @@
 export * from './gridDetailPanelToggleColDef';
-export * from './gridDetailPanelSelector';
+export {
+  gridDetailPanelExpandedRowIdsSelector,
+  gridDetailPanelExpandedRowsContentCacheSelector,
+  gridDetailPanelExpandedRowsHeightCacheSelector,
+} from './gridDetailPanelSelector';
 export * from './gridDetailPanelInterface';

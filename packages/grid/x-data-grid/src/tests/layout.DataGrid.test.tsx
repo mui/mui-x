@@ -1,23 +1,22 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
-import { SinonStub, stub, spy } from 'sinon';
+import { stub, spy } from 'sinon';
 import { expect } from 'chai';
 import {
   DataGrid,
-  GridValueGetterParams,
   GridToolbar,
   DataGridProps,
   ptBR,
-  GridColumns,
+  GridColDef,
   gridClasses,
 } from '@mui/x-data-grid';
-import { useData } from 'packages/storybook/src/hooks/useData';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getColumnHeaderCell, getColumnValues, getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { clock, render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -37,17 +36,38 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     columns: [{ field: 'brand' }],
   };
 
-  it('should throw an error if rows props is being mutated', () => {
-    expect(() => {
-      // We don't want to freeze baselineProps.rows
-      const rows = [...baselineProps.rows];
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} />
-        </div>,
-      );
-      rows.push({ id: 3, brand: 'Louis Vuitton' });
-    }).to.throw();
+  describe('immutable rows', () => {
+    it('should throw an error if rows props is being mutated', () => {
+      expect(() => {
+        // We don't want to freeze baselineProps.rows
+        const rows = [...baselineProps.rows];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rows={rows} />
+          </div>,
+        );
+        rows.push({ id: 3, brand: 'Louis Vuitton' });
+      }).to.throw();
+    });
+
+    // See https://github.com/mui/mui-x/issues/5411
+    it('should fail silently if not possible to freeze', () => {
+      expect(() => {
+        // For example, MobX
+        // https://github.com/mobxjs/mobx/blob/e60b36c9c78ff9871be1bd324831343c279dd69f/packages/mobx/src/types/observablearray.ts#L115
+        const rows = new Proxy(baselineProps.rows, {
+          preventExtensions() {
+            throw new Error('Freezing is not supported');
+          },
+        });
+
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rows={rows} />
+          </div>,
+        );
+      }).not.to.throw();
+    });
   });
 
   describe('Layout', () => {
@@ -59,22 +79,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should resize the width of the columns', async () => {
-      // Using a fake clock also affects `requestAnimationFrame`.
-      // Calling clock.tick() should call the callback passed, but it doesn't work.
-      stub(window, 'requestAnimationFrame').callsFake((fn: any) => fn());
-      stub(window, 'cancelAnimationFrame');
-
       interface TestCaseProps {
         width?: number;
       }
-      const TestCase = (props: TestCaseProps) => {
+
+      function TestCase(props: TestCaseProps) {
         const { width = 300 } = props;
         return (
           <div style={{ width, height: 300 }}>
             <DataGrid {...baselineProps} />
           </div>
         );
-      };
+      }
 
       const { container, setProps } = render(<TestCase width={300} />);
       let rect;
@@ -87,9 +103,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
-
-      (window.requestAnimationFrame as SinonStub).restore();
-      (window.cancelAnimationFrame as SinonStub).restore();
     });
 
     // Adaptation of describeConformance()
@@ -146,40 +159,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
-      it('should support columns.valueGetter using `getValue` (deprecated)', () => {
-        const columns = [
-          { field: 'id' },
-          { field: 'firstName' },
-          { field: 'lastName' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) =>
-              `${params.getValue(params.id, 'firstName') || ''} ${
-                params.getValue(params.id, 'lastName') || ''
-              }`,
-          },
-        ];
-
-        const rows = [
-          { id: 1, lastName: 'Snow', firstName: 'Jon' },
-          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-        ];
-
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-
-          expect(getColumnValues(3)).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
-        }).toWarnDev(
-          'MUI: You are calling getValue. This method is deprecated and will be removed in the next major version.',
-        );
-      });
-
       it('should support columns.valueGetter using direct row access', () => {
-        const columns: GridColumns = [
+        const columns: GridColDef[] = [
           { field: 'id' },
           { field: 'firstName' },
           { field: 'lastName' },
@@ -203,7 +184,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
-      it('should warn if the container has no intrinsic height', () => {
+      clock.withFakeTimers();
+
+      it('should error if the container has no intrinsic height', () => {
         expect(() => {
           render(
             <div style={{ width: 300, height: 0 }}>
@@ -212,10 +195,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty height.');
+        }).toErrorDev(
+          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty height.',
+        );
       });
 
-      it('should warn if the container has no intrinsic width', () => {
+      it('should error if the container has no intrinsic width', () => {
         expect(() => {
           render(
             <div style={{ width: 0 }}>
@@ -226,40 +211,22 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           );
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-        }).toWarnDev('MUI: useResizeContainer - The parent of the grid has an empty width.');
-      });
-
-      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
-        const rows = [
-          { id: 1, age: 1 },
-          { id: 2, age: 2 },
-        ];
-        const columns = [
-          { field: 'id' },
-          {
-            field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
-          },
-        ];
-        expect(() => {
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid rows={rows} columns={columns} />
-            </div>,
-          );
-        }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
-        expect(getColumnValues(1)).to.deep.equal(['1', '2']);
+        }).toErrorDev(
+          'MUI: useResizeContainer - The parent DOM element of the data grid has an empty width',
+        );
       });
     });
 
     describe('swallow warnings', () => {
+      clock.withFakeTimers();
+
       beforeEach(() => {
-        stub(console, 'warn');
+        stub(console, 'error');
       });
 
       afterEach(() => {
         // @ts-expect-error beforeEach side effect
-        console.warn.restore();
+        console.error.restore();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
@@ -549,29 +516,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(getColumnHeaderCell(2).offsetWidth).to.be.equal(expectedWidth);
       });
 
-      it('should handle hidden columns (deprecated)', () => {
-        const rows = [{ id: 1, firstName: 'Jon' }];
-        const columns = [
-          { field: 'id', headerName: 'ID', flex: 1 },
-          {
-            field: 'firstName',
-            headerName: 'First name',
-            hide: true,
-          },
-        ];
-
-        render(
-          <div style={{ width: 200, height: 300 }}>
-            <DataGrid rows={rows} columns={columns} />
-          </div>,
-        );
-
-        const firstColumn = getColumnHeaderCell(0);
-        expect(firstColumn).toHaveInlineStyle({
-          width: '198px', // because of the 2px border
-        });
-      });
-
       it('should handle hidden columns', () => {
         const rows = [{ id: 1, firstName: 'Jon' }];
         const columns = [
@@ -598,65 +542,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should resize flex: 1 column when setting hide: false on a column to avoid exceeding grid width (deprecated)', () => {
-        const TestCase = (props: DataGridProps) => (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-        );
-
-        const { setProps } = render(
-          <TestCase
-            rows={[
-              {
-                id: 1,
-                first: 'Mike',
-                age: 11,
-              },
-              {
-                id: 2,
-                first: 'Jack',
-                age: 11,
-              },
-              {
-                id: 3,
-                first: 'Mike',
-                age: 20,
-              },
-            ]}
-            columns={[
-              { field: 'id', flex: 1 },
-              { field: 'first', width: 100 },
-              { field: 'age', width: 50, hide: true },
-            ]}
-          />,
-        );
-
-        let firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        expect(firstColumn).toHaveInlineStyle({
-          width: '198px', // because of the 2px border
-        });
-
-        setProps({
-          columns: [
-            { field: 'clientId', flex: 1 },
-            { field: 'first', width: 100 },
-            { field: 'age', width: 50 },
-          ],
-        });
-
-        firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        expect(firstColumn).toHaveInlineStyle({
-          width: '148px', // because of the 2px border
-        });
-      });
-
       it('should resize flex: 1 column when changing columnVisibilityModel to avoid exceeding grid width', () => {
-        const TestCase = (props: DataGridProps) => (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...props} />
-          </div>
-        );
+        function TestCase(props: DataGridProps) {
+          return (
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...props} />
+            </div>
+          );
+        }
 
         const { setProps } = render(
           <TestCase
@@ -702,14 +595,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
 
       it('should be rerender invariant', () => {
-        const Test = () => {
+        function Test() {
           const columns = [{ field: 'id', headerName: 'ID', flex: 1 }];
           return (
             <div style={{ width: 200, height: 300 }}>
               <DataGrid rows={[]} columns={columns} />
             </div>
           );
-        };
+        }
 
         const { setProps } = render(<Test />);
         setProps();
@@ -813,6 +706,18 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
+      it('should render loading overlay the same height as the content', () => {
+        const rowHeight = 30;
+        render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} rowHeight={rowHeight} autoHeight loading />
+          </div>,
+        );
+        expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.clientHeight).to.equal(
+          rowHeight * baselineProps.rows.length,
+        );
+      });
+
       it('should expand content height to one row height when there is an error', () => {
         const error = { message: 'ERROR' };
         const rowHeight = 50;
@@ -845,14 +750,14 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
     // A function test counterpart of ScrollbarOverflowVerticalSnap.
     it('should not have a horizontal scrollbar if not needed', () => {
-      const TestCase = () => {
-        const data = useData(100, 1);
+      function TestCase() {
+        const data = useBasicDemoData(100, 1);
         return (
           <div style={{ width: 500, height: 300 }}>
             <DataGrid {...data} />
           </div>
         );
-      };
+      }
       render(<TestCase />);
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
       // It should not have a horizontal scrollbar
@@ -987,6 +892,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       }).toErrorDev([
         'The data grid component requires all rows to have a unique `id` property',
+        'The data grid component requires all rows to have a unique `id` property',
         'The above error occurred in the <ForwardRef(DataGrid)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
@@ -1111,11 +1017,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
   it('should not render the "no rows" overlay when transitioning the loading prop from false to true', () => {
     const NoRowsOverlay = spy(() => null);
-    const TestCase = (props: Partial<DataGridProps>) => (
-      <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-    );
+    function TestCase(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const { setProps } = render(<TestCase rows={[]} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
@@ -1124,11 +1032,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
     const NoRowsOverlay = spy(() => null);
-    const TestCase = (props: Partial<DataGridProps>) => (
-      <div style={{ width: 300, height: 500 }}>
-        <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
-      </div>
-    );
+    function TestCase(props: Partial<DataGridProps>) {
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} components={{ NoRowsOverlay }} {...props} />
+        </div>
+      );
+    }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
     expect(NoRowsOverlay.callCount).to.equal(0);

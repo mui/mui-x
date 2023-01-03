@@ -28,7 +28,7 @@ const viVNGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} bộ lọc hoạt động` : `${count} bộ lọc hoạt động`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -50,9 +50,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Thêm bộ lọc',
   filterPanelDeleteIconLabel: 'Xóa',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Toán tử',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
   filterPanelColumns: 'Cột',
@@ -82,6 +80,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',
@@ -135,11 +134,20 @@ const viVNGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const viVN: Localization = getGridLocalization(viVNGrid, viVNCore);

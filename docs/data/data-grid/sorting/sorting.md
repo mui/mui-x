@@ -1,7 +1,3 @@
----
-title: Data Grid - Sorting
----
-
 # Data Grid - Sorting
 
 <p class="description">Easily sort your rows based on one or several criteria.</p>
@@ -17,10 +13,10 @@ Following clicks change the column's sorting direction. You can see the applied 
 :::warning
 The `DataGrid` can only sort the rows according to one criterion at a time.
 
-To use multi-sorting, you need to upgrade to the [Pro plan](https://mui.com/store/items/mui-x-pro/).
+To use multi-sorting, you need to upgrade to [Pro plan](/x/introduction/licensing/#pro-plan) or above.
 :::
 
-## Multi-sorting [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Multi-sorting [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The following demo lets you sort the rows according to several criteria at the same time.
 
@@ -35,8 +31,8 @@ Hold down the <kbd class="key">Ctrl</kbd> or <kbd class="key">Shift</kbd> (use <
 The sort model is a list of sorting items.
 Each item represents a sorting rule and is composed of several elements:
 
-- `sortingItem.field`: the field on which we want to apply the rule
-- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule will not be applied.
+- `sortingItem.field`: the field on which the rule applies.
+- `sortingItem.sort`: the direction of the sorting (`'asc'`, `'desc'`, `null` or `undefined`). If `null` or `undefined`, the rule doesn't apply.
 
 ### Initialize the sort model
 
@@ -82,7 +78,7 @@ A comparator determines how two cell values should be sorted.
 Each column type comes with a default comparator method.
 You can re-use them by importing the following functions:
 
-- `gridStringNumberComparator` (used by the `string` and `singleSelect` columns)
+- `gridStringOrNumberComparator` (used by the `string` and `singleSelect` columns)
 - `gridNumberComparator` (used by the `number` and `boolean` columns)
 - `gridDateComparator` (used by the `date` and `date-time` columns)
 
@@ -138,7 +134,7 @@ Sorting can be run server-side by setting the `sortingMode` prop to `server`, an
 
 {{"demo": "ServerSortingGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -146,9 +142,9 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "SortingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors
 
-{{"demo": "SortingSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Sorting"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state)
 
@@ -156,3 +152,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

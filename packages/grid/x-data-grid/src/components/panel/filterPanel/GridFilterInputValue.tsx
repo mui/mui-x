@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
@@ -66,7 +66,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     warnDeprecatedTypeSupport(type as string);
   }
   const filterTimeout = React.useRef<any>();
-  const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
+  const [filterValueState, setFilterValueState] = React.useState<string>(item.value ?? '');
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
   const rootProps = useGridRootProps();
@@ -83,7 +83,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
             ...rootProps.componentsProps?.baseSelect,
           },
           children: renderSingleSelectOptions(
-            apiRef.current.getColumn(item.columnField),
+            apiRef.current.getColumn(item.field),
             apiRef.current,
             isSelectNative ? 'option' : MenuItem,
           ),
@@ -91,11 +91,11 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       : {};
 
   const onFilterChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       let value = event.target.value;
       // NativeSelect casts the value to a string.
       if (type === 'singleSelect') {
-        const column = apiRef.current.getColumn(item.columnField);
+        const column = apiRef.current.getColumn(item.field);
         const columnValueOptions =
           typeof column.valueOptions === 'function'
             ? column.valueOptions({ field: column.field })
@@ -136,8 +136,8 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      type={type || 'text'}
       variant="standard"
+      type={type || 'text'}
       InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
@@ -155,16 +155,18 @@ GridFilterInputValue.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;

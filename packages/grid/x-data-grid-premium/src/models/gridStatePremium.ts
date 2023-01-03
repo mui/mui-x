@@ -2,13 +2,21 @@ import {
   GridInitialState as GridInitialStatePro,
   GridState as GridStatePro,
 } from '@mui/x-data-grid-pro';
-import type { GridRowGroupingState, GridRowGroupingInitialState } from '../hooks';
+import type {
+  GridRowGroupingState,
+  GridRowGroupingInitialState,
+  GridAggregationState,
+  GridAggregationInitialState,
+  GridCellSelectionModel,
+} from '../hooks';
 
 /**
  * The state of `DataGridPremium`.
  */
 export interface GridStatePremium extends GridStatePro {
   rowGrouping: GridRowGroupingState;
+  aggregation: GridAggregationState;
+  cellSelection: GridCellSelectionModel;
 }
 
 /**
@@ -16,4 +24,6 @@ export interface GridStatePremium extends GridStatePro {
  */
 export interface GridInitialStatePremium extends GridInitialStatePro {
   rowGrouping?: GridRowGroupingInitialState;
+  aggregation?: GridAggregationInitialState;
+  cellSelection?: GridCellSelectionModel;
 }

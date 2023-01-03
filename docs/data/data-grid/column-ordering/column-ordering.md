@@ -2,7 +2,7 @@
 title: Data Grid - Column ordering
 ---
 
-# Data Grid - Column ordering [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data Grid - Column ordering [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Drag and drop your columns to reorder them.</p>
 
@@ -10,13 +10,13 @@ By default, columns are ordered according to the order they are included in the 
 
 By default, `DataGridPro` allows all column reordering by dragging the header cells and moving them left or right.
 
-{{"demo": "ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "ColumnOrderingGrid.js", "bg": "inline"}}
 
 To disable reordering on all columns, set the prop `disableColumnReorder={true}`.
 
 To disable reordering in a specific column, set the `disableReorder` property to true in the `GridColDef` of the respective column.
 
-{{"demo": "ColumnOrderingDisabledGrid.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "ColumnOrderingDisabledGrid.js", "bg": "inline"}}
 
 In addition, column reordering emits the following events that can be imported:
 
@@ -29,3 +29,4 @@ In addition, column reordering emits the following events that can be imported:
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

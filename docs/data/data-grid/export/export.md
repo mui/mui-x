@@ -1,7 +1,3 @@
----
-title: Data Grid - Export
----
-
 # Data Grid - Export
 
 <p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
@@ -36,14 +32,16 @@ By default, the export menu displays all the available export formats, according
 
 - [Print](#print-export)
 - [CSV](#csv-export)
-- [Excel](#excel-export) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
-- [Clipboard](#clipboard) [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/) (🚧 Not delivered yet)
+- [Excel](#excel-export) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+- [Clipboard](#clipboard) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan) (🚧 Not delivered yet)
 
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 ```tsx
 <DataGrid componentsProps={{ toolbar: { csvOptions } }} />
+
 // same as
+
 <GridToolbarExport csvOptions={csvOptions} />
 ```
 
@@ -98,7 +96,7 @@ The print export always prints rows in their current state.
 :::
 
 By default, the grid exports the selected rows if there are any.
-If not, it exports all rows (filtered and sorted rows, according to active rules), including the collapsed ones.
+If not, it exports all rows except the footers (filtered and sorted rows, according to active rules), including the collapsed ones.
 
 Alternatively, you can set the `getRowsToExport` function and export any rows you want, as in the following example.
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
@@ -139,7 +137,7 @@ You can provide a [`valueFormatter`](/x/react-data-grid/column-definition/#value
 ### File encoding
 
 You can use `csvOptions` to specify the format of the export, such as the `delimiter` character used to separate fields, the `fileName`, or `utf8WithBom` to prefix the exported file with UTF-8 Byte Order Mark (BOM).
-For more details on these options, please visit the [`csvOptions` api page](/x/api/data-grid/grid-csv-export-options/).
+For more details on these options, please visit the [`csvOptions` API page](/x/api/data-grid/grid-csv-export-options/).
 
 ```jsx
 <GridToolbarExport
@@ -165,9 +163,9 @@ With media query, you have to start your `sx` object with `@media print` key, su
 ```jsx
 <DataGrid
   sx={{
-    "@media print": {
-      ".MuiDataGrid-main": { color: 'rgba(0, 0, 0, 0.87)' }
-    }
+    '@media print': {
+      '.MuiDataGrid-main': { color: 'rgba(0, 0, 0, 0.87)' },
+    },
   }}
   {/* ... */}
 />
@@ -178,7 +176,7 @@ With `pageStyle` option, you can override the main content color with a [more sp
 ```jsx
 <DataGrid
   componentsProps={{
-    GridToolbar: {
+    toolbar: {
       printOptions:{
         pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
       }
@@ -201,18 +199,12 @@ By default, the print export display all the DataGrid. It is possible to remove 
 />
 ```
 
-For more option to customize the print export, please visit the [`printOptions` api page](/x/api/data-grid/grid-print-export-options/).
-
-:::warning
-Due to the fact that the Print export relies on the usage of an `iframe`, there is a limitation around the usage of `X-Frame-Options`.
-
-In order for the Print export to work as expected set `X-Frame-Options: SAMEORIGIN`.
-:::
+For more option to customize the print export, please visit the [`printOptions` API page](/x/api/data-grid/grid-print-export-options/).
 
 ## Custom export format
 
 You can add custom export formats by creating your own export menu.
-To simplify its creation, we export `<GridToolbarExportContainer />` which contains the menu logic.
+To simplify its creation, you can use `<GridToolbarExportContainer />` which contains the menu logic.
 The default `<GridToolbarExport />` is defined as follow:
 
 ```jsx
@@ -229,22 +221,12 @@ The demo below shows how to add a JSON export.
 
 {{"demo": "CustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Excel export [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+## Excel export [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 This feature relies on [exceljs](https://github.com/exceljs/exceljs).
-To install it:
-
-```sh
- // with npm
- npm install exceljs
-
- // with yarn
- yarn add exceljs
-```
-
 The Excel export allows translating columns' type and tree structure of a DataGrid to an Excel file.
 
-Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/components/data-grid/columns/#converting-types) as needed.
+Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'dateTime'` are exported in their corresponding type in Excel. Please ensure the `rows` values have the correct type, you can always [convert them](/x/react-data-grid/column-definition/#converting-types) as needed.
 
 {{"demo": "ExcelExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -252,7 +234,7 @@ Columns with types `'boolean'`, `'number'`, `'singleSelect'`, `'date'`, and `'da
 
 #### Customizing the columns
 
-You can use the property `columnsStyles` to customize the column style.
+You can use the `columnsStyles` property to customize the column style.
 This property accepts an object in which keys are the column field and values an [exceljs style object](https://github.com/exceljs/exceljs#styles).
 
 This can be used to specify value formatting or to add some colors.
@@ -320,7 +302,7 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## 🚧 Clipboard [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -329,7 +311,7 @@ This feature isn't implemented yet. It's coming.
 You will be able to copy and paste items to and from the grid using the system clipboard.
 :::
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef
 
 :::warning
 Only use this API as the last option. Give preference to the props to control the grid.
@@ -343,14 +325,15 @@ Only use this API as the last option. Give preference to the props to control th
 
 {{"demo": "PrintExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
-### Excel [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+### Excel [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 {{"demo": "ExcelExportApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 
-- [csvOptions](/x/api/data-grid/grid-csv-export-options/)
-- [printOptions](/x/api/data-grid/grid-print-export-options/)
-- [excelOptions](/x/api/data-grid/grid-excel-export-options/)
+- [GridCsvExportOptions](/x/api/data-grid/grid-csv-export-options/)
+- [GridPrintExportOptions](/x/api/data-grid/grid-print-export-options/)
+- [GridExcelExportOptions](/x/api/data-grid/grid-excel-export-options/)
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

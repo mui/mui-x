@@ -1,11 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
-import { alpha, styled, Theme } from '@mui/material/styles';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { DAY_MARGIN, useUtils, areDayPropsEqual } from '@mui/x-date-pickers/internals';
+import { alpha, styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useUtils } from '@mui/x-date-pickers/internals';
 import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
@@ -16,7 +15,8 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 
 const releaseInfo = getReleaseInfo();
 
-export interface DateRangePickerDayProps<TDate> extends Omit<PickersDayProps<TDate>, 'classes'> {
+export interface DateRangePickerDayProps<TDate>
+  extends Omit<PickersDayProps<TDate>, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
@@ -34,11 +34,11 @@ export interface DateRangePickerDayProps<TDate> extends Omit<PickersDayProps<TDa
    */
   isPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: boolean;
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: boolean;
   /**
@@ -46,9 +46,9 @@ export interface DateRangePickerDayProps<TDate> extends Omit<PickersDayProps<TDa
    */
   classes?: Partial<DateRangePickerDayClasses>;
   /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
+   * Indicates if the day should be visually selected.
    */
-  sx?: SxProps<Theme>;
+  isVisuallySelected?: boolean;
 }
 
 type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
@@ -105,33 +105,47 @@ const startBorderStyle = {
 const DateRangePickerDayRoot = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'Root',
-  overridesResolver: (props, styles) => styles.root,
+  overridesResolver: (_, styles) => [
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlight}`]:
+        styles.rangeIntervalDayHighlight,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightStart}`]:
+        styles.rangeIntervalDayHighlightStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
+        styles.rangeIntervalDayHighlightEnd,
+    },
+    styles.root,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...startBorderStyle,
-    borderLeftColor: theme.palette.divider,
+    borderLeftColor: (theme.vars || theme).palette.divider,
   },
   [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
     ...endBorderStyle,
-    borderRightColor: theme.palette.divider,
+    borderRightColor: (theme.vars || theme).palette.divider,
   },
   ...(ownerState.isHighlighting &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      color: theme.palette.primary.contrastText,
-      backgroundColor: alpha(theme.palette.primary.light, 0.6),
+      color: (theme.vars || theme).palette.primary.contrastText,
+      backgroundColor: theme.vars
+        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
+        : alpha(theme.palette.primary.light, 0.6),
       '&:first-of-type': startBorderStyle,
       '&:last-of-type': endBorderStyle,
     }),
   ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
     ...startBorderStyle,
     paddingLeft: 0,
-    marginLeft: DAY_MARGIN / 2,
   }),
   ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
     ...endBorderStyle,
     paddingRight: 0,
-    marginRight: DAY_MARGIN / 2,
   }),
 }));
 
@@ -146,21 +160,33 @@ DateRangePickerDayRoot.propTypes = {
 const DateRangePickerDayRangeIntervalPreview = styled('div', {
   name: 'MuiDateRangePickerDay',
   slot: 'RangeIntervalPreview',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: styles.rangeIntervalDayPreview },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewStart}`]:
+        styles.rangeIntervalDayPreviewStart,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalDayPreviewEnd}`]:
+        styles.rangeIntervalDayPreviewEnd,
+    },
+    styles.rangeIntervalPreview,
+  ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
   ...(ownerState.isPreviewing &&
     !ownerState.outsideCurrentMonth && {
       borderRadius: 0,
-      border: `2px dashed ${theme.palette.divider}`,
+      border: `2px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
       ...((ownerState.isStartOfPreviewing || ownerState.isStartOfMonth) && {
-        borderLeftColor: theme.palette.divider,
+        borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
       }),
       ...((ownerState.isEndOfPreviewing || ownerState.isEndOfMonth) && {
-        borderRightColor: theme.palette.divider,
+        borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
       }),
     }),
@@ -174,7 +200,16 @@ DateRangePickerDayRangeIntervalPreview.propTypes = {
   ownerState: PropTypes.object.isRequired,
 } as any;
 
-const DateRangePickerDayDay = styled(PickersDay, { name: 'MuiDateRangePickerDay', slot: 'Day' })<{
+const DateRangePickerDayDay = styled(PickersDay, {
+  name: 'MuiDateRangePickerDay',
+  slot: 'Day',
+  overridesResolver: (_, styles) => [
+    { [`&.${dateRangePickerDayClasses.dayInsideRangeInterval}`]: styles.dayInsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.dayOutsideRangeInterval}`]: styles.dayOutsideRangeInterval },
+    { [`&.${dateRangePickerDayClasses.notSelectedDate}`]: styles.notSelectedDate },
+    styles.day,
+  ],
+})<{
   ownerState: OwnerState;
 }>(({ theme, ownerState }) => ({
   // Required to overlap preview border
@@ -185,15 +220,16 @@ const DateRangePickerDayDay = styled(PickersDay, { name: 'MuiDateRangePickerDay'
   ...(!ownerState.selected && {
     backgroundColor: 'transparent',
   }),
-  ...(!ownerState.isHighlighting && {
-    '&:hover': {
-      border: `1px solid ${theme.palette.grey[500]}`,
-    },
-  }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
     }),
+  ...(ownerState.draggable && {
+    cursor: 'grab',
+  }),
+  ...(ownerState.draggable && {
+    touchAction: 'none',
+  }),
 })) as unknown as <TDate>(
   props: PickersDayProps<TDate> & { ownerState: OwnerState },
 ) => JSX.Element;
@@ -203,9 +239,10 @@ type DateRangePickerDayComponent = <TDate>(
 ) => JSX.Element;
 
 const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate>(
-  props: DateRangePickerDayProps<TDate>,
+  inProps: DateRangePickerDayProps<TDate>,
   ref: React.Ref<HTMLButtonElement>,
 ) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDateRangePickerDay' });
   const {
     className,
     day,
@@ -217,6 +254,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfHighlighting,
     isStartOfPreviewing,
     selected = false,
+    isVisuallySelected,
+    sx,
+    draggable,
     ...other
   } = props;
 
@@ -234,6 +274,7 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     selected,
     isStartOfMonth,
     isEndOfMonth,
+    draggable,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -243,9 +284,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
       data-mui-test={shouldRenderHighlight ? 'DateRangeHighlight' : undefined}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
+      sx={sx}
     >
       <DateRangePickerDayRangeIntervalPreview
-        role="cell"
         data-mui-test={shouldRenderPreview ? 'DateRangePreview' : undefined}
         className={classes.rangeIntervalPreview}
         ownerState={ownerState}
@@ -255,11 +296,12 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           ref={ref}
           disableMargin
           day={day}
-          selected={selected}
+          selected={isVisuallySelected}
           outsideCurrentMonth={outsideCurrentMonth}
           data-mui-test="DateRangePickerDay"
           className={classes.day}
           ownerState={ownerState}
+          draggable={draggable}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>
@@ -272,9 +314,28 @@ DateRangePickerDayRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * A ref for imperative actions.
+   * It currently only supports `focusVisible()` action.
+   */
+  action: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        focusVisible: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  /**
+   * If `true`, the ripples are centered.
+   * They won't start at the cursor interaction position.
+   * @default false
+   */
+  centerRipple: PropTypes.bool,
+  /**
    * Override or extend the styles applied to the component.
    */
   classes: PropTypes.object,
+  className: PropTypes.string,
   /**
    * The date to show.
    */
@@ -294,13 +355,40 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   disableMargin: PropTypes.bool,
+  /**
+   * If `true`, the ripple effect is disabled.
+   *
+   * ⚠️ Without a ripple there is no styling for :focus-visible by default. Be sure
+   * to highlight the element by applying separate styles with the `.Mui-focusVisible` class.
+   * @default false
+   */
+  disableRipple: PropTypes.bool,
+  /**
+   * If `true`, the touch ripple effect is disabled.
+   * @default false
+   */
+  disableTouchRipple: PropTypes.bool,
+  /**
+   * If `true`, the base button will have a keyboard focus ripple.
+   * @default false
+   */
+  focusRipple: PropTypes.bool,
+  /**
+   * This prop can help identify which element has keyboard focus.
+   * The class name will be applied when the element gains the focus through keyboard interaction.
+   * It's a polyfill for the [CSS :focus-visible selector](https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo).
+   * The rationale for using this feature [is explained here](https://github.com/WICG/focus-visible/blob/HEAD/explainer.md).
+   * A [polyfill can be used](https://github.com/WICG/focus-visible) to apply a `focus-visible` class to other components
+   * if needed.
+   */
+  focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
   /**
    * Set to `true` if the `day` is the end of a highlighted date range.
    */
   isEndOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the start of a highlighted date range.
+   * Set to `true` if the `day` is the start of a previewing date range.
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
@@ -316,11 +404,20 @@ DateRangePickerDayRaw.propTypes = {
    */
   isStartOfHighlighting: PropTypes.bool.isRequired,
   /**
-   * Set to `true` if the `day` is the end of a highlighted date range.
+   * Set to `true` if the `day` is the end of a previewing date range.
    */
   isStartOfPreviewing: PropTypes.bool.isRequired,
-  onDayFocus: PropTypes.func,
+  /**
+   * Indicates if the day should be visually selected.
+   */
+  isVisuallySelected: PropTypes.bool,
   onDaySelect: PropTypes.func.isRequired,
+  /**
+   * Callback fired when the component is focused with a keyboard.
+   * We trigger a `onFocus` callback too.
+   */
+  onFocusVisible: PropTypes.func,
+  onMouseEnter: PropTypes.func,
   /**
    * If `true`, day is outside of month and will be hidden.
    */
@@ -335,6 +432,7 @@ DateRangePickerDayRaw.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -344,26 +442,32 @@ DateRangePickerDayRaw.propTypes = {
     PropTypes.object,
   ]),
   /**
+   * @default 0
+   */
+  tabIndex: PropTypes.number,
+  /**
    * If `true`, renders as today date.
    * @default false
    */
   today: PropTypes.bool,
+  /**
+   * Props applied to the `TouchRipple` element.
+   */
+  TouchRippleProps: PropTypes.object,
+  /**
+   * A ref that points to the `TouchRipple` element.
+   */
+  touchRippleRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        pulsate: PropTypes.func.isRequired,
+        start: PropTypes.func.isRequired,
+        stop: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
 } as any;
-
-const propsAreEqual = (
-  prevProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-  nextProps: Readonly<React.PropsWithChildren<DateRangePickerDayProps<any>>>,
-) => {
-  return (
-    prevProps.isHighlighting === nextProps.isHighlighting &&
-    prevProps.isEndOfHighlighting === nextProps.isEndOfHighlighting &&
-    prevProps.isStartOfHighlighting === nextProps.isStartOfHighlighting &&
-    prevProps.isPreviewing === nextProps.isPreviewing &&
-    prevProps.isEndOfPreviewing === nextProps.isEndOfPreviewing &&
-    prevProps.isStartOfPreviewing === nextProps.isStartOfPreviewing &&
-    areDayPropsEqual(prevProps, nextProps)
-  );
-};
 
 /**
  *
@@ -375,7 +479,4 @@ const propsAreEqual = (
  *
  * - [DateRangePickerDay API](https://mui.com/x/api/date-pickers/date-range-picker-day/)
  */
-export const DateRangePickerDay = React.memo(
-  DateRangePickerDayRaw,
-  propsAreEqual,
-) as DateRangePickerDayComponent;
+export const DateRangePickerDay = React.memo(DateRangePickerDayRaw) as DateRangePickerDayComponent;

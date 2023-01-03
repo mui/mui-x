@@ -5,9 +5,10 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   useGridApiContext,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
+  GridRowParams,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -44,7 +45,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
     <Stack
       sx={{
         py: 2,
-        height: 1,
+        height: '100%',
         boxSizing: 'border-box',
         position: 'sticky',
         left: 0,
@@ -83,7 +84,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'email', headerName: 'Email' },
@@ -193,14 +194,14 @@ type Customer = typeof rows[number];
 
 export default function FullWidthDetailPanel() {
   const getDetailPanelContent = React.useCallback(
-    ({ row }) => <DetailPanelContent row={row} />,
+    ({ row }: GridRowParams) => <DetailPanelContent row={row} />,
     [],
   );
 
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 
   return (
-    <Box sx={{ width: 1, height: 400 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}

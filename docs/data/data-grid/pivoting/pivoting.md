@@ -2,7 +2,7 @@
 title: Data Grid - Pivoting
 ---
 
-# Data Grid - Pivoting [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data Grid - Pivoting [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Turn a column values into columns.</p>
 
@@ -18,3 +18,4 @@ Pivoting will allow you to take a columns values and turn them into columns.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

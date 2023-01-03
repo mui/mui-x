@@ -40,7 +40,7 @@ test.describe('DataGrid docs', () => {
       const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("Overview")');
       await anchor.waitFor();
 
-      await expect(anchor).toHaveAttribute('app-drawer-active', '');
+      await expect(anchor).toHaveClass(/app-drawer-active/);
       await expect(anchor).toHaveAttribute('href', `/x/react-data-grid/`);
     });
   });
@@ -52,7 +52,7 @@ test.describe('DataGrid docs', () => {
       const anchor = page.locator('nav[aria-label="documentation"] ul ul a:text-is("DataGrid")');
       await anchor.waitFor();
 
-      await expect(anchor).toHaveAttribute('app-drawer-active', '');
+      await expect(anchor).toHaveClass(/app-drawer-active/);
       await expect(anchor).toHaveAttribute('href', `/x/api/data-grid/data-grid/`);
     });
 
@@ -96,7 +96,7 @@ test.describe('DataGrid docs', () => {
 
   //     await page.type('input#docsearch-input', 'datagrid', { delay: 50 });
 
-  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data Grid - Components")').first();
+  //     const anchor = page.locator('.DocSearch-Hits a:has-text("Data grid - Components")').first();
   //     await anchor.waitFor();
 
   //     await expect(anchor).toHaveAttribute(

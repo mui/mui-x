@@ -1,7 +1,3 @@
----
-title: Data Grid - Styling
----
-
 # Data Grid - Styling
 
 <p class="description">The grid CSS can be easily overwritten.</p>
@@ -11,7 +7,7 @@ title: Data Grid - Styling
 For one-off styles, the `sx` prop can be used.
 It allows to apply simple to complex customizations directly onto the `DataGrid` element.
 The keys accepted can be any CSS property as well as the custom properties provided by MUI.
-For more details, visit the [`sx` prop page](/system/the-sx-prop/).
+For more details, visit the [`sx` prop page](/system/getting-started/the-sx-prop/).
 
 ```tsx
 <DataGrid sx={{ m: 2 }} /> // Sets the margin to 2 times the spacing unit = 16px
@@ -27,7 +23,7 @@ The `GridColDef` type has properties to apply class names and custom CSS on the 
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -45,7 +41,7 @@ const columns: GridColumns = [
 
 ## Styling rows
 
-The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string.
+The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string. Sometimes it might be needed to override the existing rules using higher specificity CSS selectors.
 
 ```tsx
 interface GridRowParams<R extends GridRowModel = GridRowModel> {
@@ -60,14 +56,7 @@ interface GridRowParams<R extends GridRowModel = GridRowModel> {
   /**
    * All grid columns.
    */
-  columns: GridColumns;
-  /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   */
-  getValue: (id: GridRowId, field: string) => any;
+  columns: GridColDef[];
 }
 ```
 
@@ -83,7 +72,7 @@ This property allows to set a CSS class that is applied on every cell of the col
 It can also be a function, which is called with a `GridCellParams` object.
 
 ```tsx
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -121,15 +110,15 @@ You must use `headerAlign` to align the content of the header.
 
 ## Striped rows
 
-The following demo illustrates how the rows of the grid can be stripped.
+You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
+
+The following demo illustrates how this can be achieved.
 
 {{"demo": "StripedGrid.js", "bg": "inline"}}
 
 ## Custom theme
 
-You can use the `indexRelativeToCurrentPage` param passed to `getRowClassName` to apply alternating styles to the rows.
-
-The following demo illustrates how this can be achieved.
+The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "AntDesignGrid.js", "defaultCodeOpen": false}}
 
@@ -137,3 +126,4 @@ The following demo illustrates how this can be achieved.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

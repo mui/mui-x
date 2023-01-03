@@ -1,36 +1,41 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
+import { spy, stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  waitFor,
+  // @ts-ignore Remove once the test utils are typed
+} from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
   gridClasses,
   GridLinkOperator,
   GridRowsProp,
+  GridApi,
+  useGridApiRef,
 } from '@mui/x-data-grid';
+import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
-import { spy, stub, SinonStub } from 'sinon';
-import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
   const { render } = createRenderer({ clock: 'fake' });
 
-  const BaselineTestCase = (
-    props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number },
-  ) => {
+  function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
 
-    const basicData = useData(20, 2);
+    const basicData = useBasicDemoData(20, 2);
 
     return (
       <div style={{ width: 300, height }}>
         <DataGrid {...basicData} autoHeight={isJSDOM} {...other} />
       </div>
     );
-  };
+  }
 
   describe('prop: page and onPageChange', () => {
     before(function beforeHook() {
@@ -146,7 +151,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should control page state when the prop and the onChange are set', () => {
-      const ControlCase = () => {
+      function ControlCase() {
         const [page, setPage] = React.useState(0);
 
         return (
@@ -157,7 +162,7 @@ describe('<DataGrid /> - Pagination', () => {
             rowsPerPageOptions={[1]}
           />
         );
-      };
+      }
 
       render(<ControlCase />);
 
@@ -170,7 +175,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should go to last page when page is controlled and the current page is greater than the last page', () => {
       const onPageChange = spy();
-      const TestCasePaginationFilteredData = (props: Partial<DataGridProps>) => {
+      function TestCasePaginationFilteredData(props: Partial<DataGridProps>) {
         const [page, setPage] = React.useState(1);
 
         const handlePageChange: DataGridProps['onPageChange'] = (newPage) => {
@@ -187,7 +192,7 @@ describe('<DataGrid /> - Pagination', () => {
             {...props}
           />
         );
-      };
+      }
       const { setProps } = render(<TestCasePaginationFilteredData />);
       expect(onPageChange.callCount).to.equal(0);
 
@@ -196,8 +201,8 @@ describe('<DataGrid /> - Pagination', () => {
           linkOperator: GridLinkOperator.And,
           items: [
             {
-              columnField: 'id',
-              operatorValue: '<=',
+              field: 'id',
+              operator: '<=',
               value: '3',
             },
           ],
@@ -263,6 +268,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should throw if pageSize exceeds 100', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function TestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <BaselineTestCase
+            apiRef={apiRef}
+            pageSize={1}
+            page={0}
+            rowsPerPageOptions={[1, 2, 101]}
+          />
+        );
+      }
+      render(<TestCase />);
+      expect(() => apiRef.current.setPageSize(101)).to.throw(
+        /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
+      );
     });
 
     it('should allow to update both the page and pageSize from the outside at once', () => {
@@ -332,7 +356,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should control pageSize state when the prop and the onChange are set', () => {
-      const ControlCase = () => {
+      function ControlCase() {
         const [pageSize, setPageSize] = React.useState(1);
 
         return (
@@ -343,7 +367,7 @@ describe('<DataGrid /> - Pagination', () => {
             rowsPerPageOptions={[1, 2, 3]}
           />
         );
-      };
+      }
 
       render(<ControlCase />);
 
@@ -361,6 +385,7 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} rowsPerPageOptions={[25, 50, 100]} />);
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
@@ -371,13 +396,17 @@ describe('<DataGrid /> - Pagination', () => {
         render(<BaselineTestCase pageSize={pageSize} />);
       }).toWarnDev([
         `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`${pageSize}\` is not preset in the \`rowsPerPageOptions\``,
       ]);
     });
 
     it('should display a warning if the default pageSize given as props is not in the prop rowsPerPageOptions', () => {
       expect(() => {
         render(<BaselineTestCase rowsPerPageOptions={[25, 50]} />);
-      }).toWarnDev([`MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``]);
+      }).toWarnDev([
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+        `MUI: The page size \`100\` is not preset in the \`rowsPerPageOptions\``,
+      ]);
     });
 
     it('should update the pageCount state when updating the pageSize prop with a lower value', () => {
@@ -402,19 +431,19 @@ describe('<DataGrid /> - Pagination', () => {
       }
     });
 
-    const TestCaseAutoPageSize = (
+    function TestCaseAutoPageSize(
       props: Omit<DataGridProps, 'rows' | 'columns'> & { height: number; nbRows: number },
-    ) => {
+    ) {
       const { height, nbRows, ...other } = props;
 
-      const data = useData(nbRows, 10);
+      const data = useBasicDemoData(nbRows, 10);
 
       return (
         <div style={{ width: 300, height: props.height }}>
           <DataGrid columns={data.columns} rows={data.rows} autoPageSize {...other} />
         </div>
       );
-    };
+    }
 
     it('should give priority to the controlled pageSize', () => {
       render(<BaselineTestCase autoPageSize pageSize={1} rowsPerPageOptions={[1]} />);
@@ -469,10 +498,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // make sure there is no more pages.
       const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-      expect(nextPageBtn!.getAttribute('disabled')).not.to.equal(
-        null,
-        'next page should be disabled.',
-      );
+      expect(nextPageBtn!).not.to.have.attribute('disabled', 'false'); // next page should be disabled
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
@@ -539,7 +565,7 @@ describe('<DataGrid /> - Pagination', () => {
   });
 
   it('should support server side pagination', () => {
-    const ServerPaginationGrid = () => {
+    function ServerPaginationGrid() {
       const [rows, setRows] = React.useState<GridRowsProp>([]);
       const [page, setPage] = React.useState(0);
 
@@ -582,7 +608,7 @@ describe('<DataGrid /> - Pagination', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<ServerPaginationGrid />);
     expect(getColumnValues(0)).to.deep.equal(['0']);

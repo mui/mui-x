@@ -1,50 +1,20 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
 
 export default function FormPropsDateRangePickers() {
-  const [value, setValue] = React.useState([null, null]);
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={3}>
-        <DateRangePicker
-          disabled
-          startText="disabled start"
-          endText="disabled end"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
-        <DateRangePicker
-          readOnly
-          startText="read-only start"
-          endText="read-only end"
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(startProps, endProps) => (
-            <React.Fragment>
-              <TextField {...startProps} />
-              <Box sx={{ mx: 2 }}> to </Box>
-              <TextField {...endProps} />
-            </React.Fragment>
-          )}
-        />
-      </Stack>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer>
+        <DemoItem label="disabled">
+          <NextDateRangePicker disabled />
+        </DemoItem>
+        <DemoItem label="readOnly">
+          <NextDateRangePicker readOnly />
+        </DemoItem>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

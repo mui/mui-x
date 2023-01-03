@@ -1,0 +1,12 @@
+<DataGridPro
+  {...data}
+  components={{ Toolbar: GridToolbar }}
+  componentsProps={{
+    filterPanel: {
+      filterFormProps: {
+        filterColumns,
+      },
+      getColumnForNewFilter,
+    },
+  }}
+/>

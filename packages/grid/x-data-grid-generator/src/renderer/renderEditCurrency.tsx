@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
-import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import Autocomplete, { autocompleteClasses, AutocompleteProps } from '@mui/material/Autocomplete';
 import InputBase from '@mui/material/InputBase';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
@@ -17,24 +17,25 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
       height: '100%',
     },
   },
-}));
+})) as typeof Autocomplete;
 
 function EditCurrency(props: GridRenderEditCellParams<string>) {
-  const { id, value, api, field } = props;
+  const { id, value, field } = props;
 
-  const handleChange = React.useCallback(
-    (event, newValue) => {
-      api.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
-      if (!event.key) {
-        api.commitCellChange({ id, field });
-        api.setCellMode(id, field, 'view');
-      }
+  const apiRef = useGridApiContext();
+
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<string, false, true, false>['onChange']>
+  >(
+    async (event, newValue) => {
+      await apiRef.current.setEditCellValue({ id, field, value: newValue.toUpperCase() }, event);
+      apiRef.current.stopCellEditMode({ id, field });
     },
-    [api, field, id],
+    [apiRef, field, id],
   );
 
   return (
-    <StyledAutocomplete
+    <StyledAutocomplete<string, false, true, false>
       value={value}
       onChange={handleChange}
       options={CURRENCY_OPTIONS}

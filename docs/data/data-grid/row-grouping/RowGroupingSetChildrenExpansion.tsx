@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
   DataGridPremium,
-  gridVisibleSortedRowIdsSelector,
+  GRID_ROOT_GROUP_ID,
+  GridGroupNode,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
 import { useMovieData } from '@mui/x-data-grid-generator';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 export default function RowGroupingSetChildrenExpansion() {
@@ -22,29 +23,32 @@ export default function RowGroupingSetChildrenExpansion() {
     },
   });
 
-  const toggleSecondRow = () => {
-    const rowIds = gridVisibleSortedRowIdsSelector(apiRef);
+  const toggle2ndGroup = () => {
+    const groups =
+      apiRef.current.getRowNode<GridGroupNode>(GRID_ROOT_GROUP_ID)!.children;
 
-    if (rowIds.length > 1) {
-      const rowId = rowIds[1];
+    if (groups.length > 1) {
+      const groupId = groups[1];
       apiRef.current.setRowChildrenExpansion(
-        rowId,
-        !apiRef.current.getRowNode(rowId)?.childrenExpanded,
+        groupId,
+        !apiRef.current.getRowNode<GridGroupNode>(groupId)!.childrenExpanded,
       );
     }
   };
 
   return (
-    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
-      <Button onClick={toggleSecondRow}>Toggle 2nd row expansion</Button>
-      <div style={{ height: 400, width: '100%' }}>
+    <Box sx={{ width: '100%' }}>
+      <Button size="small" onClick={toggle2ndGroup}>
+        Toggle 2nd row expansion
+      </Button>
+      <Box sx={{ height: 400, pt: 1 }}>
         <DataGridPremium
           {...data}
           apiRef={apiRef}
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           initialState={initialState}
         />
-      </div>
-    </Stack>
+      </Box>
+    </Box>
   );
 }

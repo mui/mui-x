@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridEventListener, GridEventsStr } from '../../models/events';
+import { GridEventListener, GridEvents } from '../../models/events';
 import { UnregisterToken, CleanupTracking } from '../../utils/cleanupTracking/CleanupTracking';
 import { EventListenerOptions } from '../../utils/EventManager';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
@@ -27,7 +27,7 @@ class ObjectToBeRetainedByReact {}
 export function createUseGridApiEventHandler(registryContainer: RegistryContainer) {
   let cleanupTokensCounter = 0;
 
-  return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEventsStr>(
+  return function useGridApiEventHandler<Api extends GridApiCommon, E extends GridEvents>(
     apiRef: React.MutableRefObject<Api>,
     eventName: E,
     handler?: GridEventListener<E>,
@@ -116,7 +116,7 @@ export const useGridApiEventHandler = createUseGridApiEventHandler(registryConta
 
 const optionsSubscriberOptions: EventListenerOptions = { isFirst: true };
 
-export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEventsStr>(
+export function useGridApiOptionHandler<Api extends GridApiCommon, E extends GridEvents>(
   apiRef: React.MutableRefObject<Api>,
   eventName: E,
   handler?: GridEventListener<E>,

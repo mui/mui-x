@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { useLocaleText, useUtils } from '../hooks/useUtils';
@@ -7,11 +6,13 @@ import { Calendar } from './icons';
 import { useMaskedInput } from '../hooks/useMaskedInput';
 import { DateInputProps } from './PureDateInput';
 
-export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TInputDate, TDate>(
-  props: DateInputProps<TInputDate, TDate>,
+// TODO v6: Drop with the legacy pickers
+export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TDate>(
+  props: DateInputProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
   const {
+    className,
     components = {},
     disableOpenPicker,
     getOpenDialogAriaText: getOpenDialogAriaTextProp,
@@ -24,7 +25,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
     ...other
   } = props;
 
-  const localeText = useLocaleText();
+  const localeText = useLocaleText<TDate>();
 
   const getOpenDialogAriaText = getOpenDialogAriaTextProp ?? localeText.openDatePickerDialogue;
 
@@ -36,6 +37,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
   return renderInput({
     ref,
     inputRef,
+    className,
     ...textFieldProps,
     InputProps: {
       ...InputProps,
@@ -45,7 +47,7 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
             edge={adornmentPosition}
             data-mui-test="open-picker-from-keyboard"
             disabled={other.disabled || other.readOnly}
-            aria-label={getOpenDialogAriaText(other.rawValue, utils)}
+            aria-label={getOpenDialogAriaText(other.value, utils)}
             {...OpenPickerButtonProps}
             onClick={openPicker}
           >
@@ -56,12 +58,3 @@ export const KeyboardDateInput = React.forwardRef(function KeyboardDateInput<TIn
     },
   });
 });
-
-KeyboardDateInput.propTypes = {
-  acceptRegex: PropTypes.instanceOf(RegExp),
-  getOpenDialogAriaText: PropTypes.func,
-  mask: PropTypes.string,
-  OpenPickerButtonProps: PropTypes.object,
-  renderInput: PropTypes.func.isRequired,
-  rifmFormatter: PropTypes.func,
-};

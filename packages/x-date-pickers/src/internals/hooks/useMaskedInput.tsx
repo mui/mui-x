@@ -9,8 +9,8 @@ import {
   getMaskFromCurrentFormat,
 } from '../utils/text-field-helper';
 
-type MaskedInputProps<TInputDate, TDate> = Omit<
-  DateInputProps<TInputDate, TDate>,
+type MaskedInputProps<TDate> = Omit<
+  DateInputProps<TDate>,
   | 'adornmentPosition'
   | 'disableOpenPicker'
   | 'getOpenDialogAriaText'
@@ -22,7 +22,8 @@ type MaskedInputProps<TInputDate, TDate> = Omit<
   | 'renderInput'
 > & { inputProps?: Partial<React.HTMLProps<HTMLInputElement>> };
 
-export const useMaskedInput = <TInputDate, TDate>({
+// TODO v6: Drop with the legacy pickers
+export const useMaskedInput = <TDate extends unknown>({
   acceptRegex = /[\d]/gi,
   disabled,
   disableMaskedInput,
@@ -32,12 +33,12 @@ export const useMaskedInput = <TInputDate, TDate>({
   label,
   mask,
   onChange,
-  rawValue,
+  value,
   readOnly,
   rifmFormatter,
   TextFieldProps,
   validationError,
-}: MaskedInputProps<TInputDate, TDate>): MuiTextFieldProps => {
+}: MaskedInputProps<TDate>): MuiTextFieldProps => {
   const utils = useUtils<TDate>();
 
   const formatHelperText = utils.getFormatHelperText(inputFormat);
@@ -68,23 +69,47 @@ export const useMaskedInput = <TInputDate, TDate>({
     [acceptRegex, maskToUse, shouldUseMaskedInput],
   );
 
-  // TODO: Implement with controlled vs uncontrolled `rawValue`
-  const parsedValue = rawValue === null ? null : utils.date(rawValue);
-
   // Track the value of the input
-  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(parsedValue);
+  const [innerInputValue, setInnerInputValue] = React.useState<TDate | null>(value);
   // control the input text
   const [innerDisplayedInputValue, setInnerDisplayedInputValue] = React.useState<string>(
-    getDisplayDate(utils, rawValue, inputFormat),
+    getDisplayDate(utils, value, inputFormat),
   );
 
-  const isAcceptedValue = rawValue === null || utils.isValid(parsedValue);
-  if (isAcceptedValue && !utils.isEqual(innerInputValue, parsedValue)) {
+  // Inspired from autocomplete: https://github.com/mui/material-ui/blob/2c89d036dc2e16f100528f161600dffc83241768/packages/mui-base/src/AutocompleteUnstyled/useAutocomplete.js#L185:L201
+  const prevValue = React.useRef<TDate | null>(null);
+  const prevLocale = React.useRef<Locale | string>(utils.locale);
+  const prevInputFormat = React.useRef<string>(inputFormat);
+
+  React.useEffect(() => {
+    const valueHasChanged = value !== prevValue.current;
+    const localeHasChanged = utils.locale !== prevLocale.current;
+    const inputFormatHasChanged = inputFormat !== prevInputFormat.current;
+    prevValue.current = value;
+    prevLocale.current = utils.locale;
+    prevInputFormat.current = inputFormat;
+
+    if (!valueHasChanged && !localeHasChanged && !inputFormatHasChanged) {
+      return;
+    }
+
+    const isAcceptedValue = value === null || utils.isValid(value);
+
+    const innerEqualsProvided =
+      innerInputValue === null
+        ? value === null
+        : value !== null && Math.abs(utils.getDiff(innerInputValue, value, 'seconds')) === 0;
+
+    if (!localeHasChanged && !inputFormatHasChanged && (!isAcceptedValue || innerEqualsProvided)) {
+      return;
+    }
+
     // When dev set a new valid value, we trust them
-    const newDisplayDate = getDisplayDate(utils, rawValue, inputFormat);
-    setInnerInputValue(parsedValue);
+    const newDisplayDate = getDisplayDate(utils, value, inputFormat);
+
+    setInnerInputValue(value);
     setInnerDisplayedInputValue(newDisplayDate);
-  }
+  }, [utils, value, inputFormat, innerInputValue]);
 
   const handleChange = (text: string) => {
     const finalString = text === '' || text === mask ? '' : text;

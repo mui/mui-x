@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridSortModel,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -105,7 +105,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',
@@ -124,7 +124,7 @@ export default function TreeDataDisableChildrenSorting() {
   ]);
 
   return (
-    <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
+    <Box sx={{ width: '100%' }}>
       <FormGroup>
         <FormControlLabel
           control={
@@ -140,7 +140,7 @@ export default function TreeDataDisableChildrenSorting() {
           }
         />
       </FormGroup>
-      <div style={{ height: 400, width: '100%' }}>
+      <Box sx={{ height: 400, mt: 1 }}>
         <DataGridPro
           treeData
           rows={rows}
@@ -151,7 +151,7 @@ export default function TreeDataDisableChildrenSorting() {
           onSortModelChange={setSortModel}
           defaultGroupingExpansionDepth={-1}
         />
-      </div>
-    </Stack>
+      </Box>
+    </Box>
   );
 }

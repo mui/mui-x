@@ -1,7 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
-import { capitalize } from '@mui/material/utils';
+import {
+  unstable_composeClasses as composeClasses,
+  unstable_capitalize as capitalize,
+} from '@mui/utils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -59,7 +61,7 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
       className={classes.root}
-      style={{ minHeight: height, opacity: rootProps.showColumnRightBorder ? 0 : 1 }}
+      style={{ minHeight: height, opacity: rootProps.showColumnVerticalBorder ? 0 : 1 }}
       {...other}
       onClick={stopClick}
     >

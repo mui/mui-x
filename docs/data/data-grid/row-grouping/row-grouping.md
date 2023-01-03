@@ -1,32 +1,34 @@
 ---
-title: Data Grid - Row Grouping
+title: Data Grid - Row grouping
 ---
 
-# Data Grid - Row grouping [<span class="plan-premium"></span>](https://mui.com/store/items/mui-x-premium/)
+# Data Grid - Row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 <p class="description">Group your rows according to some column values.</p>
 
 For when you need to group rows based on repeated column values, and/or custom functions.
-In the following example, we're grouping all movies based on their production `company`
+In the following example, movies are grouped based on their production `company`:
 
 {{"demo": "RowGroupingBasicExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Set grouping criteria
+## Grouping criteria
 
 ### Initialize the row grouping
 
 The easiest way to get started with the feature is to provide its model to the `initialState` prop:
 
 ```ts
-initialState={{
+<DataGridPremium
+  initialState={{
     rowGrouping: {
-        model: ['company', 'director'],
-    }
-}}
+      model: ['company', 'director'],
+    },
+  }}
+/>
 ```
 
 The basic parameters are the columns you want to check for repeating values.
-In this example, we want to group all the movies matching the same company name, followed by a second group matching the director's name.
+This example groups all the movies matching the same company name, followed by a second group matching the director's name.
 
 {{"demo": "RowGroupingInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -42,7 +44,7 @@ You can use the `onRowGroupingModelChange` prop to listen to changes to the grou
 ### Single grouping column
 
 By default, the grid will display a single column holding all grouping columns.
-If you have multiple grouping criteria, this column name will be set to "Group".
+If you have multiple grouping criteria, this column name will be set to "Group."
 
 {{"demo": "RowGroupingSingleGroupingCol.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -66,9 +68,34 @@ The callback is called for each grouping column, and it receives the respective 
 
 {{"demo": "RowGroupingCustomGroupingColDefCallback.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Grouping rows with custom cell renderer
+
+By default, when rows are grouped by a column with a custom cell component (`GridColDef['renderCell']`), the same custom cell component is used in the grouping column.
+
+{{"demo": "RowGroupingCustomCell.js", "bg": "inline", "defaultCodeOpen": false}}
+
+You can opt out of this default behavior by returning `params.value` in `renderCell` for grouping rows instead:
+
+```tsx
+const ratingColDef: GridColDef = {
+  // ...
+  renderCell: (params) => {
+    if (params.rowNode.type === 'group') {
+      return params.value;
+    }
+
+    return (
+      // ...
+    );
+  },
+};
+```
+
+{{"demo": "RowGroupingCustomCellDefault.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Show values for the leaves
 
-By default, the grouped rows display no value on their grouping columns' cells. We're calling those cells "leaves".
+By default, the grouped rows display no value on their grouping columns' cells. Those cells are called "leaves."
 
 If you want to display some value, you can provide a `leafField` property to the `groupingColDef`.
 
@@ -83,13 +110,23 @@ Use the `hideDescendantCount` property of the `groupingColDef` to hide the numbe
 ### Hide the grouped columns
 
 By default, the columns used to group the rows remains visible.
-For instance if you group by `"director"`, you will have two columns titled _Director_:
+For instance if you group by `"director"`, you have two columns titled **Director**:
 
 - The grouped column (the column from which you grouped the rows)
 - The grouping column on which you can toggle the groups
 
 To automatically hide the grouped columns, use the `useKeepGroupedColumnsHidden` utility hook.
-The hook will automatically hide the columns when added to the model and show them back when removed from it.
+The hook automatically hides the columns when added to the model, and displays them when removed from it.
+
+:::warning
+This hook is not compatible with the deprecated column property `hide`.
+
+You can manage column visibility with `columnVisibilityModel`, `initialState`, or both together.
+To do so, pass them to the hook parameters.
+:::
+
+Bellow are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+You can mix the two examples to support both at the same time.
 
 ```tsx
 // Usage with the initial state
@@ -123,12 +160,6 @@ const [rowGroupingModel, setRowGroupingModel] = React.useState([
 const initialState = useKeepGroupedColumnsHidden({
   apiRef,
   rowGroupingModel,
-  initialState: {
-    columns: {
-      // Other hidden columns
-      columnVisibilityModel: { gross: false },
-    },
-  },
 });
 
 return (
@@ -141,19 +172,13 @@ return (
 );
 ```
 
-:::warning
-This hook is only compatible with the deprecated column property `hide` or with the controlled `columnVisibilityModel` prop.
-
-You must use the `columnVisibilityModel` in the `initialState` instead.
-:::
-
 {{"demo": "RowGroupingUseKeepGroupedColumnsHidden.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Disable the row grouping
 
 ### For all columns
 
-You can disable row grouping by setting `disableRowGrouping` prop to true.
+You can disable row grouping by setting the `disableRowGrouping` prop to true.
 
 It will disable all the features related to the row grouping, even if a model is provided.
 
@@ -172,7 +197,7 @@ The grouping value has to be either a `string`, a `number`, `null`, or `undefine
 If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
 
 ```ts
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'composer',
     groupingValueGetter: (params) => params.value.name,
@@ -214,6 +239,20 @@ isGroupExpandedByDefault={
 Use the `setRowChildrenExpansion` method on `apiRef` to programmatically set the expansion of a row.
 
 {{"demo": "RowGroupingSetChildrenExpansion.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Customize grouping cell indent
+
+To change the default cell indent you can pass the `offsetMultiplier` prop to the `<GridTreeDataGroupingCell />` component and use it as `groupingColDef.renderCell`:
+
+```tsx
+const groupingColDef = {
+  renderCell: (params) => (
+    <GridTreeDataGroupingCell {...params} offsetMultiplier={4} />
+  ),
+};
+
+<DataGridPremium groupingColDef={groupingColDef} />;
+```
 
 ## Sorting / Filtering
 
@@ -277,11 +316,25 @@ const rows = apiRef.current.getRowGroupChildren({
 
 {{"demo": "RowGroupingGetRowGroupChildren.js", "bg": "inline", "defaultCodeOpen": false}}
 
+## 🚧 Row group panel
+
+:::warning
+This feature isn't implemented yet. It's coming.
+
+👍 Upvote [issue #5235](https://github.com/mui/mui-x/issues/5235) if you want to see it land faster.
+:::
+
+With this panel, your users will be able to control which columns are used for grouping just by dragging them inside the panel.
+
 ## Full example
 
 {{"demo": "RowGroupingFullExample.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Advanced use cases
+
+See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more advanced use cases.
+
+## apiRef
 
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -289,3 +342,4 @@ const rows = apiRef.current.getRowGroupChildren({
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { DataGridPro, GridColumns, DataGridProProps } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomPrice,
@@ -19,7 +19,10 @@ import {
 
 function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   return (
-    <Stack sx={{ py: 2, height: 1, boxSizing: 'border-box' }} direction="column">
+    <Stack
+      sx={{ py: 2, height: '100%', boxSizing: 'border-box' }}
+      direction="column"
+    >
       <Paper sx={{ flex: 1, mx: 'auto', width: '90%', p: 1 }}>
         <Stack direction="column" spacing={1} sx={{ height: 1 }}>
           <Typography variant="h6">{`Order #${rowProp.id}`}</Typography>
@@ -72,7 +75,7 @@ function DetailPanelContent({ row: rowProp }: { row: Customer }) {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'date', type: 'date', headerName: 'Placed at' },
@@ -163,13 +166,14 @@ const rows = [
 type Customer = typeof rows[number];
 
 export default function BasicDetailPanels() {
-  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
-    React.useCallback(({ row }) => <DetailPanelContent row={row} />, []);
+  const getDetailPanelContent = React.useCallback<
+    NonNullable<DataGridProProps['getDetailPanelContent']>
+  >(({ row }) => <DetailPanelContent row={row} />, []);
 
   const getDetailPanelHeight = React.useCallback(() => 400, []);
 
   return (
-    <Box sx={{ width: 1, height: 400 }}>
+    <Box sx={{ width: '100%', height: 400 }}>
       <DataGridPro
         columns={columns}
         rows={rows}

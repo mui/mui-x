@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   useGridLogger,
   useGridApiEventHandler,
@@ -7,13 +7,13 @@ import {
   getDataGridUtilityClass,
   useGridSelector,
   gridSortModelSelector,
-  gridRowTreeDepthSelector,
+  gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
   gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
-import { GridApiPro } from '../../../models/gridApiPro';
+import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes'] };
@@ -33,12 +33,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
  * @requires useGridRows (method)
  */
 export const useGridRowReorder = (
-  apiRef: React.MutableRefObject<GridApiPro>,
+  apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowReordering' | 'onRowOrderChange' | 'classes'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
@@ -80,7 +80,7 @@ export const useGridRowReorder = (
         dragRowNode.current!.classList.remove(classes.rowDragging);
       });
 
-      originRowIndex.current = apiRef.current.getRowIndex(params.id);
+      originRowIndex.current = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
     },
     [isRowReorderDisabled, classes.rowDragging, logger, apiRef],
   );
@@ -91,6 +91,12 @@ export const useGridRowReorder = (
         return;
       }
 
+      const rowNode = apiRef.current.getRowNode(params.id);
+
+      if (!rowNode || rowNode.type === 'footer' || rowNode.type === 'pinnedRow') {
+        return;
+      }
+
       logger.debug(`Dragging over row ${params.id}`);
       event.preventDefault();
       // Prevent drag events propagation.
@@ -98,7 +104,7 @@ export const useGridRowReorder = (
       event.stopPropagation();
 
       if (params.id !== dragRowId) {
-        const targetRowIndex = apiRef.current.getRowIndex(params.id);
+        const targetRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(params.id);
         apiRef.current.setRowIndex(dragRowId, targetRowIndex);
       }
     },
@@ -130,8 +136,8 @@ export const useGridRowReorder = (
       } else {
         // Emit the rowOrderChange event only once when the reordering stops.
         const rowOrderChangeParams: GridRowOrderChangeParams = {
-          row: apiRef.current.getRow(dragRowId),
-          targetIndex: apiRef.current.getRowIndex(params.id),
+          row: apiRef.current.getRow(dragRowId)!,
+          targetIndex: apiRef.current.getRowIndexRelativeToVisibleRows(params.id),
           oldIndex: originRowIndex.current!,
         };
 

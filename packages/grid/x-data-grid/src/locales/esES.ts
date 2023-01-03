@@ -28,7 +28,7 @@ const esESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -50,9 +50,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Agregar filtro',
   filterPanelDeleteIconLabel: 'Borrar',
   // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operadores',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
   filterPanelColumns: 'Columnas',
@@ -82,6 +80,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desordenar',
@@ -137,11 +136,20 @@ const esESGrid: Partial<GridLocaleText> = {
   // unGroupColumn: name => `Stop grouping by ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   // expandDetailPanel: 'Expand',
   // collapseDetailPanel: 'Collapse',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

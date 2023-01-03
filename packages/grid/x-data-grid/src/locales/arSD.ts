@@ -28,7 +28,7 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
+  // toolbarQuickFilterPlaceholder: 'Search…',
   // toolbarQuickFilterLabel: 'Search',
   // toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -50,9 +50,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
   filterPanelLinkOperator: 'عامل منطقي',
-  filterPanelOperators: 'عامل',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'عامل',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',
   filterPanelColumns: 'الأعمدة',
@@ -68,7 +66,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorNot: 'ليس',
   filterOperatorAfter: 'بعد',
   filterOperatorOnOrAfter: 'عند أو بعد',
-  filterOperatorBefore: 'بعد',
+  filterOperatorBefore: 'قبل',
   filterOperatorOnOrBefore: 'عند أو قبل',
   filterOperatorIsEmpty: 'خالي',
   filterOperatorIsNotEmpty: 'غير خالي',
@@ -82,6 +80,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',
@@ -135,11 +134,20 @@ const arSDGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `إيقاف التجميع حسب ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'توسيع',
   collapseDetailPanel: 'طوي',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid, arSDCore);

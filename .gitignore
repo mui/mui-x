@@ -11,7 +11,7 @@ __diff_output__
 /.nyc_output
 /coverage
 /docs/.next
-/docs/pages/playground.tsx
+/docs/pages/playground/
 /docs/export
 /test/regressions/screenshots
 build
@@ -19,3 +19,5 @@ dist
 node_modules
 size-snapshot.json
 performance-snapshot.json
+.github/styles/Google
+.github/styles/write-good

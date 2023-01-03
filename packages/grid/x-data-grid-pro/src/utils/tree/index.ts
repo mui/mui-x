@@ -1,1 +1,1 @@
-export { getGroupRowIdFromPath } from './buildRowTree';
+export { getGroupRowIdFromPath } from './utils';

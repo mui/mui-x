@@ -1,0 +1,13 @@
+<StaticDatePicker
+  onChange={(newValue) => setValue(newValue)}
+  value={value}
+  renderInput={(params) => <TextField {...params} />}
+  components={{
+    ActionBar: CustomActionBar,
+  }}
+  componentsProps={{
+    actionBar: {
+      actions: ['today'],
+    },
+  }}
+/>

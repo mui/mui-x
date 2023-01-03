@@ -9,7 +9,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from '../../../../../test/utils/helperFn';
 
@@ -41,6 +41,11 @@ const FULL_INITIAL_STATE: GridInitialState = {
   rowGrouping: {
     model: ['category'],
   },
+  aggregation: {
+    model: {
+      id: 'size',
+    },
+  },
 };
 
 describe('<DataGridPremium /> - State Persistence', () => {
@@ -48,7 +53,7 @@ describe('<DataGridPremium /> - State Persistence', () => {
 
   let apiRef: React.MutableRefObject<GridApi>;
 
-  const TestCase = (props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) => {
+  function TestCase(props: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'>) {
     apiRef = useGridApiRef();
 
     return (
@@ -66,29 +71,82 @@ describe('<DataGridPremium /> - State Persistence', () => {
         />
       </div>
     );
-  };
+  }
 
   describe('apiRef: exportState', () => {
-    // We always export the `orderedFields`,
-    // If it's something problematic we could introduce an `hasBeenReordered` property and only export if at least one column has been reordered.
-    it('should not return the default values of the models', () => {
+    it('should export the initial values of the models', () => {
+      render(<TestCase initialState={FULL_INITIAL_STATE} />);
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should not export the default values of the models when using exportOnlyDirtyModels', () => {
       render(<TestCase />);
-      expect(apiRef.current.exportState()).to.deep.equal({
+      expect(apiRef.current.exportState({ exportOnlyDirtyModels: true })).to.deep.equal({
         columns: {
           orderedFields: ['id', 'category'],
         },
       });
     });
 
-    it('should export the initial values of the models', () => {
-      render(<TestCase initialState={FULL_INITIAL_STATE} />);
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
-    });
-
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
-      apiRef.current.setRowGroupingModel(['category']);
-      expect(apiRef.current.exportState()).to.deep.equal(FULL_INITIAL_STATE);
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.setAggregationModel({
+          id: 'size',
+        }),
+      );
+
+      const exportedState = apiRef.current.exportState();
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should export the current version of the exportable state when using exportOnlyDirtyModels', () => {
+      render(<TestCase />);
+      act(() => apiRef.current.setRowGroupingModel(['category']));
+      act(() =>
+        apiRef.current.setAggregationModel({
+          id: 'size',
+        }),
+      );
+
+      const exportedState = apiRef.current.exportState({ exportOnlyDirtyModels: true });
+      expect(exportedState.rowGrouping).to.deep.equal(FULL_INITIAL_STATE.rowGrouping);
+      expect(exportedState.aggregation).to.deep.equal(FULL_INITIAL_STATE.aggregation);
+    });
+
+    it('should export the controlled values of the models', () => {
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
+        />,
+      );
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
+      );
+    });
+
+    it('should export the controlled values of the models when using exportOnlyDirtyModels', () => {
+      render(
+        <TestCase
+          rowGroupingModel={FULL_INITIAL_STATE.rowGrouping?.model}
+          aggregationModel={FULL_INITIAL_STATE.aggregation?.model}
+        />,
+      );
+      expect(apiRef.current.exportState().rowGrouping).to.deep.equal(
+        FULL_INITIAL_STATE.rowGrouping,
+      );
+      expect(apiRef.current.exportState().aggregation).to.deep.equal(
+        FULL_INITIAL_STATE.aggregation,
+      );
     });
   });
 
@@ -96,8 +154,29 @@ describe('<DataGridPremium /> - State Persistence', () => {
     it('should restore the whole exportable state', () => {
       render(<TestCase />);
 
-      apiRef.current.restoreState(FULL_INITIAL_STATE);
-      expect(getColumnValues(0)).to.deep.equal(['Cat A (3)', '', '', '', 'Cat B (3)', '', '', '']);
+      act(() => apiRef.current.restoreState(FULL_INITIAL_STATE));
+      expect(getColumnValues(0)).to.deep.equal([
+        'Cat A (3)',
+        '',
+        '',
+        '',
+        'Cat B (3)',
+        '',
+        '',
+        '',
+        '',
+      ]);
+      expect(getColumnValues(1)).to.deep.equal([
+        '3' /* Agg */,
+        '0',
+        '1',
+        '2',
+        '3',
+        '3' /* Agg */,
+        '4',
+        '5',
+        '6' /* Agg */,
+      ]);
     });
   });
 });

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { gridClasses, getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -36,7 +36,8 @@ const GridColumnHeadersInnerRoot = styled('div', {
   ],
 })(() => ({
   display: 'flex',
-  alignItems: 'center',
+  alignItems: 'flex-start',
+  flexDirection: 'column',
   [`&.${gridClasses.columnHeaderDropZone} .${gridClasses.columnHeaderDraggableContainer}`]: {
     cursor: 'move',
   },

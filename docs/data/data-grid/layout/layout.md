@@ -1,19 +1,17 @@
----
-title: Data Grid - Layout
----
-
 # Data Grid - Layout
 
 <p class="description">The data grid offers multiple layout mode.</p>
 
-By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
+:::error
+By default, the grid has **no intrinsic dimensions**. It occupies the space its parent leaves.
+The grid will raise an error in the console if its container has no intrinsic dimensions.
+:::
 
-:::warning
-When using % (**percentage**) for your height or width.
-You need to make sure the container you are putting the grid into also has an intrinsic dimension.
+## Percentage dimensions
+
+When using % (percentage) for your height or width, you need to make sure the container you are putting the grid into also has an intrinsic dimension.
 The browsers fit the element according to a percentage of the parent dimension.
 If the parent has no dimensions, then the % will be zero.
-:::
 
 ## Flex layout
 
@@ -42,3 +40,4 @@ This is not recommended for large datasets as row virtualization will not be abl
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

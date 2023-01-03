@@ -1,16 +1,11 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGridPro /> - Column Spanning', () => {
   const { render } = createRenderer({ clock: 'fake' });
@@ -94,7 +89,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
     it('should work after column reordering', () => {
       let apiRef: React.MutableRefObject<GridApi>;
 
-      const Test = () => {
+      function Test() {
         apiRef = useGridApiRef();
 
         return (
@@ -102,13 +97,13 @@ describe('<DataGridPro /> - Column Spanning', () => {
             <DataGridPro apiRef={apiRef} {...baselineProps} columns={columns} />
           </div>
         );
-      };
+      }
 
       render(<Test />);
 
-      apiRef!.current.setColumnIndex('price', 1);
+      act(() => apiRef!.current.setColumnIndex('price', 1));
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('1-2');
     });
@@ -117,7 +112,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
   it('should recalculate cells after column reordering', () => {
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -135,11 +130,11 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
-    apiRef!.current.setColumnIndex('brand', 1);
+    act(() => apiRef!.current.setColumnIndex('brand', 1));
 
     // Nike row
     expect(() => getCell(0, 0)).to.not.throw();
@@ -198,7 +193,7 @@ describe('<DataGridPro /> - Column Spanning', () => {
 
     let apiRef: React.MutableRefObject<GridApi>;
 
-    const Test = () => {
+    function Test() {
       apiRef = useGridApiRef();
 
       return (
@@ -211,33 +206,35 @@ describe('<DataGridPro /> - Column Spanning', () => {
           />
         </div>
       );
-    };
+    }
 
     render(<Test />);
 
-    apiRef!.current.setRows([
-      {
-        id: 0,
-        brand: 'Adidas',
-        category: 'Shoes',
-        price: '$100',
-        rating: '4.5',
-      },
-      {
-        id: 1,
-        brand: 'Nike',
-        category: 'Shoes',
-        price: '$120',
-        rating: '4.5',
-      },
-      {
-        id: 2,
-        brand: 'Reebok',
-        category: 'Shoes',
-        price: '$90',
-        rating: '4.5',
-      },
-    ]);
+    act(() =>
+      apiRef!.current.setRows([
+        {
+          id: 0,
+          brand: 'Adidas',
+          category: 'Shoes',
+          price: '$100',
+          rating: '4.5',
+        },
+        {
+          id: 1,
+          brand: 'Nike',
+          category: 'Shoes',
+          price: '$120',
+          rating: '4.5',
+        },
+        {
+          id: 2,
+          brand: 'Reebok',
+          category: 'Shoes',
+          price: '$90',
+          rating: '4.5',
+        },
+      ]),
+    );
 
     // Adidas row
     expect(() => getCell(0, 0)).to.not.throw();

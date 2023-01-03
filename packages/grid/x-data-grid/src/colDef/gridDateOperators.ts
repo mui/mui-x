@@ -23,7 +23,7 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<string | number | Date>): boolean => {
     if (!value) {
       return false;
     }
@@ -47,7 +47,7 @@ function buildApplyFilterFn(
 
 export const getGridDateOperators = (
   showTime?: boolean,
-): GridFilterOperator<any, string | number | Date, any>[] => [
+): GridFilterOperator<any, string | Date, any>[] => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem) => {
@@ -108,6 +108,7 @@ export const getGridDateOperators = (
         return value == null;
       };
     },
+    requiresFilterValue: false,
   },
   {
     value: 'isNotEmpty',
@@ -116,5 +117,6 @@ export const getGridDateOperators = (
         return value != null;
       };
     },
+    requiresFilterValue: false,
   },
 ];

@@ -88,8 +88,8 @@ export default function CustomEmptyOverlayGrid() {
         components={{
           NoRowsOverlay: CustomNoRowsOverlay,
         }}
+        {...data}
         rows={[]}
-        columns={data.columns}
       />
     </div>
   );

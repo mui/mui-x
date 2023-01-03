@@ -1,7 +1,3 @@
----
-title: Data Grid - Column definition
----
-
 # Data Grid - Column definition
 
 <p class="description">Define your columns.</p>
@@ -73,7 +69,7 @@ In the following demo, a formatter is used to display the tax rate's decimal val
 
 The value generated is only used for rendering purposes.
 Filtering and sorting do not rely on the formatted value.
-Use the [`valueParser`](/x/react-data-grid/cells/#value-parser) to support filtering.
+Use the [`valueParser`](/x/react-data-grid/editing/#value-parser-and-value-setter) to support filtering.
 
 ## Rendering cells
 
@@ -98,7 +94,6 @@ const columns: GridColDef[] = [
         {params.value.getFullYear()}
         <Button
           variant="contained"
-          color="primary"
           size="small"
           style={{ marginLeft: 16 }}
           tabIndex={params.hasFocus ? 0 : -1}
@@ -131,12 +126,61 @@ You can check the [styling cells](/x/react-data-grid/style/#styling-cells) secti
 Cell content should not be in the tab sequence except if cell is focused.
 You can check the [tab sequence](/x/react-data-grid/accessibility/#tab-sequence) section for more information.
 
+### Using hooks inside a renderer
+
+The `renderCell` property is a function that returns a React node, not a React component.
+
+If you want to use React hooks inside your renderer, you should wrap them inside a component.
+
+```tsx
+// ❌ Not valid
+const column = {
+  // ...other properties,
+  renderCell: () => {
+    const [count, setCount] = React.useState(0);
+
+    return (
+      <Button onClick={() => setCount((prev) => prev + 1)}>{count} click(s)</Button>
+    );
+  },
+};
+
+// ✅ Valid
+const CountButton = () => {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <Button onClick={() => setCount((prev) => prev + 1)}>{count} click(s)</Button>
+  );
+};
+
+const column = {
+  // ...other properties,
+  renderCell: () => <CountButton />,
+};
+```
+
+:::warning
+Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
+The internal state of the component returned by renderCell will be lost.
+
+If you want the cell information to persist, you should save it either in the data grid state or in the data grid parent.
+:::
+
 ### Expand cell renderer
 
 By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
 As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
+
+:::warning
+Because of pagination and virtualization, cells can be unmounted when scrolling or switching pages.
+The internal state of the component returned by `renderCell` will be lost.
+
+If you want to persist cell information, you should save it either in the data grid parent or in the row model.
+Updating the row will rerender the row and so call renderCell with updated params.
+:::
 
 ## Column types
 
@@ -223,19 +267,19 @@ const usdPrice: GridColTypeDef = {
 If an unsupported column type is used, the `string` column type will be used instead.
 :::
 
-## Selectors [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## Selectors
 
 ### Visible columns
 
 Those selectors do not take into account hidden columns.
 
-{{"demo": "VisibleColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Visible Columns"}}
 
 ### Defined columns
 
 Those selectors consider all the defined columns, including hidden ones.
 
-{{"demo": "ColumnsSelectorsNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"component": "modules/components/SelectorsDocs.js", "category": "Columns"}}
 
 More information about the selectors and how to use them on the [dedicated page](/x/react-data-grid/state/#access-the-state).
 
@@ -243,3 +287,4 @@ More information about the selectors and how to use them on the [dedicated page]
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -1,7 +1,3 @@
----
-title: Data Grid - Column visibility
----
-
 # Data Grid - Column visibility
 
 <p class="description">Define which columns are visible.</p>
@@ -53,12 +49,6 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 />
 ```
 
-:::warning
-The grid does not handle switching between controlled and uncontrolled modes.
-
-This edge case will be supported in v6 after the removal of the legacy `hide` field.
-:::
-
 {{"demo": "VisibleColumnsModelControlled.js", "bg": "inline"}}
 
 ## Column visibility panel
@@ -70,18 +60,30 @@ The user can then choose which columns are visible using the _Columns_ button.
 
 {{"demo": "ColumnSelectorGrid.js", "bg": "inline"}}
 
+### Disable action buttons
+
+To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `componentsProps.columnsPanel`.
+
+```tsx
+<DataGrid
+  components={{
+    Toolbar: GridToolbar,
+  }}
+  componentsProps={{
+    columnsPanel: {
+      disableHideAllButton: true,
+      disableShowAllButton: true,
+    },
+  }}
+/>
+```
+
 :::info
 To hide the column visibility panel from the toolbar, set the prop `disableColumnSelector={true}`.
 :::
-
-## Column `hide` property (deprecated)
-
-Before the introduction of the `columnVisibilityModel`, the columns could be hidden by setting the `hide` property in `GridColDef` to `true`.
-This method still works but will be removed on the next major release.
-
-{{"demo": "ColumnHiding.js", "bg": "inline"}}
 
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

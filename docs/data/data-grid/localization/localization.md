@@ -1,10 +1,6 @@
----
-title: Data Grid - Localization
----
-
 # Data Grid - Localization
 
-<p class="description">The Data Grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
+<p class="description">The data grid allows to support users from different locales, with formatting, and localized strings.</p>
 
 The default locale of MUI is English (United States). If you want to use other locales, follow the instructions below.
 
@@ -96,40 +92,23 @@ import { DataGrid, nlNL } from '@mui/x-data-grid';
 
 ### Supported locales
 
-| Locale                  | BCP 47 language tag | Import name |
-| :---------------------- | :------------------ | :---------- |
-| Arabic (Sudan)          | ar-SD               | `arSD`      |
-| Bulgarian               | bg-BG               | `bgBG`      |
-| Czech                   | cs-CZ               | `csCZ`      |
-| Danish                  | da-DK               | `daDK`      |
-| Dutch                   | nl-NL               | `nlNL`      |
-| English (United States) | en-US               | `enUS`      |
-| Finnish                 | fi-FI               | `fiFI`      |
-| French                  | fr-FR               | `frFR`      |
-| German                  | de-DE               | `deDE`      |
-| Greek                   | el-GR               | `elGR`      |
-| Hebrew                  | he-IL               | `heIL`      |
-| Hungarian               | hu-HU               | `huHU`      |
-| Italian                 | it-IT               | `itIT`      |
-| Japanese                | ja-JP               | `jaJP`      |
-| Korean                  | ko-KR               | `koKR`      |
-| Norwegian (Bokmål)      | nb-NO               | `nbNO`      |
-| Persian                 | fa-IR               | `faIR`      |
-| Polish                  | pl-PL               | `plPL`      |
-| Portuguese (Brazil)     | pt-BR               | `ptBR`      |
-| Russian                 | ru-RU               | `ruRU`      |
-| Slovak                  | sk-SK               | `skSK`      |
-| Spanish (Spain)         | es-ES               | `esES`      |
-| Turkish                 | tr-TR               | `trTR`      |
-| Ukraine                 | uk-UA               | `ukUA`      |
-| Simplified Chinese      | zh-CN               | `zhCN`      |
+{{"demo": "DataGridLocalisationTableNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 You can [find the source](https://github.com/mui/mui-x/tree/HEAD/packages/grid/x-data-grid/src/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 Note that these translations of the Data grid component depend on the [Localization strategy](/material-ui/guides/localization/) of the whole library.
 
+## 🚧 RTL Support
+
+:::warning
+RTL is not fully supported in the Data Grid.
+
+👍 Upvote [issue #230](https://github.com/mui/mui-x/issues/230) if that's a requirement in your project.
+:::
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

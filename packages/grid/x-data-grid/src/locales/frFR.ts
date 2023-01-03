@@ -28,7 +28,7 @@ const frFRGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Recherche...',
+  toolbarQuickFilterPlaceholder: 'Recherche…',
   toolbarQuickFilterLabel: 'Recherche',
   toolbarQuickFilterDeleteIconLabel: 'Supprimer',
 
@@ -37,7 +37,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarExportLabel: 'Exporter',
   toolbarExportCSV: 'Télécharger en CSV',
   toolbarExportPrint: 'Imprimer',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Télécharger pour Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -50,9 +50,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Ajouter un filtre',
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLinkOperator: 'Opérateur logique',
-  filterPanelOperators: 'Opérateur',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',
@@ -82,6 +80,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
   columnMenuUnsort: 'Annuler le tri',
@@ -109,10 +108,10 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Sélectionner toutes les lignes',
+  checkboxSelectionUnselectAllRows: 'Désélectionner toutes les lignes',
+  checkboxSelectionSelectRow: 'Sélectionner la ligne',
+  checkboxSelectionUnselectRow: 'Désélectionner la ligne',
 
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
@@ -137,11 +136,20 @@ const frFRGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Arrêter de grouper par ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Afficher/masquer les détails',
+  expandDetailPanel: 'Afficher',
+  collapseDetailPanel: 'Masquer',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Positionnement des lignes',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

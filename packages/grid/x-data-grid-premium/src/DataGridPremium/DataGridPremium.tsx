@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -27,15 +27,15 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useDataGridPremiumProps(inProps);
-  const apiRef = useDataGridPremiumComponent(props.apiRef, props);
+  const privateApiRef = useDataGridPremiumComponent(props.apiRef, props);
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   return (
-    <GridContextProvider apiRef={apiRef} props={props}>
+    <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -64,7 +64,23 @@ DataGridPremiumRaw.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * Aggregation functions available on the grid.
+   * @default GRID_AGGREGATION_FUNCTIONS
+   */
+  aggregationFunctions: PropTypes.object,
+  /**
+   * Set the aggregation model of the grid.
+   */
+  aggregationModel: PropTypes.object,
+  /**
+   * Rows used to generate the aggregated value.
+   * If `filtered`, the aggregated values are generated using only the rows currently passing the filtering process.
+   * If `all`, the aggregated values are generated using all the rows.
+   * @default "filtered"
+   */
+  aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
+  /**
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -118,8 +134,9 @@ DataGridPremiumRaw.propTypes = {
    * @default 3
    */
   columnBuffer: PropTypes.number,
+  columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -161,6 +178,11 @@ DataGridPremiumRaw.propTypes = {
   detailPanelExpandedRowIds: PropTypes.arrayOf(
     PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   ),
+  /**
+   * If `true`, aggregation is disabled.
+   * @default false
+   */
+  disableAggregation: PropTypes.bool,
   /**
    * If `true`, the filtering will only be applied to the top level rows when grouping rows with the `treeData` prop.
    * @default false
@@ -225,7 +247,7 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
-  disableMultipleSelection: PropTypes.bool,
+  disableMultipleRowSelection: PropTypes.bool,
   /**
    * If `true`, the row grouping is disabled.
    * @default false
@@ -235,7 +257,7 @@ DataGridPremiumRaw.propTypes = {
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: PropTypes.bool,
+  disableRowSelectionOnClick: PropTypes.bool,
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -255,12 +277,13 @@ DataGridPremiumRaw.propTypes = {
    */
   error: PropTypes.any,
   /**
-   * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`, then the feature is fully disabled, and neither property nor method calls will have any effect.
    */
   experimentalFeatures: PropTypes.shape({
-    newEditingApi: PropTypes.bool,
-    preventCommitWhileValidating: PropTypes.bool,
+    columnGrouping: PropTypes.bool,
+    lazyLoading: PropTypes.bool,
+    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -282,9 +305,9 @@ DataGridPremiumRaw.propTypes = {
   filterModel: PropTypes.shape({
     items: PropTypes.arrayOf(
       PropTypes.shape({
-        columnField: PropTypes.string.isRequired,
+        field: PropTypes.string.isRequired,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-        operatorValue: PropTypes.string,
+        operator: PropTypes.string.isRequired,
         value: PropTypes.any,
       }),
     ).isRequired,
@@ -292,6 +315,13 @@ DataGridPremiumRaw.propTypes = {
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
+  /**
+   * Determines the position of an aggregated value.
+   * @param {GridGroupNode} groupNode The current group.
+   * @returns {GridAggregationPosition | null} Position of the aggregated value (if `null`, the group isn't aggregated).
+   * @default `(groupNode) => groupNode == null ? 'footer' : 'inline'`
+   */
+  getAggregationPosition: PropTypes.func,
   /**
    * Function that applies CSS classes dynamically on cells.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -307,7 +337,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number} The height in pixels.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
   getDetailPanelHeight: PropTypes.func,
@@ -389,7 +419,7 @@ DataGridPremiumRaw.propTypes = {
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
    * The initial state of the DataGridPremium.
-   * The data in it will be set in the state on initialization but will not be controlled.
+   * The data in it is set in the state on initialization but isn't controlled.
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState: PropTypes.object,
@@ -402,7 +432,7 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
   isGroupExpandedByDefault: PropTypes.func,
@@ -412,6 +442,12 @@ DataGridPremiumRaw.propTypes = {
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: PropTypes.bool,
   /**
    * If `true`, the selection model will retain selected rows that do not exist.
    * Useful when using server side pagination and row selections need to be retained
@@ -440,13 +476,19 @@ DataGridPremiumRaw.propTypes = {
   }),
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default "debug"
+   * @default "error" ("warn" in dev mode)
    */
   logLevel: PropTypes.oneOf(['debug', 'error', 'info', 'warn', false]),
   /**
    * Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
    */
   nonce: PropTypes.string,
+  /**
+   * Callback fired when the row grouping model changes.
+   * @param {GridAggregationModel} model The aggregated columns.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onAggregationModelChange: PropTypes.func,
   /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -461,13 +503,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick: PropTypes.func,
-  /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit: PropTypes.func,
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -557,15 +592,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onColumnResize: PropTypes.func,
   /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange: PropTypes.func,
-  /**
    * Callback fired when the column visibility model changes.
    * @param {GridColumnVisibilityModel} model The new model.
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -585,14 +611,6 @@ DataGridPremiumRaw.propTypes = {
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange: PropTypes.func,
-  /**
    * Callback fired when the `editRowsModel` changes.
    * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
@@ -605,6 +623,13 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onError: PropTypes.func,
+  /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].
@@ -722,18 +747,18 @@ DataGridPremiumRaw.propTypes = {
    */
   onRowOrderChange: PropTypes.func,
   /**
+   * Callback fired when the selection state of one or multiple rows changes.
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onRowSelectionModelChange: PropTypes.func,
+  /**
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param {GridRowScrollEndParams} params With all properties from [[GridRowScrollEndParams]].
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowsScrollEnd: PropTypes.func,
-  /**
-   * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onSelectionModelChange: PropTypes.func,
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
@@ -745,7 +770,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @internal
+   * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
   /**
@@ -779,8 +804,14 @@ DataGridPremiumRaw.propTypes = {
     right: PropTypes.arrayOf(PropTypes.string),
   }),
   /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows: PropTypes.shape({
+    bottom: PropTypes.arrayOf(PropTypes.object),
+    top: PropTypes.arrayOf(PropTypes.object),
+  }),
+  /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
@@ -798,8 +829,8 @@ DataGridPremiumRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * If `single`, all column we are grouping by will be represented in the same grouping the same column.
-   * If `multiple`, each column we are grouping by will be represented in its own column.
+   * If `single`, all the columns that are grouped are represented in the same grid column.
+   * If `multiple`, each column that is grouped is represented in its own grid column.
    * @default 'single'
    */
   rowGroupingColumnMode: PropTypes.oneOf(['multiple', 'single']),
@@ -824,7 +855,27 @@ DataGridPremiumRaw.propTypes = {
   /**
    * Set of rows of type [[GridRowsProp]].
    */
-  rows: PropTypes.array.isRequired,
+  rows: PropTypes.arrayOf(PropTypes.object).isRequired,
+  /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: PropTypes.bool,
+  /**
+   * Sets the row selection model of the grid.
+   */
+  rowSelectionModel: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
+   * * @default "client"
+   */
+  rowsLoadingMode: PropTypes.oneOf(['client', 'server']),
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -850,23 +901,15 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * Set the selection model of the grid.
-   */
-  selectionModel: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired),
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-  /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -907,4 +950,19 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  unstable_cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  unstable_cellSelectionModel: PropTypes.object,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  unstable_onCellSelectionModelChange: PropTypes.func,
 } as any;

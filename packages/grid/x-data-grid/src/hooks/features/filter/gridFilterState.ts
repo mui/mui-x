@@ -1,6 +1,9 @@
-import { GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModel } from '../../../models/gridFilterModel';
 import { GridRowId } from '../../../models/gridRows';
+
+export type GridFilterItemResult = { [key: Required<GridFilterItem>['id']]: boolean };
+export type GridQuickFilterValueResult = { [key: string]: boolean };
 
 export const getDefaultGridFilterModel: () => GridFilterModel = () => ({
   items: [],
@@ -30,7 +33,7 @@ export interface GridFilterState {
   /**
    * Amount of descendants that are passing the filters.
    * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).
-   * For the Row Grouping by Column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).
+   * For the Row grouping by column, it does not include the intermediate depth levels (= amount of descendant of maximum depth).
    * If a row is not registered in this lookup, it is supposed to have no descendant passing the filters.
    */
   filteredDescendantCountLookup: Record<GridRowId, number>;
@@ -46,11 +49,15 @@ export interface GridFilterInitialState {
  */
 export type GridAggregatedFilterItemApplier = (
   rowId: GridRowId,
-  shouldApplyItem?: (columnField: string) => boolean,
-) => boolean;
+  shouldApplyItem?: (field: string) => boolean,
+) => {
+  passingFilterItems: null | GridFilterItemResult;
+  passingQuickFilterValues: null | GridQuickFilterValueResult;
+};
 
 export interface GridFilteringMethodParams {
   isRowMatchingFilters: GridAggregatedFilterItemApplier | null;
+  filterModel: GridFilterModel;
 }
 
 export type GridFilteringMethodValue = Omit<GridFilterState, 'filterModel'>;

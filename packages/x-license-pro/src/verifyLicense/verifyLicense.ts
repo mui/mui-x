@@ -145,7 +145,7 @@ export function verifyLicense({
     }
 
     if (license.expiryTimestamp < pkgTimestamp) {
-      return LicenseStatus.Expired;
+      return LicenseStatus.ExpiredVersion;
     }
   } else if (license.licensingModel === 'subscription') {
     if (license.expiryTimestamp < new Date().getTime()) {
@@ -159,7 +159,7 @@ export function verifyLicense({
   }
 
   if (!acceptedScopes.includes(license.scope)) {
-    return LicenseStatus.Invalid;
+    return LicenseStatus.OutOfScope;
   }
 
   return LicenseStatus.Valid;

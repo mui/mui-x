@@ -13,7 +13,7 @@ import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -25,21 +25,18 @@ import {
 } from '../params';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridInputSelectionModel, GridSelectionModel } from '../gridSelectionModel';
+import { GridInputRowSelectionModel, GridRowSelectionModel } from '../gridRowSelectionModel';
 import { GridInitialStateCommunity } from '../gridStateCommunity';
 import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridColumnGroupingModel } from '../gridColumnGrouping';
 
 export interface GridExperimentalFeatures {
   /**
-   * Will be part of the premium-plan when fully ready.
+   * Enables the column grouping.
    */
-  preventCommitWhileValidating: boolean;
-  /**
-   * Enables the new API for cell editing and row editing.
-   */
-  newEditingApi: boolean;
+  columnGrouping: boolean;
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
    * Only works if NODE_ENV=test.
@@ -72,13 +69,13 @@ export interface DataGridProcessedProps<R extends GridValidRowModel = any>
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
-  | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
-  | 'disableMultipleSelection'
+  | 'disableMultipleRowSelection'
   | 'disableColumnReorder'
   | 'disableColumnResize'
+  | 'keepColumnPositionIfDraggedOutside'
   | 'throttleRowsMs'
   | 'hideFooterRowCount'
   | 'pagination'
@@ -146,6 +143,11 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowBuffer: number;
   /**
+   * If `false`, the row selection mode is disabled.
+   * @default true
+   */
+  rowSelection: boolean;
+  /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3
    */
@@ -194,7 +196,7 @@ export interface DataGridPropsWithDefaultValues {
    * If `true`, multiple selection using the Ctrl or CMD key is disabled.
    * @default false
    */
-  disableMultipleSelection: boolean;
+  disableMultipleRowSelection: boolean;
   /**
    * If `true`, sorting with multiple columns is disabled.
    * @default false
@@ -204,7 +206,7 @@ export interface DataGridPropsWithDefaultValues {
    * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  disableSelectionOnClick: boolean;
+  disableRowSelectionOnClick: boolean;
   /**
    * If `true`, the virtualization is disabled.
    * @default false
@@ -261,7 +263,7 @@ export interface DataGridPropsWithDefaultValues {
   logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   * @default "debug"
+   * @default "error" ("warn" in dev mode)
    */
   logLevel: keyof Logger | false;
   /**
@@ -292,15 +294,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: boolean;
+  showColumnVerticalBorder: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
@@ -329,6 +331,12 @@ export interface DataGridPropsWithDefaultValues {
    * @default false
    */
   disableColumnResize: boolean;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 /**
@@ -337,15 +345,13 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
-   * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @internal
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
    * Signal to the underlying logic what version of the public component API
    * of the data grid is exposed [[GridSignature]].
-   * @internal
+   * @ignore - do not document.
    */
   signature?: string;
   /**
@@ -415,21 +421,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @returns {boolean} A boolean indicating if the cell is selectable.
    */
   isRowSelectable?: (params: GridRowParams<R>) => boolean;
-  /**
-   * Callback fired when the edit cell value changes.
-   * @param {GridEditCellPropsParams} params With all properties from [[GridEditCellPropsParams]].
-   * @param {MuiEvent<React.SyntheticEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated use `preProcessEditCellProps` from the [`GridColDef`](/x/api/data-grid/grid-col-def/)
-   */
-  onEditCellPropsChange?: GridEventListener<'editCellPropsChange'>;
-  /**
-   * Callback fired when the cell changes are committed.
-   * @param {GridCellEditCommitParams} params With all properties from [[GridCellEditCommitParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event that caused this prop to be called.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellEditCommit?: GridEventListener<'cellEditCommit'>;
   /**
    * Callback fired when the cell turns to edit mode.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
@@ -545,15 +536,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnOrderChange?: GridEventListener<'columnOrderChange'>;
   /**
-   * Callback fired when a column visibility changes.
-   * Only works when no `columnVisibilityModel` is provided and if we change the visibility of a single column at a time.
-   * @param {GridColumnVisibilityChangeParams} params With all properties from [[GridColumnVisibilityChangeParams]].
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   * @deprecated Use `onColumnVisibilityModelChange` instead.
-   */
-  onColumnVisibilityChange?: GridEventListener<'columnVisibilityChange'>;
-  /**
    * Callback fired when a row is clicked.
    * Not called if the target clicked is an interactive element added by the built-in columns.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
@@ -580,7 +562,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridState} state The new state.
    * @param {MuiEvent<{}>} event The event object.
    * @param {GridCallbackDetails} details Additional details for this callback.
-   * @internal
+   * @ignore - do not document.
    */
   onStateChange?: GridEventListener<'stateChange'>;
   /**
@@ -678,16 +660,16 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onFilterModelChange?: (model: GridFilterModel, details: GridCallbackDetails<'filter'>) => void;
   /**
-   * Set the selection model of the grid.
+   * Sets the row selection model of the grid.
    */
-  selectionModel?: GridInputSelectionModel;
+  rowSelectionModel?: GridInputRowSelectionModel;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param {GridSelectionModel} selectionModel With all the row ids [[GridSelectionModel]].
+   * @param {GridRowSelectionModel} rowSelectionModel With all the row ids [[GridSelectionModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSelectionModelChange?: (
-    selectionModel: GridSelectionModel,
+  onRowSelectionModelChange?: (
+    rowSelectionModel: GridRowSelectionModel,
     details: GridCallbackDetails,
   ) => void;
   /**
@@ -723,9 +705,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColumns<R>;
+  columns: GridColDef<R>[];
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -761,13 +743,12 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   sx?: SxProps<Theme>;
   /**
-   * Features under development.
+   * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */
   experimentalFeatures?: Partial<GridExperimentalFeatures>;
   /**
    * Callback called before updating a row with new values in the row and cell editing.
-   * Only applied if `props.experimentalFeatures.newEditingApi: true`.
    * @template R
    * @param {R} newRow Row object with the new values.
    * @param {R} oldRow Row object with the old values.
@@ -779,4 +760,5 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {any} error The error thrown.
    */
   onProcessRowUpdateError?: (error: any) => void;
+  columnGroupingModel?: GridColumnGroupingModel;
 }

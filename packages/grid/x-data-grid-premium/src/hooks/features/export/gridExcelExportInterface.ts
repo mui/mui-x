@@ -44,6 +44,11 @@ export interface GridExcelExportOptions extends GridFileExportOptions {
    * Object mapping column field to Exceljs style
    * */
   columnsStyles?: ColumnsStylesInterface;
+  /**
+   * If `true`, the headers of the column groups will be added into the file.
+   * @default true
+   */
+  includeColumnGroupsHeaders?: boolean;
 }
 
 export interface GridToolbarExportProps extends GridToolbarExportPropsCommunity {

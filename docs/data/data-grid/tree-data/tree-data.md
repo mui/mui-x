@@ -2,7 +2,7 @@
 title: Data Grid - Tree data
 ---
 
-# Data Grid - Tree data [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+# Data Grid - Tree data [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">Use Tree data to handle rows with parent / child relationship.</p>
 
@@ -16,7 +16,7 @@ The `getTreeDataPath` function returns an array of strings which represents the 
 //         - Robert
 //         - Karen
 
-const columns: GridColumns = [{ field: 'jobTitle', width: 250 }];
+const columns: GridColDef[] = [{ field: 'jobTitle', width: 250 }];
 
 // Without transformation
 const rows: GridRowsProp = [
@@ -125,7 +125,7 @@ Alternatively, you can achieve a similar behavior by implementing this feature o
 This implementation does not support every feature of the grid but can be a good starting point for large datasets.
 
 The idea is to add a property `descendantCount` on the row and to use it instead of the internal grid state.
-To do so, we need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
+To do so, you need to override both the `renderCell` of the grouping column and to manually open the rows by listening to `rowExpansionChange` event.
 
 {{"demo": "TreeDataLazyLoading.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -137,3 +137,4 @@ To do so, we need to override both the `renderCell` of the grouping column and t
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

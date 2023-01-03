@@ -1,0 +1,8 @@
+<DataGridPro
+  experimentalFeatures={{ columnGrouping: true }}
+  rows={rows}
+  columns={columns}
+  checkboxSelection
+  disableRowSelectionOnClick
+  columnGroupingModel={columnGroupingModel}
+/>

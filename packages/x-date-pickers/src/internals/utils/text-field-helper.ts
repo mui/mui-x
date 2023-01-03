@@ -2,25 +2,17 @@ import { MuiPickersAdapter } from '../models';
 
 export const getDisplayDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  rawValue: any,
+  date: TDate | null,
   inputFormat: string,
 ) => {
-  const date = utils.date(rawValue);
-  const isEmpty = rawValue === null;
-
-  if (isEmpty) {
+  // TODO: should `isValid` narrow `TDate | null` to `NonNullable<TDate>`?
+  // Either we allow `TDate | null` to be valid and guard against calling `formatByString` with `null`.
+  // Or we ensure `formatByString` is callable with `null`.
+  if (date === null || !utils.isValid(date)) {
     return '';
   }
 
-  return utils.isValid(date)
-    ? utils.formatByString(
-        // TODO: should `isValid` narrow `TDate | null` to `NonNullable<TDate>`?
-        // Either we allow `TDate | null` to be valid and guard against calling `formatByString` with `null`.
-        // Or we ensure `formatByString` is callable with `null`.
-        date!,
-        inputFormat,
-      )
-    : '';
+  return utils.formatByString(date!, inputFormat);
 };
 
 const MASK_USER_INPUT_SYMBOL = '_';

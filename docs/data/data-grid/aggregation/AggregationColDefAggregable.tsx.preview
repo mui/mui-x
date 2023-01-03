@@ -1,0 +1,12 @@
+<DataGridPremium
+  rows={data.rows}
+  columns={COLUMNS}
+  initialState={{
+    aggregation: {
+      model: {
+        gross: 'sum',
+        year: 'sum',
+      },
+    },
+  }}
+/>

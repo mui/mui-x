@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
-const GridCustomToolbar = ({ syncState }) => {
+function GridCustomToolbar({ syncState }) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
 
@@ -23,7 +23,6 @@ const GridCustomToolbar = ({ syncState }) => {
       <GridToolbarDensitySelector />
       <Button
         size="small"
-        color="primary"
         startIcon={<rootProps.components.ColumnSelectorIcon />}
         onClick={() => syncState(apiRef.current.exportState())}
         {...rootProps.componentsProps?.baseButton}
@@ -32,7 +31,7 @@ const GridCustomToolbar = ({ syncState }) => {
       </Button>
     </GridToolbarContainer>
   );
-};
+}
 
 GridCustomToolbar.propTypes = {
   syncState: PropTypes.func.isRequired,
@@ -47,7 +46,7 @@ export default function RestoreStateInitialState() {
 
   const [savedState, setSavedState] = React.useState({
     count: 0,
-    initialState: undefined,
+    initialState: data.initialState,
   });
 
   const syncState = React.useCallback((newInitialState) => {
@@ -60,7 +59,7 @@ export default function RestoreStateInitialState() {
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Box sx={{ width: '100%', height: 336, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 336 }}>
         <DataGridPro
           {...data}
           loading={loading}
@@ -68,7 +67,7 @@ export default function RestoreStateInitialState() {
           componentsProps={{ toolbar: { syncState } }}
         />
       </Box>
-      <Box sx={{ width: '100%', height: 300, bgcolor: 'background.paper' }}>
+      <Box sx={{ height: 300 }}>
         <DataGridPro
           {...data}
           loading={loading}

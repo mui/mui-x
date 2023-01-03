@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
 import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
 
@@ -25,11 +25,27 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
+function hasNativeSelection(element: HTMLInputElement) {
+  if (window.getSelection()?.toString() !== '') {
+    return true;
+  }
+
+  if (!element) {
+    return false;
+  }
+
+  if ((element.selectionEnd || 0) - (element.selectionStart || 0) > 0) {
+    return true;
+  }
+
+  return false;
+}
+
 /**
  * @requires useGridCsvExport (method)
  * @requires useGridSelection (method)
  */
-export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity>): void => {
+export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
   const copySelectedRowsToClipboard = React.useCallback<
     GridClipboardApi['unstable_copySelectedRowsToClipboard']
   >(
@@ -65,7 +81,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity
       }
 
       // Do nothing if there's a native selection
-      if (window.getSelection()?.toString() !== '') {
+      if (hasNativeSelection(event.target as HTMLInputElement)) {
         return;
       }
 
@@ -80,5 +96,5 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridApiCommunity
     unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
   };
 
-  useGridApiMethod(apiRef, clipboardApi, 'GridClipboardApi');
+  useGridApiMethod(apiRef, clipboardApi, 'public');
 };

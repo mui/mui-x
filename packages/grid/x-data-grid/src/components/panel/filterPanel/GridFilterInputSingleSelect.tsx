@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
-import { unstable_useId as useId } from '@mui/material/utils';
+import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridColDef } from '../../../models/colDef/gridColDef';
@@ -49,9 +49,12 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
 
-  const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+  const currentColumn = item.field ? apiRef.current.getColumn(item.field) : null;
 
   const currentValueOptions = React.useMemo(() => {
+    if (currentColumn === null) {
+      return undefined;
+    }
     return typeof currentColumn.valueOptions === 'function'
       ? currentColumn.valueOptions({ field: currentColumn.field })
       : currentColumn.valueOptions;
@@ -96,8 +99,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
-      type={type || 'text'}
       variant="standard"
+      type={type || 'text'}
       InputLabelProps={{
         shrink: true,
       }}
@@ -111,7 +114,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       {...rootProps.componentsProps?.baseTextField}
     >
       {renderSingleSelectOptions(
-        apiRef.current.getColumn(item.columnField),
+        apiRef.current.getColumn(item.field),
         apiRef.current,
         isSelectNative ? 'option' : MenuItem,
       )}
@@ -124,16 +127,18 @@ GridFilterInputSingleSelect.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  apiRef: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   applyValue: PropTypes.func.isRequired,
   focusElementRef: PropTypes /* @typescript-to-proptypes-ignore */.oneOfType([
     PropTypes.func,
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
 } as any;

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { unstable_composeClasses as composeClasses } from '@mui/material';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowTreeDepthSelector,
+  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -29,11 +29,11 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-const GridRowReorderCell = (params: GridRenderCellParams) => {
+function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowTreeDepthSelector);
+  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   // eslint-disable-next-line no-underscore-dangle
   const cellValue = params.row.__reorder__ || params.id;
@@ -89,16 +89,23 @@ const GridRowReorderCell = (params: GridRenderCellParams) => {
       }
     : null;
 
+  if (params.rowNode.type === 'footer') {
+    return null;
+  }
+
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <rootProps.components.RowReorderIcon />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );
-};
+}
 
 export { GridRowReorderCell };
 
-export const renderRowReorderCell = (params: GridRenderCellParams) => (
-  <GridRowReorderCell {...params} />
-);
+export const renderRowReorderCell = (params: GridRenderCellParams) => {
+  if (params.rowNode.type === 'footer' || params.rowNode.type === 'pinnedRow') {
+    return null;
+  }
+  return <GridRowReorderCell {...params} />;
+};

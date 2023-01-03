@@ -1,10 +1,33 @@
-import { generateUtilityClasses, generateUtilityClass } from '@mui/material';
+import {
+  unstable_generateUtilityClasses as generateUtilityClasses,
+  unstable_generateUtilityClass as generateUtilityClass,
+} from '@mui/utils';
 
 export interface GridClasses {
   /**
-   * Styles applied to the root element of the cell with type="actions"
+   * Styles applied to the root element of the cell with type="actions".
    */
   actionsCell: string;
+  /**
+   * Styles applied to the root element of the column header when aggregated.
+   */
+  aggregationColumnHeader: string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="left"`.
+   */
+  'aggregationColumnHeader--alignLeft': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="center"`.
+   */
+  'aggregationColumnHeader--alignCenter': string;
+  /**
+   * Styles applied to the root element of the header when aggregation if `headerAlign="right"`.
+   */
+  'aggregationColumnHeader--alignRight': string;
+  /**
+   * Styles applied to the aggregation label in the column header when aggregated.
+   */
+  aggregationColumnHeaderLabel: string;
   /**
    * Styles applied to the root element if `autoHeight={true}`.
    */
@@ -38,6 +61,22 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
+   * Styles applied to the cell element if it is at the top edge of a cell selection range.
+   */
+  'cell--rangeTop': string;
+  /**
+   * Styles applied to the cell element if it is at the bottom edge of a cell selection range.
+   */
+  'cell--rangeBottom': string;
+  /**
+   * Styles applied to the cell element if it is at the left edge of a cell selection range.
+   */
+  'cell--rangeLeft': string;
+  /**
+   * Styles applied to the cell element if it is at the right edge of a cell selection range.
+   */
+  'cell--rangeRight': string;
+  /**
    * Styles applied to the cell element.
    */
   cell: string;
@@ -49,6 +88,10 @@ export interface GridClasses {
    * Styles applied to the cell checkbox element.
    */
   cellCheckbox: string;
+  /**
+   * Styles applied to the skeleton cell element.
+   */
+  cellSkeleton: string;
   /**
    * Styles applied to the selection checkbox element.
    */
@@ -94,6 +137,10 @@ export interface GridClasses {
    */
   columnHeader: string;
   /**
+   * Styles applied to the column group header element.
+   */
+  columnGroupHeader: string;
+  /**
    * Styles applied to the header checkbox cell element.
    */
   columnHeaderCheckbox: string;
@@ -121,6 +168,18 @@ export interface GridClasses {
    * Styles applied to the column header's title excepted buttons.
    */
   columnHeaderTitleContainerContent: string;
+  /**
+   * Styles applied to the column group header cell if not empty.
+   */
+  'columnHeader--filledGroup': string;
+  /**
+   * Styles applied to the empty column group header cell.
+   */
+  'columnHeader--emptyGroup': string;
+  /**
+   * Styles applied to the column group header cell when show column border.
+   */
+  'columnHeader--showColumnBorder': string;
   /**
    * Styles applied to the column headers.
    */
@@ -177,6 +236,10 @@ export interface GridClasses {
    * Styles applied to the detail panel toggle cell element if expanded.
    */
   'detailPanelToggleCell--expanded': string;
+  /**
+   * Styles applied to the root element of the cell inside a footer row.
+   */
+  footerCell: string;
   /**
    * Styles applied to the panel element.
    */
@@ -274,6 +337,14 @@ export interface GridClasses {
    */
   menuList: string;
   /**
+   * Styles applied to the overlay wrapper element.
+   */
+  overlayWrapper: string;
+  /**
+   * Styles applied to the overlay wrapper inner element.
+   */
+  overlayWrapperInner: string;
+  /**
    * Styles applied to the overlay element.
    */
   overlay: string;
@@ -334,6 +405,10 @@ export interface GridClasses {
    */
   'root--densityCompact': string;
   /**
+   * Styles applied to the root element when user selection is disabled.
+   */
+  'root--disableUserSelection': string;
+  /**
    * Styles applied to the row element if the row is editable.
    */
   'row--editable': string;
@@ -353,6 +428,10 @@ export interface GridClasses {
    * Styles applied to the row if it has dynamic row height.
    */
   'row--dynamicHeight': string;
+  /**
+   * Styles applied to the row if its detail panel is open.
+   */
+  'row--detailPanelExpanded': string;
   /**
    * Styles applied to the row element.
    */
@@ -403,11 +482,20 @@ export interface GridClasses {
    */
   toolbarFilterList: string;
   /**
-   * Styles applied to both the cell and the column header if `showColumnRightBorder={true}`.
+   * Styles applied to cells, column header and other elements that have border.
+   * Sets border color only.
    */
-  withBorder: string;
+  withBorderColor: string;
   /**
-   * Styles applied to the root of the grouping cell of the tree data.
+   * Styles applied the cell if `showColumnVerticalBorder={true}`.
+   */
+  'cell--withRightBorder': string;
+  /**
+   * Styles applied the column header if `showColumnVerticalBorder={true}`.
+   */
+  'columnHeader--withRightBorder': string;
+  /**
+   * Styles applied to the root of the grouping column of the tree data.
    */
   treeDataGroupingCell: string;
   /**
@@ -422,6 +510,22 @@ export interface GridClasses {
    * Styles applied to the toggle of the grouping criteria cell
    */
   groupingCriteriaCellToggle: string;
+  /**
+   * Styles applied to the pinned rows container.
+   */
+  pinnedRows: string;
+  /**
+   * Styles applied to the top pinned rows container.
+   */
+  'pinnedRows--top': string;
+  /**
+   * Styles applied to the bottom pinned rows container.
+   */
+  'pinnedRows--bottom': string;
+  /**
+   * Styles applied to pinned rows render zones.
+   */
+  pinnedRowsRenderZone: string;
 }
 
 export type GridClassKey = keyof GridClasses;
@@ -432,6 +536,10 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
+  'aggregationColumnHeader',
+  'aggregationColumnHeader--alignLeft',
+  'aggregationColumnHeader--alignCenter',
+  'aggregationColumnHeader--alignRight',
   'autoHeight',
   'booleanCell',
   'cell--editable',
@@ -440,9 +548,14 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
+  'cell--rangeTop',
+  'cell--rangeBottom',
+  'cell--rangeLeft',
+  'cell--rangeRight',
   'cell',
   'cellContent',
   'cellCheckbox',
+  'cellSkeleton',
   'checkboxInput',
   'columnHeader--alignCenter',
   'columnHeader--alignLeft',
@@ -460,6 +573,10 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'columnHeaderTitle',
   'columnHeaderTitleContainer',
   'columnHeaderTitleContainerContent',
+  'columnGroupHeader',
+  'columnHeader--filledGroup',
+  'columnHeader--emptyGroup',
+  'columnHeader--showColumnBorder',
   'columnHeaders',
   'columnHeadersInner',
   'columnHeadersInner--scrollable',
@@ -474,6 +591,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'detailPanels',
   'detailPanelToggleCell',
   'detailPanelToggleCell--expanded',
+  'footerCell',
   'panel',
   'panelHeader',
   'panelWrapper',
@@ -503,12 +621,14 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'root--densityStandard',
   'root--densityComfortable',
   'root--densityCompact',
+  'root--disableUserSelection',
   'row',
   'row--editable',
   'row--editing',
   'row--lastVisible',
   'row--dragging',
   'row--dynamicHeight',
+  'row--detailPanelExpanded',
   'rowReorderCellPlaceholder',
   'rowCount',
   'rowReorderCellContainer',
@@ -531,9 +651,15 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'pinnedColumnHeaders',
   'pinnedColumnHeaders--left',
   'pinnedColumnHeaders--right',
-  'withBorder',
+  'withBorderColor',
+  'cell--withRightBorder',
+  'columnHeader--withRightBorder',
   'treeDataGroupingCell',
   'treeDataGroupingCellToggle',
   'groupingCriteriaCell',
   'groupingCriteriaCellToggle',
+  'pinnedRows',
+  'pinnedRows--top',
+  'pinnedRows--bottom',
+  'pinnedRowsRenderZone',
 ]);

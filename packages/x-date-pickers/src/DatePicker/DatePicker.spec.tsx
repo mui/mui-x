@@ -4,14 +4,14 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { expectType } from '@mui/types';
 
 // Allows setting date type right with generic JSX syntax
-<DatePicker<Date, Date>
+<DatePicker<Date>
   value={new Date()}
   onChange={(date) => date?.getDate()}
   renderInput={() => <input />}
 />;
 
 // Throws error if passed value is invalid
-<DatePicker<Date, Date>
+<DatePicker<Date>
   // @ts-expect-error Value is invalid
   value={moment()}
   onChange={(date) => date?.getDate()}
@@ -19,30 +19,30 @@ import { expectType } from '@mui/types';
 />;
 
 // Inference from the state
-const InferTest = () => {
-  const [date, setDate] = React.useState<Moment | null>(moment());
+function InferTest() {
+  const [value, setValue] = React.useState<Moment | null>(moment());
 
   return (
     <DatePicker
-      value={date}
-      onChange={(newDate) => setDate(newDate)}
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
       renderInput={() => <input />}
     />
   );
-};
+}
 
-// Allows inferring for side props
+// Allows inferring from side props
 <DatePicker
   value={moment()}
   minDate={moment()}
-  renderDay={(day) => <span> {day.format('D')} </span>}
+  components={{
+    Day: ({ day }) => <span> {day.format('D')} </span>,
+  }}
   onChange={(date) => date?.set({ second: 0 })}
   renderInput={() => <input />}
 />;
 
-// TypeScript can't know the type of the DateAdapter in the React context.
-// So in this case it is expected that type will be the type of `value` as for now.
-// Arguable, this usage doesn't make sense since the component would never reflect the user picked value.
+// Allows inferring from side props
 {
   <DatePicker
     value={null}
@@ -52,7 +52,7 @@ const InferTest = () => {
     renderInput={() => <input />}
   />;
   // workaround
-  <DatePicker<Date, Date | null>
+  <DatePicker<Date>
     value={null}
     onChange={(date) => {
       expectType<Date | null, typeof date>(date);

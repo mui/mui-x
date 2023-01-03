@@ -38,12 +38,18 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
   {
     field: 'avatar',
     headerName: 'Avatar',
-    sortable: false,
     generateData: randomColor,
     renderCell: renderAvatar,
+    valueGetter: (params) =>
+      params.row.name == null || params.row.avatar == null
+        ? null
+        : { name: params.row.name, color: params.row.avatar },
+    sortable: false,
     filterable: false,
+    groupable: false,
+    aggregable: false,
     disableExport: true,
-  },
+  } as GridColDef<any, { color: string; name: string }>,
   {
     field: 'name',
     headerName: 'Name',
@@ -51,6 +57,8 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     dataGeneratorUniquenessEnabled: true,
     width: 120,
     editable: true,
+    groupable: false,
+    aggregable: false,
   },
   {
     field: 'website',
@@ -59,6 +67,8 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     renderCell: renderLink,
     width: 160,
     editable: true,
+    groupable: false,
+    aggregable: false,
   },
   {
     field: 'rating',
@@ -69,6 +79,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     width: 180,
     type: 'number',
     editable: true,
+    availableAggregationFunctions: ['avg', 'min', 'max', 'size'],
   },
   {
     field: 'email',
@@ -154,5 +165,12 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     field: 'salary',
     headerName: 'Salary',
     generateData: () => randomInt(30000, 80000),
+    type: 'number',
+    valueFormatter: ({ value }) => {
+      if (!value || typeof value !== 'number') {
+        return value;
+      }
+      return `${value.toLocaleString()}$`;
+    },
   },
 ];

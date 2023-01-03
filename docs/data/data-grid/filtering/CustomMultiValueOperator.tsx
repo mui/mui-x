@@ -119,9 +119,9 @@ export default function CustomMultiValueOperator() {
     items: [
       {
         id: 1,
-        columnField: 'quantity',
+        field: 'quantity',
         value: [5000, 15000],
-        operatorValue: 'between',
+        operator: 'between',
       },
     ],
   });
@@ -145,7 +145,7 @@ export default function CustomMultiValueOperator() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data.rows}
+        {...data}
         columns={columns}
         filterModel={filterModel}
         onFilterModelChange={(model) => setFilterModel(model)}

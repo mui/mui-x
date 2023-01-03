@@ -1,16 +1,11 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, waitFor, screen, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
-function fireClickEvent(cell: HTMLElement) {
-  fireEvent.mouseUp(cell);
-  fireEvent.click(cell);
-}
 
 describe('<DataGrid /> - Column Spanning', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });
@@ -131,7 +126,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
@@ -145,7 +140,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 2));
+      userEvent.mousePress(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
       fireEvent.keyDown(getCell(0, 2), { key: 'ArrowLeft' });
@@ -159,7 +154,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowUp' });
@@ -173,7 +168,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 3));
+      userEvent.mousePress(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
       fireEvent.keyDown(getCell(1, 3), { key: 'ArrowDown' });
@@ -192,7 +187,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 3));
+      userEvent.mousePress(getCell(0, 3));
       expect(getActiveCell()).to.equal('0-3');
 
       fireEvent.keyDown(getCell(0, 3), { key: 'PageDown' });
@@ -206,14 +201,14 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(2, 1));
+      userEvent.mousePress(getCell(2, 1));
       expect(getActiveCell()).to.equal('2-1');
 
       fireEvent.keyDown(getCell(2, 1), { key: 'PageUp' });
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should move to the cell below when pressing "Enter" after editing', async () => {
+    it('should move to the cell below when pressing "Enter" after editing', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
@@ -226,7 +221,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 3));
+      userEvent.mousePress(getCell(1, 3));
       expect(getActiveCell()).to.equal('1-3');
 
       // start editing
@@ -234,12 +229,10 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       // commit
       fireEvent.keyDown(getCell(1, 3).querySelector('input'), { key: 'Enter' });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('2-2');
-      });
+      expect(getActiveCell()).to.equal('2-2');
     });
 
-    it('should move to the cell on the right when pressing "Tab" after editing', async () => {
+    it('should move to the cell on the right when pressing "Tab" after editing', () => {
       const editableColumns = columns.map((column) => ({ ...column, editable: true }));
       render(
         <div style={{ width: 500, height: 300 }}>
@@ -247,16 +240,14 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       // start editing
       fireEvent.keyDown(getCell(1, 1), { key: 'Enter' });
 
       fireEvent.keyDown(getCell(1, 1).querySelector('input'), { key: 'Tab' });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('1-3');
-      });
+      expect(getActiveCell()).to.equal('1-3');
     });
 
     it('should move to the cell on the left when pressing "Shift+Tab" after editing', async () => {
@@ -267,16 +258,14 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 2));
+      userEvent.mousePress(getCell(0, 2));
       expect(getActiveCell()).to.equal('0-2');
 
       // start editing
       fireEvent.keyDown(getCell(0, 2), { key: 'Enter' });
 
       fireEvent.keyDown(getCell(0, 2).querySelector('input'), { key: 'Tab', shiftKey: true });
-      await waitFor(() => {
-        expect(getActiveCell()).to.equal('0-0');
-      });
+      expect(getActiveCell()).to.equal('0-0');
     });
 
     it('should work with row virtualization', function test() {
@@ -331,7 +320,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(1, 1));
+      userEvent.mousePress(getCell(1, 1));
       expect(getActiveCell()).to.equal('1-1');
 
       fireEvent.keyDown(getCell(1, 1), { key: 'ArrowDown' });
@@ -366,7 +355,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       document.querySelector(`.${gridClasses.virtualScroller}`)!.dispatchEvent(new Event('scroll'));
@@ -434,7 +423,7 @@ describe('<DataGrid /> - Column Spanning', () => {
             initialState={{
               filter: {
                 filterModel: {
-                  items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                  items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
                 },
               },
             }}
@@ -442,7 +431,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowDown' });
@@ -474,7 +463,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         </div>,
       );
 
-      fireClickEvent(getCell(0, 0));
+      userEvent.mousePress(getCell(0, 0));
 
       const virtualScroller = document.querySelector(
         `.${gridClasses.virtualScroller}`,
@@ -556,7 +545,7 @@ describe('<DataGrid /> - Column Spanning', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Nike' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Nike' }],
               },
             },
           }}
@@ -594,7 +583,7 @@ describe('<DataGrid /> - Column Spanning', () => {
 
     // hide `category` column
     fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
     clock.runToLast();
 
     // Nike row
@@ -628,8 +617,8 @@ describe('<DataGrid /> - Column Spanning', () => {
       </div>,
     );
 
-    expect(getCell(0, 0).getAttribute('aria-colspan')).to.equal('2');
-    expect(getCell(0, 2).getAttribute('aria-colspan')).to.equal('1');
+    expect(getCell(0, 0)).to.have.attribute('aria-colspan', '2');
+    expect(getCell(0, 2)).to.have.attribute('aria-colspan', '1');
   });
 
   it('should work with pagination', () => {

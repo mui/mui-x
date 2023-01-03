@@ -8,7 +8,9 @@ import {
   wrapPickerMount,
   createPickerRenderer,
   adapterToUse,
-} from '../../../../test/utils/pickers-utils';
+  withPickerControls,
+} from 'test/utils/pickers-utils';
+import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
   <React.Fragment>
@@ -17,8 +19,12 @@ const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextField
   </React.Fragment>
 );
 
+const WrappedStaticDateTimePicker = withPickerControls(StaticDateRangePicker)({
+  renderInput: defaultRangeRenderInput,
+});
+
 describe('<StaticDateRangePicker />', () => {
-  const { render } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(
     <StaticDateRangePicker
@@ -46,17 +52,22 @@ describe('<StaticDateRangePicker />', () => {
     }),
   );
 
+  describeRangeValidation(StaticDateRangePicker, () => ({
+    render,
+    clock,
+    componentFamily: 'legacy-static-picker',
+    views: ['day'],
+    variant: 'mobile',
+  }));
+
   it('allows disabling dates', () => {
     render(
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
-        minDate={adapterToUse.date('2005-01-01T00:00:00.000')}
+        minDate={adapterToUse.date(new Date(2005, 0, 1))}
         shouldDisableDate={isWeekend}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
       />,
     );
 
@@ -72,16 +83,28 @@ describe('<StaticDateRangePicker />', () => {
       <StaticDateRangePicker
         renderInput={defaultRangeRenderInput}
         onChange={() => {}}
-        value={[
-          adapterToUse.date('2018-01-01T00:00:00.000'),
-          adapterToUse.date('2018-01-31T00:00:00.000'),
-        ]}
+        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
       />,
     );
 
     // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
     expect(
-      document.querySelector('[role="grid"] > [role="row"] [role="cell"] > button'),
+      document.querySelector(
+        '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',
+      ),
     ).to.have.text('1');
+  });
+
+  describe('localization', () => {
+    it('should respect the `localeText` prop', () => {
+      render(
+        <WrappedStaticDateTimePicker
+          initialValue={[null, null]}
+          localeText={{ cancelButtonLabel: 'Custom cancel' }}
+        />,
+      );
+
+      expect(screen.queryByText('Custom cancel')).not.to.equal(null);
+    });
   });
 });

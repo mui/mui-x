@@ -1,26 +1,6 @@
----
-title: Data Grid - Editing
----
-
 # Data Grid - Editing
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
-
-:::warning
-This page refers to the new editing API, which is not enabled by default.
-To use it, add the following flag:
-
-```tsx
-<DataGrid experimentalFeatures={{ newEditingApi: true }} />
-```
-
-This additional step is required because the default editing API has a couple of issues that can only be fixed with breaking changes, that will only be possible in v6.
-To avoid having to wait for the next major release window, all breaking changes needed were included inside this flag.
-
-If you are looking for the documentation for the default editing API, visit [this page](/x/react-data-grid/editing-legacy/).
-Note that it is encouraged to migrate to the new editing API since it will be enabled by default in v6.
-Although it says "experimental," you can consider it stable.
-:::
 
 ## Making a column editable
 
@@ -112,7 +92,7 @@ You can use the `valueParser` property in the column definition to modify the va
 ```tsx
 const columns: GridColDef[] = [
   {
-    valueParser: (value: GridCellValue, params: GridCellParams) => {
+    valueParser: (value: any, params: GridCellParams) => {
       return value.toLowerCase();
     },
   },
@@ -253,12 +233,6 @@ While the promise is not resolved, the edit component will receive an `isProcess
 
 {{"demo": "ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::warning
-If the user performs an action that saves changes and exits edit mode (e.g. pressing <kbd class="key">Enter</kbd>) while the props are still being processed, the changes will be discarded upon exit.
-To avoid this, it is important to communicate to users when the processing is still occurring.
-You can use the `isProcessingProps` prop to show a loader while waiting for the server to respond.
-:::
-
 ## Persistence
 
 The `processRowUpdate` prop is called when the user performs an action to [stop editing](#stop-editing).
@@ -305,14 +279,14 @@ This property works like the `renderCell` property, which is rendered while cell
 
 ```tsx
 function CustomEditComponent(props: GridRenderEditCellParams) {
-  return <input type="text" value={params.value} onValueChange={...}>;
+  return <input type="text" value={params.value} onValueChange={...} />;
 }
 
 const columns: GridColDef[] = [
   {
     field: 'firstName',
     renderEditCell: (params: GridRenderEditCellParams) => (
-      return <CustomEditComponent {...params} />;
+      <CustomEditComponent {...params} />
     ),
   },
 ];
@@ -340,7 +314,7 @@ function CustomEditComponent(props: GridRenderEditCellParams) {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
   };
 
-  return <input type="text" value={value} onValueChange={handleValueChange}>;
+  return <input type="text" value={value} onChange={handleValueChange} />;
 }
 ```
 
@@ -382,8 +356,8 @@ Modify the edit component to enable this feature:
 +    setValue(valueProp);
 +  }, [valueProp]);
 +
-   return <input type="text" value={value} onChange={handleChange}>;
-}
+   return <input type="text" value={value} onChange={handleChange} />;
+ }
 ```
 
 ### With auto-stop
@@ -416,7 +390,7 @@ The following demo implements an edit component with auto-stop, based on a nativ
 {{"demo": "AutoStopEditComponent.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-We don't recommend using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
+Avoid using edit components with auto-stop in columns that use long-running `preProcessEditCellProps` because the UI will freeze while waiting for `apiRef.current.setEditCellValue`.
 Instead, use the provided interactions to exit edit mode.
 :::
 
@@ -451,96 +425,9 @@ Instead, use the buttons available in each row or in the toolbar.
 
 ## Advanced use cases
 
-In the next sections, there examples of how the props provided by editing API can be used to implement complex use cases commonly found in applications.
+See [Editing recipes](/x/react-data-grid/recipes-editing/) for more advanced use cases.
 
-### Conditional validation
-
-When all cells in a row are in edit mode, you can validate fields by comparing their values against one another.
-To do this, start by adding the `preProcessEditCellProps` as explained in the [validation](#validation) section.
-When the callback is called, it will have an additional `otherFieldsProps` param containing the props from the other fields in the same row.
-Use this param to check if the value from the current column is valid or not.
-Return the modified `props` containing the error as you would for cell editing.
-Once at the least one field has the `error` attribute set to a truthy value, the row will not exit edit mode.
-
-The following demo requires a value for the **Payment method** column only if the **Is paid?** column is checked:
-
-{{"demo": "ConditionalValidationGrid.js", "bg": "inline", "defaultCodeOpen": false}}
-
-### Linked fields
-
-The options available for one field may depend on the value of another field.
-For instance, if the `singleSelect` column is used, you can provide a function to `valueOptions` returning the relevant options for the value selected in another field, as exemplified below.
-
-```tsx
-const columns: GridColDef[] = [
-  {
-    field: 'account',
-    type: 'singleSelect',
-    valueOptions: ({ row }) => {
-      if (!row) {
-        // The row is not available when filtering this column
-        return ['Sales', 'Investments', 'Ads', 'Taxes', 'Payroll', 'Utilities'];
-      }
-
-      return row.type === 'Income' // Gets the value of the "type" field
-        ? ['Sales', 'Investments', 'Ads']
-        : ['Taxes', 'Payroll', 'Utilities'];
-    },
-  },
-];
-```
-
-The code above is already enough to display different options in the **Account** column based on the value selected in the **Type** column.
-The only task left is to reset the account once the type is changed.
-This is needed because the previously selected account will not exist now in the options.
-To solve that, you can create a custom edit component, reusing the built-in one, and pass a function to the `onValueChange` prop.
-This function should call `apiRef.current.setEditCellValue` to reset the value of the other field.
-
-```tsx
-const CustomTypeEditComponent = (props: GridEditSingleSelectCellProps) => {
-  const apiRef = useGridApiContext();
-
-  const handleValueChange = async () => {
-    await apiRef.current.setEditCellValue({
-      id: props.id,
-      field: 'account',
-      value: '',
-    });
-  };
-
-  return <GridEditSingleSelectCell onValueChange={handleValueChange} {...props} />;
-};
-```
-
-The demo below combines the steps showed above.
-You can experiment it by changing the value of any cell in the **Type** column.
-The **Account** column is automatically updated with the correct options.
-
-{{"demo": "LinkedFieldsRowEditing.js", "bg": "inline", "defaultCodeOpen": false}}
-
-:::warning
-The call to `apiRef.current.setEditCellValue` returns a promise that must be awaited.
-For instance, if the `singleSelect` column type is used, not awaiting will cause the other column to be rendered with a `value` that is not in the options.
-
-```ts
-const handleChange = async () => {
-  await apiRef.current.setEditCellValue({
-    id: props.id,
-    field: 'account',
-    value: '',
-  });
-};
-```
-
-:::
-
-A similar behavior can be reproduced with cell editing.
-Instead of `apiRef.current.setEditCellValue`, the `rows` prop must be updated or `apiRef.current.updateRows` be used.
-Note that the `onCellEditStart` and `onCellEditStop` props also have to be used to revert the value of the cell changed, in case the user cancels the edit.
-
-{{"demo": "LinkedFieldsCellEditing.js", "bg": "inline", "defaultCodeOpen": false}}
-
-## apiRef [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
+## apiRef
 
 {{"demo": "EditApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
@@ -548,3 +435,4 @@ Note that the `onCellEditStart` and `onCellEditStop` props also have to be used 
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  useForkRef,
-  ownerWindow,
-  useEventCallback,
+  unstable_useForkRef as useForkRef,
+  unstable_ownerWindow as ownerWindow,
+  unstable_useEventCallback as useEventCallback,
   unstable_useEnhancedEffect as useEnhancedEffect,
-} from '@mui/material/utils';
+} from '@mui/utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
 // TODO replace with https://caniuse.com/resizeobserver.
 
@@ -17,7 +17,8 @@ export interface AutoSizerSize {
 // Credit to https://github.com/bvaughn/react-virtualized/blob/master/source/AutoSizer/AutoSizer.js
 // for the sources.
 
-export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface AutoSizerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children' | 'onResize'> {
   /**
    * Function responsible for rendering children.
    * @param {AutoSizerSize} size The grid's size.
@@ -167,6 +168,12 @@ GridAutoSizer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * Function responsible for rendering children.
+   * @param {AutoSizerSize} size The grid's size.
+   * @returns {React.ReactNode} The children to render.
+   */
+  children: PropTypes.func.isRequired,
   /**
    * Default height to use for initial render; useful for SSR.
    * @default null

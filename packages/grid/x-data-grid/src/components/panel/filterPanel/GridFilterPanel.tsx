@@ -12,6 +12,12 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
+import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+
+export interface GetColumnForNewFilterArgs {
+  currentFilters: GridFilterItem[];
+  columns: GridStateColDef[];
+}
 
 export interface GridFilterPanelProps
   extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
@@ -19,6 +25,12 @@ export interface GridFilterPanelProps
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
+  /**
+   * Function that returns the next filter item to be picked as default filter.
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
+   * @returns {GridColDef['field']} The field to be used for the next filter.
+   */
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'];
   /**
    * Props passed to each filter form.
    */
@@ -31,7 +43,18 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+
+  /**
+   * @ignore - do not document.
+   */
+  children?: React.ReactNode;
 }
+
+const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
+  field: col.field,
+  operator: col.filterOperators![0].value,
+  id: Math.round(Math.random() * 1e5),
+});
 
 const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
@@ -45,6 +68,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
       columnsSort,
       filterFormProps,
+      getColumnForNewFilter,
       children,
       ...other
     } = props;
@@ -63,40 +87,71 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef],
     );
 
-    const getDefaultItem = React.useCallback((): GridFilterItem | null => {
-      const firstColumnWithOperator = filterableColumns.find(
-        (colDef) => colDef.filterOperators?.length,
-      );
+    const getDefaultFilter = React.useCallback((): GridFilterItem | null => {
+      let nextColumnWithOperator;
+      if (getColumnForNewFilter && typeof getColumnForNewFilter === 'function') {
+        // To allow override the column for default (first) filter
+        const nextFieldName = getColumnForNewFilter({
+          currentFilters: filterModel?.items || [],
+          columns: filterableColumns,
+        });
 
-      if (!firstColumnWithOperator) {
+        nextColumnWithOperator = filterableColumns.find(({ field }) => field === nextFieldName);
+      } else {
+        nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
+      }
+
+      if (!nextColumnWithOperator) {
         return null;
       }
 
-      return {
-        columnField: firstColumnWithOperator.field,
-        operatorValue: firstColumnWithOperator.filterOperators![0].value,
-        id: Math.round(Math.random() * 1e5),
-      };
-    }, [filterableColumns]);
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterModel?.items, filterableColumns, getColumnForNewFilter]);
+
+    const getNewFilter = React.useCallback((): GridFilterItem | null => {
+      if (getColumnForNewFilter === undefined || typeof getColumnForNewFilter !== 'function') {
+        return getDefaultFilter();
+      }
+
+      const currentFilters = filterModel.items.length
+        ? filterModel.items
+        : [getDefaultFilter()].filter(Boolean);
+
+      // If no items are there in filterModel, we have to pass defaultFilter
+      const nextColumnFieldName = getColumnForNewFilter({
+        currentFilters: currentFilters as GridFilterItem[],
+        columns: filterableColumns,
+      });
+
+      const nextColumnWithOperator = filterableColumns.find(
+        ({ field }) => field === nextColumnFieldName,
+      );
+
+      if (!nextColumnWithOperator) {
+        return null;
+      }
+
+      return getGridFilter(nextColumnWithOperator);
+    }, [filterModel.items, filterableColumns, getColumnForNewFilter, getDefaultFilter]);
 
     const items = React.useMemo<GridFilterItem[]>(() => {
       if (filterModel.items.length) {
         return filterModel.items;
       }
 
-      const defaultItem = getDefaultItem();
+      const defaultFilter = getDefaultFilter();
 
-      return defaultItem ? [defaultItem] : [];
-    }, [filterModel.items, getDefaultItem]);
+      return defaultFilter ? [defaultFilter] : [];
+    }, [filterModel.items, getDefaultFilter]);
 
     const hasMultipleFilters = items.length > 1;
 
     const addNewFilter = () => {
-      const defaultItem = getDefaultItem();
-      if (!defaultItem) {
+      const newFilter = getNewFilter();
+      if (!newFilter) {
         return;
       }
-      apiRef.current.upsertFilterItems([...items, defaultItem]);
+      apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
     const deleteFilter = React.useCallback(
@@ -152,7 +207,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             <rootProps.components.BaseButton
               onClick={addNewFilter}
               startIcon={<GridAddIcon />}
-              color="primary"
               {...rootProps.componentsProps?.baseButton}
             >
               {apiRef.current.getLocaleText('filterPanelAddFilter')}
@@ -170,6 +224,10 @@ GridFilterPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * @ignore - do not document.
+   */
+  children: PropTypes.node,
+  /**
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
    */
@@ -185,6 +243,12 @@ GridFilterPanel.propTypes = {
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
   }),
+  /**
+   * Function that returns the next filter item to be picked as default filter.
+   * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
+   * @returns {GridColDef['field']} The field to be used for the next filter.
+   */
+  getColumnForNewFilter: PropTypes.func,
   /**
    * Sets the available logic operators.
    * @default [GridLinkOperator.And, GridLinkOperator.Or]

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
-import { debounce } from '@mui/material/utils';
+import { unstable_debounce as debounce } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
@@ -22,7 +22,7 @@ const GridToolbarQuickFilterRoot = styled(TextField, {
     marginLeft: theme.spacing(0.5),
   },
   '& .MuiInput-underline:before': {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`,
   },
   [`& input[type=search]::-ms-clear,
 & input[type=search]::-ms-reveal`]: {
@@ -98,7 +98,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   }, [prevQuickFilterValues, quickFilterValues, quickFilterFormatter, quickFilterParser]);
 
   const updateSearchValue = React.useCallback(
-    (newSearchValue) => {
+    (newSearchValue: string) => {
       apiRef.current.setQuickFilterValues(quickFilterParser(newSearchValue));
     },
     [apiRef, quickFilterParser],
@@ -110,7 +110,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   );
 
   const handleSearchValueChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const newSearchValue = event.target.value;
       setSearchValue(newSearchValue);
       debouncedUpdateSearchValue(newSearchValue);

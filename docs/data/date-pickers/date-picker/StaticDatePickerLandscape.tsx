@@ -1,24 +1,15 @@
 import * as React from 'react';
-import isWeekend from 'date-fns/isWeekend';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 
 export default function StaticDatePickerLandscape() {
-  const [value, setValue] = React.useState<Date | null>(new Date());
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDatePicker<Date>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StaticNextDatePicker
         orientation="landscape"
-        openTo="day"
-        value={value}
-        shouldDisableDate={isWeekend}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderInput={(params) => <TextField {...params} />}
+        defaultValue={dayjs('2022-04-07')}
       />
     </LocalizationProvider>
   );

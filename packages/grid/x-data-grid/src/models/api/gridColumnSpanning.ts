@@ -1,3 +1,4 @@
+import { GridStateColDef } from '../colDef/gridColDef';
 import { GridColumnIndex, GridCellColSpanInfo } from '../gridColumnSpanning';
 import { GridRowId } from '../gridRows';
 
@@ -16,17 +17,21 @@ export interface GridColumnSpanningApi {
     rowId: GridRowId,
     columnIndex: GridColumnIndex,
   ) => GridCellColSpanInfo | undefined;
+}
+
+export interface GridColumnSpanningPrivateApi {
   /**
    * Calculate column spanning for each cell in the row
    * @param {Object} options The options to apply on the calculation.
    * @param {GridRowId} options.rowId The row id
    * @param {number} options.minFirstColumn First visible column index
    * @param {number} options.maxLastColumn Last visible column index
-   * @ignore - do not document.
+   * @param {GridStateColDef[]} options.columns List of columns to calculate colSpan for
    */
-  unstable_calculateColSpan: (options: {
+  calculateColSpan: (options: {
     rowId: GridRowId;
     minFirstColumn: number;
     maxLastColumn: number;
+    columns: GridStateColDef[];
   }) => void;
 }

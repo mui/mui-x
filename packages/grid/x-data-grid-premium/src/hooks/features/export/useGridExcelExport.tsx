@@ -7,7 +7,7 @@ import {
   defaultGetRowsToExport,
   GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   GridExcelExportApi,
   GridExportExtension,
@@ -23,7 +23,7 @@ import { GridExcelExportMenuItem } from '../../../components';
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium>): void => {
+export const useGridExcelExport = (apiRef: React.MutableRefObject<GridPrivateApiPremium>): void => {
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
 
   const getDataAsExcel = React.useCallback<GridExcelExportApi['getDataAsExcel']>(
@@ -40,6 +40,7 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
           columns: exportedColumns,
           rowIds: exportedRowIds,
           includeHeaders: options.includeHeaders ?? true,
+          includeColumnGroupsHeaders: options.includeColumnGroupsHeaders ?? true,
           valueOptionsSheetName: options?.valueOptionsSheetName || 'Options',
           columnsStyles: options?.columnsStyles,
           exceljsPreProcess: options?.exceljsPreProcess,
@@ -74,7 +75,7 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridApiPremium
     exportDataAsExcel,
   };
 
-  useGridApiMethod(apiRef, excelExportApi, 'GridExcelExportApi');
+  useGridApiMethod(apiRef, excelExportApi, 'public');
 
   /**
    * PRE-PROCESSING

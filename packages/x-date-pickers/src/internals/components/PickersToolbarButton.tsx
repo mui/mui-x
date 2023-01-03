@@ -1,9 +1,13 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Button, { ButtonProps } from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { TypographyProps } from '@mui/material/Typography';
 import { PickersToolbarText } from './PickersToolbarText';
 import { ExtendMui } from '../models/helpers';
+import { getPickersToolbarUtilityClass } from './pickersToolbarClasses';
+import { PickersToolbarButtonClasses } from './pickersToolbarButtonClasses';
 
 export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value' | 'variant'> {
   align?: TypographyProps['align'];
@@ -11,24 +15,41 @@ export interface PickersToolbarButtonProps extends ExtendMui<ButtonProps, 'value
   typographyClassName?: string;
   value: React.ReactNode;
   variant: TypographyProps['variant'];
+  classes?: Partial<PickersToolbarButtonClasses>;
 }
 
-const PickersToolbarButtonRoot = styled(Button)({
+const useUtilityClasses = (ownerState: PickersToolbarButtonProps) => {
+  const { classes } = ownerState;
+  const slots = {
+    root: ['root'],
+  };
+
+  return composeClasses(slots, getPickersToolbarUtilityClass, classes);
+};
+
+const PickersToolbarButtonRoot = styled(Button, {
+  name: 'MuiPickersToolbarButton',
+  slot: 'Root',
+  overridesResolver: (_, styles) => styles.root,
+})({
   padding: 0,
   minWidth: 16,
   textTransform: 'none',
 });
 
 export const PickersToolbarButton: React.FunctionComponent<PickersToolbarButtonProps> =
-  React.forwardRef(function PickersToolbarButton(props, ref) {
+  React.forwardRef(function PickersToolbarButton(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbarButton' });
     const { align, className, selected, typographyClassName, value, variant, ...other } = props;
+
+    const classes = useUtilityClasses(props);
 
     return (
       <PickersToolbarButtonRoot
         data-mui-test="toolbar-button"
         variant="text"
         ref={ref}
-        className={className}
+        className={clsx(className, classes.root)}
         {...other}
       >
         <PickersToolbarText

@@ -1,21 +1,24 @@
 import * as React from 'react';
 import { isFunction } from '../../utils/utils';
 import { useGridLogger } from './useGridLogger';
-import { GridApiCommon } from '../../models';
+import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
-export const useGridNativeEventListener = <Api extends GridApiCommon, E extends Event>(
-  apiRef: React.MutableRefObject<Api>,
-  ref: React.MutableRefObject<HTMLDivElement | null> | (() => Element | undefined | null),
-  eventName: string,
-  handler?: (event: E) => any,
+export const useGridNativeEventListener = <
+  PrivateApi extends GridPrivateApiCommon,
+  K extends keyof HTMLElementEventMap,
+>(
+  apiRef: React.MutableRefObject<PrivateApi>,
+  ref: React.MutableRefObject<HTMLDivElement | null> | (() => HTMLElement | undefined | null),
+  eventName: K,
+  handler?: (event: HTMLElementEventMap[K]) => any,
   options?: AddEventListenerOptions,
 ) => {
   const logger = useGridLogger(apiRef, 'useNativeEventListener');
   const [added, setAdded] = React.useState(false);
   const handlerRef = React.useRef(handler);
 
-  const wrapHandler = React.useCallback((args) => {
-    return handlerRef.current && handlerRef.current(args);
+  const wrapHandler = React.useCallback((event: HTMLElementEventMap[K]) => {
+    return handlerRef.current && handlerRef.current(event);
   }, []);
 
   React.useEffect(() => {
@@ -23,7 +26,7 @@ export const useGridNativeEventListener = <Api extends GridApiCommon, E extends 
   }, [handler]);
 
   React.useEffect(() => {
-    let targetElement: Element | null | undefined;
+    let targetElement: HTMLElement | null | undefined;
 
     if (isFunction(ref)) {
       targetElement = ref();
@@ -31,7 +34,7 @@ export const useGridNativeEventListener = <Api extends GridApiCommon, E extends 
       targetElement = ref && ref.current ? ref.current : null;
     }
 
-    if (targetElement && wrapHandler && eventName && !added) {
+    if (targetElement && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
       targetElement.addEventListener(eventName, wrapHandler, options);
       const boundElem = targetElement;

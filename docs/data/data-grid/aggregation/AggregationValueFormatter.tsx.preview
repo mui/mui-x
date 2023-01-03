@@ -1,0 +1,15 @@
+<DataGridPremium
+  rows={data.rows}
+  columns={COLUMNS}
+  aggregationFunctions={{
+    ...GRID_AGGREGATION_FUNCTIONS,
+    firstAlphabetical: firstAlphabeticalAggregation,
+  }}
+  initialState={{
+    aggregation: {
+      model: {
+        director: 'firstAlphabetical',
+      },
+    },
+  }}
+/>

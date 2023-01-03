@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import clsx from 'clsx';
-import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, GridCellParams } from '@mui/x-data-grid';
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -48,7 +48,7 @@ export default function StylingCellsGrid() {
     <Box
       sx={{
         height: 300,
-        width: 1,
+        width: '100%',
         '& .super-app-theme--cell': {
           backgroundColor: 'rgba(224, 183, 60, 0.55)',
           color: '#1a3e72',

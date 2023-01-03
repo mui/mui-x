@@ -28,16 +28,16 @@ const itITGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search...',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Cerca…',
+  toolbarQuickFilterLabel: 'Cerca',
+  toolbarQuickFilterDeleteIconLabel: 'Resetta',
 
   // Export selector toolbar button text
   toolbarExport: 'Esporta',
   toolbarExportLabel: 'Esporta',
   toolbarExportCSV: 'Esporta in CSV',
   toolbarExportPrint: 'Stampa',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Scarica come Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
@@ -49,10 +49,8 @@ const itITGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
   filterPanelDeleteIconLabel: 'Rimuovi',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operatori',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLinkOperator: 'Operatore logico',
+  filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'E (and)',
   filterPanelOperatorOr: 'O (or)',
   filterPanelColumns: 'Colonne',
@@ -82,6 +80,7 @@ const itITGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Mostra le colonne',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtra',
   columnMenuHideColumn: 'Nascondi',
   columnMenuUnsort: "Annulla l'ordinamento",
@@ -109,10 +108,10 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Seleziona tutte le righe',
+  checkboxSelectionUnselectAllRows: 'Deseleziona tutte le righe',
+  checkboxSelectionSelectRow: 'Seleziona riga',
+  checkboxSelectionUnselectRow: 'Deseleziona riga',
 
   // Boolean cell text
   booleanCellTrueLabel: 'vero',
@@ -137,11 +136,20 @@ const itITGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Annulla raggruppamento per ${name}`,
 
   // Master/detail
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Abilita pannello dettagli',
+  expandDetailPanel: 'Espandi',
+  collapseDetailPanel: 'Comprimi',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Riordinamento righe',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const itIT: Localization = getGridLocalization(itITGrid, itITCore);

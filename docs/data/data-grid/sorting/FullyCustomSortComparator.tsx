@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColumns, DataGrid, GridComparatorFn } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, GridComparatorFn } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const VISIBLE_FIELDS = ['name', 'rating', 'country', 'isAdmin'];
@@ -14,7 +14,7 @@ export default function FullyCustomSortComparator() {
     rowLength: 100,
   });
 
-  const columns = React.useMemo<GridColumns>(
+  const columns = React.useMemo<GridColDef[]>(
     () => [
       {
         field: 'dateCreatedCustom',
@@ -35,7 +35,9 @@ export default function FullyCustomSortComparator() {
         {...data}
         columns={columns}
         initialState={{
+          ...data.initialState,
           sorting: {
+            ...data.initialState?.sorting,
             sortModel: [
               {
                 field: 'dateCreatedCustom',

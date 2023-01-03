@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material/utils';
+import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
 import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {
@@ -12,6 +12,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
 import { ValueOptions } from '../../models/colDef/gridColDef';
 import { getValueFromValueOptions } from '../panel/filterPanel/filterPanelUtils';
+import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 const renderSingleSelectOptions = (option: ValueOptions, OptionComponent: React.ElementType) => {
   const isOptionTypeObject = typeof option === 'object';
@@ -37,9 +38,18 @@ export interface GridEditSingleSelectCellProps
    * @returns {Promise<void> | void} A promise to be awaited before calling `apiRef.current.setEditCellValue`
    */
   onValueChange?: (event: SelectChangeEvent<any>, newValue: any) => Promise<void> | void;
+  /**
+   * If true, the select opens by default.
+   */
+  initialOpen?: boolean;
+}
+
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
+  const rootProps = useGridRootProps();
   const {
     id,
     value,
@@ -53,19 +63,19 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isEditable,
     tabIndex,
     className,
-    getValue,
     hasFocus,
     isValidating,
     isProcessingProps,
     error,
     onValueChange,
+    initialOpen = rootProps.editMode === GridEditModes.Cell,
     ...other
   } = props;
 
+  const apiRef = useGridApiContext();
   const ref = React.useRef<any>();
   const inputRef = React.useRef<any>();
-  const rootProps = useGridRootProps();
-  const [open, setOpen] = React.useState(rootProps.editMode === 'cell');
+  const [open, setOpen] = React.useState(initialOpen);
 
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
@@ -101,27 +111,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       await onValueChange(event, formattedTargetValue);
     }
 
-    const isValid = await api.setEditCellValue({ id, field, value: formattedTargetValue }, event);
-
-    if (rootProps.experimentalFeatures?.newEditingApi) {
-      return;
-    }
-
-    // We use isValid === false because the default return is undefined which evaluates to true with !isValid
-    if (rootProps.editMode === GridEditModes.Row || isValid === false) {
-      return;
-    }
-
-    const canCommit = await Promise.resolve(api.commitCellChange({ id, field }, event));
-    if (canCommit) {
-      api.setCellMode(id, field, 'view');
-
-      if ((event as any).key) {
-        // TODO v6: remove once we stop ignoring events fired from portals
-        const params = api.getCellParams(id, field);
-        api.publishEvent('cellNavigationKeyDown', params, event);
-      }
-    }
+    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
   };
 
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
@@ -130,15 +120,14 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       return;
     }
     if (reason === 'backdropClick' || isEscapeKey(event.key)) {
-      if (rootProps.experimentalFeatures?.newEditingApi) {
-        api.stopCellEditMode({ id, field, ignoreModifications: true });
-      } else {
-        api.setCellMode(id, field, 'view');
-      }
+      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
-  const handleOpen = () => {
+  const handleOpen: SelectProps['onOpen'] = (event) => {
+    if (isKeyboardEvent(event) && event.key === 'Enter') {
+      return;
+    }
     setOpen(true);
   };
 
@@ -179,13 +168,13 @@ GridEditSingleSelectCell.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * GridApi that let you manipulate the grid.
-   * @deprecated Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` (only available in `@mui/x-data-grid-pro`)
    */
-  api: PropTypes.any.isRequired,
+  api: PropTypes.object.isRequired,
   /**
    * The mode of the cell.
    */
   cellMode: PropTypes.oneOf(['edit', 'view']).isRequired,
+  changeReason: PropTypes.oneOf(['debouncedSetEditCellValue', 'setEditCellValue']),
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -199,14 +188,6 @@ GridEditSingleSelectCell.propTypes = {
    */
   formattedValue: PropTypes.any,
   /**
-   * Get the cell value of a row and field.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The field.
-   * @returns {any} The cell value.
-   * @deprecated Use `params.row` to directly access the fields you want instead.
-   */
-  getValue: PropTypes.func.isRequired,
-  /**
    * If true, the cell is the active element.
    */
   hasFocus: PropTypes.bool.isRequired,
@@ -214,6 +195,10 @@ GridEditSingleSelectCell.propTypes = {
    * The grid row id.
    */
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If true, the select opens by default.
+   */
+  initialOpen: PropTypes.bool,
   /**
    * If true, the cell is editable.
    */
@@ -230,7 +215,7 @@ GridEditSingleSelectCell.propTypes = {
   /**
    * The row model of the row that the current cell belongs to.
    */
-  row: PropTypes.object.isRequired,
+  row: PropTypes.any.isRequired,
   /**
    * The node of the row that the current cell belongs to.
    */
@@ -240,7 +225,8 @@ GridEditSingleSelectCell.propTypes = {
    */
   tabIndex: PropTypes.oneOf([-1, 0]).isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.any,
 } as any;

@@ -1,60 +1,66 @@
 import * as React from 'react';
 import { useValidation, ValidationProps, Validator } from './useValidation';
-import { DayValidationProps } from './models';
+import {
+  BaseDateValidationProps,
+  CommonDateTimeValidationError,
+  DayValidationProps,
+  MonthValidationProps,
+  YearValidationProps,
+} from './models';
 import { useLocalizationContext } from '../useUtils';
+import { applyDefaultDate } from '../../utils/date-utils';
 
-export interface ExportedDateValidationProps<TDate> extends DayValidationProps<TDate> {}
-
-export interface DateValidationProps<TInputDate, TDate>
-  extends ValidationProps<DateValidationError, TInputDate | null>,
-    ExportedDateValidationProps<TDate> {}
+export interface DateComponentValidationProps<TDate>
+  extends DayValidationProps<TDate>,
+    MonthValidationProps<TDate>,
+    YearValidationProps<TDate>,
+    Required<BaseDateValidationProps<TDate>> {}
 
 export type DateValidationError =
-  | 'invalidDate'
+  | CommonDateTimeValidationError
   | 'shouldDisableDate'
-  | 'disableFuture'
-  | 'disablePast'
+  | 'shouldDisableMonth'
+  | 'shouldDisableYear'
   | 'minDate'
-  | 'maxDate'
-  | null;
+  | 'maxDate';
 
-export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
-  props,
-  value,
-  adapter,
-}): DateValidationError => {
-  const now = adapter.utils.date()!;
-  const date = adapter.utils.date(value);
-
-  const {
-    shouldDisableDate,
-    minDate = adapter.defaultDates.minDate,
-    maxDate = adapter.defaultDates.maxDate,
-    disableFuture,
-    disablePast,
-  } = props;
-
-  if (date === null) {
+export const validateDate: Validator<
+  any | null,
+  any,
+  DateValidationError,
+  DateComponentValidationProps<any>
+> = ({ props, value, adapter }): DateValidationError => {
+  if (value === null) {
     return null;
   }
+
+  const now = adapter.utils.date()!;
+  const minDate = applyDefaultDate(adapter.utils, props.minDate, adapter.defaultDates.minDate);
+  const maxDate = applyDefaultDate(adapter.utils, props.maxDate, adapter.defaultDates.maxDate);
 
   switch (true) {
     case !adapter.utils.isValid(value):
       return 'invalidDate';
 
-    case Boolean(shouldDisableDate && shouldDisableDate(date)):
+    case Boolean(props.shouldDisableDate && props.shouldDisableDate(value)):
       return 'shouldDisableDate';
 
-    case Boolean(disableFuture && adapter.utils.isAfterDay(date, now)):
+    case Boolean(props.shouldDisableMonth && props.shouldDisableMonth(value)):
+      return 'shouldDisableMonth';
+
+    case Boolean(props.shouldDisableYear && props.shouldDisableYear(value)):
+      return 'shouldDisableYear';
+
+    case Boolean(props.disableFuture && adapter.utils.isAfterDay(value, now)):
       return 'disableFuture';
 
-    case Boolean(disablePast && adapter.utils.isBeforeDay(date, now)):
+    case Boolean(props.disablePast && adapter.utils.isBeforeDay(value, now)):
       return 'disablePast';
 
-    case Boolean(minDate && adapter.utils.isBeforeDay(date, minDate)):
+    case Boolean(minDate && adapter.utils.isBeforeDay(value, minDate)):
       return 'minDate';
 
-    case Boolean(maxDate && adapter.utils.isAfterDay(date, maxDate)):
+    case Boolean(maxDate && adapter.utils.isAfterDay(value, maxDate)):
       return 'maxDate';
 
     default:
@@ -62,13 +68,15 @@ export const validateDate: Validator<any, DateValidationProps<any, any>> = ({
   }
 };
 
-export const useIsDayDisabled = <TDate>({
+export const useIsDateDisabled = <TDate>({
   shouldDisableDate,
+  shouldDisableMonth,
+  shouldDisableYear,
   minDate,
   maxDate,
   disableFuture,
   disablePast,
-}: DayValidationProps<TDate>) => {
+}: DateComponentValidationProps<TDate>) => {
   const adapter = useLocalizationContext<TDate>();
 
   return React.useCallback(
@@ -78,18 +86,31 @@ export const useIsDayDisabled = <TDate>({
         value: day,
         props: {
           shouldDisableDate,
+          shouldDisableMonth,
+          shouldDisableYear,
           minDate,
           maxDate,
           disableFuture,
           disablePast,
         },
       }) !== null,
-    [adapter, shouldDisableDate, minDate, maxDate, disableFuture, disablePast],
+    [
+      adapter,
+      shouldDisableDate,
+      shouldDisableMonth,
+      shouldDisableYear,
+      minDate,
+      maxDate,
+      disableFuture,
+      disablePast,
+    ],
   );
 };
 
-const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
+// TODO v6: Drop with the legacy pickers
+export const isSameDateError = (a: DateValidationError, b: DateValidationError) => a === b;
 
-export const useDateValidation = <TInputDate, TDate>(
-  props: DateValidationProps<TInputDate, TDate>,
-): DateValidationError => useValidation(props, validateDate, isSameDateError);
+// TODO v6: Drop with the legacy pickers
+export const useDateValidation = <TDate>(
+  props: ValidationProps<DateValidationError, TDate | null, DateComponentValidationProps<TDate>>,
+): DateValidationError => useValidation(props, validateDate, isSameDateError, null);

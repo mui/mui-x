@@ -1,35 +1,16 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import Stack from '@mui/material/Stack';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 export default function FormPropsDateTimePickers() {
-  const [value, setValue] = React.useState(null);
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Stack spacing={3}>
-        <DateTimePicker
-          label="disabled"
-          disabled
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <DateTimePicker
-          label="read-only"
-          readOnly
-          value={value}
-          onChange={(newValue) => {
-            setValue(newValue);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </Stack>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer>
+        <NextDateTimePicker label="disabled" disabled />
+        <NextDateTimePicker label="readOnly" readOnly />
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

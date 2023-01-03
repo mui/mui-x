@@ -1,0 +1,6 @@
+<DataGridPremium
+  rows={data.rows}
+  columns={COLUMNS}
+  aggregationModel={aggregationModel}
+  onAggregationModelChange={(newModel) => setAggregationModel(newModel)}
+/>

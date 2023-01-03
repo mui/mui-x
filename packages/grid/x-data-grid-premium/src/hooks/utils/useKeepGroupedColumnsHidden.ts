@@ -3,7 +3,6 @@ import {
   GridApi,
   GridColumnVisibilityModel,
   gridColumnVisibilityModelSelector,
-  GridEvents,
 } from '@mui/x-data-grid-pro';
 import { GridRowGroupingModel } from '../features/rowGrouping';
 import { GridInitialStatePremium } from '../../models/gridStatePremium';
@@ -46,7 +45,7 @@ export const useKeepGroupedColumnsHidden = (
   );
 
   React.useEffect(() => {
-    props.apiRef.current.subscribeEvent(GridEvents.rowGroupingModelChange, (newModel) => {
+    props.apiRef.current.subscribeEvent('rowGroupingModelChange', (newModel) => {
       const columnVisibilityModel = updateColumnVisibilityModel(
         gridColumnVisibilityModelSelector(props.apiRef),
         newModel,

@@ -1,7 +1,3 @@
----
-title: Data Grid - Getting started
----
-
 # Data Grid - Getting started
 
 <p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows, and you are set.</p>
@@ -88,7 +84,7 @@ You can import `GridColDef` to see all column properties.
 Putting it together, this is all you need to get started, as you can see in this live and interactive demo:
 
 ```tsx
-import React from 'react';
+import * as React from 'react';
 import { DataGrid, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 
 const rows: GridRowsProp = [
@@ -148,10 +144,10 @@ Please pay attention to the license.
 The component comes [in different plans](https://mui.com/pricing/):
 
 - **Community** Plan: [`@mui/x-data-grid`](https://www.npmjs.com/package/@mui/x-data-grid), published under the [MIT license](https://tldrlegal.com/license/mit-license) and [free forever](https://mui-org.notion.site/Stewardship-542a2226043d4f4a96dfb429d16cf5bd).
-- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
-- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/store/legal/mui-x-eula/).
+- **Pro** Plan: [`@mui/x-data-grid-pro`](https://www.npmjs.com/package/@mui/x-data-grid-pro) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
+- **Premium** Plan: [`@mui/x-data-grid-premium`](https://www.npmjs.com/package/@mui/x-data-grid-premium) published under a [Commercial license](https://mui.com/legal/mui-x-eula/).
 
-More information about the various plans on [the dedicated section](/x/advanced-components/#plans)
+You can find more information about the plans in [the Licensing page](/x/introduction/licensing/).
 
 ### Feature comparison
 
@@ -162,21 +158,21 @@ The enterprise components come in two plans: Pro and Premium.
 | Features                                                                               | Community | Pro <span class="plan-pro"></span> | Premium <span class="plan-premium"></span> |
 | :------------------------------------------------------------------------------------- | :-------: | :--------------------------------: | :----------------------------------------: |
 | **Column**                                                                             |           |                                    |
-| [Column groups](/x/react-data-grid/column-groups/)                                     |    🚧     |                 🚧                 |                     🚧                     |
+| [Column groups](/x/react-data-grid/column-groups/)                                     |    ✅     |                 ✅                 |                     ✅                     |
 | [Column spanning](/x/react-data-grid/column-spanning/)                                 |    ✅     |                 ✅                 |                     ✅                     |
 | [Column resizing](/x/react-data-grid/column-dimensions/#resizing)                      |    ❌     |                 ✅                 |                     ✅                     |
 | [Column reorder](/x/react-data-grid/column-ordering/)                                  |    ❌     |                 ✅                 |                     ✅                     |
 | [Column pinning](/x/react-data-grid/column-pinning/)                                   |    ❌     |                 ✅                 |                     ✅                     |
 | **Row**                                                                                |           |                                    |                                            |
-| [Row height](/x/react-data-grid/rows/#row-height)                                      |    ✅     |                 ✅                 |                     ✅                     |
-| [Row spanning](/x/react-data-grid/rows/#row-spanning)                                  |    🚧     |                 🚧                 |                     🚧                     |
-| [Row reordering](/x/react-data-grid/rows/#row-reorder)                                 |    ❌     |                 ✅                 |                     ✅                     |
-| [Row pinning](/x/react-data-grid/rows/#row-pinning)                                    |    ❌     |                 🚧                 |                     🚧                     |
+| [Row height](/x/react-data-grid/row-height/)                                           |    ✅     |                 ✅                 |                     ✅                     |
+| [Row spanning](/x/react-data-grid/row-spanning/)                                       |    🚧     |                 🚧                 |                     🚧                     |
+| [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
+| [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
 | **Selection**                                                                          |           |                                    |                                            |
-| [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Multiple row selection](/x/react-data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
-| [Cell range selection](/x/react-data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
+| [Single row selection](/x/react-data-grid/row-selection/#single-row-selection)         |    ✅     |                 ✅                 |                     ✅                     |
+| [Checkbox selection](/x/react-data-grid/row-selection/#checkbox-selection)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multiple row selection](/x/react-data-grid/row-selection/#multiple-row-selection)     |    ❌     |                 ✅                 |                     ✅                     |
+| [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
 | [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
 | [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
@@ -189,7 +185,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Pagination > 100 rows per page](/x/react-data-grid/pagination/#size-of-the-page)      |    ❌     |                 ✅                 |                     ✅                     |
 | **Editing**                                                                            |           |                                    |                                            |
 | [Row editing](/x/react-data-grid/editing/#row-editing)                                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Cell editing](/x/react-data-grid/editing/#cell-editing)                               |    ✅     |                 ✅                 |                     ✅                     |
+| [Cell editing](/x/react-data-grid/editing/)                                            |    ✅     |                 ✅                 |                     ✅                     |
 | **Import & export**                                                                    |           |                                    |                                            |
 | [CSV export](/x/react-data-grid/export/#csv-export)                                    |    ✅     |                 ✅                 |                     ✅                     |
 | [Print](/x/react-data-grid/export/#print-export)                                       |    ✅     |                 ✅                 |                     ✅                     |
@@ -203,7 +199,7 @@ The enterprise components come in two plans: Pro and Premium.
 | [Tree data](/x/react-data-grid/tree-data/)                                             |    ❌     |                 ✅                 |                     ✅                     |
 | [Master detail](/x/react-data-grid/master-detail/)                                     |    ❌     |                 ✅                 |                     ✅                     |
 | [Row grouping](/x/react-data-grid/row-grouping/)                                       |    ❌     |                 ❌                 |                     ✅                     |
-| [Aggregation](/x/react-data-grid/aggregation/)                                         |    ❌     |                 ❌                 |                     🚧                     |
+| [Aggregation](/x/react-data-grid/aggregation/)                                         |    ❌     |                 ❌                 |                     ✅                     |
 | [Pivoting](/x/react-data-grid/pivoting/)                                               |    ❌     |                 ❌                 |                     🚧                     |
 | **Misc**                                                                               |           |                                    |                                            |
 | [Accessibility](/x/react-data-grid/accessibility/)                                     |    ✅     |                 ✅                 |                     ✅                     |
@@ -214,3 +210,4 @@ The enterprise components come in two plans: Pro and Premium.
 
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
+- [DataGridPremium](/x/api/data-grid/data-grid-premium/)

@@ -1,22 +1,15 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
+import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
 
 export default function StaticDateTimePickerDemo() {
-  const [value, setValue] = React.useState(new Date());
-
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <StaticDateTimePicker
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StaticNextDateTimePicker
         displayStaticWrapperAs="desktop"
-        openTo="year"
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
-        renderInput={(params) => <TextField {...params} />}
+        defaultValue={dayjs('2022-04-07T15:30')}
       />
     </LocalizationProvider>
   );

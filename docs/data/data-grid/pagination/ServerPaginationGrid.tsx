@@ -2,7 +2,11 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { createFakeServer } from '@mui/x-data-grid-generator';
 
-const { columns, initialState, useQuery } = createFakeServer();
+const SERVER_OPTIONS = {
+  useCursorPagination: false,
+};
+
+const { useQuery, ...data } = createFakeServer({}, SERVER_OPTIONS);
 
 export default function ServerPaginationGrid() {
   const [page, setPage] = React.useState(0);
@@ -16,7 +20,7 @@ export default function ServerPaginationGrid() {
     [page, pageSize],
   );
 
-  const { isLoading, data, pageInfo } = useQuery(queryOptions);
+  const { isLoading, rows, pageInfo } = useQuery(queryOptions);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
@@ -34,7 +38,8 @@ export default function ServerPaginationGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={data}
+        rows={rows}
+        {...data}
         rowCount={rowCountState}
         loading={isLoading}
         rowsPerPageOptions={[5]}
@@ -44,8 +49,6 @@ export default function ServerPaginationGrid() {
         paginationMode="server"
         onPageChange={(newPage) => setPage(newPage)}
         onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-        columns={columns}
-        initialState={initialState}
       />
     </div>
   );

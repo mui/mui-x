@@ -1,9 +1,3 @@
-/* eslint-disable import/first */
-import { LicenseInfo } from '@mui/x-data-grid-pro';
-
-// Remove the license warning from demonstration purposes
-LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
-
 import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import pages from 'docsx/data/pages'; // DO NOT REMOVE
@@ -11,28 +5,26 @@ import * as React from 'react';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
 import PropTypes from 'prop-types';
-import acceptLanguage from 'accept-language';
 import { useRouter } from 'next/router';
 import { ponyfillGlobal } from '@mui/utils';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
-import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
-import { LANGUAGES } from 'docs/src/modules/constants';
 import { CodeVariantProvider } from 'docs/src/modules/utils/codeVariant';
 import { CodeCopyProvider } from 'docs/src/modules/utils/CodeCopy';
-import {
-  UserLanguageProvider,
-  useSetUserLanguage,
-  useUserLanguage,
-} from 'docs/src/modules/utils/i18n';
+import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
+
+// Remove the license warning from demonstration purposes
+LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
-    return 'latest';
+    // #default-branch-switch with latest for the master branch
+    return 'next';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
@@ -42,22 +34,19 @@ ponyfillGlobal.muiDocConfig = {
   csbIncludePeerDependencies: (deps, { versions }) => {
     const newDeps = { ...deps };
 
-    if (newDeps['@mui/x-data-grid']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-    }
-
-    if (newDeps['@mui/x-data-grid-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
-    }
-
     if (newDeps['@mui/x-data-grid-premium']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro'];
       // TODO: remove when https://github.com/mui/material-ui/pull/32492 is released
       // use `import 'exceljs'` in demonstrations instead
       newDeps.exceljs = versions.exceljs;
+    }
+
+    if (newDeps['@mui/x-data-grid-pro']) {
+      newDeps['@mui/x-data-grid'] = versions['@mui/x-data-grid'];
+    }
+
+    if (newDeps['@mui/x-data-grid']) {
+      newDeps['@mui/material'] = versions['@mui/material'];
     }
 
     if (newDeps['@mui/x-data-grid-generator']) {
@@ -67,14 +56,13 @@ ponyfillGlobal.muiDocConfig = {
       newDeps['@mui/x-data-grid-pro'] = versions['@mui/x-data-grid-pro']; // Some TS types are imported from @mui/x-data-grid-pro
     }
 
+    if (newDeps['@mui/x-date-pickers-pro']) {
+      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
+    }
+
     if (newDeps['@mui/x-date-pickers']) {
       newDeps['@mui/material'] = versions['@mui/material'];
       newDeps['date-fns'] = versions['date-fns'];
-    }
-
-    if (newDeps['@mui/x-date-pickers-pro']) {
-      newDeps['@mui/material'] = versions['@mui/material'];
-      newDeps['@mui/x-date-pickers'] = versions['@mui/x-date-pickers'];
     }
 
     return newDeps;
@@ -97,36 +85,6 @@ ponyfillGlobal.muiDocConfig = {
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
-// Set the locales that the documentation automatically redirects to.
-acceptLanguage.languages(LANGUAGES);
-
-function LanguageNegotiation() {
-  const setUserLanguage = useSetUserLanguage();
-  const router = useRouter();
-  const userLanguage = useUserLanguage();
-
-  React.useEffect(() => {
-    const { userLanguage: userLanguageUrl, canonicalAs } = pathnameToLanguage(router.asPath);
-    const preferedLanguage =
-      LANGUAGES.find((lang) => lang === getCookie('userLanguage')) ||
-      acceptLanguage.get(navigator.language) ||
-      userLanguage;
-
-    if (
-      userLanguageUrl === 'en' &&
-      userLanguage !== preferedLanguage &&
-      !process.env.PULL_REQUEST
-    ) {
-      window.location =
-        preferedLanguage === 'en' ? canonicalAs : `/${preferedLanguage}${canonicalAs}`;
-    } else if (userLanguage !== userLanguageUrl) {
-      setUserLanguage(userLanguageUrl);
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return null;
-}
 
 let reloadInterval;
 
@@ -253,6 +211,8 @@ function AppWrapper(props) {
     ];
   }
 
+  const pageContextValue = React.useMemo(() => ({ activePage, pages }), [activePage]);
+
   return (
     <React.Fragment>
       <NextHead>
@@ -263,7 +223,7 @@ function AppWrapper(props) {
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>
           <CodeVariantProvider>
-            <PageContext.Provider value={{ activePage, pages }}>
+            <PageContext.Provider value={pageContextValue}>
               <ThemeProvider>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}
@@ -271,7 +231,6 @@ function AppWrapper(props) {
                 </DocsStyledEngineProvider>
               </ThemeProvider>
             </PageContext.Provider>
-            <LanguageNegotiation />
           </CodeVariantProvider>
         </CodeCopyProvider>
       </UserLanguageProvider>

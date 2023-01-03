@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { expect } from 'chai';
+import { spy } from 'sinon';
 import {
   DataGridPro,
   GridToolbar,
@@ -6,17 +8,15 @@ import {
   useGridApiRef,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
+import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
-import { expect } from 'chai';
-import { spy } from 'sinon';
-import { getData } from 'storybook/src/data/data-service';
+import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 
 describe('<DataGridPro /> - Print export', () => {
-  const { render } = createRenderer();
+  const { render, clock } = createRenderer();
 
   const NB_ROWS = 2;
-  const defaultData = getData(NB_ROWS, 2);
+  const defaultData = getBasicGridData(NB_ROWS, 2);
   let apiRef: React.MutableRefObject<GridApi>;
 
   const baselineProps = {
@@ -25,7 +25,7 @@ describe('<DataGridPro /> - Print export', () => {
     rowsPerPageOptions: [NB_ROWS, 100],
   };
 
-  const Test = (props: Partial<DataGridProProps>) => {
+  function Test(props: Partial<DataGridProProps>) {
     apiRef = useGridApiRef();
 
     return (
@@ -33,7 +33,7 @@ describe('<DataGridPro /> - Print export', () => {
         <DataGridPro {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
-  };
+  }
 
   const allBooleanConfigurations = [
     {
@@ -55,11 +55,12 @@ describe('<DataGridPro /> - Print export', () => {
   ];
 
   describe('Export toolbar', () => {
+    clock.withFakeTimers();
+
     it('should display print button by default', () => {
       render(<Test components={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
-
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
     });
 
@@ -71,7 +72,6 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
       fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
-
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).to.equal(null);
     });
@@ -81,7 +81,7 @@ describe('<DataGridPro /> - Print export', () => {
     allBooleanConfigurations.forEach(({ printVisible, gridVisible }) => {
       it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
         gridVisible ? "'visible'" : "'hidden'"
-      } in screen`, async function test() {
+      } in screen`, async () => {
         const onColumnVisibilityModelChange = spy();
 
         render(
@@ -100,51 +100,13 @@ describe('<DataGridPro /> - Print export', () => {
 
         expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-        await apiRef.current.exportDataAsPrint({
-          fields: printVisible ? ['currencyPair', 'id'] : ['id'],
-        });
-
-        expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-        // verify column visibility has been set
-        expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
-          currencyPair: printVisible,
-          id: true,
-        });
-
-        // verify column visibility has been restored
-        expect(onColumnVisibilityModelChange.secondCall.firstArg).to.deep.equal({
-          currencyPair: gridVisible,
-          id: false,
-        });
-      });
-    });
-  });
-
-  describe('column visibility with colDef.hide', () => {
-    allBooleanConfigurations.forEach(({ printVisible, gridVisible }) => {
-      it(`should have 'currencyPair' ${printVisible ? "'visible'" : "'hidden'"} in print and ${
-        gridVisible ? "'visible'" : "'hidden'"
-      } in screen`, async function test() {
-        const onColumnVisibilityModelChange = spy();
-
-        render(
-          <Test
-            onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-            columns={[
-              { field: 'currencyPair', hide: !gridVisible },
-              { field: 'id', hide: true },
-            ]}
-          />,
+        await act(() =>
+          apiRef.current.exportDataAsPrint({
+            fields: printVisible ? ['currencyPair', 'id'] : ['id'],
+          }),
         );
 
-        expect(onColumnVisibilityModelChange.callCount).to.equal(0);
-
-        await apiRef.current.exportDataAsPrint({
-          fields: printVisible ? ['currencyPair', 'id'] : ['id'],
-        });
-
         expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-
         // verify column visibility has been set
         expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
           currencyPair: printVisible,
@@ -161,14 +123,14 @@ describe('<DataGridPro /> - Print export', () => {
   });
 
   describe('columns to print', () => {
-    it(`should ignore 'allColumns' if 'fields' is provided`, async function test() {
+    it(`should ignore 'allColumns' if 'fields' is provided`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(<Test onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true });
+      await act(() => apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: false,
@@ -176,7 +138,7 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should ignore 'disableExport' if 'fields' is provided`, async function test() {
+    it(`should ignore 'disableExport' if 'fields' is provided`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -188,7 +150,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true });
+      await act(() => apiRef.current.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: false,
@@ -196,7 +158,7 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should apply 'disableExport' even if 'allColumns' is set`, async function test() {
+    it(`should apply 'disableExport' even if 'allColumns' is set`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
@@ -208,7 +170,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await apiRef.current.exportDataAsPrint({ allColumns: true });
+      await act(() => apiRef.current.exportDataAsPrint({ allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: true,
@@ -216,19 +178,20 @@ describe('<DataGridPro /> - Print export', () => {
       });
     });
 
-    it(`should print hidden columns if 'allColumns' set to true`, async function test() {
+    it(`should print hidden columns if 'allColumns' set to true`, async () => {
       const onColumnVisibilityModelChange = spy();
 
       render(
         <Test
+          columnVisibilityModel={{ id: false }}
           onColumnVisibilityModelChange={onColumnVisibilityModelChange}
-          columns={[{ field: 'currencyPair' }, { field: 'id', hide: true }]}
+          columns={[{ field: 'currencyPair' }, { field: 'id' }]}
         />,
       );
 
       expect(onColumnVisibilityModelChange.callCount).to.equal(0);
 
-      await apiRef.current.exportDataAsPrint({ allColumns: true });
+      await act(() => apiRef.current.exportDataAsPrint({ allColumns: true }));
 
       expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
         currencyPair: true,

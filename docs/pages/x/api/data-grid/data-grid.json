@@ -1,7 +1,11 @@
 {
   "props": {
     "columns": { "type": { "name": "custom", "description": "array" }, "required": true },
-    "rows": { "type": { "name": "array" }, "required": true },
+    "rows": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
@@ -27,7 +31,7 @@
     "disableColumnSelector": { "type": { "name": "bool" } },
     "disableDensitySelector": { "type": { "name": "bool" } },
     "disableExtendRowFullWidth": { "type": { "name": "bool" } },
-    "disableSelectionOnClick": { "type": { "name": "bool" } },
+    "disableRowSelectionOnClick": { "type": { "name": "bool" } },
     "disableVirtualization": { "type": { "name": "bool" } },
     "editMode": {
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
@@ -38,7 +42,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ newEditingApi?: bool, preventCommitWhileValidating?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -48,7 +52,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
@@ -80,12 +84,11 @@
         "name": "enum",
         "description": "'debug'<br>&#124;&nbsp;'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'warn'<br>&#124;&nbsp;false"
       },
-      "default": "\"debug\""
+      "default": "\"error\" (\"warn\" in dev mode)"
     },
     "nonce": { "type": { "name": "string" } },
     "onCellClick": { "type": { "name": "func" } },
     "onCellDoubleClick": { "type": { "name": "func" } },
-    "onCellEditCommit": { "type": { "name": "func" } },
     "onCellEditStart": { "type": { "name": "func" } },
     "onCellEditStop": { "type": { "name": "func" } },
     "onCellFocusOut": { "type": { "name": "func" } },
@@ -98,17 +101,7 @@
     "onColumnHeaderOut": { "type": { "name": "func" } },
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
-    "onColumnVisibilityChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "Use <code>onColumnVisibilityModelChange</code> instead."
-    },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onEditCellPropsChange": {
-      "type": { "name": "func" },
-      "deprecated": true,
-      "deprecationInfo": "use <code>preProcessEditCellProps</code> from the <a href=\"/x/api/data-grid/grid-col-def/\"><code>GridColDef</code></a>"
-    },
     "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
@@ -126,11 +119,10 @@
     "onRowEditStart": { "type": { "name": "func" } },
     "onRowEditStop": { "type": { "name": "func" } },
     "onRowModesModelChange": { "type": { "name": "func" } },
-    "onSelectionModelChange": { "type": { "name": "func" } },
+    "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "onStateChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -140,6 +132,13 @@
     "rowCount": { "type": { "name": "number" } },
     "rowHeight": { "type": { "name": "number" }, "default": "52" },
     "rowModesModel": { "type": { "name": "object" } },
+    "rowSelection": { "type": { "name": "bool" }, "default": "true" },
+    "rowSelectionModel": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
+      }
+    },
     "rowSpacingType": {
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
@@ -150,14 +149,8 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "selectionModel": {
-      "type": {
-        "name": "custom",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
-      }
-    },
-    "showCellRightBorder": { "type": { "name": "bool" } },
-    "showColumnRightBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" } },
+    "showColumnVerticalBorder": { "type": { "name": "bool" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -197,8 +190,23 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
+    "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenuHideIcon": { "default": "GridVisibilityOffIcon", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuManageColumnsIcon": {
+      "default": "GridViewColumnIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
     "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
@@ -224,7 +232,7 @@
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
     "DetailPanelCollapseIcon": { "default": "GridRemoveIcon", "type": { "name": "elementType" } },
     "DetailPanelExpandIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
-    "ErrorOverlay": { "default": "ErrorOverlay", "type": { "name": "elementType" } },
+    "ErrorOverlay": { "default": "GridErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
@@ -237,7 +245,6 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
-    "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
     "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "NoResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
@@ -250,6 +257,7 @@
     "QuickFilterIcon": { "default": "GridSearchIcon", "type": { "name": "elementType" } },
     "Row": { "default": "GridRow", "type": { "name": "elementType" } },
     "RowReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
+    "SkeletonCell": { "default": "GridSkeletonCell", "type": { "name": "elementType" } },
     "Toolbar": { "default": "null", "type": { "name": "elementType | null" } },
     "TreeDataCollapseIcon": { "default": "GridExpandMoreIcon", "type": { "name": "elementType" } },
     "TreeDataExpandIcon": { "default": "GridKeyboardArrowRight", "type": { "name": "elementType" } }
@@ -258,6 +266,11 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "aggregationColumnHeader",
+      "aggregationColumnHeader--alignLeft",
+      "aggregationColumnHeader--alignCenter",
+      "aggregationColumnHeader--alignRight",
+      "aggregationColumnHeaderLabel",
       "autoHeight",
       "booleanCell",
       "cell--editable",
@@ -266,9 +279,14 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
+      "cellSkeleton",
       "checkboxInput",
       "columnHeader--alignCenter",
       "columnHeader--alignLeft",
@@ -280,6 +298,7 @@
       "columnHeader--sorted",
       "columnHeader--filtered",
       "columnHeader",
+      "columnGroupHeader",
       "columnHeaderCheckbox",
       "columnHeaderDraggableContainer",
       "rowReorderCellPlaceholder",
@@ -287,6 +306,9 @@
       "columnHeaderTitle",
       "columnHeaderTitleContainer",
       "columnHeaderTitleContainerContent",
+      "columnHeader--filledGroup",
+      "columnHeader--emptyGroup",
+      "columnHeader--showColumnBorder",
       "columnHeaders",
       "columnHeadersInner",
       "columnHeadersInner--scrollable",
@@ -301,6 +323,7 @@
       "detailPanels",
       "detailPanelToggleCell",
       "detailPanelToggleCell--expanded",
+      "footerCell",
       "panel",
       "panelHeader",
       "panelWrapper",
@@ -325,6 +348,8 @@
       "menuIconButton",
       "menuOpen",
       "menuList",
+      "overlayWrapper",
+      "overlayWrapperInner",
       "overlay",
       "virtualScroller",
       "virtualScrollerContent",
@@ -340,11 +365,13 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",
       "row--lastVisible",
       "row--dynamicHeight",
+      "row--detailPanelExpanded",
       "row",
       "rowCount",
       "rowReorderCellContainer",
@@ -357,11 +384,17 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder",
+      "withBorderColor",
+      "cell--withRightBorder",
+      "columnHeader--withRightBorder",
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
-      "groupingCriteriaCellToggle"
+      "groupingCriteriaCellToggle",
+      "pinnedRows",
+      "pinnedRows--top",
+      "pinnedRows--bottom",
+      "pinnedRowsRenderZone"
     ],
     "globalClasses": {},
     "name": "MuiDataGrid"
@@ -369,5 +402,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/DataGrid/DataGrid.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li></ul>",
-  "packages": ["@mui/x-data-grid"]
+  "packages": [{ "packageName": "@mui/x-data-grid", "componentName": "DataGrid" }]
 }

@@ -3,23 +3,52 @@ import {
   MuiPickersAdapterContext,
   MuiPickersAdapterContextValue,
 } from '../../LocalizationProvider/LocalizationProvider';
+import { DEFAULT_LOCALE } from '../../locales/enUS';
+import { PickersLocaleText } from '../../locales/utils/pickersLocaleTextApi';
 
-export const useLocalizationContext = <T>() => {
+export const useLocalizationContext = <TDate>() => {
   const localization = React.useContext(MuiPickersAdapterContext);
   if (localization === null) {
     throw new Error(
-      'MUI: Can not find utils in context. It looks like you forgot to wrap your component in LocalizationProvider, or pass dateAdapter prop directly.',
+      [
+        'MUI: Can not find the date and time pickers localization context.',
+        'It looks like you forgot to wrap your component in LocalizationProvider.',
+        'This can also happen if you are bundling multiple versions of the `@mui/x-date-pickers` package',
+      ].join('\n'),
     );
   }
 
-  return localization as MuiPickersAdapterContextValue<T>;
+  if (localization.utils === null) {
+    throw new Error(
+      [
+        'MUI: Can not find the date and time pickers adapter from its localization context.',
+        'It looks like you forgot to pass a `dateAdapter` to your LocalizationProvider.',
+      ].join('\n'),
+    );
+  }
+
+  const localeText = React.useMemo(
+    () => ({ ...DEFAULT_LOCALE, ...localization.localeText }),
+    [localization.localeText],
+  );
+
+  return React.useMemo(
+    () =>
+      ({
+        ...localization,
+        localeText,
+      } as Omit<MuiPickersAdapterContextValue<TDate>, 'localeText'> & {
+        localeText: PickersLocaleText<TDate>;
+      }),
+    [localization, localeText],
+  );
 };
 
-export const useUtils = <T>() => useLocalizationContext<T>().utils;
+export const useUtils = <TDate>() => useLocalizationContext<TDate>().utils;
 
-export const useDefaultDates = <T>() => useLocalizationContext<T>().defaultDates;
+export const useDefaultDates = <TDate>() => useLocalizationContext<TDate>().defaultDates;
 
-export const useLocaleText = <T>() => useLocalizationContext<T>().localeText;
+export const useLocaleText = <TDate>() => useLocalizationContext<TDate>().localeText;
 
 export const useNow = <TDate>(): TDate => {
   const utils = useUtils<TDate>();

@@ -1,32 +1,66 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
-import { ExportedClockPickerProps } from '../ClockPicker/ClockPicker';
-import { ExportedCalendarPickerProps } from '../CalendarPicker/CalendarPicker';
+import { ExportedTimeClockProps } from '../TimeClock/TimeClock';
+import { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
-import { ValidationProps } from '../internals/hooks/validation/useValidation';
+import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internals/models';
-import { PickerStateValueManager } from '../internals/hooks/usePickerState';
-import { parsePickerInputValue } from '../internals/utils/date-utils';
-import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
+import { DateOrTimeView } from '../internals/models';
+import { applyDefaultDate } from '../internals/utils/date-utils';
+import { DefaultizedProps } from '../internals/models/helpers';
+import {
+  BaseDateValidationProps,
+  BaseTimeValidationProps,
+} from '../internals/hooks/validation/models';
+import {
+  CalendarOrClockPickerSlotsComponent,
+  CalendarOrClockPickerSlotsComponentsProps,
+} from '../internals/components/CalendarOrClockPicker';
+import {
+  DateTimePickerToolbar,
+  DateTimePickerToolbarProps,
+  ExportedDateTimePickerToolbarProps,
+} from './DateTimePickerToolbar';
+import {
+  DateTimePickerTabs,
+  DateTimePickerTabsProps,
+  ExportedDateTimePickerTabsProps,
+} from './DateTimePickerTabs';
+import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 
-export interface BaseDateTimePickerProps<TInputDate, TDate>
-  extends ExportedClockPickerProps<TDate>,
-    ExportedCalendarPickerProps<TDate>,
-    BasePickerProps<TInputDate | null, TDate | null>,
-    ValidationProps<DateTimeValidationError, TInputDate | null>,
-    ExportedDateInputProps<TInputDate, TDate> {
+export interface BaseDateTimePickerSlotsComponent<TDate>
+  extends CalendarOrClockPickerSlotsComponent<TDate, DateOrTimeView> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  Toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+  /**
+   * Tabs enabling toggling between date and time pickers.
+   * @default DateTimePickerTabs
+   */
+  Tabs?: React.JSXElementConstructor<DateTimePickerTabsProps>;
+}
+
+export interface BaseDateTimePickerSlotsComponentsProps<TDate>
+  extends CalendarOrClockPickerSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateTimePickerToolbarProps;
+  tabs?: ExportedDateTimePickerTabsProps;
+}
+
+export interface BaseDateTimePickerProps<TDate>
+  extends ExportedTimeClockProps<TDate>,
+    ExportedDateCalendarProps<TDate>,
+    BasePickerProps<TDate | null, TDate>,
+    ValidationCommonProps<DateTimeValidationError, TDate | null>,
+    ExportedDateInputProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
-  /**
-   * To show tabs.
-   */
-  hideTabs?: boolean;
   /**
    * Date tab icon.
    */
@@ -40,54 +74,51 @@ export interface BaseDateTimePickerProps<TInputDate, TDate>
    */
   minDateTime?: TDate;
   /**
-   * Minimal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
+   * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
   /**
    * Callback fired on view change.
-   * @param {CalendarOrClockPickerView} view The new view.
+   * @param {DateOrTimeView} view The new view.
    */
-  onViewChange?: (view: CalendarOrClockPickerView) => void;
+  onViewChange?: (view: DateOrTimeView) => void;
   /**
    * First view to show.
+   * Must be a valid option from `views` list
+   * @default 'day'
    */
-  openTo?: CalendarOrClockPickerView;
-  /**
-   * Component that will replace default toolbar renderer.
-   * @default DateTimePickerToolbar
-   */
-  ToolbarComponent?: React.JSXElementConstructor<BaseToolbarProps<TDate, TDate | null>>;
-  /**
-   * Mobile picker title, displaying in the toolbar.
-   * @default 'Select date & time'
-   */
-  toolbarTitle?: React.ReactNode;
-  /**
-   * Date format, that is displaying in toolbar.
-   */
-  toolbarFormat?: string;
-  /**
-   * Mobile picker date value placeholder, displaying if `value` === `null`.
-   * @default '–'
-   */
-  toolbarPlaceholder?: React.ReactNode;
+  openTo?: DateOrTimeView;
   /**
    * Array of views to show.
+   * @default ['year', 'day', 'hours', 'minutes']
    */
-  views?: readonly CalendarOrClockPickerView[];
+  views?: readonly DateOrTimeView[];
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  components?: BaseDateTimePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
 }
 
-type DefaultizedProps<Props> = Props & { inputFormat: string };
-
 export function useDateTimePickerDefaultizedProps<
-  TInputDate,
   TDate,
-  Props extends BaseDateTimePickerProps<TInputDate, TDate>,
+  Props extends BaseDateTimePickerProps<TDate>,
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<Pick<BaseDateTimePickerProps<TInputDate, TDate>, 'openTo' | 'views'>> {
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'openTo' | 'views' | keyof BaseDateValidationProps<TDate> | keyof BaseTimeValidationProps,
+    { inputFormat: string }
+  >
+> {
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
   const themeProps = useThemeProps({
@@ -103,6 +134,17 @@ export function useDateTimePickerDefaultizedProps<
     throw new Error('We are not supporting custom orientation for DateTimePicker yet :(');
   }
 
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
+
+    return {
+      ...themeProps.localeText,
+      dateTimePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
+
   return {
     ampm,
     orientation: 'portrait',
@@ -115,17 +157,34 @@ export function useDateTimePickerDefaultizedProps<
     disableIgnoringDatePartForTimeValidation: Boolean(
       themeProps.minDateTime || themeProps.maxDateTime,
     ),
+    disablePast: false,
+    disableFuture: false,
     ...themeProps,
-    minDate: themeProps.minDateTime ?? themeProps.minDate ?? defaultDates.minDate,
-    maxDate: themeProps.maxDateTime ?? themeProps.maxDate ?? defaultDates.maxDate,
+    minDate: applyDefaultDate(
+      utils,
+      themeProps.minDateTime ?? themeProps.minDate,
+      defaultDates.minDate,
+    ),
+    maxDate: applyDefaultDate(
+      utils,
+      themeProps.maxDateTime ?? themeProps.maxDate,
+      defaultDates.maxDate,
+    ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
+    localeText,
+    components: {
+      Toolbar: DateTimePickerToolbar,
+      Tabs: DateTimePickerTabs,
+      ...themeProps.components,
+    },
+    componentsProps: {
+      ...themeProps.componentsProps,
+      toolbar: {
+        ampm,
+        ampmInClock: themeProps.ampmInClock,
+        ...themeProps.componentsProps?.toolbar,
+      },
+    },
   };
 }
-
-export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> = {
-  emptyValue: null,
-  getTodayValue: (utils) => utils.date()!,
-  parseInput: parsePickerInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
-};

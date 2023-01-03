@@ -1,5 +1,5 @@
 import { nbNO as nbNOCore } from '@mui/material/locale';
-import { GridLocaleText } from '@mui/x-data-grid';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const nbNOGrid: Partial<GridLocaleText> = {
@@ -28,7 +28,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} aktive filter` : `${count} aktivt filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Søk...',
+  toolbarQuickFilterPlaceholder: 'Søk…',
   toolbarQuickFilterLabel: 'Søk',
   toolbarQuickFilterDeleteIconLabel: 'Slett',
 
@@ -50,9 +50,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Legg til filter',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLinkOperator: 'Logisk operator',
-  filterPanelOperators: 'Operatører',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operatører',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
@@ -82,6 +80,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',
@@ -135,11 +134,20 @@ const nbNOGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Stopp å grupper på ${name}`,
 
   // Master/detail
+  // detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Utvid',
   collapseDetailPanel: 'Kollaps',
 
   // Row reordering text
   rowReorderingHeaderName: 'Rad reorganisering',
+
+  // Aggregation
+  // aggregationMenuItemHeader: 'Aggregation',
+  // aggregationFunctionLabelSum: 'sum',
+  // aggregationFunctionLabelAvg: 'avg',
+  // aggregationFunctionLabelMin: 'min',
+  // aggregationFunctionLabelMax: 'max',
+  // aggregationFunctionLabelSize: 'size',
 };
 
 export const nbNO: Localization = getGridLocalization(nbNOGrid, nbNOCore);

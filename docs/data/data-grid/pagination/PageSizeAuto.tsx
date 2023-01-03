@@ -19,18 +19,15 @@ export default function PageSizeAuto() {
   return (
     <Stack style={{ width: '100%' }} alignItems="flex-start" spacing={2}>
       <FormControl fullWidth>
-        <InputLabel
-          htmlFor="main-grouping-criteria"
-          id="ain-grouping-criteria-label"
-        >
+        <InputLabel htmlFor="height-of-container" id="height-of-container-label">
           Height of the container
         </InputLabel>
         <Select
           label="Main Grouping Criteria"
-          onChange={(e) => setHeight(Number(e.target.value))}
+          onChange={(event) => setHeight(Number(event.target.value))}
           value={height}
-          id="main-grouping-criteria"
-          labelId="main-grouping-criteria-label"
+          id="height-of-container"
+          labelId="height-of-container-label"
         >
           <MenuItem value="300">300px</MenuItem>
           <MenuItem value="400">400px</MenuItem>

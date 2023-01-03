@@ -1,16 +1,20 @@
-import React from 'react';
+import * as React from 'react';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { GridColumnIndex, GridCellColSpanInfo } from '../../../models/gridColumnSpanning';
 import { GridRowId } from '../../../models/gridRows';
-import { GridColumnSpanningApi } from '../../../models/api/gridColumnSpanning';
+import {
+  GridColumnSpanningApi,
+  GridColumnSpanningPrivateApi,
+} from '../../../models/api/gridColumnSpanning';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 
 /**
  * @requires useGridColumns (method, event)
  * @requires useGridParamsApi (method)
  */
-export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiCommunity>) => {
+export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>) => {
   const lookup = React.useRef<Record<GridRowId, Record<GridColumnIndex, GridCellColSpanInfo>>>({});
 
   const setCellColSpanInfo = React.useCallback(
@@ -38,11 +42,12 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
       rowId: GridRowId;
       minFirstColumnIndex: number;
       maxLastColumnIndex: number;
+      columns: GridStateColDef[];
     }) => {
-      const { columnIndex, rowId, minFirstColumnIndex, maxLastColumnIndex } = params;
-      const visibleColumns = apiRef.current.getVisibleColumns();
-      const columnsLength = visibleColumns.length;
-      const column = visibleColumns[columnIndex];
+      const { columnIndex, rowId, minFirstColumnIndex, maxLastColumnIndex, columns } = params;
+
+      const columnsLength = columns.length;
+      const column = columns[columnIndex];
 
       const colSpan =
         typeof column.colSpan === 'function'
@@ -66,7 +71,7 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
         const nextColumnIndex = columnIndex + j;
         // Cells should be spanned only within their column section (left-pinned, right-pinned and unpinned).
         if (nextColumnIndex >= minFirstColumnIndex && nextColumnIndex < maxLastColumnIndex) {
-          const nextColumn = visibleColumns[nextColumnIndex];
+          const nextColumn = columns[nextColumnIndex];
           width += nextColumn.computedWidth;
 
           setCellColSpanInfo(rowId, columnIndex + j, {
@@ -88,14 +93,15 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
   );
 
   // Calculate `colSpan` for each cell in the row
-  const calculateColSpan = React.useCallback<GridColumnSpanningApi['unstable_calculateColSpan']>(
-    ({ rowId, minFirstColumn, maxLastColumn }) => {
+  const calculateColSpan = React.useCallback<GridColumnSpanningPrivateApi['calculateColSpan']>(
+    ({ rowId, minFirstColumn, maxLastColumn, columns }) => {
       for (let i = minFirstColumn; i < maxLastColumn; i += 1) {
         const cellProps = calculateCellColSpan({
           columnIndex: i,
           rowId,
           minFirstColumnIndex: minFirstColumn,
           maxLastColumnIndex: maxLastColumn,
+          columns,
         });
         if (cellProps.colSpan > 1) {
           i += cellProps.colSpan - 1;
@@ -105,12 +111,16 @@ export const useGridColumnSpanning = (apiRef: React.MutableRefObject<GridApiComm
     [calculateCellColSpan],
   );
 
-  const columnSpanningApi: GridColumnSpanningApi = {
+  const columnSpanningPublicApi: GridColumnSpanningApi = {
     unstable_getCellColSpanInfo: getCellColSpanInfo,
-    unstable_calculateColSpan: calculateColSpan,
   };
 
-  useGridApiMethod(apiRef, columnSpanningApi, 'GridColumnSpanningAPI');
+  const columnSpanningPrivateApi: GridColumnSpanningPrivateApi = {
+    calculateColSpan,
+  };
+
+  useGridApiMethod(apiRef, columnSpanningPublicApi, 'public');
+  useGridApiMethod(apiRef, columnSpanningPrivateApi, 'private');
 
   const handleColumnReorderChange = React.useCallback(() => {
     // `colSpan` needs to be recalculated after column reordering

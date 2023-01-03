@@ -1,27 +1,26 @@
 import * as React from 'react';
 import type {
-  GridCellEditCommitParams,
   GridColumnHeaderParams,
   GridColumnOrderChangeParams,
   GridColumnResizeParams,
-  GridColumnVisibilityChangeParams,
-  GridEditCellPropsParams,
   GridHeaderSelectionCheckboxParams,
   GridMenuParams,
   GridPreferencePanelParams,
+  GridRenderedRowsIntervalChangeParams,
   GridRowParams,
   GridRowSelectionCheckboxParams,
   GridScrollParams,
+  GridColumnGroupHeaderParams,
 } from '../params';
 import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridEditRowsModel } from '../gridEditRowModel';
-import type { GridSelectionModel } from '../gridSelectionModel';
+import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
-import type { GridRowId, GridRowTreeNodeConfig } from '../gridRows';
+import type { GridGroupNode, GridRowId } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
@@ -186,40 +185,79 @@ export interface GridColumnHeaderEventLookup {
   };
 }
 
+export interface GridColumnGroupHeaderEventLookup {
+  /**
+   * Fired when a key is pressed in a column group header. It's mapped do the `keydown` DOM event.
+   */
+  columnGroupHeaderKeyDown: {
+    params: GridColumnGroupHeaderParams;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header gains focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderFocus: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a column group header loses focus.
+   * @ignore - do not document.
+   */
+  columnGroupHeaderBlur: {
+    params: GridColumnGroupHeaderParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+}
 export interface GridCellEventLookup {
   /**
    * Fired when a cell is clicked.
    */
   cellClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a cell is double-clicked.
    */
   cellDoubleClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` event happens in a cell.
    */
   cellMouseDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseup` event happens in a cell.
    */
   cellMouseUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
+    event: React.MouseEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `mouseover` event happens in a cell.
+   */
+  cellMouseOver: {
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
+    event: React.KeyboardEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `keyup` event happens in a cell.
+   */
+  cellKeyUp: {
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
@@ -227,7 +265,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragEnter: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
   /**
@@ -236,7 +274,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
 }
@@ -265,7 +303,7 @@ export interface GridControlledStateEventLookup {
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
-  selectionChange: { params: GridSelectionModel };
+  rowSelectionChange: { params: GridRowSelectionModel };
   /**
    * Fired when the column visibility model changes.
    */
@@ -284,6 +322,7 @@ export interface GridControlledStateReasonLookup {
 export interface GridEventLookup
   extends GridRowEventLookup,
     GridColumnHeaderEventLookup,
+    GridColumnGroupHeaderEventLookup,
     GridCellEventLookup,
     GridControlledStateEventLookup {
   /**
@@ -344,13 +383,6 @@ export interface GridEventLookup
    */
   columnResizeStop: { params: null; event: MouseEvent };
   /**
-   * Fired when a column visibility changes.
-   * It is not fired when the `columnVisibilityModel` is controlled or initialized.
-   * It is not fired when toggling all column's visibility at once.
-   * @deprecated Use `'columnVisibilityModelChange'` instead.
-   */
-  columnVisibilityChange: { params: GridColumnVisibilityChangeParams };
-  /**
    * Fired during the resizing of a column.
    */
   columnResize: { params: GridColumnResizeParams; event: MouseEvent };
@@ -376,17 +408,21 @@ export interface GridEventLookup
    */
   sortedRowsSet: {};
   /**
-   * Fired when the expansion of a row is changed. Called with a [[GridRowTreeNodeConfig]] object.
+   * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    * @ignore - do not document.
    */
-  rowExpansionChange: { params: GridRowTreeNodeConfig };
+  rowExpansionChange: { params: GridGroupNode };
+  /**
+   * Fired when the rendered rows index interval changes. Called with a [[GridRenderedRowsIntervalChangeParams]] object.
+   */
+  renderedRowsIntervalChange: { params: GridRenderedRowsIntervalChangeParams };
 
   // Edit
   /**
    * Fired when the mode of a cell changes.
    * @ignore - do not document
    */
-  cellModeChange: { params: GridCellParams };
+  cellModeChange: { params: GridCellParams<any> };
   /**
    * Fired when the model that controls the cell modes changes.
    */
@@ -408,17 +444,6 @@ export interface GridEventLookup
   cellEditStop: {
     params: GridCellEditStopParams;
     event: MuiBaseEvent;
-  };
-  /**
-   * Fired when the props of the edit input are committed.
-   */
-  cellEditCommit: { params: GridCellEditCommitParams; event: MuiBaseEvent };
-  /**
-   * Fired when the props of the edit cell changes.
-   */
-  editCellPropsChange: {
-    params: GridEditCellPropsParams;
-    event: React.SyntheticEvent<HTMLElement> | {};
   };
   /**
    * Fired when the row turns to edit mode.
@@ -443,35 +468,17 @@ export interface GridEventLookup
   /**
    * Fired when a cell gains focus.
    */
-  cellFocusIn: { params: GridCellParams };
+  cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
    */
-  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
-
-  // Navigation
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a cell.
-   * @ignore - do not document.
-   */
-  cellNavigationKeyDown: {
-    params: GridCellParams | GridRowParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a [navigation key](/x/react-data-grid/accessibility#keyboard-navigation) is pressed in a column header.
-   * @ignore - do not document.
-   */
-  columnHeaderNavigationKeyDown: {
-    params: GridColumnHeaderParams;
-    event: React.KeyboardEvent<HTMLElement>;
-  };
+  cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 
   // Scroll
   /**
    * Fired during the scroll of the grid viewport.
    */
-  rowsScroll: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
+  scrollPositionChange: { params: GridScrollParams; event: React.UIEvent | MuiBaseEvent };
   /**
    * Fired when the content size used by the `GridVirtualScroller` changes.
    * @ignore - do not document.
@@ -523,3 +530,5 @@ export interface GridEventLookup
    */
   menuClose: { params: GridMenuParams };
 }
+
+export type GridEvents = keyof GridEventLookup;

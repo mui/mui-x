@@ -6,8 +6,8 @@ import Button from '@mui/material/Button';
 import {
   GridColumnMenu,
   GridColumnMenuContainer,
-  GridFilterMenuItem,
-  SortGridMenuItems,
+  GridColumnMenuFilterItem,
+  GridColumnMenuSortItem,
   useGridApiRef,
   DataGridPro,
 } from '@mui/x-data-grid-pro';
@@ -16,36 +16,34 @@ import StarOutlineIcon from '@mui/icons-material/StarOutline';
 const StyledGridColumnMenuContainer = styled(GridColumnMenuContainer)(
   ({ theme, ownerState }) => ({
     background: theme.palette[ownerState.color].main,
-    color: theme.palette[ownerState.color].contrastText,
   }),
 );
 
 const StyledGridColumnMenu = styled(GridColumnMenu)(({ theme, ownerState }) => ({
   background: theme.palette[ownerState.color].main,
-  color: theme.palette[ownerState.color].contrastText,
 }));
 
 function CustomColumnMenuComponent(props) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+  const { hideMenu, colDef, color, ...other } = props;
 
-  if (currentColumn.field === 'name') {
+  if (colDef.field === 'name') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
-        <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-        <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
+        <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
+        <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
       </StyledGridColumnMenuContainer>
     );
   }
-  if (currentColumn.field === 'stars') {
+  if (colDef.field === 'stars') {
     return (
       <StyledGridColumnMenuContainer
         hideMenu={hideMenu}
-        currentColumn={currentColumn}
+        colDef={colDef}
         ownerState={{ color }}
         {...other}
       >
@@ -67,7 +65,7 @@ function CustomColumnMenuComponent(props) {
   return (
     <StyledGridColumnMenu
       hideMenu={hideMenu}
-      currentColumn={currentColumn}
+      colDef={colDef}
       ownerState={{ color }}
       {...other}
     />
@@ -75,8 +73,8 @@ function CustomColumnMenuComponent(props) {
 }
 
 CustomColumnMenuComponent.propTypes = {
+  colDef: PropTypes.object.isRequired,
   color: PropTypes.oneOf(['primary', 'secondary']).isRequired,
-  currentColumn: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
 };
 
@@ -87,14 +85,10 @@ export default function CustomColumnMenu() {
   const apiRef = useGridApiRef();
 
   return (
-    <div
-      style={{
-        width: '100%',
-      }}
-    >
+    <Box sx={{ width: '100%' }}>
       <Button
         color={color}
-        variant="outlined"
+        size="small"
         onClick={(event) => {
           event.stopPropagation();
           setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
@@ -103,7 +97,7 @@ export default function CustomColumnMenu() {
       >
         Toggle menu background
       </Button>
-      <div style={{ height: 250, width: '100%', marginTop: 16 }}>
+      <Box sx={{ height: 250, mt: 1 }}>
         <DataGridPro
           apiRef={apiRef}
           columns={[
@@ -132,7 +126,7 @@ export default function CustomColumnMenu() {
             columnMenu: { color },
           }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

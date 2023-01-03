@@ -1,70 +1,85 @@
 import * as React from 'react';
+import { LocalizedComponent, PickersInputLocaleText } from '@mui/x-date-pickers';
 import {
-  buildDeprecatedPropsWarning,
   BasePickerProps,
-  PickerStateValueManager,
   useDefaultDates,
-  useLocaleText,
   useUtils,
-  ValidationProps,
+  ValidationCommonProps,
+  DefaultizedProps,
+  applyDefaultDate,
+  BaseDateValidationProps,
 } from '@mui/x-date-pickers/internals';
 import { useThemeProps } from '@mui/material/styles';
-import { ExportedDateRangePickerViewProps } from './DateRangePickerView';
+import {
+  DateRangePickerViewSlotsComponent,
+  DateRangePickerViewSlotsComponentsProps,
+  ExportedDateRangePickerViewProps,
+} from './DateRangePickerView';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
-import { parseRangeInputValue } from '../internal/utils/date-utils';
 import { ExportedDateRangePickerInputProps } from './DateRangePickerInput';
+import {
+  DateRangePickerToolbar,
+  DateRangePickerToolbarProps,
+  ExportedDateRangePickerToolbarProps,
+} from './DateRangePickerToolbar';
 
-export interface BaseDateRangePickerProps<TInputDate, TDate>
-  extends Omit<BasePickerProps<DateRange<TInputDate>, DateRange<TDate>>, 'orientation'>,
+export interface BaseDateRangePickerSlotsComponent<TDate>
+  extends DateRangePickerViewSlotsComponent<TDate> {
+  Toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
+
+export interface BaseDateRangePickerSlotsComponentsProps<TDate>
+  extends DateRangePickerViewSlotsComponentsProps<TDate> {
+  toolbar?: ExportedDateRangePickerToolbarProps;
+}
+
+export interface BaseDateRangePickerProps<TDate>
+  extends Omit<BasePickerProps<DateRange<TDate>, TDate>, 'orientation'>,
     ExportedDateRangePickerViewProps<TDate>,
-    ValidationProps<DateRangeValidationError, DateRange<TInputDate>>,
-    ExportedDateRangePickerInputProps<TInputDate, TDate> {
-  /**
-   * Text for end input label and toolbar placeholder.
-   * @default 'End'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
-   */
-  endText?: React.ReactNode;
+    BaseDateValidationProps<TDate>,
+    ValidationCommonProps<DateRangeValidationError, DateRange<TDate>>,
+    ExportedDateRangePickerInputProps<TDate> {
   /**
    * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
    * @default '__/__/____'
    */
-  mask?: ExportedDateRangePickerInputProps<TInputDate, TDate>['mask'];
+  mask?: ExportedDateRangePickerInputProps<TDate>['mask'];
   /**
    * Callback fired when the value (the selected date range) changes @DateIOType.
    * @template TDate
-   * @param {DateRange<TDate>} date The new parsed date range.
+   * @param {DateRange<TDate>} date The new date range.
    * @param {string} keyboardInputValue The current value of the keyboard input.
    */
   onChange: (date: DateRange<TDate>, keyboardInputValue?: string) => void;
   /**
-   * Text for start input label and toolbar placeholder.
-   * @default 'Start'
-   * @deprecated Use the `localeText` prop of `LocalizationProvider` instead, see https://mui.com/x/react-date-pickers/localization
+   * Overrideable components.
+   * @default {}
    */
-  startText?: React.ReactNode;
+  components?: BaseDateRangePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
 }
 
-export type DefaultizedProps<Props> = Props & { inputFormat: string };
-
-const deprecatedPropsWarning = buildDeprecatedPropsWarning(
-  'Props for translation are deprecated. See https://mui.com/x/react-date-pickers/localization for more information.',
-);
-
 export function useDateRangePickerDefaultizedProps<
-  TInputDate,
   TDate,
-  Props extends BaseDateRangePickerProps<TInputDate, TDate>,
+  Props extends BaseDateRangePickerProps<TDate>,
 >(
   props: Props,
   name: string,
-): DefaultizedProps<Props> &
-  Required<
-    Pick<BaseDateRangePickerProps<TInputDate, TDate>, 'calendars' | 'startText' | 'endText'>
-  > {
+): LocalizedComponent<
+  TDate,
+  DefaultizedProps<
+    Props,
+    'calendars' | keyof BaseDateValidationProps<TDate>,
+    { inputFormat: string }
+  >
+> {
   const utils = useUtils<TDate>();
-  const defaultDates = useDefaultDates();
+  const defaultDates = useDefaultDates<TDate>();
 
   // This is technically unsound if the type parameters appear in optional props.
   // Optional props can be filled by `useThemeProps` with types that don't match the type parameters.
@@ -73,30 +88,26 @@ export function useDateRangePickerDefaultizedProps<
     name,
   });
 
-  deprecatedPropsWarning({
-    startText: themeProps.startText,
-    endText: themeProps.endText,
-  });
+  const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
+    if (themeProps.localeText?.toolbarTitle == null) {
+      return themeProps.localeText;
+    }
 
-  const localeText = useLocaleText();
-
-  const startText = themeProps.startText ?? localeText.start;
-  const endText = themeProps.endText ?? localeText.end;
+    return {
+      ...themeProps.localeText,
+      dateRangePickerToolbarTitle: themeProps.localeText.toolbarTitle,
+    };
+  }, [themeProps.localeText]);
 
   return {
+    disableFuture: false,
+    disablePast: false,
     calendars: 2,
     inputFormat: utils.formats.keyboardDate,
-    minDate: defaultDates.minDate,
-    maxDate: defaultDates.maxDate,
     ...themeProps,
-    endText,
-    startText,
+    minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
+    maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    localeText,
+    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
   };
 }
-
-export const dateRangePickerValueManager: PickerStateValueManager<[any, any], [any, any], any> = {
-  emptyValue: [null, null],
-  getTodayValue: (utils) => [utils.date()!, utils.date()!],
-  parseInput: parseRangeInputValue,
-  areValuesEqual: (utils, a, b) => utils.isEqual(a[0], b[0]) && utils.isEqual(a[1], b[1]),
-};

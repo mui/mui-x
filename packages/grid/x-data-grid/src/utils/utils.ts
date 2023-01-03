@@ -6,7 +6,7 @@ export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
 
-export function isObject(value: any): value is Record<string, any> {
+export function isObject<TObject = Record<string, any>>(value: any): value is TObject {
   return typeof value === 'object';
 }
 
@@ -169,4 +169,28 @@ export function isDeepEqual(a: any, b: any) {
   // true if both NaN, false otherwise
   // eslint-disable-next-line no-self-compare
   return a !== a && b !== b;
+}
+
+// Pseudo random number. See https://stackoverflow.com/a/47593316
+function mulberry32(a: number): () => number {
+  return () => {
+    /* eslint-disable */
+    let t = (a += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    /* eslint-enable */
+  };
+}
+
+export function randomNumberBetween(seed: number, min: number, max: number): () => number {
+  const random = mulberry32(seed);
+  return () => min + (max - min) * random();
+}
+
+export function deepClone(obj: Record<string, any>) {
+  if (typeof structuredClone === 'function') {
+    return structuredClone(obj);
+  }
+  return JSON.parse(JSON.stringify(obj));
 }

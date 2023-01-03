@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
-  GridRowTreeNodeConfig,
   GridEventListener,
   GridCallbackDetails,
   GridRowParams,
   GridRowId,
   GridValidRowModel,
+  GridGroupNode,
+  GridFeatureMode,
 } from '@mui/x-data-grid';
 import {
   GridExperimentalFeatures,
@@ -15,14 +16,33 @@ import {
   DataGridPropsWithComplexDefaultValueBeforeProcessing,
 } from '@mui/x-data-grid/internals';
 import type { GridPinnedColumns } from '../hooks/features/columnPinning';
+import type { GridPinnedRowsProp } from '../hooks/features/rowPinning';
 import { GridApiPro } from './gridApiPro';
 import {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
+import { GridProSlotsComponent } from './gridProSlotsComponent';
 
-export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
+export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
+  /**
+   * Enables the data grid to lazy load rows while scrolling.
+   */
+  lazyLoading: boolean;
+  /**
+   * Enables the ability for rows to be pinned in data grid.
+   */
+  rowPinning: boolean;
+}
+
+interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
+  /**
+   * Overrideable components.
+   */
+  components?: Partial<GridProSlotsComponent>;
+}
 
 /**
  * The props users can give to the `DataGridProProps` component.
@@ -30,15 +50,14 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 export interface DataGridProProps<R extends GridValidRowModel = any>
   extends Omit<
     Partial<DataGridProPropsWithDefaultValue> &
-      DataGridPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridProPropsWithComplexDefaultValueBeforeProcessing &
       DataGridProPropsWithoutDefaultValue<R>,
     DataGridProForcedPropsKey
-  > {
-  /**
-   * Features under development.
-   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
-   */
-  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
+  > {}
+
+interface DataGridProPropsWithComplexDefaultValueAfterProcessing
+  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'components'> {
+  components: GridProSlotsComponent;
 }
 
 /**
@@ -46,7 +65,7 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
-    DataGridPropsWithComplexDefaultValueAfterProcessing,
+    DataGridProPropsWithComplexDefaultValueAfterProcessing,
     DataGridProPropsWithoutDefaultValue<R> {}
 
 export type DataGridProForcedPropsKey = 'signature';
@@ -76,10 +95,10 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Determines if a group should be expanded after its creation.
    * This prop takes priority over the `defaultGroupingExpansionDepth` prop.
-   * @param {GridRowTreeNodeConfig} node The node of the group to test.
+   * @param {GridGroupNode} node The node of the group to test.
    * @returns {boolean} A boolean indicating if the group is expanded.
    */
-  isGroupExpandedByDefault?: (node: GridRowTreeNodeConfig) => boolean;
+  isGroupExpandedByDefault?: (node: GridGroupNode) => boolean;
   /**
    * If `true`, the column pinning is disabled.
    * @default false
@@ -98,21 +117,34 @@ export interface DataGridProPropsWithDefaultValue extends DataGridPropsWithDefau
   /**
    * Function that returns the height of the row detail panel.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
-   * @returns {number} The height in pixels.
+   * @returns {number | string} The height in pixels or "auto" to use the content height.
    * @default "() => 500"
    */
-  getDetailPanelHeight: (params: GridRowParams) => number;
+  getDetailPanelHeight: (params: GridRowParams) => number | 'auto';
   /**
    * If `true`, the reordering of rows is enabled.
    * @default false
    */
   rowReordering: boolean;
+  /**
+   * Loading rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like enable infnite loading.
+   * Set it to 'server' if you would like to enable lazy loading.
+   * * @default "client"
+   */
+  rowsLoadingMode: GridFeatureMode;
+  /**
+   * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
+   * in a column re-order action will not cause the column to jump back to its original position.
+   * @default false
+   */
+  keepColumnPositionIfDraggedOutside: boolean;
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends Omit<DataGridPropsWithoutDefaultValue<R>, 'initialState'> {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiPro>;
   /**
@@ -121,6 +153,11 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePro;
+  /**
+   * Unstable features, breaking changes might be introduced.
+   * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
+   */
+  experimentalFeatures?: Partial<GridExperimentalProFeatures>;
   /**
    * Determines the path of a row in the tree data.
    * For instance, a row with the path ["A", "B"] is the child of the row with the path ["A"].
@@ -192,4 +229,15 @@ export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onRowOrderChange?: GridEventListener<'rowOrderChange'>;
+  /**
+   * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
+   * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
+   * @param {MuiEvent<{}>} event The event object.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  onFetchRows?: GridEventListener<'fetchRows'>;
+  /**
+   * Rows data to pin on top or bottom.
+   */
+  pinnedRows?: GridPinnedRowsProp<R>;
 }

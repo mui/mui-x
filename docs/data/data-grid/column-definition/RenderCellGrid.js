@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-
 import { DataGrid } from '@mui/x-data-grid';
 
-const RenderDate = (props) => {
+function RenderDate(props) {
   const { hasFocus, value } = props;
   const buttonElement = React.useRef(null);
   const rippleRef = React.useRef(null);
@@ -27,7 +26,6 @@ const RenderDate = (props) => {
         ref={buttonElement}
         touchRippleRef={rippleRef}
         variant="contained"
-        color="primary"
         size="small"
         style={{ marginLeft: 16 }}
         // Remove button from tab sequence when cell does not have focus
@@ -43,7 +41,7 @@ const RenderDate = (props) => {
       </Button>
     </strong>
   );
-};
+}
 
 RenderDate.propTypes = {
   /**
@@ -51,7 +49,8 @@ RenderDate.propTypes = {
    */
   hasFocus: PropTypes.bool.isRequired,
   /**
-   * The cell value, but if the column has valueGetter, use getValue.
+   * The cell value.
+   * If the column has `valueGetter`, use `params.row` to directly access the fields.
    */
   value: PropTypes.instanceOf(Date),
 };

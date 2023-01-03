@@ -1,11 +1,22 @@
-import { generateUtilityClass, generateUtilityClasses } from '@mui/material';
+import {
+  unstable_generateUtilityClass as generateUtilityClass,
+  unstable_generateUtilityClasses as generateUtilityClasses,
+} from '@mui/utils';
 
 export interface DateTimePickerToolbarClasses {
+  /** Styles applied to the root element. */
+  root: string;
+  /** Styles applied to the date container element. */
   dateContainer: string;
+  /** Styles applied to the time container element. */
   timeContainer: string;
+  /** Styles applied to the time container if rtl. */
+  timeLabelReverse: string;
+  /** Styles applied to the separator element. */
   separator: string;
+  /** Styles applied to the am/pm section. */
   ampmSelection: string;
-  ampmLandscape: string;
+  /** Styles applied to am/pm labels. */
   ampmLabel: string;
 }
 
@@ -15,12 +26,15 @@ export function getDateTimePickerToolbarUtilityClass(slot: string) {
   return generateUtilityClass('MuiDateTimePickerToolbar', slot);
 }
 
-export const dateTimePickerToolbarClasses = generateUtilityClasses('MuiDateTimePickerToolbar', [
-  'root',
-  'dateContainer',
-  'timeContainer',
-  'separator',
-  'ampmSelection',
-  'ampmLandscape',
-  'ampmLabel',
-]);
+export const dateTimePickerToolbarClasses: DateTimePickerToolbarClasses = generateUtilityClasses(
+  'MuiDateTimePickerToolbar',
+  [
+    'root',
+    'dateContainer',
+    'timeContainer',
+    'separator',
+    'timeLabelReverse',
+    'ampmSelection',
+    'ampmLabel',
+  ],
+);

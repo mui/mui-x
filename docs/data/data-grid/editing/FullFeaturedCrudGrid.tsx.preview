@@ -3,6 +3,7 @@
   columns={columns}
   editMode="row"
   rowModesModel={rowModesModel}
+  onRowModesModelChange={handleRowModesModelChange}
   onRowEditStart={handleRowEditStart}
   onRowEditStop={handleRowEditStop}
   processRowUpdate={processRowUpdate}
@@ -12,5 +13,4 @@
   componentsProps={{
     toolbar: { setRows, setRowModesModel },
   }}
-  experimentalFeatures={{ newEditingApi: true }}
 />

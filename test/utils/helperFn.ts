@@ -64,10 +64,14 @@ export function getColumnValues(colIndex: number) {
   );
 }
 
-export function getColumnHeaderCell(colIndex: number): HTMLElement {
+export function getColumnHeaderCell(colIndex: number, rowIndex?: number): HTMLElement {
+  const headerRowSelector =
+    rowIndex === undefined ? '' : `[role="row"][aria-rowindex="${rowIndex + 1}"] `;
+  const headerCellSelector = `[role="columnheader"][aria-colindex="${colIndex + 1}"]`;
   const columnHeader = document.querySelector<HTMLElement>(
-    `[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
+    `${headerRowSelector}${headerCellSelector}`,
   );
+
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }

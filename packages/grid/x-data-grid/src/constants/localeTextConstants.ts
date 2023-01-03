@@ -26,7 +26,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'Search...',
+  toolbarQuickFilterPlaceholder: 'Search…',
   toolbarQuickFilterLabel: 'Search',
   toolbarQuickFilterDeleteIconLabel: 'Clear',
 
@@ -48,7 +48,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
@@ -78,8 +78,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
+  columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Hide',
+  columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Unsort',
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',
@@ -133,6 +134,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   unGroupColumn: (name) => `Stop grouping by ${name}`,
 
   // Master/detail
+  detailPanelToggle: 'Detail panel toggle',
   expandDetailPanel: 'Expand',
   collapseDetailPanel: 'Collapse',
 
@@ -141,4 +143,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Row reordering text
   rowReorderingHeaderName: 'Row reordering',
+
+  // Aggregation
+  aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'size',
 };
