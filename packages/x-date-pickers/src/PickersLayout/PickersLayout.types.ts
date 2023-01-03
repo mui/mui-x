@@ -23,7 +23,7 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
   Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TView>>;
   /**
    * Custom component for wrapping the layout.
-   * It wrapps the toolbar, views, action bar, and shortcuts
+   * It wrapps the toolbar, views, action bar, and shortcuts.
    */
   Layout?: React.JSXElementConstructor<
     PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>

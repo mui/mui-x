@@ -18,6 +18,7 @@ By default, pickers are made of 4 sub elements present in the following order:
 - The **content** displaying the current view. Can be a calendar, or a clock.
 - The **tabs** allowing to switch between day and time views in Date Time Pickers.
 - The **action bar** allowing some interactions. Can be added with [`componentsProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.
+- The **shortcuts** allowing quick selection of some values. Can be added with [`componentsProps.shortcuts`](/x/react-date-pickers/shortcuts/#adding-shortcuts)
 
 By default the `content` and `tabs` are wrapped together in a `contentWrapper` to simplify the layout.
 
@@ -40,6 +41,7 @@ Such that all subcomponents are placed in a 3 by 3 [CSS grid](https://developer.
 ```jsx
 <PickersLayoutRoot>
   {toolbar}
+  {shortcuts}
   <PickersLayoutContentWrapper>
     {tabs}
     {content}
