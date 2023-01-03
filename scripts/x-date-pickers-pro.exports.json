@@ -21,6 +21,7 @@
   { "name": "DateFieldProps", "kind": "Interface" },
   { "name": "DatePicker", "kind": "Variable" },
   { "name": "DatePickerProps", "kind": "Interface" },
+  { "name": "DatePickerToolbar", "kind": "Variable" },
   { "name": "datePickerToolbarClasses", "kind": "Variable" },
   { "name": "DatePickerToolbarClasses", "kind": "Interface" },
   { "name": "DatePickerToolbarClassKey", "kind": "TypeAlias" },
