@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import MaterialTextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
@@ -81,7 +81,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     ownerState,
   });
 
-  const TextField = components?.TextField ?? MaterialTextField;
+  const TextField = components?.TextField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: componentsProps?.textField,

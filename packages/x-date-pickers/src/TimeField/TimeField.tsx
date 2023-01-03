@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import MaterialTextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { TimeFieldProps } from './TimeField.types';
@@ -23,7 +23,7 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
 
   const ownerState = themeProps;
 
-  const TextField = components?.TextField ?? MaterialTextField;
+  const TextField = components?.TextField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
     elementType: TextField,
     externalSlotProps: componentsProps?.textField,
