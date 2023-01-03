@@ -60,46 +60,25 @@ The date range picker component can be disabled or read-only.
 
 {{"demo": "FormPropsDateRangePickers.js"}}
 
-## Validation
+## Customization
 
-You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
+### Render 1 to 3 months
 
-## Different number of months
+You can render up to 3 months at the same time using the `calendar` prop.
 
-Note that the `calendars` prop only works in desktop mode.
+:::info
+This prop will be ignored on the mobile picker.
+:::
 
-{{"demo": "CalendarsDateRangePicker.js"}}
+{{"demo": "DateRangePickerCalendarProp.js"}}
 
-## Custom input component
+### Custom input component
 
 You can customize the rendering of the input with the `Input` component slot.
 Make sure to spread `inputProps` correctly to the custom input component.
 
 {{"demo": "CustomInputs.js"}}
 
-## Customized day rendering
+## Validation
 
-The displayed days are customizable with the `Day` component slot.
-You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
-
-{{"demo": "CustomDateRangePickerDay.js"}}
-
-## 🚧 Pre-defined range shortcuts
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
-:::
-
-Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
-
-## 🚧 Month range Picker
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-:::
-
-Month range picker allows setting date ranges by picking months only.
+You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)

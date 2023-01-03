@@ -220,6 +220,7 @@ const pages: MuiPage[] = [
         scopePathnames: [
           '/x/react-date-pickers/date-range-picker',
           '/x/react-date-pickers/date-range-field',
+          '/x/react-date-pickers/date-range-calendar',
           '/x/react-date-pickers/legacy-date-range-picker',
         ],
         children: [
@@ -231,6 +232,11 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-date-pickers/date-range-field',
             title: 'Date Range Field',
+            newFeature: true,
+          },
+          {
+            pathname: '/x/react-date-pickers/date-range-calendar',
+            title: 'Date Range Calendar',
             newFeature: true,
           },
           {
