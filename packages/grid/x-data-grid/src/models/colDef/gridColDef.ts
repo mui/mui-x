@@ -35,7 +35,7 @@ export type GridKeyValue = string | number | boolean;
 /**
  * Column Definition base interface.
  */
-export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = V> {
+export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel, V = any, F = V> {
   /**
    * The column identifier. It's used to map with [[GridRowModel]] values.
    */
@@ -155,7 +155,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = 
   /**
    * Class name that will be added in cells for that column.
    */
-  cellClassName?: GridCellClassNamePropType;
+  cellClassName?: GridCellClassNamePropType<V>;
   /**
    * Allows to override the component rendered as cell for this column.
    * @template R, V, F
