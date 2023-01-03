@@ -4,7 +4,7 @@ import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContai
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import { Unstable_SingleInputTimeRangeField as SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
 
 export default function TimeRangeFieldValue() {
   const [value, setValue] = React.useState(() => [
@@ -16,12 +16,12 @@ export default function TimeRangeFieldValue() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label="Uncontrolled field">
-          <MultiInputTimeRangeField
+          <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
         <DemoItem label="Controlled field">
-          <MultiInputTimeRangeField
+          <SingleInputTimeRangeField
             value={value}
             onChange={(newValue) => setValue(newValue)}
           />
