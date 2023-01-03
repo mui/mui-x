@@ -7,7 +7,7 @@
     OpenPickerIcon: ClockIcon,
   }}
   componentsProps={{
-    input: {
+    textField: {
       helperText: 'Hardcoded helper text',
     },
   }}
