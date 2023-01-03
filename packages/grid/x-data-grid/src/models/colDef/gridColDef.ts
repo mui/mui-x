@@ -168,7 +168,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = any, V = any, F = 
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderEditCell?: (params: GridRenderEditCellParams<R>) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams<R, V, F>) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.

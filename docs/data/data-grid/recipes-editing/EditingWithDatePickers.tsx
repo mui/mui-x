@@ -184,7 +184,12 @@ const GridEditDateInput = styled(InputBase)({
   padding: '0 9px',
 });
 
-function GridEditDateCell({ id, field, value, colDef }: GridRenderEditCellParams) {
+function GridEditDateCell({
+  id,
+  field,
+  value,
+  colDef,
+}: GridRenderEditCellParams<any, Date | string | null>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
