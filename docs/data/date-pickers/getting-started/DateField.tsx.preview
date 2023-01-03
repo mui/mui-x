@@ -1,1 +1,1 @@
-<DateField label="Date Field" sx={{ width: 200 }} />
+<DateField label="Date Field" />
