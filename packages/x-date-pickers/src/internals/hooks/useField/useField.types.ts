@@ -137,7 +137,7 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
-export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+export type FieldSectionsValueBoundaries<TDate, TSection extends FieldSection> = Record<
   MuiDateSectionName,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;

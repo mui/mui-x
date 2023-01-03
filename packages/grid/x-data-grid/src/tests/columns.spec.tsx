@@ -108,7 +108,7 @@ function CellParamsValue() {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams) => {
+      onCellClick={(params) => {
         params.value!.toUpperCase();
       }}
       onCellDoubleClick={(params: GridCellParams<number>) => {

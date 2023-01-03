@@ -1,15 +1,14 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
 import { GridCellParams, GridColDef } from '../models';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { isObject } from '../utils/utils';
 
-const parseObjectValue = (value: GridFilterItem) => {
-  if (value == null || typeof value !== 'object') {
+const parseObjectValue = (value: unknown) => {
+  if (value == null || !isObject<{ value: unknown }>(value)) {
     return value;
   }
-
   return value.value;
 };
 
@@ -23,7 +22,7 @@ export const getGridSingleSelectQuickFilterFn = (
   }
   const { valueOptions, valueFormatter, field } = column;
 
-  const potentialValues = [parseObjectValue(value).toString()];
+  const potentialValues = [parseObjectValue(value)?.toString()];
 
   const iterableColumnValues =
     typeof valueOptions === 'function' ? valueOptions({ field }) : valueOptions || [];
@@ -55,7 +54,7 @@ export const getGridSingleSelectQuickFilterFn = (
 
   return ({ value: columnValue }: GridCellParams): boolean => {
     return columnValue != null
-      ? potentialValues.includes(parseObjectValue(columnValue).toString())
+      ? potentialValues.includes(parseObjectValue(columnValue)?.toString())
       : false;
   };
 };
