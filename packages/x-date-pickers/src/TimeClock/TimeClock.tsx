@@ -137,7 +137,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
   flexDirection: 'column',
 });
 
-const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
+const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
@@ -416,7 +416,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       sx={sx}
     >
       {showViewSwitcher && (
-        <TimeCLockArrowSwitcher
+        <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
@@ -432,7 +432,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
 
       <Clock<TDate>
         autoFocus={autoFocus}
-        ampmInClock={ampmInClock}
+        ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
         ampm={ampm}
