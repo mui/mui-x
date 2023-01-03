@@ -154,6 +154,11 @@ NextDatePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -317,6 +322,11 @@ NextDatePicker.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { NextDatePicker };

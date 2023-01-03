@@ -18,8 +18,17 @@ import {
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
 
+export interface ExportedMonthCalendarProps {
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow?: 3 | 4;
+}
+
 export interface MonthCalendarProps<TDate>
-  extends MonthValidationProps<TDate>,
+  extends ExportedMonthCalendarProps,
+    MonthValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**
@@ -140,6 +149,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
+    monthsPerRow = 3,
     ...other
   } = props;
 
@@ -304,6 +314,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            monthsPerRow={monthsPerRow}
           >
             {monthText}
           </PickersMonth>
@@ -360,6 +371,11 @@ MonthCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate

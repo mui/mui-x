@@ -2,13 +2,8 @@ import * as React from 'react';
 import { styled, alpha, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
-  unstable_capitalize as capitalize,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import {
-  WrapperVariant,
-  WrapperVariantContext,
-} from '../internals/components/wrappers/WrapperVariantContext';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,
@@ -19,7 +14,7 @@ export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;
 }
 
-interface PickersMonthProps extends ExportedPickersMonthProps {
+export interface PickersMonthProps extends ExportedPickersMonthProps {
   'aria-current'?: React.AriaAttributes['aria-current'];
   autoFocus: boolean;
   children: React.ReactNode;
@@ -31,17 +26,16 @@ interface PickersMonthProps extends ExportedPickersMonthProps {
   selected?: boolean;
   value: number;
   tabIndex: number;
+  monthsPerRow: 3 | 4;
 }
 
-interface PickersMonthOwnerState extends PickersMonthProps {
-  wrapperVariant: WrapperVariant;
-}
+type PickersMonthOwnerState = PickersMonthProps;
 
 const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
-  const { wrapperVariant, disabled, selected, classes } = ownerState;
+  const { disabled, selected, classes } = ownerState;
 
   const slots = {
-    root: ['root', wrapperVariant && `mode${capitalize(wrapperVariant)}`],
+    root: ['root'],
     monthButton: ['monthButton', disabled && 'disabled', selected && 'selected'],
   };
 
@@ -51,19 +45,15 @@ const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
 const PickersMonthRoot = styled('div', {
   name: 'MuiPickersMonth',
   slot: 'Root',
-  overridesResolver: (_, styles) => [
-    styles.root,
-    { [`&.${pickersMonthClasses.modeDesktop}`]: styles.modeDesktop },
-    { [`&.${pickersMonthClasses.modeMobile}`]: styles.modeMobile },
-  ],
+  overridesResolver: (_, styles) => [styles.root],
 })<{
   ownerState: PickersMonthOwnerState;
-}>({
-  flexBasis: '33.3%',
+}>(({ ownerState }) => ({
+  flexBasis: ownerState.monthsPerRow === 3 ? '33.3%' : '25%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-});
+}));
 
 const PickersMonthButton = styled('button', {
   name: 'MuiPickersMonth',
@@ -135,18 +125,15 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
     ...other
   } = props;
 
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-
   const ref = React.useRef<HTMLButtonElement>(null);
+  const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
+
   useEnhancedEffect(() => {
     if (autoFocus) {
       ref.current?.focus();
     }
   }, [autoFocus]);
-
-  const ownerState = { ...props, wrapperVariant };
-
-  const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersMonthRoot

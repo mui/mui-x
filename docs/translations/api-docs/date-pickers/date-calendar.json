@@ -17,6 +17,7 @@
     "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
+    "monthsPerRow": "Months rendered per row.",
     "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null, selectionState: PickerSelectionState | undefined) =&gt; void</code><br><em>value:</em> The new value.<br><em>selectionState:</em> Indicates if the date selection is complete.",
     "onFocusedViewChange": "Callback fired on focused view change.<br><br><strong>Signature:</strong><br><code>function(view: TView, hasFocus: boolean) =&gt; void</code><br><em>view:</em> The new view to focus or not.<br><em>hasFocus:</em> <code>true</code> if the view should be focused.",
     "onMonthChange": "Callback firing on month change @DateIOType.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; void | Promise</code><br><em>month:</em> The new month.<br> <em>returns</em> (void | Promise): -",
@@ -33,7 +34,8 @@
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",
-    "views": "Available views."
+    "views": "Available views.",
+    "yearsPerRow": "Years rendered per row."
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

@@ -40,6 +40,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    yearsPerRow: displayStaticWrapperAs === 'mobile' ? 3 : 4,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     componentsProps: {
       ...defaultizedProps.componentsProps,
@@ -195,6 +196,11 @@ StaticNextDateTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -333,6 +339,11 @@ StaticNextDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { StaticNextDateTimePicker };

@@ -35,6 +35,7 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     viewRenderers,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    yearsPerRow: displayStaticWrapperAs === 'mobile' ? 3 : 4,
   };
 
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
@@ -143,6 +144,11 @@ StaticNextDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -270,6 +276,11 @@ StaticNextDatePicker.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { StaticNextDatePicker };
