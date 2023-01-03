@@ -40,8 +40,9 @@ export type SingleInputDateRangeFieldOwnerState<TDate> = SingleInputDateRangeFie
 
 export interface SingleInputDateRangeFieldSlotsComponent {
   /**
-   * Component rendering the HTML input and the label.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as '@mui/material/TextField'.
+   * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType;
 }

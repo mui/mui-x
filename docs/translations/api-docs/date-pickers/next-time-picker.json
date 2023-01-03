@@ -61,7 +61,7 @@
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "TextField": "Component rendering the HTML input and the label inside the smart field.",
+    "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as &#39;@mui/material/TextField&#39;.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

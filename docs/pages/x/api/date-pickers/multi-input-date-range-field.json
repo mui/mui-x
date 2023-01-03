@@ -49,7 +49,7 @@
       "default": "MultiInputDateRangeFieldSeparator",
       "type": { "name": "elementType" }
     },
-    "TextField": { "default": "TextField", "type": { "name": "elementType" } }
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputDateRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateRangeField" },

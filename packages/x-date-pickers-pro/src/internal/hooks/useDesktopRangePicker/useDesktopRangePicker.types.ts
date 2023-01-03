@@ -27,9 +27,10 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
   /**
-   * Component rendering an HTML input and a label inside the smart field.
-   * Will be rendered twice: once for the start element and once for the end element.
-   * @default TextField
+   * Form control with an input to render a date or time inside the default field.
+   * It is rendered twice: once for the start element and once for the end element.
+   * Receives the same props as '@mui/material/TextField'.
+   * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType<TextFieldProps>;
 }

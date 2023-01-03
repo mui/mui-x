@@ -27,8 +27,9 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
    */
   Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
   /**
-   * Component rendering the HTML input and the label inside the smart field.
-   * @default TextField
+   * Form control with an input to render the value inside the default field.
+   * Receives the same props as '@mui/material/TextField'.
+   * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType<TextFieldProps>;
 }

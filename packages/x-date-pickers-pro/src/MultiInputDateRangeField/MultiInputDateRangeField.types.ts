@@ -49,9 +49,10 @@ export interface MultiInputDateRangeFieldSlotsComponent {
    */
   Root?: React.ElementType;
   /**
-   * Component rendering an HTML input and a label.
-   * Will be rendered twice: once for the start date and once for the end date.
-   * @default TextField
+   * Form control with an input to render a date.
+   * It is rendered twice: once for the start date and once for the end date.
+   * Receives the same props as '@mui/material/TextField'.
+   * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType;
   /**

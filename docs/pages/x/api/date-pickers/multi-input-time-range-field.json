@@ -52,7 +52,7 @@
       "default": "MultiInputTimeRangeFieldSeparator",
       "type": { "name": "elementType" }
     },
-    "TextField": { "default": "TextField", "type": { "name": "elementType" } }
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputTimeRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },

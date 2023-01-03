@@ -38,5 +38,7 @@
     "variant": "The variant to use."
   },
   "classDescriptions": {},
-  "slotDescriptions": { "TextField": "Component rendering the HTML input and the label." }
+  "slotDescriptions": {
+    "TextField": "Form control with an input to render the value.\nReceives the same props as &#39;@mui/material/TextField&#39;."
+  }
 }

@@ -26,6 +26,6 @@
   "slotDescriptions": {
     "Root": "Element rendered at the root.",
     "Separator": "Element rendered between the two inputs.",
-    "TextField": "Component rendering an HTML input and a label.\nWill be rendered twice: once for the start date and once for the end date."
+    "TextField": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.\nReceives the same props as &#39;@mui/material/TextField&#39;."
   }
 }

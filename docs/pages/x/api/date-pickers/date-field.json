@@ -68,7 +68,9 @@
       "default": "'outlined'"
     }
   },
-  "slots": { "TextField": { "default": "TextField", "type": { "name": "elementType" } } },
+  "slots": {
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+  },
   "name": "DateField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateField" },
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",

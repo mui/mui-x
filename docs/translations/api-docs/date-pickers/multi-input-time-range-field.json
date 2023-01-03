@@ -29,6 +29,6 @@
   "slotDescriptions": {
     "Root": "Element rendered at the root.",
     "Separator": "Element rendered between the two inputs.",
-    "TextField": "Component rendering an HTML input and a label.\nWill be rendered twice: once for the start time and once for the end time."
+    "TextField": "Form control with an input to render a time.\nIt is rendered twice: once for the start time and once for the end time.\nReceives the same props as &#39;@mui/material/TextField&#39;."
   }
 }
