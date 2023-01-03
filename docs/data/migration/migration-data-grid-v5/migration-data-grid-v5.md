@@ -197,6 +197,19 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `MAX_PAGE_SIZE` constant was removed.
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
+- The `GridCellParams` interface was changed. The row generic is now before the cell generic.
+
+  ```diff
+  -extends GridCellParams<V, R, F, N> {
+  +extends GridCellParams<R, V, F, N> {
+  ```
+
+  This means that values for 2 generic arguments needs to be provided before the argument that you already have.
+
+  ```diff
+  -renderCell: (params: GridRenderCellParams<number>) => {
+  +renderCell: (params: GridRenderCellParams<any, any, number>) => {
+  ```
 
 ### CSS classes
 

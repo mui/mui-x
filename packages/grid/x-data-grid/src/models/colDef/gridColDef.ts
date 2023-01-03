@@ -125,10 +125,10 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
    * @template R, V
-   * @param {GridValueGetterParams<any, R>} params Object containing parameters for the getter.
+   * @param {GridValueGetterParams<R, any>} params Object containing parameters for the getter.
    * @returns {V} The cell value.
    */
-  valueGetter?: (params: GridValueGetterParams<any, R>) => V;
+  valueGetter?: (params: GridValueGetterParams<R, any>) => V;
   /**
    * Function that allows to customize how the entered value is stored in the row.
    * It only works with cell/row editing.
@@ -148,27 +148,27 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Function that takes the user-entered value and converts it to a value used internally.
    * @template R, V, F
    * @param {F | undefined} value The user-entered value.
-   * @param {GridCellParams<V, R, F>} params The params when called before saving the value.
+   * @param {GridCellParams<R, V, F>} params The params when called before saving the value.
    * @returns {V} The converted value to use internally.
    */
-  valueParser?: (value: F | undefined, params?: GridCellParams<V, R, F>) => V;
+  valueParser?: (value: F | undefined, params?: GridCellParams<R, V, F>) => V;
   /**
    * Class name that will be added in cells for that column.
    */
-  cellClassName?: GridCellClassNamePropType<V>;
+  cellClassName?: GridCellClassNamePropType<R, V>;
   /**
    * Allows to override the component rendered as cell for this column.
    * @template R, V, F
-   * @param {GridRenderCellParams<V, R, F>} params Object containing parameters for the renderer.
+   * @param {GridRenderCellParams<R, V, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderCell?: (params: GridRenderCellParams<V, R, F>) => React.ReactNode;
+  renderCell?: (params: GridRenderCellParams<R, V, F>) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param {GridRenderEditCellParams} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderEditCell?: (params: GridRenderEditCellParams<V>) => React.ReactNode;
+  renderEditCell?: (params: GridRenderEditCellParams<R, V, F>) => React.ReactNode;
   /**
    * Callback fired when the edit props of the cell changes.
    * It allows to process the props that saved into the state.
@@ -184,11 +184,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
-   * @template V, R, F
-   * @param {GridColumnHeaderParams<V, R, F>} params Object containing parameters for the renderer.
+   * @template R, V, F
+   * @param {GridColumnHeaderParams<R, V, F>} params Object containing parameters for the renderer.
    * @returns {React.ReactNode} The element to be rendered.
    */
-  renderHeader?: (params: GridColumnHeaderParams<V, R, F>) => React.ReactNode;
+  renderHeader?: (params: GridColumnHeaderParams<R, V, F>) => React.ReactNode;
   /**
    * Header cell element alignment.
    */
@@ -224,7 +224,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
     value: any,
     colDef: GridStateColDef,
     apiRef: React.MutableRefObject<GridApiCommunity>,
-  ) => null | ((params: GridCellParams<V, R, F>) => boolean);
+  ) => null | ((params: GridCellParams<R, V, F>) => boolean);
   /**
    * If `true`, this column cannot be reordered.
    * @default false
@@ -239,7 +239,7 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    * Number of columns a cell should span.
    * @default 1
    */
-  colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
+  colSpan?: number | ((params: GridCellParams<R, V, F>) => number | undefined);
 }
 
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
