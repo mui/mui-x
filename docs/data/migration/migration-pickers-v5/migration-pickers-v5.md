@@ -1,6 +1,6 @@
 # Migration from v5 to v6
 
-<p class="description">This guide describes the changes needed to migrate the Date & Time Pickers from v5 to v6.</p>
+<p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
 ## Start using the alpha release
 
@@ -19,11 +19,14 @@ Below are described the steps you need to take to migrate from v5 to v6.
 
 ## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6 for both the Date and Time Pickers and DataGrid.
-It should be only applied **once per folder.** Here's how to run codemods for pickers.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v6.0.0/preset-safe` to target Data Grid as well.
+It should be only applied **once per folder.**
 
 ```sh
+// Date and Time Pickers specific
 npx @mui/x-codemod v6.0.0/pickers/preset-safe <path>
+// Target Data Grid as well
+npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::info

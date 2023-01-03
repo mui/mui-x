@@ -13,6 +13,28 @@ In `package.json`, change the version of the data grid package to `next`.
 
 Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
+It should be only applied **once per folder.**
+
+```sh
+// Data Grid specific
+npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
+// Target Date and Time pickers as well
+npx @mui/x-codemod v6.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you most proabably should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+
+All other changes must be handled manually.
+
 ## Breaking changes
 
 Since v6 is a major release, it contains some changes that affect the public API.
@@ -90,7 +112,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
    }
   ```
 
-### Column menu
+### ✅ Column menu
 
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
 
@@ -104,8 +126,14 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `GridAggregationColumnMenuItem`                                     | `GridColumnMenuAggregationItem` |
   | `GridRowGroupingColumnMenuItems`, `GridRowGroupableColumnMenuItems` | `GridColumnMenuGroupingItem`    |
 
-- `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
+- The `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
+
+These changes are not part of `preset-safe` codemod and you need to handle them manually:
+
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, you need to replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- Type `GridFilterItemProps` should be renamed to `GridColumnMenuItemProps`.
+- If you are using Custom Column Menu using `components.ColumnMenu` slot, it now recieves `colDef` prop instead of `currentColumn`, you need to fix it manually
 
 ### Rows
 

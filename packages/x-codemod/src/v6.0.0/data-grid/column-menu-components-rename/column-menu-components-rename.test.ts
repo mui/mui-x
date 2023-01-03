@@ -10,7 +10,7 @@ function read(fileName) {
 
 const TEST_FILES = ['community-root-imports', 'pro-root-imports', 'premium-root-imports'];
 
-describe('v6.0.0', () => {
+describe('v6.0.0/data-grid', () => {
   describe('column-menu-components-rename', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;

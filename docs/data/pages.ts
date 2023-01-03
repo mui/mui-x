@@ -476,7 +476,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (Date & Time Pickers)',
+            title: 'Migration from lab to v5 (Date and Time Pickers)',
           },
           {
             pathname: '/x/migration/migration-data-grid-v4',

@@ -8,7 +8,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('v6.0.0', () => {
+describe('v6.0.0/pickers', () => {
   describe('view-components-rename-value-prop', () => {
     it('transforms props as needed', () => {
       const actual = transform({ source: read('./actual.spec.js') }, { jscodeshift }, {});

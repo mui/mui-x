@@ -8,7 +8,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('v6.0.0', () => {
+describe('v6.0.0/pickers', () => {
   describe('localization-provider-rename-locale', () => {
     it('transforms expression props as needed', () => {
       const actual = transform(

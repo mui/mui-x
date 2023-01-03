@@ -62,7 +62,7 @@ npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":
 
 #### 🚀 `preset-safe`
 
-A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both data-grid and pickers. To run codemods for a either grid or pickers, refer to the respective section.
+A combination of all important transformers for migrating v5 to v6. ⚠️ This codemod should be run only once. It runs codemods for both Data Grid and Date and Time Pickers packages. To run codemods for a specific package, refer to the respective section.
 
 ```sh
 npx @mui/x-codemod v6.0.0/preset-safe <path|folder>
@@ -75,7 +75,7 @@ The corresponding sub-sections are listed below
 
 ### Pickers codemods
 
-#### 🚀 `preset-safe` for pickers
+#### `preset-safe` for pickers
 
 The `preset-safe` codemods for pickers.
 
@@ -194,11 +194,11 @@ If you were always using the same text value in all your components, consider mo
  </LocalizationProvider>
 ```
 
-You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#rename-the-locale-prop-on-localizationprovider).
+You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
 
 ### Data grid codemods
 
-#### 🚀 `preset-safe` for data grid
+#### `preset-safe` for data grid
 
 The `preset-safe` codemods for data grid.
 
@@ -235,4 +235,4 @@ npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
 
-You can find more details about this breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/#column-menu).
+You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).

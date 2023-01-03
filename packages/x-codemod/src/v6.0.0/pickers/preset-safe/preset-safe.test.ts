@@ -8,8 +8,8 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('v6.0.0', () => {
-  describe('preset-safe-pickers', () => {
+describe('v6.0.0/pickers', () => {
+  describe('preset-safe', () => {
     it('transforms props as needed', () => {
       const actual = transform({ source: read('./actual.spec.js') }, { jscodeshift }, {});
 

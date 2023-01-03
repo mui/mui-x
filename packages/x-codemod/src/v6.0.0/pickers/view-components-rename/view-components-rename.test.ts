@@ -10,7 +10,7 @@ function read(fileName) {
 
 const TEST_FILES = ['community-nested-imports', 'community-root-imports', 'pro-root-imports'];
 
-describe('v6.0.0', () => {
+describe('v6.0.0/pickers', () => {
   describe('view-components-rename', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
