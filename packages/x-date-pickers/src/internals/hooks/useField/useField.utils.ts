@@ -4,6 +4,7 @@ import {
   FieldSectionsValueBoundaries,
   SectionNeighbors,
   SectionOrdering,
+  FieldValueType,
 } from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -635,8 +636,16 @@ let warnedOnceInvalidSection = false;
 
 export const validateSections = <TSection extends FieldSection>(
   sections: TSection[],
-  supportedSections: MuiDateSectionName[],
+  valueType: FieldValueType,
 ) => {
+  const supportedSections: MuiDateSectionName[] = [];
+  if (['date', 'date-time'].includes(valueType)) {
+    supportedSections.push('day', 'month', 'year');
+  }
+  if (['time', 'date-time'].includes(valueType)) {
+    supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
       const invalidSection = sections.find(
