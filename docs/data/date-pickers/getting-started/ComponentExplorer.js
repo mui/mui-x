@@ -1,7 +1,8 @@
 import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
 import Stack from '@mui/material/Stack';
+import Link from '@mui/material/Link';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -10,6 +11,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as exportedElements from '@mui/x-date-pickers-pro';
 import Typography from '@mui/material/Typography';
+
+const camelCaseToKebabCase = (str) =>
+  str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+const camelCaseToPascalCase = (str) => str.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+const getSubPackageFromExportedName = (exportedName) =>
+  exportedName.replace(/Unstable_/g, '');
 
 const COMPONENTS = {
   date: {
@@ -48,7 +56,10 @@ const COMPONENTS = {
     staticPicker: 'Unstable_StaticNextDateRangePicker',
   },
   timeRange: {
-    field: 'Unstable_MultiInputTimeRangeField',
+    field: [
+      'Unstable_SingleInputTimeRangeField',
+      'Unstable_MultiInputTimeRangeField',
+    ],
     view: null,
     picker: null,
     desktopPicker: null,
@@ -56,7 +67,10 @@ const COMPONENTS = {
     staticPicker: null,
   },
   dateTimeRange: {
-    field: 'Unstable_MultiInputDateTimeRangeField',
+    field: [
+      'Unstable_SingleInputDateTimeRangeField',
+      'Unstable_MultiInputDateTimeRangeField',
+    ],
     view: null,
     picker: null,
     desktopPicker: null,
@@ -83,8 +97,8 @@ export default function ComponentExplorer() {
 
   const importCode = exportedNames
     .map((exportedName) => {
-      const cleanName = exportedName.replace('Unstable_', '').replace('Next', '');
-      const subPackage = exportedName.replace('Unstable_', '');
+      const cleanName = exportedName.replace(/Unstable_|Next/g, '');
+      const subPackage = getSubPackageFromExportedName(exportedName);
 
       const isPro = cleanName.includes('Range');
 
@@ -104,8 +118,30 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
   const content = exportedNames.map((exportedName) => {
     const Component = exportedElements[exportedName];
 
-    return <Component />;
+    return (
+      <DemoItem label={getSubPackageFromExportedName(exportedName)}>
+        <Component />
+      </DemoItem>
+    );
   });
+
+  const docPages = React.useMemo(() => {
+    const docPagesNames = Array.from(
+      new Set(
+        exportedNames.map((exportedName) =>
+          exportedName.replace(
+            /(Unstable_|Desktop|Mobile|Static|Next|SingleInput|MultiInput)/g,
+            '',
+          ),
+        ),
+      ),
+    );
+
+    return docPagesNames.map((docPageName) => ({
+      name: camelCaseToPascalCase(docPageName),
+      path: `/x/react-date-pickers/${camelCaseToKebabCase(docPageName)}/`,
+    }));
+  }, [exportedNames]);
 
   return (
     <Stack spacing={3} sx={{ width: '100%', py: 2 }}>
@@ -163,6 +199,13 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
       </Stack>
       {exportedNames.length > 0 && (
         <React.Fragment>
+          <Stack>
+            {docPages.map((docPage) => (
+              <Link href={docPage.path} rel="noopener" target="_blank">
+                Documentation {docPage.name}
+              </Link>
+            ))}
+          </Stack>
           <Stack>
             <Typography>Import code:</Typography>
             <HighlightedCode code={importCode} language="tsx" />

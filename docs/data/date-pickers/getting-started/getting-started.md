@@ -146,12 +146,12 @@ The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _
 
 The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _Date Range_, _Time Range_ and _Date and Time Range_ editing:
 
-|                        | **Date**                    | **Time**                   | **Date and Time**              |
-| ---------------------- | --------------------------- | -------------------------- | ------------------------------ |
-| **Picker**             | `DateRangePicker`           | 🚧                         | 🚧                             |
-| **Field** (one input)  | `SingleInputDateRangeField` | 🚧                         | 🚧                             |
-| **Field** (two inputs) | `MultiInputDateRangeField`  | `MultiInputTimeRangeField` | `MultiInputDateTimeRangeField` |
-| **Calendar / Clock**   | `DateRangeCalendar`         | 🚧                         | -                              |
+|                        | **Date**                    | **Time**                    | **Date and Time**               |
+| ---------------------- | --------------------------- | --------------------------- | ------------------------------- |
+| **Picker**             | `DateRangePicker`           | 🚧                          | 🚧                              |
+| **Field** (one input)  | `SingleInputDateRangeField` | `SingleInputTimeRangeField` | `SingleInputDateTimeRangeField` |
+| **Field** (two inputs) | `MultiInputDateRangeField`  | `MultiInputTimeRangeField`  | `MultiInputDateTimeRangeField`  |
+| **Calendar / Clock**   | `DateRangeCalendar`         | 🚧                          | -                               |
 
 ### Component explorer
 
@@ -187,16 +187,6 @@ const theme = createTheme({
 You don't have to import the theme augmentation from both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` when using `@mui/x-date-pickers-pro`.
 Importing it from `@mui/x-date-pickers-pro` is enough.
 :::
-
-## Native pickers
-
-:::warning
-Native input controls support by browsers [isn't perfect](https://caniuse.com/#feat=input-datetime).
-:::
-
-Native date (`type="date"`), time (`type="time"`) and date&time (`type="datetime-local"`) pickers.
-
-{{"demo": "NativePickers.js"}}
 
 ## Testing caveats
 
