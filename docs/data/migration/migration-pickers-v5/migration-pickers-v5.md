@@ -104,6 +104,36 @@ const theme = createTheme({
 });
 ```
 
+### Remove the keyboard view
+
+The picker components no longer have a keyboard view to render the input inside the modal on mobile.
+
+- If your date is easier to edit with the keyboard (e.g: a birthdate), you can directly use the new field components:
+
+  ```diff
+   function App() {
+     return (
+  -    <DatePicker />
+  +    <DateField />
+     )
+   }
+  ```
+
+- If you want to keep the old keyboard view, you can pass a custom `Layout` component slot to re-introduce the keyboard view.
+
+{{"demo": "MobileKeyboardView.js", "defaultCodeOpen": false}}
+
+:::info
+At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
+:::
+
+:::warning
+This change only applies to the new pickers.
+The legacy pickers keep the keyboard view until there removal.
+
+For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+:::
+
 ## Date library and adapters
 
 ### ✅ Do not import adapter from `@date-io`
