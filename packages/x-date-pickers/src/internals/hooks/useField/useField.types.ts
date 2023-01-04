@@ -22,7 +22,7 @@ export interface UseFieldParams<
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
-  supportedDateSections: MuiDateSectionName[];
+  valueType: FieldValueType;
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
@@ -334,6 +334,8 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
+
+export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export type SectionNeighbors = {
   [sectionIndex: number]: {
