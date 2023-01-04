@@ -7,6 +7,39 @@ import { gridVisibleColumnFieldsSelector } from '../columns/gridColumnsSelector'
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridValidRowModel } from '../../../models/gridRows';
+import { GridColDef } from '../../../models/colDef/gridColDef';
+
+const stringToBoolean = (value: string) => {
+  switch (value.toLowerCase().trim()) {
+    case 'true':
+    case 'yes':
+    case '1':
+      return true;
+
+    case 'false':
+    case 'no':
+    case '0':
+    case 'null':
+    case 'undefined':
+      return false;
+
+    default:
+      return JSON.parse(value);
+  }
+};
+
+const parseCellStringValue = (value: string, columnType: GridColDef['type']) => {
+  switch (columnType) {
+    case 'number': {
+      return Number(value);
+    }
+    case 'boolean': {
+      return stringToBoolean(value);
+    }
+    default:
+      return value;
+  }
+};
 
 function writeToClipboardPolyfill(data: string) {
   const span = document.createElement('span');
@@ -140,7 +173,12 @@ export const useGridClipboard = (
         const selectedFieldIndex = visibleColumnFields.indexOf(selectedCell.field);
         for (let i = selectedFieldIndex; i < visibleColumnFields.length; i += 1) {
           const field = visibleColumnFields[i];
-          newRow[field] = parsedData[i - selectedFieldIndex];
+          const stringValue = parsedData[i - selectedFieldIndex];
+          if (typeof stringValue !== 'undefined') {
+            const colDef = apiRef.current.getColumn(field);
+            const parsedValue = parseCellStringValue(stringValue, colDef.type);
+            newRow[field] = parsedValue;
+          }
         }
 
         rowsToUpdate.push(newRow);
