@@ -4,6 +4,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeView } from '../../models';
 import { useViews, UseViewsOptions } from '../useViews';
 import type { UsePickerValueViewsResponse } from './usePickerValue';
+import { isTimeView } from '../../utils/time-utils';
 
 interface PickerViewsRendererBaseExternalProps<TView extends DateOrTimeView>
   extends Omit<UsePickerViewsProps<any, TView, any, any>, 'openTo' | 'viewRenderers'> {}
@@ -59,6 +60,11 @@ export interface UsePickerViewsBaseProps<
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
+  /**
+   * If `true`, the toolbar will be visible.
+   * @default `true` for mobile, `false` for desktop
+   */
+  showToolbar?: boolean;
 }
 
 /**
@@ -173,6 +179,17 @@ export const usePickerViews = <
     [disableOpenPicker, viewRenderers, views],
   );
 
+  const hasMultipleUITimeView = React.useMemo(() => {
+    const numberUITimeViews = views.reduce((acc, viewForReduce) => {
+      if (viewRenderers[viewForReduce] != null && isTimeView(viewForReduce)) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+
+    return numberUITimeViews > 1;
+  }, [viewRenderers, views]);
+
   const currentViewMode = viewModeLookup[view];
   const shouldRestoreFocus = useEventCallback(() => currentViewMode === 'UI');
 
@@ -234,6 +251,7 @@ export const usePickerViews = <
         onViewChange: setView,
         focusedView,
         onFocusedViewChange: setFocusedView,
+        showViewSwitcher: hasMultipleUITimeView && !props.showToolbar,
       });
     },
   };

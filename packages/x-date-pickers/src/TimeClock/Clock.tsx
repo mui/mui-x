@@ -67,7 +67,6 @@ const ClockRoot = styled('div', {
   justifyContent: 'center',
   alignItems: 'center',
   margin: theme.spacing(2),
-  position: 'relative',
 }));
 
 const ClockClock = styled('div', {

@@ -135,6 +135,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: TimeClockProps<any> }>({
   display: 'flex',
   flexDirection: 'column',
+  position: 'relative',
 });
 
 const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
@@ -151,7 +152,6 @@ type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-// TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
  *
  * API:
