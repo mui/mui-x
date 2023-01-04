@@ -1,12 +1,12 @@
-<DesktopNextTimePicker
-  label="For desktop"
-  defaultValue={dayjs('2022-04-07T15:30')}
-/>
-<MobileNextTimePicker
-  label="For mobile"
-  defaultValue={dayjs('2022-04-07T15:30')}
-/>
-<NextTimePicker
-  label="Responsive"
-  defaultValue={dayjs('2022-04-07T15:30')}
-/>
+<DemoItem label="Desktop variant">
+  <DesktopNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+</DemoItem>
+<DemoItem label="Mobile variant">
+  <MobileNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+</DemoItem>
+<DemoItem label="Responsive variant">
+  <NextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+</DemoItem>
+<DemoItem label="Static variant">
+  <StaticNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+</DemoItem>
