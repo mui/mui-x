@@ -418,6 +418,16 @@ const pages: MuiPage[] = [
             title: 'SingleInputDateRangeField',
             plan: 'pro',
           },
+          {
+            pathname: '/x/api/date-pickers/single-input-date-time-range-field',
+            title: 'SingleInputDateTimeRangeField',
+            plan: 'pro',
+          },
+          {
+            pathname: '/x/api/date-pickers/single-input-time-range-field',
+            title: 'SingleInputTimeRangeField',
+            plan: 'pro',
+          },
           { pathname: '/x/api/date-pickers/static-date-picker', title: 'StaticDatePicker' },
           {
             pathname: '/x/api/date-pickers/static-date-range-picker',
@@ -476,7 +486,7 @@ const pages: MuiPage[] = [
         children: [
           {
             pathname: '/x/migration/migration-pickers-lab',
-            title: 'Migration from lab to v5 (Date & Time Pickers)',
+            title: 'Migration from lab to v5 (Date and Time Pickers)',
           },
           {
             pathname: '/x/migration/migration-data-grid-v4',
