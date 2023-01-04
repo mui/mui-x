@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers-pro'
 
 # Date Calendar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-<p class="description">The Date Range Calendar lets the user select a date range without any input or popper / modal.</p>
+<p class="description">The Date Range Calendar lets the user select a range of dates without any input or popper / modal.</p>
 
 ## Basic usage
 
@@ -59,7 +59,7 @@ This feature isn't implemented yet. It's coming.
 
 Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
 
-## 🚧 Month range Picker
+## 🚧 Month Range Picker
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -67,4 +67,4 @@ This feature isn't implemented yet. It's coming.
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
 :::
 
-Month range picker allows setting date ranges by picking months only.
+The Month Range Picker allows setting a range of months.

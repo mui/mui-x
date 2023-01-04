@@ -9,23 +9,29 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-<p class="description">The date range picker let the user select a range of dates.</p>
+<p class="description">The Date Range Picker let the user select a range of dates.</p>
 
 :::warning
-The new date range pickers are unstable.
+The new Date Range Pickers are unstable.
 They might receive breaking changes on their props to have the best component possible by the time of the stable release.
 
 They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
 (`NextDateRangePicker` will become `DateRangePicker`, ...)
 :::
 
-:::info
-You can pass almost any prop from [NextDatePicker](/x/react-date-pickers/date-picker/) to the Date Range Picker.
-:::
-
 ## Basic usage
 
 {{"demo": "BasicDateRangePicker.js"}}
+
+## Component composition
+
+The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
+All the documented props of those two components can also be passed to the Date Range Picker component.
+
+Check-out their documentation page for more information:
+
+- [Date Range Field](/x/react-date-pickers/date-range-field/)
+- [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
 ## Uncontrolled vs. Controlled
 
@@ -33,30 +39,33 @@ The component can be uncontrolled or controlled
 
 {{"demo": "DateRangePickerValue.js"}}
 
-## Responsiveness
+## Available components
 
-The date range picker component is designed to be optimized for the device it runs on.
+The component is available in four variants:
 
-- The `MobileNextDateRangePicker` component works best for touch devices and small screens.
-- The `DesktopNextDateRangePicker` component works best for mouse devices and large screens.
+- The `DesktopNextDateRangePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileNextDateRangePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `NextDateRangePicker` component which renders `DesktopNextDateRangePicker` or `MobileNextDateRangePicker` depending on the device it runs on.
+
+- The `StaticDateRangePicker` component which renders without the popover/modal and field.
+
+{{"demo": "ResponsiveDateRangePickers.js"}}
 
 By default, the `NextDateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
-
-{{"demo": "ResponsiveDateRangePicker.js"}}
-
-## Static mode
-
-It is also possible to render any date range picker without the modal/popover and text field.
-This will enable building custom popover/modal containers.
-
-{{"demo": "StaticDateRangePickerDemo.js", "bg": true}}
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+:::
 
 ## Form props
 
-The date range picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsDateRangePickers.js"}}
 
