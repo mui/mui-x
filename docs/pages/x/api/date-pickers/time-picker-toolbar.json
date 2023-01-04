@@ -1,0 +1,37 @@
+{
+  "props": {
+    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      },
+      "required": true
+    },
+    "className": { "type": { "name": "string" } },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "slots": {},
+  "name": "TimePickerToolbar",
+  "styles": {
+    "classes": [
+      "root",
+      "separator",
+      "hourMinuteLabel",
+      "hourMinuteLabelLandscape",
+      "hourMinuteLabelReverse",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
+    "globalClasses": {},
+    "name": "MuiTimePickerToolbar"
+  },
+  "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
+  "demos": "<ul></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimePickerToolbar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "TimePickerToolbar" }
+  ]
+}

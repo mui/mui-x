@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { useTheme, styled, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
@@ -91,6 +92,20 @@ const TimePickerToolbarHourMinuteLabel = styled('div', {
   }),
 }));
 
+TimePickerToolbarHourMinuteLabel.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.object.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'AmPmSelection',
@@ -120,7 +135,22 @@ const TimePickerToolbarAmPmSelection = styled('div', {
 /**
  * @ignore - internal component.
  */
-export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
+
+TimePickerToolbarAmPmSelection.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.object.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
+function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiTimePickerToolbar' });
   const {
     ampm,
@@ -183,6 +213,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
             value={value ? formatHours(value) : '--'}
           />
         )}
+
         {arrayIncludes(views, ['hours', 'minutes']) && separator}
         {arrayIncludes(views, 'minutes') && (
           <PickersToolbarButton
@@ -194,6 +225,7 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
             value={value ? utils.format(value, 'minutes') : '--'}
           />
         )}
+
         {arrayIncludes(views, ['minutes', 'seconds']) && separator}
         {arrayIncludes(views, 'seconds') && (
           <PickersToolbarButton
@@ -232,3 +264,48 @@ export function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerTool
     </TimePickerToolbarRoot>
   );
 }
+
+TimePickerToolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ampm: PropTypes.bool,
+  ampmInClock: PropTypes.bool,
+  classes: PropTypes.object,
+  /**
+   * className applied to the root component.
+   */
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  isMobileKeyboardViewOpen: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  toggleMobileKeyboardView: PropTypes.func,
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat: PropTypes.string,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  value: PropTypes.any,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['hours', 'minutes', 'seconds']).isRequired,
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
+} as any;
+
+export { TimePickerToolbar };
