@@ -39,8 +39,6 @@ export const useDefaultizedTimeRangeFieldProps = <TDate, AdditionalProps extends
     disablePast: props.disablePast ?? false,
     disableFuture: props.disableFuture ?? false,
     format: props.format ?? defaultFormat,
-    minTime: props.minTime,
-    maxTime: props.maxTime,
   } as any;
 };
 
