@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridClipboardApi } from '../../../models/api';
-import { useGridApiMethod, useGridNativeEventListener } from '../../utils';
+import { GridSignature, useGridApiMethod, useGridNativeEventListener } from '../../utils';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { gridVisibleColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -52,7 +52,7 @@ function hasNativeSelection(element: HTMLInputElement) {
  */
 export const useGridClipboard = (
   apiRef: React.MutableRefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
+  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode' | 'signature'>,
 ): void => {
   const copySelectedRowsToClipboard = React.useCallback<
     GridClipboardApi['unstable_copySelectedRowsToClipboard']
@@ -111,7 +111,12 @@ export const useGridClipboard = (
         return;
       }
 
-      const rowsData = text.split('\n');
+      let rowsData = text.split('\n');
+
+      if (rowsData.length > 1 && props.signature === GridSignature.DataGrid) {
+        // limit paste to a single row in DataGrid
+        rowsData = [rowsData[0]];
+      }
 
       const selectedRowId = selectedCell.id;
       const selectedRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(selectedRowId);
@@ -143,7 +148,7 @@ export const useGridClipboard = (
 
       apiRef.current.updateRows(rowsToUpdate);
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef, props.pagination, props.paginationMode, props.signature],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
