@@ -112,7 +112,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
    }
   ```
 
-### ✅ Column menu
+### Column menu
 
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
 
@@ -129,11 +129,13 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
 
-These changes are not part of `preset-safe` codemod and you need to handle them manually:
+:::warning
+Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
-- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, you need to replace them with `GridColumnMenuGroupingItem` which provides a better api.
-- Type `GridFilterItemProps` should be renamed to `GridColumnMenuItemProps`.
-- If you are using Custom Column Menu using `components.ColumnMenu` slot, it now recieves `colDef` prop instead of `currentColumn`, you need to fix it manually
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- Rename `GridFilterItemProps` type to `GridColumnMenuItemProps`.
+- If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
+:::
 
 ### Rows
 
