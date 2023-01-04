@@ -33,9 +33,13 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
+## Pagination model
+
+The pagination model is an object containing the current page and the size of the page. The default value is `{ page: 0, pageSize: 100 }`. To change the default value, make it controlled by `paginationModel` prop or initialize a custom value using `initialState.pagination.paginationModel`.
+
 ### Initialize the pagination model
 
-To initialize the pagination model without controlling it, provide the `paginationModel` to the `initialState` prop.
+To initialize the pagination model without controlling it, provide the `paginationModel` to the `initialState` prop. If you don't provide a value for one of the properties, the default value will be used.
 
 ```tsx
 <DataGrid
@@ -47,41 +51,24 @@ To initialize the pagination model without controlling it, provide the `paginati
 />
 ```
 
-{{"demo": "PageSizeInitialState.js", "bg": "inline"}}
+{{"demo": "PaginationModelInitialState.js", "bg": "inline"}}
 
-### Controlled page size
+### Controlled pagination model
 
-Use the `paginationModel` prop to control the size of the pages.
-
-You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
-
-{{"demo": "PageSizeControlled.js", "bg": "inline"}}
-
-## Current page
-
-### Initialize the page
-
-To initialize the page without controlling it, provide the it in `paginationModel` to the `initialState` prop.
+Pass the `paginationModel` prop to control the size and current page of the grid. You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
 
 ```tsx
+const [paginationModel, setPaginationModel] = React.useState({
+  pageSize: 25,
+  page: 0,
+});
 <DataGrid
-  initialState={{
-    pagination: {
-      paginationModel: { page: 1, pageSize: 5 },
-    },
-  }}
-/>
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
+/>;
 ```
 
-{{"demo": "PageInitialState.js", "bg": "inline"}}
-
-### Controlled page
-
-Use the `paginationModel` prop to control the size of the pages.
-
-You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
-
-{{"demo": "PageControlled.js", "bg": "inline"}}
+{{"demo": "PaginationModelControlled.js", "bg": "inline"}}
 
 ## Server-side pagination
 

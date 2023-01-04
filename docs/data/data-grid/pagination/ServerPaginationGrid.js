@@ -38,7 +38,6 @@ export default function ServerPaginationGrid() {
         rowCount={rowCountState}
         loading={isLoading}
         rowsPerPageOptions={[5]}
-        pagination
         paginationModel={paginationModel}
         paginationMode="server"
         onPaginationModelChange={setPaginationModel}
