@@ -171,6 +171,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
 
 ### Other exports
 
