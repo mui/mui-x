@@ -205,6 +205,11 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   -'.MuiDataGrid-cell:focus-within': {
   +'.MuiDataGrid-cell--outlined': {
   ```
+  The new class name is also available in `gridClasses`:
+  ```diff
+  -`.${gridClasses.cell}:focus-within`: {
+  +`.${gridClasses['cell--outlined']}`: {
+  ```
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
