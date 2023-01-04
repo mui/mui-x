@@ -11,7 +11,7 @@ export default function ColumnOrderingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGridPro {...data} />
+      <DataGridPro {...data} onColumnOrderChange={(params) => console.log(params)} />
     </div>
   );
 }

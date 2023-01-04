@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
-import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -194,10 +193,20 @@ export function useGridColumns(
     [apiRef],
   );
 
+  const getColumnIndexRelativeToVisibleColumns = React.useCallback<
+    GridColumnApi['getColumnIndexRelativeToVisibleColumns']
+  >(
+    (field) => {
+      const allColumns = gridColumnFieldsSelector(apiRef);
+      return allColumns.findIndex((col) => col === field);
+    },
+    [apiRef],
+  );
+
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
       const allColumns = gridColumnFieldsSelector(apiRef);
-      const oldIndexPosition = allColumns.findIndex((col) => col === field);
+      const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
       }
@@ -212,16 +221,9 @@ export function useGridColumns(
         orderedFields: updatedColumns,
       });
 
-      const params: GridColumnOrderChangeParams = {
-        field,
-        element: apiRef.current.getColumnHeaderElement(field),
-        colDef: apiRef.current.getColumn(field),
-        targetIndex: targetIndexPosition,
-        oldIndex: oldIndexPosition,
-      };
-      apiRef.current.publishEvent('columnOrderChange', params);
+      apiRef.current.publishEvent('columnIndexChange');
     },
-    [apiRef, logger, setGridColumnsState],
+    [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns],
   );
 
   const setColumnWidth = React.useCallback<GridColumnApi['setColumnWidth']>(
@@ -247,6 +249,7 @@ export function useGridColumns(
     getColumnIndex,
     getColumnPosition,
     getVisibleColumns,
+    getColumnIndexRelativeToVisibleColumns,
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,
