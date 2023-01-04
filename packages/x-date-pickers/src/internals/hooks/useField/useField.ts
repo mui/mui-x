@@ -60,6 +60,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    valueType,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -294,15 +295,24 @@ export const useField = <
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) => ({
-            date: adjustDateSectionValue(
+          setSectionValueOnDate: (activeDate) => {
+            let date = adjustDateSectionValue(
               utils,
               activeDate,
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
-            ),
-            shouldGoToNextSection: false,
-          }),
+            );
+
+            // If the field only supports time editing, then we should never go to the previous / next day.
+            if (valueType === 'time') {
+              date = utils.mergeDateAndTime(activeDate, date);
+            }
+
+            return {
+              date,
+              shouldGoToNextSection: false,
+            };
+          },
           setSectionValueOnSections: () => ({
             sectionValue: adjustInvalidDateSectionValue(
               utils,
