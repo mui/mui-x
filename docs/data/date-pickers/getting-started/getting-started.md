@@ -137,7 +137,7 @@ The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and
 
 ### Component explorer
 
-{{"demo": "ComponentExplorer.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ### Component table
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-ignore
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
 import Stack from '@mui/material/Stack';
@@ -12,37 +13,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import * as exportedElements from '@mui/x-date-pickers-pro';
 import Typography from '@mui/material/Typography';
 
-const camelCaseToKebabCase = (str: string) =>
+const camelCaseToKebabCase = (str) =>
   str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-const camelCaseToPascalCase = (str: string) =>
-  str.replace(/([a-z])([A-Z])/g, '$1 $2');
+const camelCaseToPascalCase = (str) => str.replace(/([a-z])([A-Z])/g, '$1 $2');
 
-const getSubPackageFromExportedName = (exportedName: string) =>
+const getSubPackageFromExportedName = (exportedName) =>
   exportedName.replace(/Unstable_/g, '');
 
-type ExportedElements = keyof typeof exportedElements;
-
-interface State {
-  valueType:
-    | 'date'
-    | 'time'
-    | 'dateTime'
-    | 'dateRange'
-    | 'timeRange'
-    | 'dateTimeRange';
-  family:
-    | 'field'
-    | 'view'
-    | 'picker'
-    | 'desktopPicker'
-    | 'mobilePicker'
-    | 'staticPicker';
-}
-
-const COMPONENTS: Record<
-  State['valueType'],
-  Record<State['family'], ExportedElements | ExportedElements[] | null>
-> = {
+const COMPONENTS = {
   date: {
     field: 'Unstable_DateField',
     view: 'DateCalendar',
@@ -102,14 +80,14 @@ const COMPONENTS: Record<
   },
 };
 
-export default function ComponentExplorer() {
-  const [state, setState] = React.useState<State>({
+export default function ComponentExplorerNoSnap() {
+  const [state, setState] = React.useState({
     valueType: 'date',
     family: 'picker',
   });
 
   const config = COMPONENTS[state.valueType][state.family];
-  let exportedNames: ExportedElements[];
+  let exportedNames;
   if (Array.isArray(config)) {
     exportedNames = config;
   } else if (config == null) {
@@ -139,9 +117,7 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
     .join('\n');
 
   const content = exportedNames.map((exportedName) => {
-    const Component = exportedElements[
-      exportedName
-    ] as unknown as React.JSXElementConstructor<{}>;
+    const Component = exportedElements[exportedName];
 
     return (
       <DemoItem label={getSubPackageFromExportedName(exportedName)}>
@@ -183,7 +159,7 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
             onChange={(event) =>
               setState((prev) => ({
                 ...prev,
-                valueType: event.target.value as State['valueType'],
+                valueType: event.target.value,
               }))
             }
           >
@@ -211,7 +187,7 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
             onChange={(event) =>
               setState((prev) => ({
                 ...prev,
-                family: event.target.value as State['family'],
+                family: event.target.value,
               }))
             }
           >
@@ -245,6 +221,7 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
           </Stack>
         </React.Fragment>
       )}
+
       {exportedNames.length === 0 && (
         <Typography>This component is not available yet</Typography>
       )}
