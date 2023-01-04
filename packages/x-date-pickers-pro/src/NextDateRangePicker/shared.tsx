@@ -48,13 +48,25 @@ export interface BaseNextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: BaseNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: BaseNextDateRangePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -99,6 +111,6 @@ export function useNextDateRangePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
+    slots: { Toolbar: DateRangePickerToolbar, ...(themeProps.slots ?? themeProps.components) },
   };
 }

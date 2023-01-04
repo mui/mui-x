@@ -39,6 +39,7 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import { SlotsAndSlotsProps } from '../internals/utils/utils';
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -96,7 +97,8 @@ export interface ExportedDateCalendarProps<TDate>
 
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
+    ExportedUseViewsOptions<DateView>,
+    SlotsAndSlotsProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -120,16 +122,6 @@ export interface DateCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
 }
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
@@ -245,6 +237,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     dayOfWeekFormatter,
     components,
     componentsProps,
+    slots,
+    slotsProps,
     loading,
     renderLoading,
     displayWeekNumber,
@@ -424,8 +418,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        components={components}
-        componentsProps={componentsProps}
+        slots={slots ?? components}
+        slotsProps={slotsProps ?? componentsProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -479,8 +473,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots ?? components}
+              slotsProps={slotsProps ?? componentsProps}
               loading={loading}
               renderLoading={renderLoading}
             />

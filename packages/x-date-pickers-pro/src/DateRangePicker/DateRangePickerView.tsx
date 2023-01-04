@@ -64,12 +64,12 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: DateRangePickerViewSlotsComponent<TDate>;
+  slots?: DateRangePickerViewSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
+  slotsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -126,8 +126,8 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     shouldDisableDate,
     showToolbar,
     toggleMobileKeyboardView,
-    components,
-    componentsProps,
+    slots,
+    slotsProps,
     onFocusedViewChange,
     ...other
   } = props;
@@ -213,7 +213,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   );
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const Toolbar = components?.Toolbar;
+  const Toolbar = slots?.Toolbar;
 
   const renderView = () => {
     const sharedCalendarProps = {
@@ -229,8 +229,8 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       disablePast,
       minDate,
       maxDate,
-      components,
-      componentsProps,
+      slots,
+      slotsProps,
       shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       onFocusedViewChange: onFocusedViewChange
@@ -255,7 +255,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {shouldRenderToolbar && !!Toolbar && (
         <Toolbar
-          {...componentsProps?.toolbar}
+          {...slotsProps?.toolbar}
           value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}

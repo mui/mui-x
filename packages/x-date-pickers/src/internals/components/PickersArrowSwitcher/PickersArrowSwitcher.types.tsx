@@ -9,12 +9,12 @@ export interface ExportedPickersArrowSwitcherProps {
    * Overrideable components.
    * @default {}
    */
-  components?: PickersArrowSwitcherSlotsComponent;
+  slots?: PickersArrowSwitcherSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
+  slotsProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
 }
 

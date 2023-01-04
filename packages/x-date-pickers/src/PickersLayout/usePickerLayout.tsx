@@ -60,16 +60,18 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     children,
     components,
     componentsProps,
+    slots,
+    slotsProps,
   } = props;
 
   const classes = useUtilityClasses(props);
 
   // Action bar
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.ActionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -86,10 +88,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   // Toolbar
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const Toolbar = components?.Toolbar;
+  const Toolbar = slots?.Toolbar ?? components?.Toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
-    externalSlotProps: componentsProps?.toolbar,
+    externalSlotProps: slotsProps?.toolbar ?? componentsProps?.toolbar,
     additionalProps: {
       isLandscape,
       onChange,
@@ -117,10 +119,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Tabs
 
-  const Tabs = components?.Tabs;
+  const Tabs = slots?.Tabs ?? components?.Tabs;
   const tabs =
     view && Tabs ? (
-      <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
+      <Tabs view={view} onViewChange={onViewChange} {...slotsProps?.tabs ?? componentsProps?.tabs} />
     ) : null;
 
   return {

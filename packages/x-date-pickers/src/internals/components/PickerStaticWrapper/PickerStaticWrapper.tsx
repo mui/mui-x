@@ -58,13 +58,25 @@ export interface PickerStaticWrapperProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: PickersStaticWrapperSlotsComponentsProps;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: PickersStaticWrapperSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: PickersStaticWrapperSlotsComponentsProps;
   /**
    * Locale for components texts
    */

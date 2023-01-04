@@ -33,19 +33,21 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     ...defaultizedProps.viewRenderers,
   };
 
-  // Props with the default values specific to the mobile variant
+  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
+  // Props with the default values specific to the mobile variant  
   const props = {
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
     components: {
       Field: TimeField,
-      ...defaultizedProps.components,
+      ...slots,
     },
     componentsProps: {
-      ...defaultizedProps.componentsProps,
+      ...slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,

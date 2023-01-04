@@ -67,8 +67,8 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   const {
     children,
     className,
-    components = {},
-    componentsProps = {},
+    slots = {},
+    slotsProps = {},
     isNextDisabled,
     isNextHidden,
     onGoToNext,
@@ -100,10 +100,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
 
   const [leftProps, rightProps] = isRTL ? [nextProps, previousProps] : [previousProps, nextProps];
 
-  const PreviousIconButton = components.PreviousIconButton ?? PickersArrowSwitcherButton;
+  const PreviousIconButton = slots.PreviousIconButton ?? PickersArrowSwitcherButton;
   const previousIconButtonProps = useSlotProps({
     elementType: PreviousIconButton,
-    externalSlotProps: componentsProps.previousIconButton,
+    externalSlotProps: slotsProps.previousIconButton,
     additionalProps: {
       size: 'small',
       title: leftProps.label,
@@ -116,10 +116,10 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
-  const NextIconButton = components.NextIconButton ?? PickersArrowSwitcherButton;
+  const NextIconButton = slots.NextIconButton ?? PickersArrowSwitcherButton;
   const nextIconButtonProps = useSlotProps({
     elementType: NextIconButton,
-    externalSlotProps: componentsProps.nextIconButton,
+    externalSlotProps: slotsProps.nextIconButton,
     additionalProps: {
       size: 'small',
       title: rightProps.label,
@@ -132,19 +132,19 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     className: classes.button,
   });
 
-  const LeftArrowIcon = components?.LeftArrowIcon ?? ArrowLeft;
+  const LeftArrowIcon = slots?.LeftArrowIcon ?? ArrowLeft;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
-    externalSlotProps: componentsProps.leftArrowIcon,
+    externalSlotProps: slotsProps.leftArrowIcon,
     ownerState: undefined,
   });
 
-  const RightArrowIcon = components?.RightArrowIcon ?? ArrowRight;
+  const RightArrowIcon = slots?.RightArrowIcon ?? ArrowRight;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
-    externalSlotProps: componentsProps.rightArrowIcon,
+    externalSlotProps: slotsProps.rightArrowIcon,
     ownerState: undefined,
   });
 

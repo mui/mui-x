@@ -80,6 +80,8 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   onBlur?: () => void;
   components?: PickersPopperSlotsComponent;
   componentsProps?: PickersPopperSlotsComponentsProps;
+  slots?: PickersPopperSlotsComponent;
+  slotsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
 }

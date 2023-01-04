@@ -113,8 +113,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
         {...pickerProps}
-        components={components}
-        componentsProps={componentsProps}
+        slots={components}
+        slotsProps={componentsProps}
         {...other}
       />
     </DesktopTooltipWrapper>

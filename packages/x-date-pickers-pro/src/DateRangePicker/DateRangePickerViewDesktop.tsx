@@ -69,7 +69,7 @@ export interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps,
     Omit<
       DayCalendarProps<TDate>,
-      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'components' | 'componentsProps'
+      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'slots' | 'slotsProps'
     >,
     DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
@@ -77,12 +77,12 @@ export interface DateRangePickerViewDesktopProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: DesktopDateRangeCalendarSlotsComponent<TDate>;
+  slots?: DesktopDateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DesktopDateRangeCalendarSlotsComponentsProps<TDate>;
+  slotsProps?: DesktopDateRangeCalendarSlotsComponentsProps<TDate>;
   calendars: 1 | 2 | 3;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
@@ -146,8 +146,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   const {
     calendars,
     changeMonth,
-    components,
-    componentsProps,
+    slots,
+    slotsProps,
     rangePosition,
     currentMonth,
     value,
@@ -225,13 +225,13 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     changeMonth(utils.getPreviousMonth(currentMonth));
   }, [changeMonth, currentMonth, utils]);
 
-  const componentsForDayCalendar = {
+  const slotsForDayCalendar = {
     Day: DateRangePickerDay,
-    ...components,
+    ...slots,
   } as DayCalendarSlotsComponent<TDate>;
 
-  const componentsPropsForDayCalendar = {
-    ...componentsProps,
+  const slotsPropsForDayCalendar = {
+    ...slotsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
 
@@ -243,7 +243,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
         isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
         isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
         onMouseEnter: () => handlePreviewDayChange(day),
-        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -264,8 +264,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               isNextHidden={index !== calendars - 1}
               isNextDisabled={isNextMonthDisabled}
               nextLabel={localeText.nextMonth}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotsProps={slotsProps}
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
@@ -281,8 +281,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               onSelectedDaysChange={handleSelectedDayChange}
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
-              components={componentsForDayCalendar}
-              componentsProps={componentsPropsForDayCalendar}
+              slots={slotsForDayCalendar}
+              slotsProps={slotsPropsForDayCalendar}
             />
           </DateRangePickerViewDesktopContainer>
         );

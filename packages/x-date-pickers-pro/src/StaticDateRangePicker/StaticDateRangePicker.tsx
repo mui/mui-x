@@ -115,8 +115,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
         DateInputProps={DateInputProps}
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
-        components={components}
-        componentsProps={componentsProps}
+        slots={components}
+        slotsProps={componentsProps}
         {...pickerProps}
         {...other}
       />

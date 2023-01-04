@@ -72,13 +72,25 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: TimeClockSlotsComponentsProps;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: TimeClockSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: TimeClockSlotsComponentsProps;
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -137,7 +149,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
   flexDirection: 'column',
 });
 
-const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
+const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
@@ -177,6 +189,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
+    slots,
+    slotsProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -416,10 +430,10 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       sx={sx}
     >
       {showViewSwitcher && (
-        <TimeCLockArrowSwitcher
+        <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
-          components={components}
-          componentsProps={componentsProps}
+          slots={slots ?? components}
+          slotsProps={slotsProps ?? componentsProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}

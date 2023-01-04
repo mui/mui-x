@@ -39,13 +39,25 @@ export interface TimeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: TimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: TimeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: TimeFieldSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: TimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;

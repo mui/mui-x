@@ -49,13 +49,25 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: PickersModalDialogSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: PickersModalDialogSlotsComponentsProps;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: PickersModalDialogSlotsComponent;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: PickersModalDialogSlotsComponentsProps;
 }
 
 const PickersModalDialogRoot = styled(MuiDialog)({

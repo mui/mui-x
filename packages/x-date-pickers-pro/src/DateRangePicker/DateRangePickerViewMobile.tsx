@@ -39,7 +39,7 @@ export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
 interface DesktopDateRangeCalendarProps<TDate>
   extends Omit<
       DayCalendarProps<TDate>,
-      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'components' | 'componentsProps'
+      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'slots' | 'slotsProps'
     >,
     DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
@@ -47,12 +47,12 @@ interface DesktopDateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  components?: DateRangePickerViewMobileSlotsComponent<TDate>;
+  slots?: DateRangePickerViewMobileSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
+  slotsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
@@ -65,8 +65,8 @@ const onlyDayView = ['day'] as const;
 export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendarProps<TDate>) {
   const {
     changeMonth,
-    components,
-    componentsProps,
+    slots,
+    slotsProps,
     value,
     maxDate: maxDateProp,
     minDate: minDateProp,
@@ -88,9 +88,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDateWithDisabled = (disabled && start) || minDate;
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
-  const componentsForDayCalendar = {
+  const slotsForDayCalendar = {
     Day: DateRangePickerDay,
-    ...components,
+    ...slots,
   } as DayCalendarSlotsComponent<TDate>;
 
   // Range going for the start of the start day to the end of the end day.
@@ -103,8 +103,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     [value, utils],
   );
 
-  const componentsPropsForDayCalendar = {
-    ...componentsProps,
+  const slotsPropsForDayCalendar = {
+    ...slotsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
 
@@ -115,7 +115,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         isHighlighting: isWithinRange(utils, day, valueDayRange),
         isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
         isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
-        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -123,8 +123,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   return (
     <React.Fragment>
       <PickersCalendarHeader
-        components={components}
-        componentsProps={componentsProps}
+        slots={slots}
+        slotsProps={slotsProps}
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
@@ -142,8 +142,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         selectedDays={value}
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
-        components={componentsForDayCalendar}
-        componentsProps={componentsPropsForDayCalendar}
+        slots={slotsForDayCalendar}
+        slotsProps={slotsPropsForDayCalendar}
       />
     </React.Fragment>
   );

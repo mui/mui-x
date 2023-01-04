@@ -93,12 +93,12 @@ export interface UseDesktopPickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseDesktopPickerSlotsComponent<TDate, TView>;
+  slots: UseDesktopPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
+  slotsProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseDesktopPickerParams<

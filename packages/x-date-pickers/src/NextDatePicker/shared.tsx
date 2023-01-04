@@ -44,13 +44,25 @@ export interface BaseNextDatePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: BaseNextDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: BaseNextDatePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -107,6 +119,7 @@ export function useNextDatePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? themeProps.components;
   return {
     ...themeProps,
     localeText,
@@ -120,6 +133,6 @@ export function useNextDatePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    components: { Toolbar: DatePickerToolbar, ...themeProps.components },
+    components: { Toolbar: DatePickerToolbar, ...slots },
   };
 }

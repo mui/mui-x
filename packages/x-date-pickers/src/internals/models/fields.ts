@@ -12,10 +12,22 @@ export interface BaseFieldProps<TValue, TError>
   format?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
+  /**
+   * @deprecated
+   */
   components?: {
     TextField?: React.ElementType<TextFieldProps>;
   };
+  /**
+   * @deprecated
+   */
   componentsProps?: {
+    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  };
+  slots?: {
+    TextField?: React.ElementType<TextFieldProps>;
+  };
+  slotsProps?: {
     textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   };
 }

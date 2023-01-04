@@ -42,6 +42,8 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     ...defaultizedProps.viewRenderers,
   };
 
+  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
@@ -49,12 +51,12 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     showToolbar: defaultizedProps.showToolbar ?? true,
     components: {
       Field: DateTimeField,
-      ...defaultizedProps.components,
+      ...slots,
     },
     componentsProps: {
-      ...defaultizedProps.componentsProps,
+      ...slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,

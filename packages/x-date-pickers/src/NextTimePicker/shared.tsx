@@ -44,13 +44,25 @@ export interface BaseNextTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: BaseNextTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: BaseNextTimePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -92,6 +104,8 @@ export function useNextTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? themeProps.components;
+  const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -104,16 +118,16 @@ export function useNextTimePickerDefaultizedProps<
     }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    components: {
+    slots: {
       Toolbar: TimePickerToolbar,
-      ...themeProps.components,
+      ...slots,
     },
-    componentsProps: {
-      ...themeProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...themeProps.componentsProps?.toolbar,
+        ...slotsProps?.toolbar,
       },
     },
   };

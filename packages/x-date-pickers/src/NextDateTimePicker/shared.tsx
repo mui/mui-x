@@ -84,13 +84,25 @@ export interface BaseNextDateTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: BaseNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: BaseNextDateTimePickerSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -147,6 +159,8 @@ export function useNextDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? themeProps.components;
+  const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
@@ -180,14 +194,14 @@ export function useNextDateTimePickerDefaultizedProps<
     components: {
       Toolbar: DateTimePickerToolbar,
       Tabs: DateTimePickerTabs,
-      ...themeProps.components,
+      ...slots,
     },
     componentsProps: {
-      ...themeProps.componentsProps,
+      ...slotsProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...themeProps.componentsProps?.toolbar,
+        ...slotsProps?.toolbar,
       },
     },
   };

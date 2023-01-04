@@ -29,11 +29,23 @@ export interface NextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: NextDateRangePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: NextDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: NextDateRangePickerSlotsComponents<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: NextDateRangePickerSlotsComponentsProps<TDate>;
 }

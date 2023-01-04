@@ -46,3 +46,28 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 
   return activeEl;
 };
+
+export interface SlotsAndSlotsProps<TSlots, TSlotsProps> {
+  /**
+   * Overrideable components.
+   * @default {}
+   * @deprecated
+   */
+  components?: TSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated
+   */
+  componentsProps?: TSlotsProps;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: TSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: TSlotsProps;
+}

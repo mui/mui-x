@@ -38,20 +38,22 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     ...defaultizedProps.viewRenderers,
   };
 
+  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    components: {
+    slots: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,
-      ...defaultizedProps.components,
+      ...slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
