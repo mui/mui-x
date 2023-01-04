@@ -9,7 +9,7 @@ import { GridColumnLookup } from './gridColumnsInterfaces';
 export const gridColumnsStateSelector = (state: GridStateCommunity) => state.columns;
 
 /**
- * Get the field of each column.
+ * Get an array of column fields in the order rendered on screen.
  * @category Columns
  */
 export const gridColumnFieldsSelector = createSelector(
@@ -27,7 +27,7 @@ export const gridColumnLookupSelector = createSelector(
 );
 
 /**
- * Get the columns as an array.
+ * Get an array of column definitions in the order rendered on screen..
  * @category Columns
  */
 export const gridColumnDefinitionsSelector = createSelector(

@@ -583,7 +583,7 @@ describe('<DataGrid /> - Column Spanning', () => {
 
     // hide `category` column
     fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
-    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide' }));
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
     clock.runToLast();
 
     // Nike row

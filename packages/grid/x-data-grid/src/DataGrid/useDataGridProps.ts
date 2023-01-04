@@ -6,8 +6,9 @@ import {
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import { GridDensityTypes, GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -36,7 +37,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   columnThreshold: 3,
   rowThreshold: 3,
   rowSelection: true,
-  density: GridDensityTypes.Standard,
+  density: 'standard',
   disableExtendRowFullWidth: false,
   disableColumnFilter: false,
   disableColumnMenu: false,

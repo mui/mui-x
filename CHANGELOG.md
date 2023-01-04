@@ -3,6 +3,138 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.13
+
+_Dec 24, 2022_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 New column menu design and API
+- 🌍 Improve Russian (ru-RU) and Korean (ko-KR) locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@6.0.0-alpha.13` / `@mui/x-data-grid-pro@6.0.0-alpha.13` / `@mui/x-data-grid-premium@6.0.0-alpha.13`
+
+#### Breaking changes
+
+- New column menu design and API (#6619) MBilalShafi
+
+  The `currentColumn` prop passed to `components.ColumnMenu` was renamed to `colDef`.
+  The `column` prop passed to the items of the column menu was renamed to `colDef`.
+  The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export has been removed.
+  The following components and interfaces were been renamed for consistency:
+
+  **Community Package:**
+
+  ```diff
+  -<GridFilterMenuItem />
+  +<GridColumnMenuFilterItem />
+  ```
+
+  ```diff
+  -<HideGridColMenuItem />
+  +<GridColumnMenuHideItem />
+  ```
+
+  ```diff
+  -<GridColumnsMenuItem />
+  +<GridColumnMenuColumnsItem />
+  ```
+
+  ```diff
+  -<SortGridMenuItems />
+  +<GridColumnMenuSortItem />
+  ```
+
+  ```diff
+  -interface GridFilterItemProps
+  +interface GridColumnMenuItemProps
+  ```
+
+  **Pro package:**
+
+  ```diff
+  -<GridColumnPinningMenuItems />
+  +<GridColumnMenuPinningItem />
+  ```
+
+  **Premium package:**
+
+  ```diff
+  -<GridAggregationColumnMenuItem />
+  +<GridColumnMenuAggregationItem />
+  ```
+
+  ```diff
+  -<GridRowGroupingColumnMenuItems />
+  -<GridRowGroupableColumnMenuItems />
+  +<GridColumnMenuGroupingItem />
+  ```
+
+- Improve column definition typing (#7224) @cherniavskii
+
+  The `GridColumns` type was removed. Use `GridColDef[]` instead.
+  The `GridActionsColDef` interface was removed. Use `GridColDef` instead.
+  The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
+  The `GridStateColDef` type was removed.
+
+    If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
+    If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
+
+- Remove GridDensityType enum (#7304) @cherniavskii
+
+  The `GridDensityTypes` enum was removed. Use `GridDensity` type instead.
+
+#### Changes
+
+- [DataGrid] Allow disabling of buttons in column panel (#6947) @MBilalShafi
+- [DataGrid] Improve column definition typing (#7224) @cherniavskii
+- [DataGrid] Improve column menu design and API (#6619) @MBilalShafi
+- [DataGrid] Remove `GridDensityType` enum (#7304) @cherniavskii
+- [DataGrid] Remove `rowHeight` and `headerHeight` from state (#7199) @DanailH
+- [DataGrid] Remove column separator to match table styles (#7067) @MBilalShafi
+- [DataGrid] Update Russian (ru-RU) locale (#7220) @VeceluXa
+- [DataGridPro] Use row ID as `key` of the detail panels (#7302) @m4theushw
+- [DataGridPremium] Fix `exceljs` import with parcel (#7284) @alexfauquette
+
+### `@mui/x-date-pickers@6.0.0-alpha.13` / `@mui/x-date-pickers-pro@6.0.0-alpha.13`
+
+#### Breaking changes
+
+- Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
+
+  `AdapterLuxon` now requires `luxon` in version `3.0.2` or higher in order to work.
+
+  Take a look at the [Upgrading Luxon](https://moment.github.io/luxon/#/upgrading) guide if you are using an older version.
+
+#### Changes
+
+- [DateRangePicker] Fix to propagate `disabled` and `readOnly` on multi input picker (#7135) @LukasTy
+- [fields] Fix multi input fields root element props order and types (#7225) @LukasTy
+- [fields] Support escaped characters (#7184) @flaviendelangle
+- [pickers] Allow to define custom view renderers on the pickers (#7176) @flaviendelangle
+- [pickers] Avoid running validation methods several times in `DateCalendar` (#7247) @flaviendelangle
+- [pickers] Improve Korean (ko-KR) locale (#7266) @hanbin9775
+- [pickers] Require Luxon 3.0.2 or higher (#7249) @flaviendelangle
+- [pickers] Rework view internals (#7097) @flaviendelangle
+
+### `@mui/x-codemod@6.0.0-alpha.13`
+
+#### Changes
+
+- [codemod] New codemod for view component renaming (#7264) @flaviendelangle
+
+### Docs
+
+- [docs] Fix some selectors not being documented (#7218) @cherniavskii
+- [docs] New page for `DateCalendar` (#7053) @flaviendelangle
+- [docs] Split selection docs (#7213) @m4theushw
+
+### Core
+
+- [core] Fix API demos callout spacing @oliviertassinari
+
 ## 6.0.0-alpha.12
 
 _Dec 16, 2022_
