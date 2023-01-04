@@ -74,7 +74,7 @@ This prop will be ignored on the mobile picker.
 
 ### Custom input component
 
-You can customize the rendering of the input with the `Input` component slot.
+You can customize the rendering of the input with the `TextField` component slot.
 Make sure to spread `inputProps` correctly to the custom input component.
 
 {{"demo": "CustomInputs.js"}}

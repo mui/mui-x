@@ -57,7 +57,6 @@
     "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
     "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "Field": "Component used to enter the date with the keyboard.",
-    "Input": "Component used to render an HTML input inside the field.",
     "InputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
@@ -70,6 +69,7 @@
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
+    "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }
