@@ -15,9 +15,9 @@
       "default": "`window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`"
     },
     "timeIcon": { "type": { "name": "node" }, "default": "Time" },
-    "wrapperVariant": {
-      "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
-      "default": "'desktop'"
+    "underlineLocation": {
+      "type": { "name": "enum", "description": "'bottom'<br>&#124;&nbsp;'top'" },
+      "default": "'bottom'"
     }
   },
   "slots": {},
