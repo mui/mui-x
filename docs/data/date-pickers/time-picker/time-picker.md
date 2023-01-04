@@ -63,13 +63,6 @@ Responsive components can suffer some inconsistencies between testing environmen
 Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
 :::
 
-## Static mode
-
-It is also possible to render the Time Picker component without the popover/modal and field.
-This will enable building custom popover/modal containers.
-
-{{"demo": "StaticTimePickerDemo.js", "bg": true}}
-
 ## Form props
 
 The component can be disabled or read-only.

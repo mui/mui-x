@@ -1,9 +1,9 @@
-<NextTimePicker
+<MobileNextTimePicker
   label={'"hours", "minutes" and "seconds"'}
   views={['hours', 'minutes', 'seconds']}
 />
-<NextTimePicker label={'"hours"'} views={['hours']} />
-<NextTimePicker
+<MobileNextTimePicker label={'"hours"'} views={['hours']} />
+<MobileNextTimePicker
   label={'"minutes" and "seconds"'}
   views={['minutes', 'seconds']}
 />

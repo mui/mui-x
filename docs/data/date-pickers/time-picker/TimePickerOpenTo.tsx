@@ -12,7 +12,8 @@ export default function TimePickerOpenTo() {
         <MobileNextTimePicker
           label={'"seconds"'}
           openTo="seconds"
-          views={['minutes', 'seconds']}
+          views={['hours', 'minutes', 'seconds']}
+          format="LTS"
         />
       </DemoContainer>
     </LocalizationProvider>
