@@ -1133,7 +1133,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         render(
           <TestCase
             rowsPerPageOptions={[2]}
-            paginationModel={{ pageSize: 2, page: 1 }}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ id: false }}
             pagination
           />,
@@ -1149,7 +1149,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         render(
           <TestCase
             rowsPerPageOptions={[2]}
-            paginationModel={{ pageSize: 2, page: 1 }}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ price2M: false, price3M: false }}
             pagination
           />,

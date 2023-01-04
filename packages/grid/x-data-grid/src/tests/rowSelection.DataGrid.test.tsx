@@ -11,7 +11,6 @@ import {
   GridEditModes,
   useGridApiRef,
   GridApi,
-  GridPaginationModel,
 } from '@mui/x-data-grid';
 import {
   getCell,
@@ -54,20 +53,6 @@ describe('<DataGrid /> - Row Selection', () => {
           }}
         />
       </div>
-    );
-  }
-
-  function PaginationTestCase({
-    initialModel,
-    ...rest
-  }: Partial<DataGridProps> & { initialModel: GridPaginationModel }) {
-    const [paginationModel, setPaginationModel] = React.useState(initialModel);
-    return (
-      <TestDataGridSelection
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        {...rest}
-      />
     );
   }
 
@@ -248,9 +233,9 @@ describe('<DataGrid /> - Row Selection', () => {
 
     it('should select all visible rows regardless of pagination', () => {
       render(
-        <PaginationTestCase
+        <TestDataGridSelection
           checkboxSelection
-          initialModel={{ page: 0, pageSize: 1 }}
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
           rowsPerPageOptions={[1]}
         />,
       );
@@ -336,10 +321,10 @@ describe('<DataGrid /> - Row Selection', () => {
 
     it('should keep only the first row in the current page as selected when turning off checkboxSelection', () => {
       const { setProps } = render(
-        <PaginationTestCase
+        <TestDataGridSelection
           checkboxSelection
           pagination
-          initialModel={{ pageSize: 2, page: 0 }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           rowsPerPageOptions={[2]}
         />,
       );
@@ -658,10 +643,10 @@ describe('<DataGrid /> - Row Selection', () => {
     it('should call onRowSelectionModelChange with an empty array if no row is selectable in the current page when turning off checkboxSelection', () => {
       const onRowSelectionModelChange = spy();
       const { setProps } = render(
-        <PaginationTestCase
+        <TestDataGridSelection
           checkboxSelection
           pagination
-          initialModel={{ pageSize: 2, page: 0 }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           rowsPerPageOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
@@ -678,10 +663,9 @@ describe('<DataGrid /> - Row Selection', () => {
     it('should call onRowSelectionModelChange with an empty array if there is no selected row in the current page when turning off checkboxSelection', () => {
       const onRowSelectionModelChange = spy();
       const { setProps } = render(
-        <PaginationTestCase
+        <TestDataGridSelection
           checkboxSelection
-          pagination
-          initialModel={{ pageSize: 2, page: 0 }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           rowsPerPageOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
