@@ -3,6 +3,7 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 const pages: MuiPage[] = [
   {
     pathname: '/x/introduction-group',
+    title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
