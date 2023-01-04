@@ -19,7 +19,6 @@ import {
 import { DateRange, RangePosition } from '../../models/range';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
-  position: 'relative',
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
