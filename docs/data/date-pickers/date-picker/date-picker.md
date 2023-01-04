@@ -76,12 +76,12 @@ The component supports three views: `day`, `month`, and `year`.
 By default, the `day` and `year` views are enabled.
 Use the `views` prop to change this behavior:
 
-{{"demo": "DateTimePickerViews.js"}}
+{{"demo": "DatePickerViews.js"}}
 
 By default, the component renders the `day` view on mount.
 Use the `openTo` prop to change this behavior:
 
-{{"demo": "DateTimePickerOpenTo.js"}}
+{{"demo": "DatePickerOpenTo.js"}}
 
 :::success
 The views will appear in the order defined by the `views` array.
