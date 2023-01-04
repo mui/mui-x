@@ -26,7 +26,13 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
-  Input?: React.ElementType<TextFieldProps>;
+  /**
+   * Form control with an input to render a date or time inside the default field.
+   * It is rendered twice: once for the start element and once for the end element.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  TextField?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
@@ -43,7 +49,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
   toolbar?: ExportedBaseToolbarProps;
 }
 

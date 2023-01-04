@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { DateTimeFieldProps } from './DateTimeField.types';
@@ -23,13 +23,15 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
-  const { inputRef: externalInputRef, ...inputProps }: DateTimeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
-    externalForwardedProps: other,
-    ownerState,
-  });
+  const TextField = components?.TextField ?? MuiTextField;
+  const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps(
+    {
+      elementType: TextField,
+      externalSlotProps: componentsProps?.textField,
+      externalForwardedProps: other,
+      ownerState,
+    },
+  );
 
   const {
     ref: inputRef,
@@ -37,13 +39,13 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     inputMode,
     readOnly,
     ...fieldProps
-  } = useDateTimeField<TDate, typeof inputProps>({
-    props: inputProps,
+  } = useDateTimeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
     inputRef: externalInputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}

@@ -37,8 +37,8 @@ enum GridCellEditStartReasons {
 /**
  * Params passed to the `cellEditStart` event.
  */
-export interface GridCellEditStartParams<V = any, R extends GridValidRowModel = any, F = V>
-  extends GridCellParams<V, R, F> {
+export interface GridCellEditStartParams<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridCellParams<R, V, F> {
   /**
    * The reason for this event to be triggered.
    */
@@ -60,8 +60,8 @@ enum GridCellEditStopReasons {
 /**
  * Params passed to the `cellEditStop event.
  */
-export interface GridCellEditStopParams<V = any, R extends GridValidRowModel = any, F = V>
-  extends GridCellParams<V, R, F> {
+export interface GridCellEditStopParams<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridCellParams<R, V, F> {
   /**
    * The reason for this event to be triggered.
    */

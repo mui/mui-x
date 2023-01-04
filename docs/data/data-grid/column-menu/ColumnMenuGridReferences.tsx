@@ -71,7 +71,7 @@ const columns = [
     field: 'slot',
     headerName: 'Component',
     width: 240,
-    renderCell: (params: GridRenderCellParams<string>) => (
+    renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} plan={params.row.plan} />
     ),
   },
@@ -79,7 +79,7 @@ const columns = [
     field: 'defaultComponent',
     headerName: 'Default Component',
     width: 300,
-    renderCell: (params: GridRenderCellParams<string>) => (
+    renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} />
     ),
   },

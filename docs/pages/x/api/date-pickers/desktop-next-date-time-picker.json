@@ -119,7 +119,6 @@
       "type": { "name": "elementType" }
     },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
@@ -133,6 +132,7 @@
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
     "Tabs": { "default": "DateTimePickerTabs", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopNextDateTimePicker",

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
@@ -76,17 +76,16 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     ownerState,
   });
 
-  const Input = components?.Input ?? TextField;
-  const startInputProps: FieldsTextFieldProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const TextField = components?.TextField ?? MuiTextField;
+  const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
-
-  const endInputProps: FieldsTextFieldProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
@@ -129,15 +128,15 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       selectedSections,
       onSelectedSectionsChange,
     },
-    startInputProps,
-    endInputProps,
-    startInputRef: startInputProps.inputRef,
-    endInputRef: endInputProps.inputRef,
+    startTextFieldProps,
+    endTextFieldProps,
+    startInputRef: startTextFieldProps.inputRef,
+    endInputRef: endTextFieldProps.inputRef,
   });
 
   return (
     <Root {...rootProps}>
-      <Input
+      <TextField
         {...startDateProps}
         inputProps={{
           ...startDateProps.inputProps,
@@ -148,7 +147,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
         }}
       />
       <Separator {...separatorProps} />
-      <Input
+      <TextField
         {...endDateProps}
         inputProps={{
           ...endDateProps.inputProps,
