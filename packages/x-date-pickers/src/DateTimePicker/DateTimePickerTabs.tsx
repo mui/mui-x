@@ -161,14 +161,14 @@ DateTimePickerTabs.propTypes = {
    */
   timeIcon: PropTypes.node,
   /**
+   * Controls where to put the separator underline.
+   * @default 'bottom'
+   */
+  underlineLocation: PropTypes.oneOf(['bottom', 'top']),
+  /**
    * Currently visible picker view.
    */
   view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
-  /**
-   * Variant of the component this component is inside of.
-   * @default 'desktop'
-   */
-  wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
 } as any;
 
 export { DateTimePickerTabs };
