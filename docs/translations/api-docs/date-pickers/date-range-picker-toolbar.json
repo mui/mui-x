@@ -1,0 +1,12 @@
+{
+  "componentDescription": "@ignore - internal component.",
+  "propDescriptions": {},
+  "classDescriptions": {
+    "root": { "description": "Styles applied to the root element." },
+    "container": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the container element"
+    }
+  },
+  "slotDescriptions": {}
+}

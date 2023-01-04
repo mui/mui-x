@@ -1,0 +1,25 @@
+{
+  "props": {},
+  "slots": {},
+  "name": "TimePickerToolbar",
+  "styles": {
+    "classes": [
+      "root",
+      "separator",
+      "hourMinuteLabel",
+      "hourMinuteLabelLandscape",
+      "hourMinuteLabelReverse",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
+    "globalClasses": {},
+    "name": "MuiTimePickerToolbar"
+  },
+  "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
+  "demos": "<ul></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimePickerToolbar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "TimePickerToolbar" }
+  ]
+}
