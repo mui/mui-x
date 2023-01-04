@@ -31,7 +31,7 @@ If you want to run the transformers one by one, check out the transformers inclu
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
 
-If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you most proabably should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
 All other changes must be handled manually.
 

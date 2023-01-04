@@ -15,9 +15,8 @@ function App() {
         <DateRangePicker
           localeText={{
             cancelButtonLabel: custom_cancelText,
-            okButtonLabel: 'string_okText',
-          }}
-        />
+            okButtonLabel: "string_okText"
+          }} />
       </LocalizationProvider>
     </ThemeProvider>
   );

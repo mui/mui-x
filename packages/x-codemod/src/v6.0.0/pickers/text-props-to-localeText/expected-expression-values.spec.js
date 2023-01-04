@@ -12,9 +12,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <StaticDateRangePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -27,9 +26,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <MobileDateRangePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -42,9 +40,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <DesktopDateRangePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -57,9 +54,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
 
   {/* Date */}
   <DatePicker
@@ -74,9 +70,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <StaticDatePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -89,9 +84,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <DesktopDatePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -104,9 +98,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <MobileDatePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -119,9 +112,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
 
   {/* Time */}
   <TimePicker
@@ -136,9 +128,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
-      openNextView: custom_rightArrowButtonText,
-    }}
-  />
+      openNextView: custom_rightArrowButtonText
+    }} />
   <StaticTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -151,9 +142,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
-      openNextView: custom_rightArrowButtonText,
-    }}
-  />
+      openNextView: custom_rightArrowButtonText
+    }} />
   <DesktopTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -166,9 +156,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
-      openNextView: custom_rightArrowButtonText,
-    }}
-  />
+      openNextView: custom_rightArrowButtonText
+    }} />
   <MobileTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -181,9 +170,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
-      openNextView: custom_rightArrowButtonText,
-    }}
-  />
+      openNextView: custom_rightArrowButtonText
+    }} />
 
   {/* DateTime */}
   <DateTimePicker
@@ -200,9 +188,8 @@
       openPreviousView: custom_leftArrowButtonText,
       previousMonth: custom_leftArrowButtonText,
       openNextView: custom_rightArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <StaticDateTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -217,9 +204,8 @@
       openPreviousView: custom_leftArrowButtonText,
       previousMonth: custom_leftArrowButtonText,
       openNextView: custom_rightArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <DesktopDateTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -234,9 +220,8 @@
       openPreviousView: custom_leftArrowButtonText,
       previousMonth: custom_leftArrowButtonText,
       openNextView: custom_rightArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
   <MobileDateTimePicker
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -251,9 +236,8 @@
       openPreviousView: custom_leftArrowButtonText,
       previousMonth: custom_leftArrowButtonText,
       openNextView: custom_rightArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  />
+      nextMonth: custom_rightArrowButtonText
+    }} />
 
   {/* Stand alone */}
   <LocalizationProvider
@@ -268,11 +252,8 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       previousMonth: custom_leftArrowButtonText,
-      nextMonth: custom_rightArrowButtonText,
-    }}
-  >
-    <CalendarPicker />
-  </LocalizationProvider>
+      nextMonth: custom_rightArrowButtonText
+    }}><CalendarPicker /></LocalizationProvider>
   <LocalizationProvider
     localeText={{
       cancelButtonLabel: custom_cancelText,
@@ -285,9 +266,6 @@
       secondsClockNumberText: custom_getSecondsClockNumberText,
       calendarViewSwitchingButtonAriaLabel: custom_getViewSwitchingButtonText,
       openPreviousView: custom_leftArrowButtonText,
-      openNextView: custom_rightArrowButtonText,
-    }}
-  >
-    <ClockPicker />
-  </LocalizationProvider>
+      openNextView: custom_rightArrowButtonText
+    }}><ClockPicker /></LocalizationProvider>
 </div>;
