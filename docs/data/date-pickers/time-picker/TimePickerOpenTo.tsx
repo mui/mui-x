@@ -2,18 +2,19 @@ import * as React from 'react';
 import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
 
-export default function DatePickerViews() {
+export default function TimePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <NextDatePicker
-          label={'"year", "month" and "day"'}
-          views={['year', 'month', 'day']}
+        <MobileNextTimePicker label={'"minutes"'} openTo="minutes" />
+        <MobileNextTimePicker
+          label={'"seconds"'}
+          openTo="seconds"
+          views={['minutes', 'seconds']}
+          format="mm:ss"
         />
-        <NextDatePicker label={'"day"'} views={['day']} />
-        <NextDatePicker label={'"month" and "year"'} views={['month', 'year']} />
       </DemoContainer>
     </LocalizationProvider>
   );
