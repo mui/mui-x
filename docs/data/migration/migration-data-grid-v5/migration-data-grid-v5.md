@@ -183,12 +183,13 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
 - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+- The `GridEditRowsModel` type was removed.
 - The following API methods were removed:
   - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
   - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
   - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
   - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
-  - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
+  - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`.
 
 ### Other exports
 
