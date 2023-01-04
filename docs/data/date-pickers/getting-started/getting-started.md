@@ -9,12 +9,9 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 # Date / Time Pickers
 
-<p class="description">Date pickers and Time pickers allow selecting a single value from a pre-determined set.</p>
+<p class="description">The Date pickers and Time pickers let the user select date and time values.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
-
-- On mobile, pickers are best suited for display in a confirmation dialog.
-- For inline display, such as on a form, consider using compact controls such as segmented dropdown buttons.
 
 ## Installation
 
@@ -86,7 +83,7 @@ For this reason, we recommend that you wrap your entire application with a `Loca
 If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
 :::
 
-## Which component to use ?
+## Basic usage
 
 ### Commonly used components
 
@@ -107,23 +104,30 @@ import { DatePicker } from '@mui/x-date-pickers-pro';
 
 :::
 
+### Controlling the value
+
+All the components described in this page can be controlled using the `value` / `onChange` props:
+
+{{"demo": "ControlledComponent.js"}}
+
+## Other components
+
 ### Keyboard vs mouse editing
 
 The first thing you want to decide, is how the user should be able to select their value.
 
-- For keyboard-only editing, use the _Field_ components.
+- For keyboard and mouse editing, use the _Picker_ components:
 
-  The _Field_ components only render one (or two) inputs with rich keyboard editing:
+{{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
+
+- For keyboard-only editing, use the _Field_ components:
 
 {{"demo": "BasicDateField.js", "hideToolbar": true, "bg": "inline"}}
 
-- For mouse-only editing, use the _Calendar / Clock_ components.
+- For mouse-only editing, use the _Calendar / Clock_ components:
 
 {{"demo": "BasicDateCalendar.js", "hideToolbar": true, "bg": "inline"}}
 
-- For both keyboard and mouse editing, use the _Picker_ components.
-
-{{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
 
 :::info
 Each _Picker_ is the combination of one _Field_ and one or several _Calendar / Clock_ components.
@@ -132,7 +136,13 @@ For example, the `DatePicker` is the combination of the `DateField` and the `Dat
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
-### Date or Time editing
+### Component explorer
+
+{{"demo": "ComponentExplorer.js", "hideToolbar": true}}
+
+### Component table
+
+#### Date or Time editing
 
 The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _Date_, _Time_ and _Date and Time_ editing:
 
@@ -142,7 +152,7 @@ The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _
 | **Field**            | `DateField`    | `TimeField`  | `DateTimeField`   |
 | **Calendar / Clock** | `DateCalendar` | `TimeClock`  | -                 |
 
-### Date or Time Range editing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### Date or Time Range editing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _Date Range_, _Time Range_ and _Date and Time Range_ editing:
 
@@ -152,10 +162,6 @@ The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _
 | **Field** (one input)  | `SingleInputDateRangeField` | `SingleInputTimeRangeField` | `SingleInputDateTimeRangeField` |
 | **Field** (two inputs) | `MultiInputDateRangeField`  | `MultiInputTimeRangeField`  | `MultiInputDateTimeRangeField`  |
 | **Calendar / Clock**   | `DateRangeCalendar`         | 🚧                          | -                               |
-
-### Component explorer
-
-{{"demo": "ComponentExplorer.js", "hideToolbar": true}}
 
 ## TypeScript
 

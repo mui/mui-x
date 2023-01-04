@@ -1,0 +1,5 @@
+<NextDatePicker
+  label="Controlled Date Picker"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>
