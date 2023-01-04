@@ -6,4 +6,5 @@
 <MobileNextTimePicker
   label={'"minutes" and "seconds"'}
   views={['minutes', 'seconds']}
+  format="mm:ss"
 />

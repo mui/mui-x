@@ -16,6 +16,7 @@ export default function TimePickerViews() {
         <MobileNextTimePicker
           label={'"minutes" and "seconds"'}
           views={['minutes', 'seconds']}
+          format="mm:ss"
         />
       </DemoContainer>
     </LocalizationProvider>
