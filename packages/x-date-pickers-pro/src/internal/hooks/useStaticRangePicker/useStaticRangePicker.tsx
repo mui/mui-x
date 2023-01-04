@@ -63,7 +63,7 @@ export const useStaticRangePicker = <
     toolbar: {
       ...componentsProps?.toolbar,
       rangePosition,
-      onDateRangePositionRange: setRangePosition,
+      onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
 

@@ -1,5 +1,17 @@
 {
-  "props": {},
+  "props": {
+    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'hours'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'seconds'"
+      },
+      "required": true
+    },
+    "className": { "type": { "name": "string" } },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
   "slots": {},
   "name": "TimePickerToolbar",
   "styles": {

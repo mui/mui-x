@@ -1,5 +1,9 @@
 {
-  "props": {},
+  "props": {
+    "className": { "type": { "name": "string" } },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
   "slots": {},
   "name": "DateRangePickerToolbar",
   "styles": {

@@ -99,7 +99,6 @@ export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileNextDatePicker
-        orientation="landscape"
         components={{
           Layout: LayoutWithKeyboardView,
           Toolbar: ToolbarWithKeyboardViewSwitch,

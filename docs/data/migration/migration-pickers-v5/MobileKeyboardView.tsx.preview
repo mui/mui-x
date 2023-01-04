@@ -1,5 +1,4 @@
 <MobileNextDatePicker
-  orientation="landscape"
   components={{
     Layout: LayoutWithKeyboardView,
     Toolbar: ToolbarWithKeyboardViewSwitch,
