@@ -28,13 +28,37 @@ const stringToBoolean = (value: string) => {
   }
 };
 
-const parseCellStringValue = (value: string, columnType: GridColDef['type']) => {
+const parseCellStringValue = (value: string, colDef: GridColDef) => {
+  const columnType = colDef.type;
+
   switch (columnType) {
     case 'number': {
       return Number(value);
     }
     case 'boolean': {
       return stringToBoolean(value);
+    }
+    case 'singleSelect': {
+      const valueOptions =
+        typeof colDef.valueOptions === 'function'
+          ? colDef.valueOptions({ field: colDef.field })
+          : colDef.valueOptions || [];
+      const valueOption = valueOptions.find((option) => {
+        if (option === value) {
+          return true;
+        }
+        // TODO: would it work with valueFormatter?
+        if (typeof option === 'object' && option !== null) {
+          if (String(option.label) === value) {
+            return true;
+          }
+        }
+        return false;
+      });
+      if (valueOption) {
+        return valueOption;
+      }
+      return value;
     }
     default:
       return value;
@@ -176,10 +200,13 @@ export const useGridClipboard = (
           const stringValue = parsedData[i - selectedFieldIndex];
           if (typeof stringValue !== 'undefined') {
             const colDef = apiRef.current.getColumn(field);
-            const parsedValue = parseCellStringValue(stringValue, colDef.type);
+            const parsedValue = parseCellStringValue(stringValue, colDef);
             newRow[field] = parsedValue;
           }
         }
+
+        console.log('oldRow', targetRow.model);
+        console.log('newRow', newRow);
 
         rowsToUpdate.push(newRow);
       });
