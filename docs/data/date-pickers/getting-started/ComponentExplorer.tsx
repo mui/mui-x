@@ -171,13 +171,14 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
   return (
     <Stack spacing={3} sx={{ width: '100%', py: 2 }}>
       <Stack direction="row" spacing={2}>
-        <FormControl size="small">
+        <FormControl>
           <InputLabel id="component-explorer-value-type-label">
             Value type
           </InputLabel>
           <Select
             label="Value type"
             labelId="component-explorer-value-type-label"
+            sx={{ minWidth: 192 }}
             value={state.valueType}
             onChange={(event) =>
               setState((prev) => ({
@@ -200,11 +201,12 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl size="small">
+        <FormControl>
           <InputLabel id="component-explorer-family-label">Family</InputLabel>
           <Select
             label="Family"
             labelId="component-explorer-family-label"
+            sx={{ minWidth: 164 }}
             value={state.family}
             onChange={(event) =>
               setState((prev) => ({

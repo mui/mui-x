@@ -114,7 +114,7 @@ All the components described in this page can be controlled using the `value` / 
 
 ### Keyboard vs mouse editing
 
-The first thing you want to decide, is how the user should be able to select their value.
+The first thing you want to decide, is how the user should be able to select their value:
 
 - For keyboard and mouse editing, use the _Picker_ components:
 
@@ -128,17 +128,16 @@ The first thing you want to decide, is how the user should be able to select the
 
 {{"demo": "BasicDateCalendar.js", "hideToolbar": true, "bg": "inline"}}
 
-
-:::info
+:::success
 Each _Picker_ is the combination of one _Field_ and one or several _Calendar / Clock_ components.
-
 For example, the `DatePicker` is the combination of the `DateField` and the `DateCalendar`.
+
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
 ### Component explorer
 
-{{"demo": "ComponentExplorer.js", "hideToolbar": true}}
+{{"demo": "ComponentExplorer.js", "bg": "inline", "hideToolbar": true}}
 
 ### Component table
 
