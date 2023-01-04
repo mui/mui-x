@@ -202,6 +202,25 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
 
+### Editing
+
+- The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
+  ```diff
+   <DataGrid
+  -  experimentalFeatures={{ newEditingApi: true }}
+   />
+  ```
+- The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+- The `GridEditRowsModel` type was removed.
+- The following API methods were removed:
+  - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
+  - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
+  - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
+  - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
+  - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`.
+
 ### Other exports
 
 - The `useGridApi` hook was removed. Use `apiRef.current` instead.
