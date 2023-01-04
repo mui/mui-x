@@ -14,12 +14,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridCellOutlineCellSelector",
-    "returnType": "GridCellIdentifier | null",
-    "description": "",
-    "supportsApiRef": true
-  },
-  {
     "name": "gridColumnDefinitionsSelector",
     "returnType": "GridStateColDef<any, any, any>[]",
     "category": "Columns",
@@ -207,12 +201,6 @@
   {
     "name": "gridFocusStateSelector",
     "returnType": "GridFocusState",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
-    "name": "gridOutlineStateSelector",
-    "returnType": "GridOutlineState",
     "description": "",
     "supportsApiRef": false
   },

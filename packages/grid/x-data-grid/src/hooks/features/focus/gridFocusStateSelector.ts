@@ -38,8 +38,14 @@ export const unstable_gridTabIndexColumnGroupHeaderSelector = createSelector(
   (state: GridTabIndexState) => state.columnGroupHeader,
 );
 
+/**
+ * @ignore - do not document.
+ */
 export const gridOutlineStateSelector = (state: GridStateCommunity) => state.outline;
 
+/**
+ * @ignore - do not document.
+ */
 export const gridCellOutlineCellSelector = createSelector(
   gridOutlineStateSelector,
   (state: GridOutlineState) => state.cell,
