@@ -96,6 +96,7 @@ export const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate
       <CalendarOrClockPicker
         {...pickerProps}
         DateInputProps={DateInputProps}
+        yearsPerRow={displayStaticWrapperAs === 'mobile' ? 3 : 4}
         components={components}
         componentsProps={componentsProps}
         {...other}
