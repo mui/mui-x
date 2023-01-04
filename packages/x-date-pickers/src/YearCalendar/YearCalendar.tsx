@@ -113,6 +113,7 @@ export interface YearCalendarProps<TDate>
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
   propTypes?: any;
+  displayName: string;
 };
 
 export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
@@ -328,6 +329,8 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     </YearCalendarRoot>
   );
 }) as YearCalendarComponent;
+
+YearCalendar.displayName = 'YearCalendar';
 
 YearCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------

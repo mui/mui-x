@@ -13,7 +13,7 @@ import { DateRange } from '../internal/models';
 
 type MobileDateRangePickerComponent = (<TDate>(
   props: MobileNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangePicker<TDate>(
   inProps: MobileNextDateRangePickerProps<TDate>,
@@ -61,6 +61,8 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
 
   return renderPicker();
 }) as MobileDateRangePickerComponent;
+
+MobileNextDateRangePicker.displayName = 'MobileNextDateRangePicker';
 
 MobileNextDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

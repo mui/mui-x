@@ -149,7 +149,7 @@ const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
 
 type TimeClockComponent = (<TDate>(
   props: TimeClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 // TODO v6: Drop the `showViewSwitcher` prop with the legacy pickers
 /**
@@ -448,6 +448,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     </TimeClockRoot>
   );
 }) as TimeClockComponent;
+
+TimeClock.displayName = 'TimeClock';
 
 TimeClock.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -50,7 +50,7 @@ export interface DateRangePickerProps<TDate>
 
 type DateRangePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -80,6 +80,8 @@ export const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
 
   return <MobileDateRangePicker ref={ref} {...other} />;
 }) as DateRangePickerComponent;
+
+DateRangePicker.displayName = 'DateRangePicker';
 
 DateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

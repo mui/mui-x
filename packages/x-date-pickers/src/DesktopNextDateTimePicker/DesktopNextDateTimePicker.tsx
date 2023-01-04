@@ -14,7 +14,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimePicker<TDate>(
   inProps: DesktopNextDateTimePickerProps<TDate>,
@@ -72,6 +72,8 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
 
   return renderPicker();
 }) as DesktopDateTimePickerComponent;
+
+DesktopNextDateTimePicker.displayName = 'DesktopNextDateTimePicker';
 
 DesktopNextDateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

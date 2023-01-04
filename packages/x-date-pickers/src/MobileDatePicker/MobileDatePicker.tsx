@@ -48,7 +48,7 @@ export interface MobileDatePickerProps<TDate>
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -106,6 +106,8 @@ export const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate
     </MobileWrapper>
   );
 }) as MobileDatePickerComponent;
+
+MobileDatePicker.displayName = 'MobileDatePicker';
 
 MobileDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

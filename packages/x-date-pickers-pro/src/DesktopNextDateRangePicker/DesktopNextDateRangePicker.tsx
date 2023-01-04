@@ -13,7 +13,7 @@ import { DateRange } from '../internal/models';
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRangePicker<TDate>(
   inProps: DesktopNextDateRangePickerProps<TDate>,
@@ -61,6 +61,8 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
 
   return renderPicker();
 }) as DesktopDateRangePickerComponent;
+
+DesktopNextDateRangePicker.displayName = 'DesktopNextDateRangePicker';
 
 DesktopNextDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

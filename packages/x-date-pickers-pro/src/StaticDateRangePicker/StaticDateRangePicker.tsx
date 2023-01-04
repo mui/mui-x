@@ -48,7 +48,7 @@ export interface StaticDateRangePickerProps<TDate>
 
 type StaticDateRangePickerComponent = (<TDate>(
   props: StaticDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -123,6 +123,8 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
     </PickerStaticWrapper>
   );
 }) as StaticDateRangePickerComponent;
+
+StaticDateRangePicker.displayName = 'StaticDateRangePicker';
 
 StaticDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

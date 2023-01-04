@@ -21,7 +21,7 @@ import { renderDateViewCalendar } from '../dateViewRenderers';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDate>(
   inProps: MobileNextDatePickerProps<TDate>,
@@ -76,6 +76,8 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
 
   return renderPicker();
 }) as MobileDatePickerComponent;
+
+MobileNextDatePicker.displayName = 'MobileNextDatePicker';
 
 MobileNextDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

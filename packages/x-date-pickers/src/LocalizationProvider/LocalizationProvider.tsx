@@ -134,6 +134,8 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
   );
 }
 
+LocalizationProvider.displayName = 'LocalizationProvider';
+
 LocalizationProvider.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |

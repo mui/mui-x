@@ -3,7 +3,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { textFieldClasses } from '@mui/material/TextField';
 
-interface PickersGridProps {
+interface DemoGridProps {
   children: React.ReactNode;
 }
 
@@ -14,7 +14,14 @@ type PickersGridChildComponentType =
   | 'UI-view';
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
 
-const getChildComponentName = (child: any) => child.type?.render?.name ?? child.type?.name;
+const getChildComponentName = (child: any) => {
+  const displayName: string = child.type?.displayName;
+  if (!displayName) {
+    throw new Error('DemoContainer can only receive children with displayName');
+  }
+
+  return displayName;
+};
 
 const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
@@ -47,21 +54,59 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
   return 'time';
 };
 
-export function DemoContainer(props: PickersGridProps) {
+interface DemoItemProps {
+  label?: string;
+  children: React.ReactNode;
+}
+export function DemoItem(props: DemoItemProps) {
+  const { label, children } = props;
+
+  const childName = getChildComponentName(React.Children.toArray(children)[0]);
+  const childType = getChildTypeFromChildName(childName);
+
+  let spacing: StackProps['spacing'];
+  let sx: StackProps['sx'];
+
+  if (childType === 'multi-input-range-field') {
+    spacing = 2;
+    sx = {
+      [`& .${textFieldClasses.root}`]: {
+        flexGrow: 1,
+      },
+    };
+  } else {
+    spacing = 1;
+    sx = undefined;
+  }
+
+  return (
+    <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
+      {label != null && <Typography variant="body2">{label}</Typography>}
+      {children}
+    </Stack>
+  );
+}
+
+DemoItem.displayName = 'DemoItem';
+
+export function DemoContainer(props: DemoGridProps) {
   const { children } = props;
 
   const childrenCount = React.Children.count(children);
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
 
+  const cleanChildren: React.ReactNode[] = [];
   React.Children.forEach(children, (child: any) => {
-    let childName = getChildComponentName(child);
+    const rootChildName = getChildComponentName(child);
+    let childName = rootChildName;
 
-    if (childName === 'DemoItem') {
+    while (['DemoItem', 'LocalizationContainer'].includes(childName)) {
       const nestedChild = React.Children.toArray(child.props.children)[0] as any;
       childName = getChildComponentName(nestedChild);
     }
 
+    cleanChildren.push(rootChildName === 'DemoItem' ? child : <DemoItem>{child}</DemoItem>);
     childrenTypes.add(getChildTypeFromChildName(childName));
     childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
   });
@@ -105,40 +150,7 @@ export function DemoContainer(props: PickersGridProps) {
 
   return (
     <Stack direction={direction} spacing={spacing} sx={sx}>
-      {children}
-    </Stack>
-  );
-}
-
-interface PickersGridItemProps {
-  label: string;
-  children: React.ReactNode;
-}
-export function DemoItem(props: PickersGridItemProps) {
-  const { label, children } = props;
-
-  const childName = getChildComponentName(React.Children.toArray(children)[0]);
-  const childType = getChildTypeFromChildName(childName);
-
-  let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
-
-  if (childType === 'multi-input-range-field') {
-    spacing = 2;
-    sx = {
-      [`& .${textFieldClasses.root}`]: {
-        flexGrow: 1,
-      },
-    };
-  } else {
-    spacing = 1;
-    sx = undefined;
-  }
-
-  return (
-    <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
-      <Typography variant="body2">{label}</Typography>
-      {children}
+      {cleanChildren}
     </Stack>
   );
 }

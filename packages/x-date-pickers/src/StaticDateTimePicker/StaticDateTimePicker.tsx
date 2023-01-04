@@ -43,7 +43,7 @@ export interface StaticDateTimePickerProps<TDate>
 
 type StaticDateTimePickerComponent = (<TDate>(
   props: StaticDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -119,6 +119,8 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     </PickerStaticWrapper>
   );
 }) as StaticDateTimePickerComponent;
+
+StaticDateTimePicker.displayName = 'StaticDateTimePicker';
 
 StaticDateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

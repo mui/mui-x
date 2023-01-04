@@ -8,7 +8,7 @@ import { useTimeField } from './useTimeField';
 
 type TimeFieldComponent = (<TDate>(
   props: TimeFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const TimeField = React.forwardRef(function TimeField<TDate>(
   inProps: TimeFieldProps<TDate>,
@@ -50,6 +50,8 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     />
   );
 }) as TimeFieldComponent;
+
+TimeField.displayName = 'TimeField';
 
 TimeField.propTypes = {
   // ----------------------------- Warning --------------------------------

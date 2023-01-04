@@ -46,7 +46,7 @@ export interface TimePickerProps<TDate>
 
 type TimePickerComponent = (<TDate>(
   props: TimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -75,6 +75,8 @@ export const TimePicker = React.forwardRef(function TimePicker<TDate>(
 
   return <MobileTimePicker ref={ref} {...other} />;
 }) as TimePickerComponent;
+
+TimePicker.displayName = 'TimePicker';
 
 TimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -48,7 +48,7 @@ export interface DesktopDatePickerProps<TDate>
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -103,6 +103,8 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
     </DesktopWrapper>
   );
 }) as DesktopDatePickerComponent;
+
+DesktopDatePicker.displayName = 'DesktopDatePicker';
 
 DesktopDatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

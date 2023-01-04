@@ -8,7 +8,7 @@ import { NextDateTimePickerProps } from './NextDateTimePicker.types';
 
 type DateTimePickerComponent = (<TDate>(
   props: NextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const NextDateTimePicker = React.forwardRef(function NextDateTimePicker<TDate>(
   inProps: NextDateTimePickerProps<TDate>,
@@ -27,6 +27,8 @@ const NextDateTimePicker = React.forwardRef(function NextDateTimePicker<TDate>(
 
   return <MobileNextDateTimePicker ref={ref} {...other} />;
 }) as DateTimePickerComponent;
+
+NextDateTimePicker.displayName = 'NextDateTimePicker';
 
 NextDateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

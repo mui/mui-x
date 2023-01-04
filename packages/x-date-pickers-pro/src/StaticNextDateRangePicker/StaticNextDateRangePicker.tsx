@@ -11,7 +11,7 @@ import { DateRange } from '../internal/models';
 
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangePicker<TDate>(
   inProps: StaticNextDateRangePickerProps<TDate>,
@@ -49,6 +49,8 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
 
   return renderPicker();
 }) as StaticNextDatePickerComponent;
+
+StaticNextDateRangePicker.displayName = 'StaticNextDateRangePicker';
 
 StaticNextDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

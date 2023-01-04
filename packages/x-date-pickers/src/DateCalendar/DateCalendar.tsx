@@ -194,7 +194,7 @@ const DateCalendarViewTransitionContainer = styled(PickersFadeTransitionGroup, {
 
 type DateCalendarComponent = (<TDate>(
   props: DateCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -490,6 +490,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     </DateCalendarRoot>
   );
 }) as DateCalendarComponent;
+
+DateCalendar.displayName = 'DateCalendar';
 
 DateCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------

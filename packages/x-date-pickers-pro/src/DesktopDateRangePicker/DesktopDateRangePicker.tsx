@@ -57,7 +57,7 @@ export interface DesktopDateRangePickerProps<TDate>
 
 type DesktopDateRangePickerComponent = (<TDate>(
   props: DesktopDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -120,6 +120,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     </DesktopTooltipWrapper>
   );
 }) as DesktopDateRangePickerComponent;
+
+DesktopDateRangePicker.displayName = 'DesktopDateRangePicker';
 
 DesktopDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

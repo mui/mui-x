@@ -8,7 +8,7 @@ import { useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeF
 
 type DateRangeFieldComponent = (<TDate>(
   props: SingleInputDateTimeRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateTimeRangeField<
   TDate,
@@ -49,6 +49,8 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     />
   );
 }) as DateRangeFieldComponent;
+
+SingleInputDateTimeRangeField.displayName = 'SingleInputDateTimeRangeField';
 
 SingleInputDateTimeRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------

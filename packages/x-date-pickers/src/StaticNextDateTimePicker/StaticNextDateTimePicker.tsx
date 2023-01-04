@@ -12,7 +12,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 
 type StaticDateTimePickerComponent = (<TDate>(
   props: StaticNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePicker<TDate>(
   inProps: StaticNextDateTimePickerProps<TDate>,
@@ -59,6 +59,8 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
 
   return renderPicker();
 }) as StaticDateTimePickerComponent;
+
+StaticNextDateTimePicker.displayName = 'StaticNextDateTimePicker';
 
 StaticNextDateTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -31,7 +31,7 @@ const MultiInputDateRangeFieldSeparator = styled(
 
 type MultiInputDateRangeFieldComponent = (<TDate>(
   props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeField<TDate>(
   inProps: MultiInputDateRangeFieldProps<TDate>,
@@ -160,6 +160,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     </Root>
   );
 }) as MultiInputDateRangeFieldComponent;
+
+MultiInputDateRangeField.displayName = 'MultiInputDateRangeField';
 
 MultiInputDateRangeField.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -12,7 +12,7 @@ import { renderTimeViewClock } from '../timeViewRenderers';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDate>(
   inProps: MobileNextTimePickerProps<TDate>,
@@ -66,6 +66,8 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
 
   return renderPicker();
 }) as MobileTimePickerComponent;
+
+MobileNextTimePicker.displayName = 'MobileNextTimePicker';
 
 MobileNextTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

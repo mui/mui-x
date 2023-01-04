@@ -46,7 +46,7 @@ export interface DatePickerProps<TDate>
 
 type DatePickerComponent = (<TDate>(
   props: DatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 /**
  *
@@ -75,6 +75,8 @@ export const DatePicker = React.forwardRef(function DatePicker<TDate>(
 
   return <MobileDatePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
+
+DatePicker.displayName = 'DatePicker';
 
 DatePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

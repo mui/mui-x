@@ -11,7 +11,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 
 type StaticTimePickerComponent = (<TDate>(
   props: StaticNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDate>(
   inProps: StaticNextTimePickerProps<TDate>,
@@ -48,6 +48,8 @@ const StaticNextTimePicker = React.forwardRef(function StaticNextTimePicker<TDat
 
   return renderPicker();
 }) as StaticTimePickerComponent;
+
+StaticNextTimePicker.displayName = 'StaticNextTimePicker';
 
 StaticNextTimePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

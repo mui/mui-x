@@ -8,7 +8,7 @@ import { NextDateRangePickerProps } from './NextDateRangePicker.types';
 
 type DatePickerComponent = (<TDate>(
   props: NextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const NextDateRangePicker = React.forwardRef(function NextDateRangePicker<TDate>(
   inProps: NextDateRangePickerProps<TDate>,
@@ -27,6 +27,8 @@ const NextDateRangePicker = React.forwardRef(function NextDateRangePicker<TDate>
 
   return <MobileNextDateRangePicker ref={ref} {...other} />;
 }) as DatePickerComponent;
+
+NextDateRangePicker.displayName = 'NextDateRangePicker';
 
 NextDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

@@ -111,7 +111,7 @@ const MonthCalendarRoot = styled('div', {
 
 type MonthCalendarComponent = (<TDate>(
   props: MonthCalendarProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   inProps: MonthCalendarProps<TDate>,
@@ -312,6 +312,8 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     </MonthCalendarRoot>
   );
 }) as MonthCalendarComponent;
+
+MonthCalendar.displayName = 'MonthCalendar';
 
 MonthCalendar.propTypes = {
   // ----------------------------- Warning --------------------------------

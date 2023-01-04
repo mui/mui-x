@@ -8,7 +8,7 @@ import { useDateField } from './useDateField';
 
 type DateFieldComponent = (<TDate>(
   props: DateFieldProps<TDate> & React.RefAttributes<HTMLDivElement>,
-) => JSX.Element) & { propTypes?: any };
+) => JSX.Element) & { propTypes?: any; displayName: string };
 
 const DateField = React.forwardRef(function DateField<TDate>(
   inProps: DateFieldProps<TDate>,
@@ -50,6 +50,8 @@ const DateField = React.forwardRef(function DateField<TDate>(
     />
   );
 }) as DateFieldComponent;
+
+DateField.displayName = 'DateField';
 
 DateField.propTypes = {
   // ----------------------------- Warning --------------------------------
