@@ -23,8 +23,8 @@ import {
 export const useGridCsvExport = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridCsvExport');
 
-  const getDataAsCsv = React.useCallback<GridCsvExportApi['getDataAsCsv']>(
-    (options = {}) => {
+  const getDataAsCsv = React.useCallback(
+    (options: GridCsvExportOptions = {}): string => {
       logger.debug(`Get data as CSV`);
 
       const exportedColumns = getColumnsToExport({
