@@ -87,6 +87,16 @@ function writeToClipboardPolyfill(data: string) {
   }
 }
 
+function copyToClipboard(data: string) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(data).catch(() => {
+      writeToClipboardPolyfill(data);
+    });
+  } else {
+    writeToClipboardPolyfill(data);
+  }
+}
+
 function hasNativeSelection(element: HTMLInputElement) {
   // When getSelection is called on an <iframe> that is not displayed Firefox will return null.
   if (window.getSelection()?.toString()) {
@@ -120,6 +130,7 @@ export const useGridClipboard = (
 
     const data = apiRef.current.getDataAsCsv({
       includeHeaders: false,
+      // TODO: make it configurable
       delimiter: '\t',
     });
 
@@ -132,7 +143,20 @@ export const useGridClipboard = (
     }
   }, [apiRef]);
 
-  const handleKeydown = React.useCallback(
+  const copyFocusedCellToClipboard = React.useCallback<
+    GridClipboardApi['unstable_copyFocusedCellToClipboard']
+  >(() => {
+    const focusedCell = gridFocusCellSelector(apiRef);
+    if (!focusedCell) {
+      return;
+    }
+
+    const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
+    const data = cellParams.formattedValue;
+    copyToClipboard(data);
+  }, [apiRef]);
+
+  const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey;
       // event.code === 'KeyC' is not enough as event.code assume a QWERTY keyboard layout which would
@@ -146,7 +170,13 @@ export const useGridClipboard = (
         return;
       }
 
-      apiRef.current.unstable_copySelectedRowsToClipboard();
+      const selectedRows = apiRef.current.getSelectedRows();
+
+      if (selectedRows.size > 1) {
+        apiRef.current.unstable_copySelectedRowsToClipboard();
+      } else {
+        apiRef.current.unstable_copyFocusedCellToClipboard();
+      }
     },
     [apiRef],
   );
@@ -205,9 +235,6 @@ export const useGridClipboard = (
           }
         }
 
-        console.log('oldRow', targetRow.model);
-        console.log('newRow', newRow);
-
         rowsToUpdate.push(newRow);
       });
 
@@ -216,11 +243,12 @@ export const useGridClipboard = (
     [apiRef, props.pagination, props.paginationMode, props.signature],
   );
 
-  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleKeydown);
+  useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
 
   const clipboardApi: GridClipboardApi = {
     unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
+    unstable_copyFocusedCellToClipboard: copyFocusedCellToClipboard,
   };
 
   useGridApiMethod(apiRef, clipboardApi, 'public');

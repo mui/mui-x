@@ -8,4 +8,5 @@ export interface GridClipboardApi {
    * @ignore - do not document.
    */
   unstable_copySelectedRowsToClipboard: () => void;
+  unstable_copyFocusedCellToClipboard: () => void;
 }
