@@ -173,7 +173,7 @@ export const useGridPagination = (
       const paginationModel = gridPaginationModelSelector(apiRef);
 
       const shouldExportPaginationModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the `paginationModel` is controlled
         props.paginationModel != null ||
