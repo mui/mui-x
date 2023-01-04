@@ -74,6 +74,6 @@ export const useDateField = <TDate, TChildProps extends {}>({
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDate,
-    supportedDateSections: ['year', 'month', 'day'],
+    valueType: 'date',
   });
 };
