@@ -38,19 +38,16 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     const handlePageSizeChange = React.useCallback(
       (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         const pageSize = Number(event.target.value);
-        apiRef.current.setPaginationModel({ pageSize, page: paginationState.paginationModel.page });
+        apiRef.current.setPageSize(pageSize);
       },
-      [apiRef, paginationState.paginationModel.page],
+      [apiRef],
     );
 
     const handlePageChange = React.useCallback<TablePaginationProps['onPageChange']>(
-      (event, page) => {
-        apiRef.current.setPaginationModel({
-          page,
-          pageSize: paginationState.paginationModel.pageSize,
-        });
+      (_, page) => {
+        apiRef.current.setPage(page);
       },
-      [apiRef, paginationState.paginationModel],
+      [apiRef],
     );
 
     if (process.env.NODE_ENV !== 'production') {

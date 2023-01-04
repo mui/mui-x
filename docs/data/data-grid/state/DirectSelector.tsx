@@ -42,7 +42,6 @@ export default function DirectSelector() {
       <Box sx={{ height: 400, mt: 1 }}>
         <DataGrid
           apiRef={apiRef}
-          pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           {...data}

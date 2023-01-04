@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  gridPaginationModelSelector,
+  gridPageSelector,
   gridPageCountSelector,
   useGridApiContext,
   useGridSelector,
@@ -13,7 +13,7 @@ const PAGE_SIZE = 10;
 
 function Toolbar() {
   const apiRef = useGridApiContext();
-  const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
+  const page = useGridSelector(apiRef, gridPageSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
   return (
@@ -21,10 +21,8 @@ function Toolbar() {
       sx={(theme) => ({ padding: theme.spacing(1.5, 0) })}
       color="primary"
       count={pageCount}
-      page={paginationModel.page + 1}
-      onChange={(event, value) =>
-        apiRef.current.setPaginationModel({ page: value - 1, pageSize: PAGE_SIZE })
-      }
+      page={page + 1}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }
@@ -48,7 +46,6 @@ export default function UseGridSelector() {
         loading={loading}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pagination
         hideFooter
         components={{
           Toolbar,

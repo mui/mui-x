@@ -7,7 +7,7 @@ export interface GridPaginationState {
 }
 
 export interface GridPaginationInitialState {
-  paginationModel?: GridPaginationModel;
+  paginationModel?: Partial<GridPaginationModel>;
 }
 
 /**

@@ -33,7 +33,7 @@ export default function RowPinningWithPagination() {
           ...data.initialState,
           pagination: {
             ...data.initialState?.pagination,
-            paginationModel: { pageSize: 25, page: 0 },
+            paginationModel: { pageSize: 25 },
           },
         }}
         pagination

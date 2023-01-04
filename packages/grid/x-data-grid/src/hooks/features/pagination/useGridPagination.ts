@@ -31,9 +31,10 @@ export const paginationStateInitializer: GridStateInitializer<
     'paginationModel' | 'rowCount' | 'initialState' | 'autoPageSize' | 'signature'
   >
 > = (state, props) => {
-  const paginationModel =
-    (props.paginationModel ?? props.initialState?.pagination?.paginationModel) ||
-    getDefaultGridPaginationModel(props.autoPageSize);
+  const paginationModel = {
+    ...getDefaultGridPaginationModel(props.autoPageSize),
+    ...(props.paginationModel ?? props.initialState?.pagination?.paginationModel),
+  };
 
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
@@ -204,8 +205,12 @@ export const useGridPagination = (
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
-      const paginationModel =
-        context.stateToRestore.pagination?.paginationModel ?? gridPaginationModelSelector(apiRef);
+      const paginationModel = context.stateToRestore.pagination?.paginationModel
+        ? {
+            ...getDefaultGridPaginationModel(props.autoPageSize),
+            ...context.stateToRestore.pagination?.paginationModel,
+          }
+        : gridPaginationModelSelector(apiRef);
       apiRef.current.updateControlState(
         'pagination',
         mergeStateWithPaginationModel(

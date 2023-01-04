@@ -3,7 +3,6 @@
   loading={loading}
   paginationModel={paginationModel}
   onPaginationModelChange={setPaginationModel}
-  pagination
   hideFooter
   components={{
     Toolbar,
