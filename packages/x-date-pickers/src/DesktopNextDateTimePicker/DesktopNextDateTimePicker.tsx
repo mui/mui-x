@@ -61,10 +61,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         ampm: defaultizedProps.ampm,
       }),
       tabs: {
-        wrapperVariant: 'desktop',
+        underlineLocation: 'top',
         ...defaultizedProps.componentsProps?.tabs,
       },
-    },
+    } as DesktopNextDateTimePickerProps<TDate>['componentsProps'],
   };
 
   const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({

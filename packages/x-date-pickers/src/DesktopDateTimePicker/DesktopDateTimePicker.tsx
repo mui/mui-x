@@ -103,7 +103,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
         componentsProps={{
           ...componentsProps,
           tabs: {
-            wrapperVariant: 'desktop',
+            underlineLocation: 'top',
             ...componentsProps?.tabs,
           },
         }}

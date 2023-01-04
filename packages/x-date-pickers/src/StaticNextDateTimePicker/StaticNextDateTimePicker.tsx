@@ -45,10 +45,10 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
       ...defaultizedProps.componentsProps,
       tabs: {
         hidden: displayStaticWrapperAs === 'desktop',
-        wrapperVariant: displayStaticWrapperAs,
+        underlineLocation: displayStaticWrapperAs === 'desktop' ? 'top' : 'bottom',
         ...defaultizedProps.componentsProps?.tabs,
       },
-    },
+    } as StaticNextDateTimePickerProps<TDate>['componentsProps'],
   };
 
   const { renderPicker } = useStaticPicker<TDate, DateOrTimeView, typeof props>({

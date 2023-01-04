@@ -12,7 +12,6 @@ import {
   getDateTimePickerTabsUtilityClass,
 } from './dateTimePickerTabsClasses';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
-import { WrapperVariant } from '../internals/models/common';
 
 type TabValue = 'date' | 'time';
 
@@ -49,10 +48,10 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    */
   timeIcon?: React.ReactNode;
   /**
-   * Variant of the component this component is inside of.
-   * @default 'desktop'
+   * Controls where to put the separator underline.
+   * @default 'bottom'
    */
-  wrapperVariant?: WrapperVariant;
+  underlineLocation?: 'bottom' | 'top';
 }
 
 export interface DateTimePickerTabsProps
@@ -79,9 +78,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DateTimePickerTabsProps }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
-  ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop `order` with the legacy pickers
-    order: 1,
+  ...(ownerState.underlineLocation === 'top' && {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
@@ -98,11 +95,9 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
     timeIcon = <Time />,
     view,
     hidden = typeof window === 'undefined' || window.innerHeight < 667,
-    wrapperVariant = 'desktop',
   } = props;
 
   const localeText = useLocaleText();
-  const ownerState = { ...props, wrapperVariant };
   const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
@@ -115,7 +110,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={ownerState}
+      ownerState={props}
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}

@@ -104,7 +104,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         componentsProps={{
           ...componentsProps,
           tabs: {
-            wrapperVariant: 'mobile',
+            underlineLocation: 'bottom',
             ...componentsProps?.tabs,
           },
         }}

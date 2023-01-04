@@ -64,10 +64,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         ampm: defaultizedProps.ampm,
       }),
       tabs: {
-        wrapperVariant: 'mobile',
+        underlineLocation: 'bottom',
         ...defaultizedProps.componentsProps?.tabs,
       },
-    },
+    } as MobileNextDateTimePickerProps<TDate>['componentsProps'],
   };
 
   const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({
