@@ -101,13 +101,7 @@ export const MobileDateTimePicker = React.forwardRef(function MobileDateTimePick
         autoFocus
         DateInputProps={DateInputProps}
         components={components}
-        componentsProps={{
-          ...componentsProps,
-          tabs: {
-            underlineLocation: 'bottom',
-            ...componentsProps?.tabs,
-          },
-        }}
+        componentsProps={componentsProps}
         {...other}
       />
     </MobileWrapper>

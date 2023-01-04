@@ -86,7 +86,6 @@ export const StaticDateTimePicker = React.forwardRef(function StaticDateTimePick
     ...providedComponentsProps,
     tabs: {
       hidden: displayStaticWrapperAs === 'desktop',
-      underlineLocation: displayStaticWrapperAs === 'desktop' ? 'top' : 'bottom',
       ...providedComponentsProps?.tabs,
     },
   };

@@ -47,11 +47,6 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * @default Time
    */
   timeIcon?: React.ReactNode;
-  /**
-   * Controls where to put the separator underline.
-   * @default 'bottom'
-   */
-  underlineLocation?: 'bottom' | 'top';
 }
 
 export interface DateTimePickerTabsProps
@@ -76,15 +71,15 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DateTimePickerTabsProps }>(({ ownerState, theme }) => ({
+})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
-  ...(ownerState.underlineLocation === 'top' && {
+  '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
       top: 0,
     },
-  }),
+  },
 }));
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
@@ -160,11 +155,6 @@ DateTimePickerTabs.propTypes = {
    * @default Time
    */
   timeIcon: PropTypes.node,
-  /**
-   * Controls where to put the separator underline.
-   * @default 'bottom'
-   */
-  underlineLocation: PropTypes.oneOf(['bottom', 'top']),
   /**
    * Currently visible picker view.
    */
