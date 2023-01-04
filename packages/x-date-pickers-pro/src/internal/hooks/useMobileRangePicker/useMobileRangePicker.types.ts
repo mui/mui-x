@@ -26,7 +26,12 @@ export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrT
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
-  Input?: React.ElementType<TextFieldProps>;
+  /**
+   * Form control with an input to render a date or time inside the default field.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  TextField?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
@@ -43,7 +48,7 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  input?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
   toolbar?: ExportedBaseToolbarProps;
 }
 

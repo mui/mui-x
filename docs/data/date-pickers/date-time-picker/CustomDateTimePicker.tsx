@@ -21,7 +21,7 @@ export default function CustomDateTimePicker() {
             OpenPickerIcon: ClockIcon,
           }}
           componentsProps={{
-            input: {
+            textField: {
               helperText: 'Hardcoded helper text',
             },
           }}

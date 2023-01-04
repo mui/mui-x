@@ -64,12 +64,17 @@ export const useMobilePicker = <
     ownerState: props,
   });
 
+  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
+    ...fieldProps.components,
+    TextField: components.TextField,
+  };
+
   const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
 
@@ -88,11 +93,6 @@ export const useMobilePicker = <
         },
       };
     },
-  };
-
-  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
   };
 
   const Layout = components?.Layout ?? PickersLayout;

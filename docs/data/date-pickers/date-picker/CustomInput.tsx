@@ -28,7 +28,7 @@ export default function CustomInput() {
         label="Custom input"
         defaultValue={dayjs('2022-04-07')}
         components={{
-          Input: BrowserInput,
+          TextField: BrowserInput,
         }}
       />
     </LocalizationProvider>
