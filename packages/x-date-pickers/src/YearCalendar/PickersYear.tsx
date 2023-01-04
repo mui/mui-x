@@ -118,6 +118,8 @@ const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
     onFocus,
     onBlur,
     'aria-current': ariaCurrent,
+    // We don't want to forward this prop to the root element
+    yearsPerRow,
     ...other
   } = props;
 

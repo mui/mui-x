@@ -122,6 +122,8 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
     onFocus,
     onBlur,
     'aria-current': ariaCurrent,
+    // We don't want to forward this prop to the root element
+    monthsPerRow,
     ...other
   } = props;
 
