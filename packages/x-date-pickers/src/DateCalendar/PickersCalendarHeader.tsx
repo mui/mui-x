@@ -74,6 +74,7 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
+  components?: PickersCalendarHeaderSlotsComponent;
   slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
   slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
 }
@@ -170,6 +171,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
   const {
+    components,
     slots,
     slotsProps,
     currentMonth: month,
@@ -190,7 +192,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton =
+    slots?.switchViewButton ??
+    components?.SwitchViewButton ??
+    PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
     externalSlotProps: slotsProps?.switchViewButton,
@@ -202,7 +207,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon =
+    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
@@ -273,6 +279,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
       </PickersCalendarHeaderLabelContainer>
       <Fade in={view === 'day'}>
         <PickersArrowSwitcher
+          components={components}
           slots={slots}
           slotsProps={slotsProps}
           onGoToPrevious={selectPreviousMonth}

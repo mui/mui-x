@@ -24,6 +24,7 @@ import {
 } from '../DatePicker/DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
@@ -119,7 +120,7 @@ export function useNextDatePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? themeProps.components;
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   return {
     ...themeProps,
     localeText,
@@ -133,6 +134,6 @@ export function useNextDatePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    components: { Toolbar: DatePickerToolbar, ...slots },
+    slots: { toolbar: DatePickerToolbar, ...slots },
   };
 }

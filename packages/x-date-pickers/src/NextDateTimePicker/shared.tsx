@@ -35,7 +35,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -160,7 +160,7 @@ export function useNextDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? themeProps.components;
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
@@ -192,12 +192,12 @@ export function useNextDateTimePickerDefaultizedProps<
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
-    components: {
-      Toolbar: DateTimePickerToolbar,
-      Tabs: DateTimePickerTabs,
+    slots: {
+      toolbar: DateTimePickerToolbar,
+      tabs: DateTimePickerTabs,
       ...slots,
     },
-    componentsProps: {
+    slotsProps: {
       ...slotsProps,
       toolbar: {
         ampm,

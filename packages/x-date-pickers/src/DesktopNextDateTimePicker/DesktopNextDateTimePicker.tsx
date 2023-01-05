@@ -11,6 +11,7 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -38,7 +39,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
   const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the desktop variant
   const props = {
@@ -46,8 +47,8 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
     slots: {
-      Field: DateTimeField,
-      OpenPickerIcon: Calendar,
+      field: DateTimeField,
+      ppenPickerIcon: Calendar,
       ...slots,
     },
     slotsProps: {

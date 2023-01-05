@@ -9,6 +9,7 @@ import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from 
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderTimeViewClock } from '../timeViewRenderers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type MobileTimePickerComponent = (<TDate>(
   props: MobileNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -33,18 +34,18 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
   const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: TimeField,
+    slots: {
+      field: TimeField,
       ...slots,
     },
-    componentsProps: {
+    slotsProps: {
       ...slotsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(slotsProps?.field, ownerState),

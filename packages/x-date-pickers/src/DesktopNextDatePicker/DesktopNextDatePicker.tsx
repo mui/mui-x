@@ -14,6 +14,7 @@ import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type DesktopDatePickerComponent = (<TDate>(
   props: DesktopNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -39,7 +40,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
   const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the desktop variant
   const props = {
@@ -48,8 +49,8 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     slots: {
-      OpenPickerIcon: Calendar,
-      Field: DateField,
+      openPickerIcon: Calendar,
+      field: DateField,
       ...slots,
     },
     slotsProps: {

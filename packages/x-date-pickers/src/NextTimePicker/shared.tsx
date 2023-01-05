@@ -20,7 +20,7 @@ import { TimeValidationError } from '../internals/hooks/validation/useTimeValida
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -105,7 +105,7 @@ export function useNextTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const slots = themeProps.slots ?? themeProps.components;
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
@@ -120,7 +120,7 @@ export function useNextTimePickerDefaultizedProps<
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
     slots: {
-      Toolbar: TimePickerToolbar,
+      toolbar: TimePickerToolbar,
       ...slots,
     },
     slotsProps: {

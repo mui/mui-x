@@ -68,7 +68,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Action bar
 
-  const ActionBar = slots?.ActionBar ?? components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
     externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
@@ -88,7 +88,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   // Toolbar
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const Toolbar = slots?.Toolbar ?? components?.Toolbar;
+  const Toolbar = slots?.toolbar ?? components?.Toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
     externalSlotProps: slotsProps?.toolbar ?? componentsProps?.toolbar,
@@ -119,7 +119,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Tabs
 
-  const Tabs = slots?.Tabs ?? components?.Tabs;
+  const Tabs = slots?.tabs ?? components?.Tabs;
   const tabs =
     view && Tabs ? (
       <Tabs view={view} onViewChange={onViewChange} {...slotsProps?.tabs ?? componentsProps?.tabs} />

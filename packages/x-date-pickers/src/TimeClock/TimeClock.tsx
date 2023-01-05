@@ -433,7 +433,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       {showViewSwitcher && (
         <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
-          slots={slots ?? components}
+          components={components}
+          slots={slots }
           slotsProps={slotsProps ?? componentsProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}

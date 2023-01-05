@@ -61,6 +61,13 @@ export interface ExportedDateRangePickerViewProps<TDate>
       | keyof BaseDateValidationProps<TDate>
       | keyof DayValidationProps<TDate>
     > {
+
+  /**
+   * Overrideable components.
+   * @default {}
+   * @deprecated
+   */
+  components?: DateRangePickerViewSlotsComponent<TDate>;
   /**
    * Overrideable components.
    * @default {}
@@ -127,6 +134,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     shouldDisableDate,
     showToolbar,
     toggleMobileKeyboardView,
+    components,
     slots,
     slotsProps,
     onFocusedViewChange,
@@ -214,7 +222,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   );
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const Toolbar = slots?.Toolbar;
+  const Toolbar = slots?.toolbar ?? components?.Toolbar;
 
   const renderView = () => {
     const sharedCalendarProps = {

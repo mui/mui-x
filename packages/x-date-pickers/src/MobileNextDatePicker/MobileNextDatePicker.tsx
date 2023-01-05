@@ -18,6 +18,7 @@ import { Unstable_DateField as DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type MobileDatePickerComponent = (<TDate>(
   props: MobileNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -43,7 +44,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? defaultizedProps.components;
+  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
   const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the mobile variant
   const props = {
@@ -51,11 +52,11 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: DateField,
+    slots: {
+      field: DateField,
       ...slots,
     },
-    componentsProps: {
+    slotsProps: {
       ...slotsProps,
       field: (ownerState: any) => ({
         ...resolveComponentProps(slotsProps?.field, ownerState),
