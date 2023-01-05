@@ -77,7 +77,7 @@ function GridMenu(props: GridMenuProps) {
     apiRef.current.publishEvent(eventName, { target });
   }, [apiRef, open, target]);
 
-  const handleExited = (popperOnExited: (() => {}) | undefined) => (node: HTMLElement) => {
+  const handleExited = (popperOnExited: (() => void) | undefined) => (node: HTMLElement) => {
     if (popperOnExited) {
       popperOnExited();
     }

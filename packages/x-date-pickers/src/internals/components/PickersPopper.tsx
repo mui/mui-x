@@ -39,7 +39,7 @@ export interface PickersPopperSlotsComponent
    * Custom component for trapping the focus inside the views on desktop.
    * @default TrapFocus from @mui/material
    */
-  DesktopTrapFocus?: React.ElementType<MuiTrapFocusProps>;
+  DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
    * @default Popper from @mui/material

@@ -27,7 +27,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const ref = React.useRef<HTMLInputElement>(null);
     React.useLayoutEffect(() => {
       if (hasFocus) {
-        ref.current!.focus();
+        ref.current!.focus({ preventScroll: true });
       }
     }, [hasFocus]);
     return <input ref={ref} />;

@@ -41,7 +41,7 @@ export interface ExportedTimeClockProps<TDate>
     BaseTimeValidationProps {
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
   /**
@@ -163,6 +163,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   ref: React.Ref<HTMLDivElement>,
 ) {
   const localeText = useLocaleText<TDate>();
+  const now = useNow<TDate>();
+  const utils = useUtils<TDate>();
 
   const props = useThemeProps({
     props: inProps,
@@ -170,7 +172,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
   });
 
   const {
-    ampm = false,
+    ampm = utils.is12HourCycleInCurrentLocale(),
     ampmInClock = false,
     autoFocus,
     components,
@@ -217,9 +219,6 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     onViewChange,
     onChange: handleValueChange,
   });
-
-  const now = useNow<TDate>();
-  const utils = useUtils<TDate>();
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -457,7 +456,7 @@ TimeClock.propTypes = {
   // ----------------------------------------------------------------------
   /**
    * 12h/24h view for hour selection clock.
-   * @default false
+   * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
   /**
@@ -495,7 +494,7 @@ TimeClock.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -505,7 +504,7 @@ TimeClock.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -62,7 +64,7 @@ const DateRangePickerToolbarContainer = styled('div', {
 /**
  * @ignore - internal component.
  */
-export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
+const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
@@ -75,6 +77,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     rangePosition,
     onRangePositionChange,
     toolbarFormat,
+    className,
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -96,7 +99,7 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
-      className={classes.root}
+      className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
     >
@@ -118,3 +121,33 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     </DateRangePickerToolbarRoot>
   );
 });
+
+DateRangePickerToolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  /**
+   * className applied to the root component.
+   */
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  isMobileKeyboardViewOpen: PropTypes.bool,
+  onRangePositionChange: PropTypes.func.isRequired,
+  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  readOnly: PropTypes.bool,
+  toggleMobileKeyboardView: PropTypes.func,
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat: PropTypes.string,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+} as any;
+
+export { DateRangePickerToolbar };

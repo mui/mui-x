@@ -12,6 +12,8 @@ export * from './MultiInputDateRangeField';
 export * from './MultiInputTimeRangeField';
 export * from './MultiInputDateTimeRangeField';
 export * from './SingleInputDateRangeField';
+export * from './SingleInputTimeRangeField';
+export * from './SingleInputDateTimeRangeField';
 export type { RangeFieldSection } from './internal/models/fields';
 
 // Calendars
