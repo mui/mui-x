@@ -104,7 +104,7 @@ export { getColumnsToExport, defaultGetRowsToExport } from '../hooks/features/ex
 export { createSelector, unstable_resetCreateSelectorCache } from '../utils/createSelector';
 export { findParentElementFromClassName } from '../utils/domUtils';
 export { isNavigationKey } from '../utils/keyboardUtils';
-export { clamp, isDeepEqual, isNumber, isFunction } from '../utils/utils';
+export { clamp, isDeepEqual, isNumber, isFunction, isObject } from '../utils/utils';
 export { buildWarning } from '../utils/warning';
 export { exportAs } from '../utils/exportAs';
 export type { GridPrivateOnlyApiCommon } from '../models/api/gridApiCommon';
