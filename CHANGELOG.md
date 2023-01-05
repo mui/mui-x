@@ -22,7 +22,7 @@ We'd like to offer a big thanks to the 3 contributors who made this release poss
 
 #### Changes
 
-- Release to apply: [core] Fix the product license reference name (#7367)
+- [pickers] Fix the product license reference name (#7367)
 
 ### Docs
 
