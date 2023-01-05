@@ -117,6 +117,11 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Sets the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
    * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -344,11 +349,6 @@ DataGridProRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -771,7 +771,7 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,

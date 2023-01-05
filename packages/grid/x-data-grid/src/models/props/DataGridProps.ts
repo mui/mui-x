@@ -224,10 +224,10 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
-  headerHeight: number;
+  columnHeaderHeight: number;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -279,7 +279,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   paginationMode: GridFeatureMode;
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: number;
