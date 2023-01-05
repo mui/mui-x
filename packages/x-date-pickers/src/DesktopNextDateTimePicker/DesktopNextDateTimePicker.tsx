@@ -11,7 +11,6 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
