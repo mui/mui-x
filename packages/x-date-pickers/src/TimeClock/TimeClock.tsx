@@ -75,7 +75,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    * @default {}
    * @deprecated
    */
-  components?: TimeClockSlotsComponent;
+  components?: Partial<TimeClockSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -434,7 +434,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
         <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
           components={components}
-          slots={slots }
+          slots={slots}
           slotsProps={slotsProps ?? componentsProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}

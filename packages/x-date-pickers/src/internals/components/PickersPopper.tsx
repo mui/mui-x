@@ -281,6 +281,8 @@ export function PickersPopper(inProps: PickerPopperProps) {
     role,
     components,
     componentsProps,
+    slots,
+    slotsProps,
   } = props;
 
   React.useEffect(() => {
@@ -339,10 +341,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -353,14 +355,14 @@ export function PickersPopper(inProps: PickerPopperProps) {
     ownerState: { wrapperVariant: 'desktop' },
   });
 
-  const PaperContent = components?.PaperContent ?? React.Fragment;
-  const Transition = components?.DesktopTransition ?? Grow;
-  const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
+  const PaperContent = slots?.paperContent ?? components?.PaperContent ?? React.Fragment;
+  const Transition = slots?.desktopTransition ?? components?.DesktopTransition ?? Grow;
+  const TrapFocus = slots?.desktopTrapFocus ?? components?.DesktopTrapFocus ?? MuiTrapFocus;
 
-  const Paper = components?.DesktopPaper ?? PickersPopperPaper;
+  const Paper = slots?.desktopPaper ?? components?.DesktopPaper ?? PickersPopperPaper;
   const paperProps: MuiPaperProps = useSlotProps({
     elementType: Paper,
-    externalSlotProps: componentsProps?.desktopPaper,
+    externalSlotProps: slotsProps?.desktopPaper ?? componentsProps?.desktopPaper,
     additionalProps: {
       tabIndex: -1,
       elevation: 8,
@@ -370,10 +372,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     ownerState: {} as any, // Is overridden below to use `placement
   });
 
-  const Popper = components?.Popper ?? PickersPopperRoot;
+  const Popper = slots?.popper ?? components?.Popper ?? PickersPopperRoot;
   const popperProps = useSlotProps({
     elementType: Popper,
-    externalSlotProps: componentsProps?.popper,
+    externalSlotProps: slotsProps?.popper ?? componentsProps?.popper,
     additionalProps: {
       transition: true,
       role,
@@ -397,9 +399,12 @@ export function PickersPopper(inProps: PickerPopperProps) {
           disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
-          {...componentsProps?.desktopTrapFocus}
+          {...(slotsProps?.desktopTrapFocus ?? componentsProps?.desktopTrapFocus)}
         >
-          <Transition {...TransitionProps} {...componentsProps?.desktopTransition}>
+          <Transition
+            {...TransitionProps}
+            {...(slotsProps?.desktopTransition ?? componentsProps?.desktopTransition)}
+          >
             <Paper
               {...paperProps}
               onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -412,7 +417,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
               }}
               ownerState={{ ...ownerState, placement }}
             >
-              <PaperContent {...componentsProps?.paperContent}>
+              <PaperContent {...(slotsProps?.paperContent ?? componentsProps?.paperContent)}>
                 {children}
                 <ActionBar {...actionBarProps} />
               </PaperContent>

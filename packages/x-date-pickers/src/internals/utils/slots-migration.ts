@@ -14,7 +14,7 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    * @default {}
    * @deprecated
    */
-  components?: TSlots;
+  components?: Partial<TSlots>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -33,35 +33,21 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
   slotsProps?: TSlotsProps;
 }
 
-// type RetrunedType<TInputType> = TInputType extends object
-//   ? UncapitalizeObjectKeys<TInputType>
-//   : undefined;
+type RetrunedType<TInputType> = TInputType extends object
+  ? UncapitalizeObjectKeys<TInputType>
+  : undefined;
 
-// export const uncapitalizeObjectKeys = <TInputType extends object>(
-//   capitalizedObject: TInputType | undefined,
-// ): RetrunedType<typeof capitalizedObject> => {
-//   if (capitalizedObject === undefined) {
-//     return undefined as RetrunedType<undefined>;
-//   }
-//   const x = Object.keys(capitalizedObject).reduce(
-//     (acc, key) => ({
-//       ...acc,
-//       [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]: capitalizedObject[key],
-//     }),
-//     {} as UncapitalizeObjectKeys<TInputType>,
-//   );
-//   return x as RetrunedType<TInputType>;
-// };
-
-export const uncapitalizeObjectKeys = (capitalizedObject) => {
+export const uncapitalizeObjectKeys = <TInputType extends object>(
+  capitalizedObject: TInputType | undefined,
+): RetrunedType<typeof capitalizedObject> => {
   if (capitalizedObject === undefined) {
-    return undefined;
+    return undefined as RetrunedType<undefined>;
   }
   return Object.keys(capitalizedObject).reduce(
     (acc, key) => ({
       ...acc,
       [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]: capitalizedObject[key],
     }),
-    {},
+    {} as RetrunedType<TInputType>,
   );
 };

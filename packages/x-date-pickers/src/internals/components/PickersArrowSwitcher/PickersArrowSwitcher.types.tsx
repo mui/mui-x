@@ -11,7 +11,7 @@ export interface ExportedPickersArrowSwitcherProps {
    * @default {}
    * @deprecated
    */
-  components?: PickersArrowSwitcherSlotsComponent;
+  components?: Partial<PickersArrowSwitcherSlotsComponent>;
   /**
    * Overrideable components.
    * @default {}

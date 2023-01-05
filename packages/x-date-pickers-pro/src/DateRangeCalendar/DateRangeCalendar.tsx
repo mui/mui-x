@@ -451,7 +451,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotsComponentsProps<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
 
   const visibleMonths = React.useMemo(
     () =>

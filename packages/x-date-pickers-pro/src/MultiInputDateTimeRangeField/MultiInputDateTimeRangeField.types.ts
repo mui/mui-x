@@ -8,6 +8,7 @@ import {
   UseDateTimeRangeFieldProps,
 } from '../internal/models/dateTimeRange';
 import { RangePosition } from '../internal/models/range';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 
 export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
@@ -32,13 +33,25 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: MultiInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateTimeRangeFieldOwnerState<TDate> =

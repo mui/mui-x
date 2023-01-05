@@ -16,6 +16,7 @@ import {
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
   UsePickerViewsProps,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -72,12 +73,12 @@ export interface UseMobileRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseMobileRangePickerSlotsComponent<TDate, TView>;
+  slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
+  slotsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}

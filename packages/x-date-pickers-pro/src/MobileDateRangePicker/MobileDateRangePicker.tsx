@@ -126,7 +126,7 @@ export const MobileDateRangePicker = React.forwardRef(function MobileDateRangePi
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
         {...pickerProps}
-        slots={components}
+        components={components}
         slotsProps={componentsProps}
         {...other}
       />

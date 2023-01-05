@@ -61,7 +61,7 @@ export interface PickerStaticWrapperProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: PickersStaticWrapperSlotsComponent;
+  components?: Partial<PickersStaticWrapperSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -117,6 +117,8 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     children,
     onDismiss,
     open,
+    slots,
+    slotsProps,
     components,
     componentsProps,
     localeText,
@@ -126,10 +128,10 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
 
   const classes = useUtilityClasses(props);
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -143,7 +145,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     ownerState: { wrapperVariant: displayStaticWrapperAs },
   });
 
-  const PaperContent = components?.PaperContent ?? React.Fragment;
+  const PaperContent = slots?.paperContent ?? components?.PaperContent ?? React.Fragment;
 
   return (
     <LocalizationProvider localeText={localeText}>

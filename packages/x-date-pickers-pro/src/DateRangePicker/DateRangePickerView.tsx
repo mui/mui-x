@@ -61,7 +61,6 @@ export interface ExportedDateRangePickerViewProps<TDate>
       | keyof BaseDateValidationProps<TDate>
       | keyof DayValidationProps<TDate>
     > {
-
   /**
    * Overrideable components.
    * @default {}

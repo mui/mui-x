@@ -10,6 +10,7 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
   DateInputSlotsComponent,
+  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
@@ -113,7 +114,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
         {...pickerProps}
-        slots={components}
+        slots={uncapitalizeObjectKeys(components)}
         slotsProps={componentsProps}
         {...other}
       />

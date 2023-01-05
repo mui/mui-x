@@ -19,7 +19,8 @@ import {
   PickersArrowSwitcherSlotsComponentsProps,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  UncapitalizeObjectKeys
+  UncapitalizeObjectKeys,
+  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange, RangePosition } from '../internal/models/range';
@@ -70,10 +71,28 @@ export interface DateRangePickerViewDesktopProps<TDate>
   extends ExportedDateRangePickerViewDesktopProps,
     Omit<
       DayCalendarProps<TDate>,
-      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'slots' | 'slotsProps'
+      | 'selectedDays'
+      | 'onFocusedDayChange'
+      | 'classes'
+      | 'components'
+      | 'componentsProps'
+      | 'slots'
+      | 'slotsProps'
     >,
     DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
+  /**
+   * Overrideable components.
+   * @default {}
+   * @deprecated
+   */
+  components?: DesktopDateRangeCalendarSlotsComponent<TDate>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated
+   */
+  componentsProps?: DesktopDateRangeCalendarSlotsComponentsProps<TDate>;
   /**
    * Overrideable components.
    * @default {}
@@ -147,8 +166,10 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   const {
     calendars,
     changeMonth,
-    slots,
-    slotsProps,
+    components,
+    componentsProps,
+    slots: innerSlots,
+    slotsProps: innerSlotsProps,
     rangePosition,
     currentMonth,
     value,
@@ -162,6 +183,8 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     classes: providedClasses,
     ...other
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotsProps = innerSlotsProps ?? componentsProps;
 
   const localeText = useLocaleText<TDate>();
 
@@ -227,9 +250,9 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
   }, [changeMonth, currentMonth, utils]);
 
   const slotsForDayCalendar = {
-    Day: DateRangePickerDay,
+    day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlotsComponent<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
   const slotsPropsForDayCalendar = {
     ...slotsProps,
@@ -247,7 +270,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotsComponentsProps<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
 
   return (
     <DateRangePickerViewDesktopRoot className={clsx(className, classes.root)}>

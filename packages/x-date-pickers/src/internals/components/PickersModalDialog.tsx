@@ -52,7 +52,7 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
    * @default {}
    * @deprecated
    */
-  components?: PickersModalDialogSlotsComponent;
+  components?: Partial<PickersModalDialogSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -98,12 +98,14 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
     open,
     components,
     componentsProps,
+    slots,
+    slotsProps,
   } = props;
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -114,8 +116,8 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
     ownerState: { wrapperVariant: 'mobile' },
   });
 
-  const Dialog = components?.Dialog ?? PickersModalDialogRoot;
-  const Transition = components?.MobileTransition ?? Fade;
+  const Dialog = slots?.dialog ?? components?.Dialog ?? PickersModalDialogRoot;
+  const Transition = slots?.mobileTransition ?? components?.MobileTransition ?? Fade;
 
   return (
     <Dialog
@@ -123,9 +125,9 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
       onClose={onDismiss}
       {...componentsProps?.dialog}
       TransitionComponent={Transition}
-      TransitionProps={componentsProps?.mobileTransition}
-      PaperComponent={components?.MobilePaper}
-      PaperProps={componentsProps?.mobilePaper}
+      TransitionProps={slotsProps?.mobileTransition ?? componentsProps?.mobileTransition}
+      PaperComponent={slots?.mobilePaper ?? components?.MobilePaper}
+      PaperProps={slotsProps?.mobilePaper ?? componentsProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
       <ActionBar {...actionBarProps} />

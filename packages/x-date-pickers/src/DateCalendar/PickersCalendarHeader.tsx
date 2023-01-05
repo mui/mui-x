@@ -65,6 +65,22 @@ export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
     DateComponentValidationProps<TDate> {
+  /**
+   * Overrideable components.
+   * @default {}
+   * @depreacted
+   */
+  components?: PickersCalendarHeaderSlotsComponent;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
@@ -74,9 +90,6 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
-  components?: PickersCalendarHeaderSlotsComponent;
-  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
-  slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
 }
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {

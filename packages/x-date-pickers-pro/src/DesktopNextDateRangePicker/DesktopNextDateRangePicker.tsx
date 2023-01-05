@@ -37,14 +37,17 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     views: ['day'] as const,
     openTo: 'day' as const,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    components: {
-      Field: MultiInputDateRangeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: MultiInputDateRangeField,
+      ...(defaultizedProps.slots ?? defaultizedProps.components),
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotsProps: {
+      ...(defaultizedProps.slotsProps ?? defaultizedProps.componentsProps),
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(
+          (defaultizedProps.slotsProps ?? defaultizedProps.componentsProps)?.field,
+          ownerState,
+        ),
         ...extractValidationProps(defaultizedProps),
         className,
         sx,

@@ -6,6 +6,7 @@ import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internal/models';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 
 export interface UseSingleInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   props: UseSingleInputDateTimeRangeFieldComponentProps<TDate, TChildProps>;
@@ -31,13 +32,26 @@ export interface SingleInputDateTimeRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: SingleInputDateTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
+
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<SingleInputDateTimeRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: SingleInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type SingleInputDateTimeRangeFieldOwnerState<TDate> =

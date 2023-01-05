@@ -19,14 +19,14 @@ const SingleInputTimeRangeField = React.forwardRef(function SingleInputTimeRange
     name: 'MuiSingleInputTimeRangeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { slots, slotsProps, components, componentsProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
+  const Input = slots?.input ?? components?.Input ?? TextField;
   const inputProps: SingleInputTimeRangeFieldProps<TDate> = useSlotProps({
     elementType: Input,
-    externalSlotProps: componentsProps?.input,
+    externalSlotProps: slotsProps?.input ?? componentsProps?.input,
     externalForwardedProps: other,
     ownerState,
   });

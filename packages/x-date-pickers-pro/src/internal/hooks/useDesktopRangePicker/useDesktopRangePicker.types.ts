@@ -16,6 +16,7 @@ import {
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
   UsePickerViewsProps,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -72,13 +73,25 @@ export interface UseDesktopRangePickerProps<
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
-  components: UseDesktopRangePickerSlotsComponent<TDate, TView>;
+  components?: Partial<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated
+   */
+  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}

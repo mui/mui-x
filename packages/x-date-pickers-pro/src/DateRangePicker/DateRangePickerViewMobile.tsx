@@ -12,7 +12,8 @@ import {
   DayValidationProps,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  UncapitalizeObjectKeys
+  UncapitalizeObjectKeys,
+  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/range';
@@ -40,10 +41,28 @@ export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
 interface DesktopDateRangeCalendarProps<TDate>
   extends Omit<
       DayCalendarProps<TDate>,
-      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'slots' | 'slotsProps'
+      | 'selectedDays'
+      | 'onFocusedDayChange'
+      | 'classes'
+      | 'components'
+      | 'componentsProps'
+      | 'slots'
+      | 'slotsProps'
     >,
     DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
+  /**
+   * Overrideable components.
+   * @default {}
+   * @deprecated
+   */
+  components?: UncapitalizeObjectKeys<DateRangePickerViewMobileSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated
+   */
+  componentsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
   /**
    * Overrideable components.
    * @default {}
@@ -66,8 +85,10 @@ const onlyDayView = ['day'] as const;
 export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendarProps<TDate>) {
   const {
     changeMonth,
-    slots,
-    slotsProps,
+    components,
+    componentsProps,
+    slots: innerSlots,
+    slotsProps: innerSlotsProps,
     value,
     maxDate: maxDateProp,
     minDate: minDateProp,
@@ -78,6 +99,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     classes: providedClasses,
     ...other
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotsProps = innerSlotsProps ?? componentsProps;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -90,9 +113,9 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
   const slotsForDayCalendar = {
-    Day: DateRangePickerDay,
+    day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlotsComponent<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
@@ -119,7 +142,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as DayCalendarSlotsComponentsProps<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
 
   return (
     <React.Fragment>

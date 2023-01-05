@@ -12,7 +12,7 @@ import {
   TimeValidationProps,
   YearValidationProps,
 } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps } from '../internals';
+import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
 
 export interface UseDateTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseDateTimeFieldComponentProps<TDate, TChildProps>;
@@ -58,13 +58,25 @@ export interface DateTimeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
-  components?: DateTimeFieldSlotsComponent;
+  components?: Partial<DateTimeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated
+   */
+  componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
+  slotsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;

@@ -9,7 +9,8 @@ import {
   BaseDateValidationProps,
   BaseNextPickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys
+  UncapitalizeObjectKeys,
+  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -112,6 +113,9 @@ export function useNextDateRangePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    slots: { Toolbar: DateRangePickerToolbar, ...(themeProps.slots ?? themeProps.components) },
+    slots: {
+      toolbar: DateRangePickerToolbar,
+      ...(themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components)),
+    },
   };
 }

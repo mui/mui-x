@@ -41,7 +41,7 @@ export interface TimeFieldProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: TimeFieldSlotsComponent;
+  components?: Partial<TimeFieldSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}
