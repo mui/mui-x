@@ -338,7 +338,9 @@ export const useFieldState = <
     // We can try to set the day to the maximum boundary.
     if (
       !utils.isValid(newDate) &&
-      activeDateSections.every((section) => section.value !== '') &&
+      activeDateSections.every(
+        (section) => section.dateSectionName === 'weekDay' || section.value !== '',
+      ) &&
       activeDateSections.some((section) => section.dateSectionName === 'day')
     ) {
       const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);

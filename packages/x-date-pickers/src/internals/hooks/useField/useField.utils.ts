@@ -63,14 +63,8 @@ export const adjustDateSectionValue = <TDate>(
   const isEnd = keyCode === 'End';
 
   switch (dateSectionName) {
-    case 'day': {
-      if (isStart) {
-        return utils.startOfMonth(date);
-      }
-      if (isEnd) {
-        return utils.endOfMonth(date);
-      }
-      return utils.addDays(date, delta);
+    case 'year': {
+      return utils.addYears(date, delta);
     }
     case 'month': {
       if (isStart) {
@@ -81,11 +75,23 @@ export const adjustDateSectionValue = <TDate>(
       }
       return utils.addMonths(date, delta);
     }
-    case 'year': {
-      return utils.addYears(date, delta);
+    case 'day': {
+      if (isStart) {
+        return utils.startOfMonth(date);
+      }
+      if (isEnd) {
+        return utils.endOfMonth(date);
+      }
+      return utils.addDays(date, delta);
     }
-    case 'meridiem': {
-      return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
+    case 'weekDay': {
+      if (isStart) {
+        return utils.startOfWeek(date);
+      }
+      if (isEnd) {
+        return utils.endOfWeek(date);
+      }
+      return utils.addDays(date, delta);
     }
     case 'hours': {
       if (isStart) {
@@ -95,6 +101,9 @@ export const adjustDateSectionValue = <TDate>(
         return utils.endOfDay(date);
       }
       return utils.addHours(date, delta);
+    }
+    case 'meridiem': {
+      return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
     }
     case 'minutes': {
       if (isStart) {
@@ -118,6 +127,22 @@ export const adjustDateSectionValue = <TDate>(
       return date;
     }
   }
+};
+
+export const getDaysInWeek = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) => {
+  const elements: TDate[] = [];
+
+  const now = utils.date()!;
+  const startDate = utils.startOfWeek(now);
+  const endDate = utils.endOfWeek(now);
+
+  let current = startDate;
+  while (utils.isBefore(current, endDate)) {
+    elements.push(current);
+    current = utils.addDays(current, 1);
+  }
+
+  return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
 export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
@@ -178,6 +203,26 @@ export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSecti
       }
 
       return utils.formatByString(newDate, section.formatValue);
+    }
+
+    case 'weekDay': {
+      let newDate: TDate;
+      if (shouldSetAbsolute) {
+        if (delta > 0 || isEnd) {
+          newDate = utils.startOfWeek(today);
+        } else {
+          newDate = utils.endOfWeek(today);
+        }
+
+        return utils.formatByString(newDate, section.formatValue);
+      }
+
+      const formattedDaysInWeek = getDaysInWeek(utils, section.formatValue);
+      const currentDayInWeek = formattedDaysInWeek.indexOf(section.value);
+      const newDayInWeek =
+        (currentDayInWeek + formattedDaysInWeek.length + delta) % formattedDaysInWeek.length;
+
+      return formattedDaysInWeek[newDayInWeek];
     }
 
     case 'meridiem': {
@@ -357,15 +402,32 @@ export const changeSectionValueFormat = <TDate>(
   valueStr: string,
   currentFormat: string,
   newFormat: string,
-) => utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
+) => {
+  if (process.env.NODE_ENV !== 'production') {
+    if (getDateSectionConfigFromFormatToken(utils, currentFormat).dateSectionName === 'weekDay') {
+      throw new Error("changeSectionValueFormat doesn't support week day formats");
+    }
+  }
+
+  return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
+};
 
 export const doesSectionHaveTrailingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   contentType: 'digit' | 'letter',
+  dateSectionName: MuiDateSectionName,
   formatValue: string,
-) =>
-  contentType === 'digit' &&
-  changeSectionValueFormat(utils, '1', formatValue, formatValue).length > 1;
+) => {
+  if (contentType !== 'digit') {
+    return false;
+  }
+
+  if (dateSectionName === 'weekDay') {
+    return utils.formatByString(utils.startOfWeek(utils.date()!), formatValue).length > 1;
+  }
+
+  return changeSectionValueFormat(utils, '1', formatValue, formatValue).length > 1;
+};
 
 const getEscapedPartsFromExpandedFormat = <TDate>(
   utils: MuiPickersAdapter<TDate>,
@@ -407,6 +469,7 @@ export const splitFormatIntoSections = <TDate>(
     const hasTrailingZeroes = doesSectionHaveTrailingZeros(
       utils,
       sectionConfig.contentType,
+      sectionConfig.dateSectionName,
       currentTokenValue,
     );
 
@@ -486,10 +549,25 @@ export const getDateFromDateSections = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   sections: FieldSection[],
 ) => {
-  const formatWithoutSeparator = sections.map((section) => section.formatValue).join(' ');
-  const dateWithoutSeparatorStr = sections
-    .map((section) => getSectionVisibleValue(section, false))
-    .join(' ');
+  // If we have both a day and a weekDay section,
+  // Then we skip the weekDay in the parsing because libraries like dayjs can't parse complicated formats containing a weekDay.
+  // dayjs(dayjs().format('dddd MMMM D YYYY'), 'dddd MMMM D YYYY')) // returns `Invalid Date` even if the format is valid.
+  const shouldSkipWeekDays = sections.some((section) => section.dateSectionName === 'day');
+
+  const sectionFormats: string[] = [];
+  const sectionValues: string[] = [];
+  for (let i = 0; i < sections.length; i += 1) {
+    const section = sections[i];
+
+    const shouldSkip = shouldSkipWeekDays && section.dateSectionName === 'weekDay';
+    if (!shouldSkip) {
+      sectionFormats.push(section.formatValue);
+      sectionValues.push(getSectionVisibleValue(section, false));
+    }
+  }
+
+  const formatWithoutSeparator = sectionFormats.join(' ');
+  const dateWithoutSeparatorStr = sectionValues.join(' ');
 
   return utils.parse(dateWithoutSeparatorStr, formatWithoutSeparator);
 };
@@ -537,6 +615,14 @@ export const getSectionsBoundaries = <TDate, TSection extends FieldSection>(
           ? utils.getDaysInMonth(currentDate)
           : maxDaysInMonth,
     }),
+    weekDay: () => ({
+      minimum: 0,
+      maximum: 6,
+    }),
+    meridiem: () => ({
+      minimum: 0,
+      maximum: 0,
+    }),
     hours: () => ({
       minimum: 0,
       // Assumption: All days have the same amount of hours
@@ -551,10 +637,6 @@ export const getSectionsBoundaries = <TDate, TSection extends FieldSection>(
       minimum: 0,
       // Assumption: All years have the same amount of seconds
       maximum: utils.getSeconds(endOfYear),
-    }),
-    meridiem: () => ({
-      minimum: 0,
-      maximum: 0,
     }),
   };
 };
@@ -584,11 +666,30 @@ export const applyMeridiemChange = <TDate>(
   return date;
 };
 
+export const applyWeekDayChange = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  date: TDate,
+  sectionFormat: string,
+  sectionValue: string,
+) => {
+  const formattedDaysInWeek = getDaysInWeek(utils, sectionFormat);
+  const dayInWeekStrOfActiveDate = utils.formatByString(date, sectionFormat);
+  const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
+  const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(sectionValue);
+
+  const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
+
+  return utils.addDays(date, diff);
+};
+
 export const getDateSectionGetterAndSetter = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  dateSectionName: Exclude<MuiDateSectionName, 'meridiem'>,
+  dateSectionName: Exclude<MuiDateSectionName, 'weekDay' | 'meridiem'>,
 ) => {
-  const adapterMethods = {
+  const adapterMethods: Record<
+    typeof dateSectionName,
+    { getter: (date: TDate) => number; setter: (date: TDate, value: number) => TDate }
+  > = {
     seconds: {
       getter: utils.getSeconds,
       setter: utils.setSeconds,
@@ -640,7 +741,7 @@ export const validateSections = <TSection extends FieldSection>(
 ) => {
   const supportedSections: MuiDateSectionName[] = [];
   if (['date', 'date-time'].includes(valueType)) {
-    supportedSections.push('day', 'month', 'year');
+    supportedSections.push('weekDay', 'day', 'month', 'year');
   }
   if (['time', 'date-time'].includes(valueType)) {
     supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
@@ -683,6 +784,8 @@ export const mergeDateIntoReferenceDate = <
           mergedDate,
           utils.getHours(date) < 12 ? 'AM' : 'PM',
         );
+      } else if (section.dateSectionName === 'weekDay') {
+        mergedDate = applyWeekDayChange(utils, mergedDate, section.formatValue, section.value);
       } else {
         const { getter, setter } = getDateSectionGetterAndSetter(utils, section.dateSectionName);
         mergedDate = setter(mergedDate, getter(date));

@@ -5,11 +5,13 @@ import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
 import {
   applyMeridiemChange,
+  applyWeekDayChange,
   changeSectionValueFormat,
   cleanTrailingZeroInNumericSectionValue,
   doesSectionHaveTrailingZeros,
   getDateSectionConfigFromFormatToken,
   getDateSectionGetterAndSetter,
+  getDaysInWeek,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
@@ -150,70 +152,111 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   };
 
   const applyLetterEditing: CharacterEditingApplier<TDate, TSection> = (params) => {
+    const findMatchingOptions = (
+      format: string,
+      options: string[],
+      queryValue: string,
+    ): ReturnType<QueryApplier<TSection>> => {
+      const matchingValues = options.filter((month) => month.toLowerCase().startsWith(queryValue));
+
+      if (matchingValues.length === 0) {
+        return { saveQuery: false };
+      }
+
+      return {
+        sectionValue: matchingValues[0],
+        shouldGoToNextSection: matchingValues.length === 1,
+      };
+    };
+
+    const testQueryOnFormatAndFallbackFormat = (
+      queryValue: string,
+      activeSection: TSection,
+      getOptions: (format: string) => string[],
+      fallbackFormat?: string,
+      formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
+    ) => {
+      if (activeSection.contentType === 'letter') {
+        return findMatchingOptions(
+          activeSection.formatValue,
+          getOptions(activeSection.formatValue),
+          queryValue,
+        );
+      }
+
+      // When editing a digit-format month / weekDay and the user presses a letter,
+      // We can support the letter editing by using the letter-format month / weekDay and re-formatting the result.
+      // We just have to make sure that the default month / weekDay format is a letter format,
+      if (
+        fallbackFormat &&
+        formatFallbackValue != null &&
+        getDateSectionConfigFromFormatToken(utils, fallbackFormat).contentType === 'letter'
+      ) {
+        const fallbackOptions = getOptions(fallbackFormat);
+        const response = findMatchingOptions(fallbackFormat, fallbackOptions, queryValue);
+        if (isQueryResponseWithoutValue(response)) {
+          return { saveQuery: false };
+        }
+
+        return {
+          ...response,
+          sectionValue: formatFallbackValue(response.sectionValue, fallbackOptions),
+        };
+      }
+
+      return { saveQuery: false };
+    };
+
     const getFirstSectionValueMatchingWithQuery: QueryApplier<TSection> = (
       queryValue,
       activeSection,
     ) => {
       switch (activeSection.dateSectionName) {
         case 'month': {
-          const getMonthResponse = (format: string): ReturnType<QueryApplier<TSection>> => {
-            const matchingMonths = utils
-              .getMonthArray(utils.date()!)
-              .map((month) => utils.formatByString(month, format!))
-              .filter((month) => month.toLowerCase().startsWith(queryValue));
+          const getOptions = (format: string) =>
+            utils.getMonthArray(utils.date()!).map((month) => utils.formatByString(month, format!));
 
-            if (matchingMonths.length === 0) {
-              return { saveQuery: false };
-            }
-
-            return {
-              sectionValue: matchingMonths[0],
-              shouldGoToNextSection: matchingMonths.length === 1,
-            };
-          };
-
-          if (activeSection.contentType === 'letter') {
-            return getMonthResponse(activeSection.formatValue);
-          }
-
-          // When editing a digit-format month and the user presses a letter,
-          // We can support the letter editing by using the letter-format month and re-formatting the result.
-          // We just have to make sure that the default month format is a letter format,
-          if (
-            getDateSectionConfigFromFormatToken(utils, utils.formats.month).contentType === 'letter'
-          ) {
-            const monthResponse = getMonthResponse(utils.formats.month);
-            if (isQueryResponseWithoutValue(monthResponse)) {
-              return { saveQuery: false };
-            }
-
-            const formattedValue = changeSectionValueFormat(
+          const formatFallbackValue = (fallbackValue: string) =>
+            changeSectionValueFormat(
               utils,
-              monthResponse.sectionValue,
+              fallbackValue,
               utils.formats.month,
               activeSection.formatValue,
             );
 
-            return {
-              ...monthResponse,
-              sectionValue: formattedValue,
-            };
-          }
+          return testQueryOnFormatAndFallbackFormat(
+            queryValue,
+            activeSection,
+            getOptions,
+            utils.formats.month,
+            formatFallbackValue,
+          );
+        }
 
-          return { saveQuery: false };
+        case 'weekDay': {
+          const getOptions = (format: string) => getDaysInWeek(utils, format);
+
+          const formatFallbackValue = (fallbackValue: string, fallbackOptions: string[]) =>
+            fallbackOptions.indexOf(fallbackValue).toString();
+
+          return testQueryOnFormatAndFallbackFormat(
+            queryValue,
+            activeSection,
+            getOptions,
+            utils.formats.weekday,
+            formatFallbackValue,
+          );
         }
 
         case 'meridiem': {
-          const now = utils.date()!;
-          const sectionValue = [utils.endOfDay(now), utils.startOfDay(now)]
-            .map((date) => utils.formatByString(date, activeSection.formatValue))
-            .find((meridiem) => meridiem.toLowerCase().startsWith(queryValue));
+          const getOptions = (format: string) => {
+            const now = utils.date()!;
+            return [utils.endOfDay(now), utils.startOfDay(now)].map((date) =>
+              utils.formatByString(date, format),
+            );
+          };
 
-          if (sectionValue == null) {
-            return { saveQuery: false };
-          }
-
-          return { sectionValue, shouldGoToNextSection: true };
+          return testQueryOnFormatAndFallbackFormat(queryValue, activeSection, getOptions);
         }
 
         default: {
@@ -282,7 +325,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         const response = getNewSectionValue(
           queryValue,
           activeSection,
-          doesSectionHaveTrailingZeros(utils, 'digit', 'MM'),
+          doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
         );
 
         if (isQueryResponseWithoutValue(response)) {
@@ -295,6 +338,27 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           'MM',
           activeSection.formatValue,
         );
+        return {
+          ...response,
+          sectionValue: formattedValue,
+        };
+      }
+
+      // When editing a letter-format weekDay and the user presses a digit,
+      // We can support the numeric editing by returning the nth day in the week day array.
+      if (activeSection.dateSectionName === 'weekDay') {
+        const response = getNewSectionValue(
+          queryValue,
+          activeSection,
+          activeSection.hasTrailingZeroes,
+        );
+        if (isQueryResponseWithoutValue(response)) {
+          return response;
+        }
+
+        const formattedValue = getDaysInWeek(utils, activeSection.formatValue)[
+          Number(response.sectionValue)
+        ];
         return {
           ...response,
           sectionValue: formattedValue,
@@ -331,6 +395,20 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           return {
             date: newDate,
             shouldGoToNextSection: true,
+          };
+        }
+
+        if (activeSection.dateSectionName === 'weekDay') {
+          const newDate = applyWeekDayChange(
+            utils,
+            activeDate,
+            activeSection.formatValue,
+            response.sectionValue,
+          );
+
+          return {
+            date: newDate,
+            shouldGoToNextSection: response.shouldGoToNextSection,
           };
         }
 
