@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 ## 5.17.18
+
 _Jan 5, 2023_
 
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
