@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
-import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
@@ -616,16 +616,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose?: GridEventListener<'menuClose'>;
-  /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel?: GridEditRowsModel;
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
   /**
    * Controls the modes of the cells.
    */

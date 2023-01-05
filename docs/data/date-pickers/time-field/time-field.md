@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers'
 
 # Time Field
 
-<p class="description">The Time Field lets the user select a time with the keyboard.</p>
+<p class="description">The Time Field component lets the user select a time with the keyboard.</p>
 
 :::warning
 This component is unstable.
