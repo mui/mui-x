@@ -180,11 +180,13 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps: PropTypes.object,
   /**
@@ -293,6 +295,16 @@ MultiInputTimeRangeField.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * Overrideable slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0

@@ -33,6 +33,8 @@
     "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>MuiDateSectionName</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "size": "The size of the component.",
+    "slots": "Overrideable components.",
+    "slotsProps": "The props used for each component slot.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."

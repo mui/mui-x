@@ -1,8 +1,8 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
       "type": {
@@ -36,6 +36,8 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
       "type": {
         "name": "union",
