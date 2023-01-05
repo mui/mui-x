@@ -97,7 +97,7 @@ DataGridRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
   columnHeaderHeight: PropTypes.number,
@@ -604,7 +604,7 @@ DataGridRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
