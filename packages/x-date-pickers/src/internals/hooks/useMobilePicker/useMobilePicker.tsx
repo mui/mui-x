@@ -121,12 +121,7 @@ export const useMobilePicker = <
             actionBar: undefined,
           }}
         >
-          <Layout
-            {...layoutProps}
-            {...slotsProps?.layout}
-            slots={slots}
-            slotsProps={slotsProps}
-          >
+          <Layout {...layoutProps} {...slotsProps?.layout} slots={slots} slotsProps={slotsProps}>
             {renderCurrentView()}
           </Layout>
         </PickersModalDialog>

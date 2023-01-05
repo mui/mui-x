@@ -122,7 +122,11 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   const Tabs = slots?.tabs ?? components?.Tabs;
   const tabs =
     view && Tabs ? (
-      <Tabs view={view} onViewChange={onViewChange} {...slotsProps?.tabs ?? componentsProps?.tabs} />
+      <Tabs
+        view={view}
+        onViewChange={onViewChange}
+        {...(slotsProps?.tabs ?? componentsProps?.tabs)}
+      />
     ) : null;
 
   return {

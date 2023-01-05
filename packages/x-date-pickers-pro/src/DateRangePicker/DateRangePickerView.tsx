@@ -14,7 +14,7 @@ import {
   DayValidationProps,
   ExportedBaseToolbarProps,
   ExportedUseViewsOptions,
-  UncapitalizeObjectKeys
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../internal/models/range';
 import { DayRangeValidationProps } from '../internal/models/dateRange';

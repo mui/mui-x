@@ -1,4 +1,4 @@
-import { MakeOptional ,UncapitalizeObjectKeys} from '@mui/x-date-pickers/internals';
+import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerSlotsComponent,
   UseMobileRangePickerSlotsComponentsProps,

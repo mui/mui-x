@@ -3,12 +3,12 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
 } from '../internal/models/timeRange';
 import { RangePosition } from '../internal/models/range';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 
 export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
@@ -41,7 +41,7 @@ export interface MultiInputTimeRangeFieldProps<TDate>
    * @deprecated
    */
   componentsProps?: MultiInputTimeRangeFieldSlotsComponentsProps<TDate>;
-   /**
+  /**
    * Overrideable slots.
    * @default {}
    */
