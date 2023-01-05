@@ -41,7 +41,8 @@ export default function CommonlyUsedComponents() {
         <DemoItem
           label={
             <React.Fragment>
-              <code>DateRangePicker</code> for date range editing
+              <code>DateRangePicker</code> for date range editing{' '}
+              <span className="plan-pro" />
             </React.Fragment>
           }
         >

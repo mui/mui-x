@@ -7,11 +7,18 @@ materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 ---
 
-# Date / Time Pickers
+# Date and Time Pickers
 
-<p class="description">The Date pickers and Time pickers let the user select date and time values.</p>
+<p class="description">The Date and Time pickers let the user select date and time values.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
+
+## Community or Pro Plan ?
+
+The Date and Time Pickers comes in two packages:
+
+- `@mui/x-date-pickers`, which is open-source and contains all the components to edit a date and/or a time.
+- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit a range of date and/or time.
 
 ## Installation
 
@@ -87,7 +94,7 @@ If you need to use the Date and Time Pickers with a custom locale, have a look a
 
 ### Commonly used components
 
-Most application only need a few of the components exported by `@mui/x-date-pickers`:
+Most application only need a few of the components exposed by the Date and Time packages:
 
 {{"demo": "CommonlyUsedComponents.js"}}
 
@@ -112,7 +119,7 @@ All the components described in this page can be controlled using the `value` / 
 
 ## Other components
 
-### Keyboard vs mouse editing
+### Keyboard or mouse editing
 
 The first thing you want to decide, is how the user should be able to select their value:
 
@@ -135,32 +142,18 @@ For example, the `DatePicker` is the combination of the `DateField` and the `Dat
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
-### Component explorer
+### Date or time editing
+
+The Date and Time Pickers are divided into six families of components.
+The demo below shows each one of them using their field component:
+
+{{"demo": "ComponentFamilies.js", "bg": "inline", "hideToolbar": true}}
+
+### Find your component
+
+Use the form below to find component you need:
 
 {{"demo": "ComponentExplorerNoSnap.js", "bg": "inline", "hideToolbar": true}}
-
-### Component table
-
-#### Date or Time editing
-
-The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _Date_, _Time_ and _Date and Time_ editing:
-
-|                      | **Date**       | **Time**     | **Date and Time** |
-| -------------------- | -------------- | ------------ | ----------------- |
-| **Picker**           | `DatePicker`   | `TimePicker` | `DateTimePicker`  |
-| **Field**            | `DateField`    | `TimeField`  | `DateTimeField`   |
-| **Calendar / Clock** | `DateCalendar` | `TimeClock`  | -                 |
-
-#### Date or Time Range editing [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
-
-The _Picker_, _Field_ and _Calendar / Clock_ components are each available for _Date Range_, _Time Range_ and _Date and Time Range_ editing:
-
-|                        | **Date**                    | **Time**                    | **Date and Time**               |
-| ---------------------- | --------------------------- | --------------------------- | ------------------------------- |
-| **Picker**             | `DateRangePicker`           | 🚧                          | 🚧                              |
-| **Field** (one input)  | `SingleInputDateRangeField` | `SingleInputTimeRangeField` | `SingleInputDateTimeRangeField` |
-| **Field** (two inputs) | `MultiInputDateRangeField`  | `MultiInputTimeRangeField`  | `MultiInputDateTimeRangeField`  |
-| **Calendar / Clock**   | `DateRangeCalendar`         | 🚧                          | -                               |
 
 ## TypeScript
 
