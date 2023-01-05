@@ -10,6 +10,7 @@ import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarAction } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 
 export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
   /**
@@ -62,7 +63,7 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
    * Overrideable components.
    * @default {}
    */
-  slots?: PickersModalDialogSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersModalDialogSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}

@@ -9,6 +9,7 @@ import {
   BaseDateValidationProps,
   BaseNextPickerInputProps,
   PickerViewRendererLookup,
+  UncapitalizeObjectKeys
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -61,7 +62,7 @@ export interface BaseNextDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: BaseNextDateRangePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<BaseNextDateRangePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

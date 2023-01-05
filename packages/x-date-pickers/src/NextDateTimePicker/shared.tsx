@@ -35,6 +35,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -97,7 +98,7 @@ export interface BaseNextDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: BaseNextDateTimePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<BaseNextDateTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

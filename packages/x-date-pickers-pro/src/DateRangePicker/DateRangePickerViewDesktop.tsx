@@ -19,6 +19,7 @@ import {
   PickersArrowSwitcherSlotsComponentsProps,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
+  UncapitalizeObjectKeys
 } from '@mui/x-date-pickers/internals';
 import { calculateRangePreview } from './date-range-manager';
 import { DateRange, RangePosition } from '../internal/models/range';
@@ -77,7 +78,7 @@ export interface DateRangePickerViewDesktopProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: DesktopDateRangeCalendarSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<DesktopDateRangeCalendarSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

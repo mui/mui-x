@@ -39,7 +39,7 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
-import { SlotsAndSlotsProps } from '../internals/utils/utils';
+import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,

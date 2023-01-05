@@ -20,6 +20,7 @@ import { TimeValidationError } from '../internals/hooks/validation/useTimeValida
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -57,7 +58,7 @@ export interface BaseNextTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: BaseNextTimePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<BaseNextTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

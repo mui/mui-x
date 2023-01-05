@@ -15,7 +15,7 @@ import {
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, DateView, MuiPickersAdapter } from '../internals';
+import { BaseDateValidationProps, DateView, MuiPickersAdapter, UncapitalizeObjectKeys } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -57,7 +57,7 @@ export interface BaseNextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: BaseNextDatePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<BaseNextDatePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

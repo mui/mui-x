@@ -1,3 +1,4 @@
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopNextDateRangePickerProps,
   DesktopNextDateRangePickerSlotsComponent,
@@ -42,7 +43,7 @@ export interface NextDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: NextDateRangePickerSlotsComponents<TDate>;
+  slots?: UncapitalizeObjectKeys<NextDateRangePickerSlotsComponents<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { MakeOptional ,UncapitalizeObjectKeys} from '@mui/x-date-pickers/internals';
 import {
   UseMobileRangePickerSlotsComponent,
   UseMobileRangePickerSlotsComponentsProps,
@@ -42,7 +42,7 @@ export interface MobileNextDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: MobileNextDateRangePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<MobileNextDateRangePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

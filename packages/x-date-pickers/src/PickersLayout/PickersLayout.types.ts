@@ -8,6 +8,7 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { WrapperVariant } from '../internals/components/wrappers/WrapperVariantContext';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {
   /**
@@ -96,7 +97,7 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
    * Overrideable components.
    * @default {}
    */
-  slots?: PickersLayoutSlotsComponent<TValue, TView>;
+  slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TView>>;
   /**
    * The props used for each component slot.
    * @default {}

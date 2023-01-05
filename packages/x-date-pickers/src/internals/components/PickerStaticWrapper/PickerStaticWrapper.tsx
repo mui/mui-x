@@ -16,6 +16,7 @@ import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
+import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -71,7 +72,7 @@ export interface PickerStaticWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: PickersStaticWrapperSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersStaticWrapperSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}

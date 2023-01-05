@@ -8,7 +8,7 @@ import {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional, TimeView } from '../internals';
+import { MakeOptional, TimeView, UncapitalizeObjectKeys } from '../internals';
 
 export interface StaticNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
@@ -37,7 +37,7 @@ export interface StaticNextTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: StaticNextTimePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<StaticNextTimePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

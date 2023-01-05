@@ -26,6 +26,7 @@ import {
   pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -73,7 +74,7 @@ export interface PickersCalendarHeaderProps<TDate>
   onViewChange?: (view: DateView) => void;
   labelId?: string;
   classes?: Partial<PickersCalendarHeaderClasses>;
-  slots?: PickersCalendarHeaderSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
   slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
 }
 
@@ -189,7 +190,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = slots?.SwitchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton = slots?.switchViewButton ?? PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
     externalSlotProps: slotsProps?.switchViewButton,
@@ -201,7 +202,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = slots?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon = slots?.switchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,

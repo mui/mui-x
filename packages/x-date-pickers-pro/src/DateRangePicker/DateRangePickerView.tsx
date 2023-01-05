@@ -14,6 +14,7 @@ import {
   DayValidationProps,
   ExportedBaseToolbarProps,
   ExportedUseViewsOptions,
+  UncapitalizeObjectKeys
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../internal/models/range';
 import { DayRangeValidationProps } from '../internal/models/dateRange';
@@ -64,7 +65,7 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: DateRangePickerViewSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<DateRangePickerViewSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

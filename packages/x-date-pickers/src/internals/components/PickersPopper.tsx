@@ -22,6 +22,7 @@ import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 import { getActiveElement } from '../utils/utils';
+import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 
 export interface PickersPopperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
@@ -80,7 +81,7 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   onBlur?: () => void;
   components?: PickersPopperSlotsComponent;
   componentsProps?: PickersPopperSlotsComponentsProps;
-  slots?: PickersPopperSlotsComponent;
+  slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
   slotsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;

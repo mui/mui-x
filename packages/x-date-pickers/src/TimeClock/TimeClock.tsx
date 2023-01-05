@@ -25,6 +25,7 @@ import { TimeView } from '../internals/models';
 import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -85,7 +86,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    * Overrideable components.
    * @default {}
    */
-  slots?: TimeClockSlotsComponent;
+  slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;
   /**
    * The props used for each component slot.
    * @default {}

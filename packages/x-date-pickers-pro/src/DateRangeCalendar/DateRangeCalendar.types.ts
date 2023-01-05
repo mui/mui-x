@@ -15,6 +15,7 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
+  UncapitalizeObjectKeys
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
@@ -136,7 +137,7 @@ export interface DateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: DateRangeCalendarSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}

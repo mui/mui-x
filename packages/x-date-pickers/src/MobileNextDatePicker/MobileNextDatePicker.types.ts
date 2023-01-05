@@ -11,6 +11,7 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { DateView } from '../internals/models/views';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface MobileNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
@@ -40,7 +41,7 @@ export interface MobileNextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: MobileNextDatePickerSlotsComponent<TDate>;
+  slots?: UncapitalizeObjectKeys<MobileNextDatePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
