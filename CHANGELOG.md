@@ -9,8 +9,9 @@ _Jan 5, 2023_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 📆 Add `SingleInputTimeRangeField` and `SingleInputDateTimeRangeField` components
-- 🚀 Use grid for modifying pickers layout
+- 📆 Add `SingleInputTimeRangeField` and `SingleInputDateTimeRangeField` components (#7186) @alexfauquette
+- 🚀 Use grid for modifying pickers layout (#6900) @alexfauquette
+- ✨ Improve field components editing experience (#7272) @flaviendelangle
 - 💻 Multiple codemods
 - 📚 Many documentation improvements
 - 🐞 Bugfixes
@@ -75,7 +76,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [core] Apply title capitalization convention @oliviertassinari
 - [core] Fix the product license reference name (#7367) @oliviertassinari
 - [core] Order the slots alphabetically in the JSON files (#7349) @flaviendelangle
-- [core] Remove blanklines in _redirects @oliviertassinari
+- [core] Remove blanklines in `_redirects` @oliviertassinari
 - [core] Remove dead prettier config @oliviertassinari
 - [core] Sync back with the mono repo (#7351) @oliviertassinari
 - [core] Sync monorepo, fix layout scrollbar @oliviertassinari
