@@ -26,6 +26,8 @@ import {
   WrapperVariantContext,
   PickerSelectionState,
   useNow,
+  uncapitalizeObjectKeys,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -189,7 +191,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     displayWeekNumber,
     ...other
   } = props;
-  const slots = innerSlots ?? components;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
   const slotsProps = innerSlotsProps ?? componentsProps;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
@@ -404,9 +406,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   );
 
   const slotsForDayCalendar = {
-    Day: DateRangePickerDay,
+    day: DateRangePickerDay,
     ...slots,
-  } as DayCalendarSlotsComponent<TDate>;
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
   const slotsPropsForDayCalendar = {
     ...slotsProps,

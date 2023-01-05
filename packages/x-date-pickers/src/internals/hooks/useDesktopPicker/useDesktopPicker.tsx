@@ -53,7 +53,7 @@ export const useDesktopPicker = <
     wrapperVariant: 'desktop',
   });
 
-  const Field = slots.Field;
+  const Field = slots.field;
   const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
     externalSlotProps: slotsProps?.field,
@@ -68,7 +68,7 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
-  const InputAdornment = slots.InputAdornment ?? MuiInputAdornment;
+  const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const inputAdornmentProps = useSlotProps({
     elementType: InputAdornment,
     externalSlotProps: slotsProps?.inputAdornment,
@@ -78,7 +78,7 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
-  const OpenPickerButton = slots.OpenPickerButton ?? IconButton;
+  const OpenPickerButton = slots.openPickerButton ?? IconButton;
   const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
     elementType: OpenPickerButton,
     externalSlotProps: slotsProps?.openPickerButton,
@@ -91,11 +91,11 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
-  const OpenPickerIcon = slots.OpenPickerIcon;
+  const OpenPickerIcon = slots.openPickerIcon;
 
   const slotsForField: BaseFieldProps<TDate | null, unknown>['slots'] = {
     ...fieldProps.slots,
-    TextField: slots.TextField,
+    textField: slots.textField,
   };
 
   const slotsPropsForField: BaseFieldProps<TDate | null, unknown>['slotsProps'] = {
@@ -125,7 +125,7 @@ export const useDesktopPicker = <
     },
   };
 
-  const Layout = slots.Layout ?? PickersLayout;
+  const Layout = slots.layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
@@ -146,7 +146,7 @@ export const useDesktopPicker = <
           slots={{
             ...slots,
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
-            ActionBar: () => null,
+            actionBar: () => null,
           }}
           slotsProps={{
             ...slotsProps,
@@ -154,12 +154,7 @@ export const useDesktopPicker = <
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <Layout
-            {...layoutProps}
-            {...slotsProps?.layout}
-            slots={slots}
-            slotsProps={slotsProps}
-          >
+          <Layout {...layoutProps} {...slotsProps?.layout} slots={slots} slotsProps={slotsProps}>
             {renderCurrentView()}
           </Layout>
         </PickersPopper>

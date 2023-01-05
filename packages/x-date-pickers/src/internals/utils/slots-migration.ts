@@ -25,7 +25,7 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<UncapitalizeObjectKeys<TSlots>>;
+  slots?: UncapitalizeObjectKeys<TSlots>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -33,11 +33,35 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
   slotsProps?: TSlotsProps;
 }
 
-export const uncapitalizeObjectKeys = (capitalizedObject) =>
-  Object.keys(capitalizedObject).reduce(
+// type RetrunedType<TInputType> = TInputType extends object
+//   ? UncapitalizeObjectKeys<TInputType>
+//   : undefined;
+
+// export const uncapitalizeObjectKeys = <TInputType extends object>(
+//   capitalizedObject: TInputType | undefined,
+// ): RetrunedType<typeof capitalizedObject> => {
+//   if (capitalizedObject === undefined) {
+//     return undefined as RetrunedType<undefined>;
+//   }
+//   const x = Object.keys(capitalizedObject).reduce(
+//     (acc, key) => ({
+//       ...acc,
+//       [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]: capitalizedObject[key],
+//     }),
+//     {} as UncapitalizeObjectKeys<TInputType>,
+//   );
+//   return x as RetrunedType<TInputType>;
+// };
+
+export const uncapitalizeObjectKeys = (capitalizedObject) => {
+  if (capitalizedObject === undefined) {
+    return undefined;
+  }
+  return Object.keys(capitalizedObject).reduce(
     (acc, key) => ({
       ...acc,
       [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]: capitalizedObject[key],
     }),
     {},
   );
+};

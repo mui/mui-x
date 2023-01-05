@@ -176,10 +176,11 @@ export type { DateOrTimeView, DateView, TimeView } from './models/views';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
-export { UncapitalizeObjectKeys, SlotsAndSlotsProps } from './utils/slots-migration';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';
+export { uncapitalizeObjectKeys } from './utils/slots-migration';
+export type { UncapitalizeObjectKeys, SlotsAndSlotsProps } from './utils/slots-migration';
 
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
 export type {
