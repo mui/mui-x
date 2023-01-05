@@ -3,6 +3,84 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.14
+
+_Jan 5, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 📆 Add `SingleInputTimeRangeField` and `SingleInputDateTimeRangeField` components
+- 🚀 Use grid for modifying pickers layout
+- 💻 Multiple codemods
+- 📚 Many documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.14` / `@mui/x-data-grid-pro@v6.0.0-alpha.14` / `@mui/x-data-grid-premium@v6.0.0-alpha.14`
+
+#### Breaking changes
+
+- [DataGrid] Set default `GridCellParams['value']` type to `unknown` (#6959) @cherniavskii
+
+  The default type of `GridCellParams['value']` was changed from `any` to `unknown`.
+
+#### Changes
+
+- [DataGrid] Fix flickering on mount (#7205) @cherniavskii
+- [DataGrid] Fix selected text in cell input not being copied in Firefox (#6593) @cherniavskii
+- [DataGrid] Invert generic parameters order (#6874) @DanailH
+- [DataGrid] Remove legacy logic for `singleSelect` inside `GridFilterInputValue` (#7386) @m4theushw
+- [DataGrid] Remove remaining props from legacy editing API (#7381) @m4theushw
+- [DataGrid] Set default `GridCellParams['value']` type to `unknown` (#6959) @cherniavskii
+
+### `@mui/x-date-pickers@v6.0.0-alpha.14` / `@mui/x-date-pickers-pro@v6.0.0-alpha.14`
+
+#### Breaking changes
+
+- [fields] Rename the `input` slot of the fields to `textField` to avoid confusion (#7369) @flaviendelangle
+
+#### Changes
+
+- [fields] Add `SingleInputTimeRangeField` and `SingleInputDateTimeRangeField` components (#7186) @alexfauquette
+- [fields] Improve editing (automatic section switch, allow letter editing in digit section, allow numeric editing in letter section) (#7272) @flaviendelangle
+- [fields] Rename the `input` slot of the fields to `textField` to avoid confusion (#7369) @flaviendelangle
+- [fields] Prevent date change on `TimeField` arrow edition (#7383) @flaviendelangle
+- [pickers] Clean some JSDoc descriptions (#7384) @flaviendelangle
+- [pickers] Remove redundant `variants` in theme augmentation (#7356) @LukasTy
+- [pickers] Remove the `PaperContent` slot from the new pickers (#7342) @flaviendelangle
+- [pickers] Use grid for modifying the layout (#6900) @alexfauquette
+
+### `@mui/x-codemod@v6.0.0-alpha.14`
+
+#### Changes
+
+- [codemod] Add new codemod for adapter import (#7348) @flaviendelangle
+- [codemod] Add new codemod for the value prop renaming on the view components (#7338) @flaviendelangle
+- [codemod] Reorganize codemods and add rename column menu components codemod (#7368) @MBilalShafi
+
+### Docs
+
+- [docs] Add example to add back the mobile keyboard view (#7347) @flaviendelangle
+- [docs] Cleanup the doc pages of the community pickers (#7339) @flaviendelangle
+- [docs] Drop security fixes support for v4 (#7322) @oliviertassinari
+- [docs] Fix `disablePast` and `disableFuture` definition swap (#7324) @alexfauquette
+- [docs] Hide ad for paid docs pages (#7321) @oliviertassinari
+- [docs] New page for `TimeClock` (#7280) @flaviendelangle
+- [docs] Note the pickers breaking changes supported by the codemod (#7337) @flaviendelangle
+- [docs] Redirect translated pages (#7341) @cherniavskii
+- [docs] Reorganize v6 pickers migration guide (#7257) @flaviendelangle
+
+### Core
+
+- [core] Apply eslint rule for React component @oliviertassinari
+- [core] Apply title capitalization convention @oliviertassinari
+- [core] Fix the product license reference name (#7367) @oliviertassinari
+- [core] Order the slots alphabetically in the JSON files (#7349) @flaviendelangle
+- [core] Remove blanklines in _redirects @oliviertassinari
+- [core] Remove dead prettier config @oliviertassinari
+- [core] Sync back with the mono repo (#7351) @oliviertassinari
+- [core] Sync monorepo, fix layout scrollbar @oliviertassinari
+- [core] Upgrade monorepo (#7307) @LukasTy
+
 ## 6.0.0-alpha.13
 
 _Dec 24, 2022_
