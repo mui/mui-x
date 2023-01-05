@@ -20,7 +20,6 @@ export default function PageSizeCustomOptions() {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         rowsPerPageOptions={[5, 10, 20]}
-        pagination
         {...data}
       />
     </div>

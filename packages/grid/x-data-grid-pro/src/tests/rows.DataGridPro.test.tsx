@@ -505,7 +505,7 @@ describe('<DataGridPro /> - Rows', () => {
           <TestCaseVirtualization
             pagination
             rowHeight={50}
-            paginationModel={{ pageSize: nbRows, page: 0 }}
+            initialState={{ pagination: { paginationModel: { pageSize: nbRows } } }}
             rowsPerPageOptions={[nbRows]}
           />,
         );
@@ -524,7 +524,7 @@ describe('<DataGridPro /> - Rows', () => {
         render(
           <TestCaseVirtualization
             pagination
-            paginationModel={{ pageSize: 32, page: 3 }}
+            initialState={{ pagination: { paginationModel: { pageSize: 32, page: 3 } } }}
             rowsPerPageOptions={[32]}
             height={500}
           />,
@@ -677,18 +677,13 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should render the correct rows when changing pages', () => {
-      function PaginationModelTestCase() {
-        const [paginationModel, setPaginationModel] = React.useState({ pageSize: 6, page: 0 });
-        return (
-          <TestCase
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            rowsPerPageOptions={[6]}
-            pagination
-          />
-        );
-      }
-      render(<PaginationModelTestCase />);
+      render(
+        <TestCase
+          initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
+          rowsPerPageOptions={[6]}
+          pagination
+        />,
+      );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
       act(() => apiRef.current.setPage(1));
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);

@@ -18,7 +18,6 @@ export default function PaginationModelControlled() {
       <DataGrid
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        pagination
         {...data}
       />
     </div>

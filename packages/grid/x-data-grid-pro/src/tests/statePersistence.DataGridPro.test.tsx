@@ -123,8 +123,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           filterModel: getDefaultGridFilterModel(),
         },
         pagination: {
-          page: 0,
-          pageSize: 100,
+          paginationModel: { page: 0, pageSize: 100 },
         },
         pinnedColumns: {},
         preferencePanel: {
@@ -267,6 +266,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           <TestCase
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
+            rowsPerPageOptions={[paginationModel.pageSize]}
           />
         );
       }

@@ -51,20 +51,22 @@ export const paginationStateInitializer: GridStateInitializer<
 const mergeStateWithPaginationModel =
   (
     rowCount: number,
-    autoPageSize: DataGridProcessedProps['autoPageSize'],
     signature: DataGridProcessedProps['signature'],
-    model?: GridPaginationModel,
+    paginationModelProp?: GridPaginationModel,
   ) =>
   (paginationState: GridPaginationState) => {
     let paginationModel = paginationState.paginationModel;
-    const pageSize = model?.pageSize ?? paginationModel.pageSize;
+    const pageSize = paginationModelProp?.pageSize ?? paginationModel.pageSize;
     const pageCount = getPageCount(rowCount, pageSize);
 
-    if (model && model !== paginationModel) {
-      const page = model.page ?? paginationModel.page;
+    if (paginationModelProp && paginationModelProp !== paginationModel) {
+      const page = paginationModelProp.page ?? paginationModel.page;
       const validPage = getValidPage(page, pageCount);
-      throwIfPageSizeExceedsTheLimit(model.pageSize, signature);
-      paginationModel = validPage !== model.page ? { page: validPage, pageSize } : model;
+      throwIfPageSizeExceedsTheLimit(paginationModelProp.pageSize, signature);
+      paginationModel =
+        validPage !== paginationModelProp.page
+          ? { page: validPage, pageSize }
+          : paginationModelProp;
     }
 
     return {
@@ -146,7 +148,6 @@ export const useGridPagination = (
         'pagination',
         mergeStateWithPaginationModel(
           props.rowCount ?? visibleTopLevelRowCount,
-          props.autoPageSize,
           props.signature,
           paginationModel,
         ),
@@ -154,7 +155,7 @@ export const useGridPagination = (
       );
       apiRef.current.forceUpdate();
     },
-    [apiRef, logger, props.autoPageSize, props.rowCount, props.signature, visibleTopLevelRowCount],
+    [apiRef, logger, props.rowCount, props.signature, visibleTopLevelRowCount],
   );
 
   const pageApi: GridPaginationApi = {
@@ -215,7 +216,6 @@ export const useGridPagination = (
         'pagination',
         mergeStateWithPaginationModel(
           props.rowCount ?? visibleTopLevelRowCount,
-          props.autoPageSize,
           props.signature,
           paginationModel,
         ),
@@ -234,9 +234,11 @@ export const useGridPagination = (
    */
   const handlePaginationModelChange: GridEventListener<'paginationModelChange'> = () => {
     const paginationModel = gridPaginationModelSelector(apiRef);
-    apiRef.current.scrollToIndexes({
-      rowIndex: paginationModel.page * paginationModel.pageSize,
-    });
+    if (apiRef.current.virtualScrollerRef?.current) {
+      apiRef.current.scrollToIndexes({
+        rowIndex: paginationModel.page * paginationModel.pageSize,
+      });
+    }
 
     apiRef.current.forceUpdate();
   };
@@ -276,7 +278,6 @@ export const useGridPagination = (
       'pagination',
       mergeStateWithPaginationModel(
         props.rowCount ?? visibleTopLevelRowCount,
-        props.autoPageSize,
         props.signature,
         props.paginationModel,
       ),
@@ -286,7 +287,6 @@ export const useGridPagination = (
     props.paginationModel,
     props.rowCount,
     props.paginationMode,
-    props.autoPageSize,
     visibleTopLevelRowCount,
     props.signature,
   ]);

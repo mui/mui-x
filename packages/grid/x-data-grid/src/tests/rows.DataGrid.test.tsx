@@ -54,23 +54,6 @@ describe('<DataGrid /> - Rows', () => {
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
-  function PaginatedTestCase(
-    props: Partial<DataGridProps> & { initialModel: GridPaginationModel },
-  ) {
-    const data = getBasicGridData(120, 3);
-    const [paginationModel, setPaginationModel] = React.useState(props.initialModel);
-    return (
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          {...data}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          {...props}
-        />
-      </div>
-    );
-  }
-
   describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
       const getRowId: GridRowIdGetter = (row) => `${row.clientId}`;
@@ -156,16 +139,19 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
       const { rows, columns } = getBasicGridData(4, 2);
+
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
-        <PaginatedTestCase
-          rows={rows}
-          columns={columns}
-          getRowClassName={getRowClassName}
-          initialModel={{ pageSize: 3, page: 0 }}
-          rowsPerPageOptions={[3]}
-        />,
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            getRowClassName={getRowClassName}
+            initialState={{ pagination: { paginationModel: { pageSize: 3, page: 0 } } }}
+            rowsPerPageOptions={[3]}
+          />
+        </div>,
       );
       expect(getRow(0)).to.have.class('first');
       expect(getRow(1)).not.to.have.class('first');
@@ -925,9 +911,9 @@ describe('<DataGrid /> - Rows', () => {
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
       render(
-        <PaginatedTestCase
+        <TestCase
           getRowSpacing={getRowSpacing}
-          initialModel={{ pageSize: 2, page: 0 }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
           rowsPerPageOptions={[2]}
         />,
       );

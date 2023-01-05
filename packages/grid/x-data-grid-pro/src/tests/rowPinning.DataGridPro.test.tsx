@@ -641,22 +641,16 @@ describe('<DataGridPro /> - Row pinning', () => {
   });
 
   it('should keep pinned rows on page change', () => {
-    function PaginationModelTest() {
-      const [paginationModel, setPaginationModel] = React.useState({ pageSize: 5, page: 0 });
-
-      return (
-        <BaselineTestCase
-          rowCount={20}
-          colCount={5}
-          height={500}
-          pagination
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          rowsPerPageOptions={[5]}
-        />
-      );
-    }
-    render(<PaginationModelTest />);
+    render(
+      <BaselineTestCase
+        rowCount={20}
+        colCount={5}
+        height={500}
+        pagination
+        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+        rowsPerPageOptions={[5]}
+      />,
+    );
 
     expect(isRowPinned(getRowById(0), 'top')).to.equal(true, '#0 pinned top');
     expect(isRowPinned(getRowById(1), 'bottom')).to.equal(true, '#1 pinned bottom');
@@ -681,7 +675,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        paginationModel={{ page: 0, pageSize }}
+        initialState={{ pagination: { paginationModel: { pageSize } } }}
         rowsPerPageOptions={[pageSize]}
       />,
     );
