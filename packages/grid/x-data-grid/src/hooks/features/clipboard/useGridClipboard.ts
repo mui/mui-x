@@ -152,7 +152,13 @@ export const useGridClipboard = (
     }
 
     const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
-    const data = cellParams.formattedValue;
+    let data: string;
+    const columnType = cellParams.colDef.type;
+    if (columnType === 'number') {
+      data = String(cellParams.value);
+    } else {
+      data = cellParams.formattedValue;
+    }
     copyToClipboard(data);
   }, [apiRef]);
 
