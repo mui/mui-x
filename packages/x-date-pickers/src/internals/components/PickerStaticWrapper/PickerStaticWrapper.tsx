@@ -174,11 +174,13 @@ PickerStaticWrapper.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps: PropTypes.object,
   /**
@@ -196,6 +198,16 @@ PickerStaticWrapper.propTypes = {
   onDismiss: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

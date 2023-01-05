@@ -5,8 +5,8 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -34,6 +34,8 @@
     "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
     "shouldDisableDate": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",

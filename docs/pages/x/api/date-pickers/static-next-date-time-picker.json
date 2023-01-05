@@ -4,8 +4,8 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -64,6 +64,8 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",

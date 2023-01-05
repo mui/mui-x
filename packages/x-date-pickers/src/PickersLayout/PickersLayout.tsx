@@ -103,11 +103,13 @@ PickersLayout.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
@@ -127,6 +129,16 @@ PickersLayout.propTypes = {
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
   showToolbar: PropTypes.bool,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

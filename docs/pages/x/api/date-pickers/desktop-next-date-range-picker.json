@@ -57,6 +57,8 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
