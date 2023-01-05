@@ -3,6 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { UseDateRangeFieldProps } from '../internal/models/dateRange';
 import { RangePosition } from '../internal/models/range';
 
@@ -31,13 +32,25 @@ export interface MultiInputDateRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated
    */
   components?: MultiInputDateRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<MultiInputDateRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;

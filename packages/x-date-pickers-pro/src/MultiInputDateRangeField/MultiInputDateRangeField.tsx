@@ -5,7 +5,7 @@ import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { FieldsTextFieldProps, uncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { MultiInputDateRangeFieldProps } from './MultiInputDateRangeField.types';
 import { useMultiInputDateRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateRangeField';
 
@@ -43,6 +43,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   });
 
   const {
+    slots: innerSlots,
+    slotsProps: innerSlotsProps,
     components,
     componentsProps,
     value,
@@ -62,13 +64,15 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     autoFocus,
     ...other
   } = themeProps;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotsProps = innerSlotsProps ?? componentsProps;
 
   const ownerState = themeProps;
 
-  const Root = components?.Root ?? MultiInputDateRangeFieldRoot;
+  const Root = slots?.root ?? MultiInputDateRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: componentsProps?.root,
+    externalSlotProps: slotsProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -76,23 +80,23 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     ownerState,
   });
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotsProps?.textField,
     additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotsProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const Separator = components?.Separator ?? MultiInputDateRangeFieldSeparator;
+  const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: componentsProps?.separator,
+    externalSlotProps: slotsProps?.separator ?? componentsProps?.separator,
     ownerState,
   });
 

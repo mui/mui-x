@@ -139,7 +139,10 @@ type UseNextDateTimePickerDefaultizedProps<
 export function useNextDateTimePickerDefaultizedProps<
   TDate,
   Props extends BaseNextDateTimePickerProps<TDate>,
->(props: Props, name: string): UseNextDateTimePickerDefaultizedProps<TDate, Props> {
+>(
+  props: Props,
+  name: string,
+): Omit<UseNextDateTimePickerDefaultizedProps<TDate, Props>, 'components' | 'componentsProps'> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({

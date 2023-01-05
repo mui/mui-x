@@ -52,7 +52,7 @@ export interface BaseNextDateRangePickerProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: BaseNextDateRangePickerSlotsComponent<TDate>;
+  components?: Partial<BaseNextDateRangePickerSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -87,10 +87,13 @@ type UseNextDateRangePickerDefaultizedProps<
 export function useNextDateRangePickerDefaultizedProps<
   TDate,
   Props extends BaseNextDateRangePickerProps<TDate>,
->(props: Props, name: string): UseNextDateRangePickerDefaultizedProps<TDate, Props> {
+>(
+  props: Props,
+  name: string,
+): UseNextDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
+  const { components, componentsProps, ...themeProps } = useThemeProps({
     props,
     name,
   });
@@ -115,7 +118,8 @@ export function useNextDateRangePickerDefaultizedProps<
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: {
       toolbar: DateRangePickerToolbar,
-      ...(themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components)),
+      ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
     },
+    slotsProps: themeProps.slotsProps ?? componentsProps,
   };
 }

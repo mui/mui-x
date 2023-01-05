@@ -3,12 +3,12 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
 } from '../internal/models/dateTimeRange';
 import { RangePosition } from '../internal/models/range';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 
 export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
   sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &

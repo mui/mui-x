@@ -249,7 +249,7 @@ function WrappedDay<TDate extends unknown>({
     showDaysOutsideCurrentMonth,
     components,
     componentsProps,
-    slots, 
+    slots,
     slotsProps,
   } = parentProps;
 
@@ -261,7 +261,7 @@ function WrappedDay<TDate extends unknown>({
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: slotsProps?.day??componentsProps?.day,
+    externalSlotProps: slotsProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
       onKeyDown,
