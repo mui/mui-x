@@ -38,6 +38,7 @@ const GridColumnHeadersRoot = styled('div', {
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
+    boxSizing: 'border-box',
     borderBottom: `1px solid ${borderColor}`,
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
