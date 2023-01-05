@@ -1507,6 +1507,61 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.18
+
+_Jan 5, 2023_
+
+We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.18` / `@mui/x-data-grid-pro@v5.17.18` / `@mui/x-data-grid-premium@v5.17.18`
+
+#### Changes
+
+- [DataGrid] Fix rows not rendering properly after height change (#7376) @cherniavskii
+- [DataGrid] Fix selected text in cell input not being copied in Firefox (#7330) @cherniavskii
+- [DataGridPremium] Export row grouping column menu components (#7308) @cherniavskii
+
+### `@mui/x-date-pickers@v5.0.13` / `@mui/x-date-pickers-pro@v5.0.13`
+
+#### Changes
+
+- [pickers] Fix the product license reference name (#7367)
+
+### Docs
+
+- [docs] Redirect translated pages (#7370) @cherniavskii
+
+### Core
+
+- [core] Fix release date (#7314) @DanailH
+- [core] Fix the product license reference name (#7367) @oliviertassinari
+- [core] Upgrade monorepo (#7344) @cherniavskii
+
+## 5.17.17
+
+_Dec 24, 2022_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Russian (ru-RU) and Korean (ko-KR) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.17` / `@mui/x-data-grid-pro@v5.17.17` / `@mui/x-data-grid-premium@v5.17.17`
+
+#### Changes
+
+- [DataGrid] Update Russian (ru-RU) locale (#7291) @VeceluXa
+- [DataGridPro] Use row ID as `key` of the detail panels (#7311) @m4theushw
+- [DataGridPremium] Fix `exceljs` import with parcel (#7285) @alexfauquette
+
+### `@mui/x-date-pickers@v5.0.12` / `@mui/x-date-pickers-pro@v5.0.12`
+
+#### Changes
+
+- [pickers] Improve Korean (ko-KR) locale (#7283) @hanbin9775
+
 ## 5.17.16
 
 _Dec 16, 2022_
