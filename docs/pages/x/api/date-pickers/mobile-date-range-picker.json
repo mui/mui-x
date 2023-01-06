@@ -16,13 +16,7 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ actionBar?: elementType, ActionBar?: elementType, Day?: elementType, dialog?: elementType, Dialog?: elementType, LeftArrowIcon?: elementType, mobilePaper?: elementType, MobilePaper?: elementType, mobileTransition?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, openPickerIcon?: elementType, OpenPickerIcon?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Toolbar?: elementType }"
-      },
-      "default": "{}"
-    },
+    "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -74,13 +68,7 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "slots": {
-      "type": {
-        "name": "shape",
-        "description": "{ day?: elementType, leftArrowIcon?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, switchViewButton?: elementType, switchViewIcon?: elementType, toolbar?: elementType }"
-      },
-      "default": "{}"
-    },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

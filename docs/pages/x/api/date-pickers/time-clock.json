@@ -4,14 +4,7 @@
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ LeftArrowIcon?: elementType, NextIconButton?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType }"
-      },
-      "default": "{}",
-      "deprecated": true
-    },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -32,13 +25,7 @@
     },
     "readOnly": { "type": { "name": "bool" } },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "slots": {
-      "type": {
-        "name": "shape",
-        "description": "{ leftArrowIcon?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType }"
-      },
-      "default": "{}"
-    },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

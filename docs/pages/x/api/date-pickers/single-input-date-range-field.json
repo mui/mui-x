@@ -8,11 +8,7 @@
       },
       "default": "'primary'"
     },
-    "components": {
-      "type": { "name": "shape", "description": "{ TextField?: elementType }" },
-      "default": "{}",
-      "deprecated": true
-    },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disabled": { "type": { "name": "bool" } },
@@ -55,10 +51,7 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
-    "slots": {
-      "type": { "name": "shape", "description": "{ textField?: elementType }" },
-      "default": "{}"
-    },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

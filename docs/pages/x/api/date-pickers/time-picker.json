@@ -13,13 +13,7 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ actionBar?: elementType, ActionBar?: elementType, DesktopPaper?: elementType, DesktopTransition?: elementType, DesktopTrapFocus?: elementType, dialog?: elementType, Dialog?: elementType, LeftArrowIcon?: elementType, mobilePaper?: elementType, MobilePaper?: elementType, mobileTransition?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, openPickerIcon?: elementType, OpenPickerIcon?: elementType, PaperContent?: elementType, Popper?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, Toolbar?: elementType }"
-      },
-      "default": "{}"
-    },
+    "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },

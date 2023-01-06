@@ -5,14 +5,7 @@
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
     },
-    "components": {
-      "type": {
-        "name": "shape",
-        "description": "{ Day?: elementType, LeftArrowIcon?: elementType, NextIconButton?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType }"
-      },
-      "default": "{}",
-      "deprecated": true
-    },
+    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -41,13 +34,7 @@
     "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
     "shouldDisableDate": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "slots": {
-      "type": {
-        "name": "shape",
-        "description": "{ day?: elementType, leftArrowIcon?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, switchViewButton?: elementType, switchViewIcon?: elementType }"
-      },
-      "default": "{}"
-    },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
