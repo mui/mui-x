@@ -314,7 +314,7 @@ export interface GridControlledStateReasonLookup {
     | 'deleteFilterItem'
     | 'changeLogicOperator'
     | 'restoreState';
-  pagination: 'setPaginationModel' | 'setPage' | 'setPageSize' | 'stateRestorePreProcessing';
+  pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
 }
 
 export interface GridEventLookup
