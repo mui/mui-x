@@ -19,8 +19,8 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (openView: DateOrTimeView): TabValue => {
-  if (['day', 'month', 'year'].includes(openView)) {
+const viewToTab = (view: DateOrTimeView): TabValue => {
+  if (['day', 'month', 'year'].includes(view)) {
     return 'date';
   }
 
@@ -80,7 +80,7 @@ const DateTimePickerTabsRoot = styled(Tabs, {
 })<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
   ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop order when the old pickers are removed
+    // TODO v6: Drop `order` with the legacy pickers
     order: 1,
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {

@@ -5,6 +5,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "apiRef": { "type": { "name": "shape", "description": "{ current: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
     "autoHeight": { "type": { "name": "bool" } },
@@ -13,6 +14,7 @@
     "checkboxSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
@@ -36,7 +38,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
@@ -61,7 +62,6 @@
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getRowSpacing": { "type": { "name": "func" } },
-    "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
@@ -101,7 +101,6 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
@@ -121,7 +120,7 @@
     "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
     "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "custom", "description": "number" }, "default": "100" },
+    "pageSize": { "type": { "name": "number" }, "default": "100" },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -134,8 +133,8 @@
     "rowSelection": { "type": { "name": "bool" }, "default": "true" },
     "rowSelectionModel": {
       "type": {
-        "name": "custom",
-        "description": "number<br>&#124;&nbsp;string<br>&#124;&nbsp;array"
+        "name": "union",
+        "description": "Array&lt;number<br>&#124;&nbsp;string&gt;<br>&#124;&nbsp;number<br>&#124;&nbsp;string"
       }
     },
     "rowSpacingType": {
@@ -148,8 +147,8 @@
     },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
-    "showCellRightBorder": { "type": { "name": "bool" } },
-    "showColumnRightBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" } },
+    "showColumnVerticalBorder": { "type": { "name": "bool" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -189,8 +188,23 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
+    "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenuHideIcon": { "default": "GridVisibilityOffIcon", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuManageColumnsIcon": {
+      "default": "GridViewColumnIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
     "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
@@ -263,6 +277,10 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -345,6 +363,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",
@@ -363,7 +382,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder",
+      "withBorderColor",
+      "cell--withRightBorder",
+      "columnHeader--withRightBorder",
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",

@@ -1,5 +1,6 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -52,7 +53,7 @@
   },
   "name": "DateRangeCalendar",
   "styles": {
-    "classes": ["root", "monthContainer"],
+    "classes": ["root", "monthContainer", "dayDragging"],
     "globalClasses": {},
     "name": "MuiDateRangeCalendar"
   },
@@ -60,6 +61,6 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/DateRangeCalendar/DateRangeCalendar.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker\">Date Range Picker </a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li></ul>",
   "packages": [{ "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangeCalendar" }]
 }

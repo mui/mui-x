@@ -33,14 +33,20 @@ NextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -81,7 +87,7 @@ NextDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -91,12 +97,12 @@ NextDatePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -129,7 +135,7 @@ NextDatePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -193,8 +199,8 @@ NextDatePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -209,7 +215,9 @@ NextDatePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -238,7 +246,7 @@ NextDatePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -256,14 +264,14 @@ NextDatePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -290,7 +298,23 @@ NextDatePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    month: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
 } as any;

@@ -80,6 +80,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meniu',
   columnMenuShowColumns: 'Afișează toate coloanele',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtru',
   columnMenuHideColumn: 'Ascunde',
   columnMenuUnsort: 'Dezactivare sortare',

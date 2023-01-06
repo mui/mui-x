@@ -1527,7 +1527,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             {
               field: 'category1',
               valueGetter: (params) => `value ${params.row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
+              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
                 `groupingValue ${params.row.category1}`,
             },
           ]}
@@ -1661,7 +1661,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
       expect(apiRef.current.state.rowGrouping.model).to.deep.equal([]);
     });
 
-    it('should add a "Stop grouping {field} menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
+    it('should add a "Stop grouping {field}" menu item for each grouping criteria on the grouping column when prop.rowGroupingColumnMode = "single"', () => {
       render(
         <Test
           columns={[

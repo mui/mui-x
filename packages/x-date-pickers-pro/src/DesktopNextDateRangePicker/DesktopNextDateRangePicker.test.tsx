@@ -105,7 +105,7 @@ describe('<DesktopNextDateRangePicker />', () => {
           <DesktopNextDateRangePicker
             // We set the variant to standard to avoid having the label rendered in two places.
             componentsProps={{
-              input: {
+              textField: {
                 variant: 'standard',
               },
             }}
@@ -652,7 +652,7 @@ describe('<DesktopNextDateRangePicker />', () => {
       render(
         <DesktopNextDateRangePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: () => ['cancel'] } }}
+          componentsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });

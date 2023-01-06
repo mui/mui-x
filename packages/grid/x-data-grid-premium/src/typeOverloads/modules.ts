@@ -9,6 +9,7 @@ import type {
   GridAggregationModel,
   GridAggregationCellMeta,
   GridAggregationHeaderMeta,
+  GridCellSelectionModel,
 } from '../hooks';
 import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
 import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
@@ -22,6 +23,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the row grouping model changes.
    */
   rowGroupingModelChange: { params: GridRowGroupingModel };
+  /**
+   * Fired when the selection state of one or multiple cells change.
+   */
+  cellSelectionChange: { params: GridCellSelectionModel };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,17 +47,17 @@ export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F
    * @returns {GridKeyValue | null | undefined} The cell key.
    */
   groupingValueGetter?: (
-    params: GridGroupingValueGetterParams<V, R>,
+    params: GridGroupingValueGetterParams<R, V>,
   ) => GridKeyValue | null | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface GridRenderCellParamsPremium<V = any, R extends GridValidRowModel = any, F = V> {
+export interface GridRenderCellParamsPremium<R extends GridValidRowModel = any, V = any, F = V> {
   aggregation?: GridAggregationCellMeta;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface GridColumnHeaderParamsPremium<V = any, R extends GridValidRowModel = any, F = V> {
+export interface GridColumnHeaderParamsPremium<R extends GridValidRowModel = any, V = any, F = V> {
   aggregation?: GridAggregationHeaderMeta;
 }
 
@@ -62,19 +67,19 @@ export interface GridApiCachesPremium extends GridApiCachesPro {
 }
 
 declare module '@mui/x-data-grid-pro' {
-  interface GridColDef<R, V, F> extends GridColDefPremium<R, V, F> {}
-
   interface GridControlledStateEventLookup
     extends GridControlledStateEventLookupPro,
       GridControlledStateEventLookupPremium {}
 
-  interface GridRenderCellParams<V, R, F> extends GridRenderCellParamsPremium<V, R, F> {}
+  interface GridRenderCellParams<R, V, F> extends GridRenderCellParamsPremium<R, V, F> {}
 
-  interface GridColumnHeaderParams<V, R, F> extends GridColumnHeaderParamsPremium<V, R, F> {}
+  interface GridColumnHeaderParams<R, V, F> extends GridColumnHeaderParamsPremium<R, V, F> {}
 
   interface GridApiCaches extends GridApiCachesPremium {}
 }
 
 declare module '@mui/x-data-grid-pro/internals' {
   interface GridApiCaches extends GridApiCachesPremium {}
+
+  interface GridBaseColDef<R, V, F> extends GridColDefPremium<R, V, F> {}
 }

@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
-import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
@@ -13,7 +13,7 @@ import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
 import type { GridColumnTypesRecord } from '../colDef';
-import type { GridColumns } from '../colDef/gridColDef';
+import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
   GridRowHeightParams,
@@ -69,7 +69,6 @@ export interface DataGridProcessedProps<R extends GridValidRowModel = any>
  * Those are usually used in feature-hook for which the pro-plan has more advanced features (eg: multi-sorting, multi-filtering, ...).
  */
 export type DataGridForcedPropsKey =
-  | 'apiRef'
   | 'checkboxSelectionVisibleOnly'
   | 'disableMultipleColumnsFiltering'
   | 'disableMultipleColumnsSorting'
@@ -225,10 +224,10 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
-  headerHeight: number;
+  columnHeaderHeight: number;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -280,7 +279,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   paginationMode: GridFeatureMode;
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: number;
@@ -295,15 +294,15 @@ export interface DataGridPropsWithDefaultValues {
    */
   rowSpacingType: 'margin' | 'border';
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellVerticalBorder: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: boolean;
+  showColumnVerticalBorder: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
@@ -346,9 +345,7 @@ export interface DataGridPropsWithDefaultValues {
 export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
   extends CommonProps {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
-   * TODO: Remove `@internal` when opening `apiRef` to Community plan
-   * @ignore - do not document.
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef?: React.MutableRefObject<GridApiCommunity>;
   /**
@@ -620,16 +617,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onMenuClose?: GridEventListener<'menuClose'>;
   /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel?: GridEditRowsModel;
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
-  /**
    * Controls the modes of the cells.
    */
   cellModesModel?: GridCellModesModel;
@@ -708,9 +695,9 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   'aria-labelledby'?: string;
   /**
-   * Set of columns of type [[GridColumns]].
+   * Set of columns of type [[GridColDef[]]].
    */
-  columns: GridColumns<R>;
+  columns: GridColDef<R>[];
   /**
    * An error that will turn the grid into its error state and display the error component.
    */

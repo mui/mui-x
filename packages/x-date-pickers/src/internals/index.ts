@@ -40,12 +40,6 @@ export type {
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
-export { PickersViewLayout } from './components/PickersViewLayout';
-export type {
-  PickersViewLayoutSlotsComponentsProps,
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from './components/PickersViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {
@@ -101,13 +95,33 @@ export type { WrapperVariant } from './components/wrappers/WrapperVariantContext
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
 export type { DesktopOnlyPickerProps } from './hooks/useDesktopPicker';
+export {
+  useField,
+  createDateStrForInputFromSections,
+  addPositionPropertiesToSections,
+  splitFormatIntoSections,
+  getSectionOrder,
+} from './hooks/useField';
+export type {
+  UseFieldInternalProps,
+  UseFieldParams,
+  UseFieldResponse,
+  FieldValueManager,
+  FieldSection,
+  FieldChangeHandler,
+  FieldChangeHandlerContext,
+} from './hooks/useField';
 export { useMaskedInput } from './hooks/useMaskedInput';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePickerState } from './hooks/usePickerState';
 export { usePicker } from './hooks/usePicker';
 export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
 export type { UsePickerValueNonStaticProps } from './hooks/usePicker/usePickerValue';
-export type { UsePickerViewsNonStaticProps } from './hooks/usePicker/usePickerViews';
+export type {
+  UsePickerViewsNonStaticProps,
+  PickerViewRendererLookup,
+  UsePickerViewsProps,
+} from './hooks/usePicker/usePickerViews';
 export type { PickerStateProps, PickerStatePickerProps } from './hooks/usePickerState';
 export type { PickerStateValueManager, PickerSelectionState } from './hooks/usePickerState';
 export { useStaticPicker } from './hooks/useStaticPicker';
@@ -116,7 +130,14 @@ export type {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from './hooks/useStaticPicker';
-export { useLocalizationContext, useDefaultDates, useUtils, useLocaleText } from './hooks/useUtils';
+export {
+  useLocalizationContext,
+  useDefaultDates,
+  useUtils,
+  useLocaleText,
+  useNow,
+} from './hooks/useUtils';
+export type { ExportedUseViewsOptions } from './hooks/useViews';
 export type {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -140,10 +161,11 @@ export type { TimeValidationError } from './hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './hooks/validation/useDateTimeValidation';
 export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-helpers-hooks';
 
-export type { BaseFieldProps } from './models/fields';
+export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
 export type {
   BasePickerProps,
   BaseNextPickerProps,
+  BaseNextPickerInputProps,
   BaseNextNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { StaticPickerProps } from './models/props/staticPickerProps';
@@ -172,8 +194,6 @@ export type {
   DayCalendarSlotsComponentsProps,
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
-
-export { areDayPropsEqual } from '../PickersDay/PickersDay';
 
 export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
 export { useCalendarState } from '../DateCalendar/useCalendarState';

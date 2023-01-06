@@ -1,13 +1,42 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
+    "autoFocus": { "type": { "name": "bool" } },
+    "color": {
+      "type": {
+        "name": "enum",
+        "description": "'error'<br>&#124;&nbsp;'info'<br>&#124;&nbsp;'primary'<br>&#124;&nbsp;'secondary'<br>&#124;&nbsp;'success'<br>&#124;&nbsp;'warning'"
+      },
+      "default": "'primary'"
+    },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "defaultValue": { "type": { "name": "any" } },
+    "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
+    "focused": { "type": { "name": "bool" } },
     "format": { "type": { "name": "string" } },
+    "FormHelperTextProps": { "type": { "name": "object" } },
+    "fullWidth": { "type": { "name": "bool" } },
+    "helperText": { "type": { "name": "node" } },
+    "hiddenLabel": { "type": { "name": "bool" } },
+    "id": { "type": { "name": "string" } },
+    "InputLabelProps": { "type": { "name": "object" } },
+    "inputProps": { "type": { "name": "object" } },
+    "InputProps": { "type": { "name": "object" } },
+    "inputRef": {
+      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current: any }" }
+    },
+    "label": { "type": { "name": "node" } },
+    "margin": {
+      "type": {
+        "name": "enum",
+        "description": "'dense'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'normal'"
+      },
+      "default": "'none'"
+    },
     "maxDate": { "type": { "name": "any" } },
     "maxDateTime": { "type": { "name": "any" } },
     "maxTime": { "type": { "name": "any" } },
@@ -15,27 +44,45 @@
     "minDateTime": { "type": { "name": "any" } },
     "minTime": { "type": { "name": "any" } },
     "minutesStep": { "type": { "name": "number" }, "default": "1" },
+    "name": { "type": { "name": "string" } },
     "onChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "readOnly": { "type": { "name": "bool" } },
+    "required": { "type": { "name": "bool" } },
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
-    "value": { "type": { "name": "any" } }
+    "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "sx": {
+      "type": {
+        "name": "union",
+        "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
+      }
+    },
+    "value": { "type": { "name": "any" } },
+    "variant": {
+      "type": {
+        "name": "enum",
+        "description": "'filled'<br>&#124;&nbsp;'outlined'<br>&#124;&nbsp;'standard'"
+      },
+      "default": "'outlined'"
+    }
   },
-  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "slots": {
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+  },
   "name": "DateTimeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimeField" },
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields\">Fields</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_DateTimeField" },
     { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_DateTimeField" }

@@ -74,7 +74,7 @@ const slotColumnCommonFields: Partial<GridColDef> = {
   pinnable: false,
   hideable: false,
   minWidth: 140,
-  cellClassName: (params: GridCellParams) => params.value,
+  cellClassName: (params) => params.value,
   colSpan: ({ row, field, value }: GridCellParams) => {
     const index = Number(field);
     let colSpan = 1;
@@ -185,8 +185,8 @@ export default function ColumnSpanningDerived() {
         disableExtendRowFullWidth
         disableRowSelectionOnClick
         hideFooter
-        showCellRightBorder
-        showColumnRightBorder
+        showCellVerticalBorder
+        showColumnVerticalBorder
         disableColumnReorder
       />
     </Box>

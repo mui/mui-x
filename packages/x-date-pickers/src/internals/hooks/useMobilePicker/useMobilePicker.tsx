@@ -10,7 +10,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -22,15 +22,14 @@ import { InferError } from '../validation/useValidation';
 export const useMobilePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, format, disabled, localeText } = props;
+  const { components, componentsProps, className, format, readOnly, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -41,12 +40,12 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
     inputRef,
-    viewLookup,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
   });
@@ -57,7 +56,7 @@ export const useMobilePicker = <
     externalSlotProps: componentsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly: true,
+      readOnly: readOnly ?? true,
       disabled,
       className,
       format,
@@ -65,21 +64,28 @@ export const useMobilePicker = <
     ownerState: props,
   });
 
+  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
+    ...fieldProps.components,
+    TextField: components.TextField,
+  };
+
   const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
 
       return {
         ...inputPropsPassedByField,
         ...externalInputProps,
-        disabled: props.disabled,
-        onClick: props.readOnly || props.disabled ? undefined : actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        disabled,
+        ...(!(disabled || readOnly) && {
+          onClick: actions.onOpen,
+          onKeyDown: onSpaceOrEnter(actions.onOpen),
+        }),
         inputProps: {
           'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
           ...inputPropsPassedByField?.inputProps,
@@ -89,10 +95,7 @@ export const useMobilePicker = <
     },
   };
 
-  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
-  };
+  const Layout = components?.Layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
@@ -113,15 +116,19 @@ export const useMobilePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsProps}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

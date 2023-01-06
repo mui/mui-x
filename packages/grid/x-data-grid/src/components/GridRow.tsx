@@ -10,7 +10,7 @@ import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridR
 import {
   GridEditModes,
   GridRowModes,
-  GridEditRowsModel,
+  GridEditingState,
   GridCellModes,
 } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -50,7 +50,7 @@ export interface GridRowProps {
   renderedColumns: GridStateColDef[];
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
-  editRowsState: GridEditRowsModel;
+  editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;
@@ -91,7 +91,7 @@ function EmptyCell({ width }: { width: number }) {
 
   const style = { width };
 
-  return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
 const GridRow = React.forwardRef<
@@ -273,7 +273,10 @@ const GridRow = React.forwardRef<
         column.field,
       );
 
-      const classNames: string[] = [];
+      const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field: column.field,
+      });
 
       const disableDragEvents =
         (rootProps.disableColumnReorder && column.disableReorder) ||
@@ -340,6 +343,11 @@ const GridRow = React.forwardRef<
           ? 0
           : -1;
 
+      const isSelected = apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+        id: rowId,
+        field: column.field,
+      });
+
       return (
         <rootProps.components.Cell
           key={column.field}
@@ -354,6 +362,7 @@ const GridRow = React.forwardRef<
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
+          isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           className={clsx(classNames)}
@@ -448,7 +457,7 @@ const GridRow = React.forwardRef<
     const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
+      ? rootProps.showCellVerticalBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(

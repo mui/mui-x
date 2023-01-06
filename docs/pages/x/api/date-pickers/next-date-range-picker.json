@@ -1,5 +1,6 @@
 {
   "props": {
+    "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -7,7 +8,7 @@
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
@@ -51,7 +52,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
@@ -66,7 +67,8 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
@@ -84,7 +86,7 @@
     "Field": { "type": { "name": "elementType" } },
     "FieldRoot": { "type": { "name": "elementType" } },
     "FieldSeparator": { "type": { "name": "elementType" } },
-    "Input": { "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
@@ -95,15 +97,14 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "NextDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiNextDateRangePicker" },
-  "spread": false,
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/NextDateRangePicker/NextDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation\">Validation</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_NextDateRangePicker" }
   ]

@@ -37,7 +37,7 @@ function isKeyboardEvent(event: any): event is React.KeyboardEvent {
   return !!event.key;
 }
 
-function EditTextarea(props: GridRenderEditCellParams<string>) {
+function EditTextarea(props: GridRenderEditCellParams<any, string>) {
   const { id, field, value, colDef, hasFocus } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>();

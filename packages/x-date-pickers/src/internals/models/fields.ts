@@ -13,9 +13,24 @@ export interface BaseFieldProps<TValue, TError>
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
   components?: {
-    Input?: React.ElementType<TextFieldProps>;
+    TextField?: React.ElementType<TextFieldProps>;
   };
   componentsProps?: {
-    input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   };
 }
+
+export interface FieldsTextFieldProps
+  extends Omit<
+    TextFieldProps,
+    | 'autoComplete'
+    | 'error'
+    | 'maxRows'
+    | 'minRows'
+    | 'multiline'
+    | 'placeholder'
+    | 'rows'
+    | 'select'
+    | 'SelectProps'
+    | 'type'
+  > {}

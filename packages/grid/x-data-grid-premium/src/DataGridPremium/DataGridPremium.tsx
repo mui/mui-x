@@ -6,7 +6,7 @@ import {
   GridBody,
   GridErrorHandler,
   GridFooterPlaceholder,
-  GridHeaderPlaceholder,
+  GridHeader,
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
@@ -35,7 +35,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridErrorHandler>
-          <GridHeaderPlaceholder />
+          <GridHeader />
           <GridBody
             ColumnHeadersComponent={DataGridProColumnHeaders}
             VirtualScrollerComponent={DataGridProVirtualScroller}
@@ -80,7 +80,7 @@ DataGridPremiumRaw.propTypes = {
    */
   aggregationRowsScope: PropTypes.oneOf(['all', 'filtered']),
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.object.isRequired,
@@ -136,7 +136,12 @@ DataGridPremiumRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
-   * Set of columns of type [[GridColumns]].
+   * Sets the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
+   * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
@@ -269,10 +274,6 @@ DataGridPremiumRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel: PropTypes.object,
-  /**
    * An error that will turn the grid into its error state and display the error component.
    */
   error: PropTypes.any,
@@ -384,11 +385,6 @@ DataGridPremiumRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -610,12 +606,6 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange: PropTypes.func,
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
@@ -839,7 +829,7 @@ DataGridPremiumRaw.propTypes = {
    */
   rowGroupingModel: PropTypes.arrayOf(PropTypes.string),
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,
@@ -901,15 +891,15 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, the vertical borders of the cells are displayed.
    * @default false
    */
-  showCellRightBorder: PropTypes.bool,
+  showCellVerticalBorder: PropTypes.bool,
   /**
    * If `true`, the right border of the column headers are displayed.
    * @default false
    */
-  showColumnRightBorder: PropTypes.bool,
+  showColumnVerticalBorder: PropTypes.bool,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.
@@ -950,4 +940,19 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   treeData: PropTypes.bool,
+  /**
+   * If `true`, the cell selection mode is enabled.
+   * @default false
+   */
+  unstable_cellSelection: PropTypes.bool,
+  /**
+   * Set the cell selection model of the grid.
+   */
+  unstable_cellSelectionModel: PropTypes.object,
+  /**
+   * Callback fired when the selection state of one or multiple cells changes.
+   * @param {GridCellSelectionModel} cellSelectionModel Object in the shape of [[GridCellSelectionModel]] containg the selected cells.
+   * @param {GridCallbackDetails} details Additional details for this callback.
+   */
+  unstable_onCellSelectionModelChange: PropTypes.func,
 } as any;

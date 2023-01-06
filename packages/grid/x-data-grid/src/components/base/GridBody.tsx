@@ -5,8 +5,6 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridTotalHeaderHeightSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -29,7 +27,6 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = useGridSelector(apiRef, gridTotalHeaderHeightSelector);
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -59,9 +56,11 @@ function GridBody(props: GridBodyProps) {
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
   const virtualScrollerRef = React.useRef<HTMLDivElement>(null);
 
-  apiRef.current.columnHeadersContainerElementRef = columnsContainerRef;
-  apiRef.current.columnHeadersElementRef = columnHeadersRef;
-  apiRef.current.virtualScrollerRef = virtualScrollerRef;
+  apiRef.current.register('private', {
+    columnHeadersContainerElementRef: columnsContainerRef,
+    columnHeadersElementRef: columnHeadersRef,
+    virtualScrollerRef,
+  });
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
@@ -78,23 +77,10 @@ function GridBody(props: GridBodyProps) {
         disableHeight={rootProps.autoHeight}
         onResize={handleResize}
       >
-        {(size: { height?: number; width: number }) => {
-          const style = {
-            width: size.width,
-            // If `autoHeight` is on, there will be no height value.
-            // In this case, let the container to grow whatever it needs.
-            height: size.height ? size.height - totalHeaderHeight : 'auto',
-            marginTop: totalHeaderHeight,
-          } as React.CSSProperties;
-
-          return (
-            <VirtualScrollerComponent
-              ref={virtualScrollerRef}
-              style={style}
-              disableVirtualization={isVirtualizationDisabled}
-            />
-          );
-        }}
+        <VirtualScrollerComponent
+          ref={virtualScrollerRef}
+          disableVirtualization={isVirtualizationDisabled}
+        />
       </GridAutoSizer>
       {children}
     </GridMainContainer>

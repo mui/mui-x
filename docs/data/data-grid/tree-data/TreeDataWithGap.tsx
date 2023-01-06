@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
@@ -81,7 +81,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'jobTitle', headerName: 'Job Title', width: 200 },
   {
     field: 'recruitmentDate',

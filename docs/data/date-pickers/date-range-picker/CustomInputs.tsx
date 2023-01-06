@@ -11,11 +11,11 @@ type BrowserInputProps = TextFieldProps & {
 };
 
 function BrowserInput(props: BrowserInputProps) {
-  const { inputProps, InputProps, ownerState, ...other } = props;
+  const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <input {...inputProps} {...(other as any)} />
+      <input ref={inputRef} {...inputProps} {...(other as any)} />
       {InputProps?.endAdornment}
     </Box>
   );
@@ -27,7 +27,7 @@ export default function CustomInputs() {
       <NextDateRangePicker
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
         components={{
-          Input: BrowserInput,
+          TextField: BrowserInput,
         }}
       />
     </LocalizationProvider>

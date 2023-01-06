@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
+import { DefaultizedProps } from '../internals/models/helpers';
 import { DateOrTimeView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
@@ -13,7 +13,7 @@ import {
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
 } from '../TimeClock/TimeClock';
-import { BaseNextPickerProps } from '../internals/models/props/basePickerProps';
+import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
   DateTimePickerTabs,
@@ -31,6 +31,10 @@ import {
   ExportedDateTimePickerToolbarProps,
 } from '../DateTimePicker/DateTimePickerToolbar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
+import { DateViewRendererProps } from '../dateViewRenderers';
+import { TimeViewRendererProps } from '../timeViewRenderers';
+import { applyDefaultViewProps } from '../internals/utils/views';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -61,10 +65,7 @@ export interface BaseNextDateTimePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseNextDateTimePickerProps<TDate>
-  extends MakeOptional<
-      BaseNextPickerProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
-      'views' | 'openTo'
-    >,
+  extends BaseNextPickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
   /**
@@ -90,6 +91,19 @@ export interface BaseNextDateTimePickerProps<TDate>
    * @default {}
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers?: Partial<
+    PickerViewRendererLookup<
+      TDate | null,
+      DateOrTimeView,
+      DateViewRendererProps<TDate, DateOrTimeView> & TimeViewRendererProps<TDate, DateOrTimeView>,
+      {}
+    >
+  >;
 }
 
 type UseNextDateTimePickerDefaultizedProps<
@@ -120,7 +134,6 @@ export function useNextDateTimePickerDefaultizedProps<
     name,
   });
 
-  const views = themeProps.views ?? ['year', 'day', 'hours', 'minutes'];
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
@@ -136,12 +149,16 @@ export function useNextDateTimePickerDefaultizedProps<
 
   return {
     ...themeProps,
-    views,
+    ...applyDefaultViewProps({
+      views: themeProps.views,
+      openTo: themeProps.openTo,
+      defaultViews: ['year', 'day', 'hours', 'minutes'],
+      defaultOpenTo: 'day',
+    }),
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
     ampmInClock: themeProps.ampmInClock ?? true,
-    openTo: themeProps.openTo ?? 'day',
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??

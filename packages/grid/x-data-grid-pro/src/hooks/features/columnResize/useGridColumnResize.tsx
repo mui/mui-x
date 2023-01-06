@@ -13,12 +13,12 @@ import {
   useGridApiOptionHandler,
   useGridNativeEventListener,
   useGridLogger,
-  GridStateColDef,
 } from '@mui/x-data-grid';
 import {
   clamp,
   findParentElementFromClassName,
   GridStateInitializer,
+  GridStateColDef,
 } from '@mui/x-data-grid/internals';
 import { useTheme, Direction } from '@mui/material/styles';
 import {
