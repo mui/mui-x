@@ -3,11 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 export default function PageSizeCustomOptions() {
-  const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: 5,
-    page: 0,
-  });
-
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -17,10 +12,12 @@ export default function PageSizeCustomOptions() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
-        pageSizeOptions={[5, 10, 20]}
         {...data}
+        initialState={{
+          ...data.initialState,
+          pagination: { paginationModel: { pageSize: 5 } },
+        }}
+        pageSizeOptions={[5, 10, 25]}
       />
     </div>
   );
