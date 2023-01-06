@@ -42,8 +42,6 @@ export const paginationStateInitializer: GridStateInitializer<
     ...state,
     pagination: {
       paginationModel,
-      pageCount: getPageCount(props.rowCount ?? 0, paginationModel.pageSize),
-      rowCount: props.rowCount ?? 0,
     },
   };
 };
@@ -74,11 +72,7 @@ const mergeStateWithPaginationModel =
 
     throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, signature);
 
-    return {
-      pageCount,
-      rowCount,
-      paginationModel,
-    };
+    return { paginationModel };
   };
 
 /**

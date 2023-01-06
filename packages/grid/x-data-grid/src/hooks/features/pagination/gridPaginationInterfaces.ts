@@ -2,8 +2,6 @@ import { GridPaginationModel } from '../../../models/gridPaginationProps';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
-  pageCount: number;
-  rowCount: number;
 }
 
 export interface GridPaginationInitialState {

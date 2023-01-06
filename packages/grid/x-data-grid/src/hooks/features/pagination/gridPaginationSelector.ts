@@ -4,8 +4,10 @@ import {
   gridVisibleSortedRowEntriesSelector,
   gridVisibleSortedRowIdsSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
+  gridVisibleTopLevelRowCountSelector,
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { getPageCount } from './gridPaginationUtils';
 
 /**
  * @category Pagination
@@ -46,7 +48,9 @@ export const gridPageSizeSelector = createSelector(
  */
 export const gridPageCountSelector = createSelector(
   gridPaginationSelector,
-  (pagination) => pagination.pageCount,
+  gridVisibleTopLevelRowCountSelector,
+  (pagination, visibleTopLevelRowCount) =>
+    getPageCount(visibleTopLevelRowCount, pagination.paginationModel.pageSize),
 );
 
 /**

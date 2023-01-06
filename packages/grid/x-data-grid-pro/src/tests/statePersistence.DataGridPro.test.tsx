@@ -209,8 +209,7 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       act(() => {
-        apiRef.current.setPageSize(2);
-        apiRef.current.setPage(1);
+        apiRef.current.setPaginationModel({ page: 1, pageSize: 2 });
         apiRef.current.setPinnedColumns({ left: ['id'] });
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
