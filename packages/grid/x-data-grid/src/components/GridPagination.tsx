@@ -52,11 +52,11 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
 
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      const warnedOnceMissingPageSizeInPageSizeOptions = React.useRef(false);
+      const warnedOnceMissingInPageSizeOptions = React.useRef(false);
       const pageSize =
         rootProps.paginationModel?.pageSize ?? paginationState.paginationModel.pageSize;
       if (
-        !warnedOnceMissingPageSizeInPageSizeOptions.current &&
+        !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
         !rootProps.pageSizeOptions.includes(pageSize)
       ) {
@@ -67,7 +67,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
           ].join('\n'),
         );
 
-        warnedOnceMissingPageSizeInPageSizeOptions.current = true;
+        warnedOnceMissingInPageSizeOptions.current = true;
       }
     }
 
