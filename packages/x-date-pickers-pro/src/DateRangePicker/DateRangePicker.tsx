@@ -28,14 +28,8 @@ export interface DateRangePickerSlotsComponentsProps<TDate>
     DesktopDateRangePickerSlotsComponentsProps<TDate> {}
 
 export interface DateRangePickerProps<TDate>
-  extends Omit<
-      DesktopDateRangePickerProps<TDate>,
-      'components' | 'componentsProps' | 'slots' | 'slotsProps'
-    >,
-    Omit<
-      MobileDateRangePickerProps<TDate>,
-      'components' | 'componentsProps' | 'slots' | 'slotsProps'
-    > {
+  extends Omit<DesktopDateRangePickerProps<TDate>, 'components' | 'componentsProps'>,
+    Omit<MobileDateRangePickerProps<TDate>, 'components' | 'componentsProps'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.
    * @default '@media (pointer: fine)'
@@ -391,6 +385,25 @@ DateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
+  /**
+   * Overrideable components.
+   * @default {}
+   */
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

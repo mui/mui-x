@@ -41,7 +41,7 @@ import {
 } from '../internals/hooks/validation/models';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
-import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotsProps, uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DateCalendarSlots<TDate>
   extends PickersCalendarHeaderSlots,
@@ -134,14 +134,17 @@ export interface DateCalendarProps<TDate>
   sx?: SxProps<Theme>;
 }
 
-export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
-  DateCalendarProps<TDate>,
-  | 'views'
-  | 'openTo'
-  | 'loading'
-  | 'reduceAnimations'
-  | 'renderLoading'
-  | keyof BaseDateValidationProps<TDate>
+export type DateCalendarDefaultizedProps<TDate> = Omit<
+  DefaultizedProps<
+    DateCalendarProps<TDate>,
+    | 'views'
+    | 'openTo'
+    | 'loading'
+    | 'reduceAnimations'
+    | 'renderLoading'
+    | keyof BaseDateValidationProps<TDate>
+  >,
+  'components' | 'componentsProps'
 >;
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
@@ -176,6 +179,8 @@ function useDateCalendarDefaultizedProps<TDate>(
     ...themeProps,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
+    slots: themeProps?.slots ?? uncapitalizeObjectKeys(themeProps?.components),
+    slotsProps: themeProps?.slotsProps ?? themeProps?.componentsProps,
   };
 }
 
@@ -245,8 +250,6 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     showDaysOutsideCurrentMonth,
     fixedWeekNumber,
     dayOfWeekFormatter,
-    components,
-    componentsProps,
     slots,
     slotsProps,
     loading,
@@ -429,8 +432,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
         slots={slots}
-        components={components}
-        slotsProps={slotsProps ?? componentsProps}
+        slotsProps={slotsProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -484,9 +486,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               fixedWeekNumber={fixedWeekNumber}
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
-              components={components}
               slots={slots}
-              slotsProps={slotsProps ?? componentsProps}
+              slotsProps={slotsProps}
               loading={loading}
               renderLoading={renderLoading}
             />

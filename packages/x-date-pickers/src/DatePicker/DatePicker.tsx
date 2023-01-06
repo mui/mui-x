@@ -5,21 +5,15 @@ import PropTypes from 'prop-types';
 import {
   DesktopDatePicker,
   DesktopDatePickerProps,
-  DesktopDatePickerSlots,
   DesktopDatePickerSlotsComponent,
   DesktopDatePickerSlotsComponentsProps,
 } from '../DesktopDatePicker';
 import {
   MobileDatePicker,
   MobileDatePickerProps,
-  MobileDatePickerSlots,
   MobileDatePickerSlotsComponent,
   MobileDatePickerSlotsComponentsProps,
 } from '../MobileDatePicker';
-
-export interface DatePickerSlots<TDate>
-  extends MobileDatePickerSlots<TDate>,
-    DesktopDatePickerSlots<TDate> {}
 
 export interface DatePickerSlotsComponent<TDate>
   extends MobileDatePickerSlotsComponent<TDate>,

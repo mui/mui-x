@@ -78,6 +78,14 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ day?: elementType, leftArrowIcon?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, switchViewButton?: elementType, switchViewIcon?: elementType, toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
