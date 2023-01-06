@@ -14,7 +14,6 @@ import {
   PickersSlots,
   PickersSlotsComponentsProps,
 } from './wrappers/WrapperProps';
-import { UncapitalizeObjectKeys } from '../utils/slots-migration';
 
 export interface PickersModalDialogSlots extends Pick<PickersSlots, 'actionBar'> {
   /**
