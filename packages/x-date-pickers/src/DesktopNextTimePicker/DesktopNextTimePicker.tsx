@@ -39,7 +39,6 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    showViewSwitcher: true,
     components: {
       Field: TimeField,
       OpenPickerIcon: Clock,

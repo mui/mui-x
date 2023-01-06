@@ -38,7 +38,6 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    showViewSwitcher: false,
     components: {
       Field: TimeField,
       ...defaultizedProps.components,
