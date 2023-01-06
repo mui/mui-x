@@ -30,6 +30,11 @@ function raf() {
   });
 }
 
+function getChromeVersion() {
+  const raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+  return raw ? parseInt(raw[2], 10) : null;
+}
+
 type PrintWindowOnLoad = (
   printWindow: HTMLIFrameElement,
   options?: Pick<
@@ -130,8 +135,12 @@ export const useGridPrintExport = (
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
       gridMain!.style.overflow = 'visible';
-      // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
-      gridMain!.style.contain = 'size';
+
+      const chromeVersion = getChromeVersion();
+      if (chromeVersion && chromeVersion >= 108) {
+        // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
+        gridClone!.style.contain = 'size';
+      }
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
       const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
