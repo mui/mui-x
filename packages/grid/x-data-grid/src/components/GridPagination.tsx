@@ -37,6 +37,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,
       [rootProps.rowCount, visibleTopLevelRowCount],
     );
+
     const lastPage = React.useMemo(
       () => Math.floor(rowCount / (paginationState.paginationModel.pageSize || 1)),
       [rowCount, paginationState.paginationModel],
