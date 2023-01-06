@@ -2444,7 +2444,7 @@
 
 "@mui/monorepo@https://github.com/LukasTy/material-ui.git#handle-x-demo-container":
   version "5.11.3"
-  resolved "https://github.com/LukasTy/material-ui.git#dd73cff17e5c090794c0f60e1159a915e4d91ba4"
+  resolved "https://github.com/LukasTy/material-ui.git#700ef37de963b9c900e93c4e17faffbcd6045a1e"
 
 "@mui/private-theming@^5.11.2":
   version "5.11.2"

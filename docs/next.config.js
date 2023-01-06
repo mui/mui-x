@@ -23,6 +23,8 @@ module.exports = withDocsInfra({
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    // https://docs.netlify.com/site-deploys/split-testing/#expose-branch-information-in-your-site
+    BRANCH: process.env.BRANCH,
     DEFAULT_BRANCH: 'next',
     GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
