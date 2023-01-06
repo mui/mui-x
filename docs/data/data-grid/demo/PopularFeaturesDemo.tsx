@@ -301,7 +301,7 @@ const columns: GridColDef[] = [
     flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
-    renderCell: (params: GridRenderCellParams<string>) => {
+    renderCell: (params: GridRenderCellParams<any, string>) => {
       if (!params.value) {
         return '';
       }

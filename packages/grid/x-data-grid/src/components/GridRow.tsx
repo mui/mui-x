@@ -10,7 +10,7 @@ import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridR
 import {
   GridEditModes,
   GridRowModes,
-  GridEditRowsModel,
+  GridEditingState,
   GridCellModes,
 } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -50,7 +50,7 @@ export interface GridRowProps {
   renderedColumns: GridStateColDef[];
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
-  editRowsState: GridEditRowsModel;
+  editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;

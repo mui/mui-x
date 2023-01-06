@@ -16,12 +16,12 @@ export interface BaseMultiInputFieldProps<TValue, TError>
   extends Omit<BaseFieldProps<TValue, TError>, 'components' | 'componentsProps'> {
   components?: {
     Root?: React.ElementType<StackProps>;
-    Input?: React.ElementType<TextFieldProps>;
+    TextField?: React.ElementType<TextFieldProps>;
     Separator?: React.ElementType<TypographyProps>;
   };
   componentsProps?: {
     root?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
-    input?: SlotComponentProps<
+    textField?: SlotComponentProps<
       typeof TextField,
       {},
       { position?: 'start' | 'end' } & Record<string, any>

@@ -1,6 +1,6 @@
 # Migration from v5 to v6
 
-<p class="description">This guide describes the changes needed to migrate the Date & Time Pickers from v5 to v6.</p>
+<p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
 ## Start using the alpha release
 
@@ -19,20 +19,23 @@ Below are described the steps you need to take to migrate from v5 to v6.
 
 ## Run codemods
 
-The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6 for both the Date and Time Pickers and DataGrid.
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/pickers/preset-safe` targeting only Date and Time Pickers or `v6.0.0/preset-safe` to target Data Grid as well.
 It should be only applied **once per folder.**
 
 ```sh
+// Date and Time Pickers specific
+npx @mui/x-codemod v6.0.0/pickers/preset-safe <path>
+// Target Data Grid as well
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#-preset-safe) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#-preset-safe-for-pickers) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
 
-If you have already applied the `v6.0.0/preset-safe` codemod, then you should not need to take any further action on these items.
+If you have already applied the `v6.0.0/pickers/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items.
 
 All other changes must be handled manually.
 
@@ -101,9 +104,39 @@ const theme = createTheme({
 });
 ```
 
+### Remove the keyboard view
+
+The picker components no longer have a keyboard view to render the input inside the modal on mobile.
+
+- If your date is easier to edit with the keyboard (e.g: a birthdate), you can directly use the new field components:
+
+  ```diff
+   function App() {
+     return (
+  -    <DatePicker />
+  +    <DateField />
+     )
+   }
+  ```
+
+- If you want to keep the old keyboard view, you can pass a custom `Layout` component slot to re-introduce the keyboard view.
+
+{{"demo": "MobileKeyboardView.js", "defaultCodeOpen": false}}
+
+:::info
+At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
+:::
+
+:::warning
+This change only applies to the new pickers.
+The legacy pickers keep the keyboard view until there removal.
+
+For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+:::
+
 ## Date library and adapters
 
-### Do not import adapter from `@date-io`
+### ✅ Do not import adapter from `@date-io`
 
 In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
@@ -112,7 +145,7 @@ If you do not find the adapter you were using—there probably was a reason for 
 
 ```diff
 -import AdapterJalaali from '@date-io/jalaali';
-+import { AdapterMomentJalaali } from '@mui/x-date-pickers-pro/AdapterMomentJalaali';
++import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 ```
 
 ### Increase Luxon minimal version

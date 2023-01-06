@@ -147,7 +147,7 @@
   },
   {
     "name": "gridEditRowsStateSelector",
-    "returnType": "GridEditRowsModel",
+    "returnType": "GridEditingState",
     "description": "",
     "supportsApiRef": false
   },

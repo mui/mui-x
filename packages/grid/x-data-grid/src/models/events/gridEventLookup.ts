@@ -16,7 +16,6 @@ import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridE
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
-import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
@@ -216,49 +215,49 @@ export interface GridCellEventLookup {
    * Fired when a cell is clicked.
    */
   cellClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a cell is double-clicked.
    */
   cellDoubleClick: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mousedown` event happens in a cell.
    */
   cellMouseDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseup` event happens in a cell.
    */
   cellMouseUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `mouseover` event happens in a cell.
    */
   cellMouseOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.MouseEvent<HTMLElement>;
   };
   /**
    * Fired when a `keydown` event happens in a cell.
    */
   cellKeyDown: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
    * Fired when a `keyup` event happens in a cell.
    */
   cellKeyUp: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
@@ -266,7 +265,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragEnter: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
   /**
@@ -275,7 +274,7 @@ export interface GridCellEventLookup {
    * @ignore - do not document.
    */
   cellDragOver: {
-    params: GridCellParams;
+    params: GridCellParams<any>;
     event: React.DragEvent<HTMLElement>;
   };
 }
@@ -293,10 +292,6 @@ export interface GridControlledStateEventLookup {
    * Fired when the sort model changes.
    */
   sortModelChange: { params: GridSortModel };
-  /**
-   * Fired when the row editing model changes.
-   */
-  editRowsModelChange: { params: GridEditRowsModel };
   /**
    * Fired when the selection state of one or multiple rows changes.
    */
@@ -420,7 +415,7 @@ export interface GridEventLookup
    * Fired when the mode of a cell changes.
    * @ignore - do not document
    */
-  cellModeChange: { params: GridCellParams };
+  cellModeChange: { params: GridCellParams<any> };
   /**
    * Fired when the model that controls the cell modes changes.
    */
@@ -466,11 +461,11 @@ export interface GridEventLookup
   /**
    * Fired when a cell gains focus.
    */
-  cellFocusIn: { params: GridCellParams };
+  cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
    */
-  cellFocusOut: { params: GridCellParams; event: MuiBaseEvent };
+  cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 
   // Scroll
   /**

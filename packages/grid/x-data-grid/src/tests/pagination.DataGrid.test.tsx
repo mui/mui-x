@@ -414,21 +414,21 @@ describe('<DataGrid /> - Pagination', () => {
     it('should always render the same amount of rows and fit the viewport', () => {
       const nbRows = 27;
       const height = 780;
-      const headerHeight = 56;
+      const columnHeaderHeight = 56;
       const rowHeight = 52;
 
       render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={height}
-          headerHeight={headerHeight}
+          columnHeaderHeight={columnHeaderHeight}
           rowHeight={rowHeight}
         />,
       );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedFullPageRowsLength = Math.floor(
-        (height - headerHeight - footerHeight) / rowHeight,
+        (height - columnHeaderHeight - footerHeight) / rowHeight,
       );
 
       let rows = getRows();
@@ -469,14 +469,14 @@ describe('<DataGrid /> - Pagination', () => {
 
       const heightBefore = 780;
       const heightAfter = 360;
-      const headerHeight = 56;
+      const columnHeaderHeight = 56;
       const rowHeight = 52;
 
       const { setProps } = render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={heightBefore}
-          headerHeight={headerHeight}
+          columnHeaderHeight={columnHeaderHeight}
           rowHeight={rowHeight}
           onPaginationModelChange={onPaginationModelChange}
         />,
@@ -484,10 +484,10 @@ describe('<DataGrid /> - Pagination', () => {
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(
-        (heightBefore - headerHeight - footerHeight) / rowHeight,
+        (heightBefore - columnHeaderHeight - footerHeight) / rowHeight,
       );
       const expectedViewportRowsLengthAfter = Math.floor(
-        (heightAfter - headerHeight - footerHeight) / rowHeight,
+        (heightAfter - columnHeaderHeight - footerHeight) / rowHeight,
       );
 
       let rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
