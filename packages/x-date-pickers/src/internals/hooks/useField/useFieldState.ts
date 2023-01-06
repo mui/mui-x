@@ -40,7 +40,7 @@ export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> 
    */
   setSectionValueOnDate: (
     activeDate: TDate,
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   ) => { date: TDate; shouldGoToNextSection: boolean } | null;
   /**
    * Function called if the current date is not valid.
@@ -51,7 +51,7 @@ export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> 
    * @returns {{ sectionValue: string; shouldGoToNextSection: boolean } | null} The new value of the active section and a boolean indicating if the focus should move to the next section.
    */
   setSectionValueOnSections: (
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 }
 
@@ -89,10 +89,7 @@ export const useFieldState = <
   const firstDefaultValue = React.useRef(defaultValue);
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
 
-  const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate, TSection>(utils),
-    [utils],
-  );
+  const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
 
   const [sectionOrder, setSectionOrder] = React.useState(() =>
     fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),

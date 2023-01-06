@@ -83,6 +83,7 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'J'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'TT',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'DDDD' : 'DD',
   fieldHoursPlaceholder: () => 'ss',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',

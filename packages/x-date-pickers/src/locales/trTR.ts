@@ -68,6 +68,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'AAA' : 'AA'),
   fieldDayPlaceholder: () => 'GG',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'DDDD' : 'DD',
   fieldHoursPlaceholder: () => 'ss',
   fieldMinutesPlaceholder: () => 'dd',
   fieldSecondsPlaceholder: () => 'ss',
