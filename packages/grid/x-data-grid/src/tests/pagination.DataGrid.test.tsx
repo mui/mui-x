@@ -235,8 +235,6 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(<TestCasePaginationFilteredData />);
       expect(onPaginationModelChange.callCount).to.equal(0);
 
-      // TODO Fix `onPaginationModelChange` not firing when setting `filterModel`
-
       setProps({
         filterModel: {
           linkOperator: GridLinkOperator.And,
@@ -252,7 +250,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.equal(0);
+      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
     });
 
     it('should scroll to the top of the page when changing page', () => {

@@ -59,15 +59,20 @@ const mergeStateWithPaginationModel =
     const pageSize = paginationModelProp?.pageSize ?? paginationModel.pageSize;
     const pageCount = getPageCount(rowCount, pageSize);
 
-    if (paginationModelProp && paginationModelProp !== paginationModel) {
-      const page = paginationModelProp.page ?? paginationModel.page;
-      const validPage = getValidPage(page, pageCount);
-      throwIfPageSizeExceedsTheLimit(paginationModelProp.pageSize, signature);
-      paginationModel =
-        validPage !== paginationModelProp.page
-          ? { page: validPage, pageSize }
-          : paginationModelProp;
+    if (
+      paginationModelProp &&
+      (paginationModelProp?.page !== paginationModel.page ||
+        paginationModelProp?.pageSize !== paginationModel.pageSize)
+    ) {
+      paginationModel = paginationModelProp;
     }
+
+    const validPage = getValidPage(paginationModel.page, pageCount);
+    if (validPage !== paginationModel.page) {
+      paginationModel = { ...paginationModel, page: validPage };
+    }
+
+    throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, signature);
 
     return {
       pageCount,
