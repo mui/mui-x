@@ -9,7 +9,7 @@ import {
 /**
  * Parameters passed to `colDef.groupingValueGetter`.
  */
-export interface GridGroupingValueGetterParams<V = any, R extends GridValidRowModel = any> {
+export interface GridGroupingValueGetterParams<R extends GridValidRowModel = any, V = any> {
   /**
    * The grid row id.
    */

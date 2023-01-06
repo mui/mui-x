@@ -1,15 +1,6 @@
 <NextDatePicker
   label={'"year", "month" and "day"'}
-  defaultValue={dayjs('2022-04-07')}
   views={['year', 'month', 'day']}
 />
-<NextDatePicker
-  label={'"day"'}
-  defaultValue={dayjs('2022-04-07')}
-  views={['day']}
-/>
-<NextDatePicker
-  label={'"month" and "year"'}
-  defaultValue={dayjs('2022-04-07')}
-  views={['month', 'year']}
-/>
+<NextDatePicker label={'"day"'} views={['day']} />
+<NextDatePicker label={'"month" and "year"'} views={['month', 'year']} />

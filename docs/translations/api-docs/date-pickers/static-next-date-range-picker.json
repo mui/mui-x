@@ -12,13 +12,13 @@
     "disableAutoMonthSwitching": "If <code>true</code>, after selecting <code>start</code> date calendar will not automatically switch to the month of <code>end</code> date.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
     "disableDragEditing": "If <code>true</code>, editing dates by dragging is disabled.",
-    "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
+    "disableFuture": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
-    "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
+    "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
     "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
-    "loading": "If <code>true</code> renders <code>LoadingComponent</code> in calendar instead of calendar view. Can be used to preload information and show it in calendar.",
+    "loading": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar.",
     "localeText": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
@@ -37,15 +37,15 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
-    "PreviousIconButton": "Button allowing to switch to the left view.",
-    "NextIconButton": "Button allowing to switch to the right view.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
+    "NextIconButton": "Button allowing to switch to the right view.",
+    "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar."
+    "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

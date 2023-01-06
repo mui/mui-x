@@ -10,13 +10,13 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-{{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
+{{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
 ## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
-{{"demo": "UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}}
+{{"demo": "UpdateRowsApiRef.js", "bg": "inline"}}
 
 The default behavior of `updateRows` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the grid.
@@ -84,7 +84,7 @@ When receiving updates more frequently than this threshold, the grid will wait b
 
 The following demo updates the rows every 10 ms, but they are only applied every 2 seconds.
 
-{{"demo": "ThrottledRowsGrid.js", "bg": "inline"}}
+{{"demo": "ThrottledRowsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## API
 

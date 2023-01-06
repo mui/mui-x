@@ -9,7 +9,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 # Time Picker
 
-<p class="description">Time Picker let the user select a time.</p>
+<p class="description">The Time Picker component let the user select a time.</p>
 
 :::warning
 The new Time Pickers are unstable.
@@ -19,18 +19,14 @@ They will be renamed at the end of the v6 beta phase to have the same name as th
 (`NextTimePicker` will become `TimePicker`, ...)
 :::
 
-The selected time is indicated by the filled circle at the end of the clock hand.
-
 ## Basic usage
-
-The Time Picker is rendered as a modal dialog on mobile, and in the field on desktop.
 
 {{"demo": "BasicTimePicker.js"}}
 
 ## Component composition
 
-The Time Picker components are built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
-All the documented props of those two components can also be passed to the Time Picker components.
+The component is built using the `TimeField` for the keyboard editing and the `TimeClock` for the view editing.
+All the documented props of those two components can also be passed to the Time Picker component.
 
 Check-out their documentation page for more information:
 
@@ -43,46 +39,58 @@ The component can be uncontrolled or controlled
 
 {{"demo": "TimePickerValue.js"}}
 
-## Responsiveness
+## Available components
 
-The Time picker Component is designed and optimized for the device it runs on.
+The component is available in four variants:
 
-- The `MobileNextTimePicker` component works best for touch devices and small screens.
-- The `DesktopNextTimePicker` component works best for mouse devices and large screens.
+- The `DesktopNextTimePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileNextTimePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `NextTimePicker` component which renders `DesktopNextTimePicker` or `MobileNextTimePicker` depending on the device it runs on.
+
+- The `StaticTimePicker` component which renders without the popover/modal and field.
+
+{{"demo": "ResponsiveTimePickers.js"}}
 
 By default, the `NextTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
-
-{{"demo": "ResponsiveTimePickers.js"}}
-
-## Static mode
-
-It is also possible to render any Time Picker without the modal/popover and text field.
-This will enable building custom popover/modal containers.
-
-{{"demo": "StaticTimePickerDemo.js", "bg": true}}
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+:::
 
 ## Form props
 
-The Time Picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsTimePickers.js"}}
 
 ## Views
 
-The component can contain three views: `hours`, `minutes`, and `seconds`.
-By default, only the `hours` and `minutes` views are enabled.
+The component supports three views: `hours`, `minutes` and `seconds`.
 
-You can customize the enabled views using the `views` prop.
-Views will appear in the order they're included in the `views` array.
+By default, the `hours` and `minutes` views are enabled.
+Use the `views` prop to change this behavior:
 
 {{"demo": "TimePickerViews.js"}}
 
+By default, the component renders the `hours` view on mount.
+Use the `openTo` prop to change this behavior:
+
+{{"demo": "TimePickerOpenTo.js"}}
+
+:::success
+The views will appear in the order defined by the `views` array.
+If the view defined in `openTo` is not the first view, then the views before will not be included in the default flow.
+:::
+
 ## Landscape orientation
 
-By default, the Time Picker automatically sets the orientation based on the `window.orientation` value.
+By default, the Time Picker component automatically sets the orientation based on the `window.orientation` value.
 
 You can force a specific orientation using the `orientation` prop.
 

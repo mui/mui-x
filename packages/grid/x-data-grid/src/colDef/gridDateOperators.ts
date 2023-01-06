@@ -23,7 +23,7 @@ function buildApplyFilterFn(
 
   const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
 
-  return ({ value }: GridCellParams<string | number | Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<any, string | number | Date, any>): boolean => {
     if (!value) {
       return false;
     }

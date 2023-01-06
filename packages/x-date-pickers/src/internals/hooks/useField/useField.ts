@@ -2,7 +2,6 @@ import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useForkRef from '@mui/utils/useForkRef';
-import { MuiDateSectionName } from '../../models/muiPickersAdapter';
 import { useValidation } from '../validation/useValidation';
 import { useUtils } from '../useUtils';
 import {
@@ -12,18 +11,15 @@ import {
   UseFieldForwardedProps,
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
-  FieldBoundaries,
 } from './useField.types';
 import {
-  getMonthsMatchingQuery,
   adjustDateSectionValue,
   adjustInvalidDateSectionValue,
-  applySectionValueToDate,
-  cleanTrailingZeroInNumericSectionValue,
   isAndroid,
   cleanString,
 } from './useField.utils';
 import { useFieldState } from './useFieldState';
+import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 
 export const useField = <
   TValue,
@@ -38,9 +34,6 @@ export const useField = <
   if (!utils.formatTokenMap) {
     throw new Error('This adapter is not compatible with the field components');
   }
-  const queryRef = React.useRef<{ dateSectionName: MuiDateSectionName; value: string } | null>(
-    null,
-  );
 
   const {
     state,
@@ -54,6 +47,11 @@ export const useField = <
     sectionOrder,
   } = useFieldState(params);
 
+  const applyCharacterEditing = useFieldCharacterEditing<TDate, TSection>({
+    sections: state.sections,
+    updateSectionValue,
+  });
+
   const {
     inputRef: inputRefProp,
     internalProps,
@@ -62,6 +60,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    valueType,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -211,135 +210,7 @@ export const useField = <
       return;
     }
 
-    const isNumericValue = !Number.isNaN(Number(keyPressed));
-
-    if (isNumericValue) {
-      const getNewSectionValueStr = (
-        date: TDate | null,
-        boundaries: FieldBoundaries<TDate, TSection>,
-      ) => {
-        const sectionBoundaries = boundaries[activeSection.dateSectionName](date, activeSection);
-
-        // Remove the trailing `0` (`01` => `1`)
-        let newSectionValue = Number(`${activeSection.value}${keyPressed}`).toString();
-
-        while (newSectionValue.length > 0 && Number(newSectionValue) > sectionBoundaries.maximum) {
-          newSectionValue = newSectionValue.slice(1);
-        }
-
-        // In the unlikely scenario where max < 9, we could type a single digit that already exceeds the maximum.
-        if (newSectionValue.length === 0) {
-          newSectionValue = sectionBoundaries.minimum.toString();
-        }
-
-        if (!activeSection.hasTrailingZeroes) {
-          return newSectionValue;
-        }
-
-        return cleanTrailingZeroInNumericSectionValue(newSectionValue, sectionBoundaries.maximum);
-      };
-
-      updateSectionValue({
-        activeSection,
-        setSectionValueOnDate: (activeDate, boundaries) => {
-          // TODO: Support digit editing for months displayed in full letter
-          if (activeSection.contentType === 'letter') {
-            return activeDate;
-          }
-
-          return applySectionValueToDate({
-            utils,
-            dateSectionName: activeSection.dateSectionName,
-            date: activeDate,
-            getNumericSectionValue: (getter) => {
-              const sectionValueStr = getNewSectionValueStr(activeDate, boundaries);
-
-              // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
-              // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
-              if (activeSection.dateSectionName === 'day') {
-                return Number(sectionValueStr);
-              }
-
-              // The month is stored as 0-indexed in the date (0 = January, 1 = February, ...).
-              // But it is often rendered as 1-indexed in the input (1 = January, 2 = February, ...).
-              // This parsing makes sure that we store the digit according to the date index and not the input index.
-              const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
-              return getter(sectionDate);
-            },
-            // Meridiem is not compatible with digit editing, this line should never be called.
-            getMeridiemSectionValue: () => '',
-          });
-        },
-        setSectionValueOnSections: (boundaries) => {
-          // TODO: Support digit editing for months displayed in full letter
-          if (activeSection.contentType === 'letter') {
-            return activeSection.value;
-          }
-
-          return getNewSectionValueStr(null, boundaries);
-        },
-      });
-    }
-    // TODO: Improve condition
-    else if (['/', ' ', '-'].includes(keyPressed)) {
-      if (selectedSectionIndexes.startIndex < state.sections.length - 1) {
-        setSelectedSections(selectedSectionIndexes.startIndex + 1);
-      }
-    } else {
-      const getNewSectionValueStr = (): string => {
-        if (activeSection.contentType === 'digit') {
-          return activeSection.value;
-        }
-
-        const newQuery = keyPressed.toLowerCase();
-        const currentQuery =
-          queryRef.current?.dateSectionName === activeSection.dateSectionName
-            ? queryRef.current!.value
-            : '';
-        const concatenatedQuery = `${currentQuery}${newQuery}`;
-        const matchingMonthsWithConcatenatedQuery = getMonthsMatchingQuery(
-          utils,
-          activeSection,
-          concatenatedQuery,
-        );
-        if (matchingMonthsWithConcatenatedQuery.length > 0) {
-          queryRef.current = {
-            dateSectionName: activeSection.dateSectionName,
-            value: concatenatedQuery,
-          };
-          return matchingMonthsWithConcatenatedQuery[0];
-        }
-
-        const matchingMonthsWithNewQuery = getMonthsMatchingQuery(utils, activeSection, newQuery);
-        if (matchingMonthsWithNewQuery.length > 0) {
-          queryRef.current = {
-            dateSectionName: activeSection.dateSectionName,
-            value: newQuery,
-          };
-          return matchingMonthsWithNewQuery[0];
-        }
-
-        return activeSection.value;
-      };
-
-      updateSectionValue({
-        activeSection,
-        setSectionValueOnDate: (activeDate) =>
-          applySectionValueToDate({
-            utils,
-            dateSectionName: activeSection.dateSectionName,
-            date: activeDate,
-            getNumericSectionValue: (getter) => {
-              const sectionValueStr = getNewSectionValueStr();
-              const sectionDate = utils.parse(sectionValueStr, activeSection.formatValue)!;
-
-              return getter(sectionDate);
-            },
-            getMeridiemSectionValue: getNewSectionValueStr,
-          }),
-        setSectionValueOnSections: () => getNewSectionValueStr(),
-      });
-    }
+    applyCharacterEditing({ keyPressed, sectionIndex: selectedSectionIndexes.startIndex });
   });
 
   const handleInputKeyDown = useEventCallback((event: React.KeyboardEvent) => {
@@ -424,19 +295,32 @@ export const useField = <
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) =>
-            adjustDateSectionValue(
+          setSectionValueOnDate: (activeDate) => {
+            let date = adjustDateSectionValue(
               utils,
               activeDate,
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
-            ),
-          setSectionValueOnSections: () =>
-            adjustInvalidDateSectionValue(
+            );
+
+            // If the field only supports time editing, then we should never go to the previous / next day.
+            if (valueType === 'time') {
+              date = utils.mergeDateAndTime(activeDate, date);
+            }
+
+            return {
+              date,
+              shouldGoToNextSection: false,
+            };
+          },
+          setSectionValueOnSections: () => ({
+            sectionValue: adjustInvalidDateSectionValue(
               utils,
               activeSection,
               event.key as AvailableAdjustKeyCode,
             ),
+            shouldGoToNextSection: false,
+          }),
         });
         break;
       }

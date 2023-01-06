@@ -29,10 +29,11 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
    */
   Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
   /**
-   * Component used to render an HTML input inside the field.
-   * @default TextField
+   * Form control with an input to render the value inside the default field.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType<TextFieldProps>;
+  TextField?: React.ElementType<TextFieldProps>;
   /**
    * Component displayed on the start or end input adornment used to open the picker on desktop.
    * @default InputAdornment
@@ -53,7 +54,7 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
   extends Pick<
       PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper' | 'paperContent'
+      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
   field?: SlotComponentProps<
@@ -61,7 +62,7 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
     {},
     UsePickerProps<TDate | null, any, any, any, any>
   >;
-  input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   inputAdornment?: Partial<InputAdornmentProps>;
   openPickerButton?: SlotComponentProps<
     typeof IconButton,
