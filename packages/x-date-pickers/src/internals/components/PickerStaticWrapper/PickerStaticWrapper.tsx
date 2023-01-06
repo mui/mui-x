@@ -184,10 +184,7 @@ PickerStaticWrapper.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    PaperContent: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -213,10 +210,7 @@ PickerStaticWrapper.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    paperContent: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

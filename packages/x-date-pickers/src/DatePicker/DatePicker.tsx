@@ -100,26 +100,7 @@ DatePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    Day: PropTypes.elementType,
-    DesktopPaper: PropTypes.elementType,
-    DesktopTransition: PropTypes.elementType,
-    DesktopTrapFocus: PropTypes.elementType,
-    Dialog: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    MobilePaper: PropTypes.elementType,
-    MobileTransition: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    PaperContent: PropTypes.elementType,
-    Popper: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

@@ -106,20 +106,7 @@ MobileNextTimePicker.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    Dialog: PropTypes.elementType,
-    Field: PropTypes.elementType.isRequired,
-    Layout: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    MobilePaper: PropTypes.elementType,
-    MobileTransition: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    TextField: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -286,20 +273,7 @@ MobileNextTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    dialog: PropTypes.elementType,
-    field: PropTypes.elementType.isRequired,
-    layout: PropTypes.elementType,
-    leftArrowIcon: PropTypes.elementType,
-    mobilePaper: PropTypes.elementType,
-    mobileTransition: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-    textField: PropTypes.elementType,
-    toolbar: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

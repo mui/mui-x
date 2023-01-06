@@ -64,32 +64,7 @@ NextDateTimePicker.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    Day: PropTypes.elementType,
-    DesktopPaper: PropTypes.elementType,
-    DesktopTransition: PropTypes.elementType,
-    DesktopTrapFocus: PropTypes.elementType,
-    Dialog: PropTypes.elementType,
-    Field: PropTypes.elementType.isRequired,
-    InputAdornment: PropTypes.elementType,
-    Layout: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    MobilePaper: PropTypes.elementType,
-    MobileTransition: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    OpenPickerButton: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType.isRequired,
-    PaperContent: PropTypes.elementType,
-    Popper: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-    Tabs: PropTypes.elementType,
-    TextField: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -360,32 +335,7 @@ NextDateTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    day: PropTypes.elementType,
-    desktopPaper: PropTypes.elementType,
-    desktopTransition: PropTypes.elementType,
-    desktopTrapFocus: PropTypes.elementType,
-    dialog: PropTypes.elementType,
-    field: PropTypes.elementType.isRequired,
-    inputAdornment: PropTypes.elementType,
-    layout: PropTypes.elementType,
-    leftArrowIcon: PropTypes.elementType,
-    mobilePaper: PropTypes.elementType,
-    mobileTransition: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    openPickerButton: PropTypes.elementType,
-    openPickerIcon: PropTypes.elementType.isRequired,
-    paperContent: PropTypes.elementType,
-    popper: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-    switchViewButton: PropTypes.elementType,
-    switchViewIcon: PropTypes.elementType,
-    tabs: PropTypes.elementType,
-    textField: PropTypes.elementType,
-    toolbar: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

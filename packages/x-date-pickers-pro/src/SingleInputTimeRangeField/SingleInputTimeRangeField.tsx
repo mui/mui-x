@@ -79,9 +79,7 @@ SingleInputTimeRangeField.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    Input: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -262,9 +260,7 @@ SingleInputTimeRangeField.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    input: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

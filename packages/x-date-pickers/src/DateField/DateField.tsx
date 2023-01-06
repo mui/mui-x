@@ -74,9 +74,7 @@ DateField.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    TextField: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -259,9 +257,7 @@ DateField.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    textField: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

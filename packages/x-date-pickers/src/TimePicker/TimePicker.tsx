@@ -110,28 +110,7 @@ TimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    ActionBar: PropTypes.elementType,
-    DesktopPaper: PropTypes.elementType,
-    DesktopTransition: PropTypes.elementType,
-    DesktopTrapFocus: PropTypes.elementType,
-    dialog: PropTypes.elementType,
-    Dialog: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    mobilePaper: PropTypes.elementType,
-    MobilePaper: PropTypes.elementType,
-    mobileTransition: PropTypes.elementType,
-    MobileTransition: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    openPickerIcon: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    PaperContent: PropTypes.elementType,
-    Popper: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

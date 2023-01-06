@@ -153,30 +153,7 @@ DesktopDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    ActionBar: PropTypes.elementType,
-    Day: PropTypes.elementType,
-    desktopPaper: PropTypes.elementType,
-    DesktopPaper: PropTypes.elementType,
-    desktopTransition: PropTypes.elementType,
-    DesktopTransition: PropTypes.elementType,
-    desktopTrapFocus: PropTypes.elementType,
-    DesktopTrapFocus: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    openPickerIcon: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    paperContent: PropTypes.elementType,
-    PaperContent: PropTypes.elementType,
-    popper: PropTypes.elementType,
-    Popper: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -420,16 +397,7 @@ DesktopDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    day: PropTypes.elementType,
-    leftArrowIcon: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-    switchViewButton: PropTypes.elementType,
-    switchViewIcon: PropTypes.elementType,
-    toolbar: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

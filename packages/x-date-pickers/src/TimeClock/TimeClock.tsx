@@ -496,12 +496,7 @@ TimeClock.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    LeftArrowIcon: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -582,12 +577,7 @@ TimeClock.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    leftArrowIcon: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

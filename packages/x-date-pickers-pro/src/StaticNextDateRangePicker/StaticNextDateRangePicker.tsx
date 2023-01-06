@@ -76,18 +76,7 @@ StaticNextDateRangePicker.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    Day: PropTypes.elementType,
-    Layout: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -237,18 +226,7 @@ StaticNextDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    actionBar: PropTypes.elementType,
-    day: PropTypes.elementType,
-    layout: PropTypes.elementType,
-    leftArrowIcon: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-    switchViewButton: PropTypes.elementType,
-    switchViewIcon: PropTypes.elementType,
-    toolbar: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

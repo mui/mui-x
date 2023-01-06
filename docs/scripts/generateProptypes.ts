@@ -16,9 +16,9 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
     shouldResolveObject: ({ name }) => {
       const propsToNotResolve = [
         'classes',
-        // 'components',
+        'components',
         'componentsProps',
-        // 'slots',
+        'slots',
         'slotsProps',
         'columns',
         'currentColumn',

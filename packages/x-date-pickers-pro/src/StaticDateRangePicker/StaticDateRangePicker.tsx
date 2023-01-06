@@ -153,19 +153,7 @@ StaticDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.shape({
-    ActionBar: PropTypes.elementType,
-    Day: PropTypes.elementType,
-    LeftArrowIcon: PropTypes.elementType,
-    NextIconButton: PropTypes.elementType,
-    OpenPickerIcon: PropTypes.elementType,
-    PaperContent: PropTypes.elementType,
-    PreviousIconButton: PropTypes.elementType,
-    RightArrowIcon: PropTypes.elementType,
-    SwitchViewButton: PropTypes.elementType,
-    SwitchViewIcon: PropTypes.elementType,
-    Toolbar: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -400,16 +388,7 @@ StaticDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    day: PropTypes.elementType,
-    leftArrowIcon: PropTypes.elementType,
-    nextIconButton: PropTypes.elementType,
-    previousIconButton: PropTypes.elementType,
-    rightArrowIcon: PropTypes.elementType,
-    switchViewButton: PropTypes.elementType,
-    switchViewIcon: PropTypes.elementType,
-    toolbar: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}

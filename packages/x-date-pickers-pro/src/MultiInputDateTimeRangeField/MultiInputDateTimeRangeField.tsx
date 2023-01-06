@@ -191,11 +191,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.shape({
-    Root: PropTypes.elementType,
-    Separator: PropTypes.elementType,
-    TextField: PropTypes.elementType,
-  }),
+  components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
@@ -336,11 +332,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.shape({
-    root: PropTypes.elementType,
-    separator: PropTypes.elementType,
-    textField: PropTypes.elementType,
-  }),
+  slots: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
