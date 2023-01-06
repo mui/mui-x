@@ -2,6 +2,16 @@ import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 import { DateView } from '../internals/models';
 
+const views = {
+  // maps TimeView to its translation
+  hours: 'гадзіны',
+  minutes: 'хвіліны',
+  seconds: 'секунды',
+  // maps PickersToolbar["viewType"] to its translation
+  date: 'календара',
+  time: 'часу',
+};
+
 const beBYPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Папярэдні месяц',
@@ -16,8 +26,8 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
       : 'каляндарны выгляд адкрыты, перайсці да гадавога выгляду',
   inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
-      ? `тэкставае поле адкрыта, перайсці да  ${viewType} выгляду`
-      : `${viewType} выгляд зараз адкрыты, перайсці да тэкставага поля`,
+      ? `тэкставае поле адкрыта, перайсці да выгляду ${views[viewType]}`
+      : `Выгляд ${views[viewType]} зараз адкрыты, перайсці да тэкставага поля`,
 
   // DateRange placeholders
   start: 'Пачатак',
@@ -37,7 +47,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    `Абярыце ${views[view]}. ${
       time === null ? 'Час не абраны' : `Абраны час ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} гадзін`,
