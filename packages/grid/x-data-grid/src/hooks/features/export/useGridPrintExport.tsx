@@ -128,6 +128,8 @@ export const useGridPrintExport = (
       // Allow to overflow to not hide the border of the last row
       const gridMain: HTMLElement | null = gridClone.querySelector(`.${gridClasses.main}`);
       gridMain!.style.overflow = 'visible';
+      // See https://support.google.com/chrome/thread/191619088?hl=en&msgid=193009642
+      gridMain!.style.contain = 'size';
 
       const columnHeaders = gridClone.querySelector(`.${gridClasses.columnHeaders}`);
       const columnHeadersInner = columnHeaders!.querySelector<HTMLElement>(
