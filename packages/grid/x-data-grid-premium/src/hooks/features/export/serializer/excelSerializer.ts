@@ -142,7 +142,14 @@ const serializeRow = (
         if (value instanceof Date) {
           date = value;
         } else {
-          date = new Date((value ?? '').toString());
+          const valueString = (value ?? '').toString();
+          date = new Date(valueString);
+
+          if (Number.isNaN(date.getTime())) {
+            // Invalid date
+            row[column.field] = valueString;
+            break;
+          }
         }
         const utcDate = new Date(
           Date.UTC(
