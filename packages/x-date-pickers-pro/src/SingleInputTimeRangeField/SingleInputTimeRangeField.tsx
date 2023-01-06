@@ -94,7 +94,7 @@ SingleInputTimeRangeField.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -104,7 +104,7 @@ SingleInputTimeRangeField.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

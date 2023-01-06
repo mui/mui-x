@@ -2,12 +2,12 @@ import { TimeView } from '../../models/views';
 
 interface FutureAndPastValidationProps {
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast?: boolean;
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture?: boolean;
@@ -88,7 +88,7 @@ export interface MonthValidationProps<TDate> {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth?: (month: TDate) => boolean;
 }
@@ -101,7 +101,7 @@ export interface YearValidationProps<TDate> {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }

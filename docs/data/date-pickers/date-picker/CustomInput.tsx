@@ -1,5 +1,4 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import { TextFieldProps } from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -26,7 +25,6 @@ export default function CustomInput() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <NextDatePicker
         label="Custom input"
-        defaultValue={dayjs('2022-04-07')}
         components={{
           TextField: BrowserInput,
         }}

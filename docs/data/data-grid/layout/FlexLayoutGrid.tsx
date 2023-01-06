@@ -11,7 +11,7 @@ export default function FlexLayoutGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <div style={{ display: 'flex', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <div style={{ flexGrow: 1 }}>
           <DataGrid {...data} />
         </div>
