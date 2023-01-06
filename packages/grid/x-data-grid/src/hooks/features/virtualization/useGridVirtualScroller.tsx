@@ -502,6 +502,18 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+    if (cell) {
+      const selectedColumns = visibleColumns.filter((column) => column.field === cell.field);
+      if (selectedColumns.length > 0) {
+        const focusedColumn = selectedColumns[0];
+        const focusedColumnIndex = visibleColumns.indexOf(focusedColumn);
+        if (firstColumnToRender > focusedColumnIndex) {
+          renderedColumns.unshift(focusedColumn);
+        } else if (lastColumnToRender < focusedColumnIndex) {
+          renderedColumns.push(focusedColumn);
+        }
+      }
+    }
 
     const rows: JSX.Element[] = [];
 

@@ -450,11 +450,14 @@ const GridRow = React.forwardRef<
   const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
+  const isAdditionalColumnAdded = renderedColumns.length < lastColumnToRender - firstColumnToRender;
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
+    const isLastColumn = isAdditionalColumnAdded
+      ? indexRelativeToAllColumns === visibleColumns.length
+      : indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? rootProps.showCellVerticalBorder
