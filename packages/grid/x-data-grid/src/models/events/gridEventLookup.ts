@@ -187,7 +187,9 @@ export interface GridColumnHeaderEventLookup {
    * Fired when the index of a column changes.
    * @ignore - do not document.
    */
-  columnIndexChange: {};
+  columnIndexChange: {
+    params: GridColumnOrderChangeParams;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {

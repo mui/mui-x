@@ -35,6 +35,7 @@ import {
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
+import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 
 export const columnsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
@@ -221,7 +222,12 @@ export function useGridColumns(
         orderedFields: updatedColumns,
       });
 
-      apiRef.current.publishEvent('columnIndexChange');
+      const params: GridColumnOrderChangeParams = {
+        column: apiRef.current.getColumn(field),
+        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
+        oldIndex: oldIndexPosition,
+      };
+      apiRef.current.publishEvent('columnIndexChange', params);
     },
     [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns],
   );
