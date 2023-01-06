@@ -57,6 +57,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
+  | `headerHeight`             | `columnHeaderHeight`          |
 
 ### Removed props
 
@@ -64,6 +65,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
 
 ### State access
 
@@ -95,6 +97,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
+- The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
+  This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
+  For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
+  The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+
+  ```tsx
+  <DataGrid
+    onCellEditStop={(params, event) => {
+      if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+        return;
+      }
+      // Check if the target is inside a Portal
+      if (!event.currentTarget.contains(event.target)) {
+        event.defaultMuiPrevented = true;
+      }
+    }}
+  />
+  ```
+
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns
@@ -201,6 +222,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
 
 ### Editing
 
@@ -262,6 +284,16 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### CSS classes
 
+- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
+  ```diff
+  -'.MuiDataGrid-cell:focus-within': {
+  +'.MuiDataGrid-cell--outlined': {
+  ```
+  The new class name is also available in `gridClasses`:
+  ```diff
+  -`.${gridClasses.cell}:focus-within`: {
+  +`.${gridClasses['cell--outlined']}`: {
+  ```
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
