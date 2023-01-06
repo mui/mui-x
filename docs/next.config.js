@@ -9,11 +9,10 @@ const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 const { resolveGitRemoteUrl } = require('./utils');
 
-
 const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = async () => {
-  const remoteUrl = await resolveGitRemoteUrl('git config --get remote.origin.url');
+  const remoteUrl = await resolveGitRemoteUrl();
   return withDocsInfra({
     // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
     assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
@@ -48,7 +47,10 @@ module.exports = async () => {
         );
       }
 
-      const includesMonorepo = [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/];
+      const includesMonorepo = [
+        /(@mui[\\/]monorepo)$/,
+        /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/,
+      ];
 
       return {
         ...config,

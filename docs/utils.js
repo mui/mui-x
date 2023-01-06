@@ -1,4 +1,4 @@
-const childProcess = require("child_process");
+const childProcess = require('child_process');
 
 /**
  * @param {string} command A shell command to execute
@@ -37,16 +37,21 @@ function execute(command) {
 }
 
 async function resolveGitRemoteUrl() {
-  const result = await execute('git config --get remote.origin.url');
-  // eslint-disable-next-line no-console
-  console.info(result);
-  if (result.includes('git@')) {
-    return result.replace('git@', 'https://').replace('github.com:', 'github.com/');
+  try {
+    const result = await execute('git config --get remote.origin.url');
+    // eslint-disable-next-line no-console
+    console.info(result);
+    if (result.includes('git@')) {
+      return result.replace('git@', 'https://').replace('github.com:', 'github.com/');
+    }
+    return result;
+  } catch (err) {
+    console.warn('Unable to resolve git remote:', err);
+    return process.env.REPOSITORY_URL;
   }
-  return result;
 }
 
 module.exports = {
   execute,
   resolveGitRemoteUrl,
-}
+};
