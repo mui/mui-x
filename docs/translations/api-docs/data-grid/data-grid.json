@@ -172,6 +172,11 @@
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
     },
+    "cell--outlined": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell is outlined"
+    },
     "cell--rangeTop": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
