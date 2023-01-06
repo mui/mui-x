@@ -5,21 +5,15 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
-  DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotsComponent,
   DesktopDateTimePickerSlotsComponentsProps,
 } from '../DesktopDateTimePicker';
 import {
   MobileDateTimePicker,
   MobileDateTimePickerProps,
-  MobileDateTimePickerSlots,
   MobileDateTimePickerSlotsComponent,
   MobileDateTimePickerSlotsComponentsProps,
 } from '../MobileDateTimePicker';
-
-export interface DateTimePickerSlots<TDate>
-  extends MobileDateTimePickerSlots<TDate>,
-    DesktopDateTimePickerSlots<TDate> {}
 
 export interface DateTimePickerSlotsComponent<TDate>
   extends MobileDateTimePickerSlotsComponent<TDate>,

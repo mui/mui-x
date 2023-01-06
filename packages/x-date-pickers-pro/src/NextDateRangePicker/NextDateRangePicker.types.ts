@@ -1,4 +1,3 @@
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   DesktopNextDateRangePickerProps,
   DesktopNextDateRangePickerSlots,

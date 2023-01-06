@@ -4,31 +4,20 @@ import { SxProps } from '@mui/system';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
-  BaseDateTimePickerSlots,
   BaseDateTimePickerSlotsComponent,
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
 import {
   MobileWrapper,
   MobileWrapperProps,
-  MobileWrapperSlots,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
-import {
-  DateInputSlots,
-  DateInputSlotsComponent,
-  PureDateInput,
-} from '../internals/components/PureDateInput';
+import { DateInputSlotsComponent, PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-
-export interface MobileDateTimePickerSlots<TDate>
-  extends BaseDateTimePickerSlots<TDate>,
-    MobileWrapperSlots,
-    DateInputSlots {}
 
 export interface MobileDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,

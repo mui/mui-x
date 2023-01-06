@@ -13,7 +13,6 @@ import {
   DAY_MARGIN,
   DayCalendar,
   DayCalendarSlots,
-  DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
   defaultReduceAnimations,
   PickersArrowSwitcher,
@@ -28,7 +27,6 @@ import {
   PickerSelectionState,
   useNow,
   uncapitalizeObjectKeys,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {

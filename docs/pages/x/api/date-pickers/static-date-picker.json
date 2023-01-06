@@ -14,7 +14,7 @@
     "components": {
       "type": {
         "name": "shape",
-        "description": "{ actionBar?: elementType, ActionBar?: elementType, Day?: elementType, LeftArrowIcon?: elementType, NextIconButton?: elementType, OpenPickerIcon?: elementType, paperContent?: elementType, PaperContent?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Toolbar?: elementType }"
+        "description": "{ ActionBar?: elementType, Day?: elementType, LeftArrowIcon?: elementType, NextIconButton?: elementType, OpenPickerIcon?: elementType, PaperContent?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Toolbar?: elementType }"
       },
       "default": "{}"
     },
@@ -97,13 +97,11 @@
     }
   },
   "slots": {
-    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
-    "paperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },

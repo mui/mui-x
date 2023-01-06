@@ -3,7 +3,6 @@ import { SlotComponentProps } from '@mui/base/utils';
 import IconButton from '@mui/material/IconButton';
 import SvgIcon from '@mui/material/SvgIcon';
 import { PickersArrowSwitcherClasses } from './pickersArrowSwitcherClasses';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface ExportedPickersArrowSwitcherProps {
   /**

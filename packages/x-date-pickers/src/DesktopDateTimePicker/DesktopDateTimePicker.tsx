@@ -4,14 +4,12 @@ import { SxProps } from '@mui/system';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
-  BaseDateTimePickerSlots,
   BaseDateTimePickerSlotsComponent,
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
-  DesktopWrapperSlots,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
@@ -19,13 +17,8 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateInputSlots, DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-
-export interface DesktopDateTimePickerSlots<TDate>
-  extends BaseDateTimePickerSlots<TDate>,
-    DesktopWrapperSlots,
-    DateInputSlots {}
 
 export interface DesktopDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,

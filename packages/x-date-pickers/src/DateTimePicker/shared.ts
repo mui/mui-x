@@ -15,7 +15,6 @@ import {
   BaseTimeValidationProps,
 } from '../internals/hooks/validation/models';
 import {
-  CalendarOrClockPickerSlots,
   CalendarOrClockPickerSlotsComponent,
   CalendarOrClockPickerSlotsComponentsProps,
 } from '../internals/components/CalendarOrClockPicker';
@@ -30,20 +29,6 @@ import {
   ExportedDateTimePickerTabsProps,
 } from './DateTimePickerTabs';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
-
-export interface BaseDateTimePickerSlots<TDate>
-  extends CalendarOrClockPickerSlots<TDate, DateOrTimeView> {
-  /**
-   * Custom component for the toolbar rendered above the views.
-   * @default DateTimePickerToolbar
-   */
-  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
-  /**
-   * Tabs enabling toggling between date and time pickers.
-   * @default DateTimePickerTabs
-   */
-  tabs?: React.JSXElementConstructor<DateTimePickerTabsProps>;
-}
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends CalendarOrClockPickerSlotsComponent<TDate, DateOrTimeView> {

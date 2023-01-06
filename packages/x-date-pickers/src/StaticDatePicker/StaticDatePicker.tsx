@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
-  BaseDatePickerSlots,
   BaseDatePickerSlotsComponent,
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import {
   PickerStaticWrapper,
   PickersStaticWrapperSlotsComponentsProps,
-  PickersStaticWrapperSlots,
   PickersStaticWrapperSlotsComponent,
 } from '../internals/components/PickerStaticWrapper/PickerStaticWrapper';
 import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
@@ -22,7 +20,6 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 
 export interface StaticDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
-    PickersStaticWrapperSlots,
     PickersStaticWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
@@ -132,13 +129,11 @@ StaticDatePicker.propTypes = {
    * @default {}
    */
   components: PropTypes.shape({
-    actionBar: PropTypes.elementType,
     ActionBar: PropTypes.elementType,
     Day: PropTypes.elementType,
     LeftArrowIcon: PropTypes.elementType,
     NextIconButton: PropTypes.elementType,
     OpenPickerIcon: PropTypes.elementType,
-    paperContent: PropTypes.elementType,
     PaperContent: PropTypes.elementType,
     PreviousIconButton: PropTypes.elementType,
     RightArrowIcon: PropTypes.elementType,
