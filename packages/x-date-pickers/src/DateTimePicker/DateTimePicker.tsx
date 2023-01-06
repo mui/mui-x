@@ -5,15 +5,21 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   DesktopDateTimePicker,
   DesktopDateTimePickerProps,
+  DesktopDateTimePickerSlots,
   DesktopDateTimePickerSlotsComponent,
   DesktopDateTimePickerSlotsComponentsProps,
 } from '../DesktopDateTimePicker';
 import {
   MobileDateTimePicker,
   MobileDateTimePickerProps,
+  MobileDateTimePickerSlots,
   MobileDateTimePickerSlotsComponent,
   MobileDateTimePickerSlotsComponentsProps,
 } from '../MobileDateTimePicker';
+
+export interface DateTimePickerSlots<TDate>
+  extends MobileDateTimePickerSlots<TDate>,
+    DesktopDateTimePickerSlots<TDate> {}
 
 export interface DateTimePickerSlotsComponent<TDate>
   extends MobileDateTimePickerSlotsComponent<TDate>,
@@ -110,7 +116,27 @@ DateTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Tabs: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

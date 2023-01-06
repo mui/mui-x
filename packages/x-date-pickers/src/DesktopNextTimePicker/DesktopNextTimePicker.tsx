@@ -108,7 +108,25 @@ DesktopNextTimePicker.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    Field: PropTypes.elementType.isRequired,
+    InputAdornment: PropTypes.elementType,
+    Layout: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType.isRequired,
+    PaperContent: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    TextField: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -275,7 +293,25 @@ DesktopNextTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    desktopPaper: PropTypes.elementType,
+    desktopTransition: PropTypes.elementType,
+    desktopTrapFocus: PropTypes.elementType,
+    field: PropTypes.elementType.isRequired,
+    inputAdornment: PropTypes.elementType,
+    layout: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    openPickerButton: PropTypes.elementType,
+    openPickerIcon: PropTypes.elementType.isRequired,
+    paperContent: PropTypes.elementType,
+    popper: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    textField: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

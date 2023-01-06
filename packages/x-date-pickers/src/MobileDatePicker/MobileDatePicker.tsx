@@ -4,12 +4,14 @@ import { SxProps } from '@mui/system';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
+  BaseDatePickerSlots,
   BaseDatePickerSlotsComponent,
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import {
   MobileWrapper,
   MobileWrapperProps,
+  MobileWrapperSlots,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
@@ -18,6 +20,10 @@ import { useDateValidation } from '../internals/hooks/validation/useDateValidati
 import { PureDateInput } from '../internals/components/PureDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+export interface MobileDatePickerSlots<TDate>
+  extends BaseDatePickerSlots<TDate>,
+    MobileWrapperSlots {}
 
 export interface MobileDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
@@ -131,7 +137,21 @@ MobileDatePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

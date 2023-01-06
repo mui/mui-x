@@ -135,7 +135,20 @@ DesktopTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

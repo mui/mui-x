@@ -9,12 +9,12 @@ import {
   BaseDateValidationProps,
   BaseNextPickerInputProps,
   PickerViewRendererLookup,
-  UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 import {
+  DateRangeCalendarSlots,
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
   ExportedDateRangeCalendarProps,
@@ -25,6 +25,14 @@ import {
   ExportedDateRangePickerToolbarProps,
 } from '../DateRangePicker/DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
+
+export interface BaseNextDateRangePickerSlots<TDate> extends DateRangeCalendarSlots<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
 
 export interface BaseNextDateRangePickerSlotsComponent<TDate>
   extends DateRangeCalendarSlotsComponent<TDate> {
@@ -63,7 +71,7 @@ export interface BaseNextDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseNextDateRangePickerSlotsComponent<TDate>>;
+  slots?: BaseNextDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

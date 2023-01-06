@@ -4,6 +4,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
+  ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
@@ -11,15 +12,30 @@ import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
+  PickersPopperSlots,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
   DesktopOnlyPickerProps,
   UsePickerViewsProps,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+
+export interface UseDesktopRangePickerSlots<TDate, TView extends DateOrTimeView>
+  extends PickersPopperSlots,
+    ExportedPickersLayoutSlots<DateRange<TDate>, TView> {
+  field: React.ElementType;
+  fieldRoot?: React.ElementType<StackProps>;
+  fieldSeparator?: React.ElementType<TypographyProps>;
+  /**
+   * Form control with an input to render a date or time inside the default field.
+   * It is rendered twice: once for the start element and once for the end element.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType<TextFieldProps>;
+}
 
 export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
@@ -86,7 +102,7 @@ export interface UseDesktopRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
+  slots: UseDesktopRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

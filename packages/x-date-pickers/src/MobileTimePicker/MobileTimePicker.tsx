@@ -10,6 +10,7 @@ import {
 import {
   MobileWrapper,
   MobileWrapperProps,
+  MobileWrapperSlots,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/MobileWrapper';
@@ -20,6 +21,7 @@ import { usePickerState } from '../internals/hooks/usePickerState';
 
 export interface MobileTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
+    MobileWrapperSlots,
     MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
@@ -137,7 +139,23 @@ MobileTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    ActionBar: PropTypes.elementType,
+    dialog: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    mobilePaper: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    mobileTransition: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    openPickerIcon: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

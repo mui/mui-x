@@ -1,14 +1,27 @@
 {
   "props": {
     "classes": { "type": { "name": "object" } },
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, PaperContent?: elementType }"
+      },
+      "default": "{}",
+      "deprecated": true
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
     "localeText": { "type": { "name": "object" } },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, paperContent?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

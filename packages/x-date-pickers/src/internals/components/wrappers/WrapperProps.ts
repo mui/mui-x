@@ -12,6 +12,20 @@ export interface DateInputPropsLike
 }
 
 // TODO v6: Drop with the legacy pickers
+export interface PickersSlots {
+  /**
+   * Custom component for the action bar, it is placed bellow the picker views.
+   * @default PickersActionBar
+   */
+  actionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).
+   * @default React.Fragment
+   */
+  paperContent?: React.ElementType<{ children: React.ReactNode }>;
+}
+
+// TODO v6: Drop with the legacy pickers
 export interface PickersSlotsComponent {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.

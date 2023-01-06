@@ -1,13 +1,16 @@
 import * as React from 'react';
 import {
+  ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
+
+export interface UseStaticPickerSlots<TValue, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlots<TValue, TView> {}
 
 export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
   extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
@@ -50,7 +53,7 @@ export interface UseStaticPickerProps<
    * Overrideable components.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
+  slots: UseStaticPickerSlots<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}

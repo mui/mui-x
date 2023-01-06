@@ -14,6 +14,7 @@ import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
 import {
   DayCalendar,
+  DayCalendarSlots,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
   ExportedDayCalendarProps,
@@ -23,6 +24,7 @@ import { YearCalendar } from '../YearCalendar';
 import { ExportedUseViewsOptions, useViews } from '../internals/hooks/useViews';
 import {
   PickersCalendarHeader,
+  PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
@@ -40,6 +42,10 @@ import {
 import { DefaultizedProps } from '../internals/models/helpers';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+
+export interface DateCalendarSlots<TDate>
+  extends PickersCalendarHeaderSlots,
+    DayCalendarSlots<TDate> {}
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -98,7 +104,11 @@ export interface ExportedDateCalendarProps<TDate>
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
     ExportedUseViewsOptions<DateView>,
-    SlotsAndSlotsProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotsProps<
+      DateCalendarSlotsComponent<TDate>,
+      DateCalendarSlots<TDate>,
+      DateCalendarSlotsComponentsProps<TDate>
+    > {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -506,7 +516,15 @@ DateCalendar.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    Day: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -662,7 +680,15 @@ DateCalendar.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

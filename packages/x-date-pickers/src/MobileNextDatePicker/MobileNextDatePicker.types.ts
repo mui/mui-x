@@ -1,17 +1,22 @@
 import {
+  UseMobilePickerSlots,
   UseMobilePickerSlotsComponent,
   UseMobilePickerSlotsComponentsProps,
   MobileOnlyPickerProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseNextDatePickerProps,
+  BaseNextDatePickerSlots,
   BaseNextDatePickerSlotsComponent,
   BaseNextDatePickerSlotsComponentsProps,
 } from '../NextDatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { DateView } from '../internals/models/views';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface MobileNextDatePickerSlots<TDate>
+  extends BaseNextDatePickerSlots<TDate>,
+    MakeOptional<UseMobilePickerSlots<TDate, DateView>, 'field'> {}
 
 export interface MobileNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
@@ -41,7 +46,7 @@ export interface MobileNextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MobileNextDatePickerSlotsComponent<TDate>>;
+  slots?: MobileNextDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

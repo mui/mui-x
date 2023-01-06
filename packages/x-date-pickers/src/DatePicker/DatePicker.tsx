@@ -5,15 +5,21 @@ import PropTypes from 'prop-types';
 import {
   DesktopDatePicker,
   DesktopDatePickerProps,
+  DesktopDatePickerSlots,
   DesktopDatePickerSlotsComponent,
   DesktopDatePickerSlotsComponentsProps,
 } from '../DesktopDatePicker';
 import {
   MobileDatePicker,
   MobileDatePickerProps,
+  MobileDatePickerSlots,
   MobileDatePickerSlotsComponent,
   MobileDatePickerSlotsComponentsProps,
 } from '../MobileDatePicker';
+
+export interface DatePickerSlots<TDate>
+  extends MobileDatePickerSlots<TDate>,
+    DesktopDatePickerSlots<TDate> {}
 
 export interface DatePickerSlotsComponent<TDate>
   extends MobileDatePickerSlotsComponent<TDate>,
@@ -100,7 +106,26 @@ DatePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

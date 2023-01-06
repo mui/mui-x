@@ -9,8 +9,30 @@ import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
 import { PickersActionBar, PickersActionBarAction } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import {
+  PickersSlotsComponent,
+  PickersSlots,
+  PickersSlotsComponentsProps,
+} from './wrappers/WrapperProps';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+
+export interface PickersModalDialogSlots extends Pick<PickersSlots, 'actionBar'> {
+  /**
+   * Custom component for the dialog inside which the views are rendered on mobile.
+   * @default PickersModalDialogRoot
+   */
+  dialog?: React.ElementType<MuiDialogProps>;
+  /**
+   * Custom component for the paper rendered inside the mobile picker's Dialog.
+   * @default Paper from @mui/material
+   */
+  mobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
+  /**
+   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
+   * @default Fade from @mui/material
+   */
+  mobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
+}
 
 export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
   /**
@@ -63,7 +85,7 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersModalDialogSlotsComponent>;
+  slots?: PickersModalDialogSlots;
   /**
    * The props used for each component slot.
    * @default {}

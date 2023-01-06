@@ -8,13 +8,17 @@ export type UncapitalizeObjectKeys<T extends object> = {
   [key in UncapitalizeKeys<T>]: Capitalize<key> extends keyof T ? T[Capitalize<key>] : never;
 };
 
-export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
+// export type UncapitalizeObjectKeys<T = object> = {
+//   [key in keyof T as Uncapitalize<key & string>]: T[key];
+// };
+
+export interface SlotsAndSlotsProps<TSlotsLegacy, TSlots, TSlotsProps> {
   /**
    * Overrideable components.
    * @default {}
    * @deprecated
    */
-  components?: Partial<TSlots>;
+  components?: Partial<TSlotsLegacy>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -25,7 +29,7 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TSlots>;
+  slots?: TSlots;
   /**
    * The props used for each component slot.
    * @default {}

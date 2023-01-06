@@ -3,18 +3,21 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersPopper,
+  PickersPopperSlots,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../PickersPopper';
 import { DateInputPropsLike } from './WrapperProps';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
-import { DateInputSlotsComponent } from '../PureDateInput';
+import { DateInputSlots, DateInputSlotsComponent } from '../PureDateInput';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface DesktopWrapperProps {
   children?: React.ReactNode;
 }
+
+export interface DesktopWrapperSlots extends PickersPopperSlots, DateInputSlots {}
 
 export interface DesktopWrapperSlotsComponent
   extends PickersPopperSlotsComponent,

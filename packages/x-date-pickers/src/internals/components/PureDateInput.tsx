@@ -11,6 +11,14 @@ import { MuiPickersAdapter } from '../models';
 // TODO: make `variant` optional.
 export type MuiTextFieldProps = MuiTextFieldPropsType | Omit<MuiTextFieldPropsType, 'variant'>;
 
+export interface DateInputSlots {
+  /**
+   * Icon displayed in the open picker button.
+   * @default Calendar or Clock
+   */
+  openPickerIcon?: React.ElementType;
+}
+
 export interface DateInputSlotsComponent {
   /**
    * Icon displayed in the open picker button.

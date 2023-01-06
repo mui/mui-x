@@ -4,6 +4,7 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { TimeView } from '../TimeClock';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
+  TimeClockSlots,
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
@@ -20,7 +21,15 @@ import { TimeValidationError } from '../internals/hooks/validation/useTimeValida
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface BaseNextTimePickerSlots<TDate> extends TimeClockSlots {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default TimePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<TimePickerToolbarProps<TDate>>;
+}
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -58,7 +67,7 @@ export interface BaseNextTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseNextTimePickerSlotsComponent<TDate>>;
+  slots?: BaseNextTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -79,7 +88,10 @@ type UseNextTimePickerDefaultizedProps<
   Props extends BaseNextTimePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>
+  DefaultizedProps<
+    Props,
+    'views' | 'openTo' | 'slots' | 'slotsProps' | keyof BaseTimeValidationProps
+  >
 >;
 
 export function useNextTimePickerDefaultizedProps<

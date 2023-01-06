@@ -13,7 +13,13 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, ActionBar?: elementType, DesktopPaper?: elementType, DesktopTransition?: elementType, DesktopTrapFocus?: elementType, dialog?: elementType, Dialog?: elementType, LeftArrowIcon?: elementType, mobilePaper?: elementType, MobilePaper?: elementType, mobileTransition?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, openPickerIcon?: elementType, OpenPickerIcon?: elementType, PaperContent?: elementType, Popper?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
@@ -70,6 +76,7 @@
     }
   },
   "slots": {
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "DesktopTransition": {
@@ -80,11 +87,15 @@
       "default": "TrapFocus from @mui/material",
       "type": { "name": "elementType" }
     },
+    "dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "openPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },

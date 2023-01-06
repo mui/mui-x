@@ -16,7 +16,7 @@ export interface ExportedPickersArrowSwitcherProps {
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersArrowSwitcherSlotsComponent>;
+  slots?: PickersArrowSwitcherSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -42,6 +42,29 @@ export interface PickersArrowSwitcherProps
 export type PickersArrowSwitcherOwnerState = PickersArrowSwitcherProps;
 
 export interface PickersArrowSwitcherComponentsPropsOverrides {}
+
+export interface PickersArrowSwitcherSlots {
+  /**
+   * Button allowing to switch to the left view.
+   * @default IconButton
+   */
+  previousIconButton?: React.ElementType;
+  /**
+   * Button allowing to switch to the right view.
+   * @default IconButton
+   */
+  nextIconButton?: React.ElementType;
+  /**
+   * Icon displayed in the left view switch button.
+   * @default ArrowLeft
+   */
+  leftArrowIcon?: React.ElementType;
+  /**
+   * Icon displayed in the right view switch button.
+   * @default ArrowRight
+   */
+  rightArrowIcon?: React.ElementType;
+}
 
 export interface PickersArrowSwitcherSlotsComponent {
   /**

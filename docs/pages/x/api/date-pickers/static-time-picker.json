@@ -13,7 +13,13 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, LeftArrowIcon?: elementType, NextIconButton?: elementType, OpenPickerIcon?: elementType, PaperContent?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },

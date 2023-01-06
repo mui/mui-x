@@ -105,7 +105,12 @@ PickersLayout.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Layout: PropTypes.elementType,
+    Tabs: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -133,7 +138,12 @@ PickersLayout.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    layout: PropTypes.elementType,
+    tabs: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

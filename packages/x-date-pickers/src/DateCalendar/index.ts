@@ -1,6 +1,7 @@
 export { DateCalendar } from './DateCalendar';
 export type {
   DateCalendarProps,
+  DateCalendarSlots,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
 } from './DateCalendar';

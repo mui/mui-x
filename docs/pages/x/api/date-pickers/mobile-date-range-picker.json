@@ -16,7 +16,13 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, ActionBar?: elementType, Day?: elementType, dialog?: elementType, Dialog?: elementType, LeftArrowIcon?: elementType, mobilePaper?: elementType, MobilePaper?: elementType, mobileTransition?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, openPickerIcon?: elementType, OpenPickerIcon?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -68,7 +74,13 @@
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
     "showToolbar": { "type": { "name": "bool" } },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ day?: elementType, leftArrowIcon?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, switchViewButton?: elementType, switchViewIcon?: elementType, toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
@@ -78,13 +90,18 @@
     }
   },
   "slots": {
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
+    "dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "openPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },

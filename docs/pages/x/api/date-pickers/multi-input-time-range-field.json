@@ -1,7 +1,14 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ Root?: elementType, Separator?: elementType, TextField?: elementType }"
+      },
+      "default": "{}",
+      "deprecated": true
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
@@ -31,7 +38,13 @@
       }
     },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ root?: elementType, separator?: elementType, textField?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
       "type": {

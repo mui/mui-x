@@ -29,6 +29,15 @@ import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
 import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
 
+export interface DayCalendarSlots<TDate> {
+  /**
+   * Custom component for day.
+   * Check the [PickersDay](https://mui.com/x/api/date-pickers/pickers-day/) component.
+   * @default PickersDay
+   */
+  day?: React.ElementType<PickersDayProps<TDate>>;
+}
+
 export interface DayCalendarSlotsComponent<TDate> {
   /**
    * Custom component for day.
@@ -85,7 +94,11 @@ export interface DayCalendarProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    SlotsAndSlotsProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotsProps<
+      DayCalendarSlotsComponent<TDate>,
+      DayCalendarSlots<TDate>,
+      DayCalendarSlotsComponentsProps<TDate>
+    > {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;

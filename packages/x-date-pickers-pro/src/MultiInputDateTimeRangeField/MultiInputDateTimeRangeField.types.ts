@@ -3,7 +3,6 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDateTimeRangeFieldDefaultizedProps,
   UseDateTimeRangeFieldProps,
@@ -46,7 +45,7 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;
+  slots?: MultiInputDateTimeRangeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -56,6 +55,26 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
 
 export type MultiInputDateTimeRangeFieldOwnerState<TDate> =
   MultiInputDateTimeRangeFieldProps<TDate>;
+
+export interface MultiInputDateTimeRangeFieldSlots {
+  /**
+   * Element rendered at the root.
+   * @default MultiInputDateTimeRangeFieldRoot
+   */
+  root?: React.ElementType;
+  /**
+   * Form control with an input to render a date and time.
+   * It is rendered twice: once for the start date time and once for the end date time.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType;
+  /**
+   * Element rendered between the two inputs.
+   * @default MultiInputDateTimeRangeFieldSeparator
+   */
+  separator?: React.ElementType;
+}
 
 export interface MultiInputDateTimeRangeFieldSlotsComponent {
   /**

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
 import {
+  DateCalendarSlots,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
@@ -15,12 +16,7 @@ import {
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import {
-  BaseDateValidationProps,
-  DateView,
-  MuiPickersAdapter,
-  UncapitalizeObjectKeys,
-} from '../internals';
+import { BaseDateValidationProps, DateView, MuiPickersAdapter } from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -30,6 +26,14 @@ import {
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface BaseNextDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DatePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+}
 
 export interface BaseNextDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
@@ -63,7 +67,7 @@ export interface BaseNextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseNextDatePickerSlotsComponent<TDate>>;
+  slots?: BaseNextDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -84,7 +88,7 @@ type UseNextDatePickerDefaultizedProps<
   Props extends BaseNextDatePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
+  DefaultizedProps<Props, 'views' | 'openTo' | 'slots' | keyof BaseDateValidationProps<TDate>>
 >;
 
 export const getDatePickerFieldFormat = (

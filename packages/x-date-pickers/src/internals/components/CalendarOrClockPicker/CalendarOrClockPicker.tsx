@@ -5,6 +5,7 @@ import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
 import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
 import {
   DateCalendar,
+  DateCalendarSlots,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
 } from '../../../DateCalendar';
@@ -23,6 +24,12 @@ import {
   CalendarOrClockPickerClasses,
   getCalendarOrClockPickerUtilityClass,
 } from './calendarOrClockPickerClasses';
+
+export interface CalendarOrClockPickerSlots<TDate, TView extends DateOrTimeView>
+  extends DateCalendarSlots<TDate> {
+  tabs?: React.JSXElementConstructor<BaseTabsProps<TView>>;
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TDate | null, TView>>;
+}
 
 export interface CalendarOrClockPickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends DateCalendarSlotsComponent<TDate> {

@@ -16,7 +16,13 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, ActionBar?: elementType, Day?: elementType, desktopPaper?: elementType, DesktopPaper?: elementType, desktopTransition?: elementType, DesktopTransition?: elementType, desktopTrapFocus?: elementType, DesktopTrapFocus?: elementType, dialog?: elementType, Dialog?: elementType, LeftArrowIcon?: elementType, mobilePaper?: elementType, MobilePaper?: elementType, mobileTransition?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, openPickerIcon?: elementType, OpenPickerIcon?: elementType, paperContent?: elementType, PaperContent?: elementType, popper?: elementType, Popper?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -80,24 +86,40 @@
     }
   },
   "slots": {
+    "actionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
+    "desktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
+    "desktopTransition": {
+      "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
     "DesktopTransition": {
       "default": "Grow from @mui/material",
+      "type": { "name": "elementType" }
+    },
+    "desktopTrapFocus": {
+      "default": "TrapFocus from @mui/material",
       "type": { "name": "elementType" }
     },
     "DesktopTrapFocus": {
       "default": "TrapFocus from @mui/material",
       "type": { "name": "elementType" }
     },
+    "dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
+    "mobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
+    "mobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "openPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
+    "paperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
+    "popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },

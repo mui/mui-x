@@ -1,14 +1,20 @@
 import {
   BaseNextDatePickerProps,
+  BaseNextDatePickerSlots,
   BaseNextDatePickerSlotsComponent,
   BaseNextDatePickerSlotsComponentsProps,
 } from '../NextDatePicker/shared';
 import {
   StaticOnlyPickerProps,
+  UseStaticPickerSlots,
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
-import { DateView, MakeOptional, UncapitalizeObjectKeys } from '../internals';
+import { DateView, MakeOptional } from '../internals';
+
+export interface StaticNextDatePickerSlots<TDate>
+  extends BaseNextDatePickerSlots<TDate>,
+    UseStaticPickerSlots<TDate | null, DateView> {}
 
 export interface StaticNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
@@ -37,7 +43,7 @@ export interface StaticNextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<StaticNextDatePickerSlotsComponent<TDate>>;
+  slots?: StaticNextDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

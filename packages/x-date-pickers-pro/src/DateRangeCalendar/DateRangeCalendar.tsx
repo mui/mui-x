@@ -12,6 +12,7 @@ import {
   BaseDateValidationProps,
   DAY_MARGIN,
   DayCalendar,
+  DayCalendarSlots,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
   defaultReduceAnimations,
@@ -408,7 +409,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlots<TDate>;
 
   const slotsPropsForDayCalendar = {
     ...slotsProps,
@@ -451,7 +452,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   const visibleMonths = React.useMemo(
     () =>
@@ -585,7 +586,15 @@ DateRangeCalendar.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    Day: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -711,7 +720,15 @@ DateRangeCalendar.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

@@ -1,12 +1,14 @@
 export { DesktopTooltipWrapper } from './components/wrappers/DesktopTooltipWrapper';
 export type {
   DesktopWrapperProps,
+  DesktopWrapperSlots,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from './components/wrappers/DesktopWrapper';
 export { MobileWrapper } from './components/wrappers/MobileWrapper';
 export type {
   MobileWrapperProps,
+  MobileWrapperSlots,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
 } from './components/wrappers/MobileWrapper';
@@ -20,22 +22,26 @@ export type {
 export { PickersArrowSwitcher } from './components/PickersArrowSwitcher/PickersArrowSwitcher';
 export type {
   ExportedPickersArrowSwitcherProps,
+  PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from './components/PickersArrowSwitcher';
 export { PickersModalDialog } from './components/PickersModalDialog';
 export type {
+  PickersModalDialogSlots,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
 } from './components/PickersModalDialog';
 export { PickersPopper } from './components/PickersPopper';
 export type {
+  PickersPopperSlots,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from './components/PickersPopper';
 export { PickerStaticWrapper } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type { PickerStaticWrapperProps } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export type {
+  PickersStaticWrapperSlots,
   PickersStaticWrapperSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
@@ -82,10 +88,12 @@ export type {
   DateInputProps,
   ExportedDateInputProps,
   MuiTextFieldProps,
+  DateInputSlots,
   DateInputSlotsComponent,
 } from './components/PureDateInput';
 export type {
   DateInputPropsLike,
+  PickersSlots,
   PickersSlotsComponent,
   PickersSlotsComponentsProps,
 } from './components/wrappers/WrapperProps';
@@ -127,6 +135,7 @@ export type { PickerStateValueManager, PickerSelectionState } from './hooks/useP
 export { useStaticPicker } from './hooks/useStaticPicker';
 export type {
   StaticOnlyPickerProps,
+  UseStaticPickerSlots,
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from './hooks/useStaticPicker';
@@ -185,6 +194,7 @@ export type { UncapitalizeObjectKeys, SlotsAndSlotsProps } from './utils/slots-m
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
 export type {
   ExportedCalendarHeaderProps,
+  PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from '../DateCalendar/PickersCalendarHeader';
@@ -192,6 +202,7 @@ export type {
 export { DayCalendar } from '../DateCalendar/DayCalendar';
 export type {
   DayCalendarProps,
+  DayCalendarSlots,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
   ExportedDayCalendarProps,

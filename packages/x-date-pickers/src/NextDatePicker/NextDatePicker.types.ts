@@ -1,14 +1,19 @@
 import {
   DesktopNextDatePickerProps,
+  DesktopNextDatePickerSlots,
   DesktopNextDatePickerSlotsComponent,
   DesktopNextDatePickerSlotsComponentsProps,
 } from '../DesktopNextDatePicker';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileNextDatePickerProps,
+  MobileNextDatePickerSlots,
   MobileNextDatePickerSlotsComponent,
   MobileNextDatePickerSlotsComponentsProps,
 } from '../MobileNextDatePicker';
+
+export interface NextDatePickerSlots<TDate>
+  extends DesktopNextDatePickerSlots<TDate>,
+    MobileNextDatePickerSlots<TDate> {}
 
 export interface NextDatePickerSlotsComponents<TDate>
   extends DesktopNextDatePickerSlotsComponent<TDate>,
@@ -43,7 +48,7 @@ export interface NextDatePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<NextDatePickerSlotsComponents<TDate>>;
+  slots?: NextDatePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

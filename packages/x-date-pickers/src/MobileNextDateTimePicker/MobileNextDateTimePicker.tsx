@@ -15,7 +15,6 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -43,8 +42,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
-  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
@@ -52,12 +49,12 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: DateTimeField,
-      ...slots,
+      ...defaultizedProps.slots,
     },
     slotsProps: {
-      ...slotsProps,
+      ...defaultizedProps.slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -115,7 +112,24 @@ MobileNextDateTimePicker.propTypes = {
    * @default {}
    * deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    Field: PropTypes.elementType.isRequired,
+    Layout: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Tabs: PropTypes.elementType,
+    TextField: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -380,7 +394,24 @@ MobileNextDateTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    day: PropTypes.elementType,
+    dialog: PropTypes.elementType,
+    field: PropTypes.elementType.isRequired,
+    layout: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    mobilePaper: PropTypes.elementType,
+    mobileTransition: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+    tabs: PropTypes.elementType,
+    textField: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

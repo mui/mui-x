@@ -4,6 +4,7 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { SlotComponentProps } from '@mui/base/utils';
 import {
+  ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
@@ -11,15 +12,29 @@ import {
   DateOrTimeView,
   UsePickerParams,
   BaseNextPickerProps,
+  PickersModalDialogSlots,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
   UsePickerViewsProps,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+
+export interface UseMobileRangePickerSlots<TDate, TView extends DateOrTimeView>
+  extends PickersModalDialogSlots,
+    ExportedPickersLayoutSlots<DateRange<TDate>, TView> {
+  field: React.ElementType;
+  fieldRoot?: React.ElementType<StackProps>;
+  fieldSeparator?: React.ElementType<TypographyProps>;
+  /**
+   * Form control with an input to render a date or time inside the default field.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType<TextFieldProps>;
+}
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
@@ -73,7 +88,7 @@ export interface UseMobileRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
+  slots: UseMobileRangePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

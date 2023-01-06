@@ -52,6 +52,11 @@
     "OpenPickerIcon": "Icon displayed in the open picker button.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
-    "Toolbar": "Custom component for the toolbar rendered above the views."
+    "Toolbar": "Custom component for the toolbar rendered above the views.",
+    "actionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
+    "mobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
+    "mobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "openPickerIcon": "Icon displayed in the open picker button."
   }
 }

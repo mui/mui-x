@@ -1,6 +1,7 @@
 export { DateRangeCalendar } from './DateRangeCalendar';
 export type {
   DateRangeCalendarProps,
+  DateRangeCalendarSlots,
   DateRangeCalendarSlotsComponent,
   DateRangeCalendarSlotsComponentsProps,
   ExportedDateRangeCalendarProps,

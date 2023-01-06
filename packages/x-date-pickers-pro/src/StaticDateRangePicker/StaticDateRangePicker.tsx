@@ -115,7 +115,7 @@ export const StaticDateRangePicker = React.forwardRef(function StaticDateRangePi
         DateInputProps={DateInputProps}
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
-        slots={components}
+        components={components}
         slotsProps={componentsProps}
         {...pickerProps}
         {...other}
@@ -153,7 +153,19 @@ StaticDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -388,7 +400,16 @@ StaticDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

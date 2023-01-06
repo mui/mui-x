@@ -1,17 +1,22 @@
 import {
+  UseDesktopPickerSlots,
   UseDesktopPickerSlotsComponent,
   UseDesktopPickerSlotsComponentsProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
   BaseNextDateTimePickerProps,
+  BaseNextDateTimePickerSlots,
   BaseNextDateTimePickerSlotsComponent,
   BaseNextDateTimePickerSlotsComponentsProps,
 } from '../NextDateTimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { DateOrTimeView } from '../internals/models/views';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface DesktopNextDateTimePickerSlots<TDate>
+  extends BaseNextDateTimePickerSlots<TDate>,
+    MakeOptional<UseDesktopPickerSlots<TDate, DateOrTimeView>, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopNextDateTimePickerSlotsComponent<TDate>
   extends BaseNextDateTimePickerSlotsComponent<TDate>,
@@ -44,7 +49,7 @@ export interface DesktopNextDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DesktopNextDateTimePickerSlotsComponent<TDate>>;
+  slots?: DesktopNextDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

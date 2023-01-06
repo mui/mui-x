@@ -5,7 +5,7 @@ import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
-import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
+import { FieldsTextFieldProps } from '../internals';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;
@@ -52,7 +52,7 @@ export interface TimeFieldProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimeFieldSlotsComponent>;
+  slots?: TimeFieldSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -61,6 +61,15 @@ export interface TimeFieldProps<TDate>
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
+
+export interface TimeFieldSlots {
+  /**
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType;
+}
 
 export interface TimeFieldSlotsComponent {
   /**

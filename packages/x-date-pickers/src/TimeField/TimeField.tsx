@@ -79,7 +79,9 @@ TimeField.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    TextField: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -260,7 +262,9 @@ TimeField.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    textField: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

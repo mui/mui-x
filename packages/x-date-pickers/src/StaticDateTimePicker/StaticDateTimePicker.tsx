@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import {
   BaseDateTimePickerProps,
   useDateTimePickerDefaultizedProps,
+  BaseDateTimePickerSlots,
   BaseDateTimePickerSlotsComponent,
   BaseDateTimePickerSlotsComponentsProps,
 } from '../DateTimePicker/shared';
 import {
+  PickersStaticWrapperSlots,
   PickersStaticWrapperSlotsComponent,
   PickersStaticWrapperSlotsComponentsProps,
   PickerStaticWrapper,
@@ -15,8 +17,14 @@ import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPi
 import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { StaticPickerProps } from '../internals/models/props/staticPickerProps';
-import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { DateInputSlots, DateInputSlotsComponent } from '../internals/components/PureDateInput';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+export interface StaticDateTimePickerSlots<TDate>
+  extends BaseDateTimePickerSlots<TDate>,
+    PickersStaticWrapperSlots,
+    PickersStaticWrapperSlots,
+    DateInputSlots {}
 
 export interface StaticDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
@@ -154,7 +162,20 @@ StaticDateTimePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Tabs: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

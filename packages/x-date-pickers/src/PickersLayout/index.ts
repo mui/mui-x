@@ -1,6 +1,7 @@
 export { PickersLayout, PickersLayoutRoot, PickersLayoutContentWrapper } from './PickersLayout';
 export type {
   PickersLayoutProps,
+  PickersLayoutSlots,
   PickersLayoutSlotsComponent,
   PickersLayoutSlotsComponentsProps,
 } from './PickersLayout.types';

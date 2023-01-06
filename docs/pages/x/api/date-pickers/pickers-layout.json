@@ -1,11 +1,24 @@
 {
   "props": {
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, Layout?: elementType, Tabs?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}",
+      "deprecated": true
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, layout?: elementType, tabs?: elementType, toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {

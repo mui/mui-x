@@ -2,18 +2,21 @@ import * as React from 'react';
 import { WrapperVariantContext } from './WrapperVariantContext';
 import {
   PickersModalDialog,
+  PickersModalDialogSlots,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
 } from '../PickersModalDialog';
 import { DateInputPropsLike } from './WrapperProps';
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
-import { DateInputSlotsComponent } from '../PureDateInput';
+import { DateInputSlots, DateInputSlotsComponent } from '../PureDateInput';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export interface MobileWrapperProps {
   children?: React.ReactNode;
 }
+
+export interface MobileWrapperSlots extends PickersModalDialogSlots, DateInputSlots {}
 
 export interface MobileWrapperSlotsComponent
   extends PickersModalDialogSlotsComponent,

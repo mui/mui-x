@@ -8,7 +8,19 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { WrapperVariant } from '../internals/components/wrappers/WrapperVariantContext';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface ExportedPickersLayoutSlots<TValue, TView extends DateOrTimeView> {
+  /**
+   * Custom component for the action bar, it is placed bellow the picker views.
+   * @default PickersActionBar
+   */
+  actionBar?: React.ElementType<PickersActionBarProps>;
+  /**
+   * Custom component for wrapping the layout.
+   * It wraps the toolbar, views, and action bar.
+   */
+  layout?: React.JSXElementConstructor<PickersLayoutProps<TValue, TView>>;
+}
 
 export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {
   /**
@@ -43,6 +55,19 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
    * Props passed down to the layoutRoot component.
    */
   layout?: Partial<PickersLayoutProps<TValue, TView>>;
+}
+
+export interface PickersLayoutSlots<TValue, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlots<TValue, TView> {
+  /**
+   * Tabs enabling toggling between views.
+   */
+  tabs?: React.ElementType<BaseTabsProps<TView>>;
+  /**
+   * Custom component for the toolbar.
+   * It is placed above the picker views.
+   */
+  toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
 export interface PickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
@@ -97,7 +122,7 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TView>>;
+  slots?: PickersLayoutSlots<TValue, TView>;
   /**
    * The props used for each component slot.
    * @default {}

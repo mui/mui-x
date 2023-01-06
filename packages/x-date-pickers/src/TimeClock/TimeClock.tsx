@@ -14,6 +14,7 @@ import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import {
   PickersArrowSwitcher,
+  PickersArrowSwitcherSlots,
   PickersArrowSwitcherSlotsComponent,
   PickersArrowSwitcherSlotsComponentsProps,
 } from '../internals/components/PickersArrowSwitcher';
@@ -25,7 +26,6 @@ import { TimeView } from '../internals/models';
 import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
-import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -51,6 +51,8 @@ export interface ExportedTimeClockProps<TDate>
    */
   ampmInClock?: boolean;
 }
+
+export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 
 export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
 
@@ -86,7 +88,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;
+  slots?: TimeClockSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -494,7 +496,12 @@ TimeClock.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -575,7 +582,12 @@ TimeClock.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

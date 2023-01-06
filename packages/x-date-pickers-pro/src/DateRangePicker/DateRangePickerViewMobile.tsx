@@ -7,9 +7,11 @@ import {
   useUtils,
   DayCalendar,
   DayCalendarProps,
+  PickersCalendarHeaderSlots,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
   DayValidationProps,
+  DayCalendarSlots,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
   UncapitalizeObjectKeys,
@@ -20,6 +22,17 @@ import { DateRange } from '../internal/models/range';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
 
 import { isWithinRange, isStartOfRange, isEndOfRange } from '../internal/utils/date-utils';
+
+export interface DateRangePickerViewMobileSlots<TDate>
+  extends PickersCalendarHeaderSlots,
+    Omit<DayCalendarSlots<TDate>, 'day'> {
+  /**
+   * Custom component for day in range pickers.
+   * Check the [DateRangePickersDay](https://mui.com/x/api/date-pickers/date-range-picker-day/) component.
+   * @default DateRangePickersDay
+   */
+  day?: React.ElementType<DateRangePickerDayProps<TDate>>;
+}
 
 export interface DateRangePickerViewMobileSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -56,7 +69,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: UncapitalizeObjectKeys<DateRangePickerViewMobileSlotsComponent<TDate>>;
+  components?: DateRangePickerViewMobileSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -67,7 +80,7 @@ interface DesktopDateRangeCalendarProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateRangePickerViewMobileSlotsComponent<TDate>>;
+  slots?: DateRangePickerViewMobileSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -115,7 +128,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const slotsForDayCalendar = {
     day: DateRangePickerDay,
     ...slots,
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
+  } as DayCalendarSlots<TDate>;
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.

@@ -14,7 +14,6 @@ import {
   DayValidationProps,
   ExportedBaseToolbarProps,
   ExportedUseViewsOptions,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../internal/models/range';
 import { DayRangeValidationProps } from '../internal/models/dateRange';
@@ -22,6 +21,7 @@ import { isRangeValid } from '../internal/utils/date-utils';
 import { calculateRangeChange } from './date-range-manager';
 import {
   DateRangePickerViewMobile,
+  DateRangePickerViewMobileSlots,
   DateRangePickerViewMobileSlotsComponent,
   DateRangePickerViewMobileSlotsComponentsProps,
 } from './DateRangePickerViewMobile';
@@ -34,6 +34,14 @@ import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import { DateRangePickerToolbarProps } from './DateRangePickerToolbar';
 
 const releaseInfo = getReleaseInfo();
+
+export interface DateRangePickerViewSlots<TDate> extends DateRangePickerViewMobileSlots<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateRangePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<DateRangePickerToolbarProps<TDate>>;
+}
 
 export interface DateRangePickerViewSlotsComponent<TDate>
   extends DateRangePickerViewMobileSlotsComponent<TDate> {
@@ -71,7 +79,7 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<DateRangePickerViewSlotsComponent<TDate>>;
+  slots?: DateRangePickerViewSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

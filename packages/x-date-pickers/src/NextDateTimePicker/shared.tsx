@@ -4,11 +4,13 @@ import { DefaultizedProps } from '../internals/models/helpers';
 import { DateOrTimeView } from '../internals/models';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
+  DateCalendarSlots,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
 } from '../DateCalendar/DateCalendar';
 import {
+  TimeClockSlots,
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
@@ -35,7 +37,22 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
-import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+
+export interface BaseNextDateTimePickerSlots<TDate>
+  extends DateCalendarSlots<TDate>,
+    TimeClockSlots {
+  /**
+   * Tabs enabling toggling between date and time pickers.
+   * @default DateTimePickerTabs
+   */
+  tabs?: React.ElementType<DateTimePickerTabsProps>;
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DateTimePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<DateTimePickerToolbarProps<TDate>>;
+}
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -98,7 +115,7 @@ export interface BaseNextDateTimePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<BaseNextDateTimePickerSlotsComponent<TDate>>;
+  slots?: BaseNextDateTimePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -131,6 +148,8 @@ type UseNextDateTimePickerDefaultizedProps<
     | 'orientation'
     | 'ampmInClock'
     | 'ampm'
+    | 'slots'
+    | 'slotsProps'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
   >

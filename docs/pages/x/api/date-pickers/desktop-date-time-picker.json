@@ -13,7 +13,13 @@
       "type": { "name": "bool" },
       "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, Day?: elementType, DesktopPaper?: elementType, DesktopTransition?: elementType, DesktopTrapFocus?: elementType, LeftArrowIcon?: elementType, NextIconButton?: elementType, OpenPickerIcon?: elementType, PaperContent?: elementType, Popper?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, Tabs?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
     "dateRangeIcon": { "type": { "name": "node" } },
     "dayOfWeekFormatter": {

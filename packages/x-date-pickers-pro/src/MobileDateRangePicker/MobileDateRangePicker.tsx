@@ -7,6 +7,7 @@ import {
   MobileWrapperProps,
   usePickerState,
   DateInputPropsLike,
+  MobileWrapperSlots,
   MobileWrapperSlotsComponent,
   MobileWrapperSlotsComponentsProps,
   DateInputSlotsComponent,
@@ -30,6 +31,7 @@ const PureDateInputComponent = DateRangePickerInput as unknown as React.FC<DateI
 
 export interface MobileDateRangePickerSlotsComponent<TDate>
   extends BaseDateRangePickerSlotsComponent<TDate>,
+    MobileWrapperSlots,
     MobileWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
@@ -163,7 +165,26 @@ MobileDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    dialog: PropTypes.elementType,
+    Dialog: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    mobilePaper: PropTypes.elementType,
+    MobilePaper: PropTypes.elementType,
+    mobileTransition: PropTypes.elementType,
+    MobileTransition: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    openPickerIcon: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -407,7 +428,16 @@ MobileDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

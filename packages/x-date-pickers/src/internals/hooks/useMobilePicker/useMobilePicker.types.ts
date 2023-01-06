@@ -7,18 +7,34 @@ import {
   BaseNextPickerProps,
 } from '../../models/props/basePickerProps';
 import {
+  PickersModalDialogSlots,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
 } from '../../components/PickersModalDialog';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
+  ExportedPickersLayoutSlots,
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
+
+export interface UseMobilePickerSlots<TDate, TView extends DateOrTimeView>
+  extends PickersModalDialogSlots,
+    ExportedPickersLayoutSlots<TDate | null, TView> {
+  /**
+   * Component used to enter the date with the keyboard.
+   */
+  field: React.ElementType<BaseFieldProps<TDate | null, any>>;
+  /**
+   * Form control with an input to render the value inside the default field.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType<TextFieldProps>;
+}
 
 export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
@@ -66,7 +82,7 @@ export interface UseMobilePickerProps<
    * Overrideable components.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseMobilePickerSlotsComponent<TDate, TView>>;
+  slots: UseMobilePickerSlots<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

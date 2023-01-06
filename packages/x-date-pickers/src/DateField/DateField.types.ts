@@ -38,7 +38,11 @@ export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<
 
 export interface DateFieldProps<TDate>
   extends UseDateFieldComponentProps<TDate, FieldsTextFieldProps>,
-    SlotsAndSlotsProps<DateFieldSlotsComponent, DateFieldSlotsComponentsProps<TDate>> {}
+    SlotsAndSlotsProps<
+      DateFieldSlotsComponent,
+      DateFieldSlots,
+      DateFieldSlotsComponentsProps<TDate>
+    > {}
 
 export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
@@ -49,6 +53,15 @@ export interface DateFieldSlotsComponent {
    * @default TextField from '@mui/material'
    */
   TextField?: React.ElementType;
+}
+
+export interface DateFieldSlots {
+  /**
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
+   */
+  textField?: React.ElementType;
 }
 
 export interface DateFieldSlotsComponentsProps<TDate> {

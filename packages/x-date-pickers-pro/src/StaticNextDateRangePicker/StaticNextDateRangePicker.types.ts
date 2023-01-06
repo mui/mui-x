@@ -1,14 +1,20 @@
-import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
+import { MakeOptional } from '@mui/x-date-pickers/internals';
 import {
   StaticRangeOnlyPickerProps,
+  UseStaticRangePickerSlots,
   UseStaticRangePickerSlotsComponent,
   UseStaticRangePickerSlotsComponentsProps,
 } from '../internal/hooks/useStaticRangePicker';
 import {
   BaseNextDateRangePickerProps,
+  BaseNextDateRangePickerSlots,
   BaseNextDateRangePickerSlotsComponent,
   BaseNextDateRangePickerSlotsComponentsProps,
 } from '../NextDateRangePicker/shared';
+
+export interface StaticNextDateRangePickerSlots<TDate>
+  extends BaseNextDateRangePickerSlots<TDate>,
+    UseStaticRangePickerSlots<TDate, 'day'> {}
 
 export interface StaticNextDateRangePickerSlotsComponent<TDate>
   extends BaseNextDateRangePickerSlotsComponent<TDate>,
@@ -37,7 +43,7 @@ export interface StaticNextDateRangePickerProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<StaticNextDateRangePickerSlotsComponent<TDate>>;
+  slots?: StaticNextDateRangePickerSlots<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

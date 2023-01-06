@@ -15,8 +15,11 @@ import { PickersActionBar, PickersActionBarAction } from '../../../PickersAction
 import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
-import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
+import {
+  PickersSlots,
+  PickersSlotsComponent,
+  PickersSlotsComponentsProps,
+} from '../wrappers/WrapperProps';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -27,6 +30,9 @@ const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrappe
 
   return composeClasses(slots, getStaticWrapperUtilityClass, classes);
 };
+
+export interface PickersStaticWrapperSlots
+  extends Pick<PickersSlots, 'actionBar' | 'paperContent'> {}
 
 export interface PickersStaticWrapperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {}
@@ -72,7 +78,7 @@ export interface PickerStaticWrapperProps<TDate>
    * Overrideable components.
    * @default {}
    */
-  slots?: UncapitalizeObjectKeys<PickersStaticWrapperSlotsComponent>;
+  slots?: PickersStaticWrapperSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -178,7 +184,10 @@ PickerStaticWrapper.propTypes = {
    * @default {}
    * @deprecated
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -204,7 +213,10 @@ PickerStaticWrapper.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    paperContent: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

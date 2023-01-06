@@ -20,9 +20,35 @@ import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions
 import { PickersActionBar } from '../../PickersActionBar';
 import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
+import {
+  PickersSlots,
+  PickersSlotsComponent,
+  PickersSlotsComponentsProps,
+} from './wrappers/WrapperProps';
 import { getActiveElement } from '../utils/utils';
-import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+
+export interface PickersPopperSlots extends Pick<PickersSlots, 'actionBar' | 'paperContent'> {
+  /**
+   * Custom component for the paper rendered inside the desktop picker's Popper.
+   * @default PickersPopperPaper
+   */
+  desktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
+  /**
+   * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions).
+   * @default Grow from @mui/material
+   */
+  desktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
+  /**
+   * Custom component for trapping the focus inside the views on desktop.
+   * @default TrapFocus from @mui/material
+   */
+  desktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
+  /**
+   * Custom component for the popper inside which the views are rendered on desktop.
+   * @default Popper from @mui/material
+   */
+  popper?: React.ElementType<MuiPopperProps>;
+}
 
 export interface PickersPopperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
@@ -81,7 +107,7 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   onBlur?: () => void;
   components?: PickersPopperSlotsComponent;
   componentsProps?: PickersPopperSlotsComponentsProps;
-  slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
+  slots?: PickersPopperSlots;
   slotsProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;

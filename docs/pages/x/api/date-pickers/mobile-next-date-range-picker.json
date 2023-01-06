@@ -10,7 +10,14 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, Day?: elementType, Dialog?: elementType, Field: elementType, FieldRoot?: elementType, FieldSeparator?: elementType, Layout?: elementType, LeftArrowIcon?: elementType, MobilePaper?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, SwitchViewButton?: elementType, SwitchViewIcon?: elementType, TextField?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}",
+      "deprecated": true
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -57,7 +64,13 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, day?: elementType, dialog?: elementType, field: elementType, fieldRoot?: elementType, fieldSeparator?: elementType, layout?: elementType, leftArrowIcon?: elementType, mobilePaper?: elementType, mobileTransition?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, switchViewButton?: elementType, switchViewIcon?: elementType, textField?: elementType, toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

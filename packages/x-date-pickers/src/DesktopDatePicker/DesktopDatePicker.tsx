@@ -4,12 +4,14 @@ import { SxProps } from '@mui/system';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
+  BaseDatePickerSlots,
   BaseDatePickerSlotsComponent,
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import {
   DesktopWrapper,
   DesktopWrapperProps,
+  DesktopWrapperSlots,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
 } from '../internals/components/wrappers/DesktopWrapper';
@@ -18,6 +20,10 @@ import { useDateValidation } from '../internals/hooks/validation/useDateValidati
 import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
 import { usePickerState } from '../internals/hooks/usePickerState';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+
+export interface DesktopDatePickerSlots<TDate>
+  extends BaseDatePickerSlots<TDate>,
+    DesktopWrapperSlots {}
 
 export interface DesktopDatePickerSlotsComponent<TDate>
   extends BaseDatePickerSlotsComponent<TDate>,
@@ -128,7 +134,23 @@ DesktopDatePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}

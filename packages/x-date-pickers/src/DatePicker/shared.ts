@@ -3,6 +3,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { DateView, MuiPickersAdapter } from '../internals/models';
 import {
+  DateCalendarSlots,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
@@ -21,6 +22,14 @@ import {
 } from './DatePickerToolbar';
 import { isYearOnlyView, isYearAndMonthViews } from '../internals/utils/views';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
+
+export interface BaseDatePickerSlots<TDate> extends DateCalendarSlots<TDate> {
+  /**
+   * Custom component for the toolbar rendered above the views.
+   * @default DatePickerToolbar
+   */
+  toolbar?: React.JSXElementConstructor<DatePickerToolbarProps<TDate>>;
+}
 
 export interface BaseDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**

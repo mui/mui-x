@@ -3,11 +3,7 @@ import { SlotComponentProps } from '@mui/base/utils';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import {
-  BaseFieldProps,
-  FieldSection,
-  UncapitalizeObjectKeys,
-} from '@mui/x-date-pickers/internals';
+import { BaseFieldProps, FieldSection } from '@mui/x-date-pickers/internals';
 
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
@@ -15,6 +11,12 @@ export interface RangeFieldSection extends FieldSection {
 
 export interface RangeFieldSectionWithoutPosition
   extends Omit<RangeFieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'> {}
+
+type BaseMultiInputFieldSlots = {
+  root?: React.ElementType<StackProps>;
+  textField?: React.ElementType<TextFieldProps>;
+  separator?: React.ElementType<TypographyProps>;
+};
 
 type BaseMultiInputFieldSlotsComponent = {
   Root?: React.ElementType<StackProps>;
@@ -45,6 +47,6 @@ export interface BaseMultiInputFieldProps<TValue, TError>
    * @deprecated
    */
   componentsProps?: BaseMultiInputFieldSlotsComponentsProps;
-  slots?: UncapitalizeObjectKeys<BaseMultiInputFieldSlotsComponent>;
+  slots?: BaseMultiInputFieldSlots;
   slotsProps?: BaseMultiInputFieldSlotsComponentsProps;
 }

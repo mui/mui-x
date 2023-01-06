@@ -8,7 +8,14 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": {
+        "name": "shape",
+        "description": "{ ActionBar?: elementType, Dialog?: elementType, Field: elementType, Layout?: elementType, LeftArrowIcon?: elementType, MobilePaper?: elementType, MobileTransition?: elementType, NextIconButton?: elementType, PreviousIconButton?: elementType, RightArrowIcon?: elementType, TextField?: elementType, Toolbar?: elementType }"
+      },
+      "default": "{}",
+      "deprecated": true
+    },
     "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -53,7 +60,13 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": {
+        "name": "shape",
+        "description": "{ actionBar?: elementType, dialog?: elementType, field: elementType, layout?: elementType, leftArrowIcon?: elementType, mobilePaper?: elementType, mobileTransition?: elementType, nextIconButton?: elementType, previousIconButton?: elementType, rightArrowIcon?: elementType, textField?: elementType, toolbar?: elementType }"
+      },
+      "default": "{}"
+    },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {

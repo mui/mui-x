@@ -7,6 +7,7 @@ import {
   usePickerState,
   DateInputPropsLike,
   DesktopWrapperProps,
+  DesktopWrapperSlots,
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
   DateInputSlotsComponent,
@@ -30,6 +31,7 @@ const KeyboardDateInputComponent = DateRangePickerInput as unknown as React.FC<D
 
 export interface DesktopDateRangePickerSlotsComponent<TDate>
   extends BaseDateRangePickerSlotsComponent<TDate>,
+    DesktopWrapperSlots,
     DesktopWrapperSlotsComponent,
     DateInputSlotsComponent {}
 
@@ -151,7 +153,30 @@ DesktopDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  components: PropTypes.object,
+  components: PropTypes.shape({
+    actionBar: PropTypes.elementType,
+    ActionBar: PropTypes.elementType,
+    Day: PropTypes.elementType,
+    desktopPaper: PropTypes.elementType,
+    DesktopPaper: PropTypes.elementType,
+    desktopTransition: PropTypes.elementType,
+    DesktopTransition: PropTypes.elementType,
+    desktopTrapFocus: PropTypes.elementType,
+    DesktopTrapFocus: PropTypes.elementType,
+    LeftArrowIcon: PropTypes.elementType,
+    NextIconButton: PropTypes.elementType,
+    openPickerIcon: PropTypes.elementType,
+    OpenPickerIcon: PropTypes.elementType,
+    paperContent: PropTypes.elementType,
+    PaperContent: PropTypes.elementType,
+    popper: PropTypes.elementType,
+    Popper: PropTypes.elementType,
+    PreviousIconButton: PropTypes.elementType,
+    RightArrowIcon: PropTypes.elementType,
+    SwitchViewButton: PropTypes.elementType,
+    SwitchViewIcon: PropTypes.elementType,
+    Toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
@@ -395,7 +420,16 @@ DesktopDateRangePicker.propTypes = {
    * Overrideable components.
    * @default {}
    */
-  slots: PropTypes.object,
+  slots: PropTypes.shape({
+    day: PropTypes.elementType,
+    leftArrowIcon: PropTypes.elementType,
+    nextIconButton: PropTypes.elementType,
+    previousIconButton: PropTypes.elementType,
+    rightArrowIcon: PropTypes.elementType,
+    switchViewButton: PropTypes.elementType,
+    switchViewIcon: PropTypes.elementType,
+    toolbar: PropTypes.elementType,
+  }),
   /**
    * The props used for each component slot.
    * @default {}
