@@ -32,7 +32,6 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
