@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', {
@@ -69,7 +69,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -109,7 +109,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           checkboxSelectionVisibleOnly={false}
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -142,7 +142,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           checkboxSelectionVisibleOnly
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -164,7 +164,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           checkboxSelectionVisibleOnly
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -187,7 +187,7 @@ describe('<DataGridPro /> - Row Selection', () => {
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 

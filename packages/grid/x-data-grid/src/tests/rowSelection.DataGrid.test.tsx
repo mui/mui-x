@@ -236,7 +236,7 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
-          rowsPerPageOptions={[1]}
+          pageSizeOptions={[1]}
         />,
       );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
@@ -325,7 +325,7 @@ describe('<DataGrid /> - Row Selection', () => {
           checkboxSelection
           pagination
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -647,7 +647,7 @@ describe('<DataGrid /> - Row Selection', () => {
           checkboxSelection
           pagination
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
@@ -666,7 +666,7 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );

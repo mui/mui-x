@@ -95,7 +95,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
-          rowsPerPageOptions={[100, 2]}
+          pageSizeOptions={[100, 2]}
           {...props}
           initialState={{
             ...props.initialState,
@@ -266,7 +266,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           <TestCase
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            rowsPerPageOptions={[paginationModel.pageSize]}
+            pageSizeOptions={[paginationModel.pageSize]}
           />
         );
       }

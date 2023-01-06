@@ -59,7 +59,7 @@ export default function DataGridDemo() {
         columns={columns}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        rowsPerPageOptions={[5]}
+        pageSizeOptions={[5]}
         checkboxSelection
         disableRowSelectionOnClick
       />

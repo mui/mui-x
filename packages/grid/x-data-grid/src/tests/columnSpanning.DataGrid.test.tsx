@@ -709,7 +709,7 @@ describe('<DataGrid /> - Column Spanning', () => {
             pagination
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            rowsPerPageOptions={[pageSize]}
+            pageSizeOptions={[pageSize]}
             disableVirtualization={isJSDOM}
           />
         </div>
@@ -860,7 +860,7 @@ describe('<DataGrid /> - Column Spanning', () => {
         <div style={{ width: 390, height: 300 }}>
           <DataGrid
             pagination
-            rowsPerPageOptions={[3]}
+            pageSizeOptions={[3]}
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
             columns={[

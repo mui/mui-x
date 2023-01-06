@@ -558,6 +558,11 @@ DataGridRaw.propTypes = {
    * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
+  /**
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
+   */
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
@@ -634,11 +639,6 @@ DataGridRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3

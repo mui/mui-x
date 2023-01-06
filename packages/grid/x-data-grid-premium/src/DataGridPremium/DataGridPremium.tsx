@@ -768,6 +768,11 @@ DataGridPremiumRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
+   */
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
+  /**
    * If `true`, pagination is enabled.
    * @default false
    */
@@ -871,11 +876,6 @@ DataGridPremiumRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3

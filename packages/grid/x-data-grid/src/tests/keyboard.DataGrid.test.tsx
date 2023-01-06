@@ -36,7 +36,7 @@ describe('<DataGrid /> - Keyboard', () => {
   function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
-      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
@@ -50,7 +50,7 @@ describe('<DataGrid /> - Keyboard', () => {
           rows={data.rows}
           columns={transformColSizes(data.columns)}
           initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
-          rowsPerPageOptions={[PAGE_SIZE]}
+          pageSizeOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
           headerHeight={HEADER_HEIGHT}
@@ -464,7 +464,7 @@ describe('<DataGrid /> - Keyboard', () => {
     function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
-        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
@@ -478,7 +478,7 @@ describe('<DataGrid /> - Keyboard', () => {
             rows={data.rows}
             columns={transformColSizes(data.columns)}
             paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
-            rowsPerPageOptions={[PAGE_SIZE]}
+            pageSizeOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
             headerHeight={HEADER_HEIGHT}

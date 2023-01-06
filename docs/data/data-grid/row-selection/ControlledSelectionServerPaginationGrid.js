@@ -53,7 +53,7 @@ export default function ControlledSelectionServerPaginationGrid() {
         pagination
         checkboxSelection
         paginationModel={paginationModel}
-        rowsPerPageOptions={[5]}
+        pageSizeOptions={[5]}
         rowCount={100}
         paginationMode="server"
         onPaginationModelChange={setPaginationModel}

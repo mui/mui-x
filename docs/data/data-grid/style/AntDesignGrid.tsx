@@ -140,7 +140,7 @@ export default function AntDesignGrid() {
         checkboxSelection
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        rowsPerPageOptions={[5]}
+        pageSizeOptions={[5]}
         components={{
           Pagination: CustomPagination,
         }}

@@ -418,7 +418,7 @@ describe('<DataGridPro /> - Tree Data', () => {
           pagination
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          rowsPerPageOptions={[paginationModel.pageSize]}
+          pageSizeOptions={[paginationModel.pageSize]}
         />
       );
     }

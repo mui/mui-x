@@ -78,7 +78,7 @@ export default function CsvGetRowsToExport() {
         components={{ Toolbar: CustomToolbar }}
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
-        rowsPerPageOptions={[10]}
+        pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,
           filter: {

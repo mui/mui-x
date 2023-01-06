@@ -149,7 +149,7 @@ describe('<DataGrid /> - Rows', () => {
             columns={columns}
             getRowClassName={getRowClassName}
             initialState={{ pagination: { paginationModel: { pageSize: 3, page: 0 } } }}
-            rowsPerPageOptions={[3]}
+            pageSizeOptions={[3]}
           />
         </div>,
       );
@@ -815,7 +815,7 @@ describe('<DataGrid /> - Rows', () => {
               hideFooter={false}
               paginationModel={paginationModel}
               onPaginationModelChange={setPaginationModel}
-              rowsPerPageOptions={[5, 10]}
+              pageSizeOptions={[5, 10]}
               height={headerHeight + 10 * measuredRowHeight}
               {...data}
             />
@@ -869,7 +869,7 @@ describe('<DataGrid /> - Rows', () => {
         const { setProps } = render(
           <PaginatedTestCaseBio
             initialModel={{ pageSize: 25, page: 0 }}
-            rowsPerPageOptions={[10, 25]}
+            pageSizeOptions={[10, 25]}
           />,
         );
 
@@ -914,7 +914,7 @@ describe('<DataGrid /> - Rows', () => {
         <TestCase
           getRowSpacing={getRowSpacing}
           initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       expect(getRowSpacing.args[0][0]).to.deep.equal({

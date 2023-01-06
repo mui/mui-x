@@ -506,7 +506,7 @@ describe('<DataGridPro /> - Rows', () => {
             pagination
             rowHeight={50}
             initialState={{ pagination: { paginationModel: { pageSize: nbRows } } }}
-            rowsPerPageOptions={[nbRows]}
+            pageSizeOptions={[nbRows]}
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
@@ -525,7 +525,7 @@ describe('<DataGridPro /> - Rows', () => {
           <TestCaseVirtualization
             pagination
             initialState={{ pagination: { paginationModel: { pageSize: 32, page: 3 } } }}
-            rowsPerPageOptions={[32]}
+            pageSizeOptions={[32]}
             height={500}
           />,
         );
@@ -680,7 +680,7 @@ describe('<DataGridPro /> - Rows', () => {
       render(
         <TestCase
           initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
-          rowsPerPageOptions={[6]}
+          pageSizeOptions={[6]}
           pagination
         />,
       );

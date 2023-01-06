@@ -215,7 +215,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       <TestCase
         getDetailPanelContent={({ id }) => <div>Row {id}</div>}
         pagination
-        rowsPerPageOptions={[1]}
+        pageSizeOptions={[1]}
         initialState={{
           detailPanel: { expandedRowIds: [0] },
           pagination: { paginationModel: { pageSize: 1 } },
@@ -332,7 +332,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={getDetailPanelContent}
         pagination
-        rowsPerPageOptions={[1]}
+        pageSizeOptions={[1]}
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
@@ -368,7 +368,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
         pagination
-        rowsPerPageOptions={[1]}
+        pageSizeOptions={[1]}
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
@@ -407,7 +407,7 @@ describe('<DataGridPro /> - Detail panel', () => {
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
         pagination
-        rowsPerPageOptions={[1]}
+        pageSizeOptions={[1]}
         initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
         autoHeight
       />,

@@ -288,7 +288,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  rowsPerPageOptions: number[];
+  pageSizeOptions: number[];
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
