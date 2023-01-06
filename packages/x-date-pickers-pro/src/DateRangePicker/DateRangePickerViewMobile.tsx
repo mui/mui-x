@@ -14,7 +14,6 @@ import {
   DayCalendarSlots,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
@@ -155,7 +154,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <React.Fragment>
