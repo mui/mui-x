@@ -125,7 +125,27 @@ LayoutWithKeyboardView.propTypes = {
        * Overrideable components.
        * @default {}
        */
-      slots: PropTypes.object,
+      slots: PropTypes.shape({
+        /**
+         * Custom component for the action bar, it is placed bellow the picker views.
+         * @default PickersActionBar
+         */
+        actionBar: PropTypes.elementType,
+        /**
+         * Custom component for wrapping the layout.
+         * It wraps the toolbar, views, and action bar.
+         */
+        layout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+        /**
+         * Tabs enabling toggling between views.
+         */
+        tabs: PropTypes.elementType,
+        /**
+         * Custom component for the toolbar.
+         * It is placed above the picker views.
+         */
+        toolbar: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+      }),
       /**
        * The props used for each component slot.
        * @default {}
