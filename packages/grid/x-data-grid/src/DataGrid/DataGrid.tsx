@@ -191,7 +191,6 @@ DataGridRaw.propTypes = {
    */
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
-    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
