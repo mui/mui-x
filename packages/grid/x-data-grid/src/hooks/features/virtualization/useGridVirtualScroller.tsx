@@ -460,10 +460,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           columns: visibleColumns,
         });
       }
+
       // If the selected row is not within the current range of rows being displayed,
       // we need to render it at either the top or bottom of the rows,
       // depending on whether it is above or below the range.
-
       if (!isFocusedCellRendered && cell && !disableVirtualization) {
         const rows = currentPage.rows.filter((row) => row.id === cell.id);
         const focusedRow = rows.length > 0 && rows[0];
@@ -502,11 +502,18 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-    if (cell) {
+
+    // If the selected column is not within the current range of columns being displayed,
+    // we need to render it at either the left or right of the columns,
+    // depending on whether it is above or below the range.
+    const isAllColumnRendered =
+      maxLastColumn - minFirstColumn === lastColumnToRender - firstColumnToRender;
+    if (cell && !disableVirtualization && !isAllColumnRendered) {
       const selectedColumns = visibleColumns.filter((column) => column.field === cell.field);
       if (selectedColumns.length > 0) {
         const focusedColumn = selectedColumns[0];
         const focusedColumnIndex = visibleColumns.indexOf(focusedColumn);
+
         if (firstColumnToRender > focusedColumnIndex) {
           renderedColumns.unshift(focusedColumn);
         } else if (lastColumnToRender < focusedColumnIndex) {
