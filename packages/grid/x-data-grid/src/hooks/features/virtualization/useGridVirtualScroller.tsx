@@ -502,18 +502,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
 
     const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-    if (cell) {
-      const selectedColumns = visibleColumns.filter((column) => column.field === cell.field);
-      if (selectedColumns.length > 0) {
-        const focusedColumn = selectedColumns[0];
-        const focusedColumnIndex = visibleColumns.indexOf(focusedColumn);
-        if (firstColumnToRender > focusedColumnIndex) {
-          renderedColumns.unshift(focusedColumn);
-        } else if (lastColumnToRender < focusedColumnIndex) {
-          renderedColumns.push(focusedColumn);
-        }
-      }
-    }
 
     // If the selected column is not within the current range of columns being displayed,
     // we need to render it at either the left or right of the columns,
