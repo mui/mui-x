@@ -424,7 +424,7 @@ const DataGridProVirtualScroller = React.forwardRef<
         )}
         <GridVirtualScrollerRenderZone {...getRenderZoneProps()}>
           {mainRows}
-          <div id='mui-data-grid-last-row-id' />
+          <div id="mui-data-grid-last-row-id" style={{ minHeight: 1 }} />
         </GridVirtualScrollerRenderZone>
         {rightRenderContext && (
           <VirtualScrollerPinnedColumns
