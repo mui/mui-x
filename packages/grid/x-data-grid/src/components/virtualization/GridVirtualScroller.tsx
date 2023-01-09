@@ -24,6 +24,7 @@ const VirtualScrollerRoot = styled('div', {
   overridesResolver: (props, styles) => styles.virtualScroller,
 })({
   overflow: 'auto',
+  height: '100%',
   // See https://github.com/mui/mui-x/issues/4360
   position: 'relative',
   '@media print': {

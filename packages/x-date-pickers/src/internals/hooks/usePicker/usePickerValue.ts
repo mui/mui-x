@@ -127,8 +127,8 @@ export interface UsePickerValueNonStaticProps<TValue>
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect?: boolean;
   /**

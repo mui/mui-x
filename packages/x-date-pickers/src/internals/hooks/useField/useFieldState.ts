@@ -73,7 +73,7 @@ export const useFieldState = <
   const {
     valueManager,
     fieldValueManager,
-    supportedDateSections,
+    valueType,
     validator,
     internalProps,
     internalProps: {
@@ -109,7 +109,7 @@ export const useFieldState = <
       valueFromTheOutside,
       format,
     );
-    validateSections(sections, supportedDateSections);
+    validateSections(sections, valueType);
 
     return {
       sections,
@@ -405,7 +405,7 @@ export const useFieldState = <
       state.value,
       format,
     );
-    validateSections(sections, supportedDateSections);
+    validateSections(sections, valueType);
     setState((prevState) => ({
       ...prevState,
       sections,

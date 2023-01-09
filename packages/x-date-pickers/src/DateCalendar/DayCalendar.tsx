@@ -48,7 +48,7 @@ export interface DayCalendarSlotsComponentsProps<TDate> {
 export interface ExportedDayCalendarProps<TDate>
   extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */

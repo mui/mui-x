@@ -8,7 +8,7 @@ packageName: '@mui/x-date-pickers-pro'
 
 # Time Range Field [<span class="plan-pro"></span>](https://mui.com/store/items/mui-x-pro/)
 
-<p class="description">The Time Range Field let the user select a time range with the keyboard.</p>
+<p class="description">The Time Range Field component let the user select a time range with the keyboard.</p>
 
 ## Basic usage
 
