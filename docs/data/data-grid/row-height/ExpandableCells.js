@@ -84,7 +84,7 @@ for (let i = 0; i < 10; i += 1) {
 
 export default function ExpandableCells() {
   return (
-    <div style={{ height: 400, width: 800 }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
