@@ -29,6 +29,14 @@ const MultiInputDateRangeFieldSeparator = styled(
   },
 )({});
 
+const MultiInputDateRangeFieldTextField = styled(MuiTextField, {
+  name: 'MuiMultiInputDateRangeField',
+  slot: 'TextField',
+  overridesResolver: (props, styles) => styles.textField,
+})({
+  flexGrow: 1,
+});
+
 type MultiInputDateRangeFieldComponent = (<TDate>(
   props: MultiInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any };
@@ -76,7 +84,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     ownerState,
   });
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = components?.TextField ?? MultiInputDateRangeFieldTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: componentsProps?.textField,

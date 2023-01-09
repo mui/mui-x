@@ -43,6 +43,7 @@ export const useDesktopPicker = <
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const fieldRef = React.useRef<HTMLDivElement>(null);
 
   const {
     open,
@@ -73,6 +74,7 @@ export const useDesktopPicker = <
       className,
       format,
       autoFocus: autoFocus && !props.open,
+      ref: fieldRef,
     },
     ownerState: props,
   });
@@ -149,7 +151,8 @@ export const useDesktopPicker = <
         />
         <PickersPopper
           role="dialog"
-          anchorEl={inputRef.current}
+          placement="bottom-start"
+          anchorEl={fieldRef.current}
           {...actions}
           open={open}
           components={{
