@@ -10,6 +10,8 @@ export interface DateTimePickerToolbarClasses {
   dateContainer: string;
   /** Styles applied to the time container element. */
   timeContainer: string;
+  /** Styles applied to the time (except am/pm) container element. */
+  timeDigitsContainer: string;
   /** Styles applied to the time container if rtl. */
   timeLabelReverse: string;
   /** Styles applied to the separator element. */
@@ -34,6 +36,7 @@ export const dateTimePickerToolbarClasses: DateTimePickerToolbarClasses = genera
     'root',
     'dateContainer',
     'timeContainer',
+    'timeDigitsContainer',
     'separator',
     'timeLabelReverse',
     'ampmSelection',
