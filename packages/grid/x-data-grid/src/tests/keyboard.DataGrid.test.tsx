@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
-import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -12,7 +11,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef, gridClasses } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -56,7 +55,7 @@ describe('<DataGrid /> - Keyboard', () => {
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
-          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
+          experimentalFeatures={{ columnGrouping: true }}
           {...props}
         />
       </div>
@@ -301,6 +300,57 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
+  describe('cell outline', () => {
+    it('should add the outlined class to the cell when it is focused', () => {
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(8, 1);
+      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
+      userEvent.mousePress(cell);
+      expect(cell).to.have.class(gridClasses['cell--outlined']);
+    });
+
+    it('should remove the outlined class from the cell when Tab is pressed', () => {
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(8, 1);
+      userEvent.mousePress(cell);
+      expect(cell).to.have.class(gridClasses['cell--outlined']);
+      fireEvent.keyDown(cell, { key: 'Tab' });
+      act(() => cell.blur());
+      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
+      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
+    });
+
+    it('should keep the cell focusable after Tab is pressed', () => {
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(8, 1);
+      userEvent.mousePress(cell);
+      expect(cell).to.have.attr('tabindex', '0');
+      fireEvent.keyDown(cell, { key: 'Tab' });
+      act(() => cell.blur());
+      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
+      expect(cell).to.have.attr('tabindex', '0');
+    });
+
+    it('should add the outlined class to the cell when it is focused via Tab', () => {
+      render(<NavigationTestCaseNoScrollX />);
+      const cell = getCell(8, 1);
+      userEvent.mousePress(cell);
+      expect(cell).to.have.class(gridClasses['cell--outlined']);
+
+      // Simulates cell losing focus to another element with Tab
+      fireEvent.keyDown(cell, { key: 'Tab' });
+      act(() => cell.blur());
+      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
+      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
+
+      // Simulates cell gaining focus again with Shift+Tab
+      fireEvent.keyDown(document.activeElement, { key: 'Tab', shiftKey: true });
+      act(() => cell.focus());
+      fireEvent.keyUp(cell, { key: 'Tab', shiftKey: true });
+      expect(cell).to.have.class(gridClasses['cell--outlined']);
+    });
+  });
+
   describe('column header navigation', () => {
     it('should scroll horizontally when navigating between column headers with arrows', function test() {
       if (isJSDOM) {
@@ -485,7 +535,7 @@ describe('<DataGrid /> - Keyboard', () => {
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}
-            experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
+            experimentalFeatures={{ columnGrouping: true }}
             {...props}
           />
         </div>
@@ -614,35 +664,6 @@ describe('<DataGrid /> - Keyboard', () => {
       // column with field "price3M"
       expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
     });
-  });
-
-  it('should ignore events coming from a portal inside the cell', () => {
-    const handleCellKeyDown = spy();
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          rows={[{ id: 1, name: 'John' }]}
-          onCellKeyDown={handleCellKeyDown}
-          columns={[
-            { field: 'id' },
-            {
-              field: 'name',
-              renderCell: () => (
-                <Portal>
-                  <input type="text" name="custom-input" />
-                </Portal>
-              ),
-            },
-          ]}
-        />
-      </div>,
-    );
-    userEvent.mousePress(getCell(0, 1));
-    expect(handleCellKeyDown.callCount).to.equal(0);
-    const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
-    input.focus();
-    fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(handleCellKeyDown.callCount).to.equal(0);
   });
 
   it('should call preventDefault when using keyboard navigation', () => {

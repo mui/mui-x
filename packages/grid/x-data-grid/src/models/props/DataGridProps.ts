@@ -12,7 +12,6 @@ import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
@@ -37,11 +36,6 @@ export interface GridExperimentalFeatures {
    * Enables the column grouping.
    */
   columnGrouping: boolean;
-  /**
-   * Emits a warning if the cell receives focus without also syncing the focus state.
-   * Only works if NODE_ENV=test.
-   */
-  warnIfFocusStateIsNotSynced: boolean;
 }
 
 /**
@@ -358,10 +352,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridClasses>;
-  /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.

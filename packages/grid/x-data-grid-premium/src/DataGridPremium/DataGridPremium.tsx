@@ -150,10 +150,6 @@ DataGridPremiumRaw.propTypes = {
    */
   columnThreshold: PropTypes.number,
   /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes: PropTypes.object,
-  /**
    * Set the column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
    */
@@ -285,7 +281,6 @@ DataGridPremiumRaw.propTypes = {
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     rowPinning: PropTypes.bool,
-    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.

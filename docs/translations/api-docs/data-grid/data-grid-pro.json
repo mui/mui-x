@@ -14,7 +14,6 @@
     "columnHeaderHeight": "Sets the height in pixel of the column headers in the grid.",
     "columns": "Set of columns of type GridColDef[].",
     "columnThreshold": "Number of rows from the <code>columnBuffer</code> that can be visible before a new slice is rendered.",
-    "columnTypes": "Extend native column types with your new column types.",
     "columnVisibilityModel": "Set the column visibility model of the grid. If defined, the grid will ignore the <code>hide</code> property in <a href=\"/x/api/data-grid/grid-col-def/\">GridColDef</a>.",
     "components": "Overrideable components.",
     "componentsProps": "Overrideable components props dynamically passed to the component at rendering.",
@@ -204,6 +203,11 @@
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
       "conditions": "the cell has a custom renderer"
+    },
+    "cell--outlined": {
+      "description": "Styles applied to {{nodeName}} if {{conditions}}.",
+      "nodeName": "the cell element",
+      "conditions": "the cell is outlined"
     },
     "cell--rangeTop": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",

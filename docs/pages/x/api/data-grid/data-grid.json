@@ -16,7 +16,6 @@
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
@@ -40,10 +39,7 @@
     },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ columnGrouping?: bool }" }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -277,6 +273,7 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--outlined",
       "cell--rangeTop",
       "cell--rangeBottom",
       "cell--rangeLeft",
