@@ -8,8 +8,8 @@ const views = {
   minutes: 'хвіліны',
   seconds: 'секунды',
   // maps PickersToolbar["viewType"] to its translation
-  date: 'календара',
-  time: 'часу',
+  calendar: 'календара',
+  clock: 'часу',
 };
 
 const beBYPickers: Partial<PickersLocaleText<any>> = {
