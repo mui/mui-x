@@ -74,6 +74,11 @@ export interface BaseNextDateTimePickerProps<TDate>
    */
   ampm?: boolean;
   /**
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true
+   */
+  ampmInClock?: boolean;
+  /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
   minDateTime?: TDate;
@@ -147,6 +152,7 @@ export function useNextDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const ampmInClock = themeProps.ampmInClock ?? true;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
@@ -158,7 +164,7 @@ export function useNextDateTimePickerDefaultizedProps<
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    ampmInClock: themeProps.ampmInClock ?? true,
+    ampmInClock,
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
@@ -186,7 +192,7 @@ export function useNextDateTimePickerDefaultizedProps<
       ...themeProps.componentsProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
+        ampmInClock,
         ...themeProps.componentsProps?.toolbar,
       },
     },

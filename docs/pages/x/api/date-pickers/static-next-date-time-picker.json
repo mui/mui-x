@@ -1,7 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "ampmInClock": { "type": { "name": "bool" } },
+    "ampmInClock": { "type": { "name": "bool" }, "default": "true" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "components": { "type": { "name": "object" }, "default": "{}" },

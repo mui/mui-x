@@ -72,7 +72,7 @@ StaticNextDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true
    */
   ampmInClock: PropTypes.bool,
   /**
