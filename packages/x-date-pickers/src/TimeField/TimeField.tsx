@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { TimeFieldProps } from './TimeField.types';
@@ -23,10 +23,10 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
-  const { inputRef: externalInputRef, ...inputProps }: TimeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const TextField = components?.TextField ?? MuiTextField;
+  const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -35,17 +35,18 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     ref: inputRef,
     onPaste,
     inputMode,
+    readOnly,
     ...fieldProps
-  } = useTimeField<TDate, typeof inputProps>({
-    props: inputProps,
+  } = useTimeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
     inputRef: externalInputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
 }) as TimeFieldComponent;
@@ -93,7 +94,7 @@ TimeField.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -103,7 +104,7 @@ TimeField.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

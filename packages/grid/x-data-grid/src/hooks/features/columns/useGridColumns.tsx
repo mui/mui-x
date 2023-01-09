@@ -30,21 +30,21 @@ import {
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
-  computeColumnTypes,
   createColumnsState,
   mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
+import { getGridDefaultColumnTypes } from '../../../colDef';
+
+const defaultColumnTypes = getGridDefaultColumnTypes();
 
 export const columnsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
 > = (state, props, apiRef) => {
-  const columnsTypes = computeColumnTypes(props.columnTypes);
-
   const columnsState = createColumnsState({
     apiRef,
-    columnTypes: columnsTypes,
+    columnTypes: defaultColumnTypes,
     columnsToUpsert: props.columns,
     initialState: props.initialState?.columns,
     columnVisibilityModel:
@@ -71,18 +71,15 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
-    | 'columnTypes'
     | 'components'
     | 'componentsProps'
+    | 'disableColumnSelector'
     | 'signature'
   >,
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
 
-  const columnTypes = React.useMemo(
-    () => computeColumnTypes(props.columnTypes),
-    [props.columnTypes],
-  );
+  const columnTypes = defaultColumnTypes;
 
   const previousColumnsProp = React.useRef(props.columns);
   const previousColumnTypesProp = React.useRef(columnTypes);
@@ -354,6 +351,18 @@ export function useGridColumns(
     [props.components.ColumnsPanel, props.componentsProps?.columnsPanel],
   );
 
+  const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems) => {
+      if (props.disableColumnSelector) {
+        return columnMenuItems;
+      }
+
+      return [...columnMenuItems, 'ColumnMenuColumnsItem'];
+    },
+    [props.disableColumnSelector],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItems);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);

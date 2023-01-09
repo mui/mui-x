@@ -3,13 +3,15 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
   DateOrTimeView,
   usePicker,
   WrapperVariantContext,
-  PickersViewLayout,
   PickersModalDialog,
   InferError,
-  PickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -94,7 +96,7 @@ export const useMobileRangePicker = <
     externalSlotProps: componentsProps.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly,
+      readOnly: readOnly ?? true,
       disabled,
       className,
       format,
@@ -105,7 +107,7 @@ export const useMobileRangePicker = <
 
   const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
     ...fieldProps.components,
-    Input: components.Input,
+    TextField: components.TextField,
   };
 
   const componentsPropsForField: BaseMultiInputFieldProps<
@@ -113,10 +115,10 @@ export const useMobileRangePicker = <
     unknown
   >['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =
@@ -129,7 +131,6 @@ export const useMobileRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },
@@ -162,7 +163,7 @@ export const useMobileRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
@@ -170,6 +171,7 @@ export const useMobileRangePicker = <
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
+  const Layout = components?.Layout ?? PickersLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -192,13 +194,14 @@ export const useMobileRangePicker = <
             actionBar: undefined,
           }}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
             componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

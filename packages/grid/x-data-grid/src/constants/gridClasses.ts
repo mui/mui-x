@@ -61,6 +61,10 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
+   * Styles applied to the cell element if the cell is outlined.
+   */
+  'cell--outlined': string;
+  /**
    * Styles applied to the cell element if it is at the top edge of a cell selection range.
    */
   'cell--rangeTop': string;
@@ -548,6 +552,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
+  'cell--outlined',
   'cell--rangeTop',
   'cell--rangeBottom',
   'cell--rangeLeft',

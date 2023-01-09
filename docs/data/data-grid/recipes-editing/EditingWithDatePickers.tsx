@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   useGridApiContext,
   GridRenderEditCellParams,
@@ -39,7 +39,7 @@ function buildApplyDateFilterFn(
 
   const filterValueMs = filterItem.value.getTime();
 
-  return ({ value }: GridCellParams<Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
       return false;
     }
@@ -189,7 +189,7 @@ function GridEditDateCell({
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | string | null>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
@@ -272,7 +272,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {

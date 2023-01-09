@@ -8,7 +8,7 @@ import {
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import { GridColumnTypesRecord } from '../../../models';
-import { DEFAULT_GRID_COL_TYPE_KEY, getGridDefaultColumnTypes } from '../../../colDef';
+import { DEFAULT_GRID_COL_TYPE_KEY } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -16,30 +16,12 @@ import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './g
 import { clamp } from '../../../utils/utils';
 import { GridApiCommon } from '../../../models/api/gridApiCommon';
 import { GridRowEntry } from '../../../models/gridRows';
+import { gridDensityFactorSelector } from '../density/densitySelector';
+import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
 export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
-
-export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
-  const mergedColumnTypes: GridColumnTypesRecord = { ...getGridDefaultColumnTypes() };
-
-  Object.entries(customColumnTypes).forEach(([colType, colTypeDef]) => {
-    if (mergedColumnTypes[colType]) {
-      mergedColumnTypes[colType] = {
-        ...mergedColumnTypes[colType],
-        ...colTypeDef,
-      };
-    } else {
-      mergedColumnTypes[colType] = {
-        ...mergedColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
-        ...colTypeDef,
-      };
-    }
-  });
-
-  return mergedColumnTypes;
-};
 
 /**
  * Computes width for flex columns.
@@ -483,4 +465,13 @@ export function getFirstColumnIndexToRender({
   });
 
   return firstColumnToRender;
+}
+
+export function getTotalHeaderHeight(
+  apiRef: React.MutableRefObject<GridApiCommunity>,
+  headerHeight: number,
+) {
+  const densityFactor = gridDensityFactorSelector(apiRef);
+  const maxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
+  return Math.floor(headerHeight * densityFactor) * ((maxDepth ?? 0) + 1);
 }

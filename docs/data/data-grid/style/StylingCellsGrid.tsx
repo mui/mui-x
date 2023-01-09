@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import clsx from 'clsx';
-import { GridColumns, DataGrid, GridCellParams } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, GridCellParams } from '@mui/x-data-grid';
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -12,7 +12,7 @@ const columns: GridColumns = [
     field: 'score',
     type: 'number',
     width: 140,
-    cellClassName: (params: GridCellParams<number>) => {
+    cellClassName: (params: GridCellParams<any>) => {
       if (params.value == null) {
         return '';
       }

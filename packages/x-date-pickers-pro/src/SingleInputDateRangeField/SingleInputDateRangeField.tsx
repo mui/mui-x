@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import { useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
@@ -23,10 +23,10 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
-  const inputProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const TextField = components?.TextField ?? MuiTextField;
+  const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -35,17 +35,18 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     ref: inputRef,
     onPaste,
     inputMode,
+    readOnly,
     ...fieldProps
-  } = useSingleInputDateRangeField<TDate, typeof inputProps>({
-    props: inputProps,
-    inputRef: inputProps.inputRef,
+  } = useSingleInputDateRangeField<TDate, typeof textFieldProps>({
+    props: textFieldProps,
+    inputRef: textFieldProps.inputRef,
   });
 
   return (
-    <Input
+    <TextField
       ref={ref}
       {...fieldProps}
-      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode }}
+      inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
 }) as DateRangeFieldComponent;
@@ -88,12 +89,12 @@ SingleInputDateRangeField.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,

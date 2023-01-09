@@ -22,7 +22,7 @@ export interface UseFieldParams<
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
-  supportedDateSections: MuiDateSectionName[];
+  valueType: FieldValueType;
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
@@ -94,6 +94,7 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
+    readOnly: boolean;
   };
 
 export interface FieldSection {
@@ -136,7 +137,7 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
-export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+export type FieldSectionsValueBoundaries<TDate, TSection extends FieldSection> = Record<
   MuiDateSectionName,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;
@@ -333,6 +334,8 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
+
+export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export type SectionNeighbors = {
   [sectionIndex: number]: {

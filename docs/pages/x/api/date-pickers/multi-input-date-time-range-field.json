@@ -11,6 +11,7 @@
       },
       "default": "'column'"
     },
+    "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableIgnoringDatePartForTimeValidation": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
@@ -56,12 +57,12 @@
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "Root": { "default": "MultiInputDateTimeRangeFieldRoot", "type": { "name": "elementType" } },
     "Separator": {
       "default": "MultiInputDateTimeRangeFieldSeparator",
       "type": { "name": "elementType" }
-    }
+    },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputDateTimeRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputDateTimeRangeField" },

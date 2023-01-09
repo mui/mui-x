@@ -81,7 +81,7 @@ Add padding to the cells to increase the space between the content and the cell 
 ## Row density
 
 Give your users the option to change the default row density to match their preferences—compact, standard, or comfortable.
-Density is calculated based on the `rowHeight` and/or `headerHeight` props, when present.
+Density is calculated based on the `rowHeight` and/or `columnHeaderHeight` props, when present.
 See [Density](https://mui.com/x/react-data-grid/accessibility/#density) for details.
 
 ## Row spacing

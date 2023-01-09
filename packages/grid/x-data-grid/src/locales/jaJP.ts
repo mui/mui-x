@@ -79,6 +79,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'メニュー',
   columnMenuShowColumns: '列表示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'フィルター',
   columnMenuHideColumn: '列非表示',
   columnMenuUnsort: 'ソート解除',
