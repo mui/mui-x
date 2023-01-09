@@ -63,7 +63,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
-    } as MobileNextDateTimePickerProps<TDate>['componentsProps'],
+    },
   };
 
   const { renderPicker } = useMobilePicker<TDate, DateOrTimeView, typeof props>({

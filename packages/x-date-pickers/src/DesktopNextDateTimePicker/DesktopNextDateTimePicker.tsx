@@ -60,7 +60,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
-    } as DesktopNextDateTimePickerProps<TDate>['componentsProps'],
+    },
   };
 
   const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
