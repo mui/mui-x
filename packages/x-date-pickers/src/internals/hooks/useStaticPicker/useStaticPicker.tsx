@@ -55,7 +55,7 @@ export const useStaticPicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const Layout = slots.layout ?? components?.Layout ?? PickerStaticLayout;
+  const Layout = slots?.layout ?? components?.Layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>

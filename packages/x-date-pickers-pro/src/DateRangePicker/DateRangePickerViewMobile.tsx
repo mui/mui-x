@@ -142,7 +142,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <React.Fragment>

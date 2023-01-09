@@ -30,7 +30,7 @@ export interface MobileNextDateTimePickerProps<TDate>
    * @default {}
    * deprecated
    */
-  components?: Partial<MobileNextDateTimePickerSlotsComponent<TDate>>;
+  components?: MobileNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

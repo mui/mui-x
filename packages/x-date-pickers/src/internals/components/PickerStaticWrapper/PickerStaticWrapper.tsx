@@ -61,7 +61,7 @@ export interface PickerStaticWrapperProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<PickersStaticWrapperSlotsComponent>;
+  components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

@@ -15,7 +15,6 @@ import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { renderTimeViewClock } from '../timeViewRenderers';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -28,10 +27,11 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useNextDateTimePickerDefaultizedProps<
-    TDate,
-    MobileNextDateTimePickerProps<TDate>
-  >(inProps, 'MuiMobileNextDateTimePicker');
+  const { className, sx, slots, slotsProps, ...defaultizedProps } =
+    useNextDateTimePickerDefaultizedProps<TDate, MobileNextDateTimePickerProps<TDate>>(
+      inProps,
+      'MuiMobileNextDateTimePicker',
+    );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
@@ -43,8 +43,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
-  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,

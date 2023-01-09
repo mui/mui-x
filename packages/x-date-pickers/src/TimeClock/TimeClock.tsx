@@ -75,7 +75,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    * @default {}
    * @deprecated
    */
-  components?: Partial<TimeClockSlotsComponent>;
+  components?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

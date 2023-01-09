@@ -31,7 +31,7 @@ export interface DesktopNextDateRangePickerProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<DesktopNextDateRangePickerSlotsComponent<TDate>>;
+  components?: DesktopNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

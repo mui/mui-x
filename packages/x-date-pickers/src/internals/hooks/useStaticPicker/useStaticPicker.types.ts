@@ -39,7 +39,7 @@ export interface UseStaticPickerProps<
    * @default {}
    * @deprecated
    */
-  components?: Partial<UseStaticPickerSlotsComponent<TDate | null, TView>>;
+  components?: UseStaticPickerSlotsComponent<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -50,7 +50,7 @@ export interface UseStaticPickerProps<
    * Overrideable components.
    * @default {}
    */
-  slots: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
+  slots?: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
   /**
    * The props used for each component slot.
    * @default {}

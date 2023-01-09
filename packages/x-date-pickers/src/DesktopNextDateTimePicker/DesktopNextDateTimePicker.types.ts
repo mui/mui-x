@@ -33,7 +33,7 @@ export interface DesktopNextDateTimePickerProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<DesktopNextDateTimePickerSlotsComponent<TDate>>;
+  components?: DesktopNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

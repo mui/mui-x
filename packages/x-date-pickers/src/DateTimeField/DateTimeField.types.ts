@@ -60,7 +60,7 @@ export interface DateTimeFieldProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<DateTimeFieldSlotsComponent>;
+  components?: DateTimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}

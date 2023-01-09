@@ -2,10 +2,21 @@
 // components/componentsProps and slots/slotsProps
 // Should be deleted when components/componentsProps are removed
 
+type OptionalKeys<T extends object> = Exclude<
+  { [K in keyof T]: {} extends Pick<T, K> ? K : never }[keyof T],
+  undefined
+>;
+
 type UncapitalizeKeys<T extends object> = Uncapitalize<keyof T & string>;
 
 export type UncapitalizeObjectKeys<T extends object> = {
-  [key in UncapitalizeKeys<T>]: Capitalize<key> extends keyof T ? T[Capitalize<key>] : never;
+  [key in UncapitalizeKeys<Pick<T, OptionalKeys<T>>>]?: Capitalize<key> extends keyof T
+    ? T[Capitalize<key>]
+    : never;
+} & {
+  [key in UncapitalizeKeys<Omit<T, OptionalKeys<T>>>]: Capitalize<key> extends keyof T
+    ? T[Capitalize<key>]
+    : never;
 };
 
 export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
@@ -14,7 +25,7 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    * @default {}
    * @deprecated
    */
-  components?: Partial<TSlots>;
+  components?: TSlots;
   /**
    * The props used for each component slot.
    * @default {}
@@ -33,21 +44,22 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
   slotsProps?: TSlotsProps;
 }
 
-type RetrunedType<TInputType> = TInputType extends object
+type ObjectWithUnCapitalizedKeys<TInputType> = TInputType extends object
   ? UncapitalizeObjectKeys<TInputType>
   : undefined;
 
 export const uncapitalizeObjectKeys = <TInputType extends object>(
   capitalizedObject: TInputType | undefined,
-): RetrunedType<typeof capitalizedObject> => {
+): ObjectWithUnCapitalizedKeys<typeof capitalizedObject> => {
   if (capitalizedObject === undefined) {
-    return undefined as RetrunedType<undefined>;
+    return undefined as ObjectWithUnCapitalizedKeys<undefined>;
   }
   return Object.keys(capitalizedObject).reduce(
     (acc, key) => ({
       ...acc,
-      [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]: capitalizedObject[key],
+      [`${key.slice(0, 1).toLowerCase()}${key.slice(1)}`]:
+        capitalizedObject[key as keyof TInputType],
     }),
-    {} as RetrunedType<TInputType>,
+    {} as ObjectWithUnCapitalizedKeys<TInputType>,
   );
 };

@@ -52,7 +52,7 @@ export interface BaseNextDatePickerProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<BaseNextDatePickerSlotsComponent<TDate>>;
+  components?: BaseNextDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

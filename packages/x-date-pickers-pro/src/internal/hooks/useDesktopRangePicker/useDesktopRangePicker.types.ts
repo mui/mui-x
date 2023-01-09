@@ -75,7 +75,7 @@ export interface UseDesktopRangePickerProps<
    * @default {}
    * @deprecated
    */
-  components?: Partial<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
+  components?: UseDesktopRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

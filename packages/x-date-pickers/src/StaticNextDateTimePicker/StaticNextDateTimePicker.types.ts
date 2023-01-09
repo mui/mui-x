@@ -26,7 +26,7 @@ export interface StaticNextDateTimePickerProps<TDate>
    * @default {}
    * @deprecated
    */
-  components?: Partial<StaticNextDateTimePickerSlotsComponent<TDate>>;
+  components?: StaticNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}

@@ -270,7 +270,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
         ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponentsProps<TDate>>;
+  } as DayCalendarSlotsComponentsProps<TDate>;
 
   return (
     <DateRangePickerViewDesktopRoot className={clsx(className, classes.root)}>
