@@ -1,4 +1,5 @@
 [
+  { "name": "beBY", "kind": "Variable" },
   { "name": "CalendarPicker", "kind": "Variable" },
   { "name": "calendarPickerClasses", "kind": "Variable" },
   { "name": "CalendarPickerClasses", "kind": "Interface" },
