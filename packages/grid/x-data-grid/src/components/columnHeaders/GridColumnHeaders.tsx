@@ -26,13 +26,11 @@ const GridColumnHeadersRoot = styled('div', {
   overridesResolver: (props, styles) => styles.columnHeaders,
 })(({ theme }) => {
   return {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    position: 'relative',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
+    boxSizing: 'border-box',
     borderBottom: '1px solid',
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,

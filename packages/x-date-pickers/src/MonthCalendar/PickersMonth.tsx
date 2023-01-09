@@ -5,15 +5,13 @@ import {
   unstable_capitalize as capitalize,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import {
-  WrapperVariant,
-  WrapperVariantContext,
-} from '../internals/components/wrappers/WrapperVariantContext';
+import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import {
   getPickersMonthUtilityClass,
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
+import { WrapperVariant } from '../internals/models/common';
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
@@ -12,6 +11,7 @@ import {
 } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
+import { WrapperVariant } from '../../models/common';
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -127,8 +127,8 @@ export interface UsePickerValueNonStaticProps<TValue>
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect?: boolean;
   /**

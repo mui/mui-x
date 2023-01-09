@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 
-function EditRating(props: GridRenderEditCellParams<number>) {
+function EditRating(props: GridRenderEditCellParams<any, number>) {
   const { id, value, field } = props;
 
   const apiRef = useGridApiContext();
@@ -42,6 +42,6 @@ function EditRating(props: GridRenderEditCellParams<number>) {
   );
 }
 
-export function renderEditRating(params: GridRenderEditCellParams<number>) {
+export function renderEditRating(params: GridRenderEditCellParams<any, number>) {
   return <EditRating {...params} />;
 }

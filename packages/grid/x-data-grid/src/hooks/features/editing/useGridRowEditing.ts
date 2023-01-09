@@ -202,8 +202,14 @@ export const useGridRowEditing = (
             reason = GridRowEditStopReasons.tabKeyDown;
           }
 
-          if (reason) {
-            event.preventDefault(); // Prevent going to the next element in the tab sequence
+          // Always prevent going to the next element in the tab sequence because the focus is
+          // handled manually to support edit components rendered inside Portals
+          event.preventDefault();
+
+          if (!reason) {
+            const index = columnFields.findIndex((field) => field === params.field);
+            const nextFieldToFocus = columnFields[event.shiftKey ? index - 1 : index + 1];
+            apiRef.current.setCellFocus(params.id, nextFieldToFocus);
           }
         }
 

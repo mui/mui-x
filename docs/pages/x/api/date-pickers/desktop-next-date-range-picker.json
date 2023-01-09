@@ -8,7 +8,7 @@
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
@@ -81,7 +81,6 @@
     "Field": { "type": { "name": "elementType" } },
     "FieldRoot": { "type": { "name": "elementType" } },
     "FieldSeparator": { "type": { "name": "elementType" } },
-    "Input": { "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
@@ -91,6 +90,7 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
     "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopNextDateRangePicker",

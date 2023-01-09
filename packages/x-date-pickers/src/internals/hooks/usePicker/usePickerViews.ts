@@ -72,7 +72,7 @@ export interface UsePickerViewsBaseProps<
  */
 export interface UsePickerViewsNonStaticProps {
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker?: boolean;
