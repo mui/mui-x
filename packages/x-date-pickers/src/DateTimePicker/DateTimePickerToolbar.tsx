@@ -30,13 +30,13 @@ export interface DateTimePickerToolbarProps<TDate>
 }
 
 const useUtilityClasses = (ownerState: DateTimePickerToolbarProps<any> & { theme: Theme }) => {
-  const { classes, theme } = ownerState;
+  const { classes, theme, isLandscape } = ownerState;
   const slots = {
     root: ['root'],
     dateContainer: ['dateContainer'],
     timeContainer: ['timeContainer', theme.direction === 'rtl' && 'timeLabelReverse'],
     separator: ['separator'],
-    ampmSelection: ['ampmSelection'],
+    ampmSelection: ['ampmSelection', isLandscape && 'ampmLandscape'],
     ampmLabel: ['ampmLabel'],
   };
 
@@ -95,7 +95,11 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
 const TimePickerToolbarAmPmSelection = styled('div', {
   name: 'MuiTimePickerToolbar',
   slot: 'AmPmSelection',
-  overridesResolver: (props, styles) => styles.ampmSelection,
+  overridesResolver: (props, styles) => [
+    { [`.${dateTimePickerToolbarClasses.ampmLabel}`]: styles.ampmLabel },
+    { [`&.${dateTimePickerToolbarClasses.ampmLandscape}`]: styles.ampmLandscape },
+    styles.ampmSelection,
+  ],
 })<{
   ownerState: BaseToolbarProps<any, any>;
 }>(({ ownerState }) => ({
@@ -107,7 +111,7 @@ const TimePickerToolbarAmPmSelection = styled('div', {
     margin: '4px 0 auto',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    flexBasis: '100%',
+    width: '100%',
   }),
   [`& .${dateTimePickerToolbarClasses.ampmLabel}`]: {
     fontSize: 17,
@@ -128,6 +132,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
     isMobileKeyboardViewOpen,
     onChange,
     view,
+    isLandscape,
     onViewChange,
     toggleMobileKeyboardView,
     toolbarFormat,
@@ -165,6 +170,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   return (
     <DateTimePickerToolbarRoot
       toolbarTitle={localeText.dateTimePickerToolbarTitle}
+      isLandscape={isLandscape}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
@@ -237,31 +243,31 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             />
           </React.Fragment>
         )}
-        {showAmPmControl && (
-          <TimePickerToolbarAmPmSelection className={classes.ampmSelection} ownerState={ownerState}>
-            <PickersToolbarButton
-              disableRipple
-              variant="subtitle2"
-              data-mui-test="toolbar-am-btn"
-              selected={meridiemMode === 'am'}
-              typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('am')}
-              onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
-              disabled={disabled}
-            />
-            <PickersToolbarButton
-              disableRipple
-              variant="subtitle2"
-              data-mui-test="toolbar-pm-btn"
-              selected={meridiemMode === 'pm'}
-              typographyClassName={classes.ampmLabel}
-              value={utils.getMeridiemText('pm')}
-              onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
-              disabled={disabled}
-            />
-          </TimePickerToolbarAmPmSelection>
-        )}
       </DateTimePickerToolbarTimeContainer>
+      {showAmPmControl && (
+        <TimePickerToolbarAmPmSelection className={classes.ampmSelection} ownerState={ownerState}>
+          <PickersToolbarButton
+            disableRipple
+            variant="subtitle2"
+            data-mui-test="toolbar-am-btn"
+            selected={meridiemMode === 'am'}
+            typographyClassName={classes.ampmLabel}
+            value={utils.getMeridiemText('am')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('am')}
+            disabled={disabled}
+          />
+          <PickersToolbarButton
+            disableRipple
+            variant="subtitle2"
+            data-mui-test="toolbar-pm-btn"
+            selected={meridiemMode === 'pm'}
+            typographyClassName={classes.ampmLabel}
+            value={utils.getMeridiemText('pm')}
+            onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
+            disabled={disabled}
+          />
+        </TimePickerToolbarAmPmSelection>
+      )}
     </DateTimePickerToolbarRoot>
   );
 }
