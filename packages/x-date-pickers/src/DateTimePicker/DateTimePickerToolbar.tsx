@@ -239,6 +239,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             value={value ? utils.format(value, 'year') : '–'}
           />
         )}
+
         {views.includes('day') && (
           <PickersToolbarButton
             tabIndex={-1}

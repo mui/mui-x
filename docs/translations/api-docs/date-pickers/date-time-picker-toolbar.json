@@ -18,6 +18,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the time container element"
     },
+    "timeDigitsContainer": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the time (except am/pm) container element"
+    },
     "timeLabelReverse": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the time container",
@@ -26,7 +30,16 @@
     "separator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the separator element"
-    }
+    },
+    "ampmSelection": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the am/pm section"
+    },
+    "ampmLandscape": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "am/pm section in landscap mode"
+    },
+    "ampmLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "am/pm labels" }
   },
   "slotDescriptions": {}
 }

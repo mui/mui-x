@@ -16,7 +16,17 @@
   "slots": {},
   "name": "DateTimePickerToolbar",
   "styles": {
-    "classes": ["root", "dateContainer", "timeContainer", "timeLabelReverse", "separator"],
+    "classes": [
+      "root",
+      "dateContainer",
+      "timeContainer",
+      "timeDigitsContainer",
+      "timeLabelReverse",
+      "separator",
+      "ampmSelection",
+      "ampmLandscape",
+      "ampmLabel"
+    ],
     "globalClasses": {},
     "name": "MuiDateTimePickerToolbar"
   },
