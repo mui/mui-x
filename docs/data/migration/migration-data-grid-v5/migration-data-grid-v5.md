@@ -57,6 +57,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
+  | `headerHeight`             | `columnHeaderHeight`          |
 
 ### Removed props
 
@@ -64,6 +65,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
 
 ### State access
 
@@ -95,6 +97,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
+- The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
+  This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
+  For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
+  The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+
+  ```tsx
+  <DataGrid
+    onCellEditStop={(params, event) => {
+      if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+        return;
+      }
+      // Check if the target is inside a Portal
+      if (!event.currentTarget.contains(event.target)) {
+        event.defaultMuiPrevented = true;
+      }
+    }}
+  />
+  ```
+
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns
@@ -203,6 +224,26 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
+
+### Editing
+
+- The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
+  ```diff
+   <DataGrid
+  -  experimentalFeatures={{ newEditingApi: true }}
+   />
+  ```
+- The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+- The `GridEditRowsModel` type was removed.
+- The following API methods were removed:
+  - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
+  - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
+  - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
+  - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
+  - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`.
 
 ### Other exports
 
@@ -245,6 +286,16 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### CSS classes
 
+- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
+  ```diff
+  -'.MuiDataGrid-cell:focus-within': {
+  +'.MuiDataGrid-cell--outlined': {
+  ```
+  The new class name is also available in `gridClasses`:
+  ```diff
+  -`.${gridClasses.cell}:focus-within`: {
+  +`.${gridClasses['cell--outlined']}`: {
+  ```
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes          | MUI X v6 classes               | Note                                            |

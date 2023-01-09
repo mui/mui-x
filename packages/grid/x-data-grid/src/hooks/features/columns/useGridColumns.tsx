@@ -29,22 +29,22 @@ import {
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import {
   hydrateColumnsWidth,
-  computeColumnTypes,
   createColumnsState,
   mergeColumnsState,
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
+import { getGridDefaultColumnTypes } from '../../../colDef';
+
+const defaultColumnTypes = getGridDefaultColumnTypes();
 
 export const columnsStateInitializer: GridStateInitializer<
-  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columnTypes' | 'columns'>
+  Pick<DataGridProcessedProps, 'columnVisibilityModel' | 'initialState' | 'columns'>
 > = (state, props, apiRef) => {
-  const columnsTypes = computeColumnTypes(props.columnTypes);
-
   const columnsState = createColumnsState({
     apiRef,
-    columnTypes: columnsTypes,
+    columnTypes: defaultColumnTypes,
     columnsToUpsert: props.columns,
     initialState: props.initialState?.columns,
     columnVisibilityModel:
@@ -71,7 +71,6 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
-    | 'columnTypes'
     | 'components'
     | 'componentsProps'
     | 'disableColumnSelector'
@@ -80,10 +79,7 @@ export function useGridColumns(
 ): void {
   const logger = useGridLogger(apiRef, 'useGridColumns');
 
-  const columnTypes = React.useMemo(
-    () => computeColumnTypes(props.columnTypes),
-    [props.columnTypes],
-  );
+  const columnTypes = defaultColumnTypes;
 
   const previousColumnsProp = React.useRef(props.columns);
   const previousColumnTypesProp = React.useRef(columnTypes);

@@ -113,7 +113,7 @@ StaticNextDateRangePicker.propTypes = {
    */
   disableDragEditing: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -123,7 +123,7 @@ StaticNextDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -143,7 +143,7 @@ StaticNextDateRangePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
