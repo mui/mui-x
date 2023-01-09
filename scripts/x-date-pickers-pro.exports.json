@@ -1,4 +1,5 @@
 [
+  { "name": "beBY", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
   { "name": "ClockClassKey", "kind": "TypeAlias" },
