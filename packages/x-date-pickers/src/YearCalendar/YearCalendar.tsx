@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, useTheme } from '@mui/system';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useForkRef as useForkRef,
   unstable_composeClasses as composeClasses,
@@ -11,10 +11,10 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { YearCalendarClasses, getYearCalendarUtilityClass } from './yearCalendarClasses';
-import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
+import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
+import { YearCalendarProps } from './YearCalendar.types';
 
 const useUtilityClasses = (ownerState: YearCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -63,61 +63,6 @@ const YearCalendarRoot = styled('div', {
   width: 320,
   maxHeight: 304,
 });
-
-export interface ExportedYearCalendarProps {
-  /**
-   * Years rendered per row.
-   * @default 3
-   */
-  yearsPerRow?: 3 | 4;
-}
-
-export interface YearCalendarProps<TDate>
-  extends ExportedYearCalendarProps,
-    YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
-  autoFocus?: boolean;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<YearCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
-  onYearFocus?: (year: number) => void;
-  hasFocus?: boolean;
-  onFocusedViewChange?: (hasFocus: boolean) => void;
-}
 
 type YearCalendarComponent = (<TDate>(props: YearCalendarProps<TDate>) => JSX.Element) & {
   propTypes?: any;
