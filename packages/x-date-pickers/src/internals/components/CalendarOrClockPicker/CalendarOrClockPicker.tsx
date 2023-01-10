@@ -2,13 +2,14 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
-import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
+import { TimeClock } from '../../../TimeClock';
+import { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import {
   DateCalendar,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
 } from '../../../DateCalendar';
-import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
+import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar.types';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -170,7 +171,8 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
 
   const Tabs = components?.Tabs;
 
-  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const isDesktop = wrapperVariant === 'desktop';
+  const shouldRenderToolbar = showToolbar ?? !isDesktop;
   const Toolbar = components?.Toolbar;
 
   return (
@@ -190,14 +192,13 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />
       )}
-      {!!Tabs && (
+      {!!Tabs && !isDesktop && (
         <Tabs
           view={view}
           onViewChange={setView as (view: DateOrTimeView) => void}
           {...componentsProps?.tabs}
         />
       )}
-
       <PickerViewRoot>
         {isMobileKeyboardViewOpen ? (
           <MobileKeyboardInputView className={classes.mobileKeyboardInputView}>
@@ -237,7 +238,7 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
                 views={views.filter(isTimePickerView) as TimeView[]}
                 onChange={setValueAndGoToNextView}
                 onViewChange={setView as (view: TimeView) => void}
-                showViewSwitcher={wrapperVariant === 'desktop'}
+                showViewSwitcher={isDesktop}
                 components={components}
                 componentsProps={componentsProps}
               />
@@ -245,6 +246,13 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           </React.Fragment>
         )}
       </PickerViewRoot>
+      {!!Tabs && isDesktop && (
+        <Tabs
+          view={view}
+          onViewChange={setView as (view: DateOrTimeView) => void}
+          {...componentsProps?.tabs}
+        />
+      )}
     </PickerRoot>
   );
 }
