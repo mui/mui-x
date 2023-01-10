@@ -48,7 +48,7 @@ All the picker components have been rewritten to use the new field components in
 During the v6 alpha and beta phases, both the new and the legacy components are available.
 The old components will be removed during the beta phase and the new components will be renamed to match the name of the legacy ones.
 
-A codemod will be provided to rename the new components from there alpha / beta naming to there final naming.
+A codemod will be provided to rename the new components from the alpha / beta naming to the final naming.
 
 For example, `@mui/x-date-pickers` currently exports:
 
@@ -78,7 +78,7 @@ You can find the whole list of the pickers in the table below:
 
 ### Rename the `inputFormat` prop
 
-The `inputFormat` prop has been renamed `format` on all the pickers components.
+The `inputFormat` prop has been renamed to `format` on all the pickers components.
 
 ```diff
  <DatePicker
@@ -89,9 +89,9 @@ The `inputFormat` prop has been renamed `format` on all the pickers components.
 
 :::warning
 This change only applies to the new pickers.
-The legacy pickers keep the `inputFormat` prop name until there removal.
+The legacy pickers keep the `inputFormat` prop name until their removal.
 
-For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section.
 :::
 
 ### Update the format of the `value` prop
@@ -193,7 +193,7 @@ For more information about those new pickers, take a look at the [New picker com
 
   The DOM node containing the toolbar and the view content (the `root` slot of the `CalendarOrClockPicker` component) no longer exists.
   The closest equivalent is now the `contentWrapper` slot of the `PickersLayout` component, which do not contain the toolbar.
-  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization)
+  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization).
 
   ```diff
    const theme = createTheme({
@@ -215,10 +215,10 @@ For more information about those new pickers, take a look at the [New picker com
   These changes only apply to the new pickers.
   The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
   :::
 
-- The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot
+- The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot.
 
   ```diff
    const theme = createTheme({
@@ -237,7 +237,7 @@ For more information about those new pickers, take a look at the [New picker com
 
   The DOM node containing the toolbar and the view content (the `content` slot of the `PickerStaticWrapper` component) no longer exists.
   The closest equivalent is now the `contentWrapper` slot of the `PickersLayout` component, which do not contain the toolbar.
-  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization)
+  If you need a DOM node containing the toolbar and the view content, you will have to pass a [custom `Layout` component slot](/x/react-date-pickers/custom-layout/#dom-customization).
 
   ```diff
    const theme = createTheme({
@@ -257,9 +257,9 @@ For more information about those new pickers, take a look at the [New picker com
 
   :::warning
   These changes only apply to the new pickers.
-  The legacy pickers keep the `PickerStaticWrapper` internal component until there removal.
+  The legacy pickers keep the `PickerStaticWrapper` internal component until their removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
   :::
 
 ## Date library and adapters
@@ -414,7 +414,7 @@ All the props used to override parts of the UI (e.g: pass a custom day renderer)
 
 You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
 
-There changes always apply to all the components that had the prop.
+These changes apply to all the components that had the prop.
 For example, the `ToolbarComponent` has been replaced by a `Toolbar` component slot on all pickers.
 
 ### Input renderer (required in v5)
@@ -439,7 +439,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-  The Date Range Picker also have a new `fieldSeparator` component slot and component props slot to customize only this part of the UI:
+- The Date Range Picker also have a new `fieldSeparator` component slot and component props slot to customize only this part of the UI:
 
   ```diff
    <DateRangePicker
@@ -458,7 +458,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   This change only applies to the new pickers.
   The legacy pickers keep the `renderInput` prop until there removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
   :::
 
 ### Toolbar (`ToolbarComponent`)
@@ -800,9 +800,9 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   :::warning
   This change only applies to the new pickers.
-  The legacy pickers keep the `InputProps` prop until there removal.
+  The legacy pickers keep the `InputProps` prop until their removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
   :::
 
 ### Input adornment
@@ -818,9 +818,9 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   :::warning
   This change only applies to the new pickers.
-  The legacy pickers keep the `InputAdornmentProps` prop until there removal.
+  The legacy pickers keep the `InputAdornmentProps` prop until their removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
   :::
 
 ### Open Picker Button
@@ -836,9 +836,9 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   :::warning
   This change only applies to the new pickers.
-  The legacy pickers keep the `OpenPickerButtonProps` prop until there removal.
+  The legacy pickers keep the `OpenPickerButtonProps` prop until their removal.
 
-  For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
+  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
   :::
 
 ## Rename remaining `private` components
