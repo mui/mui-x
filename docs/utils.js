@@ -6,8 +6,8 @@ const MyOctokit = Octokit.plugin(retry);
 
 async function resolveGitRemoteUrl() {
   let remoteUrl = null;
-  if (!process.env.PULL_REQUEST_ID) {
-    console.log(`Returning ${remoteUrl}, because PULL_REQUEST_ID=${process.env.PULL_REQUEST_ID}`);
+  if (!process.env.REVIEW_ID) {
+    console.log(`Returning ${remoteUrl}, because PULL_REQUEST_ID=${process.env.REVIEW_ID}`);
     return remoteUrl;
   }
   const octokit = new MyOctokit({
@@ -17,7 +17,7 @@ async function resolveGitRemoteUrl() {
     const prInfo = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
       owner: 'mui',
       repo: 'mui-x',
-      pull_number: process.env.PULL_REQUEST_ID,
+      pull_number: process.env.REVIEW_ID,
     });
     console.log(prInfo);
     console.log(prInfo.data.head.repo);
