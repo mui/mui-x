@@ -121,7 +121,7 @@
     "compression-webpack-plugin": "^10.0.0",
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
-    "danger": "^11.2.0",
+    "danger": "^11.2.1",
     "enzyme": "^3.11.0",
     "eslint": "^8.31.0",
     "eslint-config-airbnb": "^19.0.4",
