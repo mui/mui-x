@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const { Octokit } = require('@octokit/rest');
 const { retry } = require('@octokit/plugin-retry');
 
@@ -7,7 +6,6 @@ const MyOctokit = Octokit.plugin(retry);
 async function resolveGitRemoteUrl() {
   let remoteUrl = null;
   if (!process.env.REVIEW_ID) {
-    console.log(`Returning ${remoteUrl}, because PULL_REQUEST_ID=${process.env.REVIEW_ID}`);
     return remoteUrl;
   }
   const octokit = new MyOctokit({
@@ -19,10 +17,9 @@ async function resolveGitRemoteUrl() {
       repo: 'mui-x',
       pull_number: process.env.REVIEW_ID,
     });
-    console.log(prInfo);
-    console.log(prInfo.data.head.repo);
     remoteUrl = `${prInfo.data.head.repo.owner.html_url}/${prInfo.data.head.repo.name}`;
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log('Failed to resolve remote URL from PR:', err);
   }
   return remoteUrl;
