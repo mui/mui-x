@@ -1,5 +1,5 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef, GridColDef } from '../models/colDef/gridColDef';
+import { GridColTypeDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import { getLabelFromValueOption } from '../components/panel/filterPanel/filterPanelUtils';
@@ -15,7 +15,7 @@ export const GRID_SINGLE_SELECT_COL_DEF: GridColTypeDef = {
     const { id, field, value, api } = params;
     const colDef = params.api.getColumn(field);
 
-    let valueOptions: GridColDef['valueOptions'];
+    let valueOptions: Array<ValueOptions>;
     if (typeof colDef.valueOptions === 'function') {
       valueOptions = colDef.valueOptions!({ id, row: id ? api.getRow(id) : null, field });
     } else {
