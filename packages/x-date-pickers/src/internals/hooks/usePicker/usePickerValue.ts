@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
@@ -12,6 +11,7 @@ import {
 } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
+import { WrapperVariant } from '../../models/common';
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -238,7 +238,7 @@ export const usePickerValue = <
     onChange,
     value: inValue,
     defaultValue,
-    closeOnSelect,
+    closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
   } = props;
@@ -400,7 +400,7 @@ export const usePickerValue = <
         }
 
         case 'finish': {
-          if (closeOnSelect ?? wrapperVariant === 'desktop') {
+          if (closeOnSelect) {
             // Set all dates in state to equal the new date and close picker.
             return setDate({ value: newDate, action: 'acceptAndClose' });
           }
