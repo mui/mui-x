@@ -55,6 +55,11 @@
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableTime": { "type": { "name": "func" } },
@@ -93,6 +98,7 @@
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },

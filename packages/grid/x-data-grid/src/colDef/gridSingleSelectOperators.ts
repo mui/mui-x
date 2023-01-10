@@ -1,13 +1,12 @@
 import { GridFilterInputSingleSelect } from '../components/panel/filterPanel/GridFilterInputSingleSelect';
 import { GridFilterOperator } from '../models/gridFilterOperator';
-import { GridFilterItem } from '../models/gridFilterItem';
 import { GridFilterInputMultipleSingleSelect } from '../components/panel/filterPanel/GridFilterInputMultipleSingleSelect';
+import { isObject } from '../utils/utils';
 
-const parseObjectValue = (value: GridFilterItem) => {
-  if (value == null || typeof value !== 'object') {
+const parseObjectValue = (value: unknown) => {
+  if (value == null || !isObject<{ value: unknown }>(value)) {
     return value;
   }
-
   return value.value;
 };
 

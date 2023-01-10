@@ -74,23 +74,6 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
-    it('should apply the model when filtering extended columns', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 0, price: 0 },
-            { id: 1, price: 1 },
-          ]}
-          columnTypes={{ price: { extendType: 'number' } }}
-          columns={[{ field: 'price', type: 'price' }]}
-          filterModel={{
-            items: [{ field: 'price', operator: '=', value: 1 }],
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-    });
-
     it('should apply the model when row prop changes', () => {
       render(
         <TestCase

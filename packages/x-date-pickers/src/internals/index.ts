@@ -40,12 +40,6 @@ export type {
   PickersStaticWrapperSlotsComponentsProps,
 } from './components/PickerStaticWrapper/PickerStaticWrapper';
 export { PickersToolbar } from './components/PickersToolbar';
-export { PickersViewLayout } from './components/PickersViewLayout';
-export type {
-  PickersViewLayoutSlotsComponentsProps,
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from './components/PickersViewLayout';
 export type { PickersToolbarProps } from './components/PickersToolbar';
 export { pickersToolbarClasses } from './components/pickersToolbarClasses';
 export type {
@@ -96,7 +90,6 @@ export type {
   PickersSlotsComponentsProps,
 } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
-export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
@@ -179,6 +172,7 @@ export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
+export type { WrapperVariant } from './models/common';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
@@ -201,5 +195,5 @@ export type {
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
-export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
+export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';

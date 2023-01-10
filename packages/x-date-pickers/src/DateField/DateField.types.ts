@@ -53,12 +53,13 @@ export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 
 export interface DateFieldSlotsComponent {
   /**
-   * Input rendered.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface DateFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, DateFieldOwnerState<TDate>>;
 }

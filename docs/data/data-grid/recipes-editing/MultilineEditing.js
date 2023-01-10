@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { DataGridPro, useGridApiContext } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  useGridApiContext,
+  GridCellEditStopReasons,
+} from '@mui/x-data-grid-pro';
 import InputBase from '@mui/material/InputBase';
 import Popper from '@mui/material/Popper';
 import Paper from '@mui/material/Paper';
@@ -26,11 +30,22 @@ const lines = [
   'Vestibulum pulvinar aliquam turpis, ac faucibus risus varius a.',
 ];
 
+function isKeyboardEvent(event) {
+  return !!event.key;
+}
+
 function EditTextarea(props) {
-  const { id, field, value, colDef } = props;
+  const { id, field, value, colDef, hasFocus } = props;
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState();
+  const [inputRef, setInputRef] = React.useState(null);
   const apiRef = useGridApiContext();
+
+  React.useLayoutEffect(() => {
+    if (hasFocus && inputRef) {
+      inputRef.focus();
+    }
+  }, [hasFocus, inputRef]);
 
   const handleRef = React.useCallback((el) => {
     setAnchorEl(el);
@@ -46,21 +61,6 @@ function EditTextarea(props) {
       );
     },
     [apiRef, field, id],
-  );
-
-  const handleKeyDown = React.useCallback(
-    (event) => {
-      if (
-        event.key === 'Escape' ||
-        (event.key === 'Enter' &&
-          !event.shiftKey &&
-          (event.ctrlKey || event.metaKey))
-      ) {
-        const params = apiRef.current.getCellParams(id, field);
-        apiRef.current.publishEvent('cellKeyDown', params, event);
-      }
-    },
-    [apiRef, id, field],
   );
 
   return (
@@ -84,8 +84,7 @@ function EditTextarea(props) {
               value={valueState}
               sx={{ textarea: { resize: 'both' }, width: '100%' }}
               onChange={handleChange}
-              autoFocus
-              onKeyDown={handleKeyDown}
+              inputRef={(ref) => setInputRef(ref)}
             />
           </Paper>
         </Popper>
@@ -103,6 +102,10 @@ EditTextarea.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
+  /**
+   * If true, the cell is the active element.
+   */
+  hasFocus: PropTypes.bool.isRequired,
   /**
    * The grid row id.
    */
@@ -152,7 +155,18 @@ for (let i = 0; i < 50; i += 1) {
 export default function MultilineEditing() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGridPro rows={rows} columns={columns} />
+      <DataGridPro
+        rows={rows}
+        columns={columns}
+        onCellEditStop={(params, event) => {
+          if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+            return;
+          }
+          if (isKeyboardEvent(event) && !event.ctrlKey && !event.metaKey) {
+            event.defaultMuiPrevented = true;
+          }
+        }}
+      />
     </div>
   );
 }

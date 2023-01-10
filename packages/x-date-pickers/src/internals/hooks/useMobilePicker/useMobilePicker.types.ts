@@ -13,24 +13,25 @@ import {
 import { UsePickerParams, UsePickerProps } from '../usePicker';
 import { BaseFieldProps } from '../../models/fields';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from '../../components/PickersViewLayout';
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseMobilePickerSlotsComponent<TDate>
+export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersViewLayoutSlotsComponent {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
   Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
   /**
-   * Component used to render an HTML input inside the field.
-   * @default TextField
+   * Form control with an input to render the value inside the default field.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType<TextFieldProps>;
+  TextField?: React.ElementType<TextFieldProps>;
 }
 
 export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
@@ -39,13 +40,13 @@ export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOr
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},
     UsePickerProps<TDate | null, any, any, any, any>
   >;
-  input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
 
 export interface MobileOnlyPickerProps<TDate>
@@ -64,7 +65,7 @@ export interface UseMobilePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components: UseMobilePickerSlotsComponent<TDate>;
+  components: UseMobilePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
