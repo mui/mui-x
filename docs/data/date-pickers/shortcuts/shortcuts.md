@@ -9,8 +9,8 @@ title: Date and Time pickers - Shortcuts
 
 ## Adding shortcuts
 
-By default, pickers use the `PickersShortcuts` components to display short-cuts.
-This component accept a prop `shortcurs` as an array of `PickersShortcutsItem`.
+By default, pickers use the `PickersShortcuts` component to display shortcuts.
+This component accepts a `shortcurs` prop as an array of `PickersShortcutsItem`.
 Those items are made of two required attributes:
 
 - `label`: The string displayed on the shortcut chip. This property must be unique.
@@ -39,7 +39,7 @@ You can use `componentsProps.shortcus` to customize this props. For example to a
 
 ## Disabled dates
 
-By default, the shortcuts are disabled if the returned value does noo pass validation. Here is an example where `minDate` is set to the half of the year.
+By default, the shortcuts are disabled if the returned value does not pass validation. Here is an example where `minDate` is set to the middle of the year.
 
 {{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
 

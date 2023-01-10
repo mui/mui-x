@@ -11,7 +11,7 @@ const getMonthWeekday = (
   weekdayIndex: number,
   dayRank: number,
 ) => {
-  // Helper to find for exampel the 3rd monday in Jun
+  // Helper to find for example the 3rd monday in Jun
 
   const today = adapter.date();
   const month = adapter.setMonth(today, monthIndex);

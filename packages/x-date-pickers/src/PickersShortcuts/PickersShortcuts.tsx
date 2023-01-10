@@ -60,7 +60,14 @@ export function PickersShortcuts<TValue, TDate, TView extends DateOrTimeView>(
   });
 
   return (
-    <List {...other} dense sx={{ maxHeight: VIEW_HEIGHT, overflow: 'auto' }}>
+    <List
+      dense
+      sx={[
+        { maxHeight: VIEW_HEIGHT, overflow: 'auto' },
+        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+      ]}
+      {...other}
+    >
       {items.map((item) => {
         return (
           <ListItem key={item.label}>
