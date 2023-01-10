@@ -14,8 +14,8 @@
     "checkboxSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
@@ -39,10 +39,7 @@
     },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": {
-        "name": "shape",
-        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
-      }
+      "type": { "name": "shape", "description": "{ columnGrouping?: bool }" }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -61,7 +58,6 @@
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getRowSpacing": { "type": { "name": "func" } },
-    "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
@@ -277,6 +273,7 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--outlined",
       "cell--rangeTop",
       "cell--rangeBottom",
       "cell--rangeLeft",
