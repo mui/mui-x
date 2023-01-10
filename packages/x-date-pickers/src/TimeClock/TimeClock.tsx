@@ -263,8 +263,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return false;
         }
 
-        if (shouldDisableClock) {
-          return !shouldDisableClock(timeValue, viewType);
+        if (shouldDisableClock?.(timeValue, viewType)) {
+          return false;
         }
 
         if (shouldDisableTime) {
