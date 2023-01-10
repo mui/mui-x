@@ -773,4 +773,78 @@ describe('<DateField /> - Editing', () => {
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
     });
   });
+
+  describe('Android editing', () => {
+    let originalUserAgent: string = '';
+
+    beforeEach(() => {
+      originalUserAgent = global.navigator.userAgent;
+      Object.defineProperty(global.navigator, 'userAgent', {
+        configurable: true,
+        writable: true,
+        value:
+          'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.128 Mobile Safari/537.36',
+      });
+    });
+
+    afterEach(() => {
+      Object.defineProperty(global.navigator, 'userAgent', {
+        configurable: true,
+        value: originalUserAgent,
+      });
+    });
+
+    it('should support digit editing', () => {
+      render(<DateField defaultValue={adapterToUse.date(new Date(2022, 4, 16))} />);
+
+      const input = screen.getByRole('textbox');
+      const initialValueStr = input.value;
+      const sectionStart = initialValueStr.indexOf('1');
+
+      clickOnInput(input, sectionStart, sectionStart + 1);
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+
+      // // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '2') } });
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+
+      // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '1') } });
+
+      expectInputValue(input, '05 / 21 / 2022');
+    });
+
+    it('should support letter editing', () => {
+      render(
+        <DateField
+          defaultValue={adapterToUse.date(new Date(2022, 4, 16))}
+          format={`${adapterToUse.formats.month} ${adapterToUse.formats.year}`}
+        />,
+      );
+
+      const input = screen.getByRole('textbox');
+      const initialValueStr = input.value;
+      const sectionStart = initialValueStr.indexOf('M');
+
+      clickOnInput(input, sectionStart, sectionStart + 1);
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+
+      // // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'J') } });
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+
+      // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'u') } });
+
+      expectInputValue(input, 'June 2022');
+    });
+  });
 });

@@ -213,7 +213,12 @@ describe('<DesktopTimePicker />', () => {
       }),
     );
 
-    const shouldDisableTime: TimePickerProps<any>['shouldDisableTime'] = (value) => value === 10;
+    const shouldDisableClock: TimePickerProps<any>['shouldDisableClock'] = (value) => value === 10;
+    const shouldDisableTime: TimePickerProps<any>['shouldDisableTime'] = (value, view) => {
+      const comparingValue =
+        view === 'hours' ? adapterToUse.getHours(value) : adapterToUse.getMinutes(value);
+      return comparingValue === 10;
+    };
 
     [
       { expectedError: 'invalidDate', props: { disableMaskedInput: true }, input: 'invalidText' },
@@ -226,6 +231,12 @@ describe('<DesktopTimePicker />', () => {
         expectedError: 'maxTime',
         props: { maxTime: adapterToUse.date(new Date(2000, 0, 1, 8)) },
         input: '12:00',
+      },
+      { expectedError: 'shouldDisableClock-hours', props: { shouldDisableClock }, input: '10:00' },
+      {
+        expectedError: 'shouldDisableClock-minutes',
+        props: { shouldDisableClock },
+        input: '00:10',
       },
       { expectedError: 'shouldDisableTime-hours', props: { shouldDisableTime }, input: '10:00' },
       { expectedError: 'shouldDisableTime-minutes', props: { shouldDisableTime }, input: '00:10' },

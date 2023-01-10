@@ -2,7 +2,7 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeView } from '../../models/views';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
+import { WrapperVariant } from '../../models/common';
 
 /**
  * Props used to create the layout of the views.
