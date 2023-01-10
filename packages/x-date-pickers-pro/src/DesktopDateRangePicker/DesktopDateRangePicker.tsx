@@ -10,7 +10,6 @@ import {
   DesktopWrapperSlotsComponent,
   DesktopWrapperSlotsComponentsProps,
   DateInputSlotsComponent,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangePickerView } from '../DateRangePicker/DateRangePickerView';
 import { DateRangePickerInput } from '../DateRangePicker/DateRangePickerInput';
@@ -114,8 +113,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
         rangePosition={rangePosition}
         onRangePositionChange={setRangePosition}
         {...pickerProps}
-        slots={uncapitalizeObjectKeys(components)}
-        slotsProps={componentsProps}
+        components={components}
+        componentsProps={componentsProps}
         {...other}
       />
     </DesktopTooltipWrapper>
@@ -391,16 +390,6 @@ DesktopDateRangePicker.propTypes = {
    * If `true`, show the toolbar even in desktop mode.
    */
   showToolbar: PropTypes.bool,
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

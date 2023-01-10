@@ -14,7 +14,6 @@ import {
   DayValidationProps,
   ExportedBaseToolbarProps,
   ExportedUseViewsOptions,
-  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../internal/models/range';
 import { DayRangeValidationProps } from '../internal/models/dateRange';
@@ -64,19 +63,13 @@ export interface ExportedDateRangePickerViewProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
    */
   components?: DateRangePickerViewSlotsComponent<TDate>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  slots?: UncapitalizeObjectKeys<DateRangePickerViewSlotsComponent<TDate>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
+  componentsProps?: DateRangePickerViewSlotsComponentsProps<TDate>;
   /**
    * If `true`, after selecting `start` date calendar will not automatically switch to the month of `end` date.
    * @default false
@@ -134,8 +127,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     showToolbar,
     toggleMobileKeyboardView,
     components,
-    slots,
-    slotsProps,
+    componentsProps,
     onFocusedViewChange,
     ...other
   } = props;
@@ -221,7 +213,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   );
 
   const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
-  const Toolbar = slots?.toolbar ?? components?.Toolbar;
+  const Toolbar = components?.Toolbar;
 
   const renderView = () => {
     const sharedCalendarProps = {
@@ -237,8 +229,8 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       disablePast,
       minDate,
       maxDate,
-      slots,
-      slotsProps,
+      components,
+      componentsProps,
       shouldDisableDate: wrappedShouldDisableDate,
       ...calendarState,
       onFocusedViewChange: onFocusedViewChange
@@ -263,7 +255,7 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
       {shouldRenderToolbar && !!Toolbar && (
         <Toolbar
-          {...slotsProps?.toolbar}
+          {...componentsProps?.toolbar}
           value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}
