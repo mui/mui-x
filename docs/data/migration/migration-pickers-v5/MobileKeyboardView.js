@@ -125,7 +125,7 @@ LayoutWithKeyboardView.propTypes = {
        * Overrideable components.
        * @default {}
        */
-      slots: PropTypes.object,
+      slots: PropTypes.any,
       /**
        * The props used for each component slot.
        * @default {}
