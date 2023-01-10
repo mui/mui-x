@@ -78,27 +78,45 @@ The results may vary in your application depending on the version of each librar
 
 ## Code setup
 
-After installation, you have to pass your chosen date library's adapter to `LocalizationProvider`.
-The supported adapters—as well as `LocalizationProvider`—are exported from both the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages.
+Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree with your chosen date library's adapter.
+
+{{"component": "modules/components/PickersRenderingInstructions.js"}}
+
+:::success
+All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+
+For example, to use the `AdapterDateFns` component, the two following imports are valid:
+
+```tsx
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
+```
+
+`LocalizationProvider` is also exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+
+```tsx
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro/';
+```
+
+:::
 
 All the pickers rendered inside this provider will have access to the adapter through a React context.
 For this reason, we recommend that you wrap your entire application with a `LocalizationProvider` so you can use the Date and Time Pickers everywhere.
-
-{{"component": "modules/components/PickersRenderingInstructions.js"}}
 
 :::info
 If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
 :::
 
-## Basic usage
-
-### Commonly used components
+## Commonly used components
 
 Most application only need a few of the components exposed by the Date and Time packages:
 
 {{"demo": "CommonlyUsedComponents.js"}}
 
-:::info
+:::success
 All the components exported by `@mui/x-date-pickers` are also exported by `@mui/x-date-pickers-pro` but not with nested imports.
 
 For example, to use the `DatePicker` component, the three following imports are valid:
@@ -111,11 +129,31 @@ import { DatePicker } from '@mui/x-date-pickers-pro';
 
 :::
 
-### Controlling the value
+## Basic use cases
 
-All the components described in this page can be controlled using the `value` / `onChange` props:
+### Controlled value
+
+All the components can be controlled using the `value` / `onChange` props:
 
 {{"demo": "ControlledComponent.js"}}
+
+### Custom format
+
+All the components with an HTML input can receive a custom format using the [`format` prop](/x/react-date-pickers/adapters-locale/#custom-field-format):
+
+{{"demo": "CustomFormat.js"}}
+
+### Form props
+
+All the components component can be disabled or read-only:
+
+{{"demo": "FormProps.js"}}
+
+### Validation
+
+If you need to add validation to your component, you can check the [Validation page](/x/react-date-pickers/validation/):
+
+{{"demo": "ValidatedComponent.js"}}
 
 ## Other components
 
@@ -147,13 +185,27 @@ The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:
 
-{{"demo": "ComponentFamilies.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "ComponentFamilies.js"}}
+
+### Responsiveness
+
+Each _Picker_ is available in three responsive variants:
+
+- The desktop component (e.g. `DesktopNextDatePicker`) which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The mobile component (e.g. `MobileNextDatePicker`) which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The responsive component (e.g. `NextDatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
+
+{{"demo": "ResponsivePickers.js"}}
 
 ### Find your component
 
 Use the form below to find component you need:
 
-{{"demo": "ComponentExplorerNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
 ## TypeScript
 

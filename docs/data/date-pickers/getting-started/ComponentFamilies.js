@@ -14,26 +14,44 @@ export default function ComponentFamilies() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="Date editing">
+        <DemoItem label="Date">
           <DateField defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Time editing">
+        <DemoItem label="Time">
           <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Date Time editing">
+        <DemoItem label="Date Time">
           <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Date Range editing">
+        <DemoItem
+          label={
+            <React.Fragment>
+              Date Range <span className="plan-pro" />
+            </React.Fragment>
+          }
+        >
           <MultiInputDateRangeField
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Time Range editing">
+        <DemoItem
+          label={
+            <React.Fragment>
+              Time Range <span className="plan-pro" />
+            </React.Fragment>
+          }
+        >
           <MultiInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
-        <DemoItem label="Date Time Range editing">
+        <DemoItem
+          label={
+            <React.Fragment>
+              Date Time Range <span className="plan-pro" />
+            </React.Fragment>
+          }
+        >
           <MultiInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}
           />

@@ -11,11 +11,7 @@ export default function ControlledComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <NextDatePicker
-          label="Controlled Date Picker"
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
+        <NextDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
       </DemoContainer>
     </LocalizationProvider>
   );
