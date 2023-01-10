@@ -21,7 +21,11 @@ import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends PickersPopperSlotsComponent,
+  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
+  extends Pick<
+      PickersPopperSlotsComponent,
+      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+    >,
     ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;

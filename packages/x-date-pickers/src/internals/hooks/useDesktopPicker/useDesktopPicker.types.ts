@@ -22,7 +22,10 @@ import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 
 export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends PickersPopperSlotsComponent,
+  extends Pick<
+      PickersPopperSlotsComponent,
+      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+    >,
     ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
   /**
    * Component used to enter the date with the keyboard.
