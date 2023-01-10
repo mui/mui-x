@@ -3,7 +3,7 @@ export type {
   TimeClockProps,
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
-} from './TimeClock';
+} from './TimeClock.types';
 
 export { clockClasses } from './clockClasses';
 export type { ClockClasses, ClockClassKey } from './clockClasses';

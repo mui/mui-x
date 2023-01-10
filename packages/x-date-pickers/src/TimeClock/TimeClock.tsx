@@ -1,30 +1,25 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useControlled as useControlled,
   unstable_useId as useId,
 } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SxProps } from '@mui/system';
 import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
-import {
-  PickersArrowSwitcher,
-  PickersArrowSwitcherSlotsComponent,
-  PickersArrowSwitcherSlotsComponentsProps,
-} from '../internals/components/PickersArrowSwitcher';
+import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
-import { getTimeClockUtilityClass, TimeClockClasses } from './timeClockClasses';
+import { getTimeClockUtilityClass } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
-import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
+import { TimeClockProps } from './TimeClock.types';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -35,98 +30,6 @@ const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
 
   return composeClasses(slots, getTimeClockUtilityClass, classes);
 };
-
-export interface ExportedTimeClockProps<TDate>
-  extends TimeValidationProps<TDate>,
-    BaseTimeValidationProps {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
-   */
-  ampm?: boolean;
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock?: boolean;
-}
-
-export interface TimeClockSlotsComponent extends PickersArrowSwitcherSlotsComponent {}
-
-export interface TimeClockSlotsComponentsProps extends PickersArrowSwitcherSlotsComponentsProps {}
-
-export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
-  className?: string;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Set to `true` if focus should be moved to clock picker.
-   */
-  autoFocus?: boolean;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<TimeClockClasses>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: TimeClockSlotsComponent;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: TimeClockSlotsComponentsProps;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
-  showViewSwitcher?: boolean;
-  /**
-   * Controlled open view.
-   */
-  view?: TimeView;
-  /**
-   * Views for calendar picker.
-   * @default ['hours', 'minutes']
-   */
-  views?: readonly TimeView[];
-  /**
-   * Callback fired on view change.
-   * @param {TimeView} view The new view.
-   */
-  onViewChange?: (view: TimeView) => void;
-  /**
-   * Initially open view.
-   * @default 'hours'
-   */
-  openTo?: TimeView;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-}
 
 const TimeClockRoot = styled(PickerViewRoot, {
   name: 'MuiTimeClock',

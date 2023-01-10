@@ -5,7 +5,7 @@ import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
-} from '../DateCalendar/DateCalendar';
+} from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   applyDefaultViewProps,
