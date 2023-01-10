@@ -6,7 +6,7 @@ const MyOctokit = Octokit.plugin(retry);
 async function resolveGitRemoteUrl() {
   let remoteUrl = null;
   if (!process.env.PULL_REQUEST_ID) {
-    console.warn(`Returning ${remoteUrl}, because PULL_REQUEST_ID=${process.env.PULL_REQUEST_ID}`)
+    console.warn(`Returning ${remoteUrl}, because PULL_REQUEST_ID=${process.env.PULL_REQUEST_ID}`);
     return remoteUrl;
   }
   const octokit = new MyOctokit({

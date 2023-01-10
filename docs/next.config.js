@@ -11,7 +11,6 @@ const { resolveGitRemoteUrl } = require('./utils');
 
 const workspaceRoot = path.join(__dirname, '../');
 
-
 module.exports = async () => {
   const remoteUrl = await resolveGitRemoteUrl();
   return withDocsInfra({
