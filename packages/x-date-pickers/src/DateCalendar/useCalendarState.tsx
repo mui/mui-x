@@ -5,7 +5,7 @@ import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidati
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { MuiPickersAdapter } from '../internals/models';
 import { clamp } from '../internals/utils/date-utils';
-import type { DateCalendarDefaultizedProps } from './DateCalendar';
+import { DateCalendarDefaultizedProps } from './DateCalendar.types';
 
 interface CalendarState<TDate> {
   currentMonth: TDate;
