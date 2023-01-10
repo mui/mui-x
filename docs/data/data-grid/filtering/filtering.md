@@ -354,9 +354,8 @@ initialState={{
 
 With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
 
-- For `'string'` columns, the cell must **contain** the value
-- For `'number'` columns, the cell must **equal** the value
-- For `'singleSelect'` columns, the cell must **start with** the value
+- For `'string'` and `'singleSelect'` columns, the cell's formatted value must **contain** the value
+- For `'number'` columns, the cell's formatted value must **equal** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.
