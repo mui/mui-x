@@ -12,8 +12,6 @@ import {
   DayValidationProps,
   DayCalendarSlotsComponent,
   DayCalendarSlotsComponentsProps,
-  UncapitalizeObjectKeys,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { doNothing } from '../internal/utils/utils';
 import { DateRange } from '../internal/models/range';
@@ -54,25 +52,13 @@ interface DesktopDateRangeCalendarProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
    */
-  components?: UncapitalizeObjectKeys<DateRangePickerViewMobileSlotsComponent<TDate>>;
+  components?: DateRangePickerViewMobileSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
    */
   componentsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  slots?: UncapitalizeObjectKeys<DateRangePickerViewMobileSlotsComponent<TDate>>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps?: DateRangePickerViewMobileSlotsComponentsProps<TDate>;
   value: DateRange<TDate>;
   changeMonth: (date: TDate) => void;
 }
@@ -87,8 +73,6 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     changeMonth,
     components,
     componentsProps,
-    slots: innerSlots,
-    slotsProps: innerSlotsProps,
     value,
     maxDate: maxDateProp,
     minDate: minDateProp,
@@ -99,8 +83,6 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     classes: providedClasses,
     ...other
   } = props;
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
 
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -112,10 +94,10 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   const minDateWithDisabled = (disabled && start) || minDate;
   const maxDateWithDisabled = (disabled && end) || maxDate;
 
-  const slotsForDayCalendar = {
-    day: DateRangePickerDay,
-    ...slots,
-  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
+  const componentsForDayCalendar = {
+    Day: DateRangePickerDay,
+    ...components,
+  } as DayCalendarSlotsComponent<TDate>;
 
   // Range going for the start of the start day to the end of the end day.
   // This makes sure that `isWithinRange` works with any time in the start and end day.
@@ -127,8 +109,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     [value, utils],
   );
 
-  const slotsPropsForDayCalendar = {
-    ...slotsProps,
+  const componentsPropsForDayCalendar = {
+    ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
 
@@ -139,7 +121,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         isHighlighting: isWithinRange(utils, day, valueDayRange),
         isStartOfHighlighting: isStartOfRange(utils, day, valueDayRange),
         isEndOfHighlighting: isEndOfRange(utils, day, valueDayRange),
-        ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -147,8 +129,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
   return (
     <React.Fragment>
       <PickersCalendarHeader
-        slots={slots}
-        slotsProps={slotsProps}
+        components={components}
+        slotsProps={componentsProps}
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
@@ -166,8 +148,8 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         selectedDays={value}
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
-        slots={slotsForDayCalendar}
-        slotsProps={slotsPropsForDayCalendar}
+        components={componentsForDayCalendar}
+        slotsProps={componentsPropsForDayCalendar}
       />
     </React.Fragment>
   );
