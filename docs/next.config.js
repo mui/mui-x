@@ -1,5 +1,7 @@
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { Octokit } = require('@octokit/rest');
+const { retry } = require('@octokit/plugin-retry');
 // const withTM = require('next-transpile-modules')(['@mui/monorepo']);
 const withDocsInfra = require('@mui/monorepo/docs/nextConfigDocsInfra');
 const pkg = require('../package.json');
@@ -7,12 +9,27 @@ const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./config');
-const { resolveGitRemoteUrl } = require('./utils');
+// const { resolveGitRemoteUrl } = require('./utils');
 
 const workspaceRoot = path.join(__dirname, '../');
 
+const MyOctokit = Octokit.plugin(retry);
+
 module.exports = async () => {
-  const remoteUrl = await resolveGitRemoteUrl();
+  const octokit = new MyOctokit({
+    auth: process.env.GITHUB_TOKEN,
+  });
+  let remoteUrl = process.env.REPOSITORY_URL;
+  try {
+    const prInfo = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
+      owner: 'mui',
+      repo: 'mui-x',
+      pull_number: '7388',
+    });
+    remoteUrl = `${prInfo.data.head.repo.owner.html_url}/${prInfo.data.head.repo.name}`;
+  } catch (err) {
+    console.warn('Failed to resolve remote URL from PR:', err);
+  }
   return withDocsInfra({
     // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
     assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
