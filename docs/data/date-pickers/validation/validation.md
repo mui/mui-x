@@ -208,13 +208,15 @@ For now, you can not use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
 
 ```tsx
-// Disable the values between 6 PM and midnight for every day (tomorrow 5 PM is not disabled).
+// Disable the values between 6 PM and midnight for every day
+// (tomorrow 5 PM is not disabled).
 <DateTimePicker maxTime={dayjs().set('hour', 18).startOf('hour')} />
 
 // Disable the values after today 6 PM (tomorrow 5 PM is disabled).
 <DateTimePicker maxDateTime={dayjs().set('hour', 18).startOf('hour')} />
 
-// Disable the values between midnight and 6 PM for every day (yesterday 5 PM is not disabled).
+// Disable the values between midnight and 6 PM for every day
+// (yesterday 5 PM is not disabled).
 <DateTimePicker minTime={dayjs().set('hour', 18).startOf('hour')} />
 
 // Disable the values before today 6 PM (yesterday 5 PM is disabled).
