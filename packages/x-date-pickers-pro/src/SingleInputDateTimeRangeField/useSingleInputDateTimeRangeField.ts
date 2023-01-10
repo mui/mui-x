@@ -90,6 +90,6 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateTimeRange,
-    supportedDateSections: ['year', 'month', 'day', 'hours', 'minutes', 'seconds', 'meridiem'],
+    valueType: 'date-time',
   });
 };

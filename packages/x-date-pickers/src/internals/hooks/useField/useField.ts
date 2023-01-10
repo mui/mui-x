@@ -60,6 +60,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    valueType,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -159,12 +160,13 @@ export const useField = <
       return;
     }
 
-    const valueStr = cleanString(event.target.value);
+    const valueStr = event.target.value;
+    const cleanValueStr = cleanString(valueStr);
 
     // If no section is selected, we just try to parse the new value
     // This line is mostly triggered by imperative code / application tests.
     if (selectedSectionIndexes == null) {
-      updateValueFromValueStr(valueStr);
+      updateValueFromValueStr(cleanValueStr);
       return;
     }
 
@@ -173,13 +175,13 @@ export const useField = <
     let startOfDiffIndex = -1;
     let endOfDiffIndex = -1;
     for (let i = 0; i < prevValueStr.length; i += 1) {
-      if (startOfDiffIndex === -1 && prevValueStr[i] !== valueStr[i]) {
+      if (startOfDiffIndex === -1 && prevValueStr[i] !== cleanValueStr[i]) {
         startOfDiffIndex = i;
       }
 
       if (
         endOfDiffIndex === -1 &&
-        prevValueStr[prevValueStr.length - i - 1] !== valueStr[valueStr.length - i - 1]
+        prevValueStr[prevValueStr.length - i - 1] !== cleanValueStr[cleanValueStr.length - i - 1]
       ) {
         endOfDiffIndex = i;
       }
@@ -198,11 +200,11 @@ export const useField = <
 
     // The active section being selected, the browser has replaced its value with the key pressed by the user.
     const activeSectionEndRelativeToNewValue =
-      valueStr.length -
+      cleanValueStr.length -
       prevValueStr.length +
       activeSection.end -
       cleanString(activeSection.endSeparator || '').length;
-    const keyPressed = valueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
+    const keyPressed = cleanValueStr.slice(activeSection.start, activeSectionEndRelativeToNewValue);
 
     if (isAndroid() && keyPressed.length === 0) {
       setTempAndroidValueStr(valueStr);
@@ -294,15 +296,24 @@ export const useField = <
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) => ({
-            date: adjustDateSectionValue(
+          setSectionValueOnDate: (activeDate) => {
+            let date = adjustDateSectionValue(
               utils,
               activeDate,
               activeSection.dateSectionName,
               event.key as AvailableAdjustKeyCode,
-            ),
-            shouldGoToNextSection: false,
-          }),
+            );
+
+            // If the field only supports time editing, then we should never go to the previous / next day.
+            if (valueType === 'time') {
+              date = utils.mergeDateAndTime(activeDate, date);
+            }
+
+            return {
+              date,
+              shouldGoToNextSection: false,
+            };
+          },
           setSectionValueOnSections: () => ({
             sectionValue: adjustInvalidDateSectionValue(
               utils,

@@ -173,20 +173,20 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableTime` with the hours with meridiem', () => {
-    const shouldDisableTime = spy(() => false);
+  it('should call `shouldDisableClock` with the hours with meridiem', () => {
+    const shouldDisableClock = spy(() => false);
 
     render(
       <TimeClock
         autoFocus
         value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
         onChange={() => {}}
-        shouldDisableTime={shouldDisableTime}
+        shouldDisableClock={shouldDisableClock}
         ampm
       />,
     );
 
-    const hours = shouldDisableTime
+    const hours = shouldDisableClock
       .getCalls()
       .filter((el) => el.lastArg === 'hours')
       .map((el) => el.firstArg);
