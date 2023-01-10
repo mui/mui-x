@@ -9,7 +9,6 @@ import {
   pickersMonthClasses,
   PickersMonthClasses,
 } from './pickersMonthClasses';
-import { WrapperVariant } from '../internals/models/common';
 
 export interface ExportedPickersMonthProps {
   classes?: Partial<PickersMonthClasses>;

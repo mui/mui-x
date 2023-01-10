@@ -7,7 +7,6 @@ import {
   pickersYearClasses,
   PickersYearClasses,
 } from './pickersYearClasses';
-import { WrapperVariant } from '../internals/models/common';
 
 export interface ExportedPickersYearProps {
   classes?: Partial<PickersYearClasses>;
