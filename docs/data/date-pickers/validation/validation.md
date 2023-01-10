@@ -169,13 +169,20 @@ This callback receives the current view and the value to be tested:
 
 ```tsx
 // Disables the hours between 12 AM and 3 PM.
-shouldDisableTime={(value, view) => view === 'hours' && value.hour() > 12 && value.hour() < 15}
+shouldDisableTime={(value, view) =>
+  view === 'hours' && value.hour() > 12 && value.hour() < 15
+}
 
 // Disables the last quarter of each hour.
-shouldDisableTime={(value, view) => view === 'minutes' && value.minute() >= 45};
+shouldDisableTime={(value, view) => view === 'minutes' && value.minute() >= 45}
 
 // Disables the second half of each minute.
-shouldDisableTime={(value, view) => view === 'seconds' && value.second() > 30};
+shouldDisableTime={(value, view) => view === 'seconds' && value.second() > 30}
+
+// Disable the hours before 10 AM every 3rd day
+shouldDisableTime={(value, view) =>
+  view === 'hours' && value.hour() < 10 && value.date() % 3 === 0
+}
 ```
 
 In the example below—the last quarter of each hour is not selectable.
