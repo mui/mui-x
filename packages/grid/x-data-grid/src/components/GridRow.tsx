@@ -10,10 +10,9 @@ import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridR
 import {
   GridEditModes,
   GridRowModes,
-  GridEditRowsModel,
+  GridEditingState,
   GridCellModes,
 } from '../models/gridEditRowModel';
-import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
@@ -33,6 +32,7 @@ import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRows
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
 import { GridCellProps } from './cell/GridCell';
+import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -50,7 +50,7 @@ export interface GridRowProps {
   renderedColumns: GridStateColDef[];
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
-  editRowsState: GridEditRowsModel;
+  editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;
@@ -122,7 +122,7 @@ const GridRow = React.forwardRef<
     onMouseLeave,
     ...other
   } = props;
-  const apiRef = useGridApiContext();
+  const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -362,6 +362,7 @@ const GridRow = React.forwardRef<
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
+          isOutlined={apiRef.current.isCellOutlined(rowId, column.field)}
           isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}

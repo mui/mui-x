@@ -4,7 +4,7 @@
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
     "components": { "type": { "name": "object" }, "default": "{}" },
     "componentsProps": { "type": { "name": "object" }, "default": "{}" },
@@ -107,7 +107,6 @@
       "type": { "name": "elementType" }
     },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "InputAdornment": { "default": "InputAdornment", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
@@ -120,6 +119,7 @@
     "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "DesktopNextDatePicker",

@@ -1,146 +1,28 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { styled, Theme, useThemeProps } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useId as useId,
   unstable_useEventCallback as useEventCallback,
   unstable_useControlled as useControlled,
 } from '@mui/utils';
+import { DateCalendarProps, DateCalendarDefaultizedProps } from './DateCalendar.types';
 import { useCalendarState } from './useCalendarState';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import {
-  DayCalendar,
-  DayCalendarSlotsComponent,
-  DayCalendarSlotsComponentsProps,
-  ExportedDayCalendarProps,
-} from './DayCalendar';
+import { DayCalendar } from './DayCalendar';
 import { MonthCalendar } from '../MonthCalendar';
 import { YearCalendar } from '../YearCalendar';
-import { ExportedUseViewsOptions, useViews } from '../internals/hooks/useViews';
-import {
-  PickersCalendarHeader,
-  PickersCalendarHeaderSlotsComponent,
-  PickersCalendarHeaderSlotsComponentsProps,
-} from './PickersCalendarHeader';
+import { useViews } from '../internals/hooks/useViews';
+import { PickersCalendarHeader } from './PickersCalendarHeader';
 import { findClosestEnabledDate, applyDefaultDate } from '../internals/utils/date-utils';
-import { DateView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
-import { DateCalendarClasses, getDateCalendarUtilityClass } from './dateCalendarClasses';
-import {
-  BaseDateValidationProps,
-  DayValidationProps,
-  MonthValidationProps,
-  YearValidationProps,
-} from '../internals/hooks/validation/models';
-import { DefaultizedProps } from '../internals/models/helpers';
+import { getDateCalendarUtilityClass } from './dateCalendarClasses';
+import { BaseDateValidationProps } from '../internals/hooks/validation/models';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
-
-export interface DateCalendarSlotsComponent<TDate>
-  extends PickersCalendarHeaderSlotsComponent,
-    DayCalendarSlotsComponent<TDate> {}
-
-export interface DateCalendarSlotsComponentsProps<TDate>
-  extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {}
-
-export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
-    BaseDateValidationProps<TDate>,
-    DayValidationProps<TDate>,
-    YearValidationProps<TDate>,
-    MonthValidationProps<TDate> {
-  /**
-   * Default calendar month displayed when `value={null}`.
-   */
-  defaultCalendarMonth?: TDate;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
-   * Disable heavy animations.
-   * @default typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)
-   */
-  reduceAnimations?: boolean;
-  /**
-   * Component displaying when passed `loading` true.
-   * @returns {React.ReactNode} The node to render when loading.
-   * @default () => <span data-mui-test="loading-progress">...</span>
-   */
-  renderLoading?: () => React.ReactNode;
-  /**
-   * Callback firing on year change @DateIOType.
-   * @template TDate
-   * @param {TDate} year The new year.
-   */
-  onYearChange?: (year: TDate) => void;
-  /**
-   * Callback firing on month change @DateIOType.
-   * @template TDate
-   * @param {TDate} month The new month.
-   * @returns {void|Promise} -
-   */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
-}
-
-export interface DateCalendarProps<TDate>
-  extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   * @param {PickerSelectionState | undefined} selectionState Indicates if the date selection is complete.
-   */
-  onChange?: (value: TDate | null, selectionState?: PickerSelectionState) => void;
-  className?: string;
-  classes?: Partial<DateCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
-}
-
-export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<
-  DateCalendarProps<TDate>,
-  | 'views'
-  | 'openTo'
-  | 'loading'
-  | 'reduceAnimations'
-  | 'renderLoading'
-  | keyof BaseDateValidationProps<TDate>
->;
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -537,7 +419,7 @@ DateCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -547,7 +429,7 @@ DateCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -566,7 +448,7 @@ DateCalendar.propTypes = {
    */
   focusedView: PropTypes.oneOf(['day', 'month', 'year']),
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -645,14 +527,14 @@ DateCalendar.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

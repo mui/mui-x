@@ -6,8 +6,8 @@
     "defaultValue": "The default value. Use when the component is not controlled.",
     "direction": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes.",
     "disabled": "If <code>true</code>, the component is disabled.",
-    "disableFuture": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
-    "disablePast": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
+    "disableFuture": "If <code>true</code>, disable values after the current date for date components, time for time components and both for date time components.",
+    "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "divider": "Add an element between each child.",
     "format": "Format of the date when rendered in the input(s).",
     "maxDate": "Maximal selectable date.",
@@ -24,8 +24,8 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "Input": "Input rendered for the start or end date.",
     "Root": "Element rendered at the root.",
-    "Separator": "Element rendered between the two inputs."
+    "Separator": "Element rendered between the two inputs.",
+    "TextField": "Form control with an input to render a date.\nIt is rendered twice: once for the start date and once for the end date.\nReceives the same props as <code>@mui/material/TextField</code>."
   }
 }

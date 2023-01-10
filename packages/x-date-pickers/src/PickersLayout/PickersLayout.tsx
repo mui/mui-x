@@ -76,7 +76,7 @@ const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeVie
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
-  const { sx, className, isLandscape, ref } = props;
+  const { sx, className, isLandscape, ref, wrapperVariant } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -91,8 +91,17 @@ const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeVie
       {isLandscape ? shortcuts : toolbar}
       {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper className={classes.contentWrapper}>
-        {tabs}
-        {content}
+        {wrapperVariant === 'desktop' ? (
+          <React.Fragment>
+            {content}
+            {tabs}
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            {tabs}
+            {content}
+          </React.Fragment>
+        )}
       </PickersLayoutContentWrapper>
       {actionBar}
     </PickersLayoutRoot>

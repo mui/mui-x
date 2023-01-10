@@ -8,6 +8,13 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellBlur",
+    "description": "Fired when a <code>blur</code> event happens in a cell.",
+    "params": "GridCellParams",
+    "event": "MuiEvent<React.FocusEvent<HTMLElement>>"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
     "params": "GridCellParams<any>",
@@ -37,6 +44,13 @@
     "params": "GridCellEditStopParams",
     "event": "MuiEvent<MuiBaseEvent>",
     "componentProp": "onCellEditStop"
+  },
+  {
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
+    "name": "cellFocus",
+    "description": "Fired when a <code>focus</code> event happens in a cell.",
+    "params": "GridCellParams",
+    "event": "MuiEvent<React.FocusEvent<HTMLElement>>"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
@@ -200,13 +214,6 @@
     "params": "ElementSize",
     "event": "MuiEvent<{}>",
     "componentProp": "onResize"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "editRowsModelChange",
-    "description": "Fired when the row editing model changes.",
-    "params": "GridEditRowsModel",
-    "event": "MuiEvent<{}>"
   },
   {
     "projects": ["x-data-grid-pro", "x-data-grid-premium"],

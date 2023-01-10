@@ -105,7 +105,7 @@ describe('<DesktopNextDateRangePicker />', () => {
           <DesktopNextDateRangePicker
             // We set the variant to standard to avoid having the label rendered in two places.
             componentsProps={{
-              input: {
+              textField: {
                 variant: 'standard',
               },
             }}

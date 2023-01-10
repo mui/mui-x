@@ -32,6 +32,11 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
     "shouldDisableTime": { "type": { "name": "func" } },
     "showToolbar": {
       "type": { "name": "bool" },

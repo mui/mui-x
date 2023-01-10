@@ -1,0 +1,6 @@
+<NextDatePicker label={'"year"'} openTo="year" />
+<NextDatePicker
+  label={'"month"'}
+  openTo="month"
+  views={['year', 'month', 'day']}
+/>

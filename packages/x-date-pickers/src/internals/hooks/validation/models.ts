@@ -2,12 +2,12 @@ import { TimeView } from '../../models/views';
 
 interface FutureAndPastValidationProps {
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast?: boolean;
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture?: boolean;
@@ -40,11 +40,19 @@ export interface TimeValidationProps<TDate> {
   minutesStep?: number;
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
-  shouldDisableTime?: (timeValue: number, view: TimeView) => boolean;
+  shouldDisableTime?: (value: TDate, view: TimeView) => boolean;
+  /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock?: (clockValue: number, view: TimeView) => boolean;
   /**
    * Do not ignore date part when validating min/max time.
    * @default false
@@ -88,7 +96,7 @@ export interface MonthValidationProps<TDate> {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth?: (month: TDate) => boolean;
 }
@@ -101,7 +109,7 @@ export interface YearValidationProps<TDate> {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear?: (year: TDate) => boolean;
 }

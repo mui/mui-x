@@ -16,7 +16,6 @@ import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridE
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
-import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
@@ -261,6 +260,20 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
+   * Fired when a `focus` event happens in a cell.
+   */
+  cellFocus: {
+    params: GridCellParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
+   * Fired when a `blur` event happens in a cell.
+   */
+  cellBlur: {
+    params: GridCellParams;
+    event: React.FocusEvent<HTMLElement>;
+  };
+  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
@@ -296,10 +309,6 @@ export interface GridControlledStateEventLookup {
    * Fired when the sort model changes.
    */
   sortModelChange: { params: GridSortModel };
-  /**
-   * Fired when the row editing model changes.
-   */
-  editRowsModelChange: { params: GridEditRowsModel };
   /**
    * Fired when the selection state of one or multiple rows changes.
    */

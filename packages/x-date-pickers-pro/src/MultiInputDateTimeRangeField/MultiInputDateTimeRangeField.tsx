@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Stack, { StackProps } from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
+import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
@@ -60,6 +60,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     minDateTime,
     maxDateTime,
     minutesStep,
+    shouldDisableClock,
     shouldDisableTime,
     disableFuture,
     disablePast,
@@ -81,16 +82,15 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     ownerState,
   });
 
-  const Input = components?.Input ?? TextField;
-  const startInputProps: FieldsTextFieldProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const TextField = components?.TextField ?? MuiTextField;
+  const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
-
-  const endInputProps: FieldsTextFieldProps = useSlotProps({
-    elementType: Input,
-    externalSlotProps: componentsProps?.input,
+  const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
+    elementType: TextField,
+    externalSlotProps: componentsProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
@@ -133,21 +133,22 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       minDateTime,
       maxDateTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       disableFuture,
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
     },
-    startInputProps,
-    endInputProps,
-    startInputRef: startInputProps.inputRef,
-    endInputRef: endInputProps.inputRef,
+    startTextFieldProps,
+    endTextFieldProps,
+    startInputRef: startTextFieldProps.inputRef,
+    endInputRef: endTextFieldProps.inputRef,
   });
 
   return (
     <Root {...rootProps}>
-      <Input
+      <TextField
         {...startDateProps}
         inputProps={{
           ...startDateProps.inputProps,
@@ -158,7 +159,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
         }}
       />
       <Separator {...separatorProps} />
-      <Input
+      <TextField
         {...endDateProps}
         inputProps={{
           ...endDateProps.inputProps,
@@ -213,7 +214,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -223,7 +224,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -309,6 +310,14 @@ MultiInputDateTimeRangeField.propTypes = {
     }),
   ]),
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific date. @DateIOType
    * @template TDate
    * @param {TDate} day The date to test.
@@ -318,7 +327,7 @@ MultiInputDateTimeRangeField.propTypes = {
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */

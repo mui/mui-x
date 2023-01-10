@@ -13,6 +13,28 @@ In `package.json`, change the version of the data grid package to `next`.
 
 Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
 
+## Run codemods
+
+The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
+It should be only applied **once per folder.**
+
+```sh
+// Data Grid specific
+npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
+// Target Date and Time pickers as well
+npx @mui/x-codemod v6.0.0/preset-safe <path>
+```
+
+:::info
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::
+
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+
+If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
+
+All other changes must be handled manually.
+
 ## Breaking changes
 
 Since v6 is a major release, it contains some changes that affect the public API.
@@ -35,6 +57,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
+  | `headerHeight`             | `columnHeaderHeight`          |
 
 ### Removed props
 
@@ -42,6 +65,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
 
 ### State access
 
@@ -73,6 +97,25 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
+- The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
+  This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
+  For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
+  The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+
+  ```tsx
+  <DataGrid
+    onCellEditStop={(params, event) => {
+      if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+        return;
+      }
+      // Check if the target is inside a Portal
+      if (!event.currentTarget.contains(event.target)) {
+        event.defaultMuiPrevented = true;
+      }
+    }}
+  />
+  ```
+
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 
 ### Columns
@@ -104,8 +147,16 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `GridAggregationColumnMenuItem`                                     | `GridColumnMenuAggregationItem` |
   | `GridRowGroupingColumnMenuItems`, `GridRowGroupableColumnMenuItems` | `GridColumnMenuGroupingItem`    |
 
-- `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
+- The `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
+
+:::warning
+Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
+
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- Rename `GridFilterItemProps` type to `GridColumnMenuItemProps`.
+- If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
+  :::
 
 ### Rows
 
@@ -171,6 +222,26 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
+
+### Editing
+
+- The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
+  ```diff
+   <DataGrid
+  -  experimentalFeatures={{ newEditingApi: true }}
+   />
+  ```
+- The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
+- The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+- The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+- The `GridEditRowsModel` type was removed.
+- The following API methods were removed:
+  - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
+  - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
+  - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
+  - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
+  - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`.
 
 ### Other exports
 
@@ -197,9 +268,32 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `MAX_PAGE_SIZE` constant was removed.
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
+- The `GridCellParams` interface was changed. The row generic is now before the cell generic.
+
+  ```diff
+  -extends GridCellParams<V, R, F, N> {
+  +extends GridCellParams<R, V, F, N> {
+  ```
+
+  This means that values for 2 generic arguments needs to be provided before the argument that you already have.
+
+  ```diff
+  -renderCell: (params: GridRenderCellParams<number>) => {
+  +renderCell: (params: GridRenderCellParams<any, any, number>) => {
+  ```
 
 ### CSS classes
 
+- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
+  ```diff
+  -'.MuiDataGrid-cell:focus-within': {
+  +'.MuiDataGrid-cell--outlined': {
+  ```
+  The new class name is also available in `gridClasses`:
+  ```diff
+  -`.${gridClasses.cell}:focus-within`: {
+  +`.${gridClasses['cell--outlined']}`: {
+  ```
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
