@@ -53,7 +53,7 @@
     "FieldRoot": "",
     "FieldSeparator": "",
     "Input": "",
-    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, action bar, and shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
