@@ -238,7 +238,7 @@ export const usePickerValue = <
     onChange,
     value: inValue,
     defaultValue,
-    closeOnSelect,
+    closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
   } = props;
@@ -400,7 +400,7 @@ export const usePickerValue = <
         }
 
         case 'finish': {
-          if (closeOnSelect ?? wrapperVariant === 'desktop') {
+          if (closeOnSelect) {
             // Set all dates in state to equal the new date and close picker.
             return setDate({ value: newDate, action: 'acceptAndClose' });
           }
