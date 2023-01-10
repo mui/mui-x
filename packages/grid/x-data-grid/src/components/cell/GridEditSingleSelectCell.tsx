@@ -33,7 +33,7 @@ export interface GridEditSingleSelectCellProps
    * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
    */
-  getOptionLabel?: (value: ValueOptions) => React.ReactNode;
+  getOptionLabel?: (value: ValueOptions) => string;
 }
 
 function isKeyboardEvent(event: any): event is React.KeyboardEvent {

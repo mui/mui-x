@@ -40,7 +40,7 @@ export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
      * @param {ValueOptions} value The current value option.
      * @returns {string} The text to be displayed.
      */
-    getOptionLabel?: (value: ValueOptions) => React.ReactNode;
+    getOptionLabel?: (value: ValueOptions) => string;
   };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
