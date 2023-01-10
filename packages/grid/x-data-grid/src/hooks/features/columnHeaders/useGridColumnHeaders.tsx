@@ -106,8 +106,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
-  const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
+  const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;

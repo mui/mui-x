@@ -10,10 +10,7 @@ export interface GridEditCellProps<V = any> {
 
 export type GridEditRowProps = { [field: string]: GridEditCellProps };
 
-// TODO v6: rename to GridEditingState
-export type GridEditRowsModel = { [rowId: string]: GridEditRowProps };
-
-export type GridEditingState = GridEditRowsModel;
+export type GridEditingState = { [rowId: string]: GridEditRowProps };
 
 export type GridEditMode = 'cell' | 'row';
 
