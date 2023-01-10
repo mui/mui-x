@@ -1,4 +1,5 @@
 [
+  { "name": "beBY", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
   { "name": "ClockClassKey", "kind": "TypeAlias" },
@@ -200,6 +201,8 @@
   { "name": "TimeClockClasses", "kind": "Interface" },
   { "name": "TimeClockClassKey", "kind": "TypeAlias" },
   { "name": "TimeClockProps", "kind": "Interface" },
+  { "name": "TimeClockSlotsComponent", "kind": "Interface" },
+  { "name": "TimeClockSlotsComponentsProps", "kind": "Interface" },
   { "name": "TimeFieldProps", "kind": "Interface" },
   { "name": "TimePicker", "kind": "Variable" },
   { "name": "TimePickerProps", "kind": "Interface" },

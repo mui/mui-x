@@ -7,7 +7,7 @@ import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
-import { WrapperVariant } from '../internals/components/wrappers/WrapperVariantContext';
+import { WrapperVariant } from '../internals/models/common';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {

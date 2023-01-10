@@ -216,8 +216,7 @@ ${logChangelogSection(dataGridCommits, '#### Changes')}
 ${logChangelogSection(pickersCommits, '#### Changes')}
 ${logChangelogSection(
   codemodCommits,
-  `
-### \`@mui/x-codemod@v__VERSION__\`
+  `### \`@mui/x-codemod@v__VERSION__\`
 
 #### Changes`,
 )}

@@ -7,7 +7,7 @@ import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
-} from '../TimeClock/TimeClock';
+} from '../TimeClock/TimeClock.types';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';

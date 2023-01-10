@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import { DateInputProps } from '../PureDateInput';
 import { PickersActionBarProps } from '../../../PickersActionBar';
-import { WrapperVariant } from './WrapperVariantContext';
+import { WrapperVariant } from '../../models/common';
 
 // TODO v6: Drop with the legacy pickers
 export interface DateInputPropsLike

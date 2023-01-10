@@ -134,6 +134,22 @@ The legacy pickers keep the keyboard view until there removal.
 For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
 :::
 
+### Rename `shouldDisableTime` prop
+
+The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+
+```diff
+ <DateTimePicker
+-  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+ />
+
+ <DateTimePicker
+-  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++  shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
+ />
+```
+
 ## Date library and adapters
 
 ### ✅ Do not import adapter from `@date-io`

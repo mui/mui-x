@@ -24,6 +24,11 @@
       "default": "'hours'"
     },
     "readOnly": { "type": { "name": "bool" } },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
     "shouldDisableTime": { "type": { "name": "func" } },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "slotsProps": { "type": { "name": "object" }, "default": "{}" },

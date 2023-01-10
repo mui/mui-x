@@ -410,7 +410,7 @@ describe('<DataGridPro /> - Rows', () => {
       render(
         <TestCaseVirtualization
           nbRows={nbRows}
-          headerHeight={0}
+          columnHeaderHeight={0}
           rowHeight={rowHeight}
           rowBuffer={rowBuffer}
           hideFooter
@@ -568,15 +568,15 @@ describe('<DataGridPro /> - Rows', () => {
 
     describe('scrollToIndexes', () => {
       it('should scroll correctly when the given rowIndex is partially visible at the bottom', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
-            headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + offset + border * 2}
+            columnHeaderHeight={columnHeaderHeight}
+            height={columnHeaderHeight + 4 * rowHeight + offset + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
@@ -587,15 +587,15 @@ describe('<DataGridPro /> - Rows', () => {
       });
 
       it('should scroll correctly when the given index is partially visible at the top', () => {
-        const headerHeight = 40;
+        const columnHeaderHeight = 40;
         const rowHeight = 50;
         const offset = 10;
         const border = 1;
         render(
           <TestCaseVirtualization
             hideFooter
-            headerHeight={headerHeight}
-            height={headerHeight + 4 * rowHeight + border + border * 2}
+            columnHeaderHeight={columnHeaderHeight}
+            height={columnHeaderHeight + 4 * rowHeight + border + border * 2}
             nbCols={2}
             rowHeight={rowHeight}
           />,
