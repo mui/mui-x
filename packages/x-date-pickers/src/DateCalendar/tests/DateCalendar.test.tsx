@@ -446,8 +446,8 @@ describe('<DateCalendar />', () => {
 
       render(
         <DateCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -463,8 +463,8 @@ describe('<DateCalendar />', () => {
       render(
         <DateCalendar
           defaultValue={adapterToUse.date(new Date(2019, 3, 29))}
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
