@@ -87,6 +87,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     disableFuture,
     disablePast,
     minutesStep = 1,
+    shouldDisableClock,
     shouldDisableTime,
     showViewSwitcher,
     onChange,
@@ -165,8 +166,29 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           return false;
         }
 
+        if (shouldDisableClock?.(timeValue, viewType)) {
+          return false;
+        }
+
         if (shouldDisableTime) {
-          return !shouldDisableTime(timeValue, viewType);
+          switch (viewType) {
+            case 'hours':
+              return !shouldDisableTime(utils.setHours(selectedTimeOrMidnight, timeValue), 'hours');
+            case 'minutes':
+              return !shouldDisableTime(
+                utils.setMinutes(selectedTimeOrMidnight, timeValue),
+                'minutes',
+              );
+
+            case 'seconds':
+              return !shouldDisableTime(
+                utils.setSeconds(selectedTimeOrMidnight, timeValue),
+                'seconds',
+              );
+
+            default:
+              return false;
+          }
         }
 
         return true;
@@ -210,6 +232,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       meridiemMode,
       minTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       utils,
       disableFuture,
@@ -449,8 +472,16 @@ TimeClock.propTypes = {
    */
   readOnly: PropTypes.bool,
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
