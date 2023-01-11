@@ -83,9 +83,14 @@ LayoutWithKeyboardView.propTypes = {
         ActionBar: PropTypes.elementType,
         /**
          * Custom component for wrapping the layout.
-         * It wraps the toolbar, views, and action bar.
+         * It wraps the toolbar, views, action bar, and shortcuts.
          */
         Layout: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+        /**
+         * Custom component for the shortcuts.
+         * @default PickersShortcuts
+         */
+        Shortcuts: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
         /**
          * Tabs enabling toggling between views.
          */
@@ -103,6 +108,7 @@ LayoutWithKeyboardView.propTypes = {
       componentsProps: PropTypes.object,
       disabled: PropTypes.bool,
       isLandscape: PropTypes.bool,
+      isValid: PropTypes.func,
       onAccept: PropTypes.func,
       onCancel: PropTypes.func,
       onChange: PropTypes.func,
@@ -143,6 +149,10 @@ LayoutWithKeyboardView.propTypes = {
       views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year'])),
       wrapperVariant: PropTypes.oneOf(['desktop', 'mobile']),
     }),
+    /**
+     * Props passed down to the shortcuts component.
+     */
+    shortcuts: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
     /**
      * Props passed down to the tabs component.
      */

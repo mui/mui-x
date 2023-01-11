@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 
 const getMonthWeekday = (adapter, monthIndex, weekdayIndex, dayRank) => {
-  // Helper to find for exampel the 3rd monday in Jun
+  // Helper to find for example the 3rd monday in Jun
 
   const today = adapter.date();
   const month = adapter.setMonth(today, monthIndex);
