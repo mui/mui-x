@@ -308,9 +308,10 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         disableFuture={disableFuture}
         reduceAnimations={reduceAnimations}
         labelId={gridLabelId}
-        slots={slots}
         components={components}
-        slotsProps={slotsProps ?? componentsProps}
+        componentsProps={componentsProps}
+        slots={slots}
+        slotsProps={slotsProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -365,8 +366,9 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               dayOfWeekFormatter={dayOfWeekFormatter}
               displayWeekNumber={displayWeekNumber}
               components={components}
+              componentsProps={componentsProps}
               slots={slots}
-              slotsProps={slotsProps ?? componentsProps}
+              slotsProps={slotsProps}
               loading={loading}
               renderLoading={renderLoading}
             />

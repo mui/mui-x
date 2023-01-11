@@ -9,12 +9,18 @@ export interface ExportedPickersArrowSwitcherProps {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: PickersArrowSwitcherSlotsComponent;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotsProps`.
+   */
+  componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
+  /**
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersArrowSwitcherSlotsComponent>;
   /**

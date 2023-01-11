@@ -68,12 +68,18 @@ export interface PickersCalendarHeaderProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @depreacted
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: PickersCalendarHeaderSlotsComponent;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * The props used for each component slot.
+   * @default {}
+   * @deprecated Please use `slotsProps`
+   */
+  componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
   /**
@@ -185,6 +191,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const {
     components,
+    componentsProps,
     slots,
     slotsProps,
     currentMonth: month,
@@ -211,7 +218,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
-    externalSlotProps: slotsProps?.switchViewButton,
+    externalSlotProps: slotsProps?.switchViewButton ?? componentsProps?.switchViewButton,
     additionalProps: {
       size: 'small',
       'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
@@ -225,7 +232,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
-    externalSlotProps: slotsProps?.switchViewIcon,
+    externalSlotProps: slotsProps?.switchViewIcon ?? componentsProps?.switchViewIcon,
     ownerState: undefined,
     className: classes.switchViewIcon,
   });
@@ -293,6 +300,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
       <Fade in={view === 'day'}>
         <PickersArrowSwitcher
           components={components}
+          componentsProps={componentsProps}
           slots={slots}
           slotsProps={slotsProps}
           onGoToPrevious={selectPreviousMonth}

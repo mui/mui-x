@@ -63,9 +63,10 @@ export const useStaticPicker = <
         <Layout
           {...layoutProps}
           {...componentsProps?.layout}
-          slots={slots}
           components={components}
-          slotsProps={slotsProps ?? componentsProps}
+          componentsProps={componentsProps}
+          slots={slots}
+          slotsProps={slotsProps}
           ref={ref}
         >
           {renderCurrentView()}

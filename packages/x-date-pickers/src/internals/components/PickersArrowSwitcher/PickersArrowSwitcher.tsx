@@ -68,6 +68,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     children,
     className,
     components,
+    componentsProps,
     slots,
     slotsProps,
     isNextDisabled,
@@ -105,7 +106,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     slots?.previousIconButton ?? components?.PreviousIconButton ?? PickersArrowSwitcherButton;
   const previousIconButtonProps = useSlotProps({
     elementType: PreviousIconButton,
-    externalSlotProps: slotsProps?.previousIconButton,
+    externalSlotProps: slotsProps?.previousIconButton ?? componentsProps?.previousIconButton,
     additionalProps: {
       size: 'small',
       title: leftProps.label,
@@ -122,7 +123,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     slots?.nextIconButton ?? components?.NextIconButton ?? PickersArrowSwitcherButton;
   const nextIconButtonProps = useSlotProps({
     elementType: NextIconButton,
-    externalSlotProps: slotsProps?.nextIconButton,
+    externalSlotProps: slotsProps?.nextIconButton ?? componentsProps?.nextIconButton,
     additionalProps: {
       size: 'small',
       title: rightProps.label,
@@ -139,7 +140,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
-    externalSlotProps: slotsProps?.leftArrowIcon,
+    externalSlotProps: slotsProps?.leftArrowIcon ?? componentsProps?.leftArrowIcon,
     ownerState: undefined,
   });
 
@@ -147,7 +148,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
-    externalSlotProps: slotsProps?.rightArrowIcon,
+    externalSlotProps: slotsProps?.rightArrowIcon ?? componentsProps?.rightArrowIcon,
     ownerState: undefined,
   });
 
