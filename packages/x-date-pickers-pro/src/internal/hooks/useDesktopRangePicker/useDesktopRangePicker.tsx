@@ -185,7 +185,7 @@ export const useDesktopRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>,TDate, TView> = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,

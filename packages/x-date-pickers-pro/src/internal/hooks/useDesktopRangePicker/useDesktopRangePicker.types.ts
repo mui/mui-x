@@ -26,7 +26,7 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
       PickersPopperSlotsComponent,
       'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
     >,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -45,7 +45,7 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},

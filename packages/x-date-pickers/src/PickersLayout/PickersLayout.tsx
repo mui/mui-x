@@ -8,7 +8,7 @@ import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLay
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeView } from '../internals/models/views';
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -70,8 +70,8 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeView>(
-  inProps: PickersLayoutProps<TValue, TView>,
+const PickersLayout = function PickersLayout<TValue, TDate, TView extends DateOrTimeView>(
+  inProps: PickersLayoutProps<TValue, TDate, TView>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 

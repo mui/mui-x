@@ -26,7 +26,7 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
       PickersPopperSlotsComponent,
       'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
     >,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -59,7 +59,7 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
       PickersPopperSlotsComponentsProps,
       'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
     >,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},

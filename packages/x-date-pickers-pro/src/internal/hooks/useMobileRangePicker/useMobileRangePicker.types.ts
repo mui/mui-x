@@ -22,7 +22,7 @@ import { BaseMultiInputFieldProps } from '../../models/fields';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {
   Field: React.ElementType;
   FieldRoot?: React.ElementType<StackProps>;
   FieldSeparator?: React.ElementType<TypographyProps>;
@@ -40,7 +40,7 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
       PickersModalDialogSlotsComponentsProps,
       'dialog' | 'mobilePaper' | 'mobileTransition'
     >,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},

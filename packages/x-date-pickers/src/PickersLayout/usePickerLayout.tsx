@@ -14,7 +14,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeView>(
   return toolbarProps.view !== null;
 }
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -29,14 +29,14 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
-interface PickersLayoutPropsWithValueRequired<TValue, TView extends DateOrTimeView>
-  extends PickersLayoutProps<TValue, TView> {
+interface PickersLayoutPropsWithValueRequired<TValue, TDate, TView extends DateOrTimeView>
+  extends PickersLayoutProps<TValue, TDate, TView> {
   value: TValue;
 }
 interface UsePickerLayoutResponse extends SubComponents {}
 
-const usePickerLayout = <TValue, TView extends DateOrTimeView>(
-  props: PickersLayoutProps<TValue, TView>,
+const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
+  props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse => {
   const {
     wrapperVariant,
@@ -61,7 +61,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     // The true type should be
     // - For pickers value: TDate | null
     // - For rangepickers value: [TDate | null, TDate | null]
-  } = props as PickersLayoutPropsWithValueRequired<TValue, TView>;
+  } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
   const classes = useUtilityClasses(props);
 

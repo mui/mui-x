@@ -10,7 +10,7 @@ import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
 
-export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView> {
+export interface ExportedPickersLayoutSlotsComponent<TValue, TDate, TView extends DateOrTimeView> {
   /**
    * Custom component for the action bar, it is placed bellow the picker views.
    * @default PickersActionBar
@@ -20,27 +20,31 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TView extends DateO
    * Custom component for the shortcuts.
    * @default PickersShortcuts
    */
-  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TView>>;
+  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TDate, TView>>;
   /**
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, action bar, and shortcuts.
    */
   Layout?: React.JSXElementConstructor<
-    PickersLayoutProps<TValue, TView> & React.RefAttributes<HTMLDivElement>
+    PickersLayoutProps<TValue, TDate, TView> & React.RefAttributes<HTMLDivElement>
   >;
 }
 
-interface PickersLayoutActionBarOwnerState<TValue, TView extends DateOrTimeView>
-  extends PickersLayoutProps<TValue, TView> {
+interface PickersLayoutActionBarOwnerState<TValue, TDate, TView extends DateOrTimeView>
+  extends PickersLayoutProps<TValue, TDate, TView> {
   wrapperVariant: WrapperVariant;
 }
 
-interface PickersShortcutsOwnerState<TValue, TView extends DateOrTimeView>
-  extends PickersShortcutsProps<TValue, TView> {
+interface PickersShortcutsOwnerState<TValue, TDate, TView extends DateOrTimeView>
+  extends PickersShortcutsProps<TValue, TDate, TView> {
   wrapperVariant: WrapperVariant;
 }
 
-export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView> {
+export interface ExportedPickersLayoutSlotsComponentsProps<
+  TValue,
+  TDate,
+  TView extends DateOrTimeView,
+> {
   /**
    * Props passed down to the action bar component.
    */
@@ -49,24 +53,24 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
       Omit<PickersActionBarProps, 'onAccept' | 'onClear' | 'onCancel' | 'onSetToday'>
     >,
     {},
-    PickersLayoutActionBarOwnerState<TValue, TView>
+    PickersLayoutActionBarOwnerState<TValue, TDate, TView>
   >;
   /**
    * Props passed down to the shortcuts component.
    */
   shortcuts?: SlotComponentProps<
-    React.ComponentType<PickersShortcutsProps<TValue, TView>>,
+    React.ComponentType<PickersShortcutsProps<TValue, TDate, TView>>,
     {},
-    PickersShortcutsOwnerState<TValue, TView>
+    PickersShortcutsOwnerState<TValue, TDate, TView>
   >;
   /**
    * Props passed down to the layoutRoot component.
    */
-  layout?: Partial<PickersLayoutProps<TValue, TView>>;
+  layout?: Partial<PickersLayoutProps<TValue, TDate, TView>>;
 }
 
-export interface PickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<TValue, TView> {
+export interface PickersLayoutSlotsComponent<TValue, TDate, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<TValue, TDate, TView> {
   /**
    * Tabs enabling toggling between views.
    */
@@ -78,8 +82,8 @@ export interface PickersLayoutSlotsComponent<TValue, TView extends DateOrTimeVie
   Toolbar?: React.JSXElementConstructor<BaseToolbarProps<TValue, TView>>;
 }
 
-export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<TValue, TView> {
+export interface PickersLayoutSlotsComponentsProps<TValue, TDate, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponentsProps<TValue, TDate, TView> {
   /**
    * Props passed down to the tabs component.
    */
@@ -90,7 +94,7 @@ export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrT
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
+export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
   extends Omit<UsePickerLayoutPropsResponseLayoutProps<TValue, TView>, 'value'> {
   value?: TValue;
   className?: string;
@@ -105,12 +109,12 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
    * Overrideable components.
    * @default {}
    */
-  components?: PickersLayoutSlotsComponent<TValue, TView>;
+  components?: PickersLayoutSlotsComponent<TValue, TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TView>;
+  componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
 }
 
 export interface SubComponents {
