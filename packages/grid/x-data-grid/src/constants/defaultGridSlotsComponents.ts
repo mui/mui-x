@@ -43,6 +43,8 @@ import {
   GridVisibilityOffIcon,
   GridViewColumnIcon,
   GridClearIcon,
+  GridDeleteIcon,
+  GridDeleteForeverIcon,
 } from '../components';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
@@ -55,7 +57,8 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   ColumnMenuIcon: GridTripleDotsVerticalIcon,
   OpenFilterButtonIcon: GridFilterListIcon,
   FilterPanelAddIcon: GridAddIcon,
-  FilterPanelDeleteIcon: GridCloseIcon,
+  FilterPanelDeleteIcon: GridDeleteIcon,
+  FilterPanelDeleteAllIcon: GridDeleteForeverIcon,
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
   ColumnUnsortedIcon: GridColumnUnsortedIcon,

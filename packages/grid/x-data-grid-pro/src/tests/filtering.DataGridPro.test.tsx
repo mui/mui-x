@@ -22,7 +22,7 @@ import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-describe('<DataGridPro /> - Filter', () => {
+describe.only('<DataGridPro /> - Filter', () => {
   const { clock, render } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
@@ -313,7 +313,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should work as expected with "Add filter" and "Clear all" buttons ', () => {
+  it('should work as expected with "Add filter" and "Delete all" buttons ', () => {
     render(
       <TestCase
         initialState={{
@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
-    const clearButton = screen.getByRole('button', { name: /Clear All/i });
+    const clearButton = screen.getByRole('button', { name: /Delete All/i });
     expect(clearButton).to.have.attribute('disabled');
     fireEvent.click(addButton);
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(2);
@@ -355,7 +355,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
   });
 
-  it('should hide `Clear all` in filter panel when `disableClearAllButton` is `true`', () => {
+  it('should hide `Delete all` in filter panel when `disableDeleteAllButton` is `true`', () => {
     render(
       <TestCase
         initialState={{
@@ -366,12 +366,12 @@ describe('<DataGridPro /> - Filter', () => {
         }}
         componentsProps={{
           filterPanel: {
-            disableClearAllButton: true,
+            disableDeleteAllButton: true,
           },
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Clear all' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Delete all' })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {

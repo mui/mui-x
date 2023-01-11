@@ -19,7 +19,7 @@ export default function DisableActionButtonsDataGridPro() {
         componentsProps={{
           filterPanel: {
             disableAddFilterButton: true,
-            disableClearAllButton: true,
+            disableDeleteAllButton: true,
           },
         }}
       />

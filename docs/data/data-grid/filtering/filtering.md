@@ -43,7 +43,7 @@ This demo implements a basic use case to prevent showing multiple filters for on
 
 ### Disable action buttons [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-To disable `Add filter` or `Clear all` buttons, pass `disableAddFilterButton` or `disableClearAllButton` to `componentsProps.filterPanel`.
+To disable `Add filter` or `Delete all` buttons, pass `disableAddFilterButton` or `disableDeleteAllButton` to `componentsProps.filterPanel`.
 
 {{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
