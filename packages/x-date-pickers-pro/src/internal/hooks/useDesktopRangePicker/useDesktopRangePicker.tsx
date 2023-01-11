@@ -134,15 +134,16 @@ export const useDesktopRangePicker = <
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
-    ...fieldProps.slots,
+    ...(fieldProps.slots ?? uncapitalizeObjectKeys(fieldProps?.components)),
   };
 
+  const slotsPropsFromFieldProps = fieldProps.slotsProps ?? fieldProps.componentsProps;
   const slotsPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotsProps'] = {
-    ...fieldProps.componentsProps,
+    ...slotsPropsFromFieldProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(slotsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotsProps?.textField,
+        slotsPropsFromFieldProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =
@@ -160,7 +161,10 @@ export const useDesktopRangePicker = <
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(slotsProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotsProps?.root, ownerState);
+      const rootPropsPassedByField = resolveComponentProps(
+        slotsPropsFromFieldProps?.root,
+        ownerState,
+      );
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
@@ -170,7 +174,7 @@ export const useDesktopRangePicker = <
     separator: (ownerState) => {
       const externalSeparatorProps = resolveComponentProps(slotsProps?.fieldSeparator, ownerState);
       const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.slotsProps?.separator,
+        slotsPropsFromFieldProps?.separator,
         ownerState,
       );
       return {
