@@ -458,7 +458,12 @@ const GridRow = React.forwardRef<
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-        const cellProps = { width, colSpan, showRightBorder: rootProps.showCellVerticalBorder, indexRelativeToAllColumns };
+        const cellProps = {
+          width,
+          colSpan,
+          showRightBorder: rootProps.showCellVerticalBorder,
+          indexRelativeToAllColumns,
+        };
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;

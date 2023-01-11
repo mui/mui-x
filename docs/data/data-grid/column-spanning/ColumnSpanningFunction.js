@@ -103,6 +103,7 @@ export default function ColumnSpanningFunction() {
     >
       <DataGrid
         autoHeight
+        disableColumnFilter
         disableRowSelectionOnClick
         hideFooter
         showCellVerticalBorder

@@ -270,7 +270,6 @@ GridColumnHeaderItem.propTypes = {
   colIndex: PropTypes.number.isRequired,
   columnMenuOpen: PropTypes.bool.isRequired,
   disableReorder: PropTypes.bool,
-  extendRowFullWidth: PropTypes.bool.isRequired,
   filterItemsCounter: PropTypes.number,
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
