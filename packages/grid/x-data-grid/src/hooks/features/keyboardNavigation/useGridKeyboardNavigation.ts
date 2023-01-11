@@ -331,6 +331,15 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+        event,
+        cell: cellParams,
+      });
+
+      if (!canUpdateFocus) {
+        return;
+      }
+
       const dimensions = apiRef.current.getRootDimensions();
       if (currentPageRows.length === 0 || !dimensions) {
         return;

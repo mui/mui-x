@@ -19,6 +19,8 @@ import {
   gridRowsDataRowIdToIdLookupSelector,
   GridRowId,
   gridClasses,
+  gridFocusCellSelector,
+  GridCellParams,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -32,6 +34,10 @@ export const cellSelectionStateInitializer: GridStateInitializer<
   cellSelection: { ...(props.unstable_cellSelectionModel ?? props.initialState?.cellSelection) },
 });
 
+function isKeyboardEvent(event: any): event is React.KeyboardEvent {
+  return !!event.key;
+}
+
 export const useGridCellSelection = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<
@@ -44,9 +50,8 @@ export const useGridCellSelection = (
   >,
 ) => {
   const visibleRows = useGridVisibleRows(apiRef, props);
-  const lastClickedCell = React.useRef<GridCellCoordinates | null>();
+  const cellWithVirtualFocus = React.useRef<GridCellCoordinates | null>();
   const lastMouseDownCell = React.useRef<GridCellCoordinates | null>();
-  const focusedCellWhenShiftWasPressed = React.useRef<GridCellCoordinates | null>(null);
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
@@ -164,6 +169,26 @@ export const useGridCellSelection = (
 
   useGridApiMethod(apiRef, cellSelectionApi, 'public');
 
+  const hasClickedValidCellForRangeSelection = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+        return false;
+      }
+
+      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+        return false;
+      }
+
+      const column = apiRef.current.getColumn(params.field);
+      if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
+        return false;
+      }
+
+      return params.rowNode.type !== 'pinnedRow';
+    },
+    [apiRef],
+  );
+
   const handleCellMouseDown = React.useCallback<GridEventListener<'cellMouseDown'>>(
     (params, event) => {
       // Skip if the click comes from the right-button or, only on macOS, Ctrl is pressed
@@ -173,12 +198,18 @@ export const useGridCellSelection = (
         return;
       }
 
+      const selectedCells = Object.keys(apiRef.current.unstable_getCellSelectionModel());
+      const isSelectingFirstCell = selectedCells.length === 0;
+      if (hasClickedValidCellForRangeSelection(params) && event.shiftKey && !isSelectingFirstCell) {
+        event.preventDefault();
+      }
+
       lastMouseDownCell.current = { id: params.id, field: params.field };
       apiRef.current.rootElementRef?.current?.classList.add(
         gridClasses['root--disableUserSelection'],
       );
     },
-    [apiRef],
+    [apiRef, hasClickedValidCellForRangeSelection],
   );
 
   const handleCellMouseUp = React.useCallback<GridEventListener<'cellMouseUp'>>(() => {
@@ -187,6 +218,10 @@ export const useGridCellSelection = (
       gridClasses['root--disableUserSelection'],
     );
   }, [apiRef]);
+
+  const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>((params) => {
+    cellWithVirtualFocus.current = { id: params.id, field: params.field };
+  }, []);
 
   const handleCellMouseOver = React.useCallback<GridEventListener<'cellMouseOver'>>(
     (params, event) => {
@@ -211,30 +246,16 @@ export const useGridCellSelection = (
   >((params, event) => {
     const { id, field } = params;
 
-    if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+    if (!hasClickedValidCellForRangeSelection(params)) {
       return;
     }
 
-    if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+    const focusedCell = gridFocusCellSelector(apiRef);
+    if (event.shiftKey && focusedCell) {
+      apiRef.current.unstable_selectCellRange(focusedCell, { id, field });
+      cellWithVirtualFocus.current = { id, field };
       return;
     }
-
-    const column = apiRef.current.getColumn(params.field);
-    if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
-      return;
-    }
-
-    if (params.rowNode.type === 'pinnedRow') {
-      return;
-    }
-
-    if (event.shiftKey && lastClickedCell.current) {
-      apiRef.current.unstable_selectCellRange(lastClickedCell.current, { id, field });
-      lastClickedCell.current = { id, field };
-      return;
-    }
-
-    lastClickedCell.current = { id, field };
 
     if (event.ctrlKey || event.metaKey) {
       // Add the clicked cell to the selection
@@ -253,19 +274,18 @@ export const useGridCellSelection = (
     [GridEventLookup['cellKeyDown']['params'], GridEventLookup['cellKeyDown']['event']],
     void
   >((params, event) => {
-    const { id, field } = params;
-
-    if (event.key === 'Shift') {
-      focusedCellWhenShiftWasPressed.current = { id, field };
+    if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
       return;
     }
 
-    if (!focusedCellWhenShiftWasPressed.current || !isNavigationKey(event.key) || !event.shiftKey) {
+    if (!event.shiftKey) {
+      apiRef.current.unstable_setCellSelectionModel({});
       return;
     }
 
-    let endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-    let endColumnIndex = apiRef.current.getColumnIndex(field);
+    const { current: otherCell } = cellWithVirtualFocus;
+    let endRowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(otherCell.id);
+    let endColumnIndex = apiRef.current.getColumnIndex(otherCell.field);
 
     if (event.key === 'ArrowDown') {
       endRowIndex += 1;
@@ -286,24 +306,18 @@ export const useGridCellSelection = (
       return;
     }
 
-    apiRef.current.unstable_selectCellRange(focusedCellWhenShiftWasPressed.current, {
+    cellWithVirtualFocus.current = {
       id: visibleRows.rows[endRowIndex].id,
       field: visibleColumns[endColumnIndex].field,
-    });
-  });
+    };
 
-  const handleCellKeyUp = useEventCallback<
-    [GridEventLookup['cellKeyUp']['params'], GridEventLookup['cellKeyUp']['event']],
-    void
-  >((params, event) => {
-    if (event.key === 'Shift') {
-      focusedCellWhenShiftWasPressed.current = null;
-    }
+    const { id, field } = params;
+    apiRef.current.unstable_selectCellRange({ id, field }, cellWithVirtualFocus.current);
   });
 
   useGridApiEventHandler(apiRef, 'cellClick', runIfCellSelectionIsEnabled(handleCellClick));
+  useGridApiEventHandler(apiRef, 'cellFocusIn', runIfCellSelectionIsEnabled(handleCellFocusIn));
   useGridApiEventHandler(apiRef, 'cellKeyDown', runIfCellSelectionIsEnabled(handleCellKeyDown));
-  useGridApiEventHandler(apiRef, 'cellKeyUp', runIfCellSelectionIsEnabled(handleCellKeyUp));
   useGridApiEventHandler(apiRef, 'cellMouseDown', runIfCellSelectionIsEnabled(handleCellMouseDown));
   useGridApiEventHandler(apiRef, 'cellMouseUp', runIfCellSelectionIsEnabled(handleCellMouseUp));
   useGridApiEventHandler(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
@@ -374,6 +388,27 @@ export const useGridCellSelection = (
     [apiRef, visibleRows.range, visibleRows.rows],
   );
 
+  const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
+    (initialValue, { event, cell }) => {
+      if (!cell || !props.unstable_cellSelection || !event.shiftKey) {
+        return initialValue;
+      }
+
+      if (isKeyboardEvent(event)) {
+        return isNavigationKey(event.key) ? false : initialValue;
+      }
+
+      const selectedCells = Object.keys(apiRef.current.unstable_getCellSelectionModel());
+      if (hasClickedValidCellForRangeSelection(cell) && selectedCells.length > 0) {
+        return false;
+      }
+
+      return initialValue;
+    },
+    [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);
   useGridRegisterPipeProcessor(apiRef, 'cellClassName', addClassesToCells);
+  useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
 };
