@@ -22,7 +22,7 @@ import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 import { getActiveElement } from '../utils/utils';
-import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../utils/slots-migration';
 
 export interface PickersPopperSlotsComponent
   extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
@@ -281,9 +281,11 @@ export function PickersPopper(inProps: PickerPopperProps) {
     role,
     components,
     componentsProps,
-    slots,
-    slotsProps,
+    slots: innerSlots,
+    slotsProps: innerSlotsProps,
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotsProps = innerSlotsProps ?? componentsProps;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
@@ -341,10 +343,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
+    externalSlotProps: slotsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -355,14 +357,14 @@ export function PickersPopper(inProps: PickerPopperProps) {
     ownerState: { wrapperVariant: 'desktop' },
   });
 
-  const PaperContent = slots?.paperContent ?? components?.PaperContent ?? React.Fragment;
-  const Transition = slots?.desktopTransition ?? components?.DesktopTransition ?? Grow;
-  const TrapFocus = slots?.desktopTrapFocus ?? components?.DesktopTrapFocus ?? MuiTrapFocus;
+  const PaperContent = slots?.paperContent ?? React.Fragment;
+  const Transition = slots?.desktopTransition ?? Grow;
+  const TrapFocus = slots?.desktopTrapFocus ?? MuiTrapFocus;
 
-  const Paper = slots?.desktopPaper ?? components?.DesktopPaper ?? PickersPopperPaper;
+  const Paper = slots?.desktopPaper ?? PickersPopperPaper;
   const paperProps: MuiPaperProps = useSlotProps({
     elementType: Paper,
-    externalSlotProps: slotsProps?.desktopPaper ?? componentsProps?.desktopPaper,
+    externalSlotProps: slotsProps?.desktopPaper,
     additionalProps: {
       tabIndex: -1,
       elevation: 8,
@@ -372,10 +374,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     ownerState: {} as any, // Is overridden below to use `placement
   });
 
-  const Popper = slots?.popper ?? components?.Popper ?? PickersPopperRoot;
+  const Popper = slots?.popper ?? PickersPopperRoot;
   const popperProps = useSlotProps({
     elementType: Popper,
-    externalSlotProps: slotsProps?.popper ?? componentsProps?.popper,
+    externalSlotProps: slotsProps?.popper,
     additionalProps: {
       transition: true,
       role,
@@ -399,12 +401,9 @@ export function PickersPopper(inProps: PickerPopperProps) {
           disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
-          {...(slotsProps?.desktopTrapFocus ?? componentsProps?.desktopTrapFocus)}
+          {...slotsProps?.desktopTrapFocus}
         >
-          <Transition
-            {...TransitionProps}
-            {...(slotsProps?.desktopTransition ?? componentsProps?.desktopTransition)}
-          >
+          <Transition {...TransitionProps} {...slotsProps?.desktopTransition}>
             <Paper
               {...paperProps}
               onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -417,7 +416,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
               }}
               ownerState={{ ...ownerState, placement }}
             >
-              <PaperContent {...(slotsProps?.paperContent ?? componentsProps?.paperContent)}>
+              <PaperContent {...slotsProps?.paperContent}>
                 {children}
                 <ActionBar {...actionBarProps} />
               </PaperContent>
