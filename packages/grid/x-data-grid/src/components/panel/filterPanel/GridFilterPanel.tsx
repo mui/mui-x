@@ -42,6 +42,7 @@ export interface GridFilterPanelProps
     | 'columnInputProps'
     | 'valueInputProps'
   >;
+
   /*
    * If `true`, the `Add filter` button will not be displayed.
    * @default false
@@ -232,6 +233,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             ) : (
               <span />
             )}
+
             {!disableDeleteAllButton ? (
               <rootProps.components.BaseButton
                 disabled={items.length < 2}
@@ -263,6 +265,8 @@ GridFilterPanel.propTypes = {
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  disableAddFilterButton: PropTypes.bool,
+  disableDeleteAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
    */
