@@ -60,8 +60,8 @@ export interface BaseNextDatePickerProps<TDate>
    */
   componentsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseNextDatePickerSlotsComponent<TDate>>;
   /**
@@ -84,7 +84,10 @@ type UseNextDatePickerDefaultizedProps<
   Props extends BaseNextDatePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>,
+    'components' | 'componentsProps'
+  >
 >;
 
 export const getDatePickerFieldFormat = (
@@ -140,5 +143,6 @@ export function useNextDatePickerDefaultizedProps<
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: { toolbar: DatePickerToolbar, ...slots },
+    slotsProps: themeProps.slotsProps ?? themeProps.componentsProps,
   };
 }
