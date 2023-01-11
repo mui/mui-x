@@ -30,15 +30,7 @@ export const useStaticPicker = <
   validator,
   ref,
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
-  const {
-    localeText,
-    slots,
-    slotsProps,
-    components,
-    componentsProps,
-    displayStaticWrapperAs,
-    autoFocus,
-  } = props;
+  const { localeText, slots, slotsProps, displayStaticWrapperAs, autoFocus } = props;
 
   const { layoutProps, renderCurrentView } = usePicker<
     TDate | null,
@@ -55,20 +47,12 @@ export const useStaticPicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const Layout = slots?.layout ?? components?.Layout ?? PickerStaticLayout;
+  const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout
-          {...layoutProps}
-          {...componentsProps?.layout}
-          components={components}
-          componentsProps={componentsProps}
-          slots={slots}
-          slotsProps={slotsProps}
-          ref={ref}
-        >
+        <Layout {...layoutProps} slots={slots} slotsProps={slotsProps} ref={ref}>
           {renderCurrentView()}
         </Layout>
       </WrapperVariantContext.Provider>
