@@ -7,11 +7,6 @@
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>.",
       "type": "(item: GridFilterItem) => void"
     },
-    {
-      "name": "getVisibleRowModels",
-      "description": "Returns a sorted <code>Map</code> containing only the visible rows.",
-      "type": "() => Map<GridRowId, GridRowModel>"
-    },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
       "name": "setFilterLinkOperator",

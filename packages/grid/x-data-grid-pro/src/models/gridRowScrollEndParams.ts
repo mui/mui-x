@@ -11,7 +11,7 @@ export interface GridRowScrollEndParams {
   /**
    * The number of rows allocated for the rendered zone.
    */
-  virtualRowsCount: number;
+  visibleRowsCount: number;
   /**
    * The grid visible columns.
    */

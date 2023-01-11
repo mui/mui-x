@@ -12,6 +12,7 @@ import {
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
   GridToolbar,
+  gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
@@ -504,7 +505,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows', () => {
+  it('should show the latest expandedRows', () => {
     render(
       <TestCase
         initialState={{
@@ -521,8 +522,11 @@ describe('<DataGridPro /> - Filter', () => {
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
-    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
+    expect(gridExpandedSortedRowEntriesSelector(apiRef)[0].model).to.deep.equal({
+      id: 1,
+      brand: 'Adidas',
+    });
   });
 
   it('should not scroll the page when a filter is removed from the panel', function test() {
