@@ -2,7 +2,7 @@
 product: date-pickers
 title: React Date Range Calendar component
 components: DateRangeCalendar
-githubLabel: 'component: pickers'
+githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 ---
 
@@ -48,23 +48,3 @@ You can find the documentation in the [Validation page](/x/react-date-pickers/va
 ## Localization
 
 You can find the documentation about localization in the [Date localization](/x/react-date-pickers/adapters-locale/) and [Component localization](/x/react-date-pickers/localization/).
-
-## 🚧 Pre-defined range shortcuts
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
-:::
-
-Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
-
-## 🚧 Month Range Picker
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
-:::
-
-The Month Range Picker allows setting a range of months.
