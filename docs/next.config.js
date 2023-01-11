@@ -41,10 +41,7 @@ module.exports = withDocsInfra({
       );
     }
 
-    const includesMonorepo = [
-      /(@mui[\\/]monorepo)$/,
-      /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/,
-    ];
+    const includesMonorepo = [/(@mui[\\/]monorepo)$/, /(@mui[\\/]monorepo)[\\/](?!.*node_modules)/];
 
     return {
       ...config,
