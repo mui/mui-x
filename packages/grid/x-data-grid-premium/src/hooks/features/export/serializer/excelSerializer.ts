@@ -47,6 +47,8 @@ const getFormattedValueOptions = (
   );
 };
 
+let invalidDateValueWarnedOnce = false;
+
 const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
@@ -148,6 +150,16 @@ const serializeRow = (
           if (Number.isNaN(date.getTime())) {
             // Invalid date
             row[column.field] = valueString;
+            if (process.env.NODE_ENV !== 'production' && !invalidDateValueWarnedOnce) {
+              console.warn(
+                [
+                  `MUI: The cell value "${value}" not a valid value for the \`date\` or \`dateTime\` column type.`,
+                  `Row id: ${id}, field: ${column.field}.`,
+                  `This value will be exported as is in the Excel file.`,
+                ].join('\n'),
+              );
+              invalidDateValueWarnedOnce = true;
+            }
             break;
           }
         }
