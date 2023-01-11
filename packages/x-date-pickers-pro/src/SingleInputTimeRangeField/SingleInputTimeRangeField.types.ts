@@ -38,8 +38,8 @@ export interface SingleInputTimeRangeFieldProps<TDate>
    */
   componentsProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<SingleInputTimeRangeFieldSlotsComponent>;
   /**

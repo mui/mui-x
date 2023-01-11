@@ -42,8 +42,8 @@ export interface MultiInputDateRangeFieldProps<TDate>
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<MultiInputDateRangeFieldSlotsComponent>;
   /**

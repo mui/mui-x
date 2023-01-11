@@ -60,8 +60,8 @@ export interface BaseNextDateRangePickerProps<TDate>
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseNextDateRangePickerSlotsComponent<TDate>>;
   /**

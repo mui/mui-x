@@ -63,8 +63,8 @@ export interface UseMobilePickerProps<
 > extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     MobileOnlyPickerProps<TDate> {
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots: UncapitalizeObjectKeys<UseMobilePickerSlotsComponent<TDate, TView>>;
   /**

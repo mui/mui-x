@@ -40,8 +40,8 @@ export interface NextTimePickerProps<TDate>
    */
   componentsProps?: NextTimePickerSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<NextTimePickerSlotsComponents<TDate>>;
   /**

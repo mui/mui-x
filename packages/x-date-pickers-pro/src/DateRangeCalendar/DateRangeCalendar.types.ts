@@ -134,8 +134,8 @@ export interface DateRangeCalendarProps<TDate>
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
   /**

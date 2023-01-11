@@ -70,8 +70,8 @@ export interface UseMobileRangePickerProps<
       MobileRangePickerAdditionalViewProps
     > {
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
   /**

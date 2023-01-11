@@ -33,8 +33,8 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    */
   componentsProps?: TSlotsProps;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<TSlots>;
   /**

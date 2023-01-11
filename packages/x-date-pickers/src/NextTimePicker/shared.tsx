@@ -55,8 +55,8 @@ export interface BaseNextTimePickerProps<TDate>
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseNextTimePickerSlotsComponent<TDate>>;
   /**
@@ -79,7 +79,10 @@ type UseNextTimePickerDefaultizedProps<
   Props extends BaseNextTimePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  Omit<DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>, 'components'|'componentsProps'>
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
+    'components' | 'componentsProps'
+  >
 >;
 
 export function useNextTimePickerDefaultizedProps<

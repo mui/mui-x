@@ -47,8 +47,8 @@ export interface UseStaticPickerProps<
    */
   componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
   /**
-  * Overrideable component slots.
-  * @default {}
+   * Overrideable component slots.
+   * @default {}
    */
   slots?: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
   /**
