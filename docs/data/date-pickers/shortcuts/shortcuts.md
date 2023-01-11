@@ -53,7 +53,7 @@ The `getValue` receives some parameters in an object:
 
 :::info
 
-#### Review message
+Review message
 
 My initial idea was to adapt the shortcut depending on:
 
