@@ -73,13 +73,13 @@ export interface UseDesktopRangePickerProps<
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: UseDesktopRangePickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
   /**

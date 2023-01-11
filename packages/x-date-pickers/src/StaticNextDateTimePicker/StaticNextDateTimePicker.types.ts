@@ -24,13 +24,13 @@ export interface StaticNextDateTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: StaticNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: StaticNextDateTimePickerSlotsComponentsProps<TDate>;
   /**

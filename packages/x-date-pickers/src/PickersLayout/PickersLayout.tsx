@@ -112,13 +112,13 @@ PickersLayout.propTypes = {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps: PropTypes.object,
   disabled: PropTypes.bool,

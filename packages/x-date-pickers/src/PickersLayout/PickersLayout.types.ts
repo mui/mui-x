@@ -84,13 +84,13 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: PickersLayoutSlotsComponent<TValue, TView>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TView>;
   /**

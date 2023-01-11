@@ -85,13 +85,13 @@ export interface BaseNextDateTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: BaseNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
   /**

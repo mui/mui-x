@@ -28,13 +28,13 @@ export interface MobileNextDatePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: MobileNextDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: MobileNextDatePickerSlotsComponentsProps<TDate>;
   /**

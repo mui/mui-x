@@ -46,13 +46,13 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**

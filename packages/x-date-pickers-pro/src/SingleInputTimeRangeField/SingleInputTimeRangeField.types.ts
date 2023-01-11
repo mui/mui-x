@@ -28,13 +28,13 @@ export interface SingleInputTimeRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: SingleInputTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
   /**

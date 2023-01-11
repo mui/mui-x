@@ -23,13 +23,13 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: TSlots;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: TSlotsProps;
   /**

@@ -9,8 +9,18 @@
       },
       "default": "'primary'"
     },
-    "components": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}", "deprecated": true },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code> with uncapitalized properties."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotsProps</code>"
+    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },

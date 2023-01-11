@@ -50,13 +50,13 @@ export interface BaseNextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: BaseNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**

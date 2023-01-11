@@ -32,13 +32,13 @@ export interface MultiInputDateRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slots` with uncapitalized properties.
    */
   components?: MultiInputDateRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated
+   * @deprecated Please use `slotsProps`
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
