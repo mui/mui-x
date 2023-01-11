@@ -24,8 +24,8 @@ import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.
 
 export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   sharedProps: inSharedProps,
-  startInputProps: inStartInputProps,
-  endInputProps: inEndInputProps,
+  startTextFieldProps: inStartTextFieldProps,
+  endTextFieldProps: inEndTextFieldProps,
   startInputRef,
   endInputRef,
 }: UseMultiInputDateRangeFieldParams<
@@ -70,7 +70,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
   const startInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
-    ...inStartInputProps,
+    ...inStartTextFieldProps,
     disabled,
     readOnly,
     format,
@@ -80,7 +80,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   };
 
   const endInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
-    ...inEndInputProps,
+    ...inEndTextFieldProps,
     format,
     disabled,
     readOnly,

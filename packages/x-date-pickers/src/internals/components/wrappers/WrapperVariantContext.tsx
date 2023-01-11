@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-export type WrapperVariant = 'mobile' | 'desktop' | null;
+import { WrapperVariant } from '../../models/common';
 
 /**
  * TODO consider getting rid from wrapper variant

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { LicenseInfo } from '@mui/x-license-pro';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
 
@@ -16,14 +16,7 @@ const blacklist = [
   'docs-data-grid-filtering/RemoveBuiltInOperators.png', // Needs interaction
   'docs-data-grid-filtering/CustomRatingOperator.png', // Needs interaction
   'docs-data-grid-filtering/CustomInputComponent.png', // Needs interaction
-  'docs-date-pickers-date-picker/CustomInput.png', // Redundant
-  'docs-date-pickers-date-picker/ResponsiveDatePickers.png', // Redundant
-  'docs-date-pickers-date-picker/ViewsDatePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/CalendarsDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-range-picker/ResponsiveDateRangePicker.png', // Redundant
-  'docs-date-pickers-date-time-picker/BasicDateTimePicker.png', // Redundant
-  'docs-date-pickers-date-time-picker/ResponsiveDateTimePickers.png', // Redundant
-  'docs-date-pickers-time-picker/ResponsiveTimePickers.png', // Redundant
+  'docs-date-pickers-date-calendar/DateCalendarServerRequest.png', // Has random behavior (TODO: Use seeded random)
   // 'docs-system-typography',
 ];
 

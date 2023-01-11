@@ -30,6 +30,11 @@
         "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
+    "shouldDisableClock": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
+    },
     "shouldDisableTime": { "type": { "name": "func" } },
     "spacing": {
       "type": {
@@ -47,12 +52,12 @@
     "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } }
   },
   "slots": {
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
     "Root": { "default": "MultiInputTimeRangeFieldRoot", "type": { "name": "elementType" } },
     "Separator": {
       "default": "MultiInputTimeRangeFieldSeparator",
       "type": { "name": "elementType" }
-    }
+    },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "MultiInputTimeRangeField",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMultiInputTimeRangeField" },
