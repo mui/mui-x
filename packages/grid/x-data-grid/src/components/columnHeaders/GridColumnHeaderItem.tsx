@@ -21,7 +21,6 @@ interface GridColumnHeaderItemProps {
   headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
-  isLastColumn: boolean;
   sortDirection: GridSortDirection;
   sortIndex?: number;
   filterItemsCounter?: number;
@@ -74,7 +73,6 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     colIndex,
     headerHeight,
     isResizing,
-    isLastColumn,
     sortDirection,
     sortIndex,
     filterItemsCounter,
@@ -274,7 +272,6 @@ GridColumnHeaderItem.propTypes = {
   hasFocus: PropTypes.bool,
   headerHeight: PropTypes.number.isRequired,
   isDragging: PropTypes.bool.isRequired,
-  isLastColumn: PropTypes.bool.isRequired,
   isResizing: PropTypes.bool.isRequired,
   separatorSide: PropTypes.oneOf(['left', 'right']),
   sortDirection: PropTypes.oneOf(['asc', 'desc']),

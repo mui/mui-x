@@ -324,7 +324,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}
-          isLastColumn={columnIndex === visibleColumns.length - 1}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           {...other}
