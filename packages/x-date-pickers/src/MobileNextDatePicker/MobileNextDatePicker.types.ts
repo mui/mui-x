@@ -38,8 +38,8 @@ export interface MobileNextDatePickerProps<TDate>
    */
   componentsProps?: MobileNextDatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<MobileNextDatePickerSlotsComponent<TDate>>;
   /**

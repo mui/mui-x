@@ -22,14 +22,12 @@ export interface GridFilterState {
    * This is the equivalent of the `visibleRowsLookup` if all the groups were expanded.
    */
   filteredRowsLookup: Record<GridRowId, boolean>;
-
   /**
    * Visibility status for each row.
    * A row is visible if it is passing the filters AND if its parents are expanded.
    * If a row is not registered in this lookup, it is visible.
    */
   visibleRowsLookup: Record<GridRowId, boolean>;
-
   /**
    * Amount of descendants that are passing the filters.
    * For the Tree Data, it includes all the intermediate depth levels (= amount of children + amount of grand children + ...).

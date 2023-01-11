@@ -39,8 +39,8 @@ export interface DesktopNextDateRangePickerProps<TDate>
    */
   componentsProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<DesktopNextDateRangePickerSlotsComponent<TDate>>;
   /**

@@ -56,8 +56,8 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;
   /**

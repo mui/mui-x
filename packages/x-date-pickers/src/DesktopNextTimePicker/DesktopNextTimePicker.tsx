@@ -280,7 +280,7 @@ DesktopNextTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

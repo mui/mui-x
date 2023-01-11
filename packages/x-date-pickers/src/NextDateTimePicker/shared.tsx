@@ -95,8 +95,8 @@ export interface BaseNextDateTimePickerProps<TDate>
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseNextDateTimePickerSlotsComponent<TDate>>;
   /**

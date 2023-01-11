@@ -60,8 +60,8 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
    */
   componentsProps?: PickersModalDialogSlotsComponentsProps;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersModalDialogSlotsComponent>;
   /**

@@ -68,8 +68,8 @@ export interface DateTimeFieldProps<TDate>
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;
   /**

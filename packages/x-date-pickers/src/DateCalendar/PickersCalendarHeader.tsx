@@ -72,8 +72,8 @@ export interface PickersCalendarHeaderProps<TDate>
    */
   components?: PickersCalendarHeaderSlotsComponent;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
   /**

@@ -339,7 +339,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

@@ -34,8 +34,8 @@ export interface StaticNextDateTimePickerProps<TDate>
    */
   componentsProps?: StaticNextDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<StaticNextDateTimePickerSlotsComponent<TDate>>;
   /**

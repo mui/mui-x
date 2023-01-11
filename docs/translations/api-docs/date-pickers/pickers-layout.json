@@ -4,7 +4,7 @@
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
     "orientation": "Force rendering in particular orientation.",
-    "slots": "Overrideable components.",
+    "slots": "Overrideable component slots.",
     "slotsProps": "The props used for each component slot."
   },
   "classDescriptions": {

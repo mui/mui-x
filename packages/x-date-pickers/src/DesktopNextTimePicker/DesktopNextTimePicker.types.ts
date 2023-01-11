@@ -38,8 +38,8 @@ export interface DesktopNextTimePickerProps<TDate>
    */
   componentsProps?: DesktopNextTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<DesktopNextTimePickerSlotsComponent<TDate>>;
   /**

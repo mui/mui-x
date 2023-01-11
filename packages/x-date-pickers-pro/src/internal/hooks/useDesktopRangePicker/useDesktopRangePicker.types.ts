@@ -83,8 +83,8 @@ export interface UseDesktopRangePickerProps<
    */
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
   /**

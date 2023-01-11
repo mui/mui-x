@@ -288,7 +288,7 @@ SingleInputDateTimeRangeField.propTypes = {
    */
   size: PropTypes.oneOf(['medium', 'small']),
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

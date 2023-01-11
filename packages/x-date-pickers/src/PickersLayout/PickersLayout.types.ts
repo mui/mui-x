@@ -94,8 +94,8 @@ export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
    */
   componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TView>;
   /**
-   * Overrideable components.
-   * @default {}
+  * Overrideable component slots.
+  * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TView>>;
   /**

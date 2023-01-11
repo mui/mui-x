@@ -69,7 +69,7 @@ export interface PickerStaticWrapperProps<TDate>
    */
   componentsProps?: PickersStaticWrapperSlotsComponentsProps;
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersStaticWrapperSlotsComponent>;
@@ -201,7 +201,7 @@ PickerStaticWrapper.propTypes = {
   onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

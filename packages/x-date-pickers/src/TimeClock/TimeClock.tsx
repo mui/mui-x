@@ -493,7 +493,7 @@ TimeClock.propTypes = {
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

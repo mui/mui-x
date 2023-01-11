@@ -280,7 +280,7 @@ MultiInputDateRangeField.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,

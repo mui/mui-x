@@ -549,7 +549,7 @@ DateCalendar.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
