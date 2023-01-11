@@ -195,5 +195,5 @@ export type {
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
-export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
+export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';
