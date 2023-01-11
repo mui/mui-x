@@ -79,7 +79,7 @@ type UseNextTimePickerDefaultizedProps<
   Props extends BaseNextTimePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>
+  Omit<DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>, 'components'|'componentsProps'>
 >;
 
 export function useNextTimePickerDefaultizedProps<

@@ -10,7 +10,6 @@ import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopNextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -35,8 +34,8 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots ?? uncapitalizeObjectKeys(defaultizedProps.components);
-  const slotsProps = defaultizedProps.slotsProps ?? defaultizedProps.componentsProps;
+  const slots = defaultizedProps.slots;
+  const slotsProps = defaultizedProps.slotsProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
