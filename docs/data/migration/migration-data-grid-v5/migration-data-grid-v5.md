@@ -90,6 +90,11 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
+- The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector `
+- The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector `
+- The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector `
+- The `gridVisibleSortedTopLevelRowEntriesSelector ` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector `
+- The `gridVisibleTopLevelRowCountSelector ` selector was renamed to `gridFilteredTopLevelRowCountSelector `
 
 ### Events
 
@@ -176,6 +181,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -284,6 +290,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -renderCell: (params: GridRenderCellParams<number>) => {
   +renderCell: (params: GridRenderCellParams<any, any, number>) => {
   ```
+
+- The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`
 
 ### CSS classes
 
