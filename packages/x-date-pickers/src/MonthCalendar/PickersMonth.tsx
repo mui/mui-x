@@ -29,9 +29,7 @@ export interface PickersMonthProps extends ExportedPickersMonthProps {
   monthsPerRow: 3 | 4;
 }
 
-type PickersMonthOwnerState = PickersMonthProps;
-
-const useUtilityClasses = (ownerState: PickersMonthOwnerState) => {
+const useUtilityClasses = (ownerState: PickersMonthProps) => {
   const { disabled, selected, classes } = ownerState;
 
   const slots = {
@@ -47,7 +45,7 @@ const PickersMonthRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
 })<{
-  ownerState: PickersMonthOwnerState;
+  ownerState: PickersMonthProps;
 }>(({ ownerState }) => ({
   flexBasis: ownerState.monthsPerRow === 3 ? '33.3%' : '25%',
   display: 'flex',
@@ -64,7 +62,7 @@ const PickersMonthButton = styled('button', {
     { [`&.${pickersMonthClasses.selected}`]: styles.selected },
   ],
 })<{
-  ownerState: PickersMonthOwnerState;
+  ownerState: PickersMonthProps;
 }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
@@ -105,7 +103,7 @@ const PickersMonthButton = styled('button', {
 /**
  * @ignore - do not document.
  */
-const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps) {
+export const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps) {
   const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersMonth',
@@ -128,8 +126,7 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   useEnhancedEffect(() => {
     if (autoFocus) {
@@ -138,12 +135,7 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
   }, [autoFocus]);
 
   return (
-    <PickersMonthRoot
-      data-mui-test="month"
-      className={classes.root}
-      ownerState={ownerState}
-      {...other}
-    >
+    <PickersMonthRoot data-mui-test="month" className={classes.root} ownerState={props} {...other}>
       <PickersMonthButton
         ref={ref}
         disabled={disabled}
@@ -155,12 +147,10 @@ const PickersMonth = React.memo(function PickersMonth(inProps: PickersMonthProps
         onFocus={(event) => onFocus(event, value)}
         onBlur={(event) => onBlur(event, value)}
         className={classes.monthButton}
-        ownerState={ownerState}
+        ownerState={props}
       >
         {children}
       </PickersMonthButton>
     </PickersMonthRoot>
   );
 });
-
-export { PickersMonth };

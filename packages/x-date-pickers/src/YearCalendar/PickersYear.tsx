@@ -28,9 +28,7 @@ export interface PickersYearProps extends ExportedPickersYearProps {
   yearsPerRow: 3 | 4;
 }
 
-type PickersYearOwnerState = PickersYearProps;
-
-const useUtilityClasses = (ownerState: PickersYearOwnerState) => {
+const useUtilityClasses = (ownerState: PickersYearProps) => {
   const { disabled, selected, classes } = ownerState;
 
   const slots = {
@@ -45,7 +43,7 @@ const PickersYearRoot = styled('div', {
   name: 'MuiPickersYear',
   slot: 'Root',
   overridesResolver: (_, styles) => [styles.root],
-})<{ ownerState: PickersYearOwnerState }>(({ ownerState }) => ({
+})<{ ownerState: PickersYearProps }>(({ ownerState }) => ({
   flexBasis: ownerState.yearsPerRow === 3 ? '33.3%' : '25%',
   display: 'flex',
   alignItems: 'center',
@@ -60,7 +58,7 @@ const PickersYearButton = styled('button', {
     { [`&.${pickersYearClasses.disabled}`]: styles.disabled },
     { [`&.${pickersYearClasses.selected}`]: styles.selected },
   ],
-})<{ ownerState: PickersYearOwnerState }>(({ theme }) => ({
+})<{ ownerState: PickersYearProps }>(({ theme }) => ({
   color: 'unset',
   backgroundColor: 'transparent',
   border: 0,
@@ -100,7 +98,7 @@ const PickersYearButton = styled('button', {
 /**
  * @ignore - internal component.
  */
-const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
+export const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
   const props = useThemeProps({
     props: inProps,
     name: 'MuiPickersYear',
@@ -124,8 +122,7 @@ const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
   } = props;
 
   const ref = React.useRef<HTMLButtonElement>(null);
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   // We can't forward the `autoFocus` to the button because it is a native button, not a MUI Button
   React.useEffect(() => {
@@ -139,7 +136,7 @@ const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
     <PickersYearRoot
       data-mui-test="year"
       className={clsx(classes.root, className)}
-      ownerState={ownerState}
+      ownerState={props}
       {...other}
     >
       <PickersYearButton
@@ -153,12 +150,10 @@ const PickersYear = React.memo(function PickersYear(inProps: PickersYearProps) {
         onFocus={(event) => onFocus(event, value)}
         onBlur={(event) => onBlur(event, value)}
         className={classes.yearButton}
-        ownerState={ownerState}
+        ownerState={props}
       >
         {children}
       </PickersYearButton>
     </PickersYearRoot>
   );
 });
-
-export { PickersYear };

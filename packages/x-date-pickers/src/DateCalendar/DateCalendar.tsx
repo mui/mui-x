@@ -130,6 +130,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     loading,
     renderLoading,
     displayWeekNumber,
+    yearsPerRow,
+    monthsPerRow,
     sx,
   } = props;
 
@@ -325,6 +327,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsPerRow={yearsPerRow}
             />
           )}
 
@@ -338,6 +341,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
+              monthsPerRow={monthsPerRow}
             />
           )}
 
