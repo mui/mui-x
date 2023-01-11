@@ -25,7 +25,7 @@ export interface GridParamsApi {
    * @param {string} field The column field.
    * @returns {GridCellParams} The cell params.
    */
-  getCellParams: <V = any, R extends GridValidRowModel = any, F = V>(
+  getCellParams: <V = unknown, R extends GridValidRowModel = any, F = V>(
     id: GridRowId,
     field: string,
   ) => GridCellParams<V, R, F>;
