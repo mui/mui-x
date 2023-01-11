@@ -150,8 +150,18 @@ ViewListItem.propTypes = {
       filter: PropTypes.shape({
         filterModel: PropTypes.object,
       }),
-      pagination: PropTypes.shape({
-        paginationModel: PropTypes.object,
+      paginationModel: PropTypes.shape({
+        /**
+         * The zero-based index of the current page.
+         * @default 0
+         */
+        page: PropTypes.number,
+        /**
+         * Set the number of rows in one page.
+         * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
+         * @default 100
+         */
+        pageSize: PropTypes.number,
       }),
       pinnedColumns: PropTypes.shape({
         left: PropTypes.arrayOf(PropTypes.string),

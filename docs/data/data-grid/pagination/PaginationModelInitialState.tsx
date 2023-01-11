@@ -15,12 +15,9 @@ export default function PaginationModelInitialState() {
         {...data}
         initialState={{
           ...data.initialState,
-          pagination: {
-            ...data.initialState?.pagination,
-            paginationModel: {
-              pageSize: 25,
-              /* page: 0 // default value will be used if not passed */
-            },
+          paginationModel: {
+            pageSize: 25,
+            /* page: 0 // default value will be used if not passed */
           },
         }}
       />

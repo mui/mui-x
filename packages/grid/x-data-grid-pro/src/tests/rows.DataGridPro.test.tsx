@@ -439,12 +439,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.paginationModel.pageSize);
     });
 
     it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoHeight />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.paginationModel.pageSize);
     });
 
     it('should render extra columns when the columnBuffer prop is present', () => {
@@ -505,7 +505,7 @@ describe('<DataGridPro /> - Rows', () => {
           <TestCaseVirtualization
             pagination
             rowHeight={50}
-            initialState={{ pagination: { paginationModel: { pageSize: nbRows } } }}
+            initialState={{ paginationModel: { pageSize: nbRows } }}
             pageSizeOptions={[nbRows]}
           />,
         );
@@ -524,7 +524,7 @@ describe('<DataGridPro /> - Rows', () => {
         render(
           <TestCaseVirtualization
             pagination
-            initialState={{ pagination: { paginationModel: { pageSize: 32, page: 3 } } }}
+            initialState={{ paginationModel: { pageSize: 32, page: 3 } }}
             pageSizeOptions={[32]}
             height={500}
           />,
@@ -679,7 +679,7 @@ describe('<DataGridPro /> - Rows', () => {
     it('should render the correct rows when changing pages', () => {
       render(
         <TestCase
-          initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
+          initialState={{ paginationModel: { pageSize: 6 } }}
           pageSizeOptions={[6]}
           pagination
         />,

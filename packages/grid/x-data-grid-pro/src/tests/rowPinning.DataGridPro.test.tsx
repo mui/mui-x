@@ -647,7 +647,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+        initialState={{ paginationModel: { pageSize: 5 } }}
         pageSizeOptions={[5]}
       />,
     );
@@ -675,7 +675,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        initialState={{ pagination: { paginationModel: { pageSize } } }}
+        initialState={{ paginationModel: { pageSize } }}
         pageSizeOptions={[pageSize]}
       />,
     );

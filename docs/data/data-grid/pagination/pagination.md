@@ -35,7 +35,7 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 ## Pagination model
 
-The pagination model is an object containing the current page and the size of the page. The default value is `{ page: 0, pageSize: 100 }`. To change the default value, make it controlled by `paginationModel` prop or initialize a custom value using `initialState.pagination.paginationModel`.
+The pagination model is an object containing the current page and the size of the page. The default value is `{ page: 0, pageSize: 100 }`. To change the default value, make it controlled by `paginationModel` prop or initialize a custom value using `initialState.paginationModel`.
 
 ### Initialize the pagination model
 
@@ -44,9 +44,7 @@ To initialize the pagination model without controlling it, provide the `paginati
 ```tsx
 <DataGrid
   initialState={{
-    pagination: {
-      paginationModel: { pageSize: 25, page: 0 },
-    },
+    paginationModel: { pageSize: 25, page: 0 },
   }}
 />
 ```

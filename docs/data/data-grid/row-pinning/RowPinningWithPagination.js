@@ -31,10 +31,7 @@ export default function RowPinningWithPagination() {
         pinnedRows={rowsData.pinnedRows}
         initialState={{
           ...data.initialState,
-          pagination: {
-            ...data.initialState?.pagination,
-            paginationModel: { pageSize: 25 },
-          },
+          paginationModel: { ...data.initialState?.paginationModel, pageSize: 25 },
         }}
         pagination
         pageSizeOptions={[5, 10, 25, 50, 100]}

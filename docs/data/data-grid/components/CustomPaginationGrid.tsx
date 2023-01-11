@@ -53,7 +53,7 @@ export default function CustomPaginationGrid() {
         {...data}
         initialState={{
           ...data.initialState,
-          pagination: { paginationModel: { pageSize: 25 } },
+          paginationModel: { pageSize: 25 },
         }}
       />
     </Box>

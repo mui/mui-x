@@ -9,7 +9,7 @@ import { GridRowEntry, GridRowId } from '../../../models/gridRows';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridFilterModelSelector } from '../filter/gridFilterSelector';
-import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
+import { gridPaginationModelSelector } from '../pagination/gridPaginationSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
@@ -54,7 +54,7 @@ export const useGridRowsMeta = (
   const hasRowWithAutoHeight = React.useRef(false);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
-  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationModelSelector);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const currentPage = useGridVisibleRows(apiRef, props);
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
