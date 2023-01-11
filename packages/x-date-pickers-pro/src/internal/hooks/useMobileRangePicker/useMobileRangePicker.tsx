@@ -163,7 +163,11 @@ export const useMobileRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>,TDate,  TView> = {
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<
+    DateRange<TDate>,
+    TDate,
+    TView
+  > = {
     ...componentsProps,
     toolbar: {
       ...componentsProps?.toolbar,
