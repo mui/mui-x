@@ -262,6 +262,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               value={value ? formatHours(value) : '--'}
             />
           )}
+
           {views.includes('minutes') && (
             <React.Fragment>
               <DateTimePickerToolbarSeparator
@@ -279,6 +280,7 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
               />
             </React.Fragment>
           )}
+
           {views.includes('seconds') && (
             <React.Fragment>
               <DateTimePickerToolbarSeparator
