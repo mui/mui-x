@@ -153,7 +153,7 @@ const serializeRow = (
             if (process.env.NODE_ENV !== 'production' && !invalidDateValueWarnedOnce) {
               console.warn(
                 [
-                  `MUI: The cell value "${value}" not a valid value for the \`date\` or \`dateTime\` column type.`,
+                  `MUI: The cell value "${value}" not a valid value for the \`${column.type}\` column type.`,
                   `Row id: ${id}, field: ${column.field}.`,
                   `This value will be exported as is in the Excel file.`,
                 ].join('\n'),
