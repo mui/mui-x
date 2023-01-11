@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
-import { useLicenseVerifier } from '@mui/x-license-pro';
+import { useLicenseVerifier, LicenseInfo } from '@mui/x-license-pro';
 import { sharedLicenseStatuses } from './useLicenseVerifier';
 import { generateReleaseInfo } from '../verifyLicense';
 

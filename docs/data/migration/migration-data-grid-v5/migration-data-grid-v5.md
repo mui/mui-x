@@ -87,6 +87,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridTotalHeaderHeightSelector` selector was removed.
 - The `gridDensityRowHeightSelector` selector was removed.
 - The `gridDensityHeaderHeightSelector` selector was removed.
+- The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
 
@@ -132,6 +133,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   + return undefined;
    }
   ```
+
+- The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
 
 ### Column menu
 
