@@ -3,7 +3,7 @@ import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { CommonProps } from '@mui/material/OverridableComponent';
 import { GridDensity } from '../gridDensity';
-import { GridEditMode, GridEditRowsModel } from '../gridEditRowModel';
+import { GridEditMode } from '../gridEditRowModel';
 import { GridFeatureMode } from '../gridFeatureMode';
 import { Logger } from '../logger';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
@@ -12,7 +12,6 @@ import { GridRowIdGetter, GridRowsProp, GridValidRowModel } from '../gridRows';
 import { GridEventListener } from '../events';
 import { GridCallbackDetails, GridLocaleText } from '../api';
 import { GridApiCommunity } from '../api/gridApiCommunity';
-import type { GridColumnTypesRecord } from '../colDef';
 import type { GridColDef } from '../colDef/gridColDef';
 import { GridClasses } from '../../constants/gridClasses';
 import {
@@ -37,11 +36,6 @@ export interface GridExperimentalFeatures {
    * Enables the column grouping.
    */
   columnGrouping: boolean;
-  /**
-   * Emits a warning if the cell receives focus without also syncing the focus state.
-   * Only works if NODE_ENV=test.
-   */
-  warnIfFocusStateIsNotSynced: boolean;
 }
 
 /**
@@ -224,10 +218,10 @@ export interface DataGridPropsWithDefaultValues {
    */
   filterMode: GridFeatureMode;
   /**
-   * Set the height in pixel of the column headers in the grid.
+   * Sets the height in pixel of the column headers in the grid.
    * @default 56
    */
-  headerHeight: number;
+  columnHeaderHeight: number;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -279,7 +273,7 @@ export interface DataGridPropsWithDefaultValues {
    */
   paginationMode: GridFeatureMode;
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: number;
@@ -358,10 +352,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<GridClasses>;
-  /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes?: GridColumnTypesRecord;
   /**
    * Set the total number of rows, if it is different from the length of the value `rows` prop.
    * If some rows have children (for instance in the tree data), this number represents the amount of top level rows.
@@ -616,16 +606,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onMenuClose?: GridEventListener<'menuClose'>;
-  /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel?: GridEditRowsModel;
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange?: (editRowsModel: GridEditRowsModel, details: GridCallbackDetails) => void;
   /**
    * Controls the modes of the cells.
    */

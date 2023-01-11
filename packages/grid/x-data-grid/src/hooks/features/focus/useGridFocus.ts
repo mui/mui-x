@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
+import {
+  unstable_ownerDocument as ownerDocument,
+  unstable_useEventCallback as useEventCallback,
+} from '@mui/utils';
 import { GridEventListener, GridEventLookup } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFocusApi, GridFocusPrivateApi } from '../../../models/api/gridFocusApi';
@@ -10,6 +13,7 @@ import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import {
+  gridCellOutlineCellSelector,
   gridFocusCellSelector,
   unstable_gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
@@ -23,6 +27,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
   focus: { cell: null, columnHeader: null, columnGroupHeader: null },
   tabIndex: { cell: null, columnHeader: null, columnGroupHeader: null },
+  outline: { cell: null },
 });
 
 /**
@@ -35,7 +40,7 @@ export const useGridFocus = (
   props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
-
+  const lastKeydownEvent = React.useRef<KeyboardEvent | null>(null);
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 
   const publishCellFocusOut = React.useCallback(
@@ -67,6 +72,7 @@ export const useGridFocus = (
           ...state,
           tabIndex: { cell: { id, field }, columnHeader: null, columnGroupHeader: null },
           focus: { cell: { id, field }, columnHeader: null, columnGroupHeader: null },
+          outline: { cell: { id, field } },
         };
       });
       apiRef.current.forceUpdate();
@@ -99,6 +105,7 @@ export const useGridFocus = (
           ...state,
           tabIndex: { columnHeader: { field }, cell: null, columnGroupHeader: null },
           focus: { columnHeader: { field }, cell: null, columnGroupHeader: null },
+          outline: { cell: null }, // The column header outline is handled via CSS
         };
       });
 
@@ -136,6 +143,14 @@ export const useGridFocus = (
   const getColumnGroupHeaderFocus = React.useCallback<
     GridFocusPrivateApi['getColumnGroupHeaderFocus']
   >(() => unstable_gridFocusColumnGroupHeaderSelector(apiRef), [apiRef]);
+
+  const isCellOutlined = React.useCallback<GridFocusPrivateApi['isCellOutlined']>(
+    (id, field) => {
+      const outlinedCell = gridCellOutlineCellSelector(apiRef);
+      return outlinedCell?.id === id && outlinedCell?.field === field;
+    },
+    [apiRef],
+  );
 
   const moveFocusToRelativeCell = React.useCallback<GridFocusPrivateApi['moveFocusToRelativeCell']>(
     (id, field, direction) => {
@@ -214,6 +229,25 @@ export const useGridFocus = (
     [apiRef],
   );
 
+  const handleCellBlur = useEventCallback(() => {
+    if (lastKeydownEvent.current?.key !== 'Tab') {
+      return;
+    }
+    apiRef.current.setState((state) => ({
+      ...state,
+      // The tabIndex is kept to allow the focus to return to this cell if Shift+Tab is pressed
+      focus: { cell: null, columnHeader: null, columnGroupHeader: null },
+      outline: { cell: null },
+    }));
+    apiRef.current.forceUpdate();
+  });
+
+  const handleCellFocus = useEventCallback((params: GridCellParams) => {
+    if (lastKeydownEvent.current?.key === 'Tab') {
+      apiRef.current.setCellFocus(params.id, params.field);
+    }
+  });
+
   const handleColumnHeaderFocus = React.useCallback<GridEventListener<'columnHeaderFocus'>>(
     ({ field }, event) => {
       if (event.target !== event.currentTarget) {
@@ -224,7 +258,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const focussedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
+  const focusedColumnGroup = unstable_gridFocusColumnGroupHeaderSelector(apiRef);
 
   const handleColumnGroupHeaderFocus = React.useCallback<
     GridEventListener<'columnGroupHeaderFocus'>
@@ -234,19 +268,19 @@ export const useGridFocus = (
         return;
       }
       if (
-        focussedColumnGroup !== null &&
-        focussedColumnGroup.depth === depth &&
-        fields.includes(focussedColumnGroup.field)
+        focusedColumnGroup !== null &&
+        focusedColumnGroup.depth === depth &&
+        fields.includes(focusedColumnGroup.field)
       ) {
         // This group cell has already been focused
         return;
       }
       apiRef.current.setColumnGroupHeaderFocus(fields[0], depth, event);
     },
-    [apiRef, focussedColumnGroup],
+    [apiRef, focusedColumnGroup],
   );
 
-  const handleBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(() => {
+  const handleColumnHeaderBlur = React.useCallback<GridEventListener<'columnHeaderBlur'>>(() => {
     logger.debug(`Clearing focus`);
     apiRef.current.setState((state) => ({
       ...state,
@@ -287,6 +321,7 @@ export const useGridFocus = (
         apiRef.current.setState((state) => ({
           ...state,
           focus: { cell: null, columnHeader: null, columnGroupHeader: null },
+          outline: { cell: null },
         }));
         apiRef.current.forceUpdate();
 
@@ -297,6 +332,14 @@ export const useGridFocus = (
     },
     [apiRef, publishCellFocusOut],
   );
+
+  const handleDocumentKeyDown = useEventCallback<[KeyboardEvent], void>((event) => {
+    lastKeydownEvent.current = event;
+  });
+
+  const handleDocumentKeyUp = useEventCallback(() => {
+    lastKeydownEvent.current = null;
+  });
 
   const handleCellModeChange = React.useCallback<GridEventListener<'cellModeChange'>>(
     (params) => {
@@ -319,6 +362,7 @@ export const useGridFocus = (
       apiRef.current.setState((state) => ({
         ...state,
         focus: { cell: null, columnHeader: null, columnGroupHeader: null },
+        outline: { cell: null },
       }));
     }
   }, [apiRef]);
@@ -332,6 +376,7 @@ export const useGridFocus = (
     moveFocusToRelativeCell,
     setColumnGroupHeaderFocus,
     getColumnGroupHeaderFocus,
+    isCellOutlined,
   };
 
   useGridApiMethod(apiRef, focusApi, 'public');
@@ -340,13 +385,19 @@ export const useGridFocus = (
   React.useEffect(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current);
     doc.addEventListener('click', handleDocumentClick);
+    doc.addEventListener('keydown', handleDocumentKeyDown);
+    doc.addEventListener('keyup', handleDocumentKeyUp);
 
     return () => {
       doc.removeEventListener('click', handleDocumentClick);
+      doc.removeEventListener('keydown', handleDocumentKeyDown);
+      doc.removeEventListener('keyup', handleDocumentKeyUp);
     };
-  }, [apiRef, handleDocumentClick]);
+  }, [apiRef, handleDocumentClick, handleDocumentKeyDown, handleDocumentKeyUp]);
 
-  useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleBlur);
+  useGridApiEventHandler(apiRef, 'cellFocus', handleCellFocus);
+  useGridApiEventHandler(apiRef, 'cellBlur', handleCellBlur);
+  useGridApiEventHandler(apiRef, 'columnHeaderBlur', handleColumnHeaderBlur);
   useGridApiEventHandler(apiRef, 'cellDoubleClick', handleCellDoubleClick);
   useGridApiEventHandler(apiRef, 'cellMouseDown', handleCellMouseDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);

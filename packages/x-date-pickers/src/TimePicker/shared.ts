@@ -5,7 +5,7 @@ import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
-} from '../TimeClock/TimeClock';
+} from '../TimeClock/TimeClock.types';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';

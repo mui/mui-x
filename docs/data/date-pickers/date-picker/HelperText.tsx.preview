@@ -1,7 +1,7 @@
 <NextDatePicker
   label="Helper text example"
   componentsProps={{
-    input: {
+    textField: {
       helperText: 'MM / DD / YYYY',
     },
   }}

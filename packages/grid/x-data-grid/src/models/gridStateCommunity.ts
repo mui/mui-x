@@ -15,9 +15,10 @@ import type {
   GridSortingInitialState,
   GridSortingState,
   GridTabIndexState,
+  GridOutlineState,
 } from '../hooks';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
-import type { GridEditRowsModel } from './gridEditRowModel';
+import type { GridEditingState } from './gridEditRowModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 
 /**
@@ -26,13 +27,14 @@ import type { GridRowSelectionModel } from './gridRowSelectionModel';
 export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
-  editRows: GridEditRowsModel;
+  editRows: GridEditingState;
   pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
   columnMenu: GridColumnMenuState;
   sorting: GridSortingState;
   focus: GridFocusState;
+  outline: GridOutlineState;
   tabIndex: GridTabIndexState;
   rowSelection: GridRowSelectionModel;
   filter: GridFilterState;

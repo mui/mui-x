@@ -1,17 +1,18 @@
 import * as React from 'react';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
-} from '../../components/PickersViewLayout';
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '../../../PickersLayout/PickersLayout.types';
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseStaticPickerSlotsComponent extends ExportedPickersViewLayoutSlotsComponent {}
+export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<TDate | null, TView> {}
+  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -29,14 +30,14 @@ export interface UseStaticPickerProps<
   TDate,
   TView extends DateOrTimeView,
   TError,
-  TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
+  TExternalProps extends UsePickerViewsProps<TDate | null, TView, any, any>,
 > extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
    * Overrideable components.
    * @default {}
    */
-  components?: UseStaticPickerSlotsComponent;
+  components?: UseStaticPickerSlotsComponent<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}
@@ -56,5 +57,5 @@ export interface UseStaticPickerParams<
   /**
    * Ref to pass to the root element
    */
-  ref: React.Ref<HTMLDivElement> | undefined;
+  ref?: React.Ref<HTMLDivElement>;
 }

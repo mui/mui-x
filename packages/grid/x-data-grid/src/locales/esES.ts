@@ -5,7 +5,7 @@ import { getGridLocalization, Localization } from '../utils/getGridLocalization'
 const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
-  // noResultsOverlayLabel: 'No results found.',
+  noResultsOverlayLabel: 'Resultados no encontrados',
   errorOverlayDefaultLabel: 'Ha ocurrido un error.',
 
   // Density selector toolbar button text
@@ -28,16 +28,16 @@ const esESGrid: Partial<GridLocaleText> = {
     count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Buscar…',
+  toolbarQuickFilterLabel: 'Buscar',
+  toolbarQuickFilterDeleteIconLabel: 'Limpiar',
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
   toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Descargar como CSV',
-  // toolbarExportPrint: 'Print',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportPrint: 'Imprimir',
+  toolbarExportExcel: 'Descargar como Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
@@ -49,7 +49,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
   filterPanelDeleteIconLabel: 'Borrar',
-  // filterPanelLogicOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
@@ -70,12 +70,12 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'es en o anterior',
   filterOperatorIsEmpty: 'está vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'es cualquiera de',
 
   // Filter values text
-  // filterValueAny: 'any',
-  // filterValueTrue: 'true',
-  // filterValueFalse: 'false',
+  filterValueAny: 'cualquiera',
+  filterValueTrue: 'verdadero',
+  filterValueFalse: 'falso',
 
   // Column menu text
   columnMenuLabel: 'Menú',
@@ -107,23 +107,23 @@ const esESGrid: Partial<GridLocaleText> = {
     `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
 
   // Checkbox selection text
-  // checkboxSelectionHeaderName: 'Checkbox selection',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionHeaderName: 'Seleccionar casilla',
+  checkboxSelectionSelectAllRows: 'Seleccionar todas las filas',
+  checkboxSelectionUnselectAllRows: 'Deseleccionar todas las filas',
+  checkboxSelectionSelectRow: 'Seleccionar fila',
+  checkboxSelectionUnselectRow: 'Deseleccionar fila',
 
   // Boolean cell text
-  // booleanCellTrueLabel: 'yes',
-  // booleanCellFalseLabel: 'no',
+  booleanCellTrueLabel: 'si',
+  booleanCellFalseLabel: 'no',
 
   // Actions cell more text
   actionsCellMore: 'más',
 
   // Column pinning text
-  // pinToLeft: 'Pin to left',
-  // pinToRight: 'Pin to right',
-  // unpin: 'Unpin',
+  pinToLeft: 'Anclar a la izquierda',
+  pinToRight: 'Anclar a la derecha',
+  unpin: 'Desanclar',
 
   // Tree Data
   // treeDataGroupingHeaderName: 'Group',
@@ -137,8 +137,8 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Master/detail
   // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  expandDetailPanel: 'Expandir',
+  collapseDetailPanel: 'reducirse',
 
   // Row reordering text
   // rowReorderingHeaderName: 'Row reordering',
@@ -147,8 +147,8 @@ const esESGrid: Partial<GridLocaleText> = {
   // aggregationMenuItemHeader: 'Aggregation',
   // aggregationFunctionLabelSum: 'sum',
   // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
   // aggregationFunctionLabelSize: 'size',
 };
 

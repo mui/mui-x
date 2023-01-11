@@ -12,7 +12,7 @@ import {
 
 export interface StaticNextDateRangePickerSlotsComponent<TDate>
   extends BaseNextDateRangePickerSlotsComponent<TDate>,
-    UseStaticRangePickerSlotsComponent {}
+    UseStaticRangePickerSlotsComponent<TDate, 'day'> {}
 
 export interface StaticNextDateRangePickerSlotsComponentsProps<TDate>
   extends BaseNextDateRangePickerSlotsComponentsProps<TDate>,
