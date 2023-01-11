@@ -332,7 +332,6 @@
   { "name": "GridPaginationModel", "kind": "Interface" },
   { "name": "gridPaginationModelSelector", "kind": "Variable" },
   { "name": "gridPaginationRowRangeSelector", "kind": "Variable" },
-  { "name": "gridPaginationSelector", "kind": "Variable" },
   { "name": "GridPaginationState", "kind": "Interface" },
   { "name": "GridPanel", "kind": "Variable" },
   { "name": "gridPanelClasses", "kind": "Variable" },

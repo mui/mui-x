@@ -241,7 +241,7 @@
   },
   {
     "name": "gridPaginationModelSelector",
-    "returnType": "GridPaginationModel",
+    "returnType": "GridPaginationState",
     "category": "Pagination",
     "description": "Get the pagination model",
     "supportsApiRef": true
