@@ -2,13 +2,14 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
-import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
+import { TimeClock } from '../../../TimeClock';
+import { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import {
   DateCalendar,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
 } from '../../../DateCalendar';
-import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
+import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar.types';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';

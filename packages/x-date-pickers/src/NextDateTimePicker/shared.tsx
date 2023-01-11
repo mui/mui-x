@@ -7,12 +7,12 @@ import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
-} from '../DateCalendar/DateCalendar';
+} from '../DateCalendar/DateCalendar.types';
 import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
-} from '../TimeClock/TimeClock';
+} from '../TimeClock/TimeClock.types';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import {
