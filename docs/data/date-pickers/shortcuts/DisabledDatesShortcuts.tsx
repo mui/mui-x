@@ -13,7 +13,7 @@ const getMonthWeekday = (
 ) => {
   // Helper to find for exampel the 3rd monday in Jun
 
-  const today = adapter.date();
+  const today = adapter.date()!;
   const month = adapter.setMonth(today, monthIndex);
   const weeks = adapter.getWeekArray(month);
 
@@ -28,12 +28,12 @@ const getMonthWeekday = (
   }
   return null;
 };
-const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
+const shortcuts: PickersShortcutsItem<Dayjs | null, Dayjs>[] = [
   {
     label: "New Year's Day",
     getValue: ({ adapter }) => {
       // (January 1)
-      const today = adapter.date();
+      const today = adapter.date()!;
       return adapter.setDate(adapter.setMonth(today, 0), 1);
     },
   },
@@ -48,7 +48,7 @@ const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Independence Day',
     getValue: ({ adapter }) => {
       // (July 4)
-      const today = adapter.date();
+      const today = adapter.date()!;
       return adapter.setDate(adapter.setMonth(today, 6), 4);
     },
   },
@@ -70,7 +70,7 @@ const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Veterans Day',
     getValue: ({ adapter }) => {
       // (November 11)
-      const today = adapter.date();
+      const today = adapter.date()!;
       return adapter.setDate(adapter.setMonth(today, 10), 11);
     },
   },
@@ -85,7 +85,7 @@ const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'World AIDS Day',
     getValue: ({ adapter }) => {
       // (December 1)
-      const today = adapter.date();
+      const today = adapter.date()!;
       return adapter.setDate(adapter.setMonth(today, 11), 1);
     },
   },
@@ -93,7 +93,7 @@ const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
     label: 'Christmas Day',
     getValue: ({ adapter }) => {
       // (December 25)
-      const today = adapter.date();
+      const today = adapter.date()!;
       return adapter.setDate(adapter.setMonth(today, 11), 25);
     },
   },
