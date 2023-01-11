@@ -134,6 +134,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
    }
   ```
 
+- The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
+
 ### Column menu
 
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
