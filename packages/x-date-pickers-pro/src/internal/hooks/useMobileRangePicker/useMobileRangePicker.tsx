@@ -106,8 +106,8 @@ export const useMobileRangePicker = <
   });
 
   const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
-    ...fieldProps.slots,
     textField: slots.textField,
+    ...fieldProps.slots,
   };
 
   const slotsPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotsProps'] = {

@@ -131,10 +131,10 @@ export const useDesktopRangePicker = <
   });
 
   const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
-    ...fieldProps.slots,
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
+    ...fieldProps.slots,
   };
 
   const slotsPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotsProps'] = {

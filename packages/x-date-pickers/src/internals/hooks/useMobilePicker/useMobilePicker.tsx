@@ -65,8 +65,8 @@ export const useMobilePicker = <
   });
 
   const slotsForField: BaseFieldProps<TDate, unknown>['slots'] = {
-    ...fieldProps.slots,
     textField: slots.textField,
+    ...fieldProps.slots,
   };
 
   const slotsPropsForField: BaseFieldProps<TDate, unknown>['slotsProps'] = {

@@ -94,8 +94,8 @@ export const useDesktopPicker = <
   const OpenPickerIcon = slots.openPickerIcon;
 
   const slotsForField: BaseFieldProps<TDate | null, unknown>['slots'] = {
-    ...fieldProps.slots,
     textField: slots.textField,
+    ...fieldProps.slots,
   };
 
   const slotsPropsForField: BaseFieldProps<TDate | null, unknown>['slotsProps'] = {
