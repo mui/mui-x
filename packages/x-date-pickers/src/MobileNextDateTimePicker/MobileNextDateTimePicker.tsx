@@ -111,13 +111,13 @@ MobileNextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
-   * deprecated
+   * @deprecated Please use `slots`. Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
-   * deprecated
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**

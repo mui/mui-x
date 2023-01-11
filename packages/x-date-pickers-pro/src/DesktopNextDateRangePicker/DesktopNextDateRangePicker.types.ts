@@ -29,13 +29,13 @@ export interface DesktopNextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated Please use `slots` with uncapitalized properties.
+   * @deprecated Please use `slots`.
    */
   components?: DesktopNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
   /**

@@ -38,11 +38,11 @@ export interface BaseMultiInputFieldProps<TValue, TError>
     'components' | 'componentsProps' | 'slots' | 'slotsProps'
   > {
   /**
-   * @deprecated Please use `slots` with uncapitalized properties.
+   * @deprecated Please use `slots`.
    */
   components?: BaseMultiInputFieldSlotsComponent;
   /**
-   * @deprecated Please use `slotsProps`
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: BaseMultiInputFieldSlotsComponentsProps;
   slots?: UncapitalizeObjectKeys<BaseMultiInputFieldSlotsComponent>;

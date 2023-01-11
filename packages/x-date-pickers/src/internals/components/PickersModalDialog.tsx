@@ -50,13 +50,13 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated Please use `slots` with uncapitalized properties.
+   * @deprecated Please use `slots`.
    */
   components?: PickersModalDialogSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: PickersModalDialogSlotsComponentsProps;
   /**

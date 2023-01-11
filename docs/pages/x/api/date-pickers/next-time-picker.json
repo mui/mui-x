@@ -12,13 +12,13 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slots</code> with uncapitalized properties."
+      "deprecationInfo": "Please use <code>slots</code>."
     },
     "componentsProps": {
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>"
+      "deprecationInfo": "Please use <code>slotsProps</code>."
     },
     "defaultValue": { "type": { "name": "any" } },
     "desktopModeMediaQuery": {

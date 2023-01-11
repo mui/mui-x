@@ -9,7 +9,7 @@ export interface ExportedPickersArrowSwitcherProps {
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated Please use `slots` with uncapitalized properties.
+   * @deprecated Please use `slots`.
    */
   components?: PickersArrowSwitcherSlotsComponent;
   /**

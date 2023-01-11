@@ -13,13 +13,13 @@ export interface BaseFieldProps<TValue, TError>
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
   /**
-   * @deprecated Please use `slots` with uncapitalized properties.
+   * @deprecated Please use `slots`.
    */
   components?: {
     TextField?: React.ElementType<TextFieldProps>;
   };
   /**
-   * @deprecated Please use `slotsProps`
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: {
     textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
