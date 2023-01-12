@@ -78,6 +78,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     onRangePositionChange,
     toolbarFormat,
     className,
+    ...other
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -102,6 +103,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
+      {...other}
     >
       <DateRangePickerToolbarContainer className={classes.container}>
         <PickersToolbarButton
