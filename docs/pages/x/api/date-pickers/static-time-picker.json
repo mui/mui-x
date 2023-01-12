@@ -61,7 +61,6 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "showToolbar": { "type": { "name": "bool" } },
     "sx": {
       "type": {
         "name": "union",

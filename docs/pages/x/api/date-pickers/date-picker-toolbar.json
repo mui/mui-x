@@ -9,6 +9,10 @@
       "required": true
     },
     "className": { "type": { "name": "string" } },
+    "hidden": {
+      "type": { "name": "bool" },
+      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop), `displayStaticWrapperAs === 'desktop'` for `Static` pickers"
+    },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
