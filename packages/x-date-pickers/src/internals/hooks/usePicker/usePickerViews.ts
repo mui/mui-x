@@ -139,14 +139,15 @@ export const usePickerViews = <
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
   const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
 
-  const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
-    view: undefined,
-    views,
-    openTo,
-    onChange,
-    onViewChange,
-    autoFocus: autoFocusView,
-  });
+  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+    useViews({
+      view: undefined,
+      views,
+      openTo,
+      onChange,
+      onViewChange,
+      autoFocus: autoFocusView,
+    });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>
@@ -199,8 +200,24 @@ export const usePickerViews = <
       return;
     }
 
+    let newView = view;
+
+    // If the current view is a field view, go to the last popper view
     if (currentViewMode === 'field' && popperView != null) {
-      setView(popperView);
+      newView = popperView;
+    }
+
+    // If the current view is not the default view and both are UI views
+    if (
+      newView !== defaultView &&
+      viewModeLookup[newView] === 'UI' &&
+      viewModeLookup[defaultView] === 'UI'
+    ) {
+      newView = defaultView;
+    }
+
+    if (newView !== view) {
+      setView(newView);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
