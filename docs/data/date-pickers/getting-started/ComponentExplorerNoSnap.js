@@ -1,7 +1,7 @@
 import * as React from 'react';
 // @ts-ignore
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
 import Link from '@mui/material/Link';
 import Select from '@mui/material/Select';

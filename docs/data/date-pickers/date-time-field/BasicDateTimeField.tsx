@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
