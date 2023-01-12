@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/demo/DemoContainer';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';

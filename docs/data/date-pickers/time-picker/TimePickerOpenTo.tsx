@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/demo/DemoContainer';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
