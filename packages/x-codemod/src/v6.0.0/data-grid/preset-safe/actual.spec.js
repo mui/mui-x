@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { SortGridMenuItems } from '@mui/x-data-grid';
+import { DataGrid, SortGridMenuItems } from '@mui/x-data-grid';
 
 function App({ column, hideMenu }) {
   return (
     <React.Fragment>
+      <DataGrid
+        disableMultipleSelection
+        showCellRightBorder
+      />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>
   );

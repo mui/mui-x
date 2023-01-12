@@ -209,6 +209,7 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
+- [`row-selection-renamed-props`](#row-selection-renamed-props)
 
 #### `column-menu-components-rename`
 
@@ -235,4 +236,29 @@ npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
 
-You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
+#### `row-selection-renamed-props`
+
+Data grid props that have been renamed.
+
+```diff
+<DataGrid
+-  selectionModel={model}
++  rowSelectionModel={model}
+-  onSelectionModelChange={handler}
++  onRowSelectionModelChange={handler}
+-  disableSelectionOnClick
++  disableRowSelectionOnClick
+-  disableMultipleSelection
++  disableMultipleRowSelection
+-  showCellRightBorder
++  showCellVerticalBorder
+-  showColumnRightBorder
++  showColumnVerticalBorder
+/>
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
+```
+
+You can find more details about Data Grid breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
