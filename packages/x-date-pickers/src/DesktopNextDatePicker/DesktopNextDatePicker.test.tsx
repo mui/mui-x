@@ -67,22 +67,71 @@ describe('<DesktopNextDatePicker />', () => {
     expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
-  it('switches between views uncontrolled', () => {
-    const handleViewChange = spy();
-    render(
-      <DesktopNextDatePicker
-        open
-        showToolbar
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        onViewChange={handleViewChange}
-      />,
-    );
+  describe('Views', () => {
+    it('should switch between views uncontrolled', () => {
+      const handleViewChange = spy();
+      render(
+        <DesktopNextDatePicker
+          open
+          showToolbar
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          onViewChange={handleViewChange}
+        />,
+      );
 
-    fireEvent.click(screen.getByLabelText(/switch to year view/i));
+      fireEvent.click(screen.getByLabelText(/switch to year view/i));
+      expect(handleViewChange.callCount).to.equal(1);
+      expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
+      expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
+    });
 
-    expect(handleViewChange.callCount).to.equal(1);
-    expect(screen.queryByLabelText(/switch to year view/i)).to.equal(null);
-    expect(screen.getByLabelText('year view is open, switch to calendar view')).toBeVisible();
+    it('should go to the first view when re-opening the picker', () => {
+      const handleViewChange = spy();
+      render(
+        <DesktopNextDatePicker
+          showToolbar
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          onViewChange={handleViewChange}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      fireEvent.click(screen.getByLabelText(/switch to year view/i));
+      expect(handleViewChange.callCount).to.equal(1);
+
+      // Dismiss the picker
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      expect(handleViewChange.callCount).to.equal(2);
+      expect(handleViewChange.lastCall.firstArg).to.equal('day');
+    });
+
+    it('should go to the `openTo` view when re-opening the picker', () => {
+      const handleViewChange = spy();
+      render(
+        <DesktopNextDatePicker
+          showToolbar
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          onViewChange={handleViewChange}
+          openTo="month"
+          views={['year', 'month', 'day']}
+        />,
+      );
+
+      openPicker({ type: 'date', variant: 'desktop' });
+
+      fireEvent.click(screen.getByLabelText(/switch to year view/i));
+      expect(handleViewChange.callCount).to.equal(1);
+
+      // Dismiss the picker
+      userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+
+      openPicker({ type: 'date', variant: 'desktop' });
+      expect(handleViewChange.callCount).to.equal(2);
+      expect(handleViewChange.lastCall.firstArg).to.equal('month');
+    });
   });
 
   describe('Component slots: Popper', () => {
