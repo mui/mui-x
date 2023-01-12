@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GridEventListener } from '../../../models/events';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColumnApi, GridColumnReorderApi } from '../../../models/api/gridColumnApi';
-import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -35,6 +34,7 @@ import {
   COLUMNS_DIMENSION_PROPERTIES,
 } from './gridColumnsUtils';
 import { GridPreferencePanelsValue } from '../preferencesPanel';
+import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { getGridDefaultColumnTypes } from '../../../colDef';
 
 const defaultColumnTypes = getGridDefaultColumnTypes();
@@ -190,10 +190,20 @@ export function useGridColumns(
     [apiRef],
   );
 
+  const getColumnIndexRelativeToVisibleColumns = React.useCallback<
+    GridColumnApi['getColumnIndexRelativeToVisibleColumns']
+  >(
+    (field) => {
+      const allColumns = gridColumnFieldsSelector(apiRef);
+      return allColumns.findIndex((col) => col === field);
+    },
+    [apiRef],
+  );
+
   const setColumnIndex = React.useCallback<GridColumnReorderApi['setColumnIndex']>(
     (field, targetIndexPosition) => {
       const allColumns = gridColumnFieldsSelector(apiRef);
-      const oldIndexPosition = allColumns.findIndex((col) => col === field);
+      const oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field);
       if (oldIndexPosition === targetIndexPosition) {
         return;
       }
@@ -209,15 +219,13 @@ export function useGridColumns(
       });
 
       const params: GridColumnOrderChangeParams = {
-        field,
-        element: apiRef.current.getColumnHeaderElement(field),
-        colDef: apiRef.current.getColumn(field),
-        targetIndex: targetIndexPosition,
+        column: apiRef.current.getColumn(field),
+        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field),
         oldIndex: oldIndexPosition,
       };
-      apiRef.current.publishEvent('columnOrderChange', params);
+      apiRef.current.publishEvent('columnIndexChange', params);
     },
-    [apiRef, logger, setGridColumnsState],
+    [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns],
   );
 
   const setColumnWidth = React.useCallback<GridColumnApi['setColumnWidth']>(
@@ -243,6 +251,7 @@ export function useGridColumns(
     getColumnIndex,
     getColumnPosition,
     getVisibleColumns,
+    getColumnIndexRelativeToVisibleColumns,
     updateColumns,
     setColumnVisibilityModel,
     setColumnVisibility,

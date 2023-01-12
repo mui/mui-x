@@ -1,6 +1,6 @@
 import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridFocusState, GridOutlineState, GridTabIndexState } from './gridFocusState';
+import { GridFocusState, GridTabIndexState } from './gridFocusState';
 
 export const gridFocusStateSelector = (state: GridStateCommunity) => state.focus;
 
@@ -36,17 +36,4 @@ export const gridTabIndexColumnHeaderSelector = createSelector(
 export const unstable_gridTabIndexColumnGroupHeaderSelector = createSelector(
   gridTabIndexStateSelector,
   (state: GridTabIndexState) => state.columnGroupHeader,
-);
-
-/**
- * @ignore - do not document.
- */
-export const gridOutlineStateSelector = (state: GridStateCommunity) => state.outline;
-
-/**
- * @ignore - do not document.
- */
-export const gridCellOutlineCellSelector = createSelector(
-  gridOutlineStateSelector,
-  (state: GridOutlineState) => state.cell,
 );

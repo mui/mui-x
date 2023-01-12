@@ -43,7 +43,15 @@ describe('<DataGrid /> - Row Selection', () => {
   function TestDataGridSelection(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...defaultData} {...props} autoHeight={isJSDOM} />
+        <DataGrid
+          {...defaultData}
+          {...props}
+          autoHeight={isJSDOM}
+          experimentalFeatures={{
+            warnIfFocusStateIsNotSynced: true,
+            ...props.experimentalFeatures,
+          }}
+        />
       </div>
     );
   }

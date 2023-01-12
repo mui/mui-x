@@ -17,7 +17,6 @@ export function useGridEvents(
     | 'onColumnHeaderOut'
     | 'onColumnHeaderEnter'
     | 'onColumnHeaderLeave'
-    | 'onColumnOrderChange'
     | 'onCellClick'
     | 'onCellDoubleClick'
     | 'onCellKeyDown'
@@ -37,7 +36,6 @@ export function useGridEvents(
   useGridApiOptionHandler(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);
   useGridApiOptionHandler(apiRef, 'columnHeaderEnter', props.onColumnHeaderEnter);
   useGridApiOptionHandler(apiRef, 'columnHeaderLeave', props.onColumnHeaderLeave);
-  useGridApiOptionHandler(apiRef, 'columnOrderChange', props.onColumnOrderChange);
 
   useGridApiOptionHandler(apiRef, 'cellClick', props.onCellClick);
   useGridApiOptionHandler(apiRef, 'cellDoubleClick', props.onCellDoubleClick);

@@ -36,6 +36,11 @@ export interface GridExperimentalFeatures {
    * Enables the column grouping.
    */
   columnGrouping: boolean;
+  /**
+   * Emits a warning if the cell receives focus without also syncing the focus state.
+   * Only works if NODE_ENV=test.
+   */
+  warnIfFocusStateIsNotSynced: boolean;
 }
 
 /**

@@ -182,6 +182,13 @@ export interface GridColumnHeaderEventLookup {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
+  /**
+   * Fired when the index of a column changes.
+   * @ignore - do not document.
+   */
+  columnIndexChange: {
+    params: GridColumnOrderChangeParams;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {
@@ -258,20 +265,6 @@ export interface GridCellEventLookup {
   cellKeyUp: {
     params: GridCellParams<any>;
     event: React.KeyboardEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a `focus` event happens in a cell.
-   */
-  cellFocus: {
-    params: GridCellParams;
-    event: React.FocusEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a `blur` event happens in a cell.
-   */
-  cellBlur: {
-    params: GridCellParams;
-    event: React.FocusEvent<HTMLElement>;
   };
   /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
