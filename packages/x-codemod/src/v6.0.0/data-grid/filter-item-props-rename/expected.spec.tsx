@@ -14,14 +14,23 @@ function App() {
     <DataGrid
       columns={columns}
       rows={rows}
+      initialState={{
+        filter: {
+          filterModel: {
+            items: [{
+              field: 'column',
+              operator: 'contains',
+              value: 'a',
+            }],
+          }
+        }
+      }}
       filterModel={{
-        items: [
-          {
-            field: 'column',
-            operator: 'contains',
-            value: 'a',
-          },
-        ],
+        items: [{
+          field: 'column',
+          operator: 'contains',
+          value: 'a',
+        }],
       }}
     />
   );
