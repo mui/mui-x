@@ -182,6 +182,13 @@ export interface GridColumnHeaderEventLookup {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
+  /**
+   * Fired when the index of a column changes.
+   * @ignore - do not document.
+   */
+  columnIndexChange: {
+    params: GridColumnOrderChangeParams;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {
