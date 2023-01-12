@@ -2443,8 +2443,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/LukasTy/material-ui.git#handle-x-demo-container":
-  version "5.11.3"
-  resolved "https://github.com/LukasTy/material-ui.git#263cb00c0c0b1b54f9e46c87401ba50a9c3c49a3"
+  version "5.11.4"
+  resolved "https://github.com/LukasTy/material-ui.git#9e3debc99296336452e3538934870db9a07af538"
 
 "@mui/private-theming@^5.11.2":
   version "5.11.2"
