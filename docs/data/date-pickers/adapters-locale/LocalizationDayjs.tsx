@@ -13,7 +13,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const locales = ['en', 'en-gb', 'zh-cn', 'de'];
 
-type LocaleKey = typeof locales[number];
+type LocaleKey = (typeof locales)[number];
 
 export default function LocalizationDayjs() {
   const [locale, setLocale] = React.useState<LocaleKey>('en');
