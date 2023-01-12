@@ -43,6 +43,12 @@ By default, the shortcuts are disabled if the returned value does not pass valid
 
 {{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
 
+## Range shortcuts [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+Shortcuts on range pickers require `getValue` property to return an array with two values.
+
+{{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}
+
 ## Shortcuts parameters
 
 The `getValue` receives some parameters in an object:

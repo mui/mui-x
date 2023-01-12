@@ -454,12 +454,16 @@ export const usePickerValue = <
     onSelectedSectionsChange: handleFieldSelectedSectionsChange,
   };
 
-  const isValid = (testedValue: TValue) =>
-    validator({
+  const isValid = (testedValue: TValue) => {
+    const validationResponse = validator({
       adapter,
       value: testedValue,
       props: { ...props, value: testedValue },
-    }) === null;
+    });
+    return Array.isArray(testedValue)
+      ? (validationResponse as any[]).every((v) => v === null)
+      : validationResponse === null;
+  };
 
   const layoutResponse: UsePickerValueLayoutResponse<TValue> = {
     ...actions,
