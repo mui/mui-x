@@ -29,7 +29,7 @@ export default function TimeValidationTimePicker() {
           onChange={(newValue) => {
             setValue(newValue);
           }}
-          shouldDisableTime={(timeValue, clockType) => {
+          shouldDisableClock={(timeValue, clockType) => {
             if (clockType === 'hours' && timeValue % 2) {
               return true;
             }

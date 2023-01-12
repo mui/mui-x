@@ -1,4 +1,5 @@
 [
+  { "name": "beBY", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
   { "name": "ClockClassKey", "kind": "TypeAlias" },
@@ -52,6 +53,7 @@
   { "name": "DayCalendarSkeletonProps", "kind": "Interface" },
   { "name": "dayPickerClasses", "kind": "Variable" },
   { "name": "deDE", "kind": "Variable" },
+  { "name": "DEFAULT_DESKTOP_MODE_MEDIA_QUERY", "kind": "Variable" },
   { "name": "DEFAULT_LOCALE", "kind": "Variable" },
   { "name": "DesktopDatePicker", "kind": "Variable" },
   { "name": "DesktopDatePickerProps", "kind": "Interface" },
@@ -200,6 +202,8 @@
   { "name": "TimeClockClasses", "kind": "Interface" },
   { "name": "TimeClockClassKey", "kind": "TypeAlias" },
   { "name": "TimeClockProps", "kind": "Interface" },
+  { "name": "TimeClockSlotsComponent", "kind": "Interface" },
+  { "name": "TimeClockSlotsComponentsProps", "kind": "Interface" },
   { "name": "TimeFieldProps", "kind": "Interface" },
   { "name": "TimePicker", "kind": "Variable" },
   { "name": "TimePickerProps", "kind": "Interface" },

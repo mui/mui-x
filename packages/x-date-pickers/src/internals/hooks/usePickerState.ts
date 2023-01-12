@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
+import { WrapperVariant } from '../models/common';
 import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';

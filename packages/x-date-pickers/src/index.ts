@@ -56,3 +56,4 @@ export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './internals/hooks/validation/useDateTimeValidation';
+export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';
