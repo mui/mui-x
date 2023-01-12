@@ -34,8 +34,14 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      toolbar: {
+        hidden: displayStaticWrapperAs !== 'mobile',
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
+    }
   };
 
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({

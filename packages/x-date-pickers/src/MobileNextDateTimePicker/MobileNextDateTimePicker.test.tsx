@@ -29,7 +29,7 @@ describe('<MobileNextDateTimePicker />', () => {
     render(
       <MobileNextDateTimePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
@@ -54,11 +54,11 @@ describe('<MobileNextDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
+  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
     render(
       <MobileNextDateTimePicker
         open
-        showToolbar={false}
+        componentsProps={{ toolbar: { hidden: true } }}
         defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
@@ -71,7 +71,7 @@ describe('<MobileNextDateTimePicker />', () => {
     render(
       <MobileNextDateTimePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
         defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}

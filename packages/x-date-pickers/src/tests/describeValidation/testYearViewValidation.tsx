@@ -24,7 +24,7 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
         renderInput: (params) => <TextField {...params} />,
         open: true,
         reduceAnimations: true,
-        showToolbar: false,
+        componentsProps: { toolbar: { hidden: true } },
       }),
     };
 

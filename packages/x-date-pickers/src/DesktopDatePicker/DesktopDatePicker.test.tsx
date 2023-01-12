@@ -155,11 +155,11 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.getByRole('textbox')).to.have.value('');
   });
 
-  it('prop `showToolbar` – renders toolbar in desktop mode', () => {
+  it('prop `slotsProps.toolbar.hidden` – renders toolbar in desktop mode', () => {
     render(
       <WrappedDesktopDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         initialValue={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
@@ -172,7 +172,7 @@ describe('<DesktopDatePicker />', () => {
     render(
       <WrappedDesktopDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         initialValue={adapterToUse.date(new Date(2018, 0, 1))}
         renderInput={(params) => <TextField {...params} />}
         onViewChange={handleViewChange}

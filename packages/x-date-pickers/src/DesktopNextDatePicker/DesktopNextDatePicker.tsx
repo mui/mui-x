@@ -44,7 +44,6 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps,
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
-    showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     components: {
       OpenPickerIcon: Calendar,
@@ -62,6 +61,10 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
     },
   };
 

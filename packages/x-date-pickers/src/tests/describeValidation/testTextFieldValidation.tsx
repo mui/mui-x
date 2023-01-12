@@ -21,7 +21,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
             onChange: () => {},
             renderInput: (params) => <TextField {...params} />,
             reduceAnimations: true,
-            showToolbar: false,
+            componentsProps: { toolbar: { hidden: true } },
           }
         : {};
 

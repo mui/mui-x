@@ -19,7 +19,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       open: true,
       view: 'day',
       reduceAnimations: true,
-      showToolbar: false,
+      componentsProps: { toolbar: { hidden: true } },
     };
 
     it('should apply shouldDisableDate', function test() {

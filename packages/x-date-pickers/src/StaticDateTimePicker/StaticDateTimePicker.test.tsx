@@ -52,10 +52,10 @@ describe('<StaticDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
+  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
     render(
       <StaticDateTimePicker
-        showToolbar={false}
+        componentsProps={{ toolbar: { hidden: true } }}
         onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
@@ -81,11 +81,11 @@ describe('<StaticDateTimePicker />', () => {
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
     });
 
-    it('should render toolbar when `showToolbar` is `true`', () => {
+    it('should render toolbar when `slotsProps.toolbar.hidden` is `false`', () => {
       render(
         <StaticDateTimePicker
           displayStaticWrapperAs="desktop"
-          showToolbar
+          componentsProps={{ toolbar: { hidden: false } }}
           onChange={() => {}}
           value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
           renderInput={(params) => <TextField {...params} />}

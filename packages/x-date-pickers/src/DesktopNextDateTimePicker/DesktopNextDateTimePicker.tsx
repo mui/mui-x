@@ -42,7 +42,6 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     components: {
       Field: DateTimeField,
@@ -61,6 +60,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
     },
   };
 

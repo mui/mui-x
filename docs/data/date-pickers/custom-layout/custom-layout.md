@@ -14,7 +14,7 @@ packageName: '@mui/x-date-pickers'
 
 By default, pickers are made of 4 sub elements present in the following order:
 
-- The **toolbar** displaying the selected date. Can be enforced with `showToolbar` prop.
+- The **toolbar** displaying the selected date. Can be enforced with `componentsProps: { toolbar: { hidden: false } }` prop.
 - The **content** displaying the current view. Can be a calendar, or a clock.
 - The **tabs** allowing to switch between day and time views in Date Time Pickers.
 - The **action bar** allowing some interactions. Can be added with [`componentsProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.

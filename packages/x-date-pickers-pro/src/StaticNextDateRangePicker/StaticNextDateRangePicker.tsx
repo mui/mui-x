@@ -37,7 +37,13 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     views: ['day'] as const,
     openTo: 'day' as const,
     calendars: defaultizedProps.calendars ?? (displayStaticWrapperAs === 'mobile' ? 1 : 2),
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    componentsProps: {
+      ...defaultizedProps.componentsProps,
+      toolbar: {
+        hidden: displayStaticWrapperAs !== 'mobile',
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
+    }
   };
 
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({

@@ -36,7 +36,6 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
     calendars: defaultizedProps.calendars ?? 1,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? true,
     components: {
       Field: MultiInputDateRangeField,
       ...defaultizedProps.components,
@@ -50,6 +49,10 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
     },
   };
 

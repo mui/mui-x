@@ -55,11 +55,11 @@ describe('<DesktopNextDatePicker />', () => {
     expect(handleChange.callCount).to.equal(1);
   });
 
-  it('prop `showToolbar` – renders toolbar in desktop mode', () => {
+  it('prop `slotsProps.toolbar.hidden` – renders toolbar in desktop mode', () => {
     render(
       <DesktopNextDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
       />,
     );
@@ -72,7 +72,7 @@ describe('<DesktopNextDatePicker />', () => {
     render(
       <DesktopNextDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
         onViewChange={handleViewChange}
       />,

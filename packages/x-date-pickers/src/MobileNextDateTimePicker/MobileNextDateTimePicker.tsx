@@ -46,7 +46,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? true,
     components: {
       Field: DateTimeField,
       ...defaultizedProps.components,
@@ -63,6 +62,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
     },
   };
 

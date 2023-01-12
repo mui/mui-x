@@ -51,7 +51,7 @@ describe('<MobileDateTimePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
@@ -77,11 +77,11 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
+  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
     render(
       <MobileDateTimePicker
         open
-        showToolbar={false}
+        componentsProps={{ toolbar: { hidden: true } }}
         onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         renderInput={(params) => <TextField {...params} />}
@@ -98,7 +98,7 @@ describe('<MobileDateTimePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}

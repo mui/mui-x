@@ -41,16 +41,21 @@ describe('<StaticNextDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
-    render(<StaticNextDateTimePicker showToolbar={false} />);
+  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
+    render(<StaticNextDateTimePicker componentsProps={{ toolbar: { hidden: true } }} />);
 
     expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
   describe('prop: displayStaticWrapperAs', () => {
-    it('should render toolbar when `showToolbar` is `true`', () => {
-      render(<StaticNextDateTimePicker displayStaticWrapperAs="desktop" showToolbar />);
+    it('should render toolbar when `slotsProps.toolbar.hidden` is `false`', () => {
+      render(
+        <StaticNextDateTimePicker
+          displayStaticWrapperAs="desktop"
+          componentsProps={{ toolbar: { hidden: false } }}
+        />,
+      );
 
       expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
     });

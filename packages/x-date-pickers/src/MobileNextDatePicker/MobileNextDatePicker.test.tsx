@@ -146,8 +146,8 @@ describe('<MobileNextDatePicker />', () => {
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
   });
 
-  it('prop `showToolbar` – renders the toolbar', () => {
-    render(<MobileNextDatePicker open showToolbar />);
+  it('prop `slotsProps.toolbar.hidden` – renders the toolbar', () => {
+    render(<MobileNextDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
 
     expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });

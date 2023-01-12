@@ -202,11 +202,11 @@ describe('<MobileDatePicker />', () => {
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
   });
 
-  it('prop `showToolbar` – renders the toolbar', () => {
+  it('prop `slotsProps.toolbar.hidden` – renders the toolbar', () => {
     render(
       <MobileDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         onChange={() => {}}
         value={null}
         renderInput={(params) => <TextField {...params} />}

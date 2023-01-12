@@ -36,7 +36,6 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? false,
     components: {
       Field: MultiInputDateRangeField,
       ...defaultizedProps.components,
@@ -50,6 +49,10 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.componentsProps?.toolbar,
+      }
     },
   };
 
