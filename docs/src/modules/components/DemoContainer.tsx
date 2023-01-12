@@ -11,12 +11,18 @@ type PickersGridChildComponentType =
   | 'single-input-field'
   | 'multi-input-range-field'
   | 'single-input-range-field'
-  | 'UI-view';
+  | 'UI-view'
+  | 'multi-panel-UI-view';
+
 type PickersSupportedSections = 'date' | 'time' | 'date-time';
 
 const getChildComponentName = (child: any) => child.type?.render?.name ?? child.type?.name;
 
 const getChildTypeFromChildName = (childName: string): PickersGridChildComponentType => {
+  if (childName.match(/^([A-Za-z]+)Range(Calendar|Clock)$/)) {
+    return 'multi-panel-UI-view';
+  }
+
   if (childName.match(/^Static([A-Za-z]+)/) || childName.match(/^([A-Za-z]+)(Calendar|Clock)$/)) {
     return 'UI-view';
   }
@@ -81,7 +87,8 @@ export function DemoContainer(props: PickersGridProps) {
   if (
     childrenCount > 2 ||
     childrenTypes.has('multi-input-range-field') ||
-    childrenTypes.has('single-input-range-field')
+    childrenTypes.has('single-input-range-field') ||
+    childrenTypes.has('multi-panel-UI-view')
   ) {
     direction = 'column';
     spacing = getSpacing('column');
