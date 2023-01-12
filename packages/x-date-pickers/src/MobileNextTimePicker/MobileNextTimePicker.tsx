@@ -56,7 +56,7 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
       toolbar: {
         hidden: false,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

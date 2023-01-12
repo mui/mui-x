@@ -63,7 +63,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
       toolbar: {
         hidden: true,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

@@ -65,7 +65,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
       toolbar: {
         hidden: false,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

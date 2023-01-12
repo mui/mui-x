@@ -66,7 +66,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
       toolbar: {
         hidden: false,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

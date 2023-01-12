@@ -50,7 +50,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
       toolbar: {
         hidden: displayStaticWrapperAs !== 'mobile',
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

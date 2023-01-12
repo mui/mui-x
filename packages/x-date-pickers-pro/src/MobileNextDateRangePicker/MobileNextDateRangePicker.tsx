@@ -52,7 +52,7 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
       toolbar: {
         hidden: false,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

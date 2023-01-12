@@ -52,7 +52,7 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
       toolbar: {
         hidden: true,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

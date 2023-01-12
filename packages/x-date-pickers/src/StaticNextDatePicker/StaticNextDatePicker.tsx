@@ -40,8 +40,8 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
       toolbar: {
         hidden: displayStaticWrapperAs !== 'mobile',
         ...defaultizedProps.componentsProps?.toolbar,
-      }
-    }
+      },
+    },
   };
 
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({

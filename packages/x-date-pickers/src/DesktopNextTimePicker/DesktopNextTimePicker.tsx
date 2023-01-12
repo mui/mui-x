@@ -58,7 +58,7 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
       toolbar: {
         hidden: true,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 

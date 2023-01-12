@@ -64,7 +64,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
       toolbar: {
         hidden: true,
         ...defaultizedProps.componentsProps?.toolbar,
-      }
+      },
     },
   };
 
