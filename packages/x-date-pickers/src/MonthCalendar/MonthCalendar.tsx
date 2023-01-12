@@ -91,6 +91,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
+    monthsPerRow = 3,
     ...other
   } = props;
 
@@ -255,6 +256,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            monthsPerRow={monthsPerRow}
           >
             {monthText}
           </PickersMonth>
@@ -311,6 +313,11 @@ MonthCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate

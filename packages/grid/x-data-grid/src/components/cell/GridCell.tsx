@@ -18,6 +18,7 @@ import {
 import { GridAlignment } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { FocusElement } from '../../models/params/gridCellParams';
 
@@ -31,7 +32,6 @@ export interface GridCellProps<V = any, F = V> {
   hasFocus?: boolean;
   height: number | 'auto';
   isEditable?: boolean;
-  isOutlined?: boolean;
   isSelected?: boolean;
   showRightBorder?: boolean;
   value?: V;
@@ -65,21 +65,17 @@ function doesSupportPreventScroll(): boolean {
   return cachedSupportsPreventScroll;
 }
 
-type OwnerState = Pick<
-  GridCellProps,
-  'align' | 'showRightBorder' | 'isEditable' | 'isOutlined' | 'isSelected'
-> & {
+type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable' | 'isSelected'> & {
   classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
-  const { align, isOutlined, showRightBorder, isEditable, isSelected, classes } = ownerState;
+  const { align, showRightBorder, isEditable, isSelected, classes } = ownerState;
 
   const slots = {
     root: [
       'cell',
       `cell--text${capitalize(align)}`,
-      isOutlined && `cell--outlined`,
       isEditable && 'cell--editable',
       isSelected && 'selected',
       showRightBorder && 'cell--withRightBorder',
@@ -90,6 +86,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
+
+let warnedOnce = false;
 
 function GridCell(props: GridCellProps) {
   const {
@@ -103,7 +101,6 @@ function GridCell(props: GridCellProps) {
     hasFocus,
     height,
     isEditable,
-    isOutlined,
     isSelected,
     rowId,
     tabIndex,
@@ -121,8 +118,6 @@ function GridCell(props: GridCellProps) {
     onMouseUp,
     onMouseOver,
     onKeyDown,
-    onFocus,
-    onBlur,
     onKeyUp,
     onDragEnter,
     onDragOver,
@@ -135,14 +130,7 @@ function GridCell(props: GridCellProps) {
   const apiRef = useGridApiContext();
 
   const rootProps = useGridRootProps();
-  const ownerState = {
-    align,
-    showRightBorder,
-    isEditable,
-    classes: rootProps.classes,
-    isSelected,
-    isOutlined,
-  };
+  const ownerState = { align, showRightBorder, isEditable, classes: rootProps.classes, isSelected };
   const classes = useUtilityClasses(ownerState);
 
   const publishMouseUp = React.useCallback(
@@ -215,6 +203,36 @@ function GridCell(props: GridCellProps) {
     }
   }, [hasFocus, cellMode, apiRef]);
 
+  let handleFocus: any = other.onFocus;
+
+  if (
+    process.env.NODE_ENV === 'test' &&
+    rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
+  ) {
+    handleFocus = (event: React.FocusEvent) => {
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (focusedCell?.id === rowId && focusedCell.field === field) {
+        if (typeof other.onFocus === 'function') {
+          other.onFocus(event);
+        }
+        return;
+      }
+
+      if (!warnedOnce) {
+        console.warn(
+          [
+            `MUI: The cell with id=${rowId} and field=${field} received focus.`,
+            `According to the state, the focus should be at id=${focusedCell?.id}, field=${focusedCell?.field}.`,
+            "Not syncing the state may cause unwanted behaviors since the `cellFocusIn` event won't be fired.",
+            'Call `fireEvent.mouseUp` before the `fireEvent.click` to sync the focus with the state.',
+          ].join('\n'),
+        );
+
+        warnedOnce = true;
+      }
+    };
+  }
+
   const column = apiRef.current.getColumn(field);
   const managesOwnFocus = column.type === 'actions';
 
@@ -254,11 +272,10 @@ function GridCell(props: GridCellProps) {
       onMouseDown={publishMouseDown('cellMouseDown')}
       onMouseUp={publishMouseUp('cellMouseUp')}
       onKeyDown={publish('cellKeyDown', onKeyDown)}
-      onBlur={publish('cellBlur', onBlur)}
-      onFocus={publish('cellFocus', onFocus)}
       onKeyUp={publish('cellKeyUp', onKeyUp)}
       {...draggableEventHandlers}
       {...other}
+      onFocus={handleFocus}
     >
       {renderChildren()}
     </div>
@@ -282,7 +299,6 @@ GridCell.propTypes = {
   hasFocus: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
-  isOutlined: PropTypes.bool,
   isSelected: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

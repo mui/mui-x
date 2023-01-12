@@ -8,13 +8,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellBlur",
-    "description": "Fired when a <code>blur</code> event happens in a cell.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<React.FocusEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellClick",
     "description": "Fired when a cell is clicked.",
     "params": "GridCellParams<any>",
@@ -44,28 +37,6 @@
     "params": "GridCellEditStopParams",
     "event": "MuiEvent<MuiBaseEvent>",
     "componentProp": "onCellEditStop"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocus",
-    "description": "Fired when a <code>focus</code> event happens in a cell.",
-    "params": "GridCellParams",
-    "event": "MuiEvent<React.FocusEvent<HTMLElement>>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusIn",
-    "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams<any>",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams<any>",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellFocusOut"
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],

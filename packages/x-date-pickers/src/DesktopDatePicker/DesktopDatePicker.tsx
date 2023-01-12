@@ -31,6 +31,11 @@ export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
     DesktopWrapperProps {
   /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
    */
@@ -72,7 +77,15 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
-  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+  const {
+    onChange,
+    value,
+    components,
+    componentsProps,
+    localeText,
+    yearsPerRow = 4,
+    ...other
+  } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -95,6 +108,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
+        yearsPerRow={yearsPerRow}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -236,6 +250,11 @@ DesktopDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -388,4 +407,9 @@ DesktopDatePicker.propTypes = {
    * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
