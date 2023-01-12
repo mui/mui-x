@@ -39,7 +39,8 @@ You can use `componentsProps.shortcus` to customize this props. For example to a
 
 ## Disabled dates
 
-By default, the shortcuts are disabled if the returned value does not pass validation. Here is an example where `minDate` is set to the middle of the year.
+By default, the shortcuts are disabled if the returned value does not pass validation.
+Here is an example where `minDate` is set to the middle of the year.
 
 {{"demo": "DisabledDatesShortcuts.js", "bg": "inline"}}
 
@@ -49,26 +50,11 @@ Shortcuts on range pickers require `getValue` property to return an array with t
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline"}}
 
-## Shortcuts parameters
+## Advanced shortcuts
 
-The `getValue` receives some parameters in an object:
+The `getValue` methods receive a `isValid` helper function.
+You can use it to test if a value is valid or not based on the [validation props](/x/react-date-pickers/validation/).
 
-- `value`
-- `view`
-- `isValid`
+In the following demonstration, it is used to get the next available week and week-end.
 
-:::info
-
-Review message
-
-My initial idea was to adapt the shortcut depending on:
-
-- The current value. For example "next week"
-- the validation parameters. Next available week-end
-
-But it's not necessary the best way to do that. Maybe using slot callback would be more interesting, because this technic does nto allows to:
-
-- modify shortcuts order
-- remove/add shortcuts depending on the displayed view
-
-:::
+{{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}

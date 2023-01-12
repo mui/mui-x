@@ -1,71 +1,70 @@
 import * as React from 'react';
-
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 
-const getMonthWeekday = (adapter, monthIndex, weekdayIndex, dayRank) => {
+const getMonthWeekday = (monthIndex, weekdayIndex, dayRank) => {
   // Helper to find for example the 3rd monday in Jun
+  const today = dayjs();
+  const firstDayOfMonth = today.month(monthIndex).startOf('month');
+  const weekDay = firstDayOfMonth.day(); // 0 (Sunday) to 6 (Saturday)
 
-  const today = adapter.date();
-  const month = adapter.setMonth(today, monthIndex);
-  const weeks = adapter.getWeekArray(month);
-
-  let mondayIndex = 0;
-  for (let i = 0; i < weeks.length; i += 1) {
-    if (adapter.isSameMonth(weeks[i][weekdayIndex], month)) {
-      mondayIndex += 1;
-    }
-    if (mondayIndex === dayRank) {
-      return weeks[i][weekdayIndex];
-    }
-  }
-  return null;
+  const deltaToFirstValidWeekDayInMonth =
+    (weekDay > weekdayIndex ? 7 : 0) + weekdayIndex - weekDay;
+  return firstDayOfMonth.add(
+    (dayRank - 1) * 7 + deltaToFirstValidWeekDayInMonth,
+    'day',
+  );
 };
+
 const shortcuts = [
   {
     label: "New Year's Day",
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (January 1)
-      const today = adapter.date();
-      return adapter.setDate(adapter.setMonth(today, 0), 1);
+
+      const today = dayjs();
+      return today.month(0).date(1);
     },
   },
   {
     label: 'Birthday of Martin Luther King Jr.',
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (third Monday in January)
-      return getMonthWeekday(adapter, 0, 0, 3);
+      return getMonthWeekday(0, 1, 3);
     },
   },
   {
     label: 'Independence Day',
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (July 4)
-      const today = adapter.date();
-      return adapter.setDate(adapter.setMonth(today, 6), 4);
+
+      const today = dayjs();
+      return today.month(6).date(4);
     },
   },
   {
     label: 'Labor Day',
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (first Monday in September)
-      return getMonthWeekday(adapter, 8, 0, 1);
+      return getMonthWeekday(8, 1, 1);
     },
   },
   {
     label: 'Thanksgiving Day',
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (fourth Thursday in November)
-      return getMonthWeekday(adapter, 10, 3, 4);
+      return getMonthWeekday(10, 4, 4);
     },
   },
   {
     label: 'Christmas Day',
-    getValue: ({ adapter }) => {
+    getValue: () => {
       // (December 25)
-      const today = adapter.date();
-      return adapter.setDate(adapter.setMonth(today, 11), 25);
+
+      const today = dayjs();
+      return today.month(11).date(25);
     },
   },
 ];

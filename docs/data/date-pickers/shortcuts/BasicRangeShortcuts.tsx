@@ -1,66 +1,51 @@
 import * as React from 'react';
+import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
-import { DateRange } from '@mui/x-date-pickers-pro';
 
-const i18n = {
-  thisWeek: 'This Week',
-  lastWeek: 'Last Week',
-  last7Days: 'Last 7 Days',
-  currentMonth: 'Current Month',
-  nextMonth: 'Next Month',
-  reset: 'Reset',
-};
-
-const valueGetter: {
-  [key in keyof typeof i18n]: PickersShortcutsItem<
-    DateRange<unknown>,
-    unknown
-  >['getValue'];
-} = {
-  thisWeek: ({ adapter }) => {
-    const today = adapter.date()!;
-    return [adapter.startOfWeek(today), adapter.endOfWeek(today)];
+const shortcuts = [
+  {
+    label: 'This Week',
+    getValue: () => {
+      const today = dayjs();
+      return [today.startOf('week'), today.endOf('week')];
+    },
   },
-  lastWeek: ({ adapter }) => {
-    const today = adapter.date()!;
-    const prevWeek = adapter.addDays(today, -7);
-    return [adapter.startOfWeek(prevWeek), adapter.endOfWeek(prevWeek)];
+  {
+    label: 'Last Week',
+    getValue: () => {
+      const today = dayjs();
+      const prevWeek = today.subtract(7, 'day');
+      return [prevWeek.startOf('week'), prevWeek.endOf('week')];
+    },
   },
-  last7Days: ({ adapter }) => {
-    const today = adapter.date()!;
-    return [adapter.addDays(today, -7), today];
+  {
+    label: 'Last 7 Days',
+    getValue: () => {
+      const today = dayjs();
+      return [today.subtract(7, 'day'), today];
+    },
   },
-  currentMonth: ({ adapter }) => {
-    const today = adapter.date()!;
-    return [adapter.startOfMonth(today), adapter.endOfMonth(today)];
+  {
+    label: 'Current Month',
+    getValue: () => {
+      const today = dayjs();
+      return [today.startOf('month'), today.endOf('month')];
+    },
   },
-  nextMonth: ({ adapter }) => {
-    const today = adapter.date()!;
-    const startOfNextMonth = adapter.addDays(adapter.endOfMonth(today), 1);
-    return [startOfNextMonth, adapter.endOfMonth(startOfNextMonth)];
+  {
+    label: 'Next Month',
+    getValue: () => {
+      const today = dayjs();
+      const startOfNextMonth = today.endOf('month').add(1, 'day');
+      return [startOfNextMonth, startOfNextMonth.endOf('month')];
+    },
   },
-  reset: () => [null, null],
-};
-const useRangeShortcuts = (shortcutKeys: (keyof typeof i18n)[]) => {
-  return shortcutKeys.map((key) => ({
-    getValue: valueGetter[key],
-    label: i18n[key],
-  }));
-};
+  { label: 'Reset', getValue: () => [null, null] },
+];
 
 export default function BasicRangeShortcuts() {
-  const shortcuts = useRangeShortcuts([
-    'thisWeek',
-    'lastWeek',
-    'last7Days',
-    'currentMonth',
-    'nextMonth',
-    'reset',
-  ]);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
