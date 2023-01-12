@@ -266,6 +266,7 @@ export function useGridDimensions(
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'filteredRowsSet', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
