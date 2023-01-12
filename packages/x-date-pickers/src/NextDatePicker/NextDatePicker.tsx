@@ -5,6 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '../DesktopNextDatePicker';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '../MobileNextDatePicker';
 import { NextDatePickerProps } from './NextDatePicker.types';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DatePickerComponent = (<TDate>(
   props: NextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -16,7 +17,7 @@ const NextDatePicker = React.forwardRef(function NextDatePicker<TDate>(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiNextDatePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
@@ -153,6 +154,11 @@ NextDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -327,6 +333,11 @@ NextDatePicker.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { NextDatePicker };

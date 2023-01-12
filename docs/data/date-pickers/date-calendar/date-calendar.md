@@ -2,7 +2,7 @@
 product: date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
-githubLabel: 'component: pickers'
+githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 ---
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -10,9 +10,9 @@ import {
 import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const shouldDisableTime: NextTimePickerProps<Dayjs>['shouldDisableTime'] = (
-  timeValue,
+  value,
   view,
-) => view === 'minutes' && timeValue >= 45;
+) => view === 'minutes' && value.minute() >= 45;
 
 const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute');
 
