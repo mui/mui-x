@@ -40,7 +40,7 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
-    yearsPerRow: displayStaticWrapperAs === 'mobile' ? 3 : 4,
+    yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     componentsProps: {
       ...defaultizedProps.componentsProps,
