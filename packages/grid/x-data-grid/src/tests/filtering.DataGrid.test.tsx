@@ -1138,7 +1138,7 @@ describe('<DataGrid /> - Filter', () => {
     const { setProps } = render(<TestCase {...baselineProps} />);
     expect(screen.queryByText('No results found.')).to.equal(null);
     setProps({
-      filterModel: { items: [{ columnField: 'brand', value: 'foobar', operatorValue: 'equals' }] },
+      filterModel: { items: [{ field: 'brand', value: 'foobar', operator: 'equals' }] },
     });
     expect(screen.queryByText('No results found.')).not.to.equal(null);
   });
