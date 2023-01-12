@@ -241,7 +241,7 @@ If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMen
 Data grid props that have been renamed.
 
 ```diff
-<DataGrid
+  <DataGrid
 -  selectionModel={model}
 +  rowSelectionModel={model}
 -  onSelectionModelChange={handler}
@@ -254,7 +254,7 @@ Data grid props that have been renamed.
 +  showCellVerticalBorder
 -  showColumnRightBorder
 +  showColumnVerticalBorder
-/>
+  />
 ```
 
 ```sh
