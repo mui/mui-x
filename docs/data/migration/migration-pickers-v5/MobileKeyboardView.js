@@ -117,7 +117,6 @@ LayoutWithKeyboardView.propTypes = {
        */
       orientation: PropTypes.oneOf(['landscape', 'portrait']),
       readOnly: PropTypes.bool,
-      showToolbar: PropTypes.bool,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(
           PropTypes.oneOfType([
@@ -155,6 +154,11 @@ LayoutWithKeyboardView.propTypes = {
        * className applied to the root component.
        */
       className: PropTypes.string,
+      /**
+       * If `true`, show the toolbar even in desktop mode.
+       * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop), `displayStaticWrapperAs === 'desktop'` for `Static` pickers
+       */
+      hidden: PropTypes.bool,
       /**
        * Toolbar date format.
        */
