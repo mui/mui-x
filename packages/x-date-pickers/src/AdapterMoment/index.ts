@@ -12,10 +12,15 @@ const formatTokenMap: MuiFormatTokenMap = {
   MMM: { sectionName: 'month', contentType: 'letter' },
   MMMM: { sectionName: 'month', contentType: 'letter' },
 
-  // Day of Month
+  // Day of the month
   D: 'day',
   Do: 'day',
   DD: 'day',
+
+  // Day of the week
+  e: 'weekDay',
+  ddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dddd: { sectionName: 'weekDay', contentType: 'letter' },
 
   // Year
   Y: 'year',
