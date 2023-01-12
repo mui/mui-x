@@ -43,7 +43,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    yearsPerRow: 4,
+    yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     components: {
       Field: DateTimeField,
       OpenPickerIcon: Calendar,
