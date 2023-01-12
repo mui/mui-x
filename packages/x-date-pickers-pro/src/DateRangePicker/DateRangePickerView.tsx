@@ -57,6 +57,8 @@ export interface ExportedDateRangePickerViewProps<TDate>
       | 'defaultValue'
       | 'onChange'
       | 'onYearChange'
+      | 'monthsPerRow'
+      | 'yearsPerRow'
       | keyof BaseDateValidationProps<TDate>
       | keyof DayValidationProps<TDate>
     > {

@@ -300,6 +300,11 @@ StaticDateTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -458,4 +463,9 @@ StaticDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

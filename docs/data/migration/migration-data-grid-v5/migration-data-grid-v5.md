@@ -295,16 +295,6 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### CSS classes
 
-- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
-  ```diff
-  -'.MuiDataGrid-cell:focus-within': {
-  +'.MuiDataGrid-cell--outlined': {
-  ```
-  The new class name is also available in `gridClasses`:
-  ```diff
-  -`.${gridClasses.cell}:focus-within`: {
-  +`.${gridClasses['cell--outlined']}`: {
-  ```
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
