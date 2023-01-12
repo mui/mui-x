@@ -20,6 +20,7 @@ import { TimeValidationError } from '../internals/hooks/validation/useTimeValida
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -44,13 +45,25 @@ export interface BaseNextTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: BaseNextTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<BaseNextTimePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -66,7 +79,10 @@ type UseNextTimePickerDefaultizedProps<
   Props extends BaseNextTimePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
+    'components' | 'componentsProps'
+  >
 >;
 
 export function useNextTimePickerDefaultizedProps<
@@ -92,6 +108,8 @@ export function useNextTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
+  const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -104,16 +122,16 @@ export function useNextTimePickerDefaultizedProps<
     }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    components: {
-      Toolbar: TimePickerToolbar,
-      ...themeProps.components,
+    slots: {
+      toolbar: TimePickerToolbar,
+      ...slots,
     },
-    componentsProps: {
-      ...themeProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...themeProps.componentsProps?.toolbar,
+        ...slotsProps?.toolbar,
       },
     },
   };

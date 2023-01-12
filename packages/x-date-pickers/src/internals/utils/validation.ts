@@ -15,7 +15,7 @@ const VALIDATION_PROP_NAMES = [
   'minuteStep',
 ] as const;
 
-type ValidationPropNames = typeof VALIDATION_PROP_NAMES[number];
+type ValidationPropNames = (typeof VALIDATION_PROP_NAMES)[number];
 
 /**
  * Extract the validation props for the props received by a component.

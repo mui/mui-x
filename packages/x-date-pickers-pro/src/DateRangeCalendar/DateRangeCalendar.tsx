@@ -26,6 +26,8 @@ import {
   WrapperVariantContext,
   PickerSelectionState,
   useNow,
+  uncapitalizeObjectKeys,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -173,6 +175,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     calendars,
     components,
     componentsProps,
+    slots: innerSlots,
+    slotsProps: innerSlotsProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -187,6 +191,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     displayWeekNumber,
     ...other
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotsProps = innerSlotsProps ?? componentsProps;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
@@ -399,13 +405,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     },
   );
 
-  const componentsForDayCalendar = {
-    Day: DateRangePickerDay,
-    ...components,
-  } as DayCalendarSlotsComponent<TDate>;
+  const slotsForDayCalendar = {
+    day: DateRangePickerDay,
+    ...slots,
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
-  const componentsPropsForDayCalendar = {
-    ...componentsProps,
+  const slotsPropsForDayCalendar = {
+    ...slotsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
@@ -442,7 +448,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
-        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -505,8 +511,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               disablePast={disablePast}
               disableFuture={disableFuture}
               reduceAnimations={reduceAnimations}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotsProps={slotsProps}
             />
           ) : (
             <DateRangeCalendarArrowSwitcher
@@ -518,8 +524,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               isNextHidden={index !== calendars - 1}
               isNextDisabled={isNextMonthDisabled}
               nextLabel={localeText.nextMonth}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotsProps={slotsProps}
             >
               {utils.format(month, 'monthAndYear')}
             </DateRangeCalendarArrowSwitcher>
@@ -543,8 +549,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             dayOfWeekFormatter={dayOfWeekFormatter}
             loading={loading}
             renderLoading={renderLoading}
-            components={componentsForDayCalendar}
-            componentsProps={componentsPropsForDayCalendar}
+            slots={slotsForDayCalendar}
+            slotsProps={slotsPropsForDayCalendar}
             autoFocus={month === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
@@ -577,11 +583,13 @@ DateRangeCalendar.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -699,6 +707,16 @@ DateRangeCalendar.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
