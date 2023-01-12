@@ -8,8 +8,6 @@ import {
   GridColDef,
   GridColumnHeaderParams,
   GridColumnHeaderTitle,
-  gridDensityHeaderHeightSelector,
-  useGridSelector,
 } from '@mui/x-data-grid';
 import { getAggregationFunctionLabel } from '../hooks/features/aggregation/gridAggregationUtils';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -18,7 +16,6 @@ import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
 interface OwnerState {
   classes: DataGridPremiumProcessedProps['classes'];
-  headerHeight: number;
   colDef: GridColDef;
 }
 
@@ -47,7 +44,7 @@ const GridAggregationFunctionLabel = styled('div', {
     lineHeight: theme.typography.caption.fontSize,
     marginTop: `calc(-2px - ${theme.typography.caption.fontSize})`,
     fontWeight: theme.typography.fontWeightMedium,
-    color: theme.palette.primary.dark,
+    color: (theme.vars || theme).palette.primary.dark,
     textTransform: 'uppercase',
   };
 });
@@ -73,9 +70,8 @@ function GridAggregationHeader(props: GridColumnHeaderParams) {
 
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
-  const ownerState = { classes: rootProps.classes, headerHeight, colDef };
+  const ownerState = { classes: rootProps.classes, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {

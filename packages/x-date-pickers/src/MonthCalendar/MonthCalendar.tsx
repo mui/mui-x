@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { SxProps, useTheme } from '@mui/system';
-import { styled, useThemeProps, Theme } from '@mui/material/styles';
+import { useTheme } from '@mui/system';
+import { styled, useThemeProps } from '@mui/material/styles';
 import {
   unstable_useControlled as useControlled,
   unstable_composeClasses as composeClasses,
@@ -10,59 +10,10 @@ import {
 } from '@mui/utils';
 import { PickersMonth } from './PickersMonth';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { MonthCalendarClasses, getMonthCalendarUtilityClass } from './monthCalendarClasses';
-import {
-  BaseDateValidationProps,
-  MonthValidationProps,
-} from '../internals/hooks/validation/models';
+import { getMonthCalendarUtilityClass } from './monthCalendarClasses';
 import { applyDefaultDate } from '../internals/utils/date-utils';
 import { DefaultizedProps } from '../internals/models/helpers';
-
-export interface MonthCalendarProps<TDate>
-  extends MonthValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
-  autoFocus?: boolean;
-  /**
-   * className applied to the root element.
-   */
-  className?: string;
-  /**
-   * Override or extend the styles applied to the component.
-   */
-  classes?: Partial<MonthCalendarClasses>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps<Theme>;
-  /** If `true` picker is disabled */
-  disabled?: boolean;
-  /**
-   * The selected value.
-   * Used when the component is controlled.
-   */
-  value?: TDate | null;
-  /**
-   * The default selected value.
-   * Used when the component is not controlled.
-   */
-  defaultValue?: TDate | null;
-  /**
-   * Callback fired when the value changes.
-   * @template TDate
-   * @param {TDate | null} value The new value.
-   */
-  onChange?: (value: TDate) => void;
-  /** If `true` picker is readonly */
-  readOnly?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
-  onMonthFocus?: (month: number) => void;
-  hasFocus?: boolean;
-  onFocusedViewChange?: (newHasFocus: boolean) => void;
-}
+import { MonthCalendarProps } from './MonthCalendar.types';
 
 const useUtilityClasses = (ownerState: MonthCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -102,11 +53,11 @@ const MonthCalendarRoot = styled('div', {
   slot: 'Root',
   overridesResolver: (props, styles) => styles.root,
 })<{ ownerState: MonthCalendarProps<any> }>({
-  width: 310,
   display: 'flex',
   flexWrap: 'wrap',
   alignContent: 'stretch',
-  margin: '0 4px',
+  padding: '0 4px',
+  width: 320,
 });
 
 type MonthCalendarComponent = (<TDate>(
@@ -140,6 +91,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
     onMonthFocus,
     hasFocus,
     onFocusedViewChange,
+    monthsPerRow = 3,
     ...other
   } = props;
 
@@ -155,7 +107,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
 
   const todayMonth = React.useMemo(() => utils.getMonth(now), [utils, now]);
 
-  const selectedDateOrToday = value ?? now;
+  const selectedDateOrStartOfMonth = React.useMemo(
+    () => value ?? utils.startOfMonth(now),
+    [now, utils, value],
+  );
+
   const selectedMonth = React.useMemo(() => {
     if (value != null) {
       return utils.getMonth(value);
@@ -169,11 +125,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
   }, [now, value, utils, disableHighlightToday]);
   const [focusedMonth, setFocusedMonth] = React.useState(() => selectedMonth || todayMonth);
 
-  const [internalHasFocus, setInternalHasFocus] = useControlled<boolean>({
+  const [internalHasFocus, setInternalHasFocus] = useControlled({
     name: 'MonthCalendar',
     state: 'hasFocus',
     controlled: hasFocus,
-    default: autoFocus,
+    default: autoFocus ?? false,
   });
 
   const changeHasFocus = useEventCallback((newHasFocus: boolean) => {
@@ -213,13 +169,13 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       return;
     }
 
-    const newDate = utils.setMonth(selectedDateOrToday, month);
+    const newDate = utils.setMonth(selectedDateOrStartOfMonth, month);
     setValue(newDate);
     onChange?.(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(utils.setMonth(selectedDateOrToday, month))) {
+    if (!isMonthDisabled(utils.setMonth(selectedDateOrStartOfMonth, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -281,7 +237,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
       ownerState={ownerState}
       {...other}
     >
-      {utils.getMonthArray(selectedDateOrToday).map((month) => {
+      {utils.getMonthArray(selectedDateOrStartOfMonth).map((month) => {
         const monthNumber = utils.getMonth(month);
         const monthText = utils.format(month, 'monthShort');
         const isSelected = monthNumber === selectedMonth;
@@ -300,6 +256,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar<TDate>(
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
             aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            monthsPerRow={monthsPerRow}
           >
             {monthText}
           </PickersMonth>
@@ -333,7 +290,7 @@ MonthCalendar.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -343,7 +300,7 @@ MonthCalendar.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -356,6 +313,11 @@ MonthCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -372,7 +334,7 @@ MonthCalendar.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import {
   DesktopTooltipWrapper,
@@ -48,6 +49,10 @@ export interface DesktopDateRangePickerProps<TDate>
    * @default {}
    */
   componentsProps?: DesktopDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type DesktopDateRangePickerComponent = (<TDate>(
@@ -75,9 +80,7 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     'MuiDesktopDateRangePicker',
   );
 
-  const [currentlySelectingRangeEnd, setCurrentlySelectingRangeEnd] = React.useState<
-    'start' | 'end'
-  >('start');
+  const [rangePosition, setRangePosition] = React.useState<'start' | 'end'>('start');
 
   const validationError = useDateRangeValidation(props);
 
@@ -89,8 +92,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
     ...other,
     components,
     componentsProps,
-    currentlySelectingRangeEnd,
-    setCurrentlySelectingRangeEnd,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
     validationError,
     ref,
   };
@@ -107,8 +110,8 @@ export const DesktopDateRangePicker = React.forwardRef(function DesktopDateRange
       <DateRangePickerView<TDate>
         open={wrapperProps.open}
         DateInputProps={DateInputProps}
-        currentlySelectingRangeEnd={currentlySelectingRangeEnd}
-        setCurrentlySelectingRangeEnd={setCurrentlySelectingRangeEnd}
+        rangePosition={rangePosition}
+        onRangePositionChange={setRangePosition}
         {...pickerProps}
         components={components}
         componentsProps={componentsProps}
@@ -128,7 +131,6 @@ DesktopDateRangePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   /**
    * The number of calendars that render on **desktop**.
    * @default 2
@@ -176,7 +178,7 @@ DesktopDateRangePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -196,7 +198,7 @@ DesktopDateRangePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -240,7 +242,7 @@ DesktopDateRangePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -306,11 +308,6 @@ DesktopDateRangePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
-   * Callback fired on view change.
-   * @param {DateView} view The new view.
-   */
-  onViewChange: PropTypes.func,
-  /**
    * Control the popup or dialog open state.
    */
   open: PropTypes.bool,
@@ -374,14 +371,14 @@ DesktopDateRangePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**

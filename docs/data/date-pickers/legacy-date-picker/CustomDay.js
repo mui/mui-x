@@ -34,14 +34,14 @@ const CustomPickersDay = styled(PickersDay, {
 }));
 
 function Day(props) {
-  const { day, selectedDays } = props;
+  const { day, selectedDay, ...other } = props;
 
-  if (selectedDays.length === 0) {
-    return <PickersDay {...props} />;
+  if (selectedDay == null) {
+    return <PickersDay {...other} day={day} />;
   }
 
-  const start = selectedDays[0].startOf('week');
-  const end = selectedDays[0].endOf('week');
+  const start = selectedDay.startOf('week');
+  const end = selectedDay.endOf('week');
 
   const dayIsBetween = day.isBetween(start, end, null, '[]');
   const isFirstDay = day.isSame(start, 'day');
@@ -49,7 +49,8 @@ function Day(props) {
 
   return (
     <CustomPickersDay
-      {...props}
+      {...other}
+      day={day}
       disableMargin
       dayIsBetween={dayIsBetween}
       isFirstDay={isFirstDay}
@@ -63,10 +64,7 @@ Day.propTypes = {
    * The date to show.
    */
   day: PropTypes.object.isRequired,
-  /**
-   * Currently selected days.
-   */
-  selectedDays: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedDay: PropTypes.object,
 };
 
 export default function CustomDay() {
@@ -81,8 +79,11 @@ export default function CustomDay() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        components={{
-          Day,
+        components={{ Day }}
+        componentsProps={{
+          day: {
+            selectedDay: value,
+          },
         }}
         renderInput={(params) => <TextField {...params} />}
         inputFormat="'Week of' MMM d"

@@ -1,3 +1,0 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <TimeClock value={value} onChange={(newValue) => setValue(newValue)} />
-</LocalizationProvider>

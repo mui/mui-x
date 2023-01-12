@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
@@ -10,14 +10,14 @@ export default function DateFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={2} direction="row">
+      <DemoContainer>
         <DateField label="Uncontrolled field" defaultValue={dayjs('2022-04-07')} />
         <DateField
           label="Controlled field"
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

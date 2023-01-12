@@ -26,6 +26,7 @@ import { getVisibleRows, useGridVisibleRows } from '../../utils/useGridVisibleRo
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridRowSelectionModel } from '../../../models';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../../../constants/gridDetailPanelToggleField';
+import { gridClasses } from '../../../constants/gridClasses';
 
 const getSelectionModelPropValue = (
   selectionModelProp: DataGridProcessedProps['rowSelectionModel'],
@@ -148,6 +149,19 @@ export const useGridRowSelection = (
    */
   const setRowSelectionModel = React.useCallback<GridRowSelectionApi['setRowSelectionModel']>(
     (model) => {
+      if (
+        props.signature === GridSignature.DataGrid &&
+        !props.checkboxSelection &&
+        Array.isArray(model) &&
+        model.length > 1
+      ) {
+        throw new Error(
+          [
+            'MUI: `rowSelectionModel` can only contain 1 item in DataGrid.',
+            'You need to upgrade to DataGridPro or DataGridPremium component to unlock multiple selection.',
+          ].join('\n'),
+        );
+      }
       const currentModel = gridRowSelectionStateSelector(apiRef.current.state);
       if (currentModel !== model) {
         logger.debug(`Setting selection model`);
@@ -158,7 +172,7 @@ export const useGridRowSelection = (
         apiRef.current.forceUpdate();
       }
     },
-    [apiRef, logger, props.rowSelection],
+    [apiRef, logger, props.rowSelection, props.signature, props.checkboxSelection],
   );
 
   const isRowSelected = React.useCallback<GridRowSelectionApi['isRowSelected']>(
@@ -351,31 +365,36 @@ export const useGridRowSelection = (
     [apiRef, canHaveMultipleSelection, checkboxSelection],
   );
 
-  const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
+  const handleRowClick = React.useCallback<GridEventListener<'rowClick'>>(
     (params, event) => {
       if (disableRowSelectionOnClick) {
         return;
       }
 
-      if (params.field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
+      const field = (event.target as HTMLDivElement)
+        .closest(`.${gridClasses.cell}`)
+        ?.getAttribute('data-field');
+
+      if (field === GRID_CHECKBOX_SELECTION_COL_DEF.field) {
         // click on checkbox should not trigger row selection
         return;
       }
 
-      if (params.field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
+      if (field === GRID_DETAIL_PANEL_TOGGLE_FIELD) {
         // click to open the detail panel should not select the row
         return;
       }
 
-      if (params.field) {
-        const column = apiRef.current.getColumn(params.field);
+      if (field) {
+        const column = apiRef.current.getColumn(field);
 
         if (column.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
       }
 
-      if (params.rowNode.type === 'pinnedRow') {
+      const rowNode = apiRef.current.getRowNode(params.id);
+      if (rowNode!.type === 'pinnedRow') {
         return;
       }
 
@@ -514,7 +533,7 @@ export const useGridRowSelection = (
     'sortedRowsSet',
     runIfRowSelectionIsEnabled(removeOutdatedSelection),
   );
-  useGridApiEventHandler(apiRef, 'cellClick', runIfRowSelectionIsEnabled(handleCellClick));
+  useGridApiEventHandler(apiRef, 'rowClick', runIfRowSelectionIsEnabled(handleRowClick));
   useGridApiEventHandler(
     apiRef,
     'rowSelectionCheckboxChange',

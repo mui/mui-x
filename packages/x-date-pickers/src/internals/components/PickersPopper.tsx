@@ -39,7 +39,7 @@ export interface PickersPopperSlotsComponent
    * Custom component for trapping the focus inside the views on desktop.
    * @default TrapFocus from @mui/material
    */
-  DesktopTrapFocus?: React.ElementType<MuiTrapFocusProps>;
+  DesktopTrapFocus?: React.JSXElementConstructor<MuiTrapFocusProps>;
   /**
    * Custom component for the popper inside which the views are rendered on desktop.
    * @default Popper from @mui/material
@@ -337,6 +337,19 @@ export function PickersPopper(inProps: PickerPopperProps) {
   };
 
   const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const actionBarProps = useSlotProps({
+    elementType: ActionBar,
+    externalSlotProps: componentsProps?.actionBar,
+    additionalProps: {
+      onAccept,
+      onClear,
+      onCancel,
+      onSetToday,
+      actions: [],
+    },
+    ownerState: { wrapperVariant: 'desktop' },
+  });
+
   const PaperContent = components?.PaperContent ?? React.Fragment;
   const Transition = components?.DesktopTransition ?? Grow;
   const TrapFocus = components?.DesktopTrapFocus ?? MuiTrapFocus;
@@ -398,14 +411,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
             >
               <PaperContent {...componentsProps?.paperContent}>
                 {children}
-                <ActionBar
-                  onAccept={onAccept}
-                  onClear={onClear}
-                  onCancel={onCancel}
-                  onSetToday={onSetToday}
-                  actions={[]}
-                  {...componentsProps?.actionBar}
-                />
+                <ActionBar {...actionBarProps} />
               </PaperContent>
             </Paper>
           </Transition>

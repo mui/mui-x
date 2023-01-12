@@ -1,6 +1,5 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import TextField from '@mui/material/TextField';
+import dayjs from 'dayjs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,26 +7,22 @@ import DialogActions from '@mui/material/DialogActions';
 import { unstable_useId as useId } from '@mui/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
 import { PickersActionBarProps } from '@mui/x-date-pickers/PickersActionBar';
-import { useLocaleText, WrapperVariantContext } from '@mui/x-date-pickers/internals';
+import { useLocaleText } from '@mui/x-date-pickers/internals';
 
 function CustomActionBar(props: PickersActionBarProps) {
-  const { onAccept, onClear, onCancel, onSetToday, actions } = props;
-  const wrapperVariant = React.useContext(WrapperVariantContext);
+  const { onAccept, onClear, onCancel, onSetToday, actions, className } = props;
   const localeText = useLocaleText();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const id = useId();
 
-  const actionsArray =
-    typeof actions === 'function' ? actions(wrapperVariant) : actions;
-
-  if (actionsArray == null || actionsArray.length === 0) {
+  if (actions == null || actions.length === 0) {
     return null;
   }
 
-  const menuItems = actionsArray?.map((actionType) => {
+  const menuItems = actions?.map((actionType) => {
     switch (actionType) {
       case 'clear':
         return (
@@ -85,7 +80,7 @@ function CustomActionBar(props: PickersActionBarProps) {
   });
 
   return (
-    <DialogActions>
+    <DialogActions className={className}>
       <Button
         id={`picker-actions-${id}`}
         aria-controls={open ? 'basic-menu' : undefined}
@@ -111,16 +106,10 @@ function CustomActionBar(props: PickersActionBarProps) {
 }
 
 export default function ActionBarComponent() {
-  const [value, setValue] = React.useState<Dayjs | null>(() =>
-    dayjs('2022-02-01T00:00'),
-  );
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticDatePicker
-        onChange={(newValue) => setValue(newValue)}
-        value={value}
-        renderInput={(params) => <TextField {...params} />}
+      <StaticNextDatePicker
+        defaultValue={dayjs('2022-04-07')}
         components={{
           ActionBar: CustomActionBar,
         }}

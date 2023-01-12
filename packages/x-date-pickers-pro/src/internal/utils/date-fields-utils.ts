@@ -1,8 +1,8 @@
-import { DateRangeFieldSection } from '../models/range';
+import { RangeFieldSection } from '../models/fields';
 
-export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
-  const startDateSections: DateRangeFieldSection[] = [];
-  const endDateSections: DateRangeFieldSection[] = [];
+export const splitDateRangeSections = (sections: RangeFieldSection[]) => {
+  const startDateSections: RangeFieldSection[] = [];
+  const endDateSections: RangeFieldSection[] = [];
   sections.forEach((section) => {
     if (section.dateName === 'start') {
       startDateSections.push(section);
@@ -14,7 +14,7 @@ export const splitDateRangeSections = (sections: DateRangeFieldSection[]) => {
   return { startDate: startDateSections, endDate: endDateSections };
 };
 
-export const removeLastSeparator = (dateSections: DateRangeFieldSection[]) =>
+export const removeLastSeparator = (dateSections: RangeFieldSection[]) =>
   dateSections.map((section, sectionIndex) => {
     if (sectionIndex === dateSections.length - 1) {
       return { ...section, separator: null };

@@ -51,16 +51,16 @@ const ukUAGrid: Partial<GridLocaleText> = {
     }),
 
   // Quick filter toolbar field
-  // toolbarQuickFilterPlaceholder: 'Search…',
-  // toolbarQuickFilterLabel: 'Search',
-  // toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterPlaceholder: 'Пошук…',
+  toolbarQuickFilterLabel: 'Пошук',
+  toolbarQuickFilterDeleteIconLabel: 'Очистити',
 
   // Export selector toolbar button text
   toolbarExport: 'Експорт',
   toolbarExportLabel: 'Експорт',
   toolbarExportCSV: 'Завантажити у форматі CSV',
   toolbarExportPrint: 'Друк',
-  // toolbarExportExcel: 'Download as Excel',
+  toolbarExportExcel: 'Завантажити у форматі Excel',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Знайти стовпець',
@@ -72,10 +72,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
   filterPanelDeleteIconLabel: 'Видалити',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Оператори',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Логічна функція',
+  filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
   filterPanelColumns: 'Стовпці',
@@ -95,7 +93,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'менше або дорівнює',
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
-  // filterOperatorIsAnyOf: 'is any of',
+  filterOperatorIsAnyOf: 'будь-що із',
 
   // Filter values text
   filterValueAny: 'будь-який',
@@ -105,6 +103,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',
@@ -138,10 +137,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Вибір прапорця',
-  // checkboxSelectionSelectAllRows: 'Select all rows',
-  // checkboxSelectionUnselectAllRows: 'Unselect all rows',
-  // checkboxSelectionSelectRow: 'Select row',
-  // checkboxSelectionUnselectRow: 'Unselect row',
+  checkboxSelectionSelectAllRows: 'Вибрати всі рядки',
+  checkboxSelectionUnselectAllRows: 'Скасувати вибір всіх рядків',
+  checkboxSelectionSelectRow: 'Вибрати рядок',
+  checkboxSelectionUnselectRow: 'Скасувати вибір рядка',
 
   // Boolean cell text
   booleanCellTrueLabel: 'так',
@@ -161,20 +160,20 @@ const ukUAGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'приховати дочірні елементи',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Група',
+  groupColumn: (name) => `Групувати за ${name}`,
+  unGroupColumn: (name) => `Відмінити групування за ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
-  // expandDetailPanel: 'Expand',
-  // collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'Перемикач панелі деталей',
+  expandDetailPanel: 'Показати',
+  collapseDetailPanel: 'Приховати',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Порядок рядків',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
+  aggregationMenuItemHeader: 'Агрегація',
   // aggregationFunctionLabelSum: 'sum',
   // aggregationFunctionLabelAvg: 'avg',
   // aggregationFunctionLabelMin: 'min',

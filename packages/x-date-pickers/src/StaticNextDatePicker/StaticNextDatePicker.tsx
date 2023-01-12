@@ -2,21 +2,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { StaticNextDatePickerProps } from './StaticNextDatePicker.types';
 import { useNextDatePickerDefaultizedProps } from '../NextDatePicker/shared';
+import { renderDateViewCalendar } from '../dateViewRenderers';
 import { useStaticPicker } from '../internals/hooks/useStaticPicker';
-import { renderDateView } from '../internals/utils/viewRenderers';
-import { validateDate } from '../internals';
+import { DateView, validateDate } from '../internals';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-};
-
 const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
   inProps: StaticNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -28,17 +22,25 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the static variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     displayStaticWrapperAs,
     showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
   };
 
-  const { renderPicker } = useStaticPicker({
+  const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
     props,
     valueManager: singleItemValueManager,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDate,
     ref,
   });
@@ -51,6 +53,12 @@ StaticNextDatePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
@@ -88,7 +96,7 @@ StaticNextDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -98,7 +106,7 @@ StaticNextDatePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -118,7 +126,7 @@ StaticNextDatePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -136,6 +144,11 @@ StaticNextDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -167,8 +180,8 @@ StaticNextDatePicker.propTypes = {
   onMonthChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -178,7 +191,9 @@ StaticNextDatePicker.propTypes = {
    */
   onYearChange: PropTypes.func,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'month', 'year']),
   /**
@@ -208,14 +223,14 @@ StaticNextDatePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -242,9 +257,30 @@ StaticNextDatePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    month: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { StaticNextDatePicker };

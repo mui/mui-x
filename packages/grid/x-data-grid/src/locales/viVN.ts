@@ -49,10 +49,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
   filterPanelDeleteIconLabel: 'Xóa',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Toán tử',
-
-  // TODO v6: rename to filterPanelOperator
+  // filterPanelLogicOperator: 'Logic operator',
+  filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
   filterPanelColumns: 'Cột',
@@ -82,6 +80,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Danh mục',
   columnMenuShowColumns: 'Danh sách cột',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Bộ lọc',
   columnMenuHideColumn: 'Ẩn cột',
   columnMenuUnsort: 'Bỏ sắp xếp',

@@ -16,7 +16,7 @@ import { UserLanguageProvider } from 'docs/src/modules/utils/i18n';
 import DocsStyledEngineProvider from 'docs/src/modules/utils/StyledEngineProvider';
 import createEmotionCache from 'docs/src/createEmotionCache';
 import findActivePage from 'docs/src/modules/utils/findActivePage';
-import { LicenseInfo } from '@mui/x-data-grid-pro';
+import { LicenseInfo } from '@mui/x-license-pro';
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
@@ -202,8 +202,6 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const activePage = findActivePage(pages, router.pathname);
-
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
     fonts = [
@@ -211,7 +209,11 @@ function AppWrapper(props) {
     ];
   }
 
-  const pageContextValue = React.useMemo(() => ({ activePage, pages }), [activePage]);
+  const pageContextValue = React.useMemo(() => {
+    const { activePage, activePageParents } = findActivePage(pages, router.pathname);
+
+    return { activePage, activePageParents, pages };
+  }, [router.pathname]);
 
   return (
     <React.Fragment>

@@ -7,7 +7,7 @@
     "item": {
       "type": {
         "name": "shape",
-        "description": "{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }"
+        "description": "{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }"
       },
       "required": true
     },
@@ -17,10 +17,10 @@
     "disableMultiFilterOperator": { "type": { "name": "bool" } },
     "filterColumns": { "type": { "name": "func" } },
     "focusElementRef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "linkOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
-    "linkOperators": {
+    "logicOperatorInputProps": { "type": { "name": "any" }, "default": "{}" },
+    "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
     },
     "multiFilterOperator": {
       "type": { "name": "enum", "description": "'and'<br>&#124;&nbsp;'or'" }
@@ -35,5 +35,9 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterForm.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro", "@mui/x-data-grid"]
+  "packages": [
+    { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterForm" },
+    { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterForm" },
+    { "packageName": "@mui/x-data-grid", "componentName": "GridFilterForm" }
+  ]
 }

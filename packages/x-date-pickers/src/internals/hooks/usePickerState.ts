@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WrapperVariant } from '../components/wrappers/WrapperVariantContext';
+import { WrapperVariant } from '../models/common';
 import { useOpenState } from './useOpenState';
 import { useUtils } from './useUtils';
 import { MuiPickersAdapter } from '../models';
@@ -190,6 +190,7 @@ interface PickerState<TValue> {
   wrapperProps: PickerStateWrapperProps;
 }
 
+// TODO v6: Drop with the legacy pickers
 export const usePickerState = <TValue, TDate, TError>(
   props: PickerStateProps<TValue>,
   valueManager: PickerStateValueManager<TValue, TDate, TError>,

@@ -6,7 +6,7 @@ import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
-} from '../DateCalendar/DateCalendar';
+} from '../DateCalendar/DateCalendar.types';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
@@ -36,7 +36,7 @@ export interface BaseDatePickerSlotsComponentsProps<TDate>
 }
 
 export interface BaseDatePickerProps<TDate>
-  extends ExportedDateCalendarProps<TDate>,
+  extends Omit<ExportedDateCalendarProps<TDate>, 'value' | 'onChange' | 'defaultValue'>,
     BasePickerProps<TDate | null, TDate>,
     ValidationCommonProps<DateValidationError, TDate | null>,
     ExportedDateInputProps<TDate> {

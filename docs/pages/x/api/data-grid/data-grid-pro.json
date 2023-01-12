@@ -21,8 +21,8 @@
     },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
@@ -56,7 +56,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
@@ -71,7 +70,7 @@
     "filterModel": {
       "type": {
         "name": "shape",
-        "description": "{ items: Array&lt;{ columnField: string, id?: number<br>&#124;&nbsp;string, operatorValue?: string, value?: any }&gt;, linkOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
+        "description": "{ items: Array&lt;{ field: string, id?: number<br>&#124;&nbsp;string, operator: string, value?: any }&gt;, logicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterLogicOperator?: 'and'<br>&#124;&nbsp;'or', quickFilterValues?: array }"
       }
     },
     "getCellClassName": { "type": { "name": "func" } },
@@ -84,7 +83,6 @@
     "getRowSpacing": { "type": { "name": "func" } },
     "getTreeDataPath": { "type": { "name": "func" } },
     "groupingColDef": { "type": { "name": "union", "description": "func<br>&#124;&nbsp;object" } },
-    "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterRowCount": {
@@ -119,7 +117,6 @@
     "onCellDoubleClick": { "type": { "name": "func" } },
     "onCellEditStart": { "type": { "name": "func" } },
     "onCellEditStop": { "type": { "name": "func" } },
-    "onCellFocusOut": { "type": { "name": "func" } },
     "onCellKeyDown": { "type": { "name": "func" } },
     "onCellModesModelChange": { "type": { "name": "func" } },
     "onColumnHeaderClick": { "type": { "name": "func" } },
@@ -133,7 +130,6 @@
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
@@ -202,8 +198,8 @@
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
-    "showCellRightBorder": { "type": { "name": "bool" } },
-    "showColumnRightBorder": { "type": { "name": "bool" } },
+    "showCellVerticalBorder": { "type": { "name": "bool" } },
+    "showColumnVerticalBorder": { "type": { "name": "bool" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
@@ -245,8 +241,31 @@
       "type": { "name": "elementType" }
     },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
+    "ColumnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
+    "ColumnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
+    "ColumnMenuHideIcon": { "default": "GridVisibilityOffIcon", "type": { "name": "elementType" } },
     "ColumnMenuIcon": {
       "default": "GridTripleDotsVerticalIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuManageColumnsIcon": {
+      "default": "GridViewColumnIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuPinLeftIcon": {
+      "default": "GridPushPinLeftIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuPinRightIcon": {
+      "default": "GridPushPinRightIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortAscendingIcon": {
+      "default": "GridArrowUpwardIcon",
+      "type": { "name": "elementType" }
+    },
+    "ColumnMenuSortDescendingIcon": {
+      "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
     "ColumnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
@@ -285,7 +304,6 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
-    "Header": { "default": "GridHeader", "type": { "name": "elementType" } },
     "LoadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "MoreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "NoResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
@@ -320,6 +338,10 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
+      "cell--rangeTop",
+      "cell--rangeBottom",
+      "cell--rangeLeft",
+      "cell--rangeRight",
       "cell",
       "cellContent",
       "cellCheckbox",
@@ -370,7 +392,7 @@
       "editBooleanCell",
       "filterForm",
       "filterFormDeleteIcon",
-      "filterFormLinkOperatorInput",
+      "filterFormLogicOperatorInput",
       "filterFormColumnInput",
       "filterFormOperatorInput",
       "filterFormValueInput",
@@ -402,6 +424,7 @@
       "root--densityStandard",
       "root--densityComfortable",
       "root--densityCompact",
+      "root--disableUserSelection",
       "row--editable",
       "row--editing",
       "row--dragging",
@@ -420,7 +443,9 @@
       "sortIcon",
       "toolbarContainer",
       "toolbarFilterList",
-      "withBorder",
+      "withBorderColor",
+      "cell--withRightBorder",
+      "columnHeader--withRightBorder",
       "treeDataGroupingCell",
       "treeDataGroupingCellToggle",
       "groupingCriteriaCell",
@@ -436,5 +461,5 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li></ul>",
-  "packages": ["@mui/x-data-grid-pro"]
+  "packages": [{ "packageName": "@mui/x-data-grid-pro", "componentName": "DataGridPro" }]
 }

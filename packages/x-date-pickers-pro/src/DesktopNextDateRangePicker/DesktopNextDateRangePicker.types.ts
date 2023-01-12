@@ -12,11 +12,11 @@ import {
 
 export interface DesktopNextDateRangePickerSlotsComponent<TDate>
   extends BaseNextDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent, 'Field'> {}
+    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, 'day'>, 'Field'> {}
 
 export interface DesktopNextDateRangePickerSlotsComponentsProps<TDate>
   extends BaseNextDateRangePickerSlotsComponentsProps<TDate>,
-    UseDesktopRangePickerSlotsComponentsProps<TDate> {}
+    UseDesktopRangePickerSlotsComponentsProps<TDate, 'day'> {}
 
 export interface DesktopNextDateRangePickerProps<TDate>
   extends BaseNextDateRangePickerProps<TDate>,

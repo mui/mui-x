@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SxProps } from '@mui/system';
 import {
   BaseDatePickerProps,
   useDatePickerDefaultizedProps,
@@ -30,6 +31,11 @@ export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
     DesktopWrapperProps {
   /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
    */
@@ -39,6 +45,10 @@ export interface DesktopDatePickerProps<TDate>
    * @default {}
    */
   componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps;
 }
 
 type DesktopDatePickerComponent = (<TDate>(
@@ -67,7 +77,15 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
-  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+  const {
+    onChange,
+    value,
+    components,
+    componentsProps,
+    localeText,
+    yearsPerRow = 4,
+    ...other
+  } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -90,6 +108,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
+        yearsPerRow={yearsPerRow}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -109,7 +128,6 @@ DesktopDatePicker.propTypes = {
    * @default /\dap/gi
    */
   acceptRegex: PropTypes.instanceOf(RegExp),
-  autoFocus: PropTypes.bool,
   children: PropTypes.node,
   /**
    * className applied to the root component.
@@ -147,7 +165,7 @@ DesktopDatePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -167,7 +185,7 @@ DesktopDatePicker.propTypes = {
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -211,7 +229,7 @@ DesktopDatePicker.propTypes = {
   ]),
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -232,6 +250,11 @@ DesktopDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
@@ -348,14 +371,14 @@ DesktopDatePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -384,4 +407,9 @@ DesktopDatePicker.propTypes = {
    * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

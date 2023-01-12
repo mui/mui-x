@@ -4,13 +4,13 @@
     "filterFormProps": {
       "type": {
         "name": "shape",
-        "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, linkOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
+        "description": "{ columnInputProps?: any, columnsSort?: 'asc'<br>&#124;&nbsp;'desc', deleteIconProps?: any, logicOperatorInputProps?: any, operatorInputProps?: any, valueInputProps?: any }"
       }
     },
     "getColumnForNewFilter": { "type": { "name": "func" } },
-    "linkOperators": {
+    "logicOperators": {
       "type": { "name": "arrayOf", "description": "Array&lt;'and'<br>&#124;&nbsp;'or'&gt;" },
-      "default": "[GridLinkOperator.And, GridLinkOperator.Or]"
+      "default": "[GridLogicOperator.And, GridLogicOperator.Or]"
     },
     "sx": {
       "type": {
@@ -25,5 +25,9 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/grid/x-data-grid/src/components/panel/filterPanel/GridFilterPanel.tsx",
   "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#commercial-version\">DataGridPremium</a></li></ul>",
-  "packages": ["@mui/x-data-grid-premium", "@mui/x-data-grid-pro", "@mui/x-data-grid"]
+  "packages": [
+    { "packageName": "@mui/x-data-grid-premium", "componentName": "GridFilterPanel" },
+    { "packageName": "@mui/x-data-grid-pro", "componentName": "GridFilterPanel" },
+    { "packageName": "@mui/x-data-grid", "componentName": "GridFilterPanel" }
+  ]
 }

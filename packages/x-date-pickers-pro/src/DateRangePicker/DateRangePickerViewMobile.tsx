@@ -128,7 +128,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
-        openView="day"
+        view="day"
         views={onlyDayView}
         disabled={disabled}
         {...other}

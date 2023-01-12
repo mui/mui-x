@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import { useForm, Controller } from 'react-hook-form';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowModelUpdate,
   useGridApiContext,
   GridRowParams,
@@ -90,7 +90,7 @@ function DetailPanelContent({ row }: { row: Customer }) {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID' },
   { field: 'customer', headerName: 'Customer', width: 200 },
   { field: 'email', headerName: 'Email', width: 200 },

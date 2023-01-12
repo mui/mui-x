@@ -44,6 +44,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     rightPinnedColumns: [
       'pinnedColumnHeaders',
       rightPinnedColumns && rightPinnedColumns.length > 0 && `pinnedColumnHeaders--right`,
+      'withBorderColor',
     ],
   };
 
@@ -52,6 +53,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 interface GridColumnHeadersPinnedColumnHeadersProps {
   side: GridPinnedPosition;
+  showCellVerticalBorder: boolean;
 }
 
 // Inspired by https://github.com/material-components/material-components-ios/blob/bca36107405594d5b7b16265a5b0ed698f85a5ee/components/Elevation/src/UIColor%2BMaterialElevation.m#L61
@@ -75,21 +77,32 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
   ],
 })<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
   position: 'absolute',
+  top: 0,
   overflow: 'hidden',
-  height: '100%',
   zIndex: 1,
   display: 'flex',
   flexDirection: 'column',
   boxShadow: theme.shadows[2],
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && {
-    backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-      '#fff',
-      getOverlayAlpha(2),
-    )})`,
-  }),
+  backgroundColor: (theme.vars || theme).palette.background.default,
+  ...(theme.vars
+    ? {
+        backgroundImage: theme.vars.overlays?.[2],
+      }
+    : {
+        ...(theme.palette.mode === 'dark' && {
+          backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
+            '#fff',
+            getOverlayAlpha(2),
+          )})`,
+        }),
+      }),
   ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
   ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
+  ...(ownerState.side === GridPinnedPosition.right &&
+    ownerState.showCellVerticalBorder && {
+      borderLeftWidth: '1px',
+      borderLeftStyle: 'solid',
+    }),
 }));
 
 interface DataGridProColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -135,7 +148,11 @@ export const DataGridProColumnHeaders = React.forwardRef<
     minColumnIndex: leftPinnedColumns.length,
   });
 
-  const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
+  const ownerState = {
+    leftPinnedColumns,
+    rightPinnedColumns,
+    classes: rootProps.classes,
+  };
   const classes = useUtilityClasses(ownerState);
 
   const leftRenderContext =
@@ -167,7 +184,10 @@ export const DataGridProColumnHeaders = React.forwardRef<
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
-          ownerState={{ side: GridPinnedPosition.left }}
+          ownerState={{
+            side: GridPinnedPosition.left,
+            showCellVerticalBorder: rootProps.showCellVerticalBorder,
+          }}
           {...pinnedColumnHeadersProps}
         >
           {getColumnGroupHeaders({
@@ -199,7 +219,10 @@ export const DataGridProColumnHeaders = React.forwardRef<
       </GridColumnHeadersInner>
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{ side: GridPinnedPosition.right }}
+          ownerState={{
+            side: GridPinnedPosition.right,
+            showCellVerticalBorder: rootProps.showCellVerticalBorder,
+          }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
           {...pinnedColumnHeadersProps}

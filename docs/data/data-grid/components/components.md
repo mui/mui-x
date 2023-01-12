@@ -71,14 +71,13 @@ export const GridColumnMenu = React.forwardRef<
   HTMLUListElement,
   GridColumnMenuProps
 >(function GridColumnMenu(props: GridColumnMenuProps, ref) {
-  const { hideMenu, currentColumn } = props;
+  const { hideMenu, colDef } = props;
 
   return (
     <GridColumnMenuContainer ref={ref} {...props}>
-      <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
-      <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />
-      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+      <GridColumnMenuSortItem onClick={hideMenu} column={colDef!} />
+      <GridColumnMenuFilterItem onClick={hideMenu} column={colDef!} />
+      <GridColumnMenuColumnsItem onClick={hideMenu} column={colDef!} />
     </GridColumnMenuContainer>
   );
 });
@@ -121,8 +120,11 @@ The grid exposes props to hide specific elements of the UI:
 
 ### Pagination
 
-By default, pagination uses the [TablePagination](/material-ui/react-pagination/#table-pagination) component that is optimized for handling tabular data.
-This demo replaces it with the [Pagination](/material-ui/react-pagination/) component.
+The default pagination component is exported as `GridPagination`.
+This component is an extension of the [TablePagination](/material-ui/react-pagination/#table-pagination) component, and it renders the page size control, the number of rows in the page and also the buttons to go to the previous and next page.
+You can replace the pagination component completely or reuse the default one.
+
+The next demo reuses `GridPagination` but replaces the previous and next page buttons with [Pagination](/material-ui/react-pagination/), which renders a dedicated button for each page.
 
 {{"demo": "CustomPaginationGrid.js", "bg": "inline"}}
 

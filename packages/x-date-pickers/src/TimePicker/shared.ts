@@ -5,7 +5,7 @@ import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
-} from '../TimeClock/TimeClock';
+} from '../TimeClock/TimeClock.types';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
@@ -133,7 +133,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   };
 }
 
-// TODO v6: Drop, we only need it on the legacy pickers for the custom valueReducer
+// TODO v6: Drop with the legacy pickers
 export const timeValueManager: PickerStateValueManager<any, any, TimeValidationError> = {
   ...singleItemValueManager,
   valueReducer: (utils, lastValidValue, newValue) => {

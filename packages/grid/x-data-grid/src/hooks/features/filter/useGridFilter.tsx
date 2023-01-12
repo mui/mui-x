@@ -62,6 +62,7 @@ export const useGridFilter = (
     | 'disableMultipleColumnsFiltering'
     | 'components'
     | 'componentsProps'
+    | 'disableColumnFilter'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridFilter');
@@ -95,6 +96,17 @@ export const useGridFilter = (
     });
     apiRef.current.publishEvent('filteredRowsSet');
   }, [props.filterMode, apiRef]);
+
+  const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
+    (columnMenuItems, colDef) => {
+      if (colDef == null || colDef.filterable === false || props.disableColumnFilter) {
+        return columnMenuItems;
+      }
+
+      return [...columnMenuItems, 'ColumnMenuFilterItem'];
+    },
+    [props.disableColumnFilter],
+  );
 
   /**
    * API METHODS
@@ -160,9 +172,9 @@ export const useGridFilter = (
             return true;
           }
 
-          const column = apiRef.current.getColumn(item.columnField);
+          const column = apiRef.current.getColumn(item.field);
           const filterOperator = column.filterOperators?.find(
-            (operator) => operator.value === item.operatorValue,
+            (operator) => operator.value === item.operator,
           );
           const requiresFilterValue =
             typeof filterOperator?.requiresFilterValue === 'undefined'
@@ -180,17 +192,27 @@ export const useGridFilter = (
 
         let newFilterItems: GridFilterItem[];
         const filterItemOnTarget = filterItemsWithValue.find(
-          (item) => item.columnField === targetColumnField,
+          (item) => item.field === targetColumnField,
         );
+
+        const targetColumn = apiRef.current.getColumn(targetColumnField);
 
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
         } else if (props.disableMultipleColumnsFiltering) {
-          newFilterItems = [cleanFilterItem({ columnField: targetColumnField }, apiRef)];
+          newFilterItems = [
+            cleanFilterItem(
+              { field: targetColumnField, operator: targetColumn!.filterOperators![0].value! },
+              apiRef,
+            ),
+          ];
         } else {
           newFilterItems = [
             ...filterItemsWithValue,
-            cleanFilterItem({ columnField: targetColumnField }, apiRef),
+            cleanFilterItem(
+              { field: targetColumnField, operator: targetColumn!.filterOperators![0].value! },
+              apiRef,
+            ),
           ];
         }
 
@@ -209,16 +231,16 @@ export const useGridFilter = (
     apiRef.current.hidePreferences();
   }, [apiRef, logger]);
 
-  const setFilterLinkOperator = React.useCallback<GridFilterApi['setFilterLinkOperator']>(
-    (linkOperator) => {
+  const setFilterLogicOperator = React.useCallback<GridFilterApi['setFilterLogicOperator']>(
+    (logicOperator) => {
       const filterModel = gridFilterModelSelector(apiRef);
-      if (filterModel.linkOperator === linkOperator) {
+      if (filterModel.logicOperator === logicOperator) {
         return;
       }
       apiRef.current.setFilterModel(
         {
           ...filterModel,
-          linkOperator,
+          logicOperator,
         },
         'changeLogicOperator',
       );
@@ -262,7 +284,7 @@ export const useGridFilter = (
   }, [apiRef]);
 
   const filterApi: GridFilterApi = {
-    setFilterLinkOperator,
+    setFilterLogicOperator,
     unstable_applyFilters: applyFilters,
     deleteFilterItem,
     upsertFilterItem,
@@ -379,6 +401,7 @@ export const useGridFilter = (
     [apiRef, props.filterMode],
   );
 
+  useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
@@ -392,7 +415,7 @@ export const useGridFilter = (
     const filterModel = gridFilterModelSelector(apiRef);
     const filterableColumnsLookup = gridFilterableColumnLookupSelector(apiRef);
     const newFilterItems = filterModel.items.filter(
-      (item) => item.columnField && filterableColumnsLookup[item.columnField],
+      (item) => item.field && filterableColumnsLookup[item.field],
     );
     if (newFilterItems.length < filterModel.items.length) {
       apiRef.current.setFilterModel({ ...filterModel, items: newFilterItems });

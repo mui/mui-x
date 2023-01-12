@@ -43,9 +43,12 @@ import {
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
 
-export const useDataGridComponent = (props: DataGridProcessedProps) => {
+export const useDataGridComponent = (
+  inputApiRef: React.MutableRefObject<GridApiCommunity> | undefined,
+  props: DataGridProcessedProps,
+) => {
   const privateApiRef = useGridInitialization<GridPrivateApiCommunity, GridApiCommunity>(
-    undefined,
+    inputApiRef,
     props,
   );
 

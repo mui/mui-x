@@ -8,6 +8,7 @@ import * as babelTypes from '@babel/types';
 import * as yargs from 'yargs';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
+import localeNames from './localeNames';
 
 const MyOctokit = Octokit.plugin(retry);
 
@@ -15,6 +16,7 @@ const GIT_ORGANIZATION = 'mui';
 const GIT_REPO = 'mui-x';
 const L10N_ISSUE_ID = 3211;
 const SOURCE_CODE_REPO = `https://github.com/${GIT_ORGANIZATION}/${GIT_REPO}`;
+const MAIN_BRANCH = 'next';
 
 const packagesWithL10n = [
   {
@@ -22,12 +24,14 @@ const packagesWithL10n = [
     reportName: '🧑‍💼 DataGrid, DataGridPro, DataGridPremium',
     constantsRelativePath: 'packages/grid/x-data-grid/src/constants/localeTextConstants.ts',
     localesRelativePath: 'packages/grid/x-data-grid/src/locales',
+    documentationReportPath: 'docs/data/data-grid/localization/data.json',
   },
   {
     key: 'pickers',
     reportName: '📅🕒 Date and Time Pickers',
     constantsRelativePath: 'packages/x-date-pickers/src/locales/enUS.ts',
     localesRelativePath: 'packages/x-date-pickers/src/locales',
+    documentationReportPath: 'docs/data/date-pickers/localization/data.json',
   },
 ];
 
@@ -284,6 +288,63 @@ async function generateReport(missingTranslations: MissingTranslations) {
   return lines.join('\n');
 }
 
+type DocumentationReportItem = {
+  languageTag: string;
+  importName: string;
+  localeName: string;
+  missingKeysCount: number;
+  totalKeysCount: number;
+  githubLink: string;
+};
+const generateDocReport = async (
+  missingTranslations: MissingTranslations,
+  baseTranslationsNumber,
+) => {
+  const workspaceRoot = path.resolve(__dirname, '../');
+
+  packagesWithL10n.forEach(async ({ key: packageKey, documentationReportPath }) => {
+    const documentationReport: DocumentationReportItem[] = [];
+    Object.entries(missingTranslations).forEach(([importName, infoPerPackage]) => {
+      const info = infoPerPackage[packageKey];
+      if (info == null) {
+        return;
+      }
+      const githubLink = `${SOURCE_CODE_REPO}/blob/${MAIN_BRANCH}/${info.path}/`;
+
+      const languageTag = `${importName.slice(0, 2).toLowerCase()}-${importName
+        .slice(2)
+        .toUpperCase()}`;
+      const localeName = localeNames[languageTag];
+
+      if (localeName === undefined) {
+        throw new Error(
+          [
+            `locale tag ${languageTag} is not associated to a locale name.`,
+            'If this tag is correct, add its name to the file `scripts/localeNames.js`',
+          ].join('\n'),
+        );
+      }
+      documentationReport.push({
+        languageTag,
+        importName,
+        localeName,
+        missingKeysCount: infoPerPackage[packageKey].missingKeys.length,
+        totalKeysCount: baseTranslationsNumber[packageKey],
+        githubLink,
+      });
+    });
+
+    await fse.writeFileSync(
+      path.join(workspaceRoot, documentationReportPath),
+      `${JSON.stringify(
+        documentationReport.sort((a, b) => a.localeName.localeCompare(b.localeName)),
+        null,
+        2,
+      )}\n`,
+    );
+  });
+};
+
 async function updateIssue(githubToken, newMessage) {
   // Initialize the API client
   const octokit = new MyOctokit({
@@ -321,10 +382,13 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
   const workspaceRoot = path.resolve(__dirname, '../');
 
   const missingTranslations: Record<string, any> = {};
+  const baseTranslationsNumber: Record<string, number> = {};
 
   packagesWithL10n.forEach((packageInfo) => {
     const constantsPath = path.join(workspaceRoot, packageInfo.constantsRelativePath);
     const [baseTranslationsByGroup, baseTranslations] = extractTranslations(constantsPath);
+
+    baseTranslationsNumber[packageInfo.key] = Object.keys(baseTranslations).length;
 
     const localesDirectory = path.resolve(workspaceRoot, packageInfo.localesRelativePath);
     const locales = findLocales(localesDirectory, constantsPath);
@@ -387,6 +451,8 @@ async function run(argv: yargs.ArgumentsCamelCase<HandlerArgv>) {
       }
     });
   });
+
+  await generateDocReport(missingTranslations, baseTranslationsNumber);
 
   if (report) {
     const newMessage = await generateReport(missingTranslations);

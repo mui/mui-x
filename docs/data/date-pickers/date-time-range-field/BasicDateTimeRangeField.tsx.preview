@@ -1,5 +1,2 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={4}>
-    <MultiInputDateTimeRangeField />
-  </Stack>
-</LocalizationProvider>
+<MultiInputDateTimeRangeField />
+<SingleInputDateTimeRangeField />

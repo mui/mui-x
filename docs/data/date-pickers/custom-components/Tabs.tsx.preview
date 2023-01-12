@@ -1,0 +1,11 @@
+<StaticNextDateTimePicker
+  defaultValue={dayjs('2022-04-07')}
+  components={{ Tabs: CustomTabs }}
+  componentsProps={{
+    tabs: {
+      hidden: false,
+      dateIcon: <LightModeIcon />,
+      timeIcon: <AcUnitIcon />,
+    },
+  }}
+/>

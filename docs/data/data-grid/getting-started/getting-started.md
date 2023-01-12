@@ -169,10 +169,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
 | [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
 | **Selection**                                                                          |           |                                    |                                            |
-| [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Multiple row selection](/x/react-data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
-| [Cell range selection](/x/react-data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
+| [Single row selection](/x/react-data-grid/row-selection/#single-row-selection)         |    ✅     |                 ✅                 |                     ✅                     |
+| [Checkbox selection](/x/react-data-grid/row-selection/#checkbox-selection)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multiple row selection](/x/react-data-grid/row-selection/#multiple-row-selection)     |    ❌     |                 ✅                 |                     ✅                     |
+| [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
 | [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
 | [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |

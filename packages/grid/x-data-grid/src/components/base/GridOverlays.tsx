@@ -79,7 +79,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlayWrapperRoo
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
-    height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
 
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });

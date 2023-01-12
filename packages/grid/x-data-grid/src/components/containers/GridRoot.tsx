@@ -42,7 +42,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
 
   const slots = {
-    root: ['root', autoHeight && 'autoHeight', `root--density${capitalize(density)}`],
+    root: [
+      'root',
+      autoHeight && 'autoHeight',
+      `root--density${capitalize(density)}`,
+      'withBorderColor',
+    ],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -68,7 +73,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
 
   const classes = useUtilityClasses(ownerState);
 
-  apiRef.current.rootElementRef = rootContainerRef;
+  apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
   // Our implementation of <NoSsr />
   const [mountedState, setMountedState] = React.useState(false);

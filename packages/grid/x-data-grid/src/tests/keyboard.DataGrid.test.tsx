@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
-import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -12,7 +11,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColumns } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -26,10 +25,8 @@ const expectAriaCoordinate = (
   element: Element | null,
   { colIndex, rowIndex }: { colIndex: number; rowIndex: number },
 ) => {
-  expect(element?.getAttribute('aria-colindex')).to.equal(colIndex.toString());
-  expect(element?.closest('[role="row"]')?.getAttribute('aria-rowindex')).to.equal(
-    rowIndex.toString(),
-  );
+  expect(element).to.have.attribute('aria-colindex', colIndex.toString());
+  expect(element?.closest('[role="row"]')).to.have.attribute('aria-rowindex', rowIndex.toString());
 };
 
 describe('<DataGrid /> - Keyboard', () => {
@@ -42,7 +39,7 @@ describe('<DataGrid /> - Keyboard', () => {
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
-    const transformColSizes = (columns: GridColumns) =>
+    const transformColSizes = (columns: GridColDef[]) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
@@ -55,9 +52,9 @@ describe('<DataGrid /> - Keyboard', () => {
           rowsPerPageOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
-          headerHeight={HEADER_HEIGHT}
+          columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
-          filterModel={{ items: [{ columnField: 'id', operatorValue: '>', value: 10 }] }}
+          filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
           experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
           {...props}
         />
@@ -470,7 +467,7 @@ describe('<DataGrid /> - Keyboard', () => {
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
-      const transformColSizes = (columns: GridColumns) =>
+      const transformColSizes = (columns: GridColDef[]) =>
         columns.map((column) => ({ ...column, width: 60 }));
 
       return (
@@ -483,7 +480,7 @@ describe('<DataGrid /> - Keyboard', () => {
             rowsPerPageOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
-            headerHeight={HEADER_HEIGHT}
+            columnHeaderHeight={HEADER_HEIGHT}
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}
@@ -618,35 +615,6 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
-  it('should ignore events coming from a portal inside the cell', () => {
-    const handleCellKeyDown = spy();
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          rows={[{ id: 1, name: 'John' }]}
-          onCellKeyDown={handleCellKeyDown}
-          columns={[
-            { field: 'id' },
-            {
-              field: 'name',
-              renderCell: () => (
-                <Portal>
-                  <input type="text" name="custom-input" />
-                </Portal>
-              ),
-            },
-          ]}
-        />
-      </div>,
-    );
-    userEvent.mousePress(getCell(0, 1));
-    expect(handleCellKeyDown.callCount).to.equal(0);
-    const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
-    input.focus();
-    fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(handleCellKeyDown.callCount).to.equal(0);
-  });
-
   it('should call preventDefault when using keyboard navigation', () => {
     const handleKeyDown = spy((event) => event.defaultPrevented);
 
@@ -718,13 +686,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(2);
+    expect(renderCell.callCount).to.equal(6);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.callCount).to.equal(8);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.callCount).to.equal(8);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {

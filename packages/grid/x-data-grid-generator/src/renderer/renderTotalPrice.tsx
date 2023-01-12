@@ -13,10 +13,14 @@ const Value = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'flex-end',
   '&.good': {
-    backgroundColor: alpha(theme.palette.success.main, 0.3),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.success.mainChannel} /  0.3)`
+      : alpha(theme.palette.success.main, 0.3),
   },
   '&.bad': {
-    backgroundColor: alpha(theme.palette.error.main, 0.3),
+    backgroundColor: theme.vars
+      ? `rgba(${theme.vars.palette.error.mainChannel} /  0.3)`
+      : alpha(theme.palette.error.main, 0.3),
   },
 }));
 
@@ -43,7 +47,7 @@ const TotalPrice = React.memo(function TotalPrice(props: TotalPriceProps) {
   );
 });
 
-export function renderTotalPrice(params: GridRenderCellParams<number>) {
+export function renderTotalPrice(params: GridRenderCellParams<any, number>) {
   if (params.value == null) {
     return '';
   }

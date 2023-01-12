@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
 import { PickerStateValueManager } from '../usePickerState';
@@ -11,7 +10,8 @@ import {
   UseFieldInternalProps,
 } from '../useField';
 import { InferError, useValidation, Validator } from '../validation/useValidation';
-import { UseFieldValidationProps } from '../useField/useField.interfaces';
+import { UseFieldValidationProps } from '../useField/useField.types';
+import { WrapperVariant } from '../../models/common';
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -127,8 +127,8 @@ export interface UsePickerValueNonStaticProps<TValue>
     'selectedSections' | 'onSelectedSectionsChange'
   > {
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect?: boolean;
   /**
@@ -200,7 +200,7 @@ export interface UsePickerValueViewsResponse<TValue> {
 }
 
 /**
- * Props passed to `usePickerLayout`.
+ * Props passed to `usePickerLayoutProps`.
  */
 export interface UsePickerValueLayoutResponse<TValue> extends UsePickerValueActions {
   value: TValue;
@@ -238,7 +238,7 @@ export const usePickerValue = <
     onChange,
     value: inValue,
     defaultValue,
-    closeOnSelect,
+    closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
   } = props;
@@ -249,7 +249,7 @@ export const usePickerValue = <
   const [rawValue, setValue] = useControlled({
     controlled: inValue,
     default: defaultValue ?? valueManager.emptyValue,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'value',
   });
 
@@ -261,7 +261,7 @@ export const usePickerValue = <
   const [selectedSections, setSelectedSections] = useControlled({
     controlled: selectedSectionsProp,
     default: null,
-    name: 'usePickerState2',
+    name: 'usePickerValue',
     state: 'selectedSections',
   });
 
@@ -400,7 +400,7 @@ export const usePickerValue = <
         }
 
         case 'finish': {
-          if (closeOnSelect ?? wrapperVariant === 'desktop') {
+          if (closeOnSelect) {
             // Set all dates in state to equal the new date and close picker.
             return setDate({ value: newDate, action: 'acceptAndClose' });
           }

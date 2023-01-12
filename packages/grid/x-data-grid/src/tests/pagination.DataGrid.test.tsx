@@ -12,8 +12,10 @@ import {
   DataGrid,
   DataGridProps,
   gridClasses,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
+  GridApi,
+  useGridApiRef,
 } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
@@ -196,11 +198,11 @@ describe('<DataGrid /> - Pagination', () => {
 
       setProps({
         filterModel: {
-          linkOperator: GridLinkOperator.And,
+          logicOperator: GridLogicOperator.And,
           items: [
             {
-              columnField: 'id',
-              operatorValue: '<=',
+              field: 'id',
+              operator: '<=',
               value: '3',
             },
           ],
@@ -266,6 +268,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({ pageSize: 2 });
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
+    });
+
+    it('should throw if pageSize exceeds 100', () => {
+      let apiRef: React.MutableRefObject<GridApi>;
+      function TestCase() {
+        apiRef = useGridApiRef();
+        return (
+          <BaselineTestCase
+            apiRef={apiRef}
+            pageSize={1}
+            page={0}
+            rowsPerPageOptions={[1, 2, 101]}
+          />
+        );
+      }
+      render(<TestCase />);
+      expect(() => apiRef.current.setPageSize(101)).to.throw(
+        /`pageSize` cannot exceed 100 in the MIT version of the DataGrid./,
+      );
     });
 
     it('should allow to update both the page and pageSize from the outside at once', () => {
@@ -437,21 +458,21 @@ describe('<DataGrid /> - Pagination', () => {
     it('should always render the same amount of rows and fit the viewport', () => {
       const nbRows = 27;
       const height = 780;
-      const headerHeight = 56;
+      const columnHeaderHeight = 56;
       const rowHeight = 52;
 
       render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={height}
-          headerHeight={headerHeight}
+          columnHeaderHeight={columnHeaderHeight}
           rowHeight={rowHeight}
         />,
       );
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedFullPageRowsLength = Math.floor(
-        (height - headerHeight - footerHeight) / rowHeight,
+        (height - columnHeaderHeight - footerHeight) / rowHeight,
       );
 
       let rows = getRows();
@@ -477,10 +498,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       // make sure there is no more pages.
       const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
-      expect(nextPageBtn!.getAttribute('disabled')).not.to.equal(
-        null,
-        'next page should be disabled.',
-      );
+      expect(nextPageBtn!).not.to.have.attribute('disabled', 'false'); // next page should be disabled
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
@@ -495,14 +513,14 @@ describe('<DataGrid /> - Pagination', () => {
 
       const heightBefore = 780;
       const heightAfter = 360;
-      const headerHeight = 56;
+      const columnHeaderHeight = 56;
       const rowHeight = 52;
 
       const { setProps } = render(
         <TestCaseAutoPageSize
           nbRows={nbRows}
           height={heightBefore}
-          headerHeight={headerHeight}
+          columnHeaderHeight={columnHeaderHeight}
           rowHeight={rowHeight}
           onPageSizeChange={onPageSizeChange}
         />,
@@ -510,10 +528,10 @@ describe('<DataGrid /> - Pagination', () => {
 
       const footerHeight = document.querySelector('.MuiDataGrid-footerContainer')!.clientHeight;
       const expectedViewportRowsLengthBefore = Math.floor(
-        (heightBefore - headerHeight - footerHeight) / rowHeight,
+        (heightBefore - columnHeaderHeight - footerHeight) / rowHeight,
       );
       const expectedViewportRowsLengthAfter = Math.floor(
-        (heightAfter - headerHeight - footerHeight) / rowHeight,
+        (heightAfter - columnHeaderHeight - footerHeight) / rowHeight,
       );
 
       let rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');

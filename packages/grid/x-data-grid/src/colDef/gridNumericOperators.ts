@@ -3,7 +3,7 @@ import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/Gr
 import { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridCellParams } from '../models';
 
-const parseNumericValue = (value: string | number | null | undefined) => {
+const parseNumericValue = (value: unknown) => {
   if (value == null) {
     return null;
   }

@@ -5,23 +5,20 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
-import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
+import {
+  DateOrTimeView,
+  PickerViewRendererLookup,
+  useLocaleText,
+  validateDateTime,
+} from '../internals';
 import { useMobilePicker } from '../internals/hooks/useMobilePicker';
 import { extractValidationProps } from '../internals/utils/validation';
-import { renderDateView, renderTimeView } from '../internals/utils/viewRenderers';
+import { renderDateViewCalendar } from '../dateViewRenderers';
+import { renderTimeViewClock } from '../timeViewRenderers';
 
 type MobileDateTimePickerComponent = (<TDate>(
   props: MobileNextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
-
-const VIEW_LOOKUP = {
-  day: renderDateView,
-  month: renderDateView,
-  year: renderDateView,
-  hours: renderTimeView,
-  minutes: renderTimeView,
-  seconds: renderTimeView,
-};
 
 const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePicker<TDate>(
   inProps: MobileNextDateTimePickerProps<TDate>,
@@ -35,11 +32,21 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     MobileNextDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileNextDateTimePicker');
 
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    hours: renderTimeViewClock,
+    minutes: renderTimeViewClock,
+    seconds: renderTimeViewClock,
+    ...defaultizedProps.viewRenderers,
+  };
+
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    autoFocus: true,
     components: {
       Field: DateTimeField,
       ...defaultizedProps.components,
@@ -63,7 +70,6 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     props,
     valueManager: singleItemValueManager,
     getOpenDialogAriaText: localeText.openDatePickerDialogue,
-    viewLookup: VIEW_LOOKUP,
     validator: validateDateTime,
   });
 
@@ -85,14 +91,20 @@ MobileNextDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
+  /**
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
   autoFocus: PropTypes.bool,
   /**
    * Class name applied to the root element.
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
@@ -127,7 +139,7 @@ MobileNextDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -142,12 +154,12 @@ MobileNextDateTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -180,7 +192,7 @@ MobileNextDateTimePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -221,6 +233,11 @@ MobileNextDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -267,8 +284,8 @@ MobileNextDateTimePicker.propTypes = {
   onSelectedSectionsChange: PropTypes.func,
   /**
    * Callback fired on view change.
-   * @template View
-   * @param {View} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -283,7 +300,9 @@ MobileNextDateTimePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * First view to show.
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
@@ -312,13 +331,21 @@ MobileNextDateTimePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
+  /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
    * @template TDate
@@ -330,12 +357,12 @@ MobileNextDateTimePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -344,7 +371,7 @@ MobileNextDateTimePicker.propTypes = {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
@@ -371,11 +398,35 @@ MobileNextDateTimePicker.propTypes = {
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { MobileNextDateTimePicker };

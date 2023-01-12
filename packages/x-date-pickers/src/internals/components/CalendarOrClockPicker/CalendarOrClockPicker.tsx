@@ -2,13 +2,14 @@ import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useViews, PickerOnChangeFn } from '../../hooks/useViews';
-import { TimeClock, ExportedTimeClockProps } from '../../../TimeClock/TimeClock';
+import { TimeClock } from '../../../TimeClock';
+import { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
 import {
   DateCalendar,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
 } from '../../../DateCalendar';
-import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar';
+import { ExportedDateCalendarProps } from '../../../DateCalendar/DateCalendar.types';
 import { KeyboardDateInput } from '../KeyboardDateInput';
 import { useIsLandscape } from '../../hooks/useIsLandscape';
 import { WrapperVariantContext } from '../wrappers/WrapperVariantContext';
@@ -19,7 +20,6 @@ import { PickerViewRoot } from '../PickerViewRoot';
 import { DateOrTimeView, DateView, TimeView } from '../../models';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../../models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../../models/props/tabs';
-import { useFocusManagement } from './useFocusManagement';
 import {
   CalendarOrClockPickerClasses,
   getCalendarOrClockPickerUtilityClass,
@@ -39,7 +39,7 @@ export interface CalendarOrClockPickerSlotsComponentsProps<TDate>
 
 export interface ExportedCalendarOrClockPickerProps<TDate, TView extends DateOrTimeView>
   extends Omit<BasePickerProps<TDate | null, TDate>, 'value' | 'onChange' | 'localeText'>,
-    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view'>,
+    Omit<ExportedDateCalendarProps<TDate>, 'onViewChange' | 'openTo' | 'view' | 'views'>,
     ExportedTimeClockProps<TDate> {
   /**
    * Callback fired on view change.
@@ -113,8 +113,7 @@ const isDatePickerView = (view: DateOrTimeView): view is DateView =>
 const isTimePickerView = (view: DateOrTimeView): view is TimeView =>
   view === 'hours' || view === 'minutes' || view === 'seconds';
 
-let warnedOnceNotValidOpenTo = false;
-
+// TODO v6: Drop with the legacy pickers
 export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
   inProps: CalendarOrClockPickerProps<TDate, View>,
 ) {
@@ -161,32 +160,19 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
     [isMobileKeyboardViewOpen, onViewChange, toggleMobileKeyboardView],
   );
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (!warnedOnceNotValidOpenTo && !views.includes(openTo)) {
-      console.warn(
-        `MUI: \`openTo="${openTo}"\` is not a valid prop.`,
-        `It must be an element of \`views=["${views.join('", "')}"]\`.`,
-      );
-      warnedOnceNotValidOpenTo = true;
-    }
-  }
-
-  const { openView, setOpenView, handleChangeAndOpenNext } = useViews<TDate | null, View>({
+  const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
     view: undefined,
     views,
     openTo,
     onChange: handleDateChange,
     onViewChange: handleViewChange,
-  });
-
-  const { focusedView, setFocusedView } = useFocusManagement<DateView>({
     autoFocus,
-    openView,
   });
 
   const Tabs = components?.Tabs;
 
-  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
+  const isDesktop = wrapperVariant === 'desktop';
+  const shouldRenderToolbar = showToolbar ?? !isDesktop;
   const Toolbar = components?.Toolbar;
 
   return (
@@ -197,8 +183,8 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           isLandscape={isLandscape}
           onChange={handleDateChange}
           value={value}
-          view={openView}
-          onViewChange={setOpenView as (view: DateOrTimeView) => void}
+          view={view}
+          onViewChange={setView as (view: DateOrTimeView) => void}
           views={views}
           disabled={other.disabled}
           readOnly={other.readOnly}
@@ -206,14 +192,13 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           toggleMobileKeyboardView={toggleMobileKeyboardView}
         />
       )}
-      {!!Tabs && (
+      {!!Tabs && !isDesktop && (
         <Tabs
-          view={openView}
-          onViewChange={setOpenView as (view: DateOrTimeView) => void}
+          view={view}
+          onViewChange={setView as (view: DateOrTimeView) => void}
           {...componentsProps?.tabs}
         />
       )}
-
       <PickerViewRoot>
         {isMobileKeyboardViewOpen ? (
           <MobileKeyboardInputView className={classes.mobileKeyboardInputView}>
@@ -226,34 +211,34 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           </MobileKeyboardInputView>
         ) : (
           <React.Fragment>
-            {isDatePickerView(openView) && (
+            {isDatePickerView(view) && (
               <DateCalendar
                 autoFocus={autoFocus}
                 value={value}
-                onViewChange={setOpenView as (view: DateView) => void}
-                onChange={handleChangeAndOpenNext}
-                view={openView}
+                onViewChange={setView as (view: DateView) => void}
+                onChange={setValueAndGoToNextView}
+                view={view}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isDatePickerView) as DateView[]}
-                focusedView={focusedView}
-                onFocusedViewChange={setFocusedView}
+                focusedView={focusedView as DateView | null}
+                onFocusedViewChange={setFocusedView as (view: DateView, hasFocus: boolean) => void}
                 components={components}
                 componentsProps={componentsProps}
                 {...other}
               />
             )}
 
-            {isTimePickerView(openView) && (
+            {isTimePickerView(view) && (
               <TimeClock
                 {...other}
                 autoFocus={autoFocus}
                 value={value}
-                view={openView}
+                view={view}
                 // Unclear why the predicate `isDatePickerView` does not imply the casted type
                 views={views.filter(isTimePickerView) as TimeView[]}
-                onChange={handleChangeAndOpenNext}
-                onViewChange={setOpenView as (view: TimeView) => void}
-                showViewSwitcher={wrapperVariant === 'desktop'}
+                onChange={setValueAndGoToNextView}
+                onViewChange={setView as (view: TimeView) => void}
+                showViewSwitcher={isDesktop}
                 components={components}
                 componentsProps={componentsProps}
               />
@@ -261,6 +246,13 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
           </React.Fragment>
         )}
       </PickerViewRoot>
+      {!!Tabs && isDesktop && (
+        <Tabs
+          view={view}
+          onViewChange={setView as (view: DateOrTimeView) => void}
+          {...componentsProps?.tabs}
+        />
+      )}
     </PickerRoot>
   );
 }

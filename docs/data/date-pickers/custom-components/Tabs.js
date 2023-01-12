@@ -2,12 +2,9 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import {
-  DateTimePicker,
-  DateTimePickerTabs,
-} from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
+import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
@@ -21,21 +18,15 @@ function CustomTabs(props) {
 }
 
 export default function Tabs() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateTimePicker
-        label="Tabs"
-        renderInput={(params) => <TextField {...params} />}
-        value={value}
-        onChange={(newValue) => {
-          setValue(newValue);
-        }}
+      <StaticNextDateTimePicker
+        defaultValue={dayjs('2022-04-07')}
         components={{ Tabs: CustomTabs }}
         componentsProps={{
           tabs: {
             hidden: false,
-            dateRangeIcon: <LightModeIcon />,
+            dateIcon: <LightModeIcon />,
             timeIcon: <AcUnitIcon />,
           },
         }}

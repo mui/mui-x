@@ -11,9 +11,10 @@ import {
   GridPreProcessEditCellProps,
   GridRowModes,
 } from '@mui/x-data-grid-pro';
+import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row Editing', () => {
@@ -27,7 +28,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const ref = React.useRef<HTMLInputElement>(null);
     React.useLayoutEffect(() => {
       if (hasFocus) {
-        ref.current!.focus();
+        ref.current!.focus({ preventScroll: true });
       }
     }, [hasFocus]);
     return <input ref={ref} />;
@@ -97,18 +98,18 @@ describe('<DataGridPro /> - Row Editing', () => {
 
       it('should update the CSS class of all editable cells', () => {
         render(<TestCase />);
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
-        expect(getCell(0, 2).className).to.contain('MuiDataGrid-cell--editing');
-        expect(getCell(0, 3).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
+        expect(getCell(0, 2)).to.have.class('MuiDataGrid-cell--editing');
+        expect(getCell(0, 3)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should update the CSS class of the row', () => {
         render(<TestCase />);
-        expect(getRow(0).className).not.to.contain('MuiDataGrid-row--editing');
+        expect(getRow(0)).not.to.have.class('MuiDataGrid-row--editing');
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
-        expect(getRow(0).className).to.contain('MuiDataGrid-row--editing');
+        expect(getRow(0)).to.have.class('MuiDataGrid-row--editing');
       });
 
       it('should render the components given in renderEditCell', () => {
@@ -443,7 +444,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         // Simulates the user stopping the editing while processing the props
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
 
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
         resolveCallback!();
 
@@ -461,7 +462,7 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should keep mode=edit if props of any column contains error=true', async () => {
@@ -491,24 +492,24 @@ describe('<DataGridPro /> - Row Editing', () => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: '' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
 
         await act(() =>
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should update the CSS class of the cell', async () => {
         render(<TestCase />);
         act(() => apiRef.current.startRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         await act(() =>
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
         act(() => apiRef.current.stopRowEditMode({ id: 0 }));
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should call processRowUpdate before updating the row', async () => {
@@ -549,7 +550,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(() => act(() => apiRef.current.stopRowEditMode({ id: 0 }))).toErrorDev(
           'MUI: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
         );
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should call onProcessRowUpdateError if processRowUpdate throws an error', () => {
@@ -1169,9 +1170,9 @@ describe('<DataGridPro /> - Row Editing', () => {
     describe('mode=view to mode=edit', () => {
       it('should start edit mode', () => {
         const { setProps } = render(<TestCase />);
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: { 0: { mode: GridRowModes.Edit } } });
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
     });
 
@@ -1180,9 +1181,9 @@ describe('<DataGridPro /> - Row Editing', () => {
         const { setProps } = render(
           <TestCase rowModesModel={{ 0: { mode: GridRowModes.Edit } }} />,
         );
-        expect(getCell(0, 1).className).to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
         setProps({ rowModesModel: { 0: { mode: GridRowModes.View } } });
-        expect(getCell(0, 1).className).not.to.contain('MuiDataGrid-cell--editing');
+        expect(getCell(0, 1)).not.to.have.class('MuiDataGrid-cell--editing');
       });
 
       it('should ignode modifications if ignoreModifications=true', async () => {
@@ -1297,5 +1298,55 @@ describe('<DataGridPro /> - Row Editing', () => {
       setProps({ rowModesModel: { 0: { mode: 'edit' } } });
       expect(onRowModesModelChange.callCount).to.equal(0);
     });
+  });
+
+  it('should correctly handle Portals when pressing Tab to go to the next column', () => {
+    function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
+      const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
+      React.useLayoutEffect(() => {
+        if (hasFocus && inputRef) {
+          inputRef.focus();
+        }
+      }, [hasFocus, inputRef]);
+      return (
+        <Portal>
+          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+        </Portal>
+      );
+    }
+    column1Props.renderEditCell = (props: GridRenderEditCellParams) => (
+      <PortaledEditComponent {...props} />
+    );
+    render(<TestCase />);
+    fireEvent.doubleClick(getCell(0, 1));
+    const input = screen.getByTestId('input');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Tab' });
+    expect(getCell(0, 2).querySelector('input')).toHaveFocus();
+  });
+
+  it('should correctly handle Portals when pressing Shift+Tab to go to the previous column', () => {
+    function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
+      const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
+      React.useLayoutEffect(() => {
+        if (hasFocus && inputRef) {
+          inputRef.focus();
+        }
+      }, [hasFocus, inputRef]);
+      return (
+        <Portal>
+          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+        </Portal>
+      );
+    }
+    column2Props.renderEditCell = (props: GridRenderEditCellParams) => (
+      <PortaledEditComponent {...props} />
+    );
+    render(<TestCase />);
+    fireEvent.doubleClick(getCell(0, 2));
+    const input = screen.getByTestId('input');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+    expect(getCell(0, 1).querySelector('input')).toHaveFocus();
   });
 });

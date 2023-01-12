@@ -9,7 +9,6 @@ import {
   GridRowParams,
   GridToolbarContainer,
   GridToolbarQuickFilter,
-  GridValueFormatterParams,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 import Link from '@mui/material/Link';
@@ -302,7 +301,7 @@ const columns: GridColDef[] = [
     flex: 0.3,
     type: 'singleSelect',
     valueOptions: ['Premium', 'Pro', 'Community'],
-    renderCell: (params: GridRenderCellParams<string>) => {
+    renderCell: (params: GridRenderCellParams<any, string>) => {
       if (!params.value) {
         return '';
       }
@@ -358,12 +357,6 @@ export default function PopularFeaturesDemo() {
     return {
       headerName: 'Grouped by Plan',
       width: 200,
-      valueFormatter: (params: GridValueFormatterParams) => {
-        if (!params.value) {
-          return '';
-        }
-        return <PlanTag plan={params.value} />;
-      },
     };
   }, []);
 

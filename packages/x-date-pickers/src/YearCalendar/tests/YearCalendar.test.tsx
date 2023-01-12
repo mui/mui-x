@@ -1,39 +1,16 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { act, fireEvent, screen, describeConformance } from '@mui/monorepo/test/utils';
-import { YearCalendar, yearCalendarClasses as classes } from '@mui/x-date-pickers/YearCalendar';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
-import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
+import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { YearCalendar } from '@mui/x-date-pickers/YearCalendar';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<YearCalendar />', () => {
-  const { render, clock } = createPickerRenderer({
-    clock: 'fake',
-  });
-
-  describeValidation(YearCalendar, () => ({
-    render,
-    clock,
-    views: ['year'],
-    componentFamily: 'calendar',
-  }));
-
-  describeConformance(<YearCalendar defaultValue={adapterToUse.date()} />, () => ({
-    classes,
-    inheritComponent: 'div',
-    wrapMount: wrapPickerMount,
-    render,
-    muiName: 'MuiYearCalendar',
-    refInstanceof: window.HTMLDivElement,
-    // cannot test reactTestRenderer because of required context
-    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
-  }));
+  const { render } = createPickerRenderer();
 
   it('allows to pick year standalone by click, `Enter` and `Space`', () => {
-    const onChangeMock = spy();
-    render(
-      <YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChangeMock} />,
-    );
+    const onChange = spy();
+    render(<YearCalendar value={adapterToUse.date(new Date(2019, 1, 2))} onChange={onChange} />);
     const targetYear = screen.getByRole('button', { name: '2025' });
 
     // A native button implies Enter and Space keydown behavior
@@ -45,8 +22,18 @@ describe('<YearCalendar />', () => {
 
     fireEvent.click(targetYear);
 
-    expect(onChangeMock.callCount).to.equal(1);
-    expect(onChangeMock.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 1, 2));
+  });
+
+  it('should select start of year without time when no initial value is present', () => {
+    const onChange = spy();
+    render(<YearCalendar onChange={onChange} />);
+
+    fireEvent.click(screen.getByRole('button', { name: '2025' }));
+
+    expect(onChange.callCount).to.equal(1);
+    expect(onChange.args[0][0]).toEqualDateTime(new Date(2025, 0, 1, 0, 0, 0, 0));
   });
 
   it('does not allow to pick year if readOnly prop is passed', () => {

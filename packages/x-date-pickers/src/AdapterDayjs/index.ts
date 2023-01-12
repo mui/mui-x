@@ -3,7 +3,7 @@ import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -41,13 +41,17 @@ interface Opts {
   formats?: Partial<DateIOFormats>;
 }
 
-export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickerFieldAdapter<Dayjs> {
+export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickersAdapter<Dayjs> {
+  public isMUIAdapter = true;
+
   constructor(options: Opts) {
     super(options);
     this.rawDayJsInstance.extend(weekOfYear);
   }
 
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: '[', end: ']' };
 
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.

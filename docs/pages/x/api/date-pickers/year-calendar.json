@@ -18,12 +18,19 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
     },
-    "value": { "type": { "name": "any" } }
+    "value": { "type": { "name": "any" } },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
+    }
   },
   "slots": {},
   "name": "YearCalendar",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiYearCalendar" },
   "filename": "/packages/x-date-pickers/src/YearCalendar/YearCalendar.tsx",
-  "demos": "<ul></ul>",
-  "packages": ["@mui/x-date-pickers-pro", "@mui/x-date-pickers"]
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "YearCalendar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "YearCalendar" }
+  ]
 }

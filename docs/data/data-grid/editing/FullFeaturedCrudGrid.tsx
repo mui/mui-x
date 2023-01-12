@@ -11,7 +11,7 @@ import {
   GridRowModesModel,
   GridRowModes,
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowParams,
   MuiEvent,
   GridToolbarContainer,
@@ -142,7 +142,7 @@ export default function FullFeaturedCrudGrid() {
     setRowModesModel(newRowModesModel);
   };
 
-  const columns: GridColumns = [
+  const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 180, editable: true },
     { field: 'age', headerName: 'Age', type: 'number', editable: true },
     {

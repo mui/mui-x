@@ -54,8 +54,8 @@ describe('<DataGrid /> - Filter', () => {
             columns={[]}
             filterModel={{
               items: [
-                { id: 0, columnField: 'brand', operatorValue: 'contains' },
-                { id: 1, columnField: 'brand', operatorValue: 'contains' },
+                { id: 0, field: 'brand', operator: 'contains' },
+                { id: 1, field: 'brand', operator: 'contains' },
               ],
             }}
           />,
@@ -68,33 +68,16 @@ describe('<DataGrid /> - Filter', () => {
     it('should apply the model', () => {
       render(
         <TestCase
-          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
     });
 
-    it('should apply the model when filtering extended columns', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 0, price: 0 },
-            { id: 1, price: 1 },
-          ]}
-          columnTypes={{ price: { extendType: 'number' } }}
-          columns={[{ field: 'price', type: 'price' }]}
-          filterModel={{
-            items: [{ columnField: 'price', operatorValue: '=', value: 1 }],
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['1']);
-    });
-
     it('should apply the model when row prop changes', () => {
       render(
         <TestCase
-          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
           rows={[
             {
               id: 3,
@@ -117,7 +100,7 @@ describe('<DataGrid /> - Filter', () => {
     it('should support new dataset', () => {
       const { setProps } = render(
         <TestCase
-          filterModel={{ items: [{ columnField: 'brand', operatorValue: 'contains', value: 'a' }] }}
+          filterModel={{ items: [{ field: 'brand', operator: 'contains', value: 'a' }] }}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -137,35 +120,9 @@ describe('<DataGrid /> - Filter', () => {
           },
         ],
         columns: [{ field: 'country' }],
-        filterModel: { items: [{ columnField: 'country', operatorValue: 'contains', value: 'a' }] },
+        filterModel: { items: [{ field: 'country', operator: 'contains', value: 'a' }] },
       });
       expect(getColumnValues(0)).to.deep.equal(['France']);
-    });
-
-    it('should pick a default operator when none provided on an item', () => {
-      expect(() => {
-        render(
-          <TestCase
-            filterModel={{ items: [{ columnField: 'brand', value: 'a' }] }}
-            rows={[
-              {
-                id: 3,
-                brand: 'Asics',
-              },
-              {
-                id: 4,
-                brand: 'RedBull',
-              },
-              {
-                id: 5,
-                brand: 'Hugo',
-              },
-            ]}
-          />,
-        );
-      }).toWarnDev('MUI: One of your filtering item have no `operatorValue` provided.');
-
-      expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
   });
 
@@ -176,7 +133,7 @@ describe('<DataGrid /> - Filter', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
               },
             },
           }}
@@ -190,12 +147,12 @@ describe('<DataGrid /> - Filter', () => {
       render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
+            items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
           }}
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Puma' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
               },
             },
           }}
@@ -211,7 +168,7 @@ describe('<DataGrid /> - Filter', () => {
           initialState={{
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
               },
             },
           }}
@@ -222,7 +179,7 @@ describe('<DataGrid /> - Filter', () => {
         initialState: {
           filter: {
             filterModel: {
-              items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Puma' }],
+              items: [{ field: 'brand', operator: 'equals', value: 'Puma' }],
             },
           },
         },
@@ -241,7 +198,7 @@ describe('<DataGrid /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                items: [{ columnField: 'brand', operatorValue: 'equals', value: 'Adidas' }],
+                items: [{ field: 'brand', operator: 'equals', value: 'Adidas' }],
               },
             },
           }}
@@ -258,11 +215,11 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('column type: string', () => {
-    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+    const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'country', ...item }],
+            items: [{ field: 'country', ...item }],
           }}
           rows={[
             { id: 0, country: undefined },
@@ -290,132 +247,120 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['', '', '', 'France (fr)', 'Germany', '0', '1'];
 
     it('should filter with operator "contains"', () => {
-      expect(getRows({ operatorValue: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'contains', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
       // Trim value
-      expect(getRows({ operatorValue: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'contains', value: ' Fra ' })).to.deep.equal(['France (fr)']);
 
       // Case-insensitive
-      expect(getRows({ operatorValue: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'contains', value: 'fra' })).to.deep.equal(['France (fr)']);
 
       // Number casting
-      expect(getRows({ operatorValue: 'contains', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operatorValue: 'contains', value: '1' })).to.deep.equal(['1']);
+      expect(getRows({ operator: 'contains', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operator: 'contains', value: '1' })).to.deep.equal(['1']);
 
       // Empty values
-      expect(getRows({ operatorValue: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
 
       // Value with regexp special literal
-      expect(getRows({ operatorValue: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal(
-        [],
-      );
-      expect(getRows({ operatorValue: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'contains', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+      expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
     });
 
     it('should filter with operator "equals"', () => {
-      expect(getRows({ operatorValue: 'equals', value: 'France (fr)' })).to.deep.equal([
-        'France (fr)',
-      ]);
+      expect(getRows({ operator: 'equals', value: 'France (fr)' })).to.deep.equal(['France (fr)']);
 
       // Trim value
-      expect(getRows({ operatorValue: 'equals', value: ' France (fr) ' })).to.deep.equal([
+      expect(getRows({ operator: 'equals', value: ' France (fr) ' })).to.deep.equal([
         'France (fr)',
       ]);
 
       // Case-insensitive
-      expect(getRows({ operatorValue: 'equals', value: 'france (fr)' })).to.deep.equal([
-        'France (fr)',
-      ]);
+      expect(getRows({ operator: 'equals', value: 'france (fr)' })).to.deep.equal(['France (fr)']);
 
       // Number casting
-      expect(getRows({ operatorValue: 'equals', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operatorValue: 'equals', value: '1' })).to.deep.equal(['1']);
+      expect(getRows({ operator: 'equals', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operator: 'equals', value: '1' })).to.deep.equal(['1']);
 
       // Empty values
-      expect(getRows({ operatorValue: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'equals', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'equals', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "startsWith"', () => {
-      expect(getRows({ operatorValue: 'startsWith', value: 'Fra' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'startsWith', value: 'Fra' })).to.deep.equal(['France (fr)']);
 
       // Trim value
-      expect(getRows({ operatorValue: 'startsWith', value: ' Fra ' })).to.deep.equal([
-        'France (fr)',
-      ]);
+      expect(getRows({ operator: 'startsWith', value: ' Fra ' })).to.deep.equal(['France (fr)']);
 
       // Case-insensitive
-      expect(getRows({ operatorValue: 'startsWith', value: 'fra' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'startsWith', value: 'fra' })).to.deep.equal(['France (fr)']);
 
       // Empty values
-      expect(getRows({ operatorValue: 'startsWith', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'startsWith', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'startsWith', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'startsWith', value: '' })).to.deep.equal(ALL_ROWS);
 
       // Number casting
-      expect(getRows({ operatorValue: 'startsWith', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operatorValue: 'startsWith', value: '1' })).to.deep.equal(['1']);
+      expect(getRows({ operator: 'startsWith', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operator: 'startsWith', value: '1' })).to.deep.equal(['1']);
 
       // Value with regexp special literal
-      expect(
-        getRows({ operatorValue: 'startsWith', value: '[-[]{}()*+?.,\\^$|#s]' }),
-      ).to.deep.equal([]);
-      expect(getRows({ operatorValue: 'contains', value: 'France (' })).to.deep.equal([
-        'France (fr)',
-      ]);
+      expect(getRows({ operator: 'startsWith', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+      expect(getRows({ operator: 'contains', value: 'France (' })).to.deep.equal(['France (fr)']);
     });
 
     it('should filter with operator "endsWith"', () => {
-      expect(getRows({ operatorValue: 'endsWith', value: 'many' })).to.deep.equal(['Germany']);
+      expect(getRows({ operator: 'endsWith', value: 'many' })).to.deep.equal(['Germany']);
 
       // Trim value
-      expect(getRows({ operatorValue: 'endsWith', value: ' many ' })).to.deep.equal(['Germany']);
+      expect(getRows({ operator: 'endsWith', value: ' many ' })).to.deep.equal(['Germany']);
 
       // Number casting
-      expect(getRows({ operatorValue: 'endsWith', value: '0' })).to.deep.equal(['0']);
-      expect(getRows({ operatorValue: 'endsWith', value: '1' })).to.deep.equal(['1']);
+      expect(getRows({ operator: 'endsWith', value: '0' })).to.deep.equal(['0']);
+      expect(getRows({ operator: 'endsWith', value: '1' })).to.deep.equal(['1']);
 
       // Empty values
-      expect(getRows({ operatorValue: 'endsWith', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'endsWith', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'endsWith', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'endsWith', value: '' })).to.deep.equal(ALL_ROWS);
 
       // Value with regexp special literal
-      expect(getRows({ operatorValue: 'endsWith', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal(
-        [],
-      );
-      expect(getRows({ operatorValue: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
+      expect(getRows({ operator: 'endsWith', value: '[-[]{}()*+?.,\\^$|#s]' })).to.deep.equal([]);
+      expect(getRows({ operator: 'contains', value: '(fr)' })).to.deep.equal(['France (fr)']);
     });
 
     it('should filter with operator "isAnyOf"', () => {
-      expect(getRows({ operatorValue: 'isAnyOf', value: ['France (fr)'] })).to.deep.equal([
+      expect(getRows({ operator: 'isAnyOf', value: ['France (fr)'] })).to.deep.equal([
         'France (fr)',
       ]);
 
       // `isAnyOf` has a `or` behavior
-      expect(
-        getRows({ operatorValue: 'isAnyOf', value: ['France (fr)', 'Germany'] }),
-      ).to.deep.equal(['France (fr)', 'Germany']);
+      expect(getRows({ operator: 'isAnyOf', value: ['France (fr)', 'Germany'] })).to.deep.equal([
+        'France (fr)',
+        'Germany',
+      ]);
 
       // Number casting
-      expect(getRows({ operatorValue: 'isAnyOf', value: ['0'] })).to.deep.equal(['0']);
-      expect(getRows({ operatorValue: 'isAnyOf', value: ['1'] })).to.deep.equal(['1']);
+      expect(getRows({ operator: 'isAnyOf', value: ['0'] })).to.deep.equal(['0']);
+      expect(getRows({ operator: 'isAnyOf', value: ['1'] })).to.deep.equal(['1']);
 
       // Empty values
-      expect(getRows({ operatorValue: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
 
       // `isAnyOf` trim values
-      expect(
-        getRows({ operatorValue: 'isAnyOf', value: [' France (fr)', 'Germany '] }),
-      ).to.deep.equal(['France (fr)', 'Germany']);
+      expect(getRows({ operator: 'isAnyOf', value: [' France (fr)', 'Germany '] })).to.deep.equal([
+        'France (fr)',
+        'Germany',
+      ]);
     });
 
     it('should filter with operator "isEmpty"', () => {
-      expect(getRows({ operatorValue: 'isEmpty' })).to.deep.equal(['', '', '']);
+      expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['', '', '']);
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
+      expect(getRows({ operator: 'isNotEmpty' })).to.deep.equal([
         'France (fr)',
         'Germany',
         '0',
@@ -425,11 +370,11 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('column type: number', () => {
-    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+    const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'year', ...item }],
+            items: [{ field: 'year', ...item }],
           }}
           rows={[
             { id: 0, year: undefined },
@@ -468,14 +413,14 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['', '', '', '0', '1954', '1974', '1984'];
 
     it('should filter with operator "="', () => {
-      expect(getRows({ operatorValue: '=', value: 1974 })).to.deep.equal(['1974']);
-      expect(getRows({ operatorValue: '=', value: 0 })).to.deep.equal(['', '0']);
-      expect(getRows({ operatorValue: '=', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '=', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '=', value: 1974 })).to.deep.equal(['1974']);
+      expect(getRows({ operator: '=', value: 0 })).to.deep.equal(['', '0']);
+      expect(getRows({ operator: '=', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '=', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "!="', () => {
-      expect(getRows({ operatorValue: '!=', value: 1974 })).to.deep.equal([
+      expect(getRows({ operator: '!=', value: 1974 })).to.deep.equal([
         '',
         '',
         '',
@@ -483,86 +428,66 @@ describe('<DataGrid /> - Filter', () => {
         '1954',
         '1984',
       ]);
-      expect(getRows({ operatorValue: '!=', value: 0 })).to.deep.equal([
-        '',
-        '',
-        '1954',
-        '1974',
-        '1984',
-      ]);
-      expect(getRows({ operatorValue: '!=', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '!=', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '!=', value: 0 })).to.deep.equal(['', '', '1954', '1974', '1984']);
+      expect(getRows({ operator: '!=', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '!=', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator ">"', () => {
-      expect(getRows({ operatorValue: '>', value: 1974 })).to.deep.equal(['1984']);
-      expect(getRows({ operatorValue: '>', value: 0 })).to.deep.equal(['1954', '1974', '1984']);
-      expect(getRows({ operatorValue: '>', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '>', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '>', value: 1974 })).to.deep.equal(['1984']);
+      expect(getRows({ operator: '>', value: 0 })).to.deep.equal(['1954', '1974', '1984']);
+      expect(getRows({ operator: '>', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '>', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator ">=', () => {
-      expect(getRows({ operatorValue: '>=', value: 1974 })).to.deep.equal(['1974', '1984']);
-      expect(getRows({ operatorValue: '>=', value: 0 })).to.deep.equal([
+      expect(getRows({ operator: '>=', value: 1974 })).to.deep.equal(['1974', '1984']);
+      expect(getRows({ operator: '>=', value: 0 })).to.deep.equal([
         '',
         '0',
         '1954',
         '1974',
         '1984',
       ]);
-      expect(getRows({ operatorValue: '>=', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '>=', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '>=', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '>=', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "<"', () => {
-      expect(getRows({ operatorValue: '<', value: 1974 })).to.deep.equal(['', '0', '1954']);
-      expect(getRows({ operatorValue: '<', value: 0 })).to.deep.equal([]);
-      expect(getRows({ operatorValue: '<', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '<', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '<', value: 1974 })).to.deep.equal(['', '0', '1954']);
+      expect(getRows({ operator: '<', value: 0 })).to.deep.equal([]);
+      expect(getRows({ operator: '<', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '<', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "<="', () => {
-      expect(getRows({ operatorValue: '<=', value: 1974 })).to.deep.equal([
-        '',
-        '0',
-        '1954',
-        '1974',
-      ]);
-      expect(getRows({ operatorValue: '<=', value: 0 })).to.deep.equal(['', '0']);
-      expect(getRows({ operatorValue: '<=', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: '<=', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '<=', value: 1974 })).to.deep.equal(['', '0', '1954', '1974']);
+      expect(getRows({ operator: '<=', value: 0 })).to.deep.equal(['', '0']);
+      expect(getRows({ operator: '<=', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: '<=', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "isAnyOf"', () => {
-      expect(getRows({ operatorValue: 'isAnyOf', value: [1954, 1984] })).to.deep.equal([
-        '1954',
-        '1984',
-      ]);
-      expect(getRows({ operatorValue: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isAnyOf', value: [1954, 1984] })).to.deep.equal(['1954', '1984']);
+      expect(getRows({ operator: 'isAnyOf', value: [] })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'isAnyOf', value: undefined })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "isEmpty"', () => {
-      expect(getRows({ operatorValue: 'isEmpty' })).to.deep.equal(['', '']);
+      expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['', '']);
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
-        '',
-        '0',
-        '1954',
-        '1974',
-        '1984',
-      ]);
+      expect(getRows({ operator: 'isNotEmpty' })).to.deep.equal(['', '0', '1954', '1974', '1984']);
     });
   });
 
   describe('column type: date', () => {
-    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+    const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'date', ...item }],
+            items: [{ field: 'date', ...item }],
           }}
           rows={[
             {
@@ -635,66 +560,66 @@ describe('<DataGrid /> - Filter', () => {
     ];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operatorValue: 'is', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'is', value: '2001-01-01' })).to.deep.equal([
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "not"', () => {
       // TODO: Should this filter return the invalid dates like for the numeric filters ?
-      expect(getRows({ operatorValue: 'not', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'not', value: '2001-01-01' })).to.deep.equal([
         '1/1/2000, 12:00:00 AM',
         '1/1/2002, 12:00:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'not', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'not', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "before"', () => {
-      expect(getRows({ operatorValue: 'before', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'before', value: '2001-01-01' })).to.deep.equal([
         '1/1/2000, 12:00:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'before', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'before', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrBefore"', () => {
-      expect(getRows({ operatorValue: 'onOrBefore', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'onOrBefore', value: '2001-01-01' })).to.deep.equal([
         '1/1/2000, 12:00:00 AM',
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "after"', () => {
-      expect(getRows({ operatorValue: 'after', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'after', value: '2001-01-01' })).to.deep.equal([
         '1/1/2002, 12:00:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'after', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'after', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrAfter"', () => {
-      expect(getRows({ operatorValue: 'onOrAfter', value: '2001-01-01' })).to.deep.equal([
+      expect(getRows({ operator: 'onOrAfter', value: '2001-01-01' })).to.deep.equal([
         '1/1/2001, 12:00:00 AM',
         '1/1/2001, 8:30:00 AM',
         '1/1/2002, 12:00:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "isEmpty"', () => {
-      expect(getRows({ operatorValue: 'isEmpty' })).to.deep.equal(['undefined', 'null']);
+      expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['undefined', 'null']);
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
+      expect(getRows({ operator: 'isNotEmpty' })).to.deep.equal([
         '',
         '1/1/2000, 12:00:00 AM',
         '1/1/2001, 12:00:00 AM',
@@ -705,11 +630,11 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('column type: dateTime', () => {
-    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+    const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'date', ...item }],
+            items: [{ field: 'date', ...item }],
           }}
           rows={[
             {
@@ -777,63 +702,63 @@ describe('<DataGrid /> - Filter', () => {
     ];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operatorValue: 'is', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'is', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 7:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "not"', () => {
       // TODO: Should this filter return the invalid dates like for the numeric filters ?
-      expect(getRows({ operatorValue: 'not', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'not', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'not', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'not', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'not', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "before"', () => {
-      expect(getRows({ operatorValue: 'before', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'before', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'before', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'before', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'before', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrBefore"', () => {
-      expect(getRows({ operatorValue: 'onOrBefore', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'onOrBefore', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 7:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrBefore', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrBefore', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "after"', () => {
-      expect(getRows({ operatorValue: 'after', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'after', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 8:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'after', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'after', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'after', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "onOrAfter"', () => {
-      expect(getRows({ operatorValue: 'onOrAfter', value: '2001-01-01T07:30' })).to.deep.equal([
+      expect(getRows({ operator: 'onOrAfter', value: '2001-01-01T07:30' })).to.deep.equal([
         '1/1/2001, 7:30:00 AM',
         '1/1/2001, 8:30:00 AM',
       ]);
-      expect(getRows({ operatorValue: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrAfter', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'onOrAfter', value: '' })).to.deep.equal(ALL_ROWS);
     });
 
     it('should filter with operator "isEmpty"', () => {
-      expect(getRows({ operatorValue: 'isEmpty' })).to.deep.equal(['undefined', 'null']);
+      expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['undefined', 'null']);
     });
 
     it('should filter with operator "isNotEmpty"', () => {
-      expect(getRows({ operatorValue: 'isNotEmpty' })).to.deep.equal([
+      expect(getRows({ operator: 'isNotEmpty' })).to.deep.equal([
         '',
         '1/1/2001, 6:30:00 AM',
         '1/1/2001, 7:30:00 AM',
@@ -843,11 +768,11 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('column type: boolean', () => {
-    const getRows = (item: Omit<GridFilterItem, 'columnField'>) => {
+    const getRows = (item: Omit<GridFilterItem, 'field'>) => {
       const { unmount } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'isPublished', ...item }],
+            items: [{ field: 'isPublished', ...item }],
           }}
           rows={[
             {
@@ -898,9 +823,9 @@ describe('<DataGrid /> - Filter', () => {
     const ALL_ROWS = ['undefined', 'null', 'true', 'false'];
 
     it('should filter with operator "is"', () => {
-      expect(getRows({ operatorValue: 'is', value: 'true' })).to.deep.equal(['true']);
-      expect(getRows({ operatorValue: 'is', value: '' })).to.deep.equal(ALL_ROWS);
-      expect(getRows({ operatorValue: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: 'true' })).to.deep.equal(['true']);
+      expect(getRows({ operator: 'is', value: '' })).to.deep.equal(ALL_ROWS);
+      expect(getRows({ operator: 'is', value: undefined })).to.deep.equal(ALL_ROWS);
     });
   });
 
@@ -965,23 +890,21 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter with operator "is"', () => {
       // With simple options
       expect(
-        getRows({ columnField: 'country', operatorValue: 'is', value: 'United States' }).country,
+        getRows({ field: 'country', operator: 'is', value: 'United States' }).country,
       ).to.deep.equal(['United States']);
-      expect(
-        getRows({ columnField: 'country', operatorValue: 'is', value: undefined }).country,
-      ).to.deep.equal(ALL_ROWS_COUNTRY);
-      expect(
-        getRows({ columnField: 'country', operatorValue: 'is', value: '' }).country,
-      ).to.deep.equal(ALL_ROWS_COUNTRY);
+      expect(getRows({ field: 'country', operator: 'is', value: undefined }).country).to.deep.equal(
+        ALL_ROWS_COUNTRY,
+      );
+      expect(getRows({ field: 'country', operator: 'is', value: '' }).country).to.deep.equal(
+        ALL_ROWS_COUNTRY,
+      );
 
       // With object options
-      expect(getRows({ columnField: 'year', operatorValue: 'is', value: 1974 }).year).to.deep.equal(
-        ['1974'],
+      expect(getRows({ field: 'year', operator: 'is', value: 1974 }).year).to.deep.equal(['1974']);
+      expect(getRows({ field: 'year', operator: 'is', value: undefined }).year).to.deep.equal(
+        ALL_ROWS_YEAR,
       );
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'is', value: undefined }).year,
-      ).to.deep.equal(ALL_ROWS_YEAR);
-      expect(getRows({ columnField: 'year', operatorValue: 'is', value: '' }).year).to.deep.equal(
+      expect(getRows({ field: 'year', operator: 'is', value: '' }).year).to.deep.equal(
         ALL_ROWS_YEAR,
       );
     });
@@ -989,23 +912,25 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter with operator "not"', () => {
       // With simple options
       expect(
-        getRows({ columnField: 'country', operatorValue: 'not', value: 'United States' }).country,
+        getRows({ field: 'country', operator: 'not', value: 'United States' }).country,
       ).to.deep.equal(['', '', 'Germany']);
       expect(
-        getRows({ columnField: 'country', operatorValue: 'not', value: undefined }).country,
+        getRows({ field: 'country', operator: 'not', value: undefined }).country,
       ).to.deep.equal(ALL_ROWS_COUNTRY);
-      expect(
-        getRows({ columnField: 'country', operatorValue: 'not', value: '' }).country,
-      ).to.deep.equal(ALL_ROWS_COUNTRY);
+      expect(getRows({ field: 'country', operator: 'not', value: '' }).country).to.deep.equal(
+        ALL_ROWS_COUNTRY,
+      );
 
       // With object options
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'not', value: 1974 }).year,
-      ).to.deep.equal(['', '', '1984']);
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'not', value: undefined }).year,
-      ).to.deep.equal(ALL_ROWS_YEAR);
-      expect(getRows({ columnField: 'year', operatorValue: 'not', value: '' }).year).to.deep.equal(
+      expect(getRows({ field: 'year', operator: 'not', value: 1974 }).year).to.deep.equal([
+        '',
+        '',
+        '1984',
+      ]);
+      expect(getRows({ field: 'year', operator: 'not', value: undefined }).year).to.deep.equal(
+        ALL_ROWS_YEAR,
+      );
+      expect(getRows({ field: 'year', operator: 'not', value: '' }).year).to.deep.equal(
         ALL_ROWS_YEAR,
       );
     });
@@ -1013,26 +938,25 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter with operator "isAnyOf"', () => {
       // With simple options
       expect(
-        getRows({ columnField: 'country', operatorValue: 'isAnyOf', value: ['United States'] })
-          .country,
+        getRows({ field: 'country', operator: 'isAnyOf', value: ['United States'] }).country,
       ).to.deep.equal(['United States']);
+      expect(getRows({ field: 'country', operator: 'isAnyOf', value: [] }).country).to.deep.equal(
+        ALL_ROWS_COUNTRY,
+      );
       expect(
-        getRows({ columnField: 'country', operatorValue: 'isAnyOf', value: [] }).country,
-      ).to.deep.equal(ALL_ROWS_COUNTRY);
-      expect(
-        getRows({ columnField: 'country', operatorValue: 'isAnyOf', value: undefined }).country,
+        getRows({ field: 'country', operator: 'isAnyOf', value: undefined }).country,
       ).to.deep.equal(ALL_ROWS_COUNTRY);
 
       // With object options
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'isAnyOf', value: [1974] }).year,
-      ).to.deep.equal(['1974']);
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'isAnyOf', value: [] }).year,
-      ).to.deep.equal(ALL_ROWS_YEAR);
-      expect(
-        getRows({ columnField: 'year', operatorValue: 'isAnyOf', value: undefined }).year,
-      ).to.deep.equal(ALL_ROWS_YEAR);
+      expect(getRows({ field: 'year', operator: 'isAnyOf', value: [1974] }).year).to.deep.equal([
+        '1974',
+      ]);
+      expect(getRows({ field: 'year', operator: 'isAnyOf', value: [] }).year).to.deep.equal(
+        ALL_ROWS_YEAR,
+      );
+      expect(getRows({ field: 'year', operator: 'isAnyOf', value: undefined }).year).to.deep.equal(
+        ALL_ROWS_YEAR,
+      );
     });
 
     it('should support `valueParser`', () => {
@@ -1045,7 +969,7 @@ describe('<DataGrid /> - Filter', () => {
       const { setProps } = render(
         <TestCase
           filterModel={{
-            items: [{ columnField: 'status', operatorValue: 'is', value: 0 }],
+            items: [{ field: 'status', operator: 'is', value: 0 }],
           }}
           rows={[
             { id: 0, status: 'Status 0' },
@@ -1068,13 +992,13 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['0']);
       setProps({
         filterModel: {
-          items: [{ columnField: 'status', operatorValue: 'not', value: 0 }],
+          items: [{ field: 'status', operator: 'not', value: 0 }],
         },
       });
       expect(getColumnValues(0)).to.deep.equal(['1', '2']);
       setProps({
         filterModel: {
-          items: [{ columnField: 'status', operatorValue: 'isAnyOf', value: [0, 2] }],
+          items: [{ field: 'status', operator: 'isAnyOf', value: [0, 2] }],
         },
       });
       expect(getColumnValues(0)).to.deep.equal(['0', '2']);
@@ -1097,13 +1021,13 @@ describe('<DataGrid /> - Filter', () => {
             },
           ]}
           filterModel={{
-            items: [{ columnField: 'voltage', operatorValue: 'is' }],
+            items: [{ field: 'voltage', operator: 'is' }],
           }}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
       setProps({
-        filterModel: { items: [{ columnField: 'voltage', operatorValue: 'is', value: 220 }] },
+        filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
       expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
     });
@@ -1117,12 +1041,12 @@ describe('<DataGrid /> - Filter', () => {
             { id: 3, name: 'Microwave', voltage: 220 },
           ]}
           columns={[{ field: 'name' }, { field: 'voltage', type: 'singleSelect' }]}
-          filterModel={{ items: [{ columnField: 'voltage', operatorValue: 'is' }] }}
+          filterModel={{ items: [{ field: 'voltage', operator: 'is' }] }}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Dishwasher', 'Microwave']);
       setProps({
-        filterModel: { items: [{ columnField: 'voltage', operatorValue: 'is', value: 220 }] },
+        filterModel: { items: [{ field: 'voltage', operator: 'is', value: 220 }] },
       });
       expect(getColumnValues(0)).to.deep.equal(['Hair Dryer', 'Microwave']);
     });
@@ -1151,19 +1075,13 @@ describe('<DataGrid /> - Filter', () => {
         return hasNoActiveFilter ? 0 : 1;
       };
 
-      expect(
-        getFilterCount({ columnField: 'brand', operatorValue: 'contains', value: '' }),
-      ).to.equal(0);
-      expect(
-        getFilterCount({ columnField: 'brand', operatorValue: 'contains', value: undefined }),
-      ).to.equal(0);
-      expect(
-        getFilterCount({ columnField: 'brand', operatorValue: 'isAnyOf', value: [] }),
-      ).to.equal(0);
-      expect(
-        getFilterCount({ columnField: 'year', operatorValue: '=', value: undefined }),
-      ).to.equal(0);
-      expect(getFilterCount({ columnField: 'year', operatorValue: '=', value: '' })).to.equal(0);
+      expect(getFilterCount({ field: 'brand', operator: 'contains', value: '' })).to.equal(0);
+      expect(getFilterCount({ field: 'brand', operator: 'contains', value: undefined })).to.equal(
+        0,
+      );
+      expect(getFilterCount({ field: 'brand', operator: 'isAnyOf', value: [] })).to.equal(0);
+      expect(getFilterCount({ field: 'year', operator: '=', value: undefined })).to.equal(0);
+      expect(getFilterCount({ field: 'year', operator: '=', value: '' })).to.equal(0);
     });
 
     it('should include value-less operators', () => {
@@ -1174,8 +1092,8 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{
             items: [
               {
-                columnField: 'brand',
-                operatorValue: 'isNotEmpty',
+                field: 'brand',
+                operator: 'isNotEmpty',
               },
             ],
           }}
@@ -1200,9 +1118,9 @@ describe('<DataGrid /> - Filter', () => {
             filterModel={{
               items: [
                 {
-                  columnField: 'quantity',
+                  field: 'quantity',
                   id: 1619547587572,
-                  operatorValue: '=',
+                  operator: '=',
                   value: '1',
                 },
               ],

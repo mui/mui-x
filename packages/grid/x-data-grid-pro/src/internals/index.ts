@@ -2,6 +2,7 @@ export * from '@mui/x-data-grid/internals';
 
 export { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 export { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
+export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 export {
   useGridColumnResize,
@@ -35,6 +36,8 @@ export {
   useGridRowPinningPreProcessors,
   addPinnedRow,
 } from '../hooks/features/rowPinning/useGridRowPinningPreProcessors';
+export { useGridLazyLoader } from '../hooks/features/lazyLoader/useGridLazyLoader';
+export { useGridLazyLoaderPreProcessors } from '../hooks/features/lazyLoader/useGridLazyLoaderPreProcessors';
 
 export type {
   GridExperimentalProFeatures,

@@ -1,71 +1,96 @@
 ---
 product: date-pickers
 title: React Date Range Picker component
-components: DateRangePicker, DateRangePickerDay, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
+components: NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker, DateRangeCalendar, DateRangePickerDay
 githubLabel: 'component: DateRangePicker'
-packageName: '@mui/x-date-pickers'
+packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
 
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-<p class="description">The date range picker let the user select a range of dates.</p>
+<p class="description">The Date Range Picker let the user select a range of dates.</p>
+
+:::warning
+The new Date Range Pickers are unstable.
+They might receive breaking changes on their props to have the best component possible by the time of the stable release.
+
+They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+(`NextDateRangePicker` will become `DateRangePicker`, ...)
+:::
 
 ## Basic usage
 
-Note that you can pass almost any prop from [DatePicker](/x/react-date-pickers/date-picker/).
-
 {{"demo": "BasicDateRangePicker.js"}}
 
-## Static mode
+## Component composition
 
-It's possible to render any picker inline. This will enable building custom popover/modal containers.
+The component is built using the `MultiInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
+All the documented props of those two components can also be passed to the Date Range Picker component.
 
-{{"demo": "StaticDateRangePickerDemo.js", "bg": true}}
+Check-out their documentation page for more information:
 
-## Responsiveness
+- [Date Range Field](/x/react-date-pickers/date-range-field/)
+- [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
 
-The date range picker component is designed to be optimized for the device it runs on.
+## Uncontrolled vs. Controlled
 
-- The `MobileDateRangePicker` component works best for touch devices and small screens.
-- The `DesktopDateRangePicker` component works best for mouse devices and large screens.
+The component can be uncontrolled or controlled
 
-By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+{{"demo": "DateRangePickerValue.js"}}
+
+## Available components
+
+The component is available in four variants:
+
+- The `DesktopNextDateRangePicker` component which works best for mouse devices and large screens.
+  It renders the views inside a popover and allows editing values directly inside the field.
+
+- The `MobileNextDateRangePicker` component which works best for touch devices and small screens.
+  It renders the view inside a modal and does not allow editing values directly inside the field.
+
+- The `NextDateRangePicker` component which renders `DesktopNextDateRangePicker` or `MobileNextDateRangePicker` depending on the device it runs on.
+
+- The `StaticDateRangePicker` component which renders without the popover/modal and field.
+
+{{"demo": "ResponsiveDateRangePickers.js"}}
+
+By default, the `NextDateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
-
-{{"demo": "ResponsiveDateRangePicker.js"}}
+:::warning
+Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
+Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+:::
 
 ## Form props
 
-The date range picker component can be disabled or read-only.
+The component can be disabled or read-only.
 
 {{"demo": "FormPropsDateRangePickers.js"}}
+
+## Customization
+
+### Render 1 to 3 months
+
+You can render up to 3 months at the same time using the `calendar` prop.
+
+:::info
+This prop will be ignored on the mobile picker.
+:::
+
+{{"demo": "DateRangePickerCalendarProp.js"}}
+
+### Custom input component
+
+You can customize the rendering of the input with the `TextField` component slot.
+Make sure to spread `inputProps` correctly to the custom input component.
+
+{{"demo": "CustomInputs.js"}}
 
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
-
-## Different number of months
-
-Note that the `calendars` prop only works in desktop mode.
-
-{{"demo": "CalendarsDateRangePicker.js"}}
-
-## Custom input component
-
-You can customize the rendered input with the `renderInput` prop. For `DateRangePicker` it takes **2** parameters – for start and end input respectively.
-If you need to render custom inputs make sure to spread `ref` and `inputProps` correctly to the input components.
-
-{{"demo": "CustomDateRangeInputs.js"}}
-
-## Customized day rendering
-
-The displayed days are customizable with the `Day` component slot.
-You can take advantage of the internal [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/) component.
-
-{{"demo": "CustomDateRangePickerDay.js"}}
 
 ## 🚧 Pre-defined range shortcuts
 
@@ -77,7 +102,7 @@ This feature isn't implemented yet. It's coming.
 
 Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
 
-## 🚧 Month range Picker
+## 🚧 Month Range Picker
 
 :::warning
 This feature isn't implemented yet. It's coming.
@@ -85,4 +110,4 @@ This feature isn't implemented yet. It's coming.
 👍 Upvote [issue #4995](https://github.com/mui/mui-x/issues/4995) if you want to see it land faster.
 :::
 
-Month range picker allows setting date ranges by picking months only.
+The Month Range Picker allows setting a range of months.

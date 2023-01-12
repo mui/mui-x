@@ -8,15 +8,15 @@ import {
   UseStaticPickerSlotsComponent,
   UseStaticPickerSlotsComponentsProps,
 } from '../internals/hooks/useStaticPicker';
-import { MakeOptional } from '../internals';
+import { DateView, MakeOptional } from '../internals';
 
 export interface StaticNextDatePickerSlotsComponent<TDate>
   extends BaseNextDatePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent {}
+    UseStaticPickerSlotsComponent<TDate | null, DateView> {}
 
 export interface StaticNextDatePickerSlotsComponentsProps<TDate>
   extends BaseNextDatePickerSlotsComponentsProps<TDate>,
-    UseStaticPickerSlotsComponentsProps {}
+    UseStaticPickerSlotsComponentsProps<TDate, DateView> {}
 
 export interface StaticNextDatePickerProps<TDate>
   extends BaseNextDatePickerProps<TDate>,

@@ -48,10 +48,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
-  filterPanelLinkOperator: 'Mantıksal operatörler',
-  filterPanelOperators: 'Operatör',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Mantıksal operatörler',
+  filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',
   filterPanelColumns: 'Sütunlar',
@@ -81,6 +79,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Sütunları göster',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre uygula',
   columnMenuHideColumn: 'Gizle',
   columnMenuUnsort: 'Sıralama',

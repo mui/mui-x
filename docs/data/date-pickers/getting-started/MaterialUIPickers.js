@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,7 +18,7 @@ export default function MaterialUIPickers() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={3}>
+      <DemoContainer>
         <DesktopDatePicker
           label="Date desktop"
           inputFormat="MM/DD/YYYY"
@@ -45,7 +45,7 @@ export default function MaterialUIPickers() {
           onChange={handleChange}
           renderInput={(params) => <TextField {...params} />}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

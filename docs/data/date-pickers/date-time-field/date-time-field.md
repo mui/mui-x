@@ -1,10 +1,14 @@
 ---
+product: date-pickers
 title: React Date Field component
+components: DateTimeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Date Time Field
 
-<p class="description">The Date Time Field lets the user select a date and a time with the keyboard.</p>
+<p class="description">The Date Time Field component lets the user select a date and a time with the keyboard.</p>
 
 :::warning
 This component is unstable.

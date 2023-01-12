@@ -3,22 +3,27 @@ import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
   DateOrTimeView,
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
   WrapperVariantContext,
   PickersPopper,
-  PickersViewLayout,
   InferError,
+  ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
+  DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange } from '../../models/range';
+import { DateRange, RangePosition } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
 
 const releaseInfo = getReleaseInfo();
@@ -26,11 +31,10 @@ const releaseInfo = getReleaseInfo();
 export const useDesktopRangePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any>,
+  TExternalProps extends UseDesktopRangePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
 }: UseDesktopRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
@@ -42,13 +46,14 @@ export const useDesktopRangePicker = <
     format,
     readOnly,
     disabled,
+    autoFocus,
     disableOpenPicker,
     localeText,
   } = props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const [currentDatePosition, setCurrentDatePosition] = React.useState<'start' | 'end'>('start');
+  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const {
     open,
@@ -57,15 +62,21 @@ export const useDesktopRangePicker = <
     renderCurrentView,
     shouldRestoreFocus,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<
+    DateRange<TDate>,
+    TDate,
+    TView,
+    TExternalProps,
+    DesktopRangePickerAdditionalViewProps
+  >({
     props,
     valueManager,
     wrapperVariant: 'desktop',
-    viewLookup,
     validator,
+    autoFocusView: true,
     additionalViewProps: {
-      currentDatePosition,
-      onCurrentDatePositionChange: setCurrentDatePosition,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
     },
   });
 
@@ -83,15 +94,16 @@ export const useDesktopRangePicker = <
   };
 
   const fieldSlotsProps = useRangePickerInputProps({
-    wrapperVariant: 'mobile',
+    wrapperVariant: 'desktop',
     open,
     actions,
     readOnly,
     disabled,
     disableOpenPicker,
+    localeText,
     onBlur: handleBlur,
-    currentDatePosition,
-    onCurrentDatePositionChange: setCurrentDatePosition,
+    rangePosition,
+    onRangePositionChange: setRangePosition,
   });
 
   const Field = components.Field;
@@ -107,6 +119,7 @@ export const useDesktopRangePicker = <
       disabled,
       className,
       format,
+      autoFocus: autoFocus && !props.open,
       ref: fieldRef,
     },
     ownerState: props,
@@ -114,7 +127,7 @@ export const useDesktopRangePicker = <
 
   const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
     ...fieldProps.components,
-    Input: components.Input,
+    TextField: components.TextField,
     Root: components.FieldRoot,
     Separator: components.FieldSeparator,
   };
@@ -124,10 +137,10 @@ export const useDesktopRangePicker = <
     unknown
   >['componentsProps'] = {
     ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(componentsProps.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.componentsProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =
@@ -140,7 +153,6 @@ export const useDesktopRangePicker = <
         inputProps: {
           ...externalInputProps?.inputProps,
           ...inputPropsPassedByField?.inputProps,
-          ...inputPropsPassedByPicker?.inputProps,
         },
       };
     },
@@ -173,6 +185,16 @@ export const useDesktopRangePicker = <
     },
   };
 
+  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...componentsProps,
+    toolbar: {
+      ...componentsProps?.toolbar,
+      rangePosition,
+      onRangePositionChange: setRangePosition,
+    } as ExportedBaseToolbarProps,
+  };
+  const Layout = components?.Layout ?? PickersLayout;
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
@@ -193,16 +215,20 @@ export const useDesktopRangePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
             ActionBar: () => null,
           }}
-          componentsProps={componentsProps}
+          componentsProps={{
+            ...componentsProps,
+            actionBar: undefined,
+          }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <PickersViewLayout
+          <Layout
             {...layoutProps}
+            {...componentsProps?.layout}
             components={components}
-            componentsProps={componentsProps}
+            componentsProps={componentsPropsForLayout}
           >
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersPopper>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

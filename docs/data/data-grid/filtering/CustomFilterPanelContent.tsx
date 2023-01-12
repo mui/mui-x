@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGridPro, GridLinkOperator, GridToolbar } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridLogicOperator, GridToolbar } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import type { Theme } from '@mui/material/styles';
 
@@ -24,12 +24,12 @@ export default function CustomFilterPanelContent() {
         componentsProps={{
           filterPanel: {
             // Force usage of "And" operator
-            linkOperators: [GridLinkOperator.And],
+            logicOperators: [GridLogicOperator.And],
             // Display columns by ascending alphabetical order
             columnsSort: 'asc',
             filterFormProps: {
               // Customize inputs by passing props
-              linkOperatorInputProps: {
+              logicOperatorInputProps: {
                 variant: 'outlined',
                 size: 'small',
               },
@@ -62,7 +62,7 @@ export default function CustomFilterPanelContent() {
                 backgroundColor: (theme: Theme) =>
                   theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
               },
-              '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+              '& .MuiDataGrid-filterFormLogicOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormColumnInput': { mr: 2, width: 150 },
               '& .MuiDataGrid-filterFormOperatorInput': { mr: 2 },
               '& .MuiDataGrid-filterFormValueInput': { width: 200 },
@@ -77,20 +77,20 @@ export default function CustomFilterPanelContent() {
               items: [
                 {
                   id: 1,
-                  columnField: 'name',
-                  operatorValue: 'contains',
+                  field: 'name',
+                  operator: 'contains',
                   value: 'D',
                 },
                 {
                   id: 2,
-                  columnField: 'name',
-                  operatorValue: 'contains',
+                  field: 'name',
+                  operator: 'contains',
                   value: 'D',
                 },
                 {
                   id: 3,
-                  columnField: 'rating',
-                  operatorValue: '>',
+                  field: 'rating',
+                  operator: '>',
                   value: '0',
                 },
               ],

@@ -48,10 +48,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
-  filterPanelLinkOperator: 'Operator logiczny',
-  filterPanelOperators: 'Operator',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Operator logiczny',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
   filterPanelColumns: 'Kolumny',
@@ -81,6 +79,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Pokaż wszystkie kolumny',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Ukryj',
   columnMenuUnsort: 'Anuluj sortowanie',

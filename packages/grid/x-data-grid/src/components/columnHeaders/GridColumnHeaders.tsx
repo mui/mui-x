@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, alpha, lighten, darken, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -14,7 +14,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    root: ['columnHeaders'],
+    root: ['columnHeaders', 'withBorderColor'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -25,20 +25,13 @@ const GridColumnHeadersRoot = styled('div', {
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
 })(({ theme }) => {
-  const borderColor =
-    theme.palette.mode === 'light'
-      ? lighten(alpha(theme.palette.divider, 1), 0.88)
-      : darken(alpha(theme.palette.divider, 1), 0.68);
-
   return {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    position: 'relative',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
-    borderBottom: `1px solid ${borderColor}`,
+    boxSizing: 'border-box',
+    borderBottom: '1px solid',
     borderTopLeftRadius: theme.shape.borderRadius,
     borderTopRightRadius: theme.shape.borderRadius,
   };
