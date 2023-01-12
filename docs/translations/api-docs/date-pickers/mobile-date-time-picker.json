@@ -34,6 +34,7 @@
     "minDateTime": "Minimal selectable moment of time with binding to date, to set min time in each day use <code>minTime</code>.",
     "minTime": "Minimal selectable time. The date part of the object will be ignored unless <code>props.disableIgnoringDatePartForTimeValidation === true</code>.",
     "minutesStep": "Step over minutes.",
+    "monthsPerRow": "Months rendered per row.",
     "onAccept": "Callback fired when date is accepted @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue) =&gt; void</code><br><em>value:</em> The value that was just accepted.",
     "onChange": "Callback fired when the value (the selected date) changes @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue, keyboardInputValue: string) =&gt; void</code><br><em>value:</em> The new value.<br><em>keyboardInputValue:</em> The current value of the keyboard input.",
     "onClose": "Callback fired when the popup requests to be closed. Use in controlled mode (see open).",
@@ -61,7 +62,8 @@
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "timeIcon": "Time tab icon.",
     "value": "The value of the picker.",
-    "views": "Array of views to show."
+    "views": "Array of views to show.",
+    "yearsPerRow": "Years rendered per row."
   },
   "classDescriptions": {},
   "slotDescriptions": {

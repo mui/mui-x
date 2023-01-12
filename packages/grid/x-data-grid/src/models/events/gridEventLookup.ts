@@ -469,10 +469,12 @@ export interface GridEventLookup
   // Focus
   /**
    * Fired when a cell gains focus.
+   * @ignore - do not document.
    */
   cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
+   * @ignore - do not document.
    */
   cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 

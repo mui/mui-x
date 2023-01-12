@@ -34,6 +34,10 @@
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "monthsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
+    },
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
@@ -96,6 +100,10 @@
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
+    },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "4 on desktop, 3 on mobile"
     }
   },
   "slots": {

@@ -240,6 +240,11 @@ MobileDatePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -391,4 +396,9 @@ MobileDatePicker.propTypes = {
    * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
