@@ -171,7 +171,7 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
   const localeText = useLocaleText<TDate>();
 
   const theme = useTheme();
-  const showAmPmControl = Boolean(ampm && !ampmInClock);
+  const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, onChange);
 
   const formatHours = (time: TDate) =>
