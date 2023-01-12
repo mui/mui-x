@@ -16,7 +16,6 @@ import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridE
 import { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
-import type { GridEditRowsModel } from '../gridEditRowModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
 import type { ElementSize } from '../elementSize';
 import type { MuiBaseEvent } from '../muiEvent';
@@ -183,6 +182,13 @@ export interface GridColumnHeaderEventLookup {
     params: GridColumnHeaderParams;
     event: React.MouseEvent<HTMLElement>;
   };
+  /**
+   * Fired when the index of a column changes.
+   * @ignore - do not document.
+   */
+  columnIndexChange: {
+    params: GridColumnOrderChangeParams;
+  };
 }
 
 export interface GridColumnGroupHeaderEventLookup {
@@ -296,10 +302,6 @@ export interface GridControlledStateEventLookup {
    * Fired when the sort model changes.
    */
   sortModelChange: { params: GridSortModel };
-  /**
-   * Fired when the row editing model changes.
-   */
-  editRowsModelChange: { params: GridEditRowsModel };
   /**
    * Fired when the selection state of one or multiple rows changes.
    */

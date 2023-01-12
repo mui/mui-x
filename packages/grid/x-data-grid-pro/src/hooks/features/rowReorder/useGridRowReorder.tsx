@@ -10,8 +10,8 @@ import {
   gridRowMaximumTreeDepthSelector,
   useGridApiOptionHandler,
   GridRowId,
-  gridEditRowsStateSelector,
 } from '@mui/x-data-grid';
+import { gridEditRowsStateSelector } from '@mui/x-data-grid/internals';
 import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';

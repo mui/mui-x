@@ -358,7 +358,7 @@ export const useGridColumnPinning = (
         return;
       }
 
-      const { field, targetIndex, oldIndex } = params;
+      const { column, targetIndex, oldIndex } = params;
       const delta = targetIndex > oldIndex ? 1 : -1;
 
       const latestColumnFields = gridColumnFieldsSelector(apiRef);
@@ -387,14 +387,16 @@ export const useGridColumnPinning = (
       ];
 
       // The index to start swapping fields
-      let i = newOrderedFieldsBeforePinningColumns.findIndex((column) => column === field);
+      let i = newOrderedFieldsBeforePinningColumns.findIndex(
+        (currentColumn) => currentColumn === column.field,
+      );
       // The index of the field to swap with
       let j = i + delta;
 
       // When to stop swapping fields.
       // We stop one field before because the swap is done with i + 1 (if delta=1)
       const stop = newOrderedFieldsBeforePinningColumns.findIndex(
-        (column) => column === siblingField,
+        (currentColumn) => currentColumn === siblingField,
       );
 
       while (delta > 0 ? i < stop : i > stop) {

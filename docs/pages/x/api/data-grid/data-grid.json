@@ -14,8 +14,8 @@
     "checkboxSelection": { "type": { "name": "bool" } },
     "classes": { "type": { "name": "object" } },
     "columnBuffer": { "type": { "name": "number" }, "default": "3" },
+    "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
-    "columnTypes": { "type": { "name": "object" } },
     "columnVisibilityModel": { "type": { "name": "object" } },
     "components": { "type": { "name": "object" } },
     "componentsProps": { "type": { "name": "object" } },
@@ -37,7 +37,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "editRowsModel": { "type": { "name": "object" } },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
@@ -62,7 +61,6 @@
     "getRowHeight": { "type": { "name": "func" } },
     "getRowId": { "type": { "name": "func" } },
     "getRowSpacing": { "type": { "name": "func" } },
-    "headerHeight": { "type": { "name": "number" }, "default": "56" },
     "hideFooter": { "type": { "name": "bool" } },
     "hideFooterPagination": { "type": { "name": "bool" } },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" } },
@@ -102,7 +100,6 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onEditRowsModelChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },

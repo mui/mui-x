@@ -5,15 +5,13 @@ import {
   unstable_composeClasses as composeClasses,
 } from '@mui/utils';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
-import {
-  WrapperVariant,
-  WrapperVariantContext,
-} from '../internals/components/wrappers/WrapperVariantContext';
+import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import {
   getPickersYearUtilityClass,
   pickersYearClasses,
   PickersYearClasses,
 } from './pickersYearClasses';
+import { WrapperVariant } from '../internals/models/common';
 
 export interface ExportedPickersYearProps {
   classes?: Partial<PickersYearClasses>;
