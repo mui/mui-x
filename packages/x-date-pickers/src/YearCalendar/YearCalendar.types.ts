@@ -3,8 +3,16 @@ import { Theme } from '@mui/material/styles';
 import { YearCalendarClasses } from './yearCalendarClasses';
 import { BaseDateValidationProps, YearValidationProps } from '../internals/hooks/validation/models';
 
+export interface ExportedYearCalendarProps {
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow?: 3 | 4;
+}
 export interface YearCalendarProps<TDate>
-  extends YearValidationProps<TDate>,
+  extends ExportedYearCalendarProps,
+    YearValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**
