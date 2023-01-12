@@ -38,15 +38,15 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     return componentNames.includes((path.value.openingElement.name as any).name);
   });
 
-  // <DataGrid(Pro|Premium) 
-  //   filterModel={{ 
-  //     items: [{ 
+  // <DataGrid(Pro|Premium)
+  //   filterModel={{
+  //     items: [{
   // -     columnField: 'name',
   // +     field: 'name',
-  // -     operatorValue: 'contains', 
-  // +     operator: 'contains', 
-  //       value: 'a' 
-  //     }] 
+  // -     operatorValue: 'contains',
+  // +     operator: 'contains',
+  //       value: 'a'
+  //     }]
   //   }}
   // />
   replaceFilterItem(
