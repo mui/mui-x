@@ -28,7 +28,7 @@ export interface MobileNextDateTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
-   * @deprecated Please use `slots`. Please use `slots`.
+   * @deprecated Please use `slots`.
    */
   components?: MobileNextDateTimePickerSlotsComponent<TDate>;
   /**
