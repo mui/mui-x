@@ -23,7 +23,6 @@ import {
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
-  WrapperVariantContext,
   PickerSelectionState,
   useNow,
 } from '@mui/x-date-pickers/internals';
@@ -153,7 +152,6 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
-  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
 
   const {
     value: valueProp,
@@ -427,9 +425,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         : isSelectedEndDate;
 
       return {
-        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
-        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isPreviewing: isWithinRange(utils, day, previewingRange),
+        isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
+        isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting,
         isEndOfHighlighting: isDragging
