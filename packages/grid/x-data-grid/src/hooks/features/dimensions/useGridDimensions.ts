@@ -70,7 +70,6 @@ export function useGridDimensions(
   const errorShown = React.useRef(false);
   const rootDimensionsRef = React.useRef<ElementSize | null>(null);
   const fullDimensionsRef = React.useRef<GridDimensions | null>(null);
-  const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props.columnHeaderHeight);
@@ -79,6 +78,7 @@ export function useGridDimensions(
     const rootElement = apiRef.current.rootElementRef?.current;
     const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
     const pinnedRowsHeight = calculatePinnedRowsHeight(apiRef);
+    const rowsMeta = gridRowsMetaSelector(apiRef.current.state);
 
     if (!rootDimensionsRef.current) {
       return;
@@ -155,13 +155,7 @@ export function useGridDimensions(
     ) {
       apiRef.current.publishEvent('viewportInnerSizeChange', newFullDimensions.viewportInnerSize);
     }
-  }, [
-    apiRef,
-    props.scrollbarSize,
-    props.autoHeight,
-    rowsMeta.currentPageTotalHeight,
-    totalHeaderHeight,
-  ]);
+  }, [apiRef, props.scrollbarSize, props.autoHeight, totalHeaderHeight]);
 
   const resize = React.useCallback<GridDimensionsApi['resize']>(() => {
     updateGridDimensionsRef();
