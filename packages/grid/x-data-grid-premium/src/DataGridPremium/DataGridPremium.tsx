@@ -308,7 +308,7 @@ DataGridPremiumRaw.propTypes = {
         value: PropTypes.any,
       }),
     ).isRequired,
-    linkOperator: PropTypes.oneOf(['and', 'or']),
+    logicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),

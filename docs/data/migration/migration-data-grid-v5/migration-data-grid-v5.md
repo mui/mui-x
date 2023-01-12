@@ -191,6 +191,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -241,6 +242,12 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
 - The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
+- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
+- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
+- The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
+- The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
+- The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
 
 ### Editing
 
@@ -304,9 +311,10 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
-  | ------------------------- | ------------------------------ | ----------------------------------------------- |
-  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
+  | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 
 <!--
 ### Virtualization
