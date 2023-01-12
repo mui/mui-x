@@ -7,7 +7,6 @@ import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date
 import { Unstable_MobileNextDateRangePicker as MobileNextDateRangePicker } from '@mui/x-date-pickers-pro/MobileNextDateRangePicker';
 import { Unstable_DesktopNextDateRangePicker as DesktopNextDateRangePicker } from '@mui/x-date-pickers-pro/DesktopNextDateRangePicker';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
-import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 
 export default function ResponsiveDateRangePickers() {
   return (
@@ -31,13 +30,6 @@ export default function ResponsiveDateRangePickers() {
         <DemoItem label="Static variant">
           <StaticNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-            sx={{
-              backgroundColor: 'red',
-              [`& > .${pickersLayoutClasses.contentWrapper}`]: {
-                alignItems: 'center',
-                backgroundColor: 'green',
-              },
-            }}
           />
         </DemoItem>
       </DemoContainer>
