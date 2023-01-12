@@ -124,7 +124,7 @@ export const GridRootStyles = styled('div', {
       padding: '0 10px',
       boxSizing: 'border-box',
     },
-    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses['cell--outlined']}`]: {
+    [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]: {
       outline: `solid ${
         theme.vars
           ? `rgba(${theme.vars.palette.primary.mainChannel} / 0.5)`
@@ -133,7 +133,7 @@ export const GridRootStyles = styled('div', {
       outlineWidth: 1,
       outlineOffset: -1,
     },
-    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses['cell--outlined']}`]: {
+    [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.cell}:focus`]: {
       outline: `solid ${theme.palette.primary.main} 1px`,
     },
     [`& .${gridClasses.columnHeaderCheckbox}, & .${gridClasses.cellCheckbox}`]: {
@@ -353,6 +353,10 @@ export const GridRootStyles = styled('div', {
       display: 'flex',
       boxShadow: theme.shadows[2],
       backgroundColor: (theme.vars || theme).palette.background.paper,
+      '&:focus-within': {
+        outline: `solid ${(theme.vars || theme).palette.primary.main} 1px`,
+        outlineOffset: '-1px',
+      },
     },
     [`& .${gridClasses['row--editing']}`]: {
       boxShadow: theme.shadows[2],

@@ -362,7 +362,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
 
       <Clock<TDate>
         autoFocus={autoFocus}
-        ampmInClock={ampmInClock}
+        ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
         ampm={ampm}

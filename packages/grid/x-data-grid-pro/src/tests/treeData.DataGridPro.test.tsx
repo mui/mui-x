@@ -15,7 +15,7 @@ import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GridApi,
   GridGroupNode,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -350,7 +350,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <Test
           rows={[{ name: 'A' }, { name: 'A.C' }, { name: 'B' }, { name: 'B.A' }]}
           filterModel={{
-            linkOperator: GridLinkOperator.Or,
+            logicOperator: GridLogicOperator.Or,
             items: [
               { field: 'name', operator: 'endsWith', value: 'A', id: 0 },
               { field: 'name', operator: 'endsWith', value: 'B', id: 1 },
