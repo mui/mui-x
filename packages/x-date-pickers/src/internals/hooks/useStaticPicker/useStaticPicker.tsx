@@ -52,7 +52,13 @@ export const useStaticPicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <Layout {...layoutProps} slots={slots} slotsProps={slotsProps} ref={ref}>
+        <Layout
+          {...layoutProps}
+          {...slotsProps?.layout}
+          slots={slots}
+          slotsProps={slotsProps}
+          ref={ref}
+        >
           {renderCurrentView()}
         </Layout>
       </WrapperVariantContext.Provider>
