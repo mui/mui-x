@@ -61,6 +61,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.componentsProps?.tabs,
+      },
     },
   };
 
