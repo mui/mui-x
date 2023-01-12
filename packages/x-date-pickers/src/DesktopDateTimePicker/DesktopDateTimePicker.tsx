@@ -75,7 +75,15 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
 
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
-  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+  const {
+    onChange,
+    value,
+    components,
+    componentsProps,
+    localeText,
+    yearsPerRow = 4,
+    ...other
+  } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -98,6 +106,7 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
+        yearsPerRow={yearsPerRow}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -282,6 +291,11 @@ DesktopDateTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -454,4 +468,9 @@ DesktopDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

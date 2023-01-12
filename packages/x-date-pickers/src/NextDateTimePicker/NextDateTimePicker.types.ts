@@ -27,6 +27,11 @@ export interface NextDateTimePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
    */

@@ -25,6 +25,11 @@ export interface DesktopNextDatePickerProps<TDate>
     DesktopOnlyPickerProps<TDate>,
     BaseNextNonStaticPickerExternalProps {
   /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
    */

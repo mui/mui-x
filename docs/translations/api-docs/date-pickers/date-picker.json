@@ -26,6 +26,7 @@
     "mask": "Custom mask. Can be used to override generate from format. (e.g. <code>__/__/____ __:__</code> or <code>__/__/____ __:__ _M</code>).",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
+    "monthsPerRow": "Months rendered per row.",
     "onAccept": "Callback fired when date is accepted @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue) =&gt; void</code><br><em>value:</em> The value that was just accepted.",
     "onChange": "Callback fired when the value (the selected date) changes @DateIOType.<br><br><strong>Signature:</strong><br><code>function(value: TValue, keyboardInputValue: string) =&gt; void</code><br><em>value:</em> The new value.<br><em>keyboardInputValue:</em> The current value of the keyboard input.",
     "onClose": "Callback fired when the popup requests to be closed. Use in controlled mode (see open).",
@@ -50,7 +51,8 @@
     "showToolbar": "If <code>true</code>, show the toolbar even in desktop mode.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The value of the picker.",
-    "views": "Array of views to show."
+    "views": "Array of views to show.",
+    "yearsPerRow": "Years rendered per row."
   },
   "classDescriptions": {},
   "slotDescriptions": {

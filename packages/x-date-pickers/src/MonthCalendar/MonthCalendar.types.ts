@@ -6,8 +6,16 @@ import {
   MonthValidationProps,
 } from '../internals/hooks/validation/models';
 
+export interface ExportedMonthCalendarProps {
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow?: 3 | 4;
+}
 export interface MonthCalendarProps<TDate>
-  extends MonthValidationProps<TDate>,
+  extends ExportedMonthCalendarProps,
+    MonthValidationProps<TDate>,
     BaseDateValidationProps<TDate> {
   autoFocus?: boolean;
   /**

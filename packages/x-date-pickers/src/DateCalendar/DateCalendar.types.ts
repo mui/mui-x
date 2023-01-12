@@ -21,6 +21,8 @@ import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValu
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView } from '../internals/models/views';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -32,6 +34,8 @@ export interface DateCalendarSlotsComponentsProps<TDate>
 
 export interface ExportedDateCalendarProps<TDate>
   extends ExportedDayCalendarProps<TDate>,
+    ExportedMonthCalendarProps,
+    ExportedYearCalendarProps,
     BaseDateValidationProps<TDate>,
     DayValidationProps<TDate>,
     YearValidationProps<TDate>,
