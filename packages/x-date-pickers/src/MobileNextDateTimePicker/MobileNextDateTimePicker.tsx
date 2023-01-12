@@ -234,6 +234,11 @@ MobileNextDateTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -417,6 +422,11 @@ MobileNextDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { MobileNextDateTimePicker };

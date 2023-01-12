@@ -382,7 +382,7 @@ export default function PopularFeaturesDemo() {
           [`& .${gridClasses.detailPanel}`]: {
             background: 'transparent',
           },
-          [`& .${gridClasses['cell--outlined']}`]: {
+          [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
             outline: 'none',
           },
           [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:

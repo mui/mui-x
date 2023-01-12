@@ -1,4 +1,5 @@
 import * as React from 'react';
+import TextField from '@mui/material/TextField';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
@@ -9,7 +10,7 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
 
   describeConformance(<SingleInputDateRangeField />, () => ({
     classes: {},
-    inheritComponent: 'div',
+    inheritComponent: TextField,
     render,
     muiName: 'MuiSingleInputDateRangeField',
     wrapMount: wrapPickerMount,

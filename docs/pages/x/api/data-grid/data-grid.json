@@ -39,7 +39,10 @@
     },
     "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
-      "type": { "name": "shape", "description": "{ columnGrouping?: bool }" }
+      "type": {
+        "name": "shape",
+        "description": "{ columnGrouping?: bool, warnIfFocusStateIsNotSynced?: bool }"
+      }
     },
     "filterMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
@@ -273,7 +276,6 @@
       "cell--textLeft",
       "cell--textRight",
       "cell--withRenderer",
-      "cell--outlined",
       "cell--rangeTop",
       "cell--rangeBottom",
       "cell--rangeLeft",

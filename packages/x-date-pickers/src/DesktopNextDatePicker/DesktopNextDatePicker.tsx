@@ -45,6 +45,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
+    yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     components: {
       OpenPickerIcon: Calendar,
       Field: DateField,
@@ -193,6 +194,11 @@ DesktopNextDatePicker.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -357,6 +363,11 @@ DesktopNextDatePicker.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { DesktopNextDatePicker };
