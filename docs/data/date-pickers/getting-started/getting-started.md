@@ -13,23 +13,23 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
-## Community or Pro Plan ?
-
-The Date and Time Pickers comes in two packages:
-
-- `@mui/x-date-pickers`, which is open-source and contains all the components to edit a date and/or a time.
-- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit a range of date and/or time.
-
 ## Installation
 
-You need to install two different types of packages to make the pickers work:
+To make the Date and Time Pickers, work, you need to install the following packages:
 
-1. **The component** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) manages the rendering.
-2. **The date library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) manages the date manipulation.
+1. **The component library** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) to render the component.
+2. **The date library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) to manipulate the date.
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
-### Why do you need a date library?
+### Community or Pro Plan ?
+
+The Date and Time Pickers comes in two packages:
+
+- `@mui/x-date-pickers`, which is open-source contains all the components to edit a date and/or a time.
+- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) contains additional components to edit a range of date and/or time.
+
+### Date library
 
 Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
 
@@ -37,8 +37,6 @@ MUI's components let you choose which library you prefer for this purpose.
 This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
 
 To achieve this, both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` export a set of **adapters** that expose the date manipulation libraries under a unified API.
-
-### Choosing a date library
 
 #### Available libraries
 
@@ -76,35 +74,62 @@ The bundling strategy was taken care of by a Create React App, and no locale was
 The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
 :::
 
+### Other peer dependencies
+
+The Date and Time Pickers package has a peer dependency on `@mui/material`.
+If you are not already using it in your project, you can install it with:
+
+```sh
+// with npm
+npm install @mui/material @emotion/react @emotion/styled
+
+// with yarn
+yarn add @mui/material @emotion/react @emotion/styled
+```
+
+<!-- #react-peer-version -->
+
+Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
+
+MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
+
+```sh
+// with npm
+npm install @mui/material @mui/styled-engine-sc styled-components
+
+// with yarn
+yarn add @mui/material @mui/styled-engine-sc styled-components
+```
+
 ## Code setup
 
-Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree with your chosen date library's adapter.
+Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
+This component receives your chosen date library's adapter and make it accessible to all the Date and Time Pickers component with a React context.
+
+The most simple way to use `LocalizationProvider` is to wrap your entire application it.
+You will then be able to use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
 
 :::success
-All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
-For example, to use the `AdapterDateFns` component, the two following imports are valid:
+- All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
-```tsx
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { AdapterDateFns } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
-```
+  ```tsx
+  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+  import { AdapterDateFns } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
+  ```
 
-`LocalizationProvider` is also exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
+- `LocalizationProvider` is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
-```tsx
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro/';
-```
+  ```tsx
+  import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+  import { LocalizationProvider } from '@mui/x-date-pickers';
+  import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
+  import { LocalizationProvider } from '@mui/x-date-pickers-pro/';
+  ```
 
 :::
-
-All the pickers rendered inside this provider will have access to the adapter through a React context.
-For this reason, we recommend that you wrap your entire application with a `LocalizationProvider` so you can use the Date and Time Pickers everywhere.
 
 :::info
 If you need to use the Date and Time Pickers with a custom locale, have a look at the [Localized dates](/x/react-date-pickers/adapters-locale/) page.
@@ -112,7 +137,7 @@ If you need to use the Date and Time Pickers with a custom locale, have a look a
 
 ## Commonly used components
 
-Most application only need a few of the components exposed by the Date and Time packages:
+Most applications only need a few of the components exposed by the Date and Time packages:
 
 {{"demo": "CommonlyUsedComponents.js"}}
 
@@ -122,8 +147,8 @@ All the components exported by `@mui/x-date-pickers` are also exported by `@mui/
 For example, to use the `DatePicker` component, the three following imports are valid:
 
 ```tsx
-import { DatePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers';
 import { DatePicker } from '@mui/x-date-pickers-pro';
 ```
 
@@ -180,7 +205,7 @@ For example, the `DatePicker` is the combination of the `DateField` and the `Dat
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
-### Date or time editing
+### Date or time editing ?
 
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:

@@ -31,75 +31,71 @@ interface State {
     | 'dateRange'
     | 'timeRange'
     | 'dateTimeRange';
-  family:
-    | 'field'
-    | 'view'
-    | 'picker'
-    | 'desktopPicker'
-    | 'mobilePicker'
-    | 'staticPicker';
+  family: 'field' | 'view' | 'picker';
 }
 
 const COMPONENTS: Record<
   State['valueType'],
-  Record<State['family'], ExportedElements | ExportedElements[] | null>
+  Record<State['family'], ExportedElements[]>
 > = {
   date: {
-    field: 'Unstable_DateField',
-    view: 'DateCalendar',
-    picker: 'Unstable_NextDatePicker',
-    desktopPicker: 'Unstable_DesktopNextDatePicker',
-    mobilePicker: 'Unstable_MobileNextDatePicker',
-    staticPicker: 'Unstable_StaticNextDatePicker',
+    field: ['Unstable_DateField'],
+    view: ['DateCalendar'],
+    picker: [
+      'Unstable_NextDatePicker',
+      'Unstable_DesktopNextDatePicker',
+      'Unstable_MobileNextDatePicker',
+      'Unstable_StaticNextDatePicker',
+    ],
   },
   time: {
-    field: 'Unstable_TimeField',
-    view: 'TimeClock',
-    picker: 'Unstable_NextTimePicker',
-    desktopPicker: 'Unstable_DesktopNextTimePicker',
-    mobilePicker: 'Unstable_MobileNextTimePicker',
-    staticPicker: 'Unstable_StaticNextTimePicker',
+    field: ['Unstable_TimeField'],
+    view: ['TimeClock'],
+    picker: [
+      'Unstable_NextTimePicker',
+      'Unstable_DesktopNextTimePicker',
+      'Unstable_MobileNextTimePicker',
+      'Unstable_StaticNextTimePicker',
+    ],
   },
   dateTime: {
-    field: 'Unstable_DateTimeField',
+    field: ['Unstable_DateTimeField'],
     view: ['DateCalendar', 'TimeClock'],
-    picker: 'Unstable_NextDateTimePicker',
-    desktopPicker: 'Unstable_DesktopNextDateTimePicker',
-    mobilePicker: 'Unstable_MobileNextDateTimePicker',
-    staticPicker: 'Unstable_StaticNextDateTimePicker',
+    picker: [
+      'Unstable_NextDateTimePicker',
+      'Unstable_DesktopNextDateTimePicker',
+      'Unstable_MobileNextDateTimePicker',
+      'Unstable_StaticNextDateTimePicker',
+    ],
   },
   dateRange: {
     field: [
       'Unstable_SingleInputDateRangeField',
       'Unstable_MultiInputDateRangeField',
     ],
-    view: 'DateRangeCalendar',
-    picker: 'Unstable_NextDateRangePicker',
-    desktopPicker: 'Unstable_DesktopNextDateRangePicker',
-    mobilePicker: 'Unstable_MobileNextDateRangePicker',
-    staticPicker: 'Unstable_StaticNextDateRangePicker',
+    view: ['DateRangeCalendar'],
+    picker: [
+      'Unstable_NextDateRangePicker',
+      'Unstable_DesktopNextDateRangePicker',
+      'Unstable_MobileNextDateRangePicker',
+      'Unstable_StaticNextDateRangePicker',
+    ],
   },
   timeRange: {
     field: [
       'Unstable_SingleInputTimeRangeField',
       'Unstable_MultiInputTimeRangeField',
     ],
-    view: null,
-    picker: null,
-    desktopPicker: null,
-    mobilePicker: null,
-    staticPicker: null,
+    view: [],
+    picker: [],
   },
   dateTimeRange: {
     field: [
       'Unstable_SingleInputDateTimeRangeField',
       'Unstable_MultiInputDateTimeRangeField',
     ],
-    view: null,
-    picker: null,
-    desktopPicker: null,
-    mobilePicker: null,
-    staticPicker: null,
+    view: [],
+    picker: [],
   },
 };
 
@@ -109,15 +105,7 @@ export default function ComponentExplorerNoSnap() {
     family: 'picker',
   });
 
-  const config = COMPONENTS[state.valueType][state.family];
-  let exportedNames: ExportedElements[];
-  if (Array.isArray(config)) {
-    exportedNames = config;
-  } else if (config == null) {
-    exportedNames = [];
-  } else {
-    exportedNames = [config];
-  }
+  const exportedNames = COMPONENTS[state.valueType][state.family];
 
   const importCode = exportedNames
     .map((exportedName) => {
@@ -132,9 +120,9 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
 import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}'    
 `
         : `
+import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'    
 import { ${exportedName} } from '@mui/x-date-pickers'
 import { ${exportedName} } from '@mui/x-date-pickers-pro'    
-import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'    
 `;
     })
     .join('\n');
@@ -217,9 +205,6 @@ import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'
             }
           >
             <MenuItem value="picker">Picker</MenuItem>
-            <MenuItem value="desktopPicker">Desktop Picker</MenuItem>
-            <MenuItem value="mobilePicker">Mobile Picker</MenuItem>
-            <MenuItem value="staticPicker">Static Picker</MenuItem>
             <MenuItem value="field">Field</MenuItem>
             <MenuItem value="view">Calendar / Clock</MenuItem>
           </Select>
