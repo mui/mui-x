@@ -3,7 +3,7 @@ import {
   GridCellParams,
   GridFilterItem,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowId,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -316,7 +316,7 @@ export const passFilterLogic = (
   // Defaultize operators
   const quickFilterLogicOperator =
     filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
-  const linkOperator = filterModel.linkOperator ?? getDefaultGridFilterModel().linkOperator;
+  const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
 
   // get result for filter items model
   if (cleanedAllFilterItemResults.length > 0) {
@@ -325,7 +325,7 @@ export const passFilterLogic = (
       return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
-    if (linkOperator === GridLinkOperator.And) {
+    if (logicOperator === GridLogicOperator.And) {
       const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
         return false;
@@ -347,7 +347,7 @@ export const passFilterLogic = (
       );
     };
 
-    if (quickFilterLogicOperator === GridLinkOperator.And) {
+    if (quickFilterLogicOperator === GridLogicOperator.And) {
       const passesAllQuickFilterValues =
         filterModel.quickFilterValues.every(quickFilterValuePredicate);
       if (!passesAllQuickFilterValues) {

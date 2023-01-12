@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
+import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 import { DateRangePickerDay as MuiDateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
@@ -37,8 +37,7 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDateRangePicker
-        displayStaticWrapperAs="desktop"
+      <DateRangeCalendar
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
         components={{ Day: DateRangePickerDay }}
       />
