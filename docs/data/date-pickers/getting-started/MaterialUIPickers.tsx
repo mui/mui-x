@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer } from '@mui/x-date-pickers/demo/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import TextField from '@mui/material/TextField';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
