@@ -22,7 +22,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;

@@ -41,41 +41,6 @@ All other changes must be handled manually.
 
 ## Picker components
 
-### New picker components
-
-All the picker components have been rewritten to use the new field components instead of using a masked-based editing.
-
-During the v6 alpha and beta phases, both the new and the legacy components are available.
-The old components will be removed during the beta phase and the new components will be renamed to match the name of the legacy ones.
-
-A codemod will be provided to rename the new components from the alpha / beta naming to the final naming.
-
-For example, `@mui/x-date-pickers` currently exports:
-
-- `DatePicker`: the legacy date picker which uses the masked-based editing
-- `NextDatePicker`: the new date picker which uses the new field component `DateField`
-
-You can find the whole list of the pickers in the table below:
-
-| Legacy picker name       | New picker name during alpha / beta |
-| ------------------------ | ----------------------------------- |
-| `DatePicker`             | `NextDatePicker`                    |
-| `DesktopDatePicker`      | `DesktopNextDatePicker`             |
-| `MobileDatePicker`       | `MobileNextDatePicker`              |
-| `StaticDatePicker`       | `StaticNextDatePicker`              |
-| `TimePicker`             | `NextTimePicker`                    |
-| `DesktopTimePicker`      | `DesktopNextTimePicker`             |
-| `MobileTimePicker`       | `MobileNextTimePicker`              |
-| `StaticTimePicker`       | `StaticNextTimePicker`              |
-| `DateTimePicker`         | `NextDateTimePicker`                |
-| `DesktopDateTimePicker`  | `DesktopNextDateTimePicker`         |
-| `MobileDateTimePicker`   | `MobileNextDateTimePicker`          |
-| `StaticDateTimePicker`   | `StaticNextDateTimePicker`          |
-| `DateRangePicker`        | `NextDateRangePicker`               |
-| `DesktopDateRangePicker` | `DesktopNextDateRangePicker`        |
-| `MobileDateRangePicker`  | `MobileNextDateRangePicker`         |
-| `StaticDateRangePicker`  | `StaticNextDateRangePicker`         |
-
 ### Rename the `inputFormat` prop
 
 The `inputFormat` prop has been renamed to `format` on all the pickers components.
@@ -86,13 +51,6 @@ The `inputFormat` prop has been renamed to `format` on all the pickers component
 +  format="YYYY"
  />
 ```
-
-:::warning
-This change only applies to the new pickers.
-The legacy pickers keep the `inputFormat` prop name until their removal.
-
-For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section.
-:::
 
 ### Update the format of the `value` prop
 
@@ -180,13 +138,6 @@ The picker components no longer have a keyboard view to render the input inside 
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
 :::
 
-:::warning
-This change only applies to the new pickers.
-The legacy pickers keep the keyboard view until there removal.
-
-For more information about those new pickers, take a look at the [New picker components](#new-picker-components) section
-:::
-
 ### Rename `shouldDisableTime` prop
 
 The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
@@ -227,13 +178,6 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
    });
   ```
 
-  :::warning
-  These changes only apply to the new pickers.
-  The legacy pickers keep the `CalendarOrClockPicker` internal component until there removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
-
 - The internal `PickerStaticWrapper` component has been removed and all its element have been moved to the new `Layout` component slot.
 
   ```diff
@@ -270,13 +214,6 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
      },
    });
   ```
-
-  :::warning
-  These changes only apply to the new pickers.
-  The legacy pickers keep the `PickerStaticWrapper` internal component until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
-  :::
 
 ## Date library and adapters
 
@@ -504,13 +441,6 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   +  componentsProps={{ fieldSeparator: { children: 'to' }}
    />
   ```
-
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `renderInput` prop until there removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section
-  :::
 
 ### Toolbar (`ToolbarComponent`)
 
@@ -849,13 +779,6 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `InputProps` prop until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
-
 ### Input adornment
 
 - The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slots props:
@@ -867,13 +790,6 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `InputAdornmentProps` prop until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
-
 ### Open Picker Button
 
 - The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slots props:
@@ -884,13 +800,6 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   +  componentsProps={{ openPickerButton: { ref: buttonRef }}}
    />
   ```
-
-  :::warning
-  This change only applies to the new pickers.
-  The legacy pickers keep the `OpenPickerButtonProps` prop until their removal.
-
-  For more information about these new pickers, take a look at the [New picker components](#new-picker-components) section.
-  :::
 
 ## Rename remaining `private` components
 

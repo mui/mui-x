@@ -2,45 +2,10 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import { UsePickerBaseProps } from '../../hooks/usePicker';
-import { PickerStateProps } from '../../hooks/usePickerState';
 import { DateOrTimeView } from '../views';
 import { PickersInputComponentLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import type { UsePickerViewsProps } from '../../hooks/usePicker/usePickerViews';
 import { MakeOptional } from '../helpers';
-
-// TODO v6: Drop with the legacy pickers
-export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue> {
-  /**
-   * className applied to the root component.
-   */
-  className?: string;
-  /**
-   * If `true`, the picker and text field are disabled.
-   * @default false
-   */
-  disabled?: boolean;
-  /**
-   * Format string.
-   */
-  inputFormat?: string;
-  /**
-   * Force rendering in particular orientation.
-   */
-  orientation?: 'portrait' | 'landscape';
-  /**
-   * Make picker read only.
-   * @default false
-   */
-  readOnly?: boolean;
-  /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar?: boolean;
-  /**
-   * Locale for components texts
-   */
-  localeText?: PickersInputComponentLocaleText<TDate>;
-}
 
 /**
  * Props common to all pickers after applying the default props on each picker.

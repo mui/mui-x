@@ -28,7 +28,7 @@
     "globalClasses": {},
     "name": "MuiTimePickerToolbar"
   },
-  "filename": "/packages/x-date-pickers/src/TimePicker/TimePickerToolbar.tsx",
+  "filename": "/packages/x-date-pickers/src/NextTimePicker/TimePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "TimePickerToolbar" },

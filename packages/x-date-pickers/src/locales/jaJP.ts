@@ -1,18 +1,11 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 // maps TimeView to its translation
 const timeViews = {
   hours: '時間',
   minutes: '分',
   seconds: '秒',
-};
-
-// maps PickersToolbar["viewType"] to its translation
-const pickerViews = {
-  date: 'カレンダー表示',
-  time: '時計表示',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -23,14 +16,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前の表示を開く',
   openNextView: '次の表示を開く',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
-    view === 'year'
-      ? '年選択表示からカレンダー表示に切り替える'
-      : 'カレンダー表示から年選択表示に切り替える',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `テキスト入力表示から${pickerViews[viewType]}に切り替える`
-      : `${pickerViews[viewType]}からテキスト入力表示に切り替える`,
+  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
 
   // DateRange placeholders
   start: '開始',

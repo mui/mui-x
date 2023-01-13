@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const views = {
   hours: '小时',
@@ -16,9 +15,7 @@ const zhCNPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前一个视图',
   openNextView: '下一个视图',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
-    view === 'year' ? '年视图已打开，切换为日历视图' : '日历视图已打开，切换为年视图',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
 
   // DateRange placeholders
   start: '开始',

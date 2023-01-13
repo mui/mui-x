@@ -17,12 +17,12 @@ describe('<MobileNextDateTimePicker /> - Describes', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   describeValue(MobileNextDateTimePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'date-time',
     variant: 'mobile',
     defaultProps: {

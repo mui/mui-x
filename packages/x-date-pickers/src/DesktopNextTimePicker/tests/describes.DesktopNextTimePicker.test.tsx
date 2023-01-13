@@ -20,7 +20,7 @@ describe('<DesktopNextTimePicker /> - Describes', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   describeConformance(<DesktopNextTimePicker />, () => ({
@@ -43,7 +43,7 @@ describe('<DesktopNextTimePicker /> - Describes', () => {
 
   describeValue(DesktopNextTimePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'time',
     variant: 'desktop',
     values: [

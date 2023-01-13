@@ -15,14 +15,14 @@ describe('<MobileNextDateRangePicker /> - Describes', () => {
   describeRangeValidation(MobileNextDateRangePicker, () => ({
     render,
     clock,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
   }));
 
   describeValue(MobileNextDateRangePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'date-range',
     variant: 'mobile',
     initialFocus: 'start',

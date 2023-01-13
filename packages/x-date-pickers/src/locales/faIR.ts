@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const faIRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,14 +9,7 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'نمای قبلی',
   openNextView: 'نمای بعدی',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
-    view === 'year'
-      ? 'نمای سال باز است، رفتن به نمای تقویم'
-      : 'نمای تقویم باز است، رفتن به نمای سال',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `نمای ورودی متن باز است، رفتن به نمای ${viewType}`
-      : `نمای ${viewType} باز است، رفتن به نمای ورودی متن`,
+  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
 
   // DateRange placeholders
   start: 'شروع',

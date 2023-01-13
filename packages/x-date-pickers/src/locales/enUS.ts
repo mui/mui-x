@@ -16,10 +16,6 @@ const enUSPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `text input view is open, go to ${viewType} view`
-      : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',

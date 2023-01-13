@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const views = {
   // maps TimeView to its translation
@@ -20,14 +19,7 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'адкрыць папярэдні выгляд',
   openNextView: 'адкрыць наступны выгляд',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
-    view === 'year'
-      ? 'гадавы выгляд адкрыты, перайсці да каляндарнага выгляду'
-      : 'каляндарны выгляд адкрыты, перайсці да гадавога выгляду',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `тэкставае поле адкрыта, перайсці да выгляду ${views[viewType]}`
-      : `Выгляд ${views[viewType]} зараз адкрыты, перайсці да тэкставага поля`,
+  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
 
   // DateRange placeholders
   start: 'Пачатак',

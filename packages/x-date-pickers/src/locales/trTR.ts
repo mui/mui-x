@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const trTRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,14 +9,7 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'sonraki görünüm',
   openNextView: 'önceki görünüm',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
-    view === 'year'
-      ? 'yıl görünümü açık, takvim görünümüne geç'
-      : 'takvim görünümü açık, yıl görünümüne geç',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `metin girişi görünümü açık, şuraya gidin: ${viewType} görünümü`
-      : `${viewType} görünüm açık, metin girişi görünümüne gidin`,
+  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
 
   // DateRange placeholders
   start: 'Başlangıç',

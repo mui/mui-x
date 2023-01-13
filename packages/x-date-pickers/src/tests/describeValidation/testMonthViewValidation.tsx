@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
@@ -21,7 +20,6 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
         openTo: 'month',
       }),
       ...(componentFamily !== 'calendar' && {
-        renderInput: (params) => <TextField {...params} />,
         open: true,
         reduceAnimations: true,
         showToolbar: false,

@@ -9,6 +9,6 @@ describe('<NextDatePicker /> - Describes', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 });

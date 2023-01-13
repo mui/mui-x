@@ -18,12 +18,12 @@ describe('<DesktopNextDatePicker /> - Describes', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   describeValue(DesktopNextDatePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'date',
     variant: 'desktop',
     values: [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 2))],

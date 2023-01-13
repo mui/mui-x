@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
@@ -15,7 +14,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
   describe('day view:', () => {
     const defaultProps = {
       onChange: () => {},
-      renderInput: (params) => <TextField {...params} />,
       open: true,
       view: 'day',
       reduceAnimations: true,
@@ -180,7 +178,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     });
 
     it('should apply minTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
+      if (['picker', 'field'].includes(componentFamily) && !withTime) {
         return;
       }
 
@@ -199,7 +197,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
     });
 
     it('should apply maxTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
+      if (['picker', 'field'].includes(componentFamily) && !withTime) {
         return;
       }
 

@@ -22,7 +22,7 @@ describe('<MobileNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   it('should render date and time by default', () => {
