@@ -58,6 +58,7 @@ LayoutWithKeyboardView.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.shape({
     /**
@@ -74,6 +75,7 @@ LayoutWithKeyboardView.propTypes = {
       /**
        * Overrideable components.
        * @default {}
+       * @deprecated Please use `slots`.
        */
       components: PropTypes.shape({
         /**
@@ -99,6 +101,7 @@ LayoutWithKeyboardView.propTypes = {
       /**
        * The props used for each component slot.
        * @default {}
+       * @deprecated Please use `slotsProps`.
        */
       componentsProps: PropTypes.object,
       disabled: PropTypes.bool,
@@ -118,6 +121,16 @@ LayoutWithKeyboardView.propTypes = {
       orientation: PropTypes.oneOf(['landscape', 'portrait']),
       readOnly: PropTypes.bool,
       showToolbar: PropTypes.bool,
+      /**
+       * Overrideable component slots.
+       * @default {}
+       */
+      slots: PropTypes.any,
+      /**
+       * The props used for each component slot.
+       * @default {}
+       */
+      slotsProps: PropTypes.object,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(
           PropTypes.oneOfType([
