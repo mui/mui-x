@@ -89,26 +89,26 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   you can import `DEFAULT_DESKTOP_MODE_MEDIA_QUERY` from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` (or use your custom media query if any):
 
   ```diff
-  <GlobalStyles
-    styles={{
-  -    [`.${pickersYearClasses.modeDesktop}`]: {
-  -      backgroundColor: 'red'
-  -    }
-  +    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY]: {
-  +      [`.${pickersYearClasses.root}`]: {
-  +        backgroundColor: 'red'
-  +      }
-  +    }
-  -    [`.${pickersYearClasses.modeMobile}`]: {
-  -      backgroundColor: 'red'
-  -    }
-  +    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY.replace('@media', '@media not')]: {
-  +      [`.${pickersYearClasses.root}`]: {
-  +        backgroundColor: 'red'
-  +      }
-  +    }
-    }}
-  />
+   <GlobalStyles
+     styles={{
+  -     [`.${pickersYearClasses.modeDesktop}`]: {
+  -       backgroundColor: 'red'
+  -     }
+  +     [DEFAULT_DESKTOP_MODE_MEDIA_QUERY]: {
+  +       [`.${pickersYearClasses.root}`]: {
+  +         backgroundColor: 'red'
+  +       }
+  +     }
+  -     [`.${pickersYearClasses.modeMobile}`]: {
+  -       backgroundColor: 'red'
+  -     }
+  +     [DEFAULT_DESKTOP_MODE_MEDIA_QUERY.replace('@media', '@media not')]: {
+  +       [`.${pickersYearClasses.root}`]: {
+  +         backgroundColor: 'red'
+  +       }
+  +     }
+     }}
+   />
   ```
 
   Works exactly the same way for `PickersMonth`.
