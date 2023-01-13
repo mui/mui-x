@@ -34,8 +34,6 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots;
-  const slotsProps = defaultizedProps.slotsProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
@@ -44,12 +42,12 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     slots: {
       field: TimeField,
       openPickerIcon: Clock,
-      ...slots,
+      ...defaultizedProps.slots,
     },
     slotsProps: {
-      ...slotsProps,
+      ...defaultizedProps.slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,

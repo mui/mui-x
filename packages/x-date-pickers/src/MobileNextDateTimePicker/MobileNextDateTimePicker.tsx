@@ -27,11 +27,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
-  const { className, sx, slots, slotsProps, ...defaultizedProps } =
-    useNextDateTimePickerDefaultizedProps<TDate, MobileNextDateTimePickerProps<TDate>>(
-      inProps,
-      'MuiMobileNextDateTimePicker',
-    );
+  const { className, sx, ...defaultizedProps } = useNextDateTimePickerDefaultizedProps<
+    TDate,
+    MobileNextDateTimePickerProps<TDate>
+  >(inProps, 'MuiMobileNextDateTimePicker');
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
@@ -50,12 +49,12 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
     showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: DateTimeField,
-      ...slots,
+      ...defaultizedProps.slots,
     },
     slotsProps: {
-      ...slotsProps,
+      ...defaultizedProps.slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -64,6 +63,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotsProps?.tabs,
+      },
     },
   };
 
