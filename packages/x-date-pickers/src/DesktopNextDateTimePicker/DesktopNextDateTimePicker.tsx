@@ -38,20 +38,23 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     ...defaultizedProps.viewRenderers,
   };
 
+  const slots = defaultizedProps.slots;
+  const slotsProps = defaultizedProps.slotsProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
-    components: {
-      Field: DateTimeField,
-      OpenPickerIcon: Calendar,
-      ...defaultizedProps.components,
+    yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
+    slots: {
+      field: DateTimeField,
+      openPickerIcon: Calendar,
+      ...slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -107,11 +110,13 @@ DesktopNextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -230,6 +235,11 @@ DesktopNextDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -377,6 +387,16 @@ DesktopNextDateTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -414,6 +434,11 @@ DesktopNextDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { DesktopNextDateTimePicker };

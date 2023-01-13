@@ -7,7 +7,7 @@
       ...data.initialState?.filter,
       filterModel: {
         items: [],
-        quickFilterLogicOperator: GridLinkOperator.Or,
+        quickFilterLogicOperator: GridLogicOperator.Or,
       },
     },
   }}

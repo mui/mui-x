@@ -377,6 +377,41 @@ If you want to keep the previous behavior, you just have to set the `ampm` prop 
 + <TimeClock ampm={false} />
 ```
 
+### Stop using the responsive classes on `PickersMonth` and `PickersYear`
+
+The `modeMobile` and `modeDesktop` classes have been removed from the `PickersMonth` and `PickersYear` internal components.
+
+If you were using those classes on responsive components,
+you can import `DEFAULT_DESKTOP_MODE_MEDIA_QUERY` from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` (or use your custom media query if any):
+
+```diff
+ <GlobalStyles
+   styles={{
+-    [`.${pickersYearClasses.modeDesktop}`]: {
+-      backgroundColor: 'red'
+-    }
++    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY]: {
++      [`.${pickersYearClasses.root}`]: {
++        backgroundColor: 'red'
++      }
++    }
+
+-    [`.${pickersYearClasses.modeMobile}`]: {
+-      backgroundColor: 'red'
+-    }
++    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY.replace('@media', '@media not')]: {
++      [`.${pickersYearClasses.root}`]: {
++        backgroundColor: 'red'
++      }
++    }
+   }}
+ />
+```
+
+:::info
+Works exactly the same way for `PickersMonth`
+:::
+
 ## Localization
 
 ### ✅ Rename localization props

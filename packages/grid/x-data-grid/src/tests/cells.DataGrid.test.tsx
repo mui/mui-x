@@ -167,6 +167,24 @@ describe('<DataGrid /> - Cells', () => {
     expect(valueFormatter.lastCall.args[0].value).to.equal(true);
   });
 
+  it('should throw when focusing cell without updating the state', () => {
+    render(
+      <div style={{ width: 300, height: 500 }}>
+        <DataGrid
+          {...baselineProps}
+          columns={[{ field: 'brand', cellClassName: 'foobar' }]}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true }}
+        />
+      </div>,
+    );
+
+    userEvent.mousePress(getCell(0, 0));
+
+    expect(() => {
+      getCell(1, 0).focus();
+    }).toWarnDev(['MUI: The cell with id=1 and field=brand received focus.']);
+  });
+
   // See https://github.com/mui/mui-x/issues/6378
   it('should not cause scroll jump when focused cell mounts in the render zone', async function test() {
     if (isJSDOM) {

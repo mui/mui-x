@@ -35,6 +35,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -89,13 +90,25 @@ export interface BaseNextDateTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: BaseNextDateTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<BaseNextDateTimePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextDateTimePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -131,7 +144,10 @@ type UseNextDateTimePickerDefaultizedProps<
 export function useNextDateTimePickerDefaultizedProps<
   TDate,
   Props extends BaseNextDateTimePickerProps<TDate>,
->(props: Props, name: string): UseNextDateTimePickerDefaultizedProps<TDate, Props> {
+>(
+  props: Props,
+  name: string,
+): Omit<UseNextDateTimePickerDefaultizedProps<TDate, Props>, 'components' | 'componentsProps'> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
   const themeProps = useThemeProps({
@@ -153,6 +169,8 @@ export function useNextDateTimePickerDefaultizedProps<
   }, [themeProps.localeText]);
 
   const ampmInClock = themeProps.ampmInClock ?? true;
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
+  const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
@@ -183,17 +201,17 @@ export function useNextDateTimePickerDefaultizedProps<
     ),
     minTime: themeProps.minDateTime ?? themeProps.minTime,
     maxTime: themeProps.maxDateTime ?? themeProps.maxTime,
-    components: {
-      Toolbar: DateTimePickerToolbar,
-      Tabs: DateTimePickerTabs,
-      ...themeProps.components,
+    slots: {
+      toolbar: DateTimePickerToolbar,
+      tabs: DateTimePickerTabs,
+      ...slots,
     },
-    componentsProps: {
-      ...themeProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       toolbar: {
         ampm,
         ampmInClock,
-        ...themeProps.componentsProps?.toolbar,
+        ...slotsProps?.toolbar,
       },
     },
   };

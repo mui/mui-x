@@ -267,20 +267,6 @@ export interface GridCellEventLookup {
     event: React.KeyboardEvent<HTMLElement>;
   };
   /**
-   * Fired when a `focus` event happens in a cell.
-   */
-  cellFocus: {
-    params: GridCellParams;
-    event: React.FocusEvent<HTMLElement>;
-  };
-  /**
-   * Fired when a `blur` event happens in a cell.
-   */
-  cellBlur: {
-    params: GridCellParams;
-    event: React.FocusEvent<HTMLElement>;
-  };
-  /**
    * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
    * @ignore - do not document.
    */
@@ -483,10 +469,12 @@ export interface GridEventLookup
   // Focus
   /**
    * Fired when a cell gains focus.
+   * @ignore - do not document.
    */
   cellFocusIn: { params: GridCellParams<any> };
   /**
    * Fired when a cell loses focus.
+   * @ignore - do not document.
    */
   cellFocusOut: { params: GridCellParams<any>; event: MuiBaseEvent };
 

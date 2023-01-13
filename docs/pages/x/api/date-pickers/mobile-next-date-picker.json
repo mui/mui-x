@@ -6,8 +6,18 @@
       "type": { "name": "bool" },
       "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotsProps</code>."
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -30,6 +40,10 @@
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "monthsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
+    },
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
@@ -71,6 +85,8 @@
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop"
     },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -92,6 +108,10 @@
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
+    },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
     }
   },
   "slots": {

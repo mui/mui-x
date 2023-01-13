@@ -11,7 +11,6 @@ import {
 } from '@mui/utils';
 import { PickersYear } from './PickersYear';
 import { useUtils, useNow, useDefaultDates } from '../internals/hooks/useUtils';
-import { WrapperVariantContext } from '../internals/components/wrappers/WrapperVariantContext';
 import { getYearCalendarUtilityClass } from './yearCalendarClasses';
 import { DefaultizedProps } from '../internals/models/helpers';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -76,7 +75,6 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   const now = useNow<TDate>();
   const theme = useTheme();
   const utils = useUtils<TDate>();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
 
   const props = useYearCalendarDefaultizedProps(inProps, 'MuiYearCalendar');
   const {
@@ -96,6 +94,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
     onYearFocus,
     hasFocus,
     onFocusedViewChange,
+    yearsPerRow = 3,
     ...other
   } = props;
 
@@ -187,15 +186,13 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
   }, [selectedYear]);
 
   const handleKeyDown = useEventCallback((event: React.KeyboardEvent, year: number) => {
-    const yearsInRow = wrapperVariant === 'desktop' ? 4 : 3;
-
     switch (event.key) {
       case 'ArrowUp':
-        focusYear(year - yearsInRow);
+        focusYear(year - yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowDown':
-        focusYear(year + yearsInRow);
+        focusYear(year + yearsPerRow);
         event.preventDefault();
         break;
       case 'ArrowLeft':
@@ -274,6 +271,7 @@ export const YearCalendar = React.forwardRef(function YearCalendar<TDate>(
             onFocus={handleYearFocus}
             onBlur={handleYearBlur}
             aria-current={todayYear === yearNumber ? 'date' : undefined}
+            yearsPerRow={yearsPerRow}
           >
             {utils.format(year, 'year')}
           </PickersYear>
@@ -362,4 +360,9 @@ YearCalendar.propTypes = {
    * Used when the component is controlled.
    */
   value: PropTypes.any,
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

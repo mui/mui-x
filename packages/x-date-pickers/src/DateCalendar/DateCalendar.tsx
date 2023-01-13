@@ -127,9 +127,13 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     dayOfWeekFormatter,
     components,
     componentsProps,
+    slots,
+    slotsProps,
     loading,
     renderLoading,
     displayWeekNumber,
+    yearsPerRow,
+    monthsPerRow,
     sx,
   } = props;
 
@@ -308,6 +312,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         components={components}
         componentsProps={componentsProps}
+        slots={slots}
+        slotsProps={slotsProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -325,6 +331,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsPerRow={yearsPerRow}
             />
           )}
 
@@ -338,6 +345,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
+              monthsPerRow={monthsPerRow}
             />
           )}
 
@@ -363,6 +371,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               displayWeekNumber={displayWeekNumber}
               components={components}
               componentsProps={componentsProps}
+              slots={slots}
+              slotsProps={slotsProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -390,11 +400,13 @@ DateCalendar.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -461,6 +473,11 @@ DateCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -543,6 +560,16 @@ DateCalendar.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
+  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([
@@ -565,4 +592,9 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
