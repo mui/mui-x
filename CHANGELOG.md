@@ -58,7 +58,7 @@ TODO INSERT HIGHLIGHTS
 
 #### Changes
 
-- [DataGrid] Fix Tab between portaled and non-portaled edit components (#7098) @m4theushw
+- [DataGrid] Fix <kbd>Tab</kbd> between portaled and non-portaled edit components (#7098) @m4theushw
 - [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
 - [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
 - [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
