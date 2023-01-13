@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
 
-  The `headerHeight` prop was renamed to `columnHeaderHeight`
+  The `headerHeight` prop was renamed to `columnHeaderHeight`.
 
 - [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
 
