@@ -100,7 +100,6 @@ On macOS:
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
-|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows, including headers                  |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 
