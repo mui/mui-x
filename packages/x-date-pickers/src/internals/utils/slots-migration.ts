@@ -1,5 +1,5 @@
 // TODO v7: This file exist only to simplify typing between
-// components/componentsProps and slots/slotsProps
+// components/componentsProps and slots/slotProps
 // Should be deleted when components/componentsProps are removed
 
 type OptionalKeys<T extends object> = Exclude<
@@ -19,7 +19,7 @@ export type UncapitalizeObjectKeys<T extends object> = {
     : never;
 };
 
-export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
+export interface SlotsAndSlotProps<TSlots extends object, TSlotProps> {
   /**
    * Overrideable components.
    * @default {}
@@ -29,9 +29,9 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
-  componentsProps?: TSlotsProps;
+  componentsProps?: TSlotProps;
   /**
    * Overrideable component slots.
    * @default {}
@@ -41,7 +41,7 @@ export interface SlotsAndSlotsProps<TSlots extends object, TSlotsProps> {
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: TSlotsProps;
+  slotProps?: TSlotProps;
 }
 
 type ObjectWithUnCapitalizedKeys<TInputType> = TInputType extends object

@@ -78,7 +78,7 @@ export interface UseMobileRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}

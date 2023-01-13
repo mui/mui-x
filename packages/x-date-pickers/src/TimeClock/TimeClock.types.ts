@@ -52,7 +52,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: TimeClockSlotsComponentsProps;
   /**
@@ -64,7 +64,7 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: TimeClockSlotsComponentsProps;
+  slotProps?: TimeClockSlotsComponentsProps;
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -34,7 +34,7 @@ export interface MobileNextTimePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: MobileNextTimePickerSlotsComponentsProps<TDate>;
   /**
@@ -46,5 +46,5 @@ export interface MobileNextTimePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: MobileNextTimePickerSlotsComponentsProps<TDate>;
+  slotProps?: MobileNextTimePickerSlotsComponentsProps<TDate>;
 }
