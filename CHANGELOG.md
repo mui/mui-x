@@ -10,6 +10,7 @@ _Jan 13, 2023_
 We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
 
 - 🐞 Bugfixes
+- 🌍 Add Belarusian (be-BY) and Urdu (ur-PK) and Improve Spanish (es-ES) locales
 
 ### `@mui/x-data-grid@v5.17.19` / `@mui/x-data-grid-pro@v5.17.19` / `@mui/x-data-grid-premium@v5.17.19`
 
