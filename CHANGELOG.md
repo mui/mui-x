@@ -73,7 +73,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
 - [DataGrid] Stop exporting editing selector (#7456) @m4theushw
 - [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
-- [DataGrid] Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
+- [DataGrid] Improve Spanish (es-ES) locale (#7447) @Anderssxn
 - [DataGrid] Remove Alt+C keyboard shortcut (#7466) @MBilalShafi
 - [DataGridPremium] Fix Excel export not working with date strings (#7396) @cherniavskii
 
@@ -153,7 +153,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
-- [core] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
+- [pickers] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - [test] Add a few inheritComponent (#7352) @oliviertassinari
