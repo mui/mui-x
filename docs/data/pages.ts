@@ -134,11 +134,13 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/react-date-pickers',
+    pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
+      { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/introduction' },
       {
         pathname: '/x/react-date-pickers/date-pickers',
         title: 'Date components',

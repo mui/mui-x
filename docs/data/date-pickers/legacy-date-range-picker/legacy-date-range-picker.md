@@ -41,7 +41,7 @@ The date range picker component is designed to be optimized for the device it ru
 By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
-There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for more information.
+There are certain caveats when testing pickers, please refer to [this section](/x/react-date-pickers/introduction/#testing-caveats) for more information.
 
 {{"demo": "ResponsiveDateRangePicker.js"}}
 
