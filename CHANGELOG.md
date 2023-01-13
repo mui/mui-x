@@ -118,15 +118,17 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
 
   ```diff
-  <DateTimePicker
-  -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
-  +  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
-  />
+   <DateTimePicker
+  -   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +   shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+   />
+  ```
 
-  <DateTimePicker
-  -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
-  +  shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
-  />
+  ```diff
+   <DateTimePicker
+  -   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +   shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
+   />
   ```
 
 #### Changes
