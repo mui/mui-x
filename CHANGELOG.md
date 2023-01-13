@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.15
+
+_Jan 13, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+### `@mui/x-data-grid@v6.0.0-alpha.15` / `@mui/x-data-grid-pro@6.0.0-alpha.15` / `@mui/x-data-grid-premium@6.0.0-alpha.15`
+
+### Breaking changes
+
+- [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
+
+  The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
+
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      cell: {
+        onBlur: (event) => {
+          const cellElement = event.currentTarget;
+          const field = cellElement.getAttribute('data-field');
+          const rowId = cell.parentElement.getAttribute('data-id');
+        },
+      },
+    }}
+  />
+  ```
+
+- [DataGrid] Stop exporting editing selector (#7456) @m4theushw
+
+  The `gridEditRowsStateSelector` selector was removed.
+
+- [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
+
+  The `headerHeight` prop was renamed to `columnHeaderHeight`
+
+- [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
+
+  The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
+
+- [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
+
+  The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
+  The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
+  The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+  The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
+  The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
+  The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
+  The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
+  The `.MuiDataGrid-filterFormLinkOperatorInput`CSS class was renamed to `.MuiDataGrid-filterFormLogicOperatorInput`.
+
+#### Changes
+
+- [DataGrid] Fix Tab between portaled and non-portaled edit components (#7098) @m4theushw
+- [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
+- [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
+- [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
+- [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
+- [DataGrid] Stop exporting editing selector (#7456) @m4theushw
+- [DataGrid] Store the outlined cell in the state (#7111) @m4theushw
+- [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
+- [DataGridPremium] Fix Excel export not working with date strings (#7396) @cherniavskii
+
+### `@mui/x-date-pickers@6.0.0-alpha.15` / `@mui/x-date-pickers-pro@6.0.0-alpha.15`
+
+### Breaking changes
+
+- [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
+
+  The `modeMobile` and `modeDesktop` classes have been removed from the `PickersMonth` and `PickersYear` internal components.
+
+  If you were using those classes on responsive components,
+  you can import `DEFAULT_DESKTOP_MODE_MEDIA_QUERY` from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro` (or use your custom media query if any):
+
+  ```diff
+  <GlobalStyles
+    styles={{
+  -    [`.${pickersYearClasses.modeDesktop}`]: {
+  -      backgroundColor: 'red'
+  -    }
+  +    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY]: {
+  +      [`.${pickersYearClasses.root}`]: {
+  +        backgroundColor: 'red'
+  +      }
+  +    }
+  -    [`.${pickersYearClasses.modeMobile}`]: {
+  -      backgroundColor: 'red'
+  -    }
+  +    [DEFAULT_DESKTOP_MODE_MEDIA_QUERY.replace('@media', '@media not')]: {
+  +      [`.${pickersYearClasses.root}`]: {
+  +        backgroundColor: 'red'
+  +      }
+  +    }
+    }}
+  />
+  ```
+
+  Works exactly the same way for `PickersMonth`.
+
+- [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
+
+  `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+
+  ```diff
+  <DateTimePicker
+  -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +  shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  />
+
+  <DateTimePicker
+  -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+  +  shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
+  />
+  ```
+
+#### Changes
+
+- [fields] Fix Android editing (#7444) @flaviendelangle
+- [pickers] Add Belarusian (be-BY) locale (#7395) @volhalink
+- [pickers] Hide am/pm controls when their is no hour view (#7380) @flaviendelangle
+- [pickers] Hide the tabs by default on `DesktopNextDateTimePicker` (#7503) @flaviendelangle
+- [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
+- [pickers] Remove `WrapperVariantContext` from `DateTimePickerTabs` (#7374) @LukasTy
+- [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
+- [pickers] Support components and slots for new pickers (#7390) @alexfauquette
+
+### Docs
+
+- [docs] Fix codesandboxes using `DemoContainer` (#7388) @LukasTy
+- [docs] Fix wrong reference to currentView (#7441) @oliviertassinari
+- [docs] New page for `DateRangeCalendar` (#7378) @flaviendelangle
+- [docs] Update the migration guide with the breaking changes between the legacy and the new pickers (#7345) @flaviendelangle
+- [docs] Use new pickers on "Custom components" demos (#7194) @flaviendelangle
+
+### Core
+
+- [core] Handle selection edge case (#7350) @oliviertassinari
+- [core] Improve license message @oliviertassinari
+- [core] Move default closeOnSelect to prop definition (#7459) @flaviendelangle
+- [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
+- [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
+- Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
+- Revert "[DataGrid] Store the outlined cell in the state (#7111)" (#7481) @m4theushw
+- [test] Add a few inheritComponent (#7352) @oliviertassinari
+
 ## 6.0.0-alpha.14
 
 _Jan 5, 2023_
