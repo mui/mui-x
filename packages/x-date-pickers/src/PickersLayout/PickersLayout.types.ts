@@ -6,6 +6,7 @@ import { DateOrTimeView } from '../internals/models/views';
 import { BaseToolbarProps, ExportedBaseToolbarProps } from '../internals/models/props/toolbar';
 import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/tabs';
 import { UsePickerLayoutPropsResponseLayoutProps } from '../internals/hooks/usePicker/usePickerLayoutProps';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { PickersLayoutClasses } from './pickersLayoutClasses';
 import { WrapperVariant } from '../internals/models/common';
 import { PickersShortcutsProps } from '../PickersShortcuts';
@@ -20,7 +21,7 @@ export interface ExportedPickersLayoutSlotsComponent<TValue, TDate, TView extend
    * Custom component for the shortcuts.
    * @default PickersShortcuts
    */
-  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<any, TDate, TView>>;
+  Shortcuts?: React.JSXElementConstructor<PickersShortcutsProps<TValue>>;
   /**
    * Custom component for wrapping the layout.
    * It wraps the toolbar, views, action bar, and shortcuts.
@@ -35,8 +36,8 @@ interface PickersLayoutActionBarOwnerState<TValue, TDate, TView extends DateOrTi
   wrapperVariant: WrapperVariant;
 }
 
-interface PickersShortcutsOwnerState<TValue, TDate, TView extends DateOrTimeView>
-  extends PickersShortcutsProps<TValue, TDate, TView> {
+interface PickersShortcutsOwnerState<TValue>
+  extends PickersShortcutsProps<TValue> {
   wrapperVariant: WrapperVariant;
 }
 
@@ -59,9 +60,9 @@ export interface ExportedPickersLayoutSlotsComponentsProps<
    * Props passed down to the shortcuts component.
    */
   shortcuts?: SlotComponentProps<
-    React.ComponentType<PickersShortcutsProps<TValue, TDate, TView>>,
+    React.ComponentType<PickersShortcutsProps<TValue>>,
     {},
-    PickersShortcutsOwnerState<TValue, TDate, TView>
+    PickersShortcutsOwnerState<TValue>
   >;
   /**
    * Props passed down to the layoutRoot component.
@@ -108,13 +109,25 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: PickersLayoutSlotsComponent<TValue, TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<PickersLayoutSlotsComponent<TValue, TDate, TView>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
 }
 
 export interface SubComponents {

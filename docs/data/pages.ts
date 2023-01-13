@@ -195,6 +195,11 @@ const pages: MuiPage[] = [
             newFeature: true,
           },
           {
+            pathname: '/x/react-date-pickers/date-range-calendar',
+            title: 'Date Range Calendar',
+            newFeature: true,
+          },
+          {
             pathname: '/x/react-date-pickers/legacy-date-range-picker',
             title: 'Legacy Date Range Picker',
           },

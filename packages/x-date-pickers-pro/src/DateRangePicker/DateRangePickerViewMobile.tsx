@@ -39,7 +39,13 @@ export interface DateRangePickerViewMobileSlotsComponentsProps<TDate>
 interface DesktopDateRangeCalendarProps<TDate>
   extends Omit<
       DayCalendarProps<TDate>,
-      'selectedDays' | 'onFocusedDayChange' | 'classes' | 'components' | 'componentsProps'
+      | 'selectedDays'
+      | 'onFocusedDayChange'
+      | 'classes'
+      | 'components'
+      | 'componentsProps'
+      | 'slots'
+      | 'slotsProps'
     >,
     DayValidationProps<TDate>,
     ExportedCalendarHeaderProps<TDate> {
@@ -124,7 +130,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
     <React.Fragment>
       <PickersCalendarHeader
         components={components}
-        componentsProps={componentsProps}
+        slotsProps={componentsProps}
         maxDate={maxDateWithDisabled}
         minDate={minDateWithDisabled}
         onMonthChange={changeMonth as any}
@@ -143,7 +149,7 @@ export function DateRangePickerViewMobile<TDate>(props: DesktopDateRangeCalendar
         onSelectedDaysChange={onSelectedDaysChange}
         onFocusedDayChange={doNothing}
         components={componentsForDayCalendar}
-        componentsProps={componentsPropsForDayCalendar}
+        slotsProps={componentsPropsForDayCalendar}
       />
     </React.Fragment>
   );

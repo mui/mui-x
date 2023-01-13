@@ -38,7 +38,7 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotsProps, displayStaticWrapperAs, autoFocus } = props;
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
@@ -57,15 +57,11 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const Layout = components?.Layout ?? PickerStaticLayout;
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<
-    DateRange<TDate>,
-    TDate,
-    TView
-  > = {
-    ...componentsProps,
+  const Layout = slots?.layout ?? PickerStaticLayout;
+  const slotsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+    ...slotsProps,
     toolbar: {
-      ...componentsProps?.toolbar,
+      ...slotsProps?.toolbar,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
@@ -76,8 +72,9 @@ export const useStaticRangePicker = <
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
-          components={components}
-          componentsProps={componentsPropsForLayout}
+          {...slotsProps?.layout}
+          slots={slots}
+          slotsProps={slotsPropsForLayout}
           ref={ref}
         >
           {renderCurrentView()}

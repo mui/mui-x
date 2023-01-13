@@ -14,9 +14,9 @@
     },
     { "name": "hideFilterPanel", "description": "Hides the filter panel.", "type": "() => void" },
     {
-      "name": "setFilterLinkOperator",
-      "description": "Changes the GridLinkOperator used to connect the filters.",
-      "type": "(operator: GridLinkOperator) => void"
+      "name": "setFilterLogicOperator",
+      "description": "Changes the GridLogicOperator used to connect the filters.",
+      "type": "(operator: GridLogicOperator) => void"
     },
     {
       "name": "setFilterModel",
