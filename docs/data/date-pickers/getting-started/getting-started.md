@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 ## Installation
 
-To make the Date and Time Pickers, work, you need to install the following packages:
+To make the Date and Time Pickers work, you need to install the following packages:
 
 1. **The component library** (`@mui/x-date-pickers` or `@mui/x-date-pickers-pro`) to render the component.
 2. **The date library** ([Day.js](https://day.js.org/), [date-fns](https://date-fns.org/), ...) to manipulate the date.
@@ -26,8 +26,8 @@ To make the Date and Time Pickers, work, you need to install the following packa
 
 The Date and Time Pickers comes in two packages:
 
-- `@mui/x-date-pickers`, which is open-source contains all the components to edit a date and/or a time.
-- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) contains additional components to edit a range of date and/or time.
+- `@mui/x-date-pickers`, which is open-source and contains all the components to edit a date and/or a time.
+- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit a range of date and/or time.
 
 ### Date library
 
@@ -104,9 +104,9 @@ yarn add @mui/material @mui/styled-engine-sc styled-components
 ## Code setup
 
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
-This component receives your chosen date library's adapter and make it accessible to all the Date and Time Pickers component with a React context.
+This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
 
-The most simple way to use `LocalizationProvider` is to wrap your entire application it.
+The simplest way to use `LocalizationProvider` is to wrap your entire application in it.
 You will then be able to use the Date and Time Pickers everywhere.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
@@ -137,14 +137,14 @@ If you need to use the Date and Time Pickers with a custom locale, have a look a
 
 ## Commonly used components
 
-Most applications only need a few of the components exposed by the Date and Time packages:
+Most applications only need a few components exposed by the Date and Time packages:
 
 {{"demo": "CommonlyUsedComponents.js"}}
 
 :::success
-All the components exported by `@mui/x-date-pickers` are also exported by `@mui/x-date-pickers-pro` but not with nested imports.
+All the components exported by `@mui/x-date-pickers` are also exported by `@mui/x-date-pickers-pro` but without the nested imports.
 
-For example, to use the `DatePicker` component, the three following imports are valid:
+For example, to use the `DatePicker` component, the following three imports are valid:
 
 ```tsx
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -158,7 +158,7 @@ import { DatePicker } from '@mui/x-date-pickers-pro';
 
 ### Controlled value
 
-All the components can be controlled using the `value` / `onChange` props:
+All the components can be uncontrolled or controlled by using the `value` / `onChange` props:
 
 {{"demo": "ControlledComponent.js"}}
 
@@ -184,7 +184,7 @@ If you need to add validation to your component, you can check the [Validation p
 
 ### Keyboard or mouse editing
 
-The first thing you want to decide, is how the user should be able to select their value:
+The first thing you need to decide, is how the user should be able to select their value:
 
 - For keyboard and mouse editing, use the _Picker_ components:
 
@@ -198,8 +198,8 @@ The first thing you want to decide, is how the user should be able to select the
 
 {{"demo": "BasicDateCalendar.js", "hideToolbar": true, "bg": "inline"}}
 
-:::success
-Each _Picker_ is the combination of one _Field_ and one or several _Calendar / Clock_ components.
+:::info
+Each _Picker_ is a combination of one _Field_ and one or several _Calendar / Clock_ components.
 For example, the `DatePicker` is the combination of the `DateField` and the `DateCalendar`.
 
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
