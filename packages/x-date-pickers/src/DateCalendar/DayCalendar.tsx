@@ -27,7 +27,7 @@ import {
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { SlotsAndslotProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -85,7 +85,7 @@ export interface DayCalendarProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    SlotsAndslotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
