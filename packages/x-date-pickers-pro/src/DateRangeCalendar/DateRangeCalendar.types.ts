@@ -130,7 +130,7 @@ export interface DateRangeCalendarProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
@@ -142,7 +142,7 @@ export interface DateRangeCalendarProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

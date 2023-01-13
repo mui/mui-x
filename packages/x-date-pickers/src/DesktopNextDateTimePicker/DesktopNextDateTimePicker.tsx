@@ -39,7 +39,7 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
   };
 
   const slots = defaultizedProps.slots;
-  const slotsProps = defaultizedProps.slotsProps;
+  const slotProps = defaultizedProps.slotProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
@@ -51,10 +51,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
       openPickerIcon: Calendar,
       ...slots,
     },
-    slotsProps: {
-      ...slotsProps,
+    slotProps: {
+      ...slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -116,7 +116,7 @@ DesktopNextDateTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -387,15 +387,15 @@ DesktopNextDateTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

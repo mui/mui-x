@@ -64,7 +64,7 @@ export interface DateTimeFieldProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
   /**
@@ -76,7 +76,7 @@ export interface DateTimeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
+  slotProps?: DateTimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type DateTimeFieldOwnerState<TDate> = DateTimeFieldProps<TDate>;

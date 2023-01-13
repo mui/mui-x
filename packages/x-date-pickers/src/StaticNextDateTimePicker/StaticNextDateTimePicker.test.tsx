@@ -109,7 +109,7 @@ describe('<StaticNextDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <StaticNextDateTimePicker
-          slotsProps={{
+          slotProps={{
             tabs: { hidden: true },
           }}
         />,
@@ -123,7 +123,7 @@ describe('<StaticNextDateTimePicker />', () => {
       render(
         <StaticNextDateTimePicker
           displayStaticWrapperAs="desktop"
-          slotsProps={{
+          slotProps={{
             tabs: { hidden: false },
           }}
         />,

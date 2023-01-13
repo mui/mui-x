@@ -27,7 +27,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
-  const { className, sx, slots, slotsProps, ...defaultizedProps } =
+  const { className, sx, slots, slotProps, ...defaultizedProps } =
     useNextDateTimePickerDefaultizedProps<TDate, MobileNextDateTimePickerProps<TDate>>(
       inProps,
       'MuiMobileNextDateTimePicker',
@@ -52,10 +52,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
       field: DateTimeField,
       ...slots,
     },
-    slotsProps: {
-      ...slotsProps,
+    slotProps: {
+      ...slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -117,7 +117,7 @@ MobileNextDateTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -388,15 +388,15 @@ MobileNextDateTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

@@ -39,7 +39,7 @@ export const useMobileRangePicker = <
 
   const {
     slots,
-    slotsProps,
+    slotProps,
     className,
     format,
     readOnly,
@@ -75,7 +75,7 @@ export const useMobileRangePicker = <
     },
   });
 
-  const fieldSlotsProps = useRangePickerInputProps({
+  const fieldslotProps = useRangePickerInputProps({
     wrapperVariant: 'mobile',
     open,
     actions,
@@ -93,7 +93,7 @@ export const useMobileRangePicker = <
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
-    externalSlotProps: slotsProps?.field,
+    externalSlotProps: slotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly: readOnly ?? true,
@@ -110,16 +110,16 @@ export const useMobileRangePicker = <
     ...fieldProps.slots,
   };
 
-  const slotsPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotsProps'] = {
-    ...fieldProps.slotsProps,
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
+    ...fieldProps.slotProps,
     textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(slotsProps?.textField, ownerState);
+      const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotsProps?.textField,
+        fieldProps.slotProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotsProps.startInput : fieldSlotsProps.endInput;
+        ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
 
       return {
         ...externalInputProps,
@@ -132,32 +132,32 @@ export const useMobileRangePicker = <
       };
     },
     root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(slotsProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotsProps?.root, ownerState);
+      const externalRootProps = resolveComponentProps(slotProps?.fieldRoot, ownerState);
+      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotProps?.root, ownerState);
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
-        ...fieldSlotsProps.root,
+        ...fieldslotProps.root,
       };
     },
     separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(slotsProps?.fieldSeparator, ownerState);
+      const externalSeparatorProps = resolveComponentProps(slotProps?.fieldSeparator, ownerState);
       const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.slotsProps?.separator,
+        fieldProps.slotProps?.separator,
         ownerState,
       );
       return {
         ...externalSeparatorProps,
         ...separatorPropsPassedByField,
-        ...fieldSlotsProps.root,
+        ...fieldslotProps.root,
       };
     },
   };
 
-  const slotsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...slotsProps,
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...slotProps,
     toolbar: {
-      ...slotsProps?.toolbar,
+      ...slotProps?.toolbar,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
@@ -168,7 +168,7 @@ export const useMobileRangePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
-        <Field {...fieldProps} slots={slotsForField} slotsProps={slotsPropsForField} />
+        <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
         <PickersModalDialog
           {...actions}
           open={open}
@@ -177,16 +177,16 @@ export const useMobileRangePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             actionBar: () => null,
           }}
-          slotsProps={{
-            ...slotsProps,
+          slotProps={{
+            ...slotProps,
             actionBar: undefined,
           }}
         >
           <Layout
             {...layoutProps}
-            {...slotsProps?.layout}
+            {...slotProps?.layout}
             slots={slots}
-            slotsProps={slotsPropsForLayout}
+            slotProps={slotPropsForLayout}
           >
             {renderCurrentView()}
           </Layout>
