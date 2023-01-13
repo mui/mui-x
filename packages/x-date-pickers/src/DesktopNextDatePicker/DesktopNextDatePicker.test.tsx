@@ -142,7 +142,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           open
-          slotsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -245,7 +245,7 @@ describe('<DesktopNextDatePicker />', () => {
               slots={{
                 desktopTransition: NoTransition,
               }}
-              slotsProps={{
+              slotProps={{
                 openPickerButton: {
                   ref: anchorElRef,
                 },
@@ -421,7 +421,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          slotsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

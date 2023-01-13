@@ -44,7 +44,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
 
   const {
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerslotProps,
     components,
     componentsProps,
     value,
@@ -66,14 +66,14 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerslotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
   const Root = slots?.root ?? MultiInputTimeRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: slotsProps?.root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -84,20 +84,20 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
 
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
   const Separator = slots?.separator ?? MultiInputTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
   });
 
@@ -188,7 +188,7 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -306,15 +306,15 @@ MultiInputTimeRangeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0
