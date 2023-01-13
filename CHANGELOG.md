@@ -9,11 +9,15 @@ _Jan 13, 2023_
 
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 🚀 Support components and slots for new pickers (#7390) @alexfauquette
+- ✨ Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
+- 🌍 Improve Spanish (es-ES) andBelarusian (be-BY) locales
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v6.0.0-alpha.15` / `@mui/x-data-grid-pro@6.0.0-alpha.15` / `@mui/x-data-grid-premium@6.0.0-alpha.15`
 
-### Breaking changes
+#### Breaking changes
 
 - [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
 
@@ -66,11 +70,12 @@ TODO INSERT HIGHLIGHTS
 - [DataGrid] Stop exporting editing selector (#7456) @m4theushw
 - [DataGrid] Store the outlined cell in the state (#7111) @m4theushw
 - [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
+- [DataGrid] Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
 - [DataGridPremium] Fix Excel export not working with date strings (#7396) @cherniavskii
 
 ### `@mui/x-date-pickers@6.0.0-alpha.15` / `@mui/x-date-pickers-pro@6.0.0-alpha.15`
 
-### Breaking changes
+#### Breaking changes
 
 - [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
 
@@ -146,8 +151,6 @@ TODO INSERT HIGHLIGHTS
 - [core] Move default closeOnSelect to prop definition (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
-- Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
-- Revert "[DataGrid] Store the outlined cell in the state (#7111)" (#7481) @m4theushw
 - [test] Add a few inheritComponent (#7352) @oliviertassinari
 
 ## 6.0.0-alpha.14
