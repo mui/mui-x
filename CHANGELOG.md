@@ -153,7 +153,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
-- [core] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
+- [pickers] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - [test] Add a few inheritComponent (#7352) @oliviertassinari
