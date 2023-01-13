@@ -34,7 +34,7 @@ export interface DateCalendarSlotsComponentsProps<TDate>
     DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     BaseDateValidationProps<TDate>,

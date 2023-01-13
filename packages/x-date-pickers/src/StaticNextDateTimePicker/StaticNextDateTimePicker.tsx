@@ -302,7 +302,10 @@ StaticNextDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   * On range pickers, it will be ignored if more than one month is rendered.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,

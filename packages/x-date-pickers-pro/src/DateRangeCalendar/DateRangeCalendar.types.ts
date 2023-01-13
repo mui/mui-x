@@ -47,7 +47,7 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 }
 
 export interface ExportedDateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
