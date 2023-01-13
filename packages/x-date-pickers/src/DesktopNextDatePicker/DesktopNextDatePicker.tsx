@@ -46,15 +46,15 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
-    components: {
-      OpenPickerIcon: Calendar,
-      Field: DateField,
-      ...defaultizedProps.components,
+    slots: {
+      openPickerIcon: Calendar,
+      field: DateField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotsProps: {
+      ...defaultizedProps.slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -99,11 +99,13 @@ DesktopNextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -340,6 +342,16 @@ DesktopNextDatePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

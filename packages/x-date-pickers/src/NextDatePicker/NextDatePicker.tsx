@@ -53,11 +53,13 @@ NextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -300,6 +302,16 @@ NextDatePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

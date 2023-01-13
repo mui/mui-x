@@ -33,19 +33,21 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
     ...defaultizedProps.viewRenderers,
   };
 
+  const slots = defaultizedProps.slots;
+  const slotsProps = defaultizedProps.slotsProps;
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: TimeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: TimeField,
+      ...slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotsProps: {
+      ...slotsProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(slotsProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -101,11 +103,13 @@ MobileNextTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -282,6 +286,16 @@ MobileNextTimePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

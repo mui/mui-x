@@ -26,6 +26,7 @@ import {
   pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -67,13 +68,25 @@ export interface PickersCalendarHeaderProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: PickersCalendarHeaderSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
@@ -177,8 +190,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
   const {
-    components = {},
-    componentsProps = {},
+    components,
+    componentsProps,
+    slots,
+    slotsProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -197,10 +212,13 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = components.SwitchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton =
+    slots?.switchViewButton ??
+    components?.SwitchViewButton ??
+    PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
-    externalSlotProps: componentsProps.switchViewButton,
+    externalSlotProps: slotsProps?.switchViewButton ?? componentsProps?.switchViewButton,
     additionalProps: {
       size: 'small',
       'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
@@ -209,11 +227,12 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = components.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon =
+    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
-    externalSlotProps: componentsProps.switchViewIcon,
+    externalSlotProps: slotsProps?.switchViewIcon ?? componentsProps?.switchViewIcon,
     ownerState: undefined,
     className: classes.switchViewIcon,
   });
@@ -282,6 +301,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
         <PickersArrowSwitcher
           components={components}
           componentsProps={componentsProps}
+          slots={slots}
+          slotsProps={slotsProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
           previousLabel={localeText.previousMonth}

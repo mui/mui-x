@@ -19,14 +19,14 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     name: 'MuiTimeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { slots, slotsProps, components, componentsProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotsProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -77,11 +77,13 @@ TimeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -272,6 +274,16 @@ TimeField.propTypes = {
    * The size of the component.
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
