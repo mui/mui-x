@@ -19,20 +19,20 @@ export interface PickersShortcutsProps<TValue> extends Omit<ListProps, 'onChange
    * If empty, does not display the shortcuts.
    * @default `[]`
    */
-  shortcuts?: PickersShortcutsItem<TValue>[];
+  items?: PickersShortcutsItem<TValue>[];
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   isValid: (value: TValue) => boolean;
 }
 
 export function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
-  const { shortcuts, isLandscape, onChange, isValid, ...other } = props;
+  const { items, isLandscape, onChange, isValid, ...other } = props;
 
-  if (shortcuts == null || shortcuts.length === 0) {
+  if (items == null || items.length === 0) {
     return null;
   }
 
-  const items = shortcuts.map((item) => {
+  const itemsAttributs = items.map((item) => {
     const newValue = item.getValue({ isValid });
 
     return {
@@ -53,7 +53,7 @@ export function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
       ]}
       {...other}
     >
-      {items.map((item) => {
+      {itemsAttributs.map((item) => {
         return (
           <ListItem key={item.label}>
             <Chip {...item} />

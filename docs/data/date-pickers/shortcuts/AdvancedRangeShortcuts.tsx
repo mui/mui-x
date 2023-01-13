@@ -6,7 +6,7 @@ import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from 
 import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
 import { DateRange } from '@mui/x-date-pickers-pro';
 
-const shortcuts: PickersShortcutsItem<DateRange<Dayjs>>[] = [
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
     label: 'Next Available Weekend',
     getValue: ({ isValid }) => {
@@ -70,9 +70,9 @@ export default function AdvancedRangeShortcuts() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
         shouldDisableDate={shouldDisableDate}
-        componentsProps={{
+        slotsProps={{
           shortcuts: {
-            shortcuts,
+            items: shortcutsItems,
           },
         }}
       />

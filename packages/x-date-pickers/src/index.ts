@@ -50,6 +50,7 @@ export * from './timeViewRenderers';
 // Layout
 export * from './PickersLayout';
 export * from './PickersActionBar';
+export * from './PickersShortcuts';
 
 export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';

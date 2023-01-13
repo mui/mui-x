@@ -97,7 +97,7 @@ export default function DisabledDatesShortcuts() {
       <StaticNextDatePicker
         componentsProps={{
           shortcuts: {
-            shortcuts,
+            items,
           },
         }}
         minDate={middleDate}

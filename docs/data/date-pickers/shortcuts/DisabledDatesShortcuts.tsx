@@ -23,7 +23,7 @@ const getMonthWeekday = (
   );
 };
 
-const shortcuts: PickersShortcutsItem<Dayjs | null>[] = [
+const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
   {
     label: "New Year's Day",
     getValue: () => {
@@ -100,9 +100,9 @@ export default function DisabledDatesShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
-        componentsProps={{
+        slotsProps={{
           shortcuts: {
-            shortcuts,
+            items: shortcutsItems,
           },
         }}
         minDate={middleDate}

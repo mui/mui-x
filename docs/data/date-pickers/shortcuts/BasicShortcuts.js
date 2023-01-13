@@ -75,7 +75,7 @@ export default function BasicShortcuts() {
       <StaticNextDatePicker
         componentsProps={{
           shortcuts: {
-            shortcuts,
+            items,
           },
         }}
       />

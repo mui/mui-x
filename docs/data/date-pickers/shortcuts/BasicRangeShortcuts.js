@@ -51,7 +51,7 @@ export default function BasicRangeShortcuts() {
       <StaticNextDateRangePicker
         componentsProps={{
           shortcuts: {
-            shortcuts,
+            items,
           },
         }}
       />

@@ -1,10 +1,12 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
+import { DateRange } from '@mui/x-date-pickers-pro';
 
-const shortcuts = [
+const shortcutsItems: PickersShortcutsItem<DateRange<Dayjs>>[] = [
   {
     label: 'This Week',
     getValue: () => {
@@ -49,9 +51,9 @@ export default function BasicRangeShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
-        componentsProps={{
+        slotsProps={{
           shortcuts: {
-            shortcuts,
+            items: shortcutsItems,
           },
         }}
       />

@@ -70,7 +70,7 @@ export default function AdvancedRangeShortcuts() {
         shouldDisableDate={shouldDisableDate}
         componentsProps={{
           shortcuts: {
-            shortcuts,
+            items,
           },
         }}
       />
