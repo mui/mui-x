@@ -11,7 +11,7 @@ import {
   YearValidationProps,
 } from '../internals/hooks/validation/models';
 import { FieldsTextFieldProps } from '../internals';
-import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface UseDateFieldParams<TDate, TChildProps extends {}> {
   props: UseDateFieldComponentProps<TDate, TChildProps>;
@@ -38,7 +38,7 @@ export type UseDateFieldComponentProps<TDate, TChildProps extends {}> = Omit<
 
 export interface DateFieldProps<TDate>
   extends UseDateFieldComponentProps<TDate, FieldsTextFieldProps>,
-    SlotsAndSlotsProps<DateFieldSlotsComponent, DateFieldSlotsComponentsProps<TDate>> {}
+    SlotsAndSlotProps<DateFieldSlotsComponent, DateFieldSlotsComponentsProps<TDate>> {}
 
 export type DateFieldOwnerState<TDate> = DateFieldProps<TDate>;
 

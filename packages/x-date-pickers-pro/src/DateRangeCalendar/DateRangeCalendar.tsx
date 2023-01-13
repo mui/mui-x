@@ -176,7 +176,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     components,
     componentsProps,
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerslotProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -192,7 +192,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...other
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerslotProps ?? componentsProps;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
@@ -410,8 +410,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...slots,
   } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
-  const slotsPropsForDayCalendar = {
-    ...slotsProps,
+  const slotPropsForDayCalendar = {
+    ...slotProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
@@ -448,7 +448,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
-        ...(resolveComponentProps(slotsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -512,7 +512,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               disableFuture={disableFuture}
               reduceAnimations={reduceAnimations}
               slots={slots}
-              slotsProps={slotsProps}
+              slotProps={slotProps}
             />
           ) : (
             <DateRangeCalendarArrowSwitcher
@@ -525,7 +525,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               isNextDisabled={isNextMonthDisabled}
               nextLabel={localeText.nextMonth}
               slots={slots}
-              slotsProps={slotsProps}
+              slotProps={slotProps}
             >
               {utils.format(month, 'monthAndYear')}
             </DateRangeCalendarArrowSwitcher>
@@ -550,7 +550,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             loading={loading}
             renderLoading={renderLoading}
             slots={slotsForDayCalendar}
-            slotsProps={slotsPropsForDayCalendar}
+            slotProps={slotPropsForDayCalendar}
             autoFocus={month === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
@@ -589,7 +589,7 @@ DateRangeCalendar.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -708,15 +708,15 @@ DateRangeCalendar.propTypes = {
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

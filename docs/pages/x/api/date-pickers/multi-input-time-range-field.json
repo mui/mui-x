@@ -11,7 +11,7 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "direction": {
@@ -46,8 +46,8 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "spacing": {
       "type": {
         "name": "union",

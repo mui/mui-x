@@ -45,7 +45,7 @@ export interface TimeFieldProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: TimeFieldSlotsComponentsProps<TDate>;
   /**
@@ -57,7 +57,7 @@ export interface TimeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: TimeFieldSlotsComponentsProps<TDate>;
+  slotProps?: TimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
