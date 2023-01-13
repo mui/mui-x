@@ -24,8 +24,8 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
-- [pickers] Add Belarusian (be-BY) locale (#7450) @LukasTy
-- [pickers] Add Urdu (ur-PK) locale (#7449) @LukasTy
+- [pickers] Add Belarusian (be-BY) locale (#7450) @volhalink
+- [pickers] Add Urdu (ur-PK) locale (#7449) @MBilalShafi
 - [pickers] Improve Spanish (es-ES) locale (#7438) @Anderssxn
 
 ## 5.17.18
