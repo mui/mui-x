@@ -10,7 +10,7 @@ import {
 import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';

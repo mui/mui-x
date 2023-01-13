@@ -14,7 +14,7 @@ import {
   useUtils,
   validateDate,
 } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';

@@ -1,4 +1,4 @@
-export { SingleInputDateTimeRangeField as Unstable_SingleInputDateTimeRangeField } from './SingleInputDateTimeRangeField';
+export { SingleInputDateTimeRangeField } from './SingleInputDateTimeRangeField';
 export { useSingleInputDateTimeRangeField as unstable_useSingleInputDateTimeRangeField } from './useSingleInputDateTimeRangeField';
 export type {
   UseSingleInputDateTimeRangeFieldProps,

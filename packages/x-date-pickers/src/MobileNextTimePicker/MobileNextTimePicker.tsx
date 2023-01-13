@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_TimeField as TimeField } from '../TimeField';
+import { TimeField } from '../TimeField';
 import { MobileNextTimePickerProps } from './MobileNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from '../internals';

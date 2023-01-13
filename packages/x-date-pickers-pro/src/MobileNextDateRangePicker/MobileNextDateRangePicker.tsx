@@ -6,7 +6,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { MobileNextDateRangePickerProps } from './MobileNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';

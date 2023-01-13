@@ -6,7 +6,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
