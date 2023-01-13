@@ -63,6 +63,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.componentsProps?.tabs,
+      },
     },
   };
 
