@@ -73,7 +73,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
 - [DataGrid] Stop exporting editing selector (#7456) @m4theushw
 - [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
-- [DataGrid] Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
+- [DataGrid] Improve Spanish (es-ES) locale (#7447) @Anderssxn
 - [DataGrid] Remove Alt+C keyboard shortcut (#7466) @MBilalShafi
 - [DataGridPremium] Fix Excel export not working with date strings (#7396) @cherniavskii
 
