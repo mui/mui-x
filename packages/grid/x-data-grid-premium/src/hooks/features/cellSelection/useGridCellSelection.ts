@@ -198,9 +198,8 @@ export const useGridCellSelection = (
         return;
       }
 
-      const selectedCells = Object.keys(apiRef.current.unstable_getCellSelectionModel());
-      const isSelectingFirstCell = selectedCells.length === 0;
-      if (hasClickedValidCellForRangeSelection(params) && event.shiftKey && !isSelectingFirstCell) {
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (hasClickedValidCellForRangeSelection(params) && event.shiftKey && focusedCell) {
         event.preventDefault();
       }
 
@@ -398,8 +397,8 @@ export const useGridCellSelection = (
         return isNavigationKey(event.key) ? false : initialValue;
       }
 
-      const selectedCells = Object.keys(apiRef.current.unstable_getCellSelectionModel());
-      if (hasClickedValidCellForRangeSelection(cell) && selectedCells.length > 0) {
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (hasClickedValidCellForRangeSelection(cell) && focusedCell) {
         return false;
       }
 
