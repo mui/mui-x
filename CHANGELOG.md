@@ -116,7 +116,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
 
-  `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+  The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
 
   ```diff
   <DateTimePicker
