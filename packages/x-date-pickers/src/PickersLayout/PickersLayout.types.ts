@@ -36,8 +36,7 @@ interface PickersLayoutActionBarOwnerState<TValue, TDate, TView extends DateOrTi
   wrapperVariant: WrapperVariant;
 }
 
-interface PickersShortcutsOwnerState<TValue>
-  extends PickersShortcutsProps<TValue> {
+interface PickersShortcutsOwnerState<TValue> extends PickersShortcutsProps<TValue> {
   wrapperVariant: WrapperVariant;
 }
 
