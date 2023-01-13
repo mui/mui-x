@@ -55,6 +55,8 @@
     "shouldDisableYear": "Disable specific year.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): If <code>true</code>, the year will be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
+    "slots": "Overrideable component slots.",
+    "slotsProps": "The props used for each component slot.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "view": "The visible view. Used when the component view is controlled. Must be a valid option from <code>views</code> list.",

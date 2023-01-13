@@ -104,7 +104,7 @@ describe('<DesktopNextDateRangePicker />', () => {
         <LocalizationProvider dateAdapter={AdapterClassToUse}>
           <DesktopNextDateRangePicker
             // We set the variant to standard to avoid having the label rendered in two places.
-            componentsProps={{
+            slotsProps={{
               textField: {
                 variant: 'standard',
               },
@@ -126,6 +126,33 @@ describe('<DesktopNextDateRangePicker />', () => {
         <DesktopNextDateRangePicker
           open
           componentsProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
+          }}
+        />,
+      );
+      const popper = screen.getByTestId('popper');
+
+      fireEvent.click(popper);
+      fireEvent.touchStart(popper);
+
+      expect(handleClick.callCount).to.equal(1);
+      expect(handleTouchStart.callCount).to.equal(1);
+    });
+  });
+
+  describe('Slots: Popper', () => {
+    it('should forward onClick and onTouchStart', () => {
+      const handleClick = spy();
+      const handleTouchStart = spy();
+      render(
+        <DesktopNextDateRangePicker
+          open
+          slotsProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -501,7 +528,7 @@ describe('<DesktopNextDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
+          slotsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -526,7 +553,7 @@ describe('<DesktopNextDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
+          slotsProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -652,7 +679,7 @@ describe('<DesktopNextDateRangePicker />', () => {
       render(
         <DesktopNextDateRangePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotsProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date-range', variant: 'desktop', initialFocus: 'start' });

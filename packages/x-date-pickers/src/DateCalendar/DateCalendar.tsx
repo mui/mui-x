@@ -127,6 +127,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     dayOfWeekFormatter,
     components,
     componentsProps,
+    slots,
+    slotsProps,
     loading,
     renderLoading,
     displayWeekNumber,
@@ -310,6 +312,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         components={components}
         componentsProps={componentsProps}
+        slots={slots}
+        slotsProps={slotsProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -367,6 +371,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               displayWeekNumber={displayWeekNumber}
               components={components}
               componentsProps={componentsProps}
+              slots={slots}
+              slotsProps={slotsProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -394,11 +400,13 @@ DateCalendar.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -551,6 +559,16 @@ DateCalendar.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
