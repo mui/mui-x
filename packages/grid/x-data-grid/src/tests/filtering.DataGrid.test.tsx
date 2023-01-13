@@ -1133,4 +1133,13 @@ describe('<DataGrid /> - Filter', () => {
       );
     }).not.to.throw();
   });
+
+  it('should display "No results found." if no row matches the filter', () => {
+    const { setProps } = render(<TestCase {...baselineProps} />);
+    expect(screen.queryByText('No results found.')).to.equal(null);
+    setProps({
+      filterModel: { items: [{ field: 'brand', value: 'foobar', operator: 'equals' }] },
+    });
+    expect(screen.queryByText('No results found.')).not.to.equal(null);
+  });
 });

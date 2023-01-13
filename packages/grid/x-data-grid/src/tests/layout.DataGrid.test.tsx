@@ -812,6 +812,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       ) as Element;
       expect(virtualScrollerContent.clientHeight).to.equal(virtualScroller.clientHeight);
     });
+
+    it('should expand the overlay height when there are no rows', () => {
+      render(
+        <div style={{ width: 150, height: 300 }}>
+          <DataGrid columns={[{ field: 'brand' }, { field: 'year' }]} rows={[]} />
+        </div>,
+      );
+      const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller') as Element;
+      const overlay = document.querySelector('.MuiDataGrid-overlay') as Element;
+      expect(overlay.clientHeight).to.equal(virtualScroller.clientHeight);
+    });
   });
 
   describe('warnings', () => {
