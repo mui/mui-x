@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### Breaking changes
 
-- [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
+- Remove the `onCellFocusOut` prop (#6302) @cherniavskii
 
   The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
 
