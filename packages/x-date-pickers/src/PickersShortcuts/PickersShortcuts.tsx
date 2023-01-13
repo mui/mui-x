@@ -49,7 +49,12 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     <List
       dense
       sx={[
-        { maxHeight: VIEW_HEIGHT, overflow: 'auto' },
+        {
+          maxHeight: VIEW_HEIGHT,
+          maxWidth: 200,
+          overflow: 'hidden',
+          '&:hover': { overflow: 'auto' },
+        },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
       {...other}

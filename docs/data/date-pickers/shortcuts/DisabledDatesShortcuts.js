@@ -28,7 +28,7 @@ const shortcutsItems = [
     },
   },
   {
-    label: 'Birthday of Martin Luther King Jr.',
+    label: 'Birthday of MLK Jr.',
     getValue: () => {
       // (third Monday in January)
       return getMonthWeekday(0, 1, 3);
