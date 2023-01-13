@@ -1,13 +1,25 @@
 {
   "props": {
     "classes": { "type": { "name": "object" } },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotsProps</code>."
+    },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
     "localeText": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
+    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",

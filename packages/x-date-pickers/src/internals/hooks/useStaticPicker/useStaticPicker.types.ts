@@ -5,6 +5,7 @@ import {
 } from '../../../PickersLayout/PickersLayout.types';
 import { DateOrTimeView } from '../../models';
 import { BaseNextPickerProps } from '../../models/props/basePickerProps';
+import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 
@@ -36,13 +37,25 @@ export interface UseStaticPickerProps<
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: UseStaticPickerSlotsComponent<TDate | null, TView>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticPickerParams<

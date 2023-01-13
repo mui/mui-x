@@ -18,6 +18,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'classes',
         'components',
         'componentsProps',
+        'slots',
+        'slotsProps',
         'columns',
         'currentColumn',
         'colDef',
