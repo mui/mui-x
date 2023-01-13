@@ -251,9 +251,15 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
-      { pathname: '/x/react-date-pickers/shortcuts', title: 'Shortcuts' },
-      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
-      { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+      {
+        pathname: '/x/react-date-pickers/visual-customization',
+        title: 'Visual customization',
+        children: [
+          { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
+          { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+          { pathname: '/x/react-date-pickers/shortcuts', title: 'Shortcuts' },
+        ],
+      },
       {
         pathname: '/x/api/date-pickers',
         title: 'API Reference',
