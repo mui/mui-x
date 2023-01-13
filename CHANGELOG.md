@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 13, 2023_
 
-We'd like to offer a big thanks to the 3 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Spanish (es-ES) and add Belarusian (be-BY) and Urdu (ur-PK) locales
 - 🐞 Bugfixes
