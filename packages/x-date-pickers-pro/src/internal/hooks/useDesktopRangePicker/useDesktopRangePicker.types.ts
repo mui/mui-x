@@ -83,7 +83,7 @@ export interface UseDesktopRangePickerProps<
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
   /**
@@ -95,7 +95,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}

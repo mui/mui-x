@@ -74,7 +74,7 @@ export interface PickersCalendarHeaderProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   /**
@@ -86,7 +86,7 @@ export interface PickersCalendarHeaderProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
@@ -193,7 +193,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     components,
     componentsProps,
     slots,
-    slotsProps,
+    slotProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -218,7 +218,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
-    externalSlotProps: slotsProps?.switchViewButton ?? componentsProps?.switchViewButton,
+    externalSlotProps: slotProps?.switchViewButton ?? componentsProps?.switchViewButton,
     additionalProps: {
       size: 'small',
       'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
@@ -232,7 +232,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
-    externalSlotProps: slotsProps?.switchViewIcon ?? componentsProps?.switchViewIcon,
+    externalSlotProps: slotProps?.switchViewIcon ?? componentsProps?.switchViewIcon,
     ownerState: undefined,
     className: classes.switchViewIcon,
   });
@@ -302,7 +302,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           components={components}
           componentsProps={componentsProps}
           slots={slots}
-          slotsProps={slotsProps}
+          slotProps={slotProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
           previousLabel={localeText.previousMonth}

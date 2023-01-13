@@ -70,7 +70,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     components,
     componentsProps,
     slots,
-    slotsProps,
+    slotProps,
     isNextDisabled,
     isNextHidden,
     onGoToNext,
@@ -106,7 +106,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     slots?.previousIconButton ?? components?.PreviousIconButton ?? PickersArrowSwitcherButton;
   const previousIconButtonProps = useSlotProps({
     elementType: PreviousIconButton,
-    externalSlotProps: slotsProps?.previousIconButton ?? componentsProps?.previousIconButton,
+    externalSlotProps: slotProps?.previousIconButton ?? componentsProps?.previousIconButton,
     additionalProps: {
       size: 'small',
       title: leftProps.label,
@@ -123,7 +123,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
     slots?.nextIconButton ?? components?.NextIconButton ?? PickersArrowSwitcherButton;
   const nextIconButtonProps = useSlotProps({
     elementType: NextIconButton,
-    externalSlotProps: slotsProps?.nextIconButton ?? componentsProps?.nextIconButton,
+    externalSlotProps: slotProps?.nextIconButton ?? componentsProps?.nextIconButton,
     additionalProps: {
       size: 'small',
       title: rightProps.label,
@@ -140,7 +140,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: leftArrowIconOwnerState, ...leftArrowIconProps } = useSlotProps({
     elementType: LeftArrowIcon,
-    externalSlotProps: slotsProps?.leftArrowIcon ?? componentsProps?.leftArrowIcon,
+    externalSlotProps: slotProps?.leftArrowIcon ?? componentsProps?.leftArrowIcon,
     ownerState: undefined,
   });
 
@@ -148,7 +148,7 @@ export const PickersArrowSwitcher = React.forwardRef(function PickersArrowSwitch
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: rightArrowIconOwnerState, ...rightArrowIconProps } = useSlotProps({
     elementType: RightArrowIcon,
-    externalSlotProps: slotsProps?.rightArrowIcon ?? componentsProps?.rightArrowIcon,
+    externalSlotProps: slotProps?.rightArrowIcon ?? componentsProps?.rightArrowIcon,
     ownerState: undefined,
   });
 

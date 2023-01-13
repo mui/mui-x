@@ -95,7 +95,7 @@ export default function DisabledDatesShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
-        slotsProps={{
+        slotProps={{
           shortcuts: {
             items: shortcutsItems,
           },

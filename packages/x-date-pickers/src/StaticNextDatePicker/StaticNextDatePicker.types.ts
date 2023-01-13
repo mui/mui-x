@@ -30,7 +30,7 @@ export interface StaticNextDatePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: StaticNextDatePickerSlotsComponentsProps<TDate>;
   /**
@@ -42,5 +42,5 @@ export interface StaticNextDatePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: StaticNextDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: StaticNextDatePickerSlotsComponentsProps<TDate>;
 }

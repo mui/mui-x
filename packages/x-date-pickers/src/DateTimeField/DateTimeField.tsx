@@ -19,7 +19,7 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
     name: 'MuiDateTimeField',
   });
 
-  const { components, componentsProps, slots, slotsProps, ...other } = themeProps;
+  const { components, componentsProps, slots, slotProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
@@ -27,7 +27,7 @@ const DateTimeField = React.forwardRef(function DateTimeField<TDate>(
   const { inputRef: externalInputRef, ...textFieldProps }: DateTimeFieldProps<TDate> = useSlotProps(
     {
       elementType: TextField,
-      externalSlotProps: slotsProps?.textField ?? componentsProps?.textField,
+      externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
       externalForwardedProps: other,
       ownerState,
     },
@@ -85,7 +85,7 @@ DateTimeField.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -304,15 +304,15 @@ DateTimeField.propTypes = {
    */
   size: PropTypes.oneOf(['medium', 'small']),
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

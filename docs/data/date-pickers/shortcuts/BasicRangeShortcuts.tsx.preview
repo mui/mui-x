@@ -1,5 +1,5 @@
 <StaticNextDateRangePicker
-  slotsProps={{
+  slotProps={{
     shortcuts: {
       items: shortcutsItems,
     },

@@ -71,7 +71,7 @@ export interface UseMobilePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseMobilePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseMobilePickerParams<

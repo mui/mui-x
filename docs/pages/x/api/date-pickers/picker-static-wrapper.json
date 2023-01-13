@@ -11,15 +11,15 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "displayStaticWrapperAs": {
       "type": { "name": "enum", "description": "'desktop'<br>&#124;&nbsp;'mobile'" },
       "default": "\"mobile\""
     },
     "localeText": { "type": { "name": "object" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",

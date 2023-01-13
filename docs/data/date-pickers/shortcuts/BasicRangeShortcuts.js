@@ -49,7 +49,7 @@ export default function BasicRangeShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
-        slotsProps={{
+        slotProps={{
           shortcuts: {
             items: shortcutsItems,
           },

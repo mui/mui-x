@@ -39,7 +39,7 @@ export interface UseStaticRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticRangePickerParams<

@@ -120,7 +120,7 @@ describe('<MobileNextDatePicker />', () => {
         <MobileNextDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          slotsProps={{
+          slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
             },
@@ -180,7 +180,7 @@ describe('<MobileNextDatePicker />', () => {
         onClose={handleClose}
         onChange={handleChange}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        slotsProps={{ actionBar: { actions: ['today'] } }}
+        slotProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
     const start = adapterToUse.date();

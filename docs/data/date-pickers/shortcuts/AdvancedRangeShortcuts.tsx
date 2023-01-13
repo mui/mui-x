@@ -70,7 +70,7 @@ export default function AdvancedRangeShortcuts() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
         shouldDisableDate={shouldDisableDate}
-        slotsProps={{
+        slotProps={{
           shortcuts: {
             items: shortcutsItems,
           },

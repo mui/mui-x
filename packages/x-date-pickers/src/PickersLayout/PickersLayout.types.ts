@@ -114,7 +114,7 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
   /**
@@ -126,7 +126,7 @@ export interface PickersLayoutProps<TValue, TDate, TView extends DateOrTimeView>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
+  slotProps?: PickersLayoutSlotsComponentsProps<TValue, TDate, TView>;
 }
 
 export interface SubComponents {

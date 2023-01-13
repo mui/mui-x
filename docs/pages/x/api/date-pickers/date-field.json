@@ -18,7 +18,7 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
@@ -63,8 +63,8 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
