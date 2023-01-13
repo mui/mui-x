@@ -127,10 +127,10 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
 
   // Shortcuts
 
-  const Shortcuts = components?.Shortcuts ?? PickersShortcuts;
+  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
   const shortcutsProps = useSlotProps({
     elementType: Shortcuts!,
-    externalSlotProps: componentsProps?.shortcuts,
+    externalSlotProps: slotsProps?.shortcuts,
     additionalProps: {
       isValid,
       isLandscape,
