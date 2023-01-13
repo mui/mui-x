@@ -1,8 +1,8 @@
 <StaticNextDateRangePicker
   shouldDisableDate={shouldDisableDate}
-  componentsProps={{
+  slotsProps={{
     shortcuts: {
-      shortcuts,
+      items: shortcutsItems,
     },
   }}
 />

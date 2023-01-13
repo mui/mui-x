@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
 
-const shortcuts = [
+const shortcutsItems = [
   {
     label: 'This Week',
     getValue: () => {
@@ -49,9 +49,9 @@ export default function BasicRangeShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateRangePicker
-        componentsProps={{
+        slotsProps={{
           shortcuts: {
-            items,
+            items: shortcutsItems,
           },
         }}
       />
