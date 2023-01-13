@@ -62,7 +62,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Remove `Alt+C` keyboard shortcut (#7466) @MBilalShafi
 
-  `Alt`(or `⌥ Option`) + `C` keyboard shortcut is no longer supported.
+  <kbd>Alt</kbd> (or <kbd>⌥ Option</kbd>) + <kbd>C</kbd> keyboard shortcut is no longer supported.
 
 #### Changes
 
