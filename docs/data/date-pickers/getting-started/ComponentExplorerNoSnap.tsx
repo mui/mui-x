@@ -212,13 +212,15 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
       </Stack>
       {exportedNames.length > 0 && (
         <React.Fragment>
-          <Stack>
+          <div>
             {docPages.map((docPage) => (
-              <Link href={docPage.path} rel="noopener" target="_blank">
-                Documentation {docPage.name}
-              </Link>
+              <div>
+                <Link href={docPage.path} rel="noopener" target="_blank">
+                  {docPage.name} documentation
+                </Link>
+              </div>
             ))}
-          </Stack>
+          </div>
           <Stack>
             <Typography>Import code:</Typography>
             <HighlightedCode code={importCode} language="tsx" />

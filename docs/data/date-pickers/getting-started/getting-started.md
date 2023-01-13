@@ -124,9 +124,7 @@ You will then be able to use the Date and Time Pickers everywhere.
 
   ```tsx
   import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-  import { LocalizationProvider } from '@mui/x-date-pickers';
   import { LocalizationProvider } from '@mui/x-date-pickers-pro/LocalizationProvider';
-  import { LocalizationProvider } from '@mui/x-date-pickers-pro/';
   ```
 
 :::
