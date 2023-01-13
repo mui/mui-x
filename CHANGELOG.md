@@ -143,7 +143,7 @@ TODO INSERT HIGHLIGHTS
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
-- [core] Move default closeOnSelect to prop definition (#7459) @flaviendelangle
+- [core] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
