@@ -129,7 +129,7 @@ TODO INSERT HIGHLIGHTS
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
 - [pickers] Remove `WrapperVariantContext` from `DateTimePickerTabs` (#7374) @LukasTy
 - [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
-- [pickers] Support components and slots for new pickers (#7390) @alexfauquette
+- [pickers] Support `components` and `slots` for new pickers (#7390) @alexfauquette
 
 ### Docs
 
