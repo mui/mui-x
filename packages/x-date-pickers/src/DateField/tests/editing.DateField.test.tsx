@@ -18,6 +18,23 @@ describe('<DateField /> - Editing', () => {
 
   const { clickOnInput } = buildFieldInteractions({ clock });
 
+  const selectSection = (input: HTMLInputElement, activeSectionIndex: number) => {
+    const value = input.value.replace(':', '/');
+
+    // TODO: Improve this logic when we will be able to access state.sections from the outside
+    let clickPosition: number;
+    if (activeSectionIndex === 0) {
+      clickPosition = 0;
+    } else {
+      clickPosition =
+        (value.split('/', activeSectionIndex - 1).join('/').length +
+          value.split('/', activeSectionIndex).join('/').length) /
+        2;
+    }
+
+    clickOnInput(input, clickPosition);
+  };
+
   const testKeyPress = <TDate extends unknown>({
     key,
     expectedValue,
@@ -306,6 +323,30 @@ describe('<DateField /> - Editing', () => {
         key: 'Backspace',
         expectedValue: '2022',
       });
+    });
+
+    it('should only call `onChange` when clearing the last section', () => {
+      const handleChange = spy();
+
+      render(
+        <DateField
+          format={adapterToUse.formats.monthAndYear}
+          defaultValue={adapterToUse.date()}
+          onChange={handleChange}
+        />,
+      );
+
+      const input = screen.getByRole('textbox');
+      selectSection(input, 0);
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(handleChange.callCount).to.equal(0);
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(handleChange.callCount).to.equal(1);
+      expect(handleChange.lastCall.firstArg).to.equal(null);
     });
   });
 

@@ -227,18 +227,18 @@ export const useFieldState = <
       activeSection,
     );
 
-    const hasOtherNonEmptySections = activeDateSections.some((section) => {
+    const isOnlyNonEmptySection = activeDateSections.every((section) => {
       if (section.startInInput === activeSection.startInInput) {
-        return false;
+        return true;
       }
 
-      return section.value !== '';
+      return section.value === '';
     });
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
     const newValue = activeDateManager.getNewValueFromNewActiveDate(null);
 
-    if (!hasOtherNonEmptySections) {
+    if (isOnlyNonEmptySection) {
       return publishValue(newValue, newSections);
     }
 
