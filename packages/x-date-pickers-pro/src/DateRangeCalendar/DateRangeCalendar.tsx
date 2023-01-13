@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -152,6 +153,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
+  const shouldHavePreview = useMediaQuery('@media (pointer: fine)', { defaultMatches: false });
 
   const {
     value: valueProp,
@@ -425,15 +427,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         : isSelectedEndDate;
 
       return {
-        isPreviewing: isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isStartOfRange(utils, day, previewingRange),
-        isEndOfPreviewing: isEndOfRange(utils, day, previewingRange),
+        isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
+        isStartOfPreviewing: shouldHavePreview
+          ? isStartOfRange(utils, day, previewingRange)
+          : false,
+        isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting,
         isEndOfHighlighting: isDragging
           ? isEndOfRange(utils, day, draggingRange)
           : isSelectedEndDate,
-        onMouseEnter: handleDayMouseEnter,
+        onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
         // apply selected styling to the dragging start or end day
         isVisuallySelected:
           dayOwnerState.selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
