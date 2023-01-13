@@ -162,11 +162,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   density: GridDensity;
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: boolean;
-  /**
    * If `true`, column filters are disabled.
    * @default false
    */
