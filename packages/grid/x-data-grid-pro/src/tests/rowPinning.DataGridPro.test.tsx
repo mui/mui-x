@@ -576,7 +576,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const headerHeight = 56;
+    const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
 
@@ -585,14 +585,14 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowCount={rowCount}
         colCount={2}
         rowHeight={rowHeight}
-        headerHeight={headerHeight}
+        columnHeaderHeight={columnHeaderHeight}
         hideFooter
         autoHeight
       />,
     );
 
     expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
-      headerHeight + rowHeight * rowCount,
+      columnHeaderHeight + rowHeight * rowCount,
     );
   });
 
@@ -609,7 +609,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowHeight={52}
         pagination
         autoPageSize
-        headerHeight={56}
+        columnHeaderHeight={56}
         hideFooter
       />,
     );

@@ -1,15 +1,9 @@
 <DemoItem label={'"hours", "minutes" and "seconds"'}>
-  <TimeClock
-    defaultValue={dayjs('2022-04-07T15:30:25')}
-    views={['hours', 'minutes', 'seconds']}
-  />
+  <TimeClock views={['hours', 'minutes', 'seconds']} />
 </DemoItem>
 <DemoItem label={'"hours"'}>
-  <TimeClock defaultValue={dayjs('2022-04-07T15:30:25')} views={['hours']} />
+  <TimeClock views={['hours']} />
 </DemoItem>
 <DemoItem label={'"minutes" and "seconds"'}>
-  <TimeClock
-    defaultValue={dayjs('2022-04-07T15:30:25')}
-    views={['minutes', 'seconds']}
-  />
+  <TimeClock views={['minutes', 'seconds']} />
 </DemoItem>

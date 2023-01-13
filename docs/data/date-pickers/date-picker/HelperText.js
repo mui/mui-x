@@ -9,7 +9,7 @@ export default function HelperText() {
       <NextDatePicker
         label="Helper text example"
         componentsProps={{
-          input: {
+          textField: {
             helperText: 'MM / DD / YYYY',
           },
         }}

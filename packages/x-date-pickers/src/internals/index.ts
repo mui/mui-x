@@ -90,7 +90,6 @@ export type {
   PickersSlotsComponentsProps,
 } from './components/wrappers/WrapperProps';
 export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
-export type { WrapperVariant } from './components/wrappers/WrapperVariantContext';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
@@ -173,12 +172,15 @@ export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
 export type { DateOrTimeView, DateView, TimeView } from './models/views';
+export type { WrapperVariant } from './models/common';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';
 export { executeInTheNextEventLoopTick, getActiveElement, onSpaceOrEnter } from './utils/utils';
 export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';
+export { uncapitalizeObjectKeys } from './utils/slots-migration';
+export type { UncapitalizeObjectKeys, SlotsAndSlotsProps } from './utils/slots-migration';
 
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
 export type {
@@ -195,5 +197,5 @@ export type {
   ExportedDayCalendarProps,
 } from '../DateCalendar/DayCalendar';
 
-export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar';
+export type { ExportedDateCalendarProps } from '../DateCalendar/DateCalendar.types';
 export { useCalendarState } from '../DateCalendar/useCalendarState';

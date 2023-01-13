@@ -121,8 +121,10 @@ async function prepend(file, string) {
 }
 
 async function addLicense(packageData) {
-  const license = `/** @license MUI X v${packageData.version}
+  const license = `/**
+ * ${packageData.name} v${packageData.version}
  *
+ * @license ${packageData.license === 'MIT' ? 'MIT' : 'MUI X Commercial'}
  * This source code is licensed under the ${
    packageData.license === 'MIT' ? 'MIT' : 'commercial'
  } license found in the

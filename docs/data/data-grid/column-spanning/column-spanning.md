@@ -15,7 +15,7 @@ interface GridColDef {
    * Number of columns a cell should span.
    * @default 1
    */
-  colSpan?: number | ((params: GridCellParams<V, R, F>) => number | undefined);
+  colSpan?: number | ((params: GridCellParams<R, V, F>) => number | undefined);
   …
 }
 ```
@@ -51,7 +51,7 @@ The function receives [`GridCellParams`](/x/api/data-grid/grid-cell-params/) as 
 
 ```ts
 interface GridColDef {
-  colSpan?: (params: GridCellParams<V, R, F>) => number | undefined;
+  colSpan?: (params: GridCellParams<R, V, F>) => number | undefined;
 }
 ```
 

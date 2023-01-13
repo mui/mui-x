@@ -79,7 +79,7 @@ import {
   PickersLayoutContentWrapper,
 } from '@mui/x-date-pickers/PickersLayout';
 
-const MyCustomLayout = (props) => {
+function MyCustomLayout(props) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   // Put the action bar before the content
@@ -93,7 +93,7 @@ const MyCustomLayout = (props) => {
       </PickersLayoutContentWrapper>
     </PickersLayoutRoot>
   );
-};
+}
 ```
 
 :::info

@@ -1,7 +1,6 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
-import Portal from '@mui/material/Portal';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -53,7 +52,7 @@ describe('<DataGrid /> - Keyboard', () => {
           rowsPerPageOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
-          headerHeight={HEADER_HEIGHT}
+          columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
           experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
@@ -481,7 +480,7 @@ describe('<DataGrid /> - Keyboard', () => {
             rowsPerPageOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
-            headerHeight={HEADER_HEIGHT}
+            columnHeaderHeight={HEADER_HEIGHT}
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}
@@ -614,35 +613,6 @@ describe('<DataGrid /> - Keyboard', () => {
       // column with field "price3M"
       expectAriaCoordinate(document.activeElement, { rowIndex: 3, colIndex: 5 });
     });
-  });
-
-  it('should ignore events coming from a portal inside the cell', () => {
-    const handleCellKeyDown = spy();
-    render(
-      <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          rows={[{ id: 1, name: 'John' }]}
-          onCellKeyDown={handleCellKeyDown}
-          columns={[
-            { field: 'id' },
-            {
-              field: 'name',
-              renderCell: () => (
-                <Portal>
-                  <input type="text" name="custom-input" />
-                </Portal>
-              ),
-            },
-          ]}
-        />
-      </div>,
-    );
-    userEvent.mousePress(getCell(0, 1));
-    expect(handleCellKeyDown.callCount).to.equal(0);
-    const input = document.querySelector<HTMLInputElement>('input[name="custom-input"]')!;
-    input.focus();
-    fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(handleCellKeyDown.callCount).to.equal(0);
   });
 
   it('should call preventDefault when using keyboard navigation', () => {

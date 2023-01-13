@@ -38,8 +38,8 @@ export const useMobileRangePicker = <
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    components,
-    componentsProps = {},
+    slots,
+    slotsProps,
     className,
     format,
     readOnly,
@@ -87,13 +87,13 @@ export const useMobileRangePicker = <
     onRangePositionChange: setRangePosition,
   });
 
-  const Field = components.Field;
+  const Field = slots.field;
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps.field,
+    externalSlotProps: slotsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly: readOnly ?? true,
@@ -105,20 +105,17 @@ export const useMobileRangePicker = <
     ownerState: props,
   });
 
-  const componentsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
+  const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
+    textField: slots.textField,
+    ...fieldProps.slots,
   };
 
-  const componentsPropsForField: BaseMultiInputFieldProps<
-    DateRange<TDate>,
-    unknown
-  >['componentsProps'] = {
-    ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps.input, ownerState);
+  const slotsPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotsProps'] = {
+    ...fieldProps.slotsProps,
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(slotsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.slotsProps?.textField,
         ownerState,
       );
       const inputPropsPassedByPicker =
@@ -135,11 +132,8 @@ export const useMobileRangePicker = <
       };
     },
     root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(componentsProps.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.root,
-        ownerState,
-      );
+      const externalRootProps = resolveComponentProps(slotsProps?.fieldRoot, ownerState);
+      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotsProps?.root, ownerState);
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
@@ -147,12 +141,9 @@ export const useMobileRangePicker = <
       };
     },
     separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(
-        componentsProps.fieldSeparator,
-        ownerState,
-      );
+      const externalSeparatorProps = resolveComponentProps(slotsProps?.fieldSeparator, ownerState);
       const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.separator,
+        fieldProps.slotsProps?.separator,
         ownerState,
       );
       return {
@@ -163,42 +154,39 @@ export const useMobileRangePicker = <
     },
   };
 
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...componentsProps,
+  const slotsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...slotsProps,
     toolbar: {
-      ...componentsProps?.toolbar,
+      ...slotsProps?.toolbar,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
-  const Layout = components?.Layout ?? PickersLayout;
+
+  const Layout = slots?.layout ?? PickersLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
-        <Field
-          {...fieldProps}
-          components={componentsForField}
-          componentsProps={componentsPropsForField}
-        />
+        <Field {...fieldProps} slots={slotsForField} slotsProps={slotsPropsForField} />
         <PickersModalDialog
           {...actions}
           open={open}
-          components={{
-            ...components,
+          slots={{
+            ...slots,
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
-            ActionBar: () => null,
+            actionBar: () => null,
           }}
-          componentsProps={{
-            ...componentsProps,
+          slotsProps={{
+            ...slotsProps,
             actionBar: undefined,
           }}
         >
           <Layout
             {...layoutProps}
-            {...componentsProps?.layout}
-            components={components}
-            componentsProps={componentsPropsForLayout}
+            {...slotsProps?.layout}
+            slots={slots}
+            slotsProps={slotsPropsForLayout}
           >
             {renderCurrentView()}
           </Layout>

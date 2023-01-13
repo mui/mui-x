@@ -2,13 +2,13 @@
 product: date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
-githubLabel: 'component: pickers'
+githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
 # Date Calendar
 
-<p class="description">The Date Calendar lets the user select a date without any input or popper / modal.</p>
+<p class="description">The Date Calendar component lets the user select a date without any input or popper / modal.</p>
 
 ## Basic usage
 

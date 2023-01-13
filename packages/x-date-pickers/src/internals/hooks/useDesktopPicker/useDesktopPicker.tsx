@@ -30,16 +30,7 @@ export const useDesktopPicker = <
   getOpenDialogAriaText,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const {
-    components,
-    componentsProps,
-    className,
-    format,
-    readOnly,
-    disabled,
-    autoFocus,
-    localeText,
-  } = props;
+  const { slots, slotsProps, className, format, readOnly, disabled, autoFocus, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -62,10 +53,10 @@ export const useDesktopPicker = <
     wrapperVariant: 'desktop',
   });
 
-  const Field = components.Field;
+  const Field = slots.field;
   const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps?.field,
+    externalSlotProps: slotsProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly,
@@ -77,20 +68,20 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
-  const InputAdornment = components.InputAdornment ?? MuiInputAdornment;
+  const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const inputAdornmentProps = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: componentsProps?.inputAdornment,
+    externalSlotProps: slotsProps?.inputAdornment,
     additionalProps: {
       position: 'end' as const,
     },
     ownerState: props,
   });
 
-  const OpenPickerButton = components.OpenPickerButton ?? IconButton;
+  const OpenPickerButton = slots.openPickerButton ?? IconButton;
   const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
     elementType: OpenPickerButton,
-    externalSlotProps: componentsProps?.openPickerButton,
+    externalSlotProps: slotsProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
       onClick: actions.onOpen,
@@ -100,19 +91,19 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
-  const OpenPickerIcon = components.OpenPickerIcon;
+  const OpenPickerIcon = slots.openPickerIcon;
 
-  const componentsForField: BaseFieldProps<TDate | null, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
+  const slotsForField: BaseFieldProps<TDate | null, unknown>['slots'] = {
+    textField: slots.textField,
+    ...fieldProps.slots,
   };
 
-  const componentsPropsForField: BaseFieldProps<TDate | null, unknown>['componentsProps'] = {
-    ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
+  const slotsPropsForField: BaseFieldProps<TDate | null, unknown>['slotsProps'] = {
+    ...fieldProps.slotsProps,
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(slotsProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.slotsProps?.textField,
         ownerState,
       );
 
@@ -123,7 +114,7 @@ export const useDesktopPicker = <
           [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
-                <OpenPickerIcon {...componentsProps?.openPickerIcon} />
+                <OpenPickerIcon {...slotsProps?.openPickerIcon} />
               </OpenPickerButton>
             </InputAdornment>
           ) : undefined,
@@ -134,7 +125,7 @@ export const useDesktopPicker = <
     },
   };
 
-  const Layout = components?.Layout ?? PickersLayout;
+  const Layout = slots.layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
@@ -143,8 +134,8 @@ export const useDesktopPicker = <
       <WrapperVariantContext.Provider value="desktop">
         <Field
           {...fieldProps}
-          components={componentsForField}
-          componentsProps={componentsPropsForField}
+          slots={slotsForField}
+          slotsProps={slotsPropsForField}
           inputRef={handleInputRef}
         />
         <PickersPopper
@@ -152,23 +143,18 @@ export const useDesktopPicker = <
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          components={{
-            ...components,
+          slots={{
+            ...slots,
             // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
-            ActionBar: () => null,
+            actionBar: () => null,
           }}
-          componentsProps={{
-            ...componentsProps,
+          slotsProps={{
+            ...slotsProps,
             actionBar: undefined,
           }}
           shouldRestoreFocus={shouldRestoreFocus}
         >
-          <Layout
-            {...layoutProps}
-            {...componentsProps?.layout}
-            components={components}
-            componentsProps={componentsProps}
-          >
+          <Layout {...layoutProps} {...slotsProps?.layout} slots={slots} slotsProps={slotsProps}>
             {renderCurrentView()}
           </Layout>
         </PickersPopper>

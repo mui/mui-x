@@ -146,12 +146,6 @@
     "supportsApiRef": true
   },
   {
-    "name": "gridEditRowsStateSelector",
-    "returnType": "GridEditRowsModel",
-    "description": "",
-    "supportsApiRef": false
-  },
-  {
     "name": "gridFilterModelSelector",
     "returnType": "GridFilterModel",
     "category": "Filtering",

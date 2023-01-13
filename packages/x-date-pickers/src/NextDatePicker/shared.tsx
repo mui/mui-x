@@ -5,7 +5,7 @@ import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
-} from '../DateCalendar/DateCalendar';
+} from '../DateCalendar/DateCalendar.types';
 import { useDefaultDates, useUtils } from '../internals/hooks/useUtils';
 import {
   applyDefaultViewProps,
@@ -15,7 +15,12 @@ import {
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
-import { BaseDateValidationProps, DateView, MuiPickersAdapter } from '../internals';
+import {
+  BaseDateValidationProps,
+  DateView,
+  MuiPickersAdapter,
+  UncapitalizeObjectKeys,
+} from '../internals';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
 import {
   DatePickerToolbar,
@@ -24,6 +29,7 @@ import {
 } from '../DatePicker/DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextDatePickerSlotsComponent<TDate> extends DateCalendarSlotsComponent<TDate> {
   /**
@@ -44,13 +50,25 @@ export interface BaseNextDatePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: BaseNextDatePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotsProps`.
    */
   componentsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<BaseNextDatePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -66,7 +84,10 @@ type UseNextDatePickerDefaultizedProps<
   Props extends BaseNextDatePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseDateValidationProps<TDate>>,
+    'components' | 'componentsProps'
+  >
 >;
 
 export const getDatePickerFieldFormat = (
@@ -107,6 +128,7 @@ export function useNextDatePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   return {
     ...themeProps,
     localeText,
@@ -120,6 +142,7 @@ export function useNextDatePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    components: { Toolbar: DatePickerToolbar, ...themeProps.components },
+    slots: { toolbar: DatePickerToolbar, ...slots },
+    slotsProps: themeProps.slotsProps ?? themeProps.componentsProps,
   };
 }

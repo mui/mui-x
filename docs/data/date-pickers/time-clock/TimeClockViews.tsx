@@ -1,6 +1,5 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
@@ -10,19 +9,13 @@ export default function TimeClockViews() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label={'"hours", "minutes" and "seconds"'}>
-          <TimeClock
-            defaultValue={dayjs('2022-04-07T15:30:25')}
-            views={['hours', 'minutes', 'seconds']}
-          />
+          <TimeClock views={['hours', 'minutes', 'seconds']} />
         </DemoItem>
         <DemoItem label={'"hours"'}>
-          <TimeClock defaultValue={dayjs('2022-04-07T15:30:25')} views={['hours']} />
+          <TimeClock views={['hours']} />
         </DemoItem>
         <DemoItem label={'"minutes" and "seconds"'}>
-          <TimeClock
-            defaultValue={dayjs('2022-04-07T15:30:25')}
-            views={['minutes', 'seconds']}
-          />
+          <TimeClock views={['minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

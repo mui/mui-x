@@ -6,7 +6,7 @@ import {
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
   ExportedDateCalendarProps,
-} from '../DateCalendar/DateCalendar';
+} from '../DateCalendar/DateCalendar.types';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { ValidationCommonProps } from '../internals/hooks/validation/useValidation';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';

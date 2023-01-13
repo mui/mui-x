@@ -1,0 +1,7 @@
+<MobileNextTimePicker label={'"minutes"'} openTo="minutes" />
+<MobileNextTimePicker
+  label={'"seconds"'}
+  openTo="seconds"
+  views={['minutes', 'seconds']}
+  format="mm:ss"
+/>

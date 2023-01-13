@@ -117,9 +117,7 @@ export const useGridColumnGrouping = (
 
   useGridApiMethod(apiRef, columnGroupingApi, 'public');
 
-  const handleColumnReorderChange = React.useCallback<
-    GridEventListener<'columnOrderChange'>
-  >(() => {
+  const handleColumnIndexChange = React.useCallback<GridEventListener<'columnIndexChange'>>(() => {
     const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
 
     apiRef.current.setState((state) => {
@@ -139,7 +137,7 @@ export const useGridColumnGrouping = (
     });
   }, [apiRef, props.columnGroupingModel]);
 
-  useGridApiEventHandler(apiRef, 'columnOrderChange', handleColumnReorderChange);
+  useGridApiEventHandler(apiRef, 'columnIndexChange', handleColumnIndexChange);
 
   const columnFields = useGridSelector(apiRef, gridColumnFieldsSelector);
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);

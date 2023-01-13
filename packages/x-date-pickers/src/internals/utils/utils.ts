@@ -46,3 +46,5 @@ export const getActiveElement = (root: Document | ShadowRoot = document): Elemen
 
   return activeEl;
 };
+
+export const DEFAULT_DESKTOP_MODE_MEDIA_QUERY = '@media (pointer: fine)';

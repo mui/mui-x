@@ -17,7 +17,7 @@ They might receive breaking changes on their props to have the best components p
 
 ## Introduction
 
-The fields are React components that let you enter a date or time with the keyboard, without using any modal or dropdown UI.
+The fields are React components that let you enter a date or time with the keyboard, without using any popover or modal UI.
 They provide refined navigation through arrow keys and support advanced behaviors like localization and validation.
 
 :::warning
