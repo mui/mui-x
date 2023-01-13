@@ -118,10 +118,10 @@ export default function ServerRequestDatePicker() {
         onMonthChange={handleMonthChange}
         renderInput={(params) => <TextField {...params} />}
         renderLoading={() => <DayCalendarSkeleton />}
-        components={{
-          Day: ServerDay,
+        slots={{
+          day: ServerDay,
         }}
-        componentsProps={{
+        slotProps={{
           day: {
             highlightedDays,
           },

@@ -79,8 +79,8 @@ export default function CustomDay() {
         onChange={(newValue) => {
           setValue(newValue);
         }}
-        components={{ Day }}
-        componentsProps={{
+        slots={{ day: Day }}
+        slotProps={{
           day: {
             selectedDay: value,
           },

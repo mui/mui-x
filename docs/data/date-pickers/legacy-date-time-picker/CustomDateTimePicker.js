@@ -25,10 +25,10 @@ export default function CustomDateTimePicker() {
           onChange={(newValue) => {
             setDateWithInitialValue(newValue);
           }}
-          components={{
-            LeftArrowIcon: AlarmIcon,
-            RightArrowIcon: SnoozeIcon,
-            OpenPickerIcon: ClockIcon,
+          slots={{
+            leftArrowIcon: AlarmIcon,
+            rightArrowIcon: SnoozeIcon,
+            openPickerIcon: ClockIcon,
           }}
           renderInput={(params) => (
             <TextField {...params} helperText="Hardcoded helper text" />
