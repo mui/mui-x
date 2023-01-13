@@ -62,7 +62,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix Tab between portaled and non-portaled edit components (#7098) @m4theushw
+- [DataGrid] Fix <kbd>Tab</kbd> between portaled and non-portaled edit components (#7098) @m4theushw
 - [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
 - [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
 - [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
@@ -134,7 +134,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
 - [pickers] Remove `WrapperVariantContext` from `DateTimePickerTabs` (#7374) @LukasTy
 - [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
-- [pickers] Support components and slots for new pickers (#7390) @alexfauquette
+- [pickers] Support `components` and `slots` for new pickers (#7390) @alexfauquette
 
 ### Docs
 
@@ -148,7 +148,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
-- [core] Move default closeOnSelect to prop definition (#7459) @flaviendelangle
+- [core] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - [test] Add a few inheritComponent (#7352) @oliviertassinari
