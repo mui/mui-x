@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 🚀 Support components and slots for new pickers (#7390) @alexfauquette
 - ✨ Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
-- 🌍 Improve Spanish (es-ES) andBelarusian (be-BY) locales
+- 🌍 Improve Spanish (es-ES) and Belarusian (be-BY) locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### Breaking changes
 
-- [DataGrid] Remove the `onCellFocusOut` prop (#6302) @cherniavskii
+- Remove the `onCellFocusOut` prop (#6302) @cherniavskii
 
   The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
 
@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
 
-  The `headerHeight` prop was renamed to `columnHeaderHeight`
+  The `headerHeight` prop was renamed to `columnHeaderHeight`.
 
 - [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
 
@@ -62,7 +62,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Remove `Alt+C` keyboard shortcut (#7466) @MBilalShafi
 
-  `Alt`(or `⌥ Option`) + `C` keyboard shortcut is no longer supported.
+  <kbd>Alt</kbd> (or <kbd>⌥ Option</kbd>) + <kbd>C</kbd> keyboard shortcut is no longer supported.
 
 #### Changes
 
@@ -115,7 +115,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
 
-  `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+  The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
 
   ```diff
   <DateTimePicker
