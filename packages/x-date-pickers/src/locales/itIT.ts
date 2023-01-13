@@ -20,7 +20,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `la vista del campo di testo è aperta, passare alla vista ${viewType}` : `la vista aperta è: ${viewType}, vai alla vista del campo di testo`,
 
   // DateRange placeholders
   start: 'Inizio',
@@ -33,10 +33,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Oggi',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: 'Seleziona data',
+  dateTimePickerDefaultToolbarTitle: 'Seleziona data e orario',
+  timePickerDefaultToolbarTitle: 'Seleziona orario',
+  dateRangePickerDefaultToolbarTitle: 'Seleziona intervallo di date',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
