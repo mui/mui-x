@@ -59,7 +59,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     components,
     componentsProps,
     slots: innerSlots,
-    slotProps: innerSlotsProps,
+    slotProps: innerSlotProps,
     // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
     // The true type should be
     // - For pickers value: TDate | null
@@ -67,7 +67,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
   } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
 
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
