@@ -38,8 +38,6 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots;
-  const slotProps = defaultizedProps.slotProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
@@ -49,12 +47,12 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
-      ...slots,
+      ...defaultizedProps.slots,
     },
     slotProps: {
-      ...slotProps,
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -63,6 +61,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.tabs,
+      },
     },
   };
 

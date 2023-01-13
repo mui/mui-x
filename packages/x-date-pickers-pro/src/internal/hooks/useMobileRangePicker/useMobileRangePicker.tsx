@@ -37,16 +37,8 @@ export const useMobileRangePicker = <
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const {
-    slots,
-    slotProps,
-    className,
-    format,
-    readOnly,
-    disabled,
-    disableOpenPicker,
-    localeText,
-  } = props;
+  const { slots, slotProps, className, format, readOnly, disabled, disableOpenPicker, localeText } =
+    props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
