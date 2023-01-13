@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 13, 2023_
 
-We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Support components and slots for new pickers (#7390) @alexfauquette
 - ✨ Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
@@ -60,6 +60,10 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
   The `.MuiDataGrid-filterFormLinkOperatorInput`CSS class was renamed to `.MuiDataGrid-filterFormLogicOperatorInput`.
 
+- [DataGrid] Remove `Alt+C` keyboard shortcut (#7466) @MBilalShafi
+
+  `Alt`(or `⌥ Option`) + `C` keyboard shortcut is no longer supported.
+
 #### Changes
 
 - [DataGrid] Fix <kbd>Tab</kbd> between portaled and non-portaled edit components (#7098) @m4theushw
@@ -71,6 +75,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [DataGrid] Store the outlined cell in the state (#7111) @m4theushw
 - [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
 - [DataGrid] Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
+- [DataGrid] Remove Alt+C keyboard shortcut (#7466) @MBilalShafi
 - [DataGridPremium] Fix Excel export not working with date strings (#7396) @cherniavskii
 
 ### `@mui/x-date-pickers@6.0.0-alpha.15` / `@mui/x-date-pickers-pro@6.0.0-alpha.15`
@@ -135,6 +140,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [pickers] Remove `WrapperVariantContext` from `DateTimePickerTabs` (#7374) @LukasTy
 - [pickers] Stop using the `WrapperVariantContext` in `MonthCalendar` and `YearCalendar` (#7382) @flaviendelangle
 - [pickers] Support `components` and `slots` for new pickers (#7390) @alexfauquette
+- [pickers] Replace `slotsProps` by `slotProps` (#7528) @alexfauquette
 
 ### Docs
 
