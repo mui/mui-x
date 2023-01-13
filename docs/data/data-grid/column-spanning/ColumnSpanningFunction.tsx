@@ -9,7 +9,6 @@ const items = [
 ];
 
 type Item = typeof items[number];
-
 interface SubtotalHeader {
   id: 'SUBTOTAL';
   label: string;
