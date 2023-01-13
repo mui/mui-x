@@ -30,11 +30,11 @@ export interface DateRangePickerSlotsComponentsProps<TDate>
 export interface DateRangePickerProps<TDate>
   extends Omit<
       DesktopDateRangePickerProps<TDate>,
-      'components' | 'componentsProps' | 'slots' | 'slotsProps'
+      'components' | 'componentsProps' | 'slots' | 'slotProps'
     >,
     Omit<
       MobileDateRangePickerProps<TDate>,
-      'components' | 'componentsProps' | 'slots' | 'slotsProps'
+      'components' | 'componentsProps' | 'slots' | 'slotProps'
     > {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.

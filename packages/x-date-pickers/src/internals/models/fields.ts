@@ -19,7 +19,7 @@ export interface BaseFieldProps<TValue, TError>
     TextField?: React.ElementType<TextFieldProps>;
   };
   /**
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: {
     textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
@@ -27,7 +27,7 @@ export interface BaseFieldProps<TValue, TError>
   slots?: {
     textField?: React.ElementType<TextFieldProps>;
   };
-  slotsProps?: {
+  slotProps?: {
     textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   };
 }

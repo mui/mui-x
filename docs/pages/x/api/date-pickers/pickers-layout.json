@@ -10,13 +10,13 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" }
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },

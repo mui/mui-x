@@ -35,16 +35,16 @@ type BaseMultiInputFieldSlotsComponentsProps = {
 export interface BaseMultiInputFieldProps<TValue, TError>
   extends Omit<
     BaseFieldProps<TValue, TError>,
-    'components' | 'componentsProps' | 'slots' | 'slotsProps'
+    'components' | 'componentsProps' | 'slots' | 'slotProps'
   > {
   /**
    * @deprecated Please use `slots`.
    */
   components?: BaseMultiInputFieldSlotsComponent;
   /**
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseMultiInputFieldSlotsComponentsProps;
   slots?: UncapitalizeObjectKeys<BaseMultiInputFieldSlotsComponent>;
-  slotsProps?: BaseMultiInputFieldSlotsComponentsProps;
+  slotProps?: BaseMultiInputFieldSlotsComponentsProps;
 }

@@ -29,7 +29,7 @@ export const useMobilePicker = <
   getOpenDialogAriaText,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
-  const { slots, slotsProps, className, format, readOnly, disabled, localeText } = props;
+  const { slots, slotProps, className, format, readOnly, disabled, localeText } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -53,7 +53,7 @@ export const useMobilePicker = <
   const Field = slots.field;
   const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
-    externalSlotProps: slotsProps?.field,
+    externalSlotProps: slotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly: readOnly ?? true,
@@ -69,12 +69,12 @@ export const useMobilePicker = <
     ...fieldProps.slots,
   };
 
-  const slotsPropsForField: BaseFieldProps<TDate, unknown>['slotsProps'] = {
-    ...fieldProps.slotsProps,
+  const slotPropsForField: BaseFieldProps<TDate, unknown>['slotProps'] = {
+    ...fieldProps.slotProps,
     textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(slotsProps?.textField, ownerState);
+      const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotsProps?.textField,
+        fieldProps.slotProps?.textField,
         ownerState,
       );
 
@@ -105,7 +105,7 @@ export const useMobilePicker = <
         <Field
           {...fieldProps}
           slots={slotsForField}
-          slotsProps={slotsPropsForField}
+          slotProps={slotPropsForField}
           inputRef={handleInputRef}
         />
         <PickersModalDialog
@@ -116,12 +116,12 @@ export const useMobilePicker = <
             // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
             actionBar: () => null,
           }}
-          slotsProps={{
-            ...slotsProps,
+          slotProps={{
+            ...slotProps,
             actionBar: undefined,
           }}
         >
-          <Layout {...layoutProps} {...slotsProps?.layout} slots={slots} slotsProps={slotsProps}>
+          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
           </Layout>
         </PickersModalDialog>
