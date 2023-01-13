@@ -11,7 +11,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - 🚀 Support components and slots for new pickers (#7390) @alexfauquette
 - ✨ Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
-- 🌍 Improve Spanish (es-ES) andBelarusian (be-BY) locales
+- 🌍 Improve Spanish (es-ES) and Belarusian (be-BY) locales
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
