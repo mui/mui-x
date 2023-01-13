@@ -72,7 +72,6 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
 - [DataGrid] Rework column headers and virtual scroller positioning (#7001) @cherniavskii
 - [DataGrid] Stop exporting editing selector (#7456) @m4theushw
-- [DataGrid] Store the outlined cell in the state (#7111) @m4theushw
 - [DataGrid] Update `onColumnOrderChange` behavior to match `onRowsOrderChange` (#7385) @DanailH
 - [DataGrid] Improve Spanish (es-ES) locale (from @Anderssxn) (#7447) @alexfauquette
 - [DataGrid] Remove Alt+C keyboard shortcut (#7466) @MBilalShafi
