@@ -47,7 +47,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [DataGrid] Remove the `columnTypes` prop (#7309) @cherniavskii
 
-  The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
+  The `columnTypes` prop was removed. For custom column types see [Custom column types](https://mui.com/x/react-data-grid/column-definition/#custom-column-types) docs.
 
 - [DataGrid] Rename `linkOperators` to `logicOperators` (#7310) @cherniavskii
 
