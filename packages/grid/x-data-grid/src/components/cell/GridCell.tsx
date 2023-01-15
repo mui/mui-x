@@ -175,13 +175,23 @@ function GridCell(props: GridCellProps) {
     [apiRef, field, rowId],
   );
 
-  const style = {
-    minWidth: width,
-    maxWidth: width,
-    minHeight: height,
-    maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
-  };
-
+  const style = React.useMemo(() => {
+    const styles = {
+      minWidth: width,
+      maxWidth: width,
+      minHeight: height,
+      maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
+    };
+    //
+    if (width === 0) {
+      return {
+        ...styles,
+        padding: 0,
+        opacity: 0,
+      };
+    }
+    return styles;
+  }, [width, height]);
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;

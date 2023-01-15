@@ -33,6 +33,7 @@ import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRows
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
 import { GridCellProps } from './cell/GridCell';
+import { gridFocusCellSelector } from '../hooks';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -54,6 +55,8 @@ export interface GridRowProps {
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;
+  isColumnWithFocusedCellRendered?: boolean;
+  visible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
@@ -116,6 +119,8 @@ const GridRow = React.forwardRef<
     cellTabIndex,
     editRowsState,
     isLastVisible = false,
+    isColumnWithFocusedCellRendered = false,
+    visible = true,
     onClick,
     onDoubleClick,
     onMouseEnter,
@@ -389,6 +394,7 @@ const GridRow = React.forwardRef<
   );
 
   const sizes = apiRef.current.unstable_getRowInternalSizes(rowId);
+  const focusedCell = gridFocusCellSelector(apiRef);
 
   let minHeight = rowHeight;
   if (minHeight === 'auto' && sizes) {
@@ -412,10 +418,16 @@ const GridRow = React.forwardRef<
 
   const style = {
     ...styleProp,
+
     maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
     minHeight,
   };
 
+  if (!visible) {
+    style.opacity = 0;
+
+    style.width = 0;
+  }
   if (sizes?.spacingTop) {
     const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
     style[property] = sizes.spacingTop;
@@ -450,12 +462,11 @@ const GridRow = React.forwardRef<
   const rowType = apiRef.current.getRowNode(rowId)!.type;
   const cells: JSX.Element[] = [];
 
-  const isAdditionalColumnAdded = renderedColumns.length < lastColumnToRender - firstColumnToRender;
   for (let i = 0; i < renderedColumns.length; i += 1) {
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = isAdditionalColumnAdded
+    const isLastColumn = isColumnWithFocusedCellRendered
       ? indexRelativeToAllColumns === visibleColumns.length
       : indexRelativeToAllColumns === visibleColumns.length - 1;
     const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
@@ -469,9 +480,19 @@ const GridRow = React.forwardRef<
     );
 
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
+      const cellWidth =
+        focusedCell && isColumnWithFocusedCellRendered && focusedCell.field === column.field
+          ? 0
+          : null;
+
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-        const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
+        const cellProps = {
+          width: cellWidth != null ? cellWidth : width,
+          colSpan,
+          showRightBorder,
+          indexRelativeToAllColumns,
+        };
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;
