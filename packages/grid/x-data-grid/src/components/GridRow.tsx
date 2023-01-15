@@ -414,7 +414,6 @@ const GridRow = React.forwardRef<
 
   const style = {
     ...styleProp,
-
     maxHeight: rowHeight === 'auto' ? 'none' : rowHeight, // max-height doesn't support "auto"
     minHeight,
   };
@@ -544,6 +543,7 @@ GridRow.propTypes = {
    * If some rows above have expanded children, this index also take those children into account.
    */
   index: PropTypes.number.isRequired,
+  isColumnWithFocusedCellRendered: PropTypes.bool,
   isLastVisible: PropTypes.bool,
   lastColumnToRender: PropTypes.number.isRequired,
   position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
@@ -552,6 +552,7 @@ GridRow.propTypes = {
   rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   selected: PropTypes.bool.isRequired,
+  visible: PropTypes.bool,
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
