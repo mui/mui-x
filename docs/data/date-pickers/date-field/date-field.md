@@ -10,11 +10,6 @@ packageName: '@mui/x-date-pickers'
 
 <p class="description">The Date Field component let the user select a date with the keyboard.</p>
 
-:::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
-:::
-
 ## Basic usage
 
 {{"demo": "BasicDateField.js"}}

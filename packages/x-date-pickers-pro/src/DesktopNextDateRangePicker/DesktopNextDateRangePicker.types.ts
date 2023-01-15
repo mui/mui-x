@@ -35,7 +35,7 @@ export interface DesktopNextDateRangePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
@@ -47,5 +47,5 @@ export interface DesktopNextDateRangePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
 }

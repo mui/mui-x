@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, expectInputValue, adapterToUse } from 'test/utils/pickers-utils';
+import { DateField } from '@mui/x-date-pickers/DateField';
 
 describe('<DateField /> - Format', () => {
   const { render } = createPickerRenderer();

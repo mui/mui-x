@@ -138,10 +138,6 @@ const GridRow = React.forwardRef<
   const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const ownerState = {
     selected,
@@ -466,6 +462,7 @@ const GridRow = React.forwardRef<
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
+
     const isLastColumn = isColumnWithFocusedCellRendered
       ? indexRelativeToAllColumns === visibleColumns.length
       : indexRelativeToAllColumns === visibleColumns.length - 1;
@@ -473,6 +470,7 @@ const GridRow = React.forwardRef<
     const showRightBorder = !isLastColumn
       ? rootProps.showCellVerticalBorder
       : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
+
 
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
