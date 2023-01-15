@@ -508,15 +508,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     // depending on whether it is above or below the range.
     const isAllColumnRendered =
       maxLastColumn - minFirstColumn === lastColumnToRender - firstColumnToRender;
+
     if (cell && !disableVirtualization && !isAllColumnRendered) {
       const selectedColumns = visibleColumns.filter((column) => column.field === cell.field);
       if (selectedColumns.length > 0) {
         const focusedColumn = selectedColumns[0];
         const focusedColumnIndex = visibleColumns.indexOf(focusedColumn);
-
-        if (firstColumnToRender > focusedColumnIndex) {
+        if (firstColumnToRender > focusedColumnIndex && focusedColumnIndex >= minFirstColumn) {
           renderedColumns.unshift(focusedColumn);
-        } else if (lastColumnToRender < focusedColumnIndex) {
+        } else if (lastColumnToRender < focusedColumnIndex && focusedColumnIndex < maxLastColumn) {
           renderedColumns.push(focusedColumn);
         }
       }
