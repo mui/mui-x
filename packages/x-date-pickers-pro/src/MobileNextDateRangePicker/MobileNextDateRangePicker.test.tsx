@@ -180,7 +180,7 @@ describe('<MobileNextDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
-          slotsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
 
@@ -245,7 +245,7 @@ describe('<MobileNextDateRangePicker />', () => {
           onAccept={onAccept}
           onClose={onClose}
           defaultValue={defaultValue}
-          slotsProps={{ actionBar: { actions: ['clear'] } }}
+          slotProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 
@@ -270,7 +270,7 @@ describe('<MobileNextDateRangePicker />', () => {
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          slotsProps={{ actionBar: { actions: ['clear'] } }}
+          slotProps={{ actionBar: { actions: ['clear'] } }}
         />,
       );
 

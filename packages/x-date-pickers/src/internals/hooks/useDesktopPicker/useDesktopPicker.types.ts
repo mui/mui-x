@@ -99,7 +99,7 @@ export interface UseDesktopPickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseDesktopPickerParams<

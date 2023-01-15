@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_TimeField as TimeField } from '../TimeField';
+import { TimeField } from '../TimeField';
 import { DesktopNextTimePickerProps } from './DesktopNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { TimeView, useLocaleText, validateTime } from '../internals';
@@ -34,8 +34,6 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     ...defaultizedProps.viewRenderers,
   };
 
-  const slots = defaultizedProps.slots;
-  const slotsProps = defaultizedProps.slotsProps;
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
@@ -44,12 +42,12 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
     slots: {
       field: TimeField,
       openPickerIcon: Clock,
-      ...slots,
+      ...defaultizedProps.slots,
     },
-    slotsProps: {
-      ...slotsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -111,7 +109,7 @@ DesktopNextTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -279,15 +277,15 @@ DesktopNextTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

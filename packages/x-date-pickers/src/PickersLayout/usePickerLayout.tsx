@@ -62,10 +62,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     components,
     componentsProps,
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerslotProps,
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerslotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
@@ -74,7 +74,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: slotsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -94,7 +94,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
-    externalSlotProps: slotsProps?.toolbar,
+    externalSlotProps: slotProps?.toolbar,
     additionalProps: {
       isLandscape,
       onChange,
@@ -124,7 +124,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotsProps?.tabs} /> : null;
+    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
 
   return {
     toolbar,

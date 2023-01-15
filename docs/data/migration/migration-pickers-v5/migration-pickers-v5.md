@@ -120,7 +120,7 @@ import { DateTime } from 'luxon';
 <DatePicker value={DateTime.now()} />;
 ```
 
-### Drop `clock` in desktop mode
+### Stop rendering a clock on desktop
 
 In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
 This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).

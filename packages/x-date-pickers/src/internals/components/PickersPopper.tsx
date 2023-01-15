@@ -82,7 +82,7 @@ export interface PickerPopperProps extends PickerStateWrapperProps {
   components?: PickersPopperSlotsComponent;
   componentsProps?: PickersPopperSlotsComponentsProps;
   slots?: UncapitalizeObjectKeys<PickersPopperSlotsComponent>;
-  slotsProps?: PickersPopperSlotsComponentsProps;
+  slotProps?: PickersPopperSlotsComponentsProps;
   classes?: Partial<PickersPopperClasses>;
   shouldRestoreFocus?: () => boolean;
 }
@@ -282,10 +282,10 @@ export function PickersPopper(inProps: PickerPopperProps) {
     components,
     componentsProps,
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerslotProps,
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerslotProps ?? componentsProps;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
@@ -346,7 +346,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: slotsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -364,7 +364,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const Paper = slots?.desktopPaper ?? PickersPopperPaper;
   const paperProps: MuiPaperProps = useSlotProps({
     elementType: Paper,
-    externalSlotProps: slotsProps?.desktopPaper,
+    externalSlotProps: slotProps?.desktopPaper,
     additionalProps: {
       tabIndex: -1,
       elevation: 8,
@@ -377,7 +377,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
   const Popper = slots?.popper ?? PickersPopperRoot;
   const popperProps = useSlotProps({
     elementType: Popper,
-    externalSlotProps: slotsProps?.popper,
+    externalSlotProps: slotProps?.popper,
     additionalProps: {
       transition: true,
       role,
@@ -401,9 +401,9 @@ export function PickersPopper(inProps: PickerPopperProps) {
           disableRestoreFocus
           disableEnforceFocus={role === 'tooltip'}
           isEnabled={() => true}
-          {...slotsProps?.desktopTrapFocus}
+          {...slotProps?.desktopTrapFocus}
         >
-          <Transition {...TransitionProps} {...slotsProps?.desktopTransition}>
+          <Transition {...TransitionProps} {...slotProps?.desktopTransition}>
             <Paper
               {...paperProps}
               onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -416,7 +416,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
               }}
               ownerState={{ ...ownerState, placement }}
             >
-              <PaperContent {...slotsProps?.paperContent}>
+              <PaperContent {...slotProps?.paperContent}>
                 {children}
                 <ActionBar {...actionBarProps} />
               </PaperContent>

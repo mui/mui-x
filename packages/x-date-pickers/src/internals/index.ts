@@ -180,7 +180,7 @@ export { defaultReduceAnimations } from './utils/defaultReduceAnimations';
 export { extractValidationProps } from './utils/validation';
 export { buildDeprecatedPropsWarning } from './utils/warning';
 export { uncapitalizeObjectKeys } from './utils/slots-migration';
-export type { UncapitalizeObjectKeys, SlotsAndSlotsProps } from './utils/slots-migration';
+export type { UncapitalizeObjectKeys, SlotsAndSlotProps } from './utils/slots-migration';
 
 export { PickersCalendarHeader } from '../DateCalendar/PickersCalendarHeader';
 export type {
