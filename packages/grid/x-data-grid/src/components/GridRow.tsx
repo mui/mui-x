@@ -462,16 +462,6 @@ const GridRow = React.forwardRef<
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-
-    const isLastColumn = isColumnWithFocusedCellRendered
-      ? indexRelativeToAllColumns === visibleColumns.length
-      : indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-    const showRightBorder = !isLastColumn
-      ? rootProps.showCellVerticalBorder
-      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
-
-
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
       indexRelativeToAllColumns,
@@ -488,7 +478,7 @@ const GridRow = React.forwardRef<
         const cellProps = {
           width: cellWidth != null ? cellWidth : width,
           colSpan,
-          showRightBorder,
+          showRightBorder: rootProps.showCellVerticalBorder,
           indexRelativeToAllColumns,
         };
         cells.push(getCell(column, cellProps));
