@@ -418,7 +418,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
     const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
 
-    let isFocusedCellRendered = false;
+    let isRowWithFocusedCellRendered = false;
     const { cell } = apiRef.current.state.focus;
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
@@ -449,7 +449,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
         if (cell && row.id === cell?.id) {
-          isFocusedCellRendered = true;
+          isRowWithFocusedCellRendered = true;
         }
 
         renderedRows.push(row);
@@ -464,12 +464,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       // If the selected row is not within the current range of rows being displayed,
       // we need to render it at either the top or bottom of the rows,
       // depending on whether it is above or below the range.
-      if (!isFocusedCellRendered && cell && !disableVirtualization) {
+      if (!isRowWithFocusedCellRendered && cell && !disableVirtualization) {
         const rows = currentPage.rows.filter((row) => row.id === cell.id);
         const focusedRow = rows.length > 0 && rows[0];
 
         if (focusedRow) {
           const index = currentPage.rows.indexOf(focusedRow);
+
           if (index > firstRowToRender) {
             renderedRows.push(focusedRow);
           } else {
@@ -508,16 +509,18 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     // depending on whether it is above or below the range.
     const isAllColumnRendered =
       maxLastColumn - minFirstColumn === lastColumnToRender - firstColumnToRender;
-
+    let isColumnWithFocusedCellRendered = false;
     if (cell && !disableVirtualization && !isAllColumnRendered) {
-      const selectedColumns = visibleColumns.filter((column) => column.field === cell.field);
-      if (selectedColumns.length > 0) {
-        const focusedColumn = selectedColumns[0];
-        const focusedColumnIndex = visibleColumns.indexOf(focusedColumn);
+      const focusedColumnIndex = visibleColumns.findIndex((column) => column.field === cell.field);
+      if (focusedColumnIndex > -1) {
+        const focusedColumn = visibleColumns[focusedColumnIndex];
+
         if (firstColumnToRender > focusedColumnIndex && focusedColumnIndex >= minFirstColumn) {
           renderedColumns.unshift(focusedColumn);
+          isColumnWithFocusedCellRendered = true;
         } else if (lastColumnToRender < focusedColumnIndex && focusedColumnIndex < maxLastColumn) {
           renderedColumns.push(focusedColumn);
+          isColumnWithFocusedCellRendered = true;
         }
       }
     }
@@ -526,9 +529,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-
+      const isRowVisible = !isRowWithFocusedCellRendered && cell && cell.id === id;
       const lastVisibleRowIndex =
-        !isFocusedCellRendered && cell
+        !isRowWithFocusedCellRendered && cell
           ? firstRowToRender + i === currentPage.rows.length
           : firstRowToRender + i === currentPage.rows.length - 1;
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
@@ -547,6 +550,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           key={id}
           row={model}
           rowId={id}
+          isColumnWithFocusedCellRendered={isColumnWithFocusedCellRendered}
+          visible={!isRowVisible}
           rowHeight={baseRowHeight}
           cellFocus={cellFocus} // TODO move to inside the row
           cellTabIndex={cellTabIndex} // TODO move to inside the row
