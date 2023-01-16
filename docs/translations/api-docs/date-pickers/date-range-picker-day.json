@@ -22,7 +22,7 @@
     "onFocusVisible": "Callback fired when the component is focused with a keyboard. We trigger a <code>onFocus</code> callback too.",
     "outsideCurrentMonth": "If <code>true</code>, day is outside of month and will be hidden.",
     "selected": "If <code>true</code>, renders as selected.",
-    "showDaysOutsideCurrentMonth": "If <code>true</code>, days outside the current month are rendered: - if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested. - if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month. On range pickers, it will be ignored if more than one month is rendered.",
+    "showDaysOutsideCurrentMonth": "If <code>true</code>, days outside the current month are rendered: - if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested. - if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month. On range pickers, it will be ignored if more than one <code>calendars</code> is rendered.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "today": "If <code>true</code>, renders as today date.",
     "TouchRippleProps": "Props applied to the <code>TouchRipple</code> element.",
