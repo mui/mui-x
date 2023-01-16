@@ -228,9 +228,9 @@ export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileNextDatePicker
-        components={{
-          Layout: LayoutWithKeyboardView,
-          Toolbar: ToolbarWithKeyboardViewSwitch,
+        slots={{
+          layout: LayoutWithKeyboardView,
+          toolbar: ToolbarWithKeyboardViewSwitch,
         }}
       />
     </LocalizationProvider>
