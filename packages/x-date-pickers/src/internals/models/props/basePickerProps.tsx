@@ -33,10 +33,6 @@ export interface BasePickerProps<TValue, TDate> extends PickerStateProps<TValue>
    */
   readOnly?: boolean;
   /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar?: boolean;
-  /**
    * Locale for components texts
    */
   localeText?: PickersInputComponentLocaleText<TDate>;
@@ -61,11 +57,6 @@ export interface BaseNextPickerProps<
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar?: boolean;
   /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.

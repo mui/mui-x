@@ -19,7 +19,11 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       open: true,
       view: 'day',
       reduceAnimations: true,
-      showToolbar: false,
+      ...(componentFamily.includes('legacy-')
+        ? {
+            componentsProps: { toolbar: { hidden: true } },
+          }
+        : { slotProps: { toolbar: { hidden: true } } }),
     };
 
     it('should apply shouldDisableDate', function test() {
