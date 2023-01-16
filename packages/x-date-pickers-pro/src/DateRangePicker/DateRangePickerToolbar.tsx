@@ -96,6 +96,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
 
   return (
     <DateRangePickerToolbarRoot
+      {...other}
       toolbarTitle={localeText.dateRangePickerToolbarTitle}
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
@@ -103,7 +104,6 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
       className={clsx(className, classes.root)}
       ownerState={ownerState}
       ref={ref}
-      {...other}
     >
       <DateRangePickerToolbarContainer className={classes.container}>
         <PickersToolbarButton
