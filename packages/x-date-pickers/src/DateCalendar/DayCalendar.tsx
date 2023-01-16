@@ -27,7 +27,7 @@ import {
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -84,7 +84,7 @@ export interface DayCalendarProps<TDate>
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    SlotsAndSlotsProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -249,7 +249,7 @@ function WrappedDay<TDate extends unknown>({
     components,
     componentsProps,
     slots,
-    slotsProps,
+    slotProps,
   } = parentProps;
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
@@ -260,7 +260,7 @@ function WrappedDay<TDate extends unknown>({
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: slotsProps?.day ?? componentsProps?.day,
+    externalSlotProps: slotProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
       onKeyDown,

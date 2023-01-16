@@ -75,7 +75,7 @@ export interface DateRangePickerViewDesktopProps<TDate>
       | 'components'
       | 'componentsProps'
       | 'slots'
-      | 'slotsProps'
+      | 'slotProps'
     >,
     DayValidationProps<TDate>,
     ExportedPickersArrowSwitcherProps {
@@ -236,7 +236,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
     ...components,
   } as DayCalendarSlotsComponent<TDate>;
 
-  const slotsPropsForDayCalendar = {
+  const slotPropsForDayCalendar = {
     ...componentsProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
@@ -271,7 +271,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               isNextDisabled={isNextMonthDisabled}
               nextLabel={localeText.nextMonth}
               components={components}
-              slotsProps={componentsProps}
+              slotProps={componentsProps}
             >
               {utils.format(monthOnIteration, 'monthAndYear')}
             </DateRangePickerViewDesktopArrowSwitcher>
@@ -288,7 +288,7 @@ export function DateRangePickerViewDesktop<TDate>(inProps: DateRangePickerViewDe
               currentMonth={monthOnIteration}
               TransitionProps={CalendarTransitionProps}
               components={componentsForDayCalendar}
-              slotsProps={slotsPropsForDayCalendar}
+              slotProps={slotPropsForDayCalendar}
             />
           </DateRangePickerViewDesktopContainer>
         );

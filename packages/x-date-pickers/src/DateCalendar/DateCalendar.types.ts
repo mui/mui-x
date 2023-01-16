@@ -21,7 +21,7 @@ import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValu
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView } from '../internals/models/views';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
@@ -84,7 +84,7 @@ export interface ExportedDateCalendarProps<TDate>
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
     ExportedUseViewsOptions<DateView>,
-    SlotsAndSlotsProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
   /**
    * The selected value.
    * Used when the component is controlled.

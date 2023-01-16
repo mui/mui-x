@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
+import { DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import {
@@ -51,10 +51,10 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
       field: DateTimeField,
       ...defaultizedProps.slots,
     },
-    slotsProps: {
-      ...defaultizedProps.slotsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -65,7 +65,7 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
       }),
       tabs: {
         hidden: false,
-        ...defaultizedProps.slotsProps?.tabs,
+        ...defaultizedProps.slotProps?.tabs,
       },
     },
   };
@@ -120,7 +120,7 @@ MobileNextDateTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -394,15 +394,15 @@ MobileNextDateTimePicker.propTypes = {
    */
   showToolbar: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
