@@ -16,7 +16,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前の表示を開く',
   openNextView: '次の表示を開く',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? '年選択表示からカレンダー表示に切り替える'
+      : 'カレンダー表示から年選択表示に切り替える',
 
   // DateRange placeholders
   start: '開始',

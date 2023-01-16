@@ -16,7 +16,10 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Letzte Ansicht öffnen',
   openNextView: 'Nächste Ansicht öffnen',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
+      : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
 
   // DateRange placeholders
   start: 'Beginn',

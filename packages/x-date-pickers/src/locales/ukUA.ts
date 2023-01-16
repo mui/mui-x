@@ -9,7 +9,10 @@ const ukUAPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'відкрити попередній вигляд',
   openNextView: 'відкрити наступний вигляд',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'річний вигляд відкрито, перейти до календарного вигляду'
+      : 'календарний вигляд відкрито, перейти до річного вигляду',
 
   // DateRange placeholders
   start: 'Початок',

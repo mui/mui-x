@@ -15,7 +15,10 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'avaa edellinen kuukausi',
   openNextView: 'avaa seuraava kuukausi',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
+      : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
 
   // DateRange placeholders
   start: 'Alku',

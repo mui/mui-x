@@ -9,7 +9,10 @@ const plPLPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'otwórz poprzedni widok',
   openNextView: 'otwórz następny widok',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'otwarty jest widok roku, przełącz na widok kalendarza'
+      : 'otwarty jest widok kalendarza, przełącz na widok roku',
 
   // DateRange placeholders
   start: 'Początek',

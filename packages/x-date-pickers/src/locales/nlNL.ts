@@ -1,5 +1,6 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
+import { DateView } from '../internals/models';
 
 const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -9,7 +10,10 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'open vorige view',
   openNextView: 'open volgende view',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+    view === 'year'
+      ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
+      : 'kalenderweergave is geopend, switch naar jaarweergave',
 
   // DateRange placeholders
   start: 'Start',

@@ -9,7 +9,10 @@ const svSEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'öppna föregående vy',
   openNextView: 'öppna nästa vy',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'årsvyn är öppen, byt till kalendervy'
+      : 'kalendervyn är öppen, byt till årsvy',
 
   // DateRange placeholders
   start: 'Start',
