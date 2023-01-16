@@ -38,7 +38,7 @@ The action bar is available on all picker components.
 It is located at the bottom of the picker's views.
 By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
-You can override the action displayed by passing the `actions` prop to the `actionBar` within `slotProps`, as shown here:
+You can override the actions displayed by passing the `actions` prop to the `actionBar` within `slotProps`, as shown here:
 
 ```jsx
 <DatePicker
@@ -83,7 +83,7 @@ In the example below, the actions are the same as in the section above, but they
 
 The tabs are available on all date time picker components.
 
-### Component slot props
+### Component props
 
 You can override the icons displayed by passing props to the `tabs` within `slotProps`, as shown here:
 
@@ -125,7 +125,7 @@ In the example below, the tabs are using different icons and have an additional 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
 to navigate to the "Previous" and "Next" steps of the picker: `PreviousIconButton`, `NextIconButton`, `LeftArrowIcon`, `RightArrowIcon`.
 
-### Component slot props
+### Component props
 
 You can pass props to the icons and buttons as shown below:
 
