@@ -16,6 +16,9 @@ import { MonthCalendarClassKey, PickersMonthClassKey } from '../MonthCalendar';
 import { PickersDayClassKey } from '../PickersDay';
 import { PickersYearClassKey, YearCalendarClassKey } from '../YearCalendar';
 import { PickersLayoutClassKey } from '../PickersLayout';
+import { DatePickerToolbarClassKey } from '../NextDatePicker';
+import { TimePickerToolbarClassKey } from '../NextTimePicker';
+import { DateTimePickerToolbarClassKey } from '../NextDateTimePicker';
 import {
   PickersArrowSwitcherClassKey,
   PickersPopperClassKey,
