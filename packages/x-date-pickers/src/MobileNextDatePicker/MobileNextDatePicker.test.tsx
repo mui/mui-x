@@ -75,8 +75,8 @@ describe('<MobileNextDatePicker />', () => {
       render(
         <MobileNextDatePicker
           open
-          components={{
-            Toolbar: () => <div data-testid="custom-toolbar" />,
+          slots={{
+            toolbar: () => <div data-testid="custom-toolbar" />,
           }}
         />,
       );
@@ -89,7 +89,7 @@ describe('<MobileNextDatePicker />', () => {
         <MobileNextDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          componentsProps={{
+          slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
             },
@@ -138,8 +138,8 @@ describe('<MobileNextDatePicker />', () => {
         <MobileNextDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          components={{
-            Day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          slots={{
+            day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
         />,
       );

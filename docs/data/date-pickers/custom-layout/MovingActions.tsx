@@ -35,7 +35,7 @@ export default function MovingActions() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDatePicker
-        componentsProps={{
+        slotProps={{
           layout: {
             sx: {
               [`.${pickersLayoutClasses.actionBar}`]: {
@@ -45,8 +45,8 @@ export default function MovingActions() {
             },
           },
         }}
-        components={{
-          ActionBar: ActionList,
+        slots={{
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>

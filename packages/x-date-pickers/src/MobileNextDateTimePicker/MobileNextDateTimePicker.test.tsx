@@ -86,7 +86,7 @@ describe('<MobileNextDateTimePicker />', () => {
         <MobileNextDateTimePicker
           open
           defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          componentsProps={{
+          slotProps={{
             tabs: { hidden: true },
           }}
         />,
