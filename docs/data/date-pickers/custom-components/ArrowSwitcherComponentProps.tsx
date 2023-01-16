@@ -54,10 +54,7 @@ export default function ArrowSwitcherComponentProps() {
           <ToggleButton value={'dateRange'}>date range</ToggleButton>
         </ToggleButtonGroup>
         {currentComponent === 'date' && (
-          <DateCalendar
-            defaultValue={dayjs('2022-04-07')}
-            slotProps={slotProps}
-          />
+          <DateCalendar defaultValue={dayjs('2022-04-07')} slotProps={slotProps} />
         )}
         {currentComponent === 'time' && (
           <Box sx={{ position: 'relative' }}>
