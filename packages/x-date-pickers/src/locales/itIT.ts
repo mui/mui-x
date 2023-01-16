@@ -20,7 +20,10 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `la vista del campo di testo è aperta, passare alla vista ${viewType}` : `la vista aperta è: ${viewType}, vai alla vista del campo di testo`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `la vista del campo di testo è aperta, passare alla vista ${viewType}`
+      : `la vista aperta è: ${viewType}, vai alla vista del campo di testo`,
 
   // DateRange placeholders
   start: 'Inizio',
