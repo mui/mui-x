@@ -39,4 +39,9 @@ export interface ExportedBaseToolbarProps {
    * className applied to the root component.
    */
   className?: string;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden?: boolean;
 }

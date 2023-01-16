@@ -523,16 +523,18 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` component slots props:
+- The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slots props:
 
   ```diff
    <DatePicker
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
+  -  showToolbar
   +  componentsProps={{
   +    toolbar: {
   +      toolbarPlaceholder: "__",
   +      toolbarFormat: "DD / MM / YYYY",
+  +      hidden: false,
   +    }
   +  }}
    />
