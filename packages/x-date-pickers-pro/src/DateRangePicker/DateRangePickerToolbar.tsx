@@ -137,7 +137,7 @@ DateRangePickerToolbar.propTypes = {
   disabled: PropTypes.bool,
   /**
    * If `true`, show the toolbar even in desktop mode.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop), `displayStaticWrapperAs === 'desktop'` for `Static` pickers
+   * @default `true` for Desktop, `false` for Mobile.
    */
   hidden: PropTypes.bool,
   isMobileKeyboardViewOpen: PropTypes.bool,
