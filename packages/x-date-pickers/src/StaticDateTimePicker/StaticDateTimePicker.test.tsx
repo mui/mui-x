@@ -52,20 +52,6 @@ describe('<StaticDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
-    render(
-      <StaticDateTimePicker
-        showToolbar={false}
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   describe('prop: displayStaticWrapperAs', () => {
     it('should not render toolbar and tabs by default', () => {
       render(
@@ -79,20 +65,6 @@ describe('<StaticDateTimePicker />', () => {
 
       expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
-    });
-
-    it('should render toolbar when `showToolbar` is `true`', () => {
-      render(
-        <StaticDateTimePicker
-          displayStaticWrapperAs="desktop"
-          showToolbar
-          onChange={() => {}}
-          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          renderInput={(params) => <TextField {...params} />}
-        />,
-      );
-
-      expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
     });
   });
 
@@ -145,6 +117,36 @@ describe('<StaticDateTimePicker />', () => {
 
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
       expect(screen.getByText('test-custom-picker-tabs')).not.to.equal(null);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should render toolbar when `hidden` is `false`', () => {
+      render(
+        <StaticDateTimePicker
+          displayStaticWrapperAs="desktop"
+          componentsProps={{ toolbar: { hidden: false } }}
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    });
+
+    it('should not render only toolbar when `hidden` is `true`', () => {
+      render(
+        <StaticDateTimePicker
+          componentsProps={{ toolbar: { hidden: true } }}
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
   });
 

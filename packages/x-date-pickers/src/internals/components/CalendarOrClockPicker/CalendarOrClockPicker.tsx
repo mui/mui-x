@@ -128,7 +128,6 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
     onViewChange,
     openTo,
     orientation,
-    showToolbar,
     toggleMobileKeyboardView,
     views,
     components,
@@ -172,14 +171,14 @@ export function CalendarOrClockPicker<TDate, View extends DateOrTimeView>(
   const Tabs = components?.Tabs;
 
   const isDesktop = wrapperVariant === 'desktop';
-  const shouldRenderToolbar = showToolbar ?? !isDesktop;
   const Toolbar = components?.Toolbar;
 
   return (
     <PickerRoot ownerState={{ isLandscape }} className={classes.root}>
-      {shouldRenderToolbar && !!Toolbar && (
+      {!!Toolbar && (
         <Toolbar
           {...componentsProps?.toolbar}
+          hidden={componentsProps?.toolbar?.hidden ?? isDesktop}
           isLandscape={isLandscape}
           onChange={handleDateChange}
           value={value}

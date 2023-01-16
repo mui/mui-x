@@ -51,7 +51,7 @@ describe('<MobileDateTimePicker />', () => {
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
@@ -77,28 +77,13 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
-    render(
-      <MobileDateTimePicker
-        open
-        showToolbar={false}
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
         renderInput={(params) => <TextField {...params} />}
         onChange={() => {}}
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
@@ -123,6 +108,23 @@ describe('<MobileDateTimePicker />', () => {
 
       expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should not render only toolbar when `hidden` is `true`', () => {
+      render(
+        <MobileDateTimePicker
+          open
+          componentsProps={{ toolbar: { hidden: true } }}
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
   });
 

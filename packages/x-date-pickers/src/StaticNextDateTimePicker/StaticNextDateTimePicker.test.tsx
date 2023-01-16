@@ -41,18 +41,18 @@ describe('<StaticNextDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
-    render(<StaticNextDateTimePicker showToolbar={false} />);
-
-    expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   describe('prop: displayStaticWrapperAs', () => {
-    it('should render toolbar when `showToolbar` is `true`', () => {
-      render(<StaticNextDateTimePicker displayStaticWrapperAs="desktop" showToolbar />);
+    describe('Component slots: Toolbar', () => {
+      it('should render toolbar when `hidden` is `false`', () => {
+        render(
+          <StaticNextDateTimePicker
+            displayStaticWrapperAs="desktop"
+            componentsProps={{ toolbar: { hidden: false } }}
+          />,
+        );
 
-      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+        expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      });
     });
   });
 
@@ -151,6 +151,12 @@ describe('<StaticNextDateTimePicker />', () => {
 
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
       expect(screen.getByText('test-custom-picker-tabs')).not.to.equal(null);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should not render only toolbar when `hidden` is `true`', () => {
+      render(<StaticNextDateTimePicker componentsProps={{ toolbar: { hidden: true } }} />);
     });
   });
 

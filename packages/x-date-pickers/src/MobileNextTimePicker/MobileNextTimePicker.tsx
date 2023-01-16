@@ -37,7 +37,6 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,
@@ -54,6 +53,10 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -269,11 +272,6 @@ MobileNextTimePicker.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}
