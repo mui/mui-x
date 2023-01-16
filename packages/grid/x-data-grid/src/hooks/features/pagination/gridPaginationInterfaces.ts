@@ -1,8 +1,12 @@
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
 
-export interface GridPaginationState extends GridPaginationModel {}
+export interface GridPaginationState {
+  paginationModel: GridPaginationModel;
+}
 
-export interface GridPaginationInitialState extends Partial<GridPaginationModel> {}
+export interface GridPaginationInitialState {
+  paginationModel?: Partial<GridPaginationModel>;
+}
 
 /**
  * The pagination API interface that is available in the grid `apiRef`.

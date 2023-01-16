@@ -27,7 +27,7 @@ export interface GridStateCommunity {
   rows: GridRowsState;
   rowsMeta: GridRowsMetaState;
   editRows: GridEditingState;
-  paginationModel: GridPaginationState;
+  pagination: GridPaginationState;
   columns: GridColumnsState;
   columnGrouping: GridColumnsGroupingState;
   columnMenu: GridColumnMenuState;
@@ -45,7 +45,7 @@ export interface GridStateCommunity {
  * The initial state of `DataGrid`.
  */
 export interface GridInitialStateCommunity {
-  paginationModel?: GridPaginationInitialState;
+  pagination?: GridPaginationInitialState;
   sorting?: GridSortingInitialState;
   filter?: GridFilterInitialState;
   columns?: GridColumnsInitialState;

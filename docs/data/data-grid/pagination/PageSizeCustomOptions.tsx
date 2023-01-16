@@ -15,7 +15,7 @@ export default function PageSizeCustomOptions() {
         {...data}
         initialState={{
           ...data.initialState,
-          paginationModel: { pageSize: 5 },
+          pagination: { paginationModel: { pageSize: 5 } },
         }}
         pageSizeOptions={[5, 10, 25]}
       />

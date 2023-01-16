@@ -10,12 +10,18 @@ import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gr
 import { getPageCount } from './gridPaginationUtils';
 
 /**
+ * @category Pagination
+ * @ignore - do not document.
+ */
+export const gridPaginationSelector = (state: GridStateCommunity) => state.pagination;
+
+/**
  * Get the pagination model
  * @category Pagination
  */
 export const gridPaginationModelSelector = createSelector(
-  (state: GridStateCommunity) => state,
-  (state: GridStateCommunity) => state.paginationModel,
+  gridPaginationSelector,
+  (pagination) => pagination.paginationModel,
 );
 
 /**
@@ -23,8 +29,8 @@ export const gridPaginationModelSelector = createSelector(
  * @category Pagination
  */
 export const gridPageSelector = createSelector(
-  gridPaginationModelSelector,
-  (paginationModel) => paginationModel.page,
+  gridPaginationSelector,
+  (pagination) => pagination.paginationModel.page,
 );
 
 /**
@@ -32,8 +38,8 @@ export const gridPageSelector = createSelector(
  * @category Pagination
  */
 export const gridPageSizeSelector = createSelector(
-  gridPaginationModelSelector,
-  (paginationModel) => paginationModel.pageSize,
+  gridPaginationSelector,
+  (pagination) => pagination.paginationModel.pageSize,
 );
 
 /**
@@ -41,10 +47,10 @@ export const gridPageSizeSelector = createSelector(
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPaginationModelSelector,
+  gridPaginationSelector,
   gridVisibleTopLevelRowCountSelector,
-  (paginationModel, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
+  (pagination, visibleTopLevelRowCount) =>
+    getPageCount(visibleTopLevelRowCount, pagination.paginationModel.pageSize),
 );
 
 /**
@@ -52,25 +58,19 @@ export const gridPageCountSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginationRowRangeSelector = createSelector(
-  gridPaginationModelSelector,
+  gridPaginationSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
   gridVisibleSortedRowEntriesSelector,
   gridVisibleSortedTopLevelRowEntriesSelector,
-  (
-    paginationModel,
-    rowTree,
-    rowTreeDepth,
-    visibleSortedRowEntries,
-    visibleSortedTopLevelRowEntries,
-  ) => {
+  (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
-      paginationModel.pageSize * paginationModel.page,
+      pagination.paginationModel.pageSize * pagination.paginationModel.page,
       visibleTopLevelRowCount - 1,
     );
     const topLevelLastRowIndex = Math.min(
-      topLevelFirstRowIndex + paginationModel.pageSize - 1,
+      topLevelFirstRowIndex + pagination.paginationModel.pageSize - 1,
       visibleTopLevelRowCount - 1,
     );
 

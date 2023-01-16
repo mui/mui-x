@@ -23,7 +23,7 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              initialState={{ paginationModel: { pageSize: 1 } }}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
               pageSizeOptions={[1]}
             />
           </div>
@@ -52,7 +52,7 @@ describe('<DataGridPro /> - Pagination', () => {
               {...basicData}
               apiRef={apiRef}
               pagination
-              initialState={{ paginationModel: { pageSize: 1 } }}
+              initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
               pageSizeOptions={[1]}
             />
           </div>
@@ -83,7 +83,7 @@ describe('<DataGridPro /> - Pagination', () => {
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              initialState={{ paginationModel: { pageSize: 5 } }}
+              initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
               onPaginationModelChange={(model) => setPageSize(model.pageSize)}
               pageSizeOptions={[pageSize]}
               pagination

@@ -147,7 +147,7 @@ describe('<DataGrid /> - Rows', () => {
             rows={rows}
             columns={columns}
             getRowClassName={getRowClassName}
-            initialState={{ paginationModel: { pageSize: 3, page: 0 } }}
+            initialState={{ pagination: { paginationModel: { pageSize: 3, page: 0 } } }}
             pageSizeOptions={[3]}
           />
         </div>,
@@ -810,7 +810,7 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
-            initialState={{ paginationModel: { pageSize: 10 } }}
+            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
             pageSizeOptions={[5, 10]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
             {...data}
@@ -846,7 +846,7 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
-            initialState={{ paginationModel: { pageSize: 25 } }}
+            initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
             pageSizeOptions={[10, 25]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
             {...data}
@@ -893,7 +893,7 @@ describe('<DataGrid /> - Rows', () => {
       render(
         <TestCase
           getRowSpacing={getRowSpacing}
-          initialState={{ paginationModel: { pageSize: 2, page: 0 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
           pageSizeOptions={[2]}
         />,
       );

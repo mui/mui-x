@@ -235,7 +235,7 @@ describe('<DataGrid /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 1 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
           pageSizeOptions={[1]}
         />,
       );
@@ -324,7 +324,7 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           pagination
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pageSizeOptions={[2]}
         />,
       );
@@ -646,7 +646,7 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           pagination
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
@@ -665,7 +665,7 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,

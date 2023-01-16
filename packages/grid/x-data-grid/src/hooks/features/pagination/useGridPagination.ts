@@ -33,14 +33,16 @@ export const paginationStateInitializer: GridStateInitializer<
 > = (state, props) => {
   const paginationModel = {
     ...getDefaultGridPaginationModel(props.autoPageSize),
-    ...(props.paginationModel ?? props.initialState?.paginationModel),
+    ...(props.paginationModel ?? props.initialState?.pagination?.paginationModel),
   };
 
   throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, props.signature);
 
   return {
     ...state,
-    paginationModel,
+    pagination: {
+      paginationModel,
+    },
   };
 };
 
@@ -51,7 +53,7 @@ const mergeStateWithPaginationModel =
     paginationModelProp?: GridPaginationModel,
   ) =>
   (paginationState: GridPaginationState) => {
-    let paginationModel = paginationState;
+    let paginationModel = paginationState.paginationModel;
     const pageSize = paginationModelProp?.pageSize ?? paginationModel.pageSize;
     const pageCount = getPageCount(rowCount, pageSize);
 
@@ -70,7 +72,7 @@ const mergeStateWithPaginationModel =
 
     throwIfPageSizeExceedsTheLimit(paginationModel.pageSize, signature);
 
-    return paginationModel;
+    return { paginationModel };
   };
 
 /**
@@ -142,7 +144,7 @@ export const useGridPagination = (
       logger.debug("Setting 'paginationModel' to", paginationModel);
 
       apiRef.current.updateControlState(
-        'paginationModel',
+        'pagination',
         mergeStateWithPaginationModel(
           props.rowCount ?? visibleTopLevelRowCount,
           props.signature,
@@ -176,7 +178,7 @@ export const useGridPagination = (
         // Always export if the `paginationModel` is controlled
         props.paginationModel != null ||
         // Always export if the `paginationModel` has been initialized
-        props.initialState?.paginationModel != null ||
+        props.initialState?.pagination?.paginationModel != null ||
         // Export if `page` or `pageSize` is not equal to the default value
         (paginationModel.page !== 0 &&
           paginationModel.pageSize !== defaultPageSize(props.autoPageSize));
@@ -187,22 +189,30 @@ export const useGridPagination = (
 
       return {
         ...prevState,
-        paginationModel,
+        pagination: {
+          ...prevState.pagination,
+          paginationModel,
+        },
       };
     },
-    [apiRef, props.paginationModel, props.initialState?.paginationModel, props.autoPageSize],
+    [
+      apiRef,
+      props.paginationModel,
+      props.initialState?.pagination?.paginationModel,
+      props.autoPageSize,
+    ],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
-      const paginationModel = context.stateToRestore?.paginationModel
+      const paginationModel = context.stateToRestore.pagination?.paginationModel
         ? {
             ...getDefaultGridPaginationModel(props.autoPageSize),
-            ...context.stateToRestore?.paginationModel,
+            ...context.stateToRestore.pagination?.paginationModel,
           }
         : gridPaginationModelSelector(apiRef);
       apiRef.current.updateControlState(
-        'paginationModel',
+        'pagination',
         mergeStateWithPaginationModel(
           props.rowCount ?? visibleTopLevelRowCount,
           props.signature,
@@ -264,7 +274,7 @@ export const useGridPagination = (
 
   React.useEffect(() => {
     apiRef.current.updateControlState(
-      'paginationModel',
+      'pagination',
       mergeStateWithPaginationModel(
         props.rowCount ?? visibleTopLevelRowCount,
         props.signature,

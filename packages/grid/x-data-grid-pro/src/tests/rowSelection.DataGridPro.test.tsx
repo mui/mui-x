@@ -50,7 +50,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
         />,
@@ -67,7 +67,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
         />,
@@ -107,7 +107,7 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly={false}
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
         />,
@@ -140,7 +140,7 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
         />,
@@ -161,7 +161,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           checkboxSelectionVisibleOnly
           pageSizeOptions={[2]}
@@ -185,7 +185,7 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          initialState={{ paginationModel: { pageSize: 2 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
           pageSizeOptions={[2]}
         />,

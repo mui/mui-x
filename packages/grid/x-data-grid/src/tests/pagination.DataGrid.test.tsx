@@ -88,7 +88,7 @@ describe('<DataGrid /> - Pagination', () => {
       render(
         <BaselineTestCase
           onPaginationModelChange={onPaginationModelChange}
-          initialState={{ paginationModel: { pageSize: 1 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
           pageSizeOptions={[1]}
         />,
       );
@@ -169,7 +169,7 @@ describe('<DataGrid /> - Pagination', () => {
       render(
         <BaselineTestCase
           onPaginationModelChange={onPaginationModelChange}
-          initialState={{ paginationModel: { pageSize: 1 } }}
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
           pageSizeOptions={[1]}
           paginationMode="server"
           rowCount={4}
@@ -592,7 +592,9 @@ describe('<DataGrid /> - Pagination', () => {
       render(
         <BaselineTestCase
           initialState={{
-            paginationModel: { pageSize: 2, page: 0 },
+            pagination: {
+              paginationModel: { pageSize: 2, page: 0 },
+            },
           }}
           pageSizeOptions={[2, 5]}
         />,
@@ -606,7 +608,9 @@ describe('<DataGrid /> - Pagination', () => {
         <BaselineTestCase
           paginationModel={{ pageSize: 5, page: 0 }}
           initialState={{
-            paginationModel: { pageSize: 2, page: 0 },
+            pagination: {
+              paginationModel: { pageSize: 2, page: 0 },
+            },
           }}
           pageSizeOptions={[2, 5]}
         />,
@@ -619,7 +623,9 @@ describe('<DataGrid /> - Pagination', () => {
       const { setProps } = render(
         <BaselineTestCase
           initialState={{
-            paginationModel: { pageSize: 2, page: 0 },
+            pagination: {
+              paginationModel: { pageSize: 2, page: 0 },
+            },
           }}
           pageSizeOptions={[2, 5]}
         />,
@@ -627,7 +633,9 @@ describe('<DataGrid /> - Pagination', () => {
 
       setProps({
         initialState: {
-          paginationModel: { pageSize: 5, page: 0 },
+          pagination: {
+            paginationModel: { pageSize: 5, page: 0 },
+          },
         },
       });
 
@@ -638,7 +646,9 @@ describe('<DataGrid /> - Pagination', () => {
       render(
         <BaselineTestCase
           initialState={{
-            paginationModel: { pageSize: 2, page: 0 },
+            pagination: {
+              paginationModel: { pageSize: 2, page: 0 },
+            },
           }}
           pageSizeOptions={[2, 5]}
         />,
