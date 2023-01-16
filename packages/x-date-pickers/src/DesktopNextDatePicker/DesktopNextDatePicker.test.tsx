@@ -29,8 +29,8 @@ describe('<DesktopNextDatePicker />', () => {
       const { getByTestId } = render(
         <DesktopNextDatePicker
           label="icon test example"
-          components={{
-            OpenPickerIcon: HomeIcon,
+          slots={{
+            openPickerIcon: HomeIcon,
           }}
         />,
       );
@@ -117,7 +117,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -171,7 +171,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           open
-          componentsProps={{
+          slotProps={{
             desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,

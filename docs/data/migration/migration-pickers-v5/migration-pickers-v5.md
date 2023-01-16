@@ -458,9 +458,9 @@ The `locale` prop of the `LocalizationProvider` component have been renamed `ada
  </LocalizationProvider
 ```
 
-## Component slots / component slots props
+## Component slots / component slot props
 
-All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slots props.
+All the props used to pass props to parts of the UI (e.g: pass a prop to the input) have been replaced by component slot props.
 All the props used to override parts of the UI (e.g: pass a custom day renderer) have been replaced by component slots.
 
 You can find more information about this pattern in the [MUI Base documentation](https://mui.com/base/getting-started/usage/#shared-props).
@@ -470,7 +470,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Input renderer (required in v5)
 
-- The `renderInput` has been replaced by an `input` component slots props:
+- The `renderInput` has been replaced by an `input` component slot props:
 
   ```diff
    <DatePicker
@@ -490,7 +490,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The Date Range Picker also have a new `fieldSeparator` component slot and component slots props to customize only this part of the UI:
+- The Date Range Picker also have a new `fieldSeparator` component slot and component slot props to customize only this part of the UI:
 
   ```diff
    <DateRangePicker
@@ -523,7 +523,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slots props:
+- The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slot props:
 
   ```diff
    <DatePicker
@@ -610,8 +610,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Tabs
 
-- The `hideTabs` and `timeIcon` props have been moved to `tabs` component slots props.
-  The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component slots props:
+- The `hideTabs` and `timeIcon` props have been moved to `tabs` component slot props.
+  The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component slot props:
 
   ```diff
    <DateTimePicker
@@ -654,7 +654,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 ### Action bar
 
 - The `action` prop of the `actionBar` component slot can no longer receive a callback.
-  Instead, you can pass a callback at the component slots props level
+  Instead, you can pass a callback at the component slot props level
 
   ```diff
    <DatePicker
@@ -681,7 +681,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```
 
 - The `Day` component slot no longer receives a `selectedDays` prop.
-  If you need to access it, you can control the value and pass it to the component slots props:
+  If you need to access it, you can control the value and pass it to the component slot props:
 
   ```tsx
   function CustomDay({ selectedDay, ...other }) {
@@ -707,7 +707,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Popper (`PopperProps`)
 
-- The `PopperProps` prop has been replaced by a `popper` component slots props:
+- The `PopperProps` prop has been replaced by a `popper` component slot props:
 
   ```diff
    <DatePicker
@@ -729,7 +729,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Dialog (`DialogProps`)
 
-- The `DialogProps` prop has been replaced by a `dialog` component slots props:
+- The `DialogProps` prop has been replaced by a `dialog` component slot props:
 
   ```diff
    <DatePicker
@@ -740,7 +740,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Desktop paper (`PaperProps`)
 
-- The `PaperProps` prop has been replaced by a `desktopPaper` component slots props:
+- The `PaperProps` prop has been replaced by a `desktopPaper` component slot props:
 
   ```diff
    <DatePicker
@@ -751,7 +751,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Desktop TrapFocus (`TrapFocusProp`)
 
-- The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component slots props:
+- The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component slot props:
 
   ```diff
    <DatePicker
@@ -762,7 +762,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Paper Content
 
-- The `PaperContent` / `paperContent` component slot and component slots props have been removed.
+- The `PaperContent` / `paperContent` component slot and component slot props have been removed.
 
   You can use the new [`Layout` component slot](/x/react-date-pickers/custom-layout/).
   The main difference is that you now receive the various parts of the UI instead of a single `children` prop:
@@ -842,7 +842,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 ### Input
 
 - The `InputProps` prop has been removed.
-  You can use the `InputProps` of the `input` component slots props instead:
+  You can use the `InputProps` of the `input` component slot props instead:
 
   ```diff
    <DatePicker
@@ -860,7 +860,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Input adornment
 
-- The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slots props:
+- The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slot props:
 
   ```diff
    <DatePicker
@@ -878,7 +878,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Open Picker Button
 
-- The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slots props:
+- The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slot props:
 
   ```diff
    <DatePicker
