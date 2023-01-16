@@ -77,21 +77,6 @@ describe('<MobileDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
-    render(
-      <MobileDateTimePicker
-        open
-        componentsProps={{ toolbar: { hidden: true } }}
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
-      />,
-    );
-
-    expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
@@ -123,6 +108,23 @@ describe('<MobileDateTimePicker />', () => {
 
       expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should not render only toolbar when `hidden` is `true`', () => {
+      render(
+        <MobileDateTimePicker
+          open
+          componentsProps={{ toolbar: { hidden: true } }}
+          onChange={() => {}}
+          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          renderInput={(params) => <TextField {...params} />}
+        />,
+      );
+
+      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
   });
 

@@ -54,19 +54,6 @@ describe('<MobileNextDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `slotsProps.toolbar.hidden` is `true`', () => {
-    render(
-      <MobileNextDateTimePicker
-        open
-        componentsProps={{ toolbar: { hidden: true } }}
-        defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-      />,
-    );
-
-    expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   it('can render seconds on view', () => {
     render(
       <MobileNextDateTimePicker
@@ -94,6 +81,21 @@ describe('<MobileNextDateTimePicker />', () => {
 
       expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should not render only toolbar when `hidden` is `true`', () => {
+      render(
+        <MobileNextDateTimePicker
+          open
+          componentsProps={{ toolbar: { hidden: true } }}
+          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        />,
+      );
+
+      expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
   });
 

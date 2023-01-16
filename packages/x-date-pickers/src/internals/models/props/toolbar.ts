@@ -3,11 +3,6 @@ import { DateOrTimeView } from '../views';
 
 export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   extends ExportedBaseToolbarProps {
-  /**
-   * If `true`, show the toolbar even in desktop mode.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop), `displayStaticWrapperAs === 'desktop'` for `Static` pickers
-   */
-  hidden?: boolean;
   isLandscape: boolean;
   onChange: (newValue: TValue) => void;
   value: TValue;
@@ -30,7 +25,7 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   toggleMobileKeyboardView?: () => void;
 }
 
-export interface ExportedBaseToolbarProps extends Pick<BaseToolbarProps<any, any>, 'hidden'> {
+export interface ExportedBaseToolbarProps {
   /**
    * Toolbar date format.
    */
@@ -44,4 +39,9 @@ export interface ExportedBaseToolbarProps extends Pick<BaseToolbarProps<any, any
    * className applied to the root component.
    */
   className?: string;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden?: boolean;
 }

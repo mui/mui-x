@@ -99,6 +99,12 @@ describe('<MobileNextDatePicker />', () => {
 
       expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
     });
+
+    it('should render the toolbar when `hidden` is `false`', () => {
+      render(<MobileNextDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
+
+      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    });
   });
 
   describe('Component slots: Day', () => {
@@ -144,12 +150,6 @@ describe('<MobileNextDatePicker />', () => {
     expect(handleClose.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
-  });
-
-  it('prop `slotsProps.toolbar.hidden` – renders the toolbar', () => {
-    render(<MobileNextDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
-
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
   describe('picker state', () => {

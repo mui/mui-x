@@ -155,18 +155,6 @@ describe('<DesktopDatePicker />', () => {
     expect(screen.getByRole('textbox')).to.have.value('');
   });
 
-  it('prop `slotsProps.toolbar.hidden` – renders toolbar in desktop mode', () => {
-    render(
-      <WrappedDesktopDatePicker
-        open
-        componentsProps={{ toolbar: { hidden: false } }}
-        initialValue={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
-  });
-
   it('switches between views uncontrolled', () => {
     const handleViewChange = spy();
     render(
@@ -239,6 +227,20 @@ describe('<DesktopDatePicker />', () => {
 
       expect(handleClick.callCount).to.equal(1);
       expect(handleTouchStart.callCount).to.equal(1);
+    });
+  });
+
+  describe('Component slots: Toolbar', () => {
+    it('should render toolbar in desktop mode when `hidden` is `false`', () => {
+      render(
+        <WrappedDesktopDatePicker
+          open
+          componentsProps={{ toolbar: { hidden: false } }}
+          initialValue={adapterToUse.date(new Date(2018, 0, 1))}
+        />,
+      );
+
+      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
     });
   });
 
