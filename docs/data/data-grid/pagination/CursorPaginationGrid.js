@@ -43,7 +43,7 @@ export default function CursorPaginationGrid() {
       // We add nextCursor when available
       mapPageToNextCursor.current[paginationModel.page] = pageInfo?.nextCursor;
     }
-  }, [paginationModel, isLoading, pageInfo?.nextCursor]);
+  }, [paginationModel.page, isLoading, pageInfo?.nextCursor]);
 
   // Some API clients return undefined while loading
   // Following lines are here to prevent `rowCountState` from being undefined during the loading
