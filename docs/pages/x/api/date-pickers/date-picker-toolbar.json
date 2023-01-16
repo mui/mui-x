@@ -15,7 +15,7 @@
   "slots": {},
   "name": "DatePickerToolbar",
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
-  "filename": "/packages/x-date-pickers/src/NextDatePicker/DatePickerToolbar.tsx",
+  "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePickerToolbar" },

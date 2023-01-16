@@ -1,4 +1,4 @@
-<StaticNextDatePicker
+<StaticDatePicker
   defaultValue={dayjs('2022-04-07')}
   components={{
     ActionBar: CustomActionBar,

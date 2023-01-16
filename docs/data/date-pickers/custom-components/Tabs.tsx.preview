@@ -1,4 +1,4 @@
-<StaticNextDateTimePicker
+<StaticDateTimePicker
   defaultValue={dayjs('2022-04-07')}
   components={{ Tabs: CustomTabs }}
   componentsProps={{

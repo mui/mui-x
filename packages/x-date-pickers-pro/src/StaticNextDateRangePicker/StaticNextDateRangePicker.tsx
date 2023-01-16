@@ -9,7 +9,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
 
-type StaticNextDatePickerComponent = (<TDate>(
+type StaticNextDateRangePickerComponent = (<TDate>(
   props: StaticNextDateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
@@ -48,7 +48,7 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
   });
 
   return renderPicker();
-}) as StaticNextDatePickerComponent;
+}) as StaticNextDateRangePickerComponent;
 
 StaticNextDateRangePicker.propTypes = {
   // ----------------------------- Warning --------------------------------

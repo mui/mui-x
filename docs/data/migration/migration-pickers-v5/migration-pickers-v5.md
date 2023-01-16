@@ -93,7 +93,7 @@ Take a look at the [default props via theme documentation](/material-ui/customiz
 ```tsx
 const theme = createTheme({
   components: {
-    MuiDesktopNextTimePicker: {
+    MuiDesktopTimePicker: {
       defaultProps: {
         viewRenderers: {
           hours: renderTimeViewClock,
@@ -102,7 +102,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiDesktopNextDateTimePicker: {
+    MuiDesktopDateTimePicker: {
       defaultProps: {
         viewRenderers: {
           hours: renderTimeViewClock,

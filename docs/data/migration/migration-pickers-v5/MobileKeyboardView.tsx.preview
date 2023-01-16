@@ -1,4 +1,4 @@
-<MobileNextDatePicker
+<MobileDatePicker
   components={{
     Layout: LayoutWithKeyboardView,
     Toolbar: ToolbarWithKeyboardViewSwitch,

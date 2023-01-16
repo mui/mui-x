@@ -1,4 +1,4 @@
-<StaticNextDatePicker
+<StaticDatePicker
   components={{
     Layout: CustomLayout,
     ActionBar: ActionList,

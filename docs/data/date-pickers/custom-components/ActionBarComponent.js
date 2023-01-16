@@ -8,7 +8,7 @@ import DialogActions from '@mui/material/DialogActions';
 import { unstable_useId as useId } from '@mui/utils';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import { useLocaleText } from '@mui/x-date-pickers/internals';
 
@@ -129,7 +129,7 @@ CustomActionBar.propTypes = {
 export default function ActionBarComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
+      <StaticDatePicker
         defaultValue={dayjs('2022-04-07')}
         components={{
           ActionBar: CustomActionBar,

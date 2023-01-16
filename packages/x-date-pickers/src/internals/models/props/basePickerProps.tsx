@@ -10,7 +10,7 @@ import { MakeOptional } from '../helpers';
 /**
  * Props common to all pickers after applying the default props on each picker.
  */
-export interface BaseNextPickerProps<
+export interface BasePickerProps<
   TValue,
   TDate,
   TView extends DateOrTimeView,
@@ -41,9 +41,9 @@ export interface BaseNextPickerProps<
 /**
  * Props common to all pickers before applying the default props on each picker.
  */
-export interface BaseNextPickerInputProps<TValue, TDate, TView extends DateOrTimeView, TError>
+export interface BasePickerInputProps<TValue, TDate, TView extends DateOrTimeView, TError>
   extends Omit<
-    MakeOptional<BaseNextPickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
+    MakeOptional<BasePickerProps<TValue, TDate, TView, TError, any, any>, 'openTo' | 'views'>,
     'viewRenderers'
   > {}
 
@@ -51,7 +51,7 @@ export interface BaseNextPickerInputProps<TValue, TDate, TView extends DateOrTim
  * Props common to all non-static pickers.
  * These props are handled by the headless wrappers.
  */
-export interface BaseNextNonStaticPickerProps {
+export interface BaseNonStaticPickerProps {
   /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
@@ -63,7 +63,7 @@ export interface BaseNextNonStaticPickerProps {
  * Props common to all non-static pickers.
  * These props are handled by each component, not by the headless wrappers.
  */
-export interface BaseNextNonStaticPickerExternalProps {
+export interface BaseNonStaticPickerExternalProps {
   /**
    * The label content.
    */

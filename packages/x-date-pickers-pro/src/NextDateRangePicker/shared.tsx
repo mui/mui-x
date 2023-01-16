@@ -7,7 +7,7 @@ import {
   useUtils,
   applyDefaultDate,
   BaseDateValidationProps,
-  BaseNextPickerInputProps,
+  BasePickerInputProps,
   PickerViewRendererLookup,
   UncapitalizeObjectKeys,
   uncapitalizeObjectKeys,
@@ -42,7 +42,7 @@ export interface BaseNextDateRangePickerSlotsComponentsProps<TDate>
 
 export interface BaseNextDateRangePickerProps<TDate>
   extends Omit<
-      BaseNextPickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
+      BasePickerInputProps<DateRange<TDate>, TDate, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,
     ExportedDateRangeCalendarProps<TDate>,

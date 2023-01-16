@@ -121,9 +121,9 @@ export { usePreviousMonthDisabled, useNextMonthDisabled } from './hooks/date-hel
 
 export type { BaseFieldProps, FieldsTextFieldProps } from './models/fields';
 export type {
-  BaseNextPickerProps,
-  BaseNextPickerInputProps,
-  BaseNextNonStaticPickerProps,
+  BasePickerProps,
+  BasePickerInputProps,
+  BaseNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';

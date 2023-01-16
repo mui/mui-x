@@ -1,4 +1,4 @@
-<StaticNextDatePicker
+<StaticDatePicker
   componentsProps={{
     layout: {
       sx: {

@@ -1,15 +1,15 @@
 <DemoItem
   label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
 >
-  <NextDateTimePicker
+  <DateTimePicker
     views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
   />
 </DemoItem>
 <DemoItem label={'"day", "hours"'}>
-  <NextDateTimePicker views={['day', 'hours']} />
+  <DateTimePicker views={['day', 'hours']} />
 </DemoItem>
 <DemoItem label={'"year", "day", "hours", "minutes", "seconds"'}>
-  <NextDateTimePicker
+  <DateTimePicker
     views={['year', 'day', 'hours', 'minutes', 'seconds']}
   />
 </DemoItem>

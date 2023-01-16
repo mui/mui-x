@@ -266,8 +266,8 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/day-calendar-skeleton', title: 'DayCalendarSkeleton' },
           {
-            pathname: '/x/api/date-pickers/desktop-next-date-picker',
-            title: 'DesktopNextDatePicker',
+            pathname: '/x/api/date-pickers/desktop-date-picker',
+            title: 'DesktopDatePicker',
           },
           {
             pathname: '/x/api/date-pickers/desktop-next-date-range-picker',
@@ -275,17 +275,17 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
-            pathname: '/x/api/date-pickers/desktop-next-date-time-picker',
-            title: 'DesktopNextDateTimePicker',
+            pathname: '/x/api/date-pickers/desktop-date-time-picker',
+            title: 'DesktopDateTimePicker',
           },
           {
-            pathname: '/x/api/date-pickers/desktop-next-time-picker',
-            title: 'DesktopNextTimePicker',
+            pathname: '/x/api/date-pickers/desktop-time-picker',
+            title: 'DesktopTimePicker',
           },
           { pathname: '/x/api/date-pickers/localization-provider', title: 'LocalizationProvider' },
           {
-            pathname: '/x/api/date-pickers/mobile-next-date-picker',
-            title: 'MobileNextDatePicker',
+            pathname: '/x/api/date-pickers/mobile-date-picker',
+            title: 'MobileDatePicker',
           },
           {
             pathname: '/x/api/date-pickers/mobile-next-date-range-picker',
@@ -293,12 +293,12 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
-            pathname: '/x/api/date-pickers/mobile-next-date-time-picker',
-            title: 'MobileNextDateTimePicker',
+            pathname: '/x/api/date-pickers/mobile-date-time-picker',
+            title: 'MobileDateTimePicker',
           },
           {
-            pathname: '/x/api/date-pickers/mobile-next-time-picker',
-            title: 'MobileNextTimePicker',
+            pathname: '/x/api/date-pickers/mobile-next-picker',
+            title: 'MobileTimePicker',
           },
           { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
           {
@@ -316,14 +316,14 @@ const pages: MuiPage[] = [
             title: 'MultiInputTimeRangeField',
             plan: 'pro',
           },
-          { pathname: '/x/api/date-pickers/next-date-picker', title: 'NextDatePicker' },
+          { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
             pathname: '/x/api/date-pickers/next-date-range-picker',
             title: 'NextDateRangePicker',
             plan: 'pro',
           },
-          { pathname: '/x/api/date-pickers/next-date-time-picker', title: 'NextDateTimePicker' },
-          { pathname: '/x/api/date-pickers/next-time-picker', title: 'NextTimePicker' },
+          { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
+          { pathname: '/x/api/date-pickers/next-picker', title: 'TimePicker' },
           { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
@@ -343,8 +343,8 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
-            pathname: '/x/api/date-pickers/static-next-date-picker',
-            title: 'StaticNextDatePicker',
+            pathname: '/x/api/date-pickers/static-date-picker',
+            title: 'StaticDatePicker',
           },
           {
             pathname: '/x/api/date-pickers/static-next-date-range-picker',
@@ -352,12 +352,12 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           {
-            pathname: '/x/api/date-pickers/static-next-date-time-picker',
-            title: 'StaticNextDateTimePicker',
+            pathname: '/x/api/date-pickers/static-date-time-picker',
+            title: 'StaticDateTimePicker',
           },
           {
-            pathname: '/x/api/date-pickers/static-next-time-picker',
-            title: 'StaticNextTimePicker',
+            pathname: '/x/api/date-pickers/static-time-picker',
+            title: 'StaticTimePicker',
           },
           { pathname: '/x/api/date-pickers/time-clock', title: 'TimeClock' },
           { pathname: '/x/api/date-pickers/time-field', title: 'TimeField' },

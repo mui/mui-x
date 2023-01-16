@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function AdapterJalali() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-      <NextDatePicker label="Date Picker" defaultValue={new Date(2022, 1, 1)} />
+      <DatePicker label="Date Picker" defaultValue={new Date(2022, 1, 1)} />
     </LocalizationProvider>
   );
 }

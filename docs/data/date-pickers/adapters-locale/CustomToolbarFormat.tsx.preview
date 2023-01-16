@@ -1,4 +1,4 @@
-<StaticNextDatePicker
+<StaticDatePicker
   displayStaticWrapperAs="desktop"
   defaultValue={dayjs('2022-04-07')}
   componentsProps={{ toolbar: { toolbarFormat: 'ddd DD MMMM' } }}
