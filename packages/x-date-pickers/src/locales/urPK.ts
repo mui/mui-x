@@ -9,7 +9,10 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'پچھلا ویو کھولیں',
   openNextView: 'اگلا ویو کھولیں',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
+      : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
 
   // DateRange placeholders
   start: 'شروع',

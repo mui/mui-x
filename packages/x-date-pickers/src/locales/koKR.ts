@@ -15,7 +15,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '이전 화면 보기',
   openNextView: '다음 화면 보기',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? '연도 선택 화면에서 달력 화면으로 전환하기'
+      : '달력 화면에서 연도 선택 화면으로 전환하기',
 
   // DateRange placeholders
   start: '시작',

@@ -9,7 +9,10 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'sonraki görünüm',
   openNextView: 'önceki görünüm',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'yıl görünümü açık, takvim görünümüne geç'
+      : 'takvim görünümü açık, yıl görünümüne geç',
 
   // DateRange placeholders
   start: 'Başlangıç',

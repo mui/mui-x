@@ -9,7 +9,10 @@ const faIRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'نمای قبلی',
   openNextView: 'نمای بعدی',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'نمای سال باز است، رفتن به نمای تقویم'
+      : 'نمای تقویم باز است، رفتن به نمای سال',
 
   // DateRange placeholders
   start: 'شروع',

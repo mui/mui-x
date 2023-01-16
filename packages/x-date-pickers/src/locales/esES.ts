@@ -15,7 +15,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'abrir la última vista',
   openNextView: 'abrir la siguiente vista',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'la vista del año está abierta, cambie a la vista de calendario'
+      : 'la vista de calendario está abierta, cambie a la vista del año',
 
   // DateRange placeholders
   start: 'Empezar',

@@ -9,7 +9,10 @@ const nbNOPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'åpne forrige visning',
   openNextView: 'åpne neste visning',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'årsvisning er åpen, bytt til kalendervisning'
+      : 'kalendervisning er åpen, bytt til årsvisning',
 
   // DateRange placeholders
   start: 'Start',

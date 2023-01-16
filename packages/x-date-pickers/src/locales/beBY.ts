@@ -19,7 +19,10 @@ const beBYPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'адкрыць папярэдні выгляд',
   openNextView: 'адкрыць наступны выгляд',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'гадавы выгляд адкрыты, перайсці да каляндарнага выгляду'
+      : 'каляндарны выгляд адкрыты, перайсці да гадавога выгляду',
 
   // DateRange placeholders
   start: 'Пачатак',

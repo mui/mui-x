@@ -9,7 +9,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'opna fyrri skoðun',
   openNextView: 'opna næstu skoðun',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
+      : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
 
   // DateRange placeholders
   start: 'Upphaf',

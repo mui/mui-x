@@ -15,7 +15,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Ouvrir la vue précédente',
   openNextView: 'Ouvrir la vue suivante',
-  // calendarViewSwitchingButtonAriaLabel: (view: DateView) => view === 'year' ? 'year view is open, switch to calendar view' : 'calendar view is open, switch to year view',
+  calendarViewSwitchingButtonAriaLabel: (view) =>
+    view === 'year'
+      ? 'La vue année est ouverte, ouvrir la vue calendrier'
+      : 'La vue calendrier est ouverte, ouvrir la vue année',
 
   // DateRange placeholders
   start: 'Début',
