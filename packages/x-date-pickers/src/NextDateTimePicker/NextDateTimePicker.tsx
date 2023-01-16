@@ -342,7 +342,7 @@ NextDateTimePicker.propTypes = {
    *
    * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
    *
-   * On range pickers, it will be ignored if more than one `calendars` is rendered.
+   * - ignored if `calendars equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
