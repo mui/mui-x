@@ -17,6 +17,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Improve print support (#7407) @cherniavskii
+- [DataGrid] Improve Spanish (es-ES) locale (#7438) @Anderssxn
 - [DataGridPremium] Fix Excel export not working with date strings (#7478) @cherniavskii
 - [DataGridPro] Fix missing column headers border with top-pinned rows (#7399) @cherniavskii
 
@@ -26,7 +27,6 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 - [pickers] Add Belarusian (be-BY) locale (#7450) @volhalink
 - [pickers] Add Urdu (ur-PK) locale (#7449) @MBilalShafi
-- [pickers] Improve Spanish (es-ES) locale (#7438) @Anderssxn
 
 ## 5.17.18
 
