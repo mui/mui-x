@@ -276,11 +276,11 @@ const pages: MuiPage[] = [
             plan: 'pro',
           },
           { pathname: '/x/api/date-pickers/date-time-field', title: 'DateTimeField' },
+          { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
           {
             pathname: '/x/api/date-pickers/date-time-picker-tabs',
             title: 'DateTimePickerTabs',
           },
-          { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
           { pathname: '/x/api/date-pickers/day-calendar-skeleton', title: 'DayCalendarSkeleton' },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
