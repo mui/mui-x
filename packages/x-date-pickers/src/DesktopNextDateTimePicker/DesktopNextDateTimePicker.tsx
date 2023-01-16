@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
+import { DateTimeField } from '../DateTimeField';
 import { DesktopNextDateTimePickerProps } from './DesktopNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -44,15 +44,15 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
     viewRenderers,
     showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
-    components: {
-      Field: DateTimeField,
-      OpenPickerIcon: Calendar,
-      ...defaultizedProps.components,
+    slots: {
+      field: DateTimeField,
+      openPickerIcon: Calendar,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -61,6 +61,10 @@ const DesktopNextDateTimePicker = React.forwardRef(function DesktopNextDateTimeP
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.tabs,
+      },
     },
   };
 
@@ -108,11 +112,13 @@ DesktopNextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -382,6 +388,16 @@ DesktopNextDateTimePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

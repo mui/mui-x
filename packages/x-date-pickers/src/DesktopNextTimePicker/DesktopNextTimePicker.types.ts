@@ -11,6 +11,7 @@ import {
 import { MakeOptional } from '../internals/models/helpers';
 import { BaseNextNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { TimeView } from '../internals/models/views';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface DesktopNextTimePickerSlotsComponent<TDate>
   extends BaseNextTimePickerSlotsComponent<TDate>,
@@ -27,11 +28,23 @@ export interface DesktopNextTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: DesktopNextTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DesktopNextTimePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DesktopNextTimePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DesktopNextTimePickerSlotsComponentsProps<TDate>;
 }

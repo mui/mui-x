@@ -14,7 +14,7 @@ import {
   useUtils,
   validateDate,
 } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -49,14 +49,14 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: DateField,
-      ...defaultizedProps.components,
+    slots: {
+      field: DateField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -101,11 +101,13 @@ MobileNextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -332,6 +334,16 @@ MobileNextDatePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

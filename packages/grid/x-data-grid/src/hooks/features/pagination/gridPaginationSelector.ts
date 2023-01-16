@@ -1,10 +1,10 @@
 import { createSelector } from '../../../utils/createSelector';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
-  gridVisibleSortedRowEntriesSelector,
-  gridVisibleSortedRowIdsSelector,
-  gridVisibleSortedTopLevelRowEntriesSelector,
-  gridVisibleTopLevelRowCountSelector,
+  gridFilteredTopLevelRowCountSelector,
+  gridExpandedSortedRowEntriesSelector,
+  gridExpandedSortedRowIdsSelector,
+  gridFilteredSortedTopLevelRowEntriesSelector,
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
@@ -48,7 +48,7 @@ export const gridPageSizeSelector = createSelector(
  */
 export const gridPageCountSelector = createSelector(
   gridPaginationSelector,
-  gridVisibleTopLevelRowCountSelector,
+  gridFilteredTopLevelRowCountSelector,
   (pagination, visibleTopLevelRowCount) =>
     getPageCount(visibleTopLevelRowCount, pagination.paginationModel.pageSize),
 );
@@ -61,8 +61,8 @@ export const gridPaginationRowRangeSelector = createSelector(
   gridPaginationSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
-  gridVisibleSortedRowEntriesSelector,
-  gridVisibleSortedTopLevelRowEntriesSelector,
+  gridExpandedSortedRowEntriesSelector,
+  gridFilteredSortedTopLevelRowEntriesSelector,
   (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
@@ -117,7 +117,7 @@ export const gridPaginationRowRangeSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
-  gridVisibleSortedRowEntriesSelector,
+  gridExpandedSortedRowEntriesSelector,
   gridPaginationRowRangeSelector,
   (visibleSortedRowEntries, paginationRange) => {
     if (!paginationRange) {
@@ -136,7 +136,7 @@ export const gridPaginatedVisibleSortedGridRowEntriesSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginatedVisibleSortedGridRowIdsSelector = createSelector(
-  gridVisibleSortedRowIdsSelector,
+  gridExpandedSortedRowIdsSelector,
   gridPaginationRowRangeSelector,
   (visibleSortedRowIds, paginationRange) => {
     if (!paginationRange) {

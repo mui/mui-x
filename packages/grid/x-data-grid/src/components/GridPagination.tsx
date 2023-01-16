@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { gridVisibleTopLevelRowCountSelector } from '../hooks/features/filter';
+import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter';
 
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
@@ -31,7 +31,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-    const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+    const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
     const rowCount = React.useMemo(
       () => rootProps.rowCount ?? visibleTopLevelRowCount ?? 0,

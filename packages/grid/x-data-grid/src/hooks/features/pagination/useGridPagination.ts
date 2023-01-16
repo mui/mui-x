@@ -5,7 +5,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { GridPaginationApi, GridPaginationState } from './gridPaginationInterfaces';
 import { GridEventListener } from '../../../models/events';
 import { GridPaginationModel } from '../../../models/gridPaginationProps';
-import { gridVisibleTopLevelRowCountSelector } from '../filter';
+import { gridFilteredTopLevelRowCountSelector } from '../filter';
 import { gridDensityFactorSelector } from '../density';
 import {
   useGridLogger,
@@ -95,7 +95,7 @@ export const useGridPagination = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPagination');
 
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const rowHeight = Math.floor(props.rowHeight * densityFactor);
 

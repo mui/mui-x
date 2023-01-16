@@ -65,6 +65,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- The `disableExtendRowFullWidth` prop was removed.
 - The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
 - The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
   ```tsx
@@ -93,7 +94,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
-- The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
+- The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridRowGroupingStateSelector` selector was removed.
 - The `gridFilterStateSelector` selector was removed.
 - The `gridRowsStateSelector` selector was removed.
@@ -104,6 +105,11 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
+- The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
+- The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
+- The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
+- The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
+- The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
 
 ### Events
 
@@ -214,6 +220,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
 - The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
@@ -329,6 +336,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -renderCell: (params: GridRenderCellParams<number>) => {
   +renderCell: (params: GridRenderCellParams<any, any, number>) => {
   ```
+
+- The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
 
 ### CSS classes
 

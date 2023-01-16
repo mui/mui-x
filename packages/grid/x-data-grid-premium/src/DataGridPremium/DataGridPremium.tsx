@@ -230,11 +230,6 @@ DataGridPremiumRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
