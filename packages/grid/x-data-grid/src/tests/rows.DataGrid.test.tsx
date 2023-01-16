@@ -5,6 +5,7 @@ import {
   screen,
   act,
   userEvent,
+  ErrorBoundary,
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
@@ -192,12 +193,15 @@ describe('<DataGrid /> - Rows', () => {
         this.skip();
       }
       expect(() => {
-        render(<TestCase />);
+        render(
+          <ErrorBoundary>
+            <TestCase />
+          </ErrorBoundary>,
+        );
       }).toErrorDev([
         'MUI: Missing the `getActions` property in the `GridColDef`.',
         'MUI: Missing the `getActions` property in the `GridColDef`.',
         'The above error occurred in the <GridActionsCell> component',
-        'MUI: GridErrorHandler - An unexpected error occurred.',
       ]);
     });
 
