@@ -41,15 +41,15 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
     viewRenderers,
     displayStaticWrapperAs,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       tabs: {
         hidden: displayStaticWrapperAs === 'desktop',
-        ...defaultizedProps.componentsProps?.tabs,
+        ...defaultizedProps.slotProps?.tabs,
       },
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -93,11 +93,13 @@ StaticNextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -307,6 +309,16 @@ StaticNextDateTimePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

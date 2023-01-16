@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
+import { DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import {
@@ -46,14 +46,14 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    components: {
-      Field: DateTimeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: DateTimeField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -64,7 +64,11 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
       }),
       toolbar: {
         hidden: false,
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.tabs,
       },
     },
   };
@@ -113,11 +117,13 @@ MobileNextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -382,6 +388,16 @@ MobileNextDateTimePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

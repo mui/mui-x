@@ -107,6 +107,37 @@ describe('<MobileNextDatePicker />', () => {
     });
   });
 
+  describe('Slots: Toolbar', () => {
+    it('should render custom toolbar component', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          slots={{
+            toolbar: () => <div data-testid="custom-toolbar" />,
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('custom-toolbar')).toBeVisible();
+    });
+
+    it('should format toolbar according to `toolbarFormat` prop', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          slotProps={{
+            toolbar: {
+              toolbarFormat: 'MMMM',
+            },
+          }}
+        />,
+      );
+
+      expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
+    });
+  });
+
   describe('Component slots: Day', () => {
     it('should render custom day', () => {
       render(
@@ -115,6 +146,22 @@ describe('<MobileNextDatePicker />', () => {
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           components={{
             Day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          }}
+        />,
+      );
+
+      expect(screen.getAllByTestId('test-day')).to.have.length(31);
+    });
+  });
+
+  describe('Slots: Day', () => {
+    it('should render custom day', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          slots={{
+            day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
         />,
       );
@@ -139,7 +186,7 @@ describe('<MobileNextDatePicker />', () => {
         onClose={handleClose}
         onChange={handleChange}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        componentsProps={{ actionBar: { actions: ['today'] } }}
+        slotProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
     const start = adapterToUse.date();

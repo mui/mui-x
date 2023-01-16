@@ -15,7 +15,7 @@ import {
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   DatePickerToolbar,
   DatePickerToolbarProps,
@@ -27,10 +27,10 @@ function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
 
   const { toolbar, tabs, content, actionBar } = usePickerLayout({
     ...props,
-    componentsProps: {
-      ...props.componentsProps,
+    slotProps: {
+      ...props.slotProps,
       toolbar: {
-        ...props.componentsProps?.toolbar,
+        ...props.slotProps?.toolbar,
         // @ts-ignore
         showKeyboardViewSwitch: props.wrapperVariant === 'mobile',
         showKeyboardView,

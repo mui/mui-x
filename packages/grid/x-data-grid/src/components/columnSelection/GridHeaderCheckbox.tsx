@@ -10,7 +10,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridHeaderSelectionCheckboxParams } from '../../models/params/gridHeaderSelectionCheckboxParams';
-import { gridVisibleSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridExpandedSortedRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../../hooks/features/pagination/gridPaginationSelector';
 import { GridRowId } from '../../models/gridRows';
 
@@ -36,7 +36,7 @@ const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderPa
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
-    const visibleRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
+    const visibleRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
     const paginatedVisibleRowIds = useGridSelector(
       apiRef,
       gridPaginatedVisibleSortedGridRowIdsSelector,

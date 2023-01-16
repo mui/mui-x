@@ -6,6 +6,7 @@ import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { DateOrTimeView } from '../internals/models';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
+import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 function toolbarHasView<TValue, TView extends DateOrTimeView>(
   toolbarProps: BaseToolbarProps<TValue, TView> | any,
@@ -59,16 +60,20 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     children,
     components,
     componentsProps,
+    slots: innerSlots,
+    slotProps: innerslotProps,
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerslotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
   // Action bar
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -84,10 +89,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Toolbar
 
-  const Toolbar = components?.Toolbar;
+  const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
-    externalSlotProps: componentsProps?.toolbar,
+    externalSlotProps: slotProps?.toolbar,
     additionalProps: {
       isLandscape,
       onChange,
@@ -112,11 +117,9 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Tabs
 
-  const Tabs = components?.Tabs;
+  const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? (
-      <Tabs view={view} onViewChange={onViewChange} {...componentsProps?.tabs} />
-    ) : null;
+    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
 
   return {
     toolbar,

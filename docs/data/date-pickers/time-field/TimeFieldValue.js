@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 export default function TimeFieldValue() {
   const [value, setValue] = React.useState(dayjs('2022-04-07T15:30'));

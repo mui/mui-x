@@ -10,7 +10,7 @@ export default function CustomToolbarFormat() {
       <StaticNextDatePicker
         displayStaticWrapperAs="desktop"
         defaultValue={dayjs('2022-04-07')}
-        componentsProps={{
+        slotProps={{
           toolbar: { toolbarFormat: 'ddd DD MMMM', hidden: false },
         }}
       />

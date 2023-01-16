@@ -11,6 +11,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 type StaticNextDatePickerComponent = (<TDate>(
   props: StaticNextDatePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
+
 const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDate>(
   inProps: StaticNextDatePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -35,11 +36,11 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     viewRenderers,
     displayStaticWrapperAs,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       toolbar: {
         hidden: displayStaticWrapperAs !== 'mobile',
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -73,11 +74,13 @@ StaticNextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -244,6 +247,16 @@ StaticNextDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

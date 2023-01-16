@@ -37,11 +37,11 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     views: ['day'] as const,
     openTo: 'day' as const,
     calendars: defaultizedProps.calendars ?? (displayStaticWrapperAs === 'mobile' ? 1 : 2),
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       toolbar: {
         hidden: displayStaticWrapperAs !== 'mobile',
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -80,11 +80,13 @@ StaticNextDateRangePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -221,6 +223,16 @@ StaticNextDateRangePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

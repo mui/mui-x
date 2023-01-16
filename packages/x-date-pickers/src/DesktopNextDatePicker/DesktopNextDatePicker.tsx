@@ -10,7 +10,7 @@ import {
 import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -45,15 +45,15 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
-    components: {
-      OpenPickerIcon: Calendar,
-      Field: DateField,
-      ...defaultizedProps.components,
+    slots: {
+      openPickerIcon: Calendar,
+      field: DateField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -63,7 +63,7 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
       }),
       toolbar: {
         hidden: true,
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -102,11 +102,13 @@ DesktopNextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -328,6 +330,16 @@ DesktopNextDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

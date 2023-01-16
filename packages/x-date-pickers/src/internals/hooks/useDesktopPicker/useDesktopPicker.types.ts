@@ -20,6 +20,7 @@ import {
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
+import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
@@ -90,15 +91,15 @@ export interface UseDesktopPickerProps<
 > extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     DesktopOnlyPickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
-  components: UseDesktopPickerSlotsComponent<TDate, TView>;
+  slots: UncapitalizeObjectKeys<UseDesktopPickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopPickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseDesktopPickerParams<

@@ -14,7 +14,7 @@ import {
   useUtils,
   validateDate,
 } from '../internals';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { renderDateViewCalendar } from '../dateViewRenderers';
@@ -48,14 +48,14 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
-    components: {
-      Field: DateField,
-      ...defaultizedProps.components,
+    slots: {
+      field: DateField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -65,7 +65,7 @@ const MobileNextDatePicker = React.forwardRef(function MobileNextDatePicker<TDat
       }),
       toolbar: {
         hidden: false,
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -104,11 +104,13 @@ MobileNextDatePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -330,6 +332,16 @@ MobileNextDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

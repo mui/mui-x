@@ -6,7 +6,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -36,14 +36,14 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
-    components: {
-      Field: MultiInputDateRangeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: MultiInputDateRangeField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         className,
         sx,
@@ -51,7 +51,7 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
       }),
       toolbar: {
         hidden: true,
-        ...defaultizedProps.componentsProps?.toolbar,
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -94,11 +94,13 @@ DesktopNextDateRangePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -277,6 +279,16 @@ DesktopNextDateRangePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

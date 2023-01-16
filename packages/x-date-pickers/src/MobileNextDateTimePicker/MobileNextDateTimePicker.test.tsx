@@ -84,6 +84,23 @@ describe('<MobileNextDateTimePicker />', () => {
     });
   });
 
+  describe('Slots: Tabs', () => {
+    it('should not render tabs when `hidden` is `true`', () => {
+      render(
+        <MobileNextDateTimePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          slotProps={{
+            tabs: { hidden: true },
+          }}
+        />,
+      );
+
+      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+  });
+
   describe('Component slots: Toolbar', () => {
     it('should not render only toolbar when `hidden` is `true`', () => {
       render(

@@ -79,11 +79,19 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     onChange,
     value,
     components,
-    componentsProps,
+    componentsProps: providedComponentsProps,
     localeText,
     yearsPerRow = 4,
     ...other
   } = props;
+
+  const componentsProps: DesktopDateTimePickerProps<TDate>['componentsProps'] = {
+    ...providedComponentsProps,
+    tabs: {
+      hidden: true,
+      ...providedComponentsProps?.tabs,
+    },
+  };
 
   const AllDateInputProps = {
     ...inputProps,

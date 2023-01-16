@@ -60,7 +60,7 @@ export const gridFilteredDescendantCountLookupSelector = createSelector(
  * Does not contain the collapsed children.
  * @category Filtering
  */
-export const gridVisibleSortedRowEntriesSelector = createSelector(
+export const gridExpandedSortedRowEntriesSelector = createSelector(
   gridVisibleRowsLookupSelector,
   gridSortedRowEntriesSelector,
   (visibleRowsLookup, sortedRows) =>
@@ -72,8 +72,8 @@ export const gridVisibleSortedRowEntriesSelector = createSelector(
  * Does not contain the collapsed children.
  * @category Filtering
  */
-export const gridVisibleSortedRowIdsSelector = createSelector(
-  gridVisibleSortedRowEntriesSelector,
+export const gridExpandedSortedRowIdsSelector = createSelector(
+  gridExpandedSortedRowEntriesSelector,
   (visibleSortedRowEntries) => visibleSortedRowEntries.map((row) => row.id),
 );
 
@@ -103,8 +103,8 @@ export const gridFilteredSortedRowIdsSelector = createSelector(
  * Get the id and the model of the top level rows accessible after the filtering process.
  * @category Filtering
  */
-export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
-  gridVisibleSortedRowEntriesSelector,
+export const gridFilteredSortedTopLevelRowEntriesSelector = createSelector(
+  gridExpandedSortedRowEntriesSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
   (visibleSortedRows, rowTree, rowTreeDepth) => {
@@ -120,8 +120,8 @@ export const gridVisibleSortedTopLevelRowEntriesSelector = createSelector(
  * Get the amount of rows accessible after the filtering process.
  * @category Filtering
  */
-export const gridVisibleRowCountSelector = createSelector(
-  gridVisibleSortedRowEntriesSelector,
+export const gridExpandedRowCountSelector = createSelector(
+  gridExpandedSortedRowEntriesSelector,
   (visibleSortedRows) => visibleSortedRows.length,
 );
 
@@ -129,8 +129,8 @@ export const gridVisibleRowCountSelector = createSelector(
  * Get the amount of top level rows accessible after the filtering process.
  * @category Filtering
  */
-export const gridVisibleTopLevelRowCountSelector = createSelector(
-  gridVisibleSortedTopLevelRowEntriesSelector,
+export const gridFilteredTopLevelRowCountSelector = createSelector(
+  gridFilteredSortedTopLevelRowEntriesSelector,
   (visibleSortedTopLevelRows) => visibleSortedTopLevelRows.length,
 );
 
