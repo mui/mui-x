@@ -324,8 +324,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}
-          isLastColumn={columnIndex === visibleColumns.length - 1}
-          extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           {...other}
@@ -447,7 +445,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                   colIndex={colIndex}
                   depth={depthIndex}
                   isLastColumn={colIndex === visibleColumns.length - fields.length}
-                  extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                   maxDepth={headerToRender.length}
                   height={headerHeight}
                   hasFocus={hasFocus}

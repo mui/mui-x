@@ -120,7 +120,7 @@ import { DateTime } from 'luxon';
 <DatePicker value={DateTime.now()} />;
 ```
 
-### Drop `clock` in desktop mode
+### Stop rendering a clock on desktop
 
 In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
 This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
@@ -523,16 +523,18 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `toolbarPlaceholder` and `toolbarFormat` props have been moved to the `toolbar` component slots props:
+- The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slots props:
 
   ```diff
    <DatePicker
   -  toolbarPlaceholder="__"
   -  toolbarFormat="DD / MM / YYYY"
+  -  showToolbar
   +  componentsProps={{
   +    toolbar: {
   +      toolbarPlaceholder: "__",
   +      toolbarFormat: "DD / MM / YYYY",
+  +      hidden: false,
   +    }
   +  }}
    />

@@ -77,7 +77,6 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showToolbar": { "type": { "name": "bool" } },
     "sx": {
       "type": {
         "name": "union",

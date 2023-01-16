@@ -319,10 +319,6 @@ StaticTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar: PropTypes.bool,
-  /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx: PropTypes.oneOfType([

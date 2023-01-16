@@ -48,32 +48,28 @@ function hasNativeSelection(element: HTMLInputElement) {
 export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCommunity>): void => {
   const copySelectedRowsToClipboard = React.useCallback<
     GridClipboardApi['unstable_copySelectedRowsToClipboard']
-  >(
-    (includeHeaders = false) => {
-      if (apiRef.current.getSelectedRows().size === 0) {
-        return;
-      }
+  >(() => {
+    if (apiRef.current.getSelectedRows().size === 0) {
+      return;
+    }
 
-      const data = apiRef.current.getDataAsCsv({
-        includeHeaders,
-        delimiter: '\t',
-      });
+    const data = apiRef.current.getDataAsCsv({
+      includeHeaders: false,
+      delimiter: '\t',
+    });
 
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(data).catch(() => {
-          writeToClipboardPolyfill(data);
-        });
-      } else {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(data).catch(() => {
         writeToClipboardPolyfill(data);
-      }
-    },
-    [apiRef],
-  );
+      });
+    } else {
+      writeToClipboardPolyfill(data);
+    }
+  }, [apiRef]);
 
   const handleKeydown = React.useCallback(
     (event: KeyboardEvent) => {
-      const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
-      // event.key === 'c' is not enough as alt+c can lead to ©, ç, or other characters on macOS.
+      const isModifierKeyPressed = event.ctrlKey || event.metaKey;
       // event.code === 'KeyC' is not enough as event.code assume a QWERTY keyboard layout which would
       // be wrong with a Dvorak keyboard (as if pressing J).
       if (String.fromCharCode(event.keyCode) !== 'C' || !isModifierKeyPressed) {
@@ -85,7 +81,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         return;
       }
 
-      apiRef.current.unstable_copySelectedRowsToClipboard(event.altKey);
+      apiRef.current.unstable_copySelectedRowsToClipboard();
     },
     [apiRef],
   );
