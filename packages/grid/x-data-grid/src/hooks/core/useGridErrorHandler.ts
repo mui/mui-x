@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
-import { useGridApiEventHandler } from '../utils/useGridApiEventHandler';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridApiMethod } from '../utils/useGridApiMethod';
+import type { GridCoreApi } from '../../models';
 
 export function useGridErrorHandler(
-  apiRef: React.MutableRefObject<GridApiCommunity>,
+  apiRef: React.MutableRefObject<GridPrivateApiCommon>,
   props: Pick<DataGridProcessedProps, 'error'>,
 ) {
-  const handleError = React.useCallback(
-    (args: any) => {
-      // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
+  const showError = React.useCallback<GridCoreApi['showError']>(
+    (args) => {
       apiRef.current.setState((state) => ({ ...state, error: args }));
     },
     [apiRef],
@@ -17,11 +17,11 @@ export function useGridErrorHandler(
 
   React.useEffect(() => {
     if (props.error) {
-      handleError({ error: props.error });
+      showError(props.error);
     } else {
-      handleError(null);
+      showError(null);
     }
-  }, [handleError, props.error]);
+  }, [showError, props.error]);
 
-  useGridApiEventHandler(apiRef, 'componentError', handleError);
+  useGridApiMethod(apiRef, { showError }, 'public');
 }

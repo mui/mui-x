@@ -442,13 +442,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowEditStop?: GridEventListener<'rowEditStop'>;
   /**
-   * Callback fired when an exception is thrown in the grid.
-   * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onError?: GridEventListener<'componentError'>;
-  /**
    * Callback fired when any cell is clicked.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.MouseEvent>} event The event object.
@@ -684,7 +677,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
-  error?: any;
+  error?: { message: string } | string | boolean | null;
   /**
    * Return the id of a given [[GridRowModel]].
    */

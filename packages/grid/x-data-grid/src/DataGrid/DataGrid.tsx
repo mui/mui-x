@@ -179,7 +179,13 @@ DataGridRaw.propTypes = {
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
-  error: PropTypes.any,
+  error: PropTypes.oneOfType([
+    PropTypes.shape({
+      message: PropTypes.string.isRequired,
+    }),
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
   /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
@@ -414,13 +420,6 @@ DataGridRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onColumnVisibilityModelChange: PropTypes.func,
-  /**
-   * Callback fired when an exception is thrown in the grid.
-   * @param {any} args The arguments passed to the `showError` call.
-   * @param {MuiEvent<{}>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onError: PropTypes.func,
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param {GridFilterModel} model With all properties from [[GridFilterModel]].

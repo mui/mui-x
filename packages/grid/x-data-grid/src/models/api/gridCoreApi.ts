@@ -3,6 +3,7 @@ import { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import { EventManager, EventListenerOptions } from '../../utils/EventManager';
 import { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
+import type { DataGridProps } from '../props/DataGridProps';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -34,9 +35,9 @@ export interface GridCoreApi {
   publishEvent: GridEventPublisher;
   /**
    * Displays the error overlay component.
-   * @param {any} props Props to be passed to the `ErrorOverlay` component.
+   * @param {DataGridProps['error']} error The error to be passed to the `ErrorOverlay` component.
    */
-  showError: (props: any) => void;
+  showError: (error: DataGridProps['error']) => void;
   /**
    * Unique identifier for each component instance in a page.
    * @ignore - do not document.

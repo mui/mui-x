@@ -81,6 +81,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
+- The `onError` prop was removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
 
 ### State access
 
@@ -117,6 +118,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
   For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
   The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
 
   ```tsx
   <DataGrid
@@ -193,6 +195,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
+- The `apiRef.current.showError` method argument type was narrowed. Same for the `error` prop.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.

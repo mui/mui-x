@@ -332,10 +332,6 @@ export interface GridEventLookup
    */
   unmount: {};
   /**
-   * Fired when an exception is thrown in the grid.
-   */
-  componentError: { params: any };
-  /**
    * Fired when the state of the grid is updated.
    */
   stateChange: { params: any };

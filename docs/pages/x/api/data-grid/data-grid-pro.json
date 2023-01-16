@@ -55,7 +55,12 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "error": { "type": { "name": "any" } },
+    "error": {
+      "type": {
+        "name": "union",
+        "description": "{ message: string }<br>&#124;&nbsp;string<br>&#124;&nbsp;bool"
+      }
+    },
     "experimentalFeatures": {
       "type": {
         "name": "shape",
@@ -129,7 +134,6 @@
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
