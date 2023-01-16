@@ -29,7 +29,7 @@
     "reduceAnimations": "Disable heavy animations.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
-    "showDaysOutsideCurrentMonth": "If <code>true</code>, days outside the current month are rendered: - if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested. - if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month. On range pickers, it will be ignored if more than one <code>calendars</code> is rendered.",
+    "showDaysOutsideCurrentMonth": "If <code>true</code>, days outside the current month are rendered:<br>- if <code>fixedWeekNumber</code> is defined, renders days to have the weeks requested.<br>- if <code>fixedWeekNumber</code> is not defined, renders day to fill the first and last week of the current month.<br>On range pickers, it will be ignored if more than one <code>calendars</code> is rendered.",
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
     "slotProps": "The props used for each component slot.",
     "slots": "Overrideable component slots.",
