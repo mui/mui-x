@@ -5,6 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '../DesktopNextTimePicker';
 import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '../MobileNextTimePicker';
 import { NextTimePickerProps } from './NextTimePicker.types';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type TimePickerComponent = (<TDate>(
   props: NextTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -16,7 +17,7 @@ const NextTimePicker = React.forwardRef(function NextTimePicker<TDate>(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiNextTimePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
@@ -62,11 +63,13 @@ NextTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -239,6 +242,16 @@ NextTimePicker.propTypes = {
    * @default `true` for mobile, `false` for desktop
    */
   showToolbar: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

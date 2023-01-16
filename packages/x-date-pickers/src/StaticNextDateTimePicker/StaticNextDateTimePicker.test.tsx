@@ -105,6 +105,55 @@ describe('<StaticNextDateTimePicker />', () => {
     });
   });
 
+  describe('Slots: Tabs', () => {
+    it('should not render tabs when `hidden` is `true`', () => {
+      render(
+        <StaticNextDateTimePicker
+          slotProps={{
+            tabs: { hidden: true },
+          }}
+        />,
+      );
+
+      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+
+    it('should render tabs when `hidden` is `false`', () => {
+      render(
+        <StaticNextDateTimePicker
+          displayStaticWrapperAs="desktop"
+          slotProps={{
+            tabs: { hidden: false },
+          }}
+        />,
+      );
+
+      expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+    });
+
+    it('should render custom component', () => {
+      function CustomPickerTabs(props: DateTimePickerTabsProps) {
+        return (
+          <React.Fragment>
+            <DateTimePickerTabs {...props} />
+            <span>test-custom-picker-tabs</span>
+          </React.Fragment>
+        );
+      }
+      render(
+        <StaticNextDateTimePicker
+          displayStaticWrapperAs="mobile"
+          slots={{ tabs: CustomPickerTabs }}
+        />,
+      );
+
+      expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
+      expect(screen.getByText('test-custom-picker-tabs')).not.to.equal(null);
+    });
+  });
+
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
       render(<StaticNextDateTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);

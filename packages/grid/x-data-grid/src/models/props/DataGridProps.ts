@@ -36,6 +36,11 @@ export interface GridExperimentalFeatures {
    * Enables the column grouping.
    */
   columnGrouping: boolean;
+  /**
+   * Emits a warning if the cell receives focus without also syncing the focus state.
+   * Only works if NODE_ENV=test.
+   */
+  warnIfFocusStateIsNotSynced: boolean;
 }
 
 /**
@@ -156,11 +161,6 @@ export interface DataGridPropsWithDefaultValues {
    * @default "standard"
    */
   density: GridDensity;
-  /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: boolean;
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -462,13 +462,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onCellDoubleClick?: GridEventListener<'cellDoubleClick'>;
-  /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut?: GridEventListener<'cellFocusOut'>;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].

@@ -7,7 +7,7 @@ import {
   DataGrid,
   DataGridProps,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -81,7 +81,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       clock.runToLast();
       expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
         items: [],
-        linkOperator: 'and',
+        logicOperator: 'and',
         quickFilterValues: ['adid', 'nik'],
         quickFilterLogicOperator: 'and',
       });
@@ -163,7 +163,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       render(
         <TestCase
           initialState={{
-            filter: { filterModel: { items: [], quickFilterLogicOperator: GridLinkOperator.Or } },
+            filter: { filterModel: { items: [], quickFilterLogicOperator: GridLogicOperator.Or } },
           }}
         />,
       );

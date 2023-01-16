@@ -8,18 +8,18 @@ import {
   unstable_useId as useId,
 } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { Clock, ClockProps } from './Clock';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
 import { PickerSelectionState } from '../internals/hooks/usePickerState';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
-import { getTimeClockUtilityClass } from './timeClockClasses';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
+import { getTimeClockUtilityClass } from './timeClockClasses';
+import { Clock, ClockProps } from './Clock';
 import { TimeClockProps } from './TimeClock.types';
+import { getHourNumbers, getMinutesNumbers } from './ClockNumbers';
 
 const useUtilityClasses = (ownerState: TimeClockProps<any>) => {
   const { classes } = ownerState;
@@ -40,7 +40,7 @@ const TimeClockRoot = styled(PickerViewRoot, {
   flexDirection: 'column',
 });
 
-const TimeCLockArrowSwitcher = styled(PickersArrowSwitcher, {
+const TimeClockArrowSwitcher = styled(PickersArrowSwitcher, {
   name: 'MuiTimeClock',
   slot: 'ArrowSwitcher',
   overridesResolver: (props, styles) => styles.arrowSwitcher,
@@ -80,6 +80,8 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     autoFocus,
     components,
     componentsProps,
+    slots,
+    slotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -342,10 +344,12 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       sx={sx}
     >
       {showViewSwitcher && (
-        <TimeCLockArrowSwitcher
+        <TimeClockArrowSwitcher
           className={classes.arrowSwitcher}
           components={components}
           componentsProps={componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}
@@ -358,7 +362,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
 
       <Clock<TDate>
         autoFocus={autoFocus}
-        ampmInClock={ampmInClock}
+        ampmInClock={ampmInClock && views.includes('hours')}
         value={value}
         type={view}
         ampm={ampm}
@@ -402,11 +406,13 @@ TimeClock.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -487,6 +493,16 @@ TimeClock.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

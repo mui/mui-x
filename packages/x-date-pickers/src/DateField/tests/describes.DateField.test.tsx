@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import TextField from '@mui/material/TextField';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   createPickerRenderer,
   wrapPickerMount,
@@ -18,7 +19,7 @@ describe('<DateField /> - Describes', () => {
 
   describeConformance(<DateField />, () => ({
     classes: {},
-    inheritComponent: 'div',
+    inheritComponent: TextField,
     render,
     muiName: 'MuiDateField',
     wrapMount: wrapPickerMount,

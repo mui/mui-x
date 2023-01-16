@@ -6,8 +6,8 @@ export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
 
-export function isObject<TObject = Record<string, any>>(value: any): value is TObject {
-  return typeof value === 'object';
+export function isObject<TObject = Record<PropertyKey, any>>(value: unknown): value is TObject {
+  return typeof value === 'object' && value !== null;
 }
 
 export function localStorageAvailable() {

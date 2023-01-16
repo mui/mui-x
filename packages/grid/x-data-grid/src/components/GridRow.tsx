@@ -13,6 +13,7 @@ import {
   GridEditingState,
   GridCellModes,
 } from '../models/gridEditRowModel';
+import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
@@ -32,7 +33,6 @@ import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRows
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
 import { GridCellProps } from './cell/GridCell';
-import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 
 export interface GridRowProps {
   rowId: GridRowId;
@@ -122,7 +122,7 @@ const GridRow = React.forwardRef<
     onMouseLeave,
     ...other
   } = props;
-  const apiRef = useGridPrivateApiContext();
+  const apiRef = useGridApiContext();
   const ref = React.useRef<HTMLDivElement>(null);
   const rootProps = useGridRootProps();
   const currentPage = useGridVisibleRows(apiRef, rootProps);
@@ -133,10 +133,6 @@ const GridRow = React.forwardRef<
   const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const ownerState = {
     selected,
@@ -362,7 +358,6 @@ const GridRow = React.forwardRef<
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
-          isOutlined={apiRef.current.isCellOutlined(rowId, column.field)}
           isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
@@ -455,12 +450,6 @@ const GridRow = React.forwardRef<
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-    const showRightBorder = !isLastColumn
-      ? rootProps.showCellVerticalBorder
-      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
-
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
       indexRelativeToAllColumns,
@@ -469,7 +458,12 @@ const GridRow = React.forwardRef<
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-        const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
+        const cellProps = {
+          width,
+          colSpan,
+          showRightBorder: rootProps.showCellVerticalBorder,
+          indexRelativeToAllColumns,
+        };
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;

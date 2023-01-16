@@ -49,7 +49,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'افزودن فیلتر',
   filterPanelDeleteIconLabel: 'حذف',
-  filterPanelLinkOperator: 'عملگر منطقی',
+  filterPanelLogicOperator: 'عملگر منطقی',
   filterPanelOperator: 'عملگرها',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'یا',

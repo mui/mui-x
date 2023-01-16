@@ -21,6 +21,9 @@ import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValu
 import { ExportedUseViewsOptions } from '../internals/hooks/useViews';
 import { DateView } from '../internals/models/views';
 import { DefaultizedProps } from '../internals/models/helpers';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
+import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
+import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types';
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
@@ -31,7 +34,9 @@ export interface DateCalendarSlotsComponentsProps<TDate>
     DayCalendarSlotsComponentsProps<TDate> {}
 
 export interface ExportedDateCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
+    ExportedMonthCalendarProps,
+    ExportedYearCalendarProps,
     BaseDateValidationProps<TDate>,
     DayValidationProps<TDate>,
     YearValidationProps<TDate>,
@@ -78,7 +83,8 @@ export interface ExportedDateCalendarProps<TDate>
 
 export interface DateCalendarProps<TDate>
   extends ExportedDateCalendarProps<TDate>,
-    ExportedUseViewsOptions<DateView> {
+    ExportedUseViewsOptions<DateView>,
+    SlotsAndSlotProps<DateCalendarSlotsComponent<TDate>, DateCalendarSlotsComponentsProps<TDate>> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -102,16 +108,6 @@ export interface DateCalendarProps<TDate>
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
   sx?: SxProps<Theme>;
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DateCalendarSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DateCalendarSlotsComponentsProps<TDate>;
 }
 
 export type DateCalendarDefaultizedProps<TDate> = DefaultizedProps<

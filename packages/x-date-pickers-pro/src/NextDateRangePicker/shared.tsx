@@ -9,6 +9,8 @@ import {
   BaseDateValidationProps,
   BaseNextPickerInputProps,
   PickerViewRendererLookup,
+  UncapitalizeObjectKeys,
+  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRangeValidationError } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -48,13 +50,25 @@ export interface BaseNextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: BaseNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<BaseNextDateRangePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -73,10 +87,13 @@ type UseNextDateRangePickerDefaultizedProps<
 export function useNextDateRangePickerDefaultizedProps<
   TDate,
   Props extends BaseNextDateRangePickerProps<TDate>,
->(props: Props, name: string): UseNextDateRangePickerDefaultizedProps<TDate, Props> {
+>(
+  props: Props,
+  name: string,
+): UseNextDateRangePickerDefaultizedProps<TDate, Omit<Props, 'components' | 'componentsProps'>> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
-  const themeProps = useThemeProps({
+  const { components, componentsProps, ...themeProps } = useThemeProps({
     props,
     name,
   });
@@ -99,6 +116,10 @@ export function useNextDateRangePickerDefaultizedProps<
     disablePast: themeProps.disablePast ?? false,
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
-    components: { Toolbar: DateRangePickerToolbar, ...themeProps.components },
+    slots: {
+      toolbar: DateRangePickerToolbar,
+      ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
+    },
+    slotProps: themeProps.slotProps ?? componentsProps,
   };
 }

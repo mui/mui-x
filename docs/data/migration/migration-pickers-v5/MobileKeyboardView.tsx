@@ -15,7 +15,7 @@ import {
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   DatePickerToolbar,
   DatePickerToolbarProps,
