@@ -12,7 +12,7 @@ export default function DateTimeValidationMaxDateTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker defaultValue={todayAtNoon} maxDateTime={todayAt9AM} />
         </DemoItem>
       </DemoContainer>

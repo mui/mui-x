@@ -16,24 +16,24 @@ export default function DateValidationDisablePast() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="DatePicker">
+        <DemoItem label="DatePicker" content="NextDatePicker">
           <NextDatePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker">
+        <DemoItem label="TimePicker" content="NextTimePicker">
           <NextTimePicker defaultValue={todayStartOfTheDay} disablePast />
         </DemoItem>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker">
+        <DemoItem label="DateRangePicker" content="NextDateRangePicker">
           <NextDateRangePicker defaultValue={[yesterday, today]} disablePast />
         </DemoItem>
       </DemoContainer>

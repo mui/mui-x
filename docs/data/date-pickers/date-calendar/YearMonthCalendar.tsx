@@ -9,10 +9,10 @@ export default function YearMonthCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="YearCalendar">
+        <DemoItem label="YearCalendar" content="YearCalendar">
           <YearCalendar />
         </DemoItem>
-        <DemoItem label="MonthCalendar">
+        <DemoItem label="MonthCalendar" content="MonthCalendar">
           <MonthCalendar />
         </DemoItem>
       </DemoContainer>

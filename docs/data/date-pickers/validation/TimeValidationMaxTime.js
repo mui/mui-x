@@ -13,10 +13,10 @@ export default function TimeValidationMaxTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="TimePicker">
+        <DemoItem label="TimePicker" content="NextTimePicker">
           <NextTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </DemoItem>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </DemoItem>
       </DemoContainer>

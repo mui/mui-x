@@ -1,12 +1,14 @@
-<DemoItem label="SingleInputDateRangeField">
+<DemoItem label="SingleInputDateRangeField" content="SingleInputDateRangeField">
   <SingleInputDateRangeField defaultValue={[date1, date2]} />
 </DemoItem>
-<DemoItem label="MultiInputDateRangeField">
+<DemoItem label="MultiInputDateRangeField" content="MultiInputDateRangeField">
   <MultiInputDateRangeField defaultValue={[date1, date2]} />
 </DemoItem>
-<DemoItem label="MultiInputTimeRangeField">
+<DemoItem label="MultiInputTimeRangeField" content="MultiInputTimeRangeField">
   <MultiInputTimeRangeField defaultValue={[date1, date2]} />
 </DemoItem>
-<DemoItem label="MultiInputDateTimeRangeField">
+<DemoItem
+  label="MultiInputDateTimeRangeField"
+  content="MultiInputDateTimeRangeField">
   <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
 </DemoItem>

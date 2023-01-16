@@ -14,21 +14,21 @@ export default function DateValidationMaxDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="DatePicker">
+        <DemoItem label="DatePicker" content="NextDatePicker">
           <NextDatePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker">
+        <DemoItem label="DateRangePicker" content="NextDateRangePicker">
           <NextDateRangePicker
             defaultValue={[yesterday, today]}
             maxDate={yesterday}

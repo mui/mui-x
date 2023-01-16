@@ -8,13 +8,13 @@ export default function TimeClockViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label={'"hours", "minutes" and "seconds"'}>
+        <DemoItem label={'"hours", "minutes" and "seconds"'} content="TimeClock">
           <TimeClock views={['hours', 'minutes', 'seconds']} />
         </DemoItem>
-        <DemoItem label={'"hours"'}>
+        <DemoItem label={'"hours"'} content="TimeClock">
           <TimeClock views={['hours']} />
         </DemoItem>
-        <DemoItem label={'"minutes" and "seconds"'}>
+        <DemoItem label={'"minutes" and "seconds"'} content="TimeClock">
           <TimeClock views={['minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>

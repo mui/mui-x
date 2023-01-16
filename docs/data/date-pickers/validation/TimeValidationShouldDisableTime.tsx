@@ -20,13 +20,13 @@ export default function TimeValidationShouldDisableTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="TimePicker">
+        <DemoItem label="TimePicker" content="NextTimePicker">
           <NextTimePicker
             defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker
             defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}

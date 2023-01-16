@@ -10,15 +10,19 @@ export default function DateTimePickerViews() {
       <DemoContainer>
         <DemoItem
           label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
+          content="NextDateTimePicker"
         >
           <NextDateTimePicker
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
           />
         </DemoItem>
-        <DemoItem label={'"day", "hours"'}>
+        <DemoItem label={'"day", "hours"'} content="NextDateTimePicker">
           <NextDateTimePicker views={['day', 'hours']} />
         </DemoItem>
-        <DemoItem label={'"year", "day", "hours", "minutes", "seconds"'}>
+        <DemoItem
+          label={'"year", "day", "hours", "minutes", "seconds"'}
+          content="NextDateTimePicker"
+        >
           <NextDateTimePicker
             views={['year', 'day', 'hours', 'minutes', 'seconds']}
           />

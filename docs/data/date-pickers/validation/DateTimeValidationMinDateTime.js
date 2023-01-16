@@ -12,7 +12,7 @@ export default function DateTimeValidationMinDateTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="DateTimePicker">
+        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
           <NextDateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
         </DemoItem>
       </DemoContainer>

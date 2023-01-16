@@ -8,10 +8,10 @@ export default function FormPropsDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="disabled">
+        <DemoItem label="disabled" content="NextDateRangePicker">
           <NextDateRangePicker disabled />
         </DemoItem>
-        <DemoItem label="readOnly">
+        <DemoItem label="readOnly" content="NextDateRangePicker">
           <NextDateRangePicker readOnly />
         </DemoItem>
       </DemoContainer>

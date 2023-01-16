@@ -12,16 +12,16 @@ export default function ResponsiveDateTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="Desktop variant">
+        <DemoItem label="Desktop variant" content="DesktopNextDateTimePicker">
           <DesktopNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant">
+        <DemoItem label="Mobile variant" content="MobileNextDateTimePicker">
           <MobileNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant">
+        <DemoItem label="Responsive variant" content="NextDateTimePicker">
           <NextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant">
+        <DemoItem label="Static variant" content="StaticNextDateTimePicker">
           <StaticNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

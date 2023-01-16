@@ -15,12 +15,12 @@ export default function DateRangePickerValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="Uncontrolled picker">
+        <DemoItem label="Uncontrolled picker" content="NextDateRangePicker">
           <NextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Controlled picker">
+        <DemoItem label="Controlled picker" content="NextDateRangePicker">
           <NextDateRangePicker
             value={value}
             onChange={(newValue) => setValue(newValue)}

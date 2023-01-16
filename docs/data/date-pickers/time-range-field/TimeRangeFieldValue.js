@@ -15,12 +15,12 @@ export default function TimeRangeFieldValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="Uncontrolled field">
+        <DemoItem label="Uncontrolled field" content="SingleInputTimeRangeField">
           <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
-        <DemoItem label="Controlled field">
+        <DemoItem label="Controlled field" content="SingleInputTimeRangeField">
           <SingleInputTimeRangeField
             value={value}
             onChange={(newValue) => setValue(newValue)}
