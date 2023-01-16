@@ -154,6 +154,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   + return undefined;
    }
   ```
+
 - The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
 - The `singleSelect` column type now has a default value formatter that returns the `label` correspoding to the selected value when `valueOptions` is an array of objects.
   As consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
@@ -179,6 +180,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `GridColumnPinningMenuItems`                                        | `GridColumnMenuPinningItem`     |
   | `GridAggregationColumnMenuItem`                                     | `GridColumnMenuAggregationItem` |
   | `GridRowGroupingColumnMenuItems`, `GridRowGroupableColumnMenuItems` | `GridColumnMenuGroupingItem`    |
+
 - The `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
 
