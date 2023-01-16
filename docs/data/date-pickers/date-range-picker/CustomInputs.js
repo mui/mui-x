@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 function BrowserInput(props) {
   const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
@@ -50,7 +50,7 @@ BrowserInput.propTypes = {
 export default function CustomInputs() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDateRangePicker
+      <DateRangePicker
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
         components={{
           TextField: BrowserInput,

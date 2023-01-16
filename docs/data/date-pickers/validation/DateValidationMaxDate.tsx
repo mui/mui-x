@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 const today = dayjs();
 const yesterday = dayjs().subtract(1, 'day');
@@ -29,10 +29,7 @@ export default function DateValidationMaxDate() {
           />
         </DemoItem>
         <DemoItem label="DateRangePicker">
-          <NextDateRangePicker
-            defaultValue={[yesterday, today]}
-            maxDate={yesterday}
-          />
+          <DateRangePicker defaultValue={[yesterday, today]} maxDate={yesterday} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

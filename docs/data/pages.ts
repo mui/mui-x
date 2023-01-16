@@ -270,8 +270,8 @@ const pages: MuiPage[] = [
             title: 'DesktopDatePicker',
           },
           {
-            pathname: '/x/api/date-pickers/desktop-next-date-range-picker',
-            title: 'DesktopNextDateRangePicker',
+            pathname: '/x/api/date-pickers/desktop-date-range-picker',
+            title: 'DesktopDateRangePicker',
             plan: 'pro',
           },
           {
@@ -288,8 +288,8 @@ const pages: MuiPage[] = [
             title: 'MobileDatePicker',
           },
           {
-            pathname: '/x/api/date-pickers/mobile-next-date-range-picker',
-            title: 'MobileNextDateRangePicker',
+            pathname: '/x/api/date-pickers/mobile-date-range-picker',
+            title: 'MobileDateRangePicker',
             plan: 'pro',
           },
           {
@@ -297,7 +297,7 @@ const pages: MuiPage[] = [
             title: 'MobileDateTimePicker',
           },
           {
-            pathname: '/x/api/date-pickers/mobile-next-picker',
+            pathname: '/x/api/date-pickers/mobile-picker',
             title: 'MobileTimePicker',
           },
           { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
@@ -318,12 +318,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
-            pathname: '/x/api/date-pickers/next-date-range-picker',
-            title: 'NextDateRangePicker',
+            pathname: '/x/api/date-pickers/date-range-picker',
+            title: 'DateRangePicker',
             plan: 'pro',
           },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
-          { pathname: '/x/api/date-pickers/next-picker', title: 'TimePicker' },
+          { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
           { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
@@ -347,8 +347,8 @@ const pages: MuiPage[] = [
             title: 'StaticDatePicker',
           },
           {
-            pathname: '/x/api/date-pickers/static-next-date-range-picker',
-            title: 'StaticNextDateRangePicker',
+            pathname: '/x/api/date-pickers/static-date-range-picker',
+            title: 'StaticDateRangePicker',
             plan: 'pro',
           },
           {

@@ -29,10 +29,10 @@
 
 #### Date Range Pickers
 
-- [NextDateRangePicker](/x/api/date-pickers/next-date-range-picker/)
-- [DesktopNextDateRangePicker](/x/api/date-pickers/desktop-next-date-range-picker/)
-- [MobileNextDateRangePicker](/x/api/date-pickers/mobile-next-date-range-picker/)
-- [StaticNextDateRangePicker](/x/api/date-pickers/static-next-date-range-picker/)
+- [DateRangePicker](/x/api/date-pickers/date-range-picker/)
+- [DesktopDateRangePicker](/x/api/date-pickers/desktop-date-range-picker/)
+- [MobileDateRangePicker](/x/api/date-pickers/mobile-date-range-picker/)
+- [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker/)
 
 ### Fields
 

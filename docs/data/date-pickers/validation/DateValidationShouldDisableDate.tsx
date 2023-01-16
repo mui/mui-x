@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 const lastMonday = dayjs().startOf('week');
 const nextSunday = dayjs().endOf('week').startOf('day');
@@ -35,7 +35,7 @@ export default function DateValidationShouldDisableDate() {
           />
         </DemoItem>
         <DemoItem label="DateRangePicker">
-          <NextDateRangePicker
+          <DateRangePicker
             defaultValue={[lastMonday, nextSunday]}
             shouldDisableDate={isWeekend}
           />

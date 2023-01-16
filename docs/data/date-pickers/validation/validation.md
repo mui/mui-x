@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: Date and Time Pickers - Validation
-components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker, TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker, DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -14,7 +14,7 @@ All the date and time pickers have an API for adding validation constraints.
 By default, they provide visual feedback if the component value doesn't meet the validation criteria.
 
 :::info
-The validation props are showcased for each type of picker component using the responsive pickers (`TimePicker`, `DatePicker`, `NextDateRangePicker`, etc)
+The validation props are showcased for each type of picker component using the responsive pickers (`TimePicker`, `DatePicker`, `DateRangePicker`, etc)
 
 But the same props are available on:
 

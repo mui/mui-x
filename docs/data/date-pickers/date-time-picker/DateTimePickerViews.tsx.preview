@@ -9,7 +9,5 @@
   <DateTimePicker views={['day', 'hours']} />
 </DemoItem>
 <DemoItem label={'"year", "day", "hours", "minutes", "seconds"'}>
-  <DateTimePicker
-    views={['year', 'day', 'hours', 'minutes', 'seconds']}
-  />
+  <DateTimePicker views={['year', 'day', 'hours', 'minutes', 'seconds']} />
 </DemoItem>
