@@ -40,7 +40,7 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     slotProps: {
       ...defaultizedProps.slotProps,
       toolbar: {
-        hidden: displayStaticWrapperAs !== 'mobile',
+        hidden: displayStaticWrapperAs === 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
     },

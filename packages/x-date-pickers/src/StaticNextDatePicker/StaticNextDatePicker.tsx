@@ -39,7 +39,7 @@ const StaticNextDatePicker = React.forwardRef(function StaticNextDatePicker<TDat
     slotProps: {
       ...defaultizedProps.slotProps,
       toolbar: {
-        hidden: displayStaticWrapperAs !== 'mobile',
+        hidden: displayStaticWrapperAs === 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
