@@ -545,7 +545,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             currentMonth={month}
             TransitionProps={CalendarTransitionProps}
             shouldDisableDate={wrappedShouldDisableDate}
-            showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+            showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
             dayOfWeekFormatter={dayOfWeekFormatter}
             loading={loading}
             renderLoading={renderLoading}
@@ -703,7 +703,13 @@ DateRangeCalendar.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
