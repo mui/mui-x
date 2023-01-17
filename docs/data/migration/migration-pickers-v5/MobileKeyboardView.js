@@ -219,6 +219,14 @@ function ToolbarWithKeyboardViewSwitch(props) {
 
   return <DatePickerToolbar {...other} />;
 }
+
+ToolbarWithKeyboardViewSwitch.propTypes = {
+  isLandscape: PropTypes.bool.isRequired,
+  setShowKeyboardView: PropTypes.func,
+  showKeyboardView: PropTypes.bool,
+  showKeyboardViewSwitch: PropTypes.bool,
+};
+
 export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
