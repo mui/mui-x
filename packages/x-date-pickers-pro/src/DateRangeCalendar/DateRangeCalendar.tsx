@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -23,11 +24,11 @@ import {
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
-  WrapperVariantContext,
   PickerSelectionState,
   useNow,
   uncapitalizeObjectKeys,
   UncapitalizeObjectKeys,
+  DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -155,7 +156,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
-  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
+  const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
+    defaultMatches: false,
+  });
 
   const {
     value: valueProp,
@@ -433,15 +436,17 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         : isSelectedEndDate;
 
       return {
-        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
-        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
+        isStartOfPreviewing: shouldHavePreview
+          ? isStartOfRange(utils, day, previewingRange)
+          : false,
+        isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting,
         isEndOfHighlighting: isDragging
           ? isEndOfRange(utils, day, draggingRange)
           : isSelectedEndDate,
-        onMouseEnter: handleDayMouseEnter,
+        onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
         // apply selected styling to the dragging start or end day
         isVisuallySelected:
           dayOwnerState.selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
