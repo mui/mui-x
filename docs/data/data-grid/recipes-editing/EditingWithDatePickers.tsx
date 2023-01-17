@@ -159,7 +159,7 @@ const dateAdapter = new AdapterDateFns({ locale });
  * `date` column
  */
 
-const dateColumnType: GridColTypeDef<Date | string, string> = {
+const dateColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -255,7 +255,7 @@ function GridFilterDateInput(
  * `dateTime` column
  */
 
-const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
+const dateTimeColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
