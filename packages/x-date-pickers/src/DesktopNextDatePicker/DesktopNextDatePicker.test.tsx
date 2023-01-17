@@ -114,9 +114,9 @@ describe('<DesktopNextDatePicker />', () => {
       const handleViewChange = spy();
       render(
         <DesktopNextDatePicker
-          showToolbar
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
+          slotProps={{ toolbar: { hidden: false } }}
         />,
       );
 
@@ -137,11 +137,11 @@ describe('<DesktopNextDatePicker />', () => {
       const handleViewChange = spy();
       render(
         <DesktopNextDatePicker
-          showToolbar
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
           openTo="month"
           views={['year', 'month', 'day']}
+          slotProps={{ toolbar: { hidden: false } }}
         />,
       );
 
