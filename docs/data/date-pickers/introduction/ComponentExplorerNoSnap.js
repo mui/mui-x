@@ -22,7 +22,7 @@ const getSubPackageFromExportedName = (exportedName) =>
 
 const COMPONENTS = {
   date: {
-    field: ['Unstable_DateField'],
+    field: ['DateField'],
     view: ['DateCalendar'],
     picker: [
       'Unstable_NextDatePicker',
@@ -32,7 +32,7 @@ const COMPONENTS = {
     ],
   },
   time: {
-    field: ['Unstable_TimeField'],
+    field: ['TimeField'],
     view: ['TimeClock'],
     picker: [
       'Unstable_NextTimePicker',
@@ -42,7 +42,7 @@ const COMPONENTS = {
     ],
   },
   dateTime: {
-    field: ['Unstable_DateTimeField'],
+    field: ['DateTimeField'],
     view: ['DateCalendar', 'TimeClock'],
     picker: [
       'Unstable_NextDateTimePicker',
@@ -52,10 +52,7 @@ const COMPONENTS = {
     ],
   },
   dateRange: {
-    field: [
-      'Unstable_SingleInputDateRangeField',
-      'Unstable_MultiInputDateRangeField',
-    ],
+    field: ['SingleInputDateRangeField', 'MultiInputDateRangeField'],
     view: ['DateRangeCalendar'],
     picker: [
       'Unstable_NextDateRangePicker',
@@ -65,18 +62,12 @@ const COMPONENTS = {
     ],
   },
   timeRange: {
-    field: [
-      'Unstable_SingleInputTimeRangeField',
-      'Unstable_MultiInputTimeRangeField',
-    ],
+    field: ['SingleInputTimeRangeField', 'MultiInputTimeRangeField'],
     view: [],
     picker: [],
   },
   dateTimeRange: {
-    field: [
-      'Unstable_SingleInputDateTimeRangeField',
-      'Unstable_MultiInputDateTimeRangeField',
-    ],
+    field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],
     view: [],
     picker: [],
   },

@@ -39,7 +39,7 @@ const COMPONENTS: Record<
   Record<State['family'], ExportedElements[]>
 > = {
   date: {
-    field: ['Unstable_DateField'],
+    field: ['DateField'],
     view: ['DateCalendar'],
     picker: [
       'Unstable_NextDatePicker',
@@ -49,7 +49,7 @@ const COMPONENTS: Record<
     ],
   },
   time: {
-    field: ['Unstable_TimeField'],
+    field: ['TimeField'],
     view: ['TimeClock'],
     picker: [
       'Unstable_NextTimePicker',
@@ -59,7 +59,7 @@ const COMPONENTS: Record<
     ],
   },
   dateTime: {
-    field: ['Unstable_DateTimeField'],
+    field: ['DateTimeField'],
     view: ['DateCalendar', 'TimeClock'],
     picker: [
       'Unstable_NextDateTimePicker',
@@ -69,10 +69,7 @@ const COMPONENTS: Record<
     ],
   },
   dateRange: {
-    field: [
-      'Unstable_SingleInputDateRangeField',
-      'Unstable_MultiInputDateRangeField',
-    ],
+    field: ['SingleInputDateRangeField', 'MultiInputDateRangeField'],
     view: ['DateRangeCalendar'],
     picker: [
       'Unstable_NextDateRangePicker',
@@ -82,18 +79,12 @@ const COMPONENTS: Record<
     ],
   },
   timeRange: {
-    field: [
-      'Unstable_SingleInputTimeRangeField',
-      'Unstable_MultiInputTimeRangeField',
-    ],
+    field: ['SingleInputTimeRangeField', 'MultiInputTimeRangeField'],
     view: [],
     picker: [],
   },
   dateTimeRange: {
-    field: [
-      'Unstable_SingleInputDateTimeRangeField',
-      'Unstable_MultiInputDateTimeRangeField',
-    ],
+    field: ['SingleInputDateTimeRangeField', 'MultiInputDateTimeRangeField'],
     view: [],
     picker: [],
   },

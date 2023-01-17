@@ -19,7 +19,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 The Date and Time Pickers are available in two packages:
 
-- `@mui/x-date-pickers`, which is open-source and contains all the components to edit a date and/or a time.
+- `@mui/x-date-pickers`, which is MIT licensed (free forever) and contains all the components to edit a date and/or a time.
 - `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit date and/or time ranges.
 
 ## Date library

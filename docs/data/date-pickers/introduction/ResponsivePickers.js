@@ -11,14 +11,14 @@ export default function ResponsivePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
+        <DemoItem label="Responsive variant">
+          <NextDatePicker defaultValue={dayjs('2022-04-07')} />
+        </DemoItem>
         <DemoItem label="Desktop variant">
           <DesktopNextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
         <DemoItem label="Mobile variant">
           <MobileNextDatePicker defaultValue={dayjs('2022-04-07')} />
-        </DemoItem>
-        <DemoItem label="Responsive variant">
-          <NextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>
