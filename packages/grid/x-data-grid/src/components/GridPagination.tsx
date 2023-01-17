@@ -9,7 +9,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter';
 
-import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import { gridPaginationModelSelector } from '../hooks/features/pagination/gridPaginationSelector';
 
 const GridPaginationRoot = styled(TablePagination)(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
@@ -30,7 +30,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
   function GridPagination(props, ref) {
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
-    const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+    const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
     const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
     const rowCount = React.useMemo(
@@ -39,8 +39,8 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     );
 
     const lastPage = React.useMemo(
-      () => Math.floor(rowCount / (paginationState.paginationModel.pageSize || 1)),
-      [rowCount, paginationState.paginationModel.pageSize],
+      () => Math.floor(rowCount / (paginationModel.pageSize || 1)),
+      [rowCount, paginationModel.pageSize],
     );
 
     const handlePageSizeChange = React.useCallback(
@@ -62,7 +62,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingInPageSizeOptions = React.useRef(false);
       const pageSize =
-        rootProps.paginationModel?.pageSize ?? paginationState.paginationModel.pageSize;
+        rootProps.paginationModel?.pageSize ?? paginationModel.pageSize;
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
@@ -85,16 +85,16 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
         component="div"
         count={rowCount}
         page={
-          paginationState.paginationModel.page <= lastPage
-            ? paginationState.paginationModel.page
+          paginationModel.page <= lastPage
+            ? paginationModel.page
             : lastPage
         }
         rowsPerPageOptions={
-          rootProps.pageSizeOptions?.includes(paginationState.paginationModel.pageSize)
+          rootProps.pageSizeOptions?.includes(paginationModel.pageSize)
             ? rootProps.pageSizeOptions
             : []
         }
-        rowsPerPage={paginationState.paginationModel.pageSize}
+        rowsPerPage={paginationModel.pageSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handlePageSizeChange}
         {...apiRef.current.getLocaleText('MuiTablePagination')}

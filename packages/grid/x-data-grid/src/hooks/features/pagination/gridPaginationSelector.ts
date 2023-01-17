@@ -29,8 +29,8 @@ export const gridPaginationModelSelector = createSelector(
  * @category Pagination
  */
 export const gridPageSelector = createSelector(
-  gridPaginationSelector,
-  (pagination) => pagination.paginationModel.page,
+  gridPaginationModelSelector,
+  (paginationModel) => paginationModel.page,
 );
 
 /**
@@ -38,8 +38,8 @@ export const gridPageSelector = createSelector(
  * @category Pagination
  */
 export const gridPageSizeSelector = createSelector(
-  gridPaginationSelector,
-  (pagination) => pagination.paginationModel.pageSize,
+  gridPaginationModelSelector,
+  (paginationModel) => paginationModel.pageSize,
 );
 
 /**
@@ -47,10 +47,10 @@ export const gridPageSizeSelector = createSelector(
  * @category Pagination
  */
 export const gridPageCountSelector = createSelector(
-  gridPaginationSelector,
+  gridPaginationModelSelector,
   gridFilteredTopLevelRowCountSelector,
-  (pagination, visibleTopLevelRowCount) =>
-    getPageCount(visibleTopLevelRowCount, pagination.paginationModel.pageSize),
+  (paginationModel, visibleTopLevelRowCount) =>
+    getPageCount(visibleTopLevelRowCount, paginationModel.pageSize),
 );
 
 /**
@@ -58,19 +58,19 @@ export const gridPageCountSelector = createSelector(
  * @category Pagination
  */
 export const gridPaginationRowRangeSelector = createSelector(
-  gridPaginationSelector,
+  gridPaginationModelSelector,
   gridRowTreeSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowEntriesSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
-  (pagination, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
+  (paginationModel, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
-      pagination.paginationModel.pageSize * pagination.paginationModel.page,
+      paginationModel.pageSize * paginationModel.page,
       visibleTopLevelRowCount - 1,
     );
     const topLevelLastRowIndex = Math.min(
-      topLevelFirstRowIndex + pagination.paginationModel.pageSize - 1,
+      topLevelFirstRowIndex + paginationModel.pageSize - 1,
       visibleTopLevelRowCount - 1,
     );
 
