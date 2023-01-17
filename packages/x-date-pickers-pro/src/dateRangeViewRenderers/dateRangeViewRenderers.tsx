@@ -32,6 +32,8 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
   calendars,
   components,
   componentsProps,
+  slots,
+  slotProps,
   loading,
   renderLoading,
   disableHighlightToday,
@@ -65,6 +67,8 @@ export const renderDateRangeViewCalendar = <TDate extends unknown>({
     calendars={calendars}
     components={components}
     componentsProps={componentsProps}
+    slots={slots}
+    slotProps={slotProps}
     loading={loading}
     renderLoading={renderLoading}
     disableHighlightToday={disableHighlightToday}

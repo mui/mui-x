@@ -1133,9 +1133,8 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should keep focus on the first column when editing the first column of the first row of the 2nd page', () => {
         render(
           <TestCase
-            rowsPerPageOptions={[2]}
-            pageSize={2}
-            page={1}
+            pageSizeOptions={[2]}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ id: false }}
             pagination
           />,
@@ -1150,9 +1149,8 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should keep focus on the last column when editing the last column of the last row of the 2nd page', () => {
         render(
           <TestCase
-            rowsPerPageOptions={[2]}
-            pageSize={2}
-            page={1}
+            pageSizeOptions={[2]}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ price2M: false, price3M: false }}
             pagination
           />,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const NoTransition = React.forwardRef(function NoTransition(
   props: TransitionProps & { children?: React.ReactNode },
@@ -35,7 +35,7 @@ export default function UncontrolledDateTimePicker() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <NextDateTimePicker
+      <DateTimePicker
         // Simulating what would happen if the media query matches/not matches
         // Simpler to implement than mocking window.matchMedia
         desktopModeMediaQuery={mode === 'desktop' ? desktopMediaQuery : `not(${desktopMediaQuery})`}

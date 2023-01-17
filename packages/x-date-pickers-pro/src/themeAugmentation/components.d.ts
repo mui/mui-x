@@ -13,29 +13,31 @@ export interface PickersProComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDateRangePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePickerToolbar'];
   };
-  MuiDesktopNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiDesktopNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopNextDateRangePicker'];
-  };
-  MuiMobileNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiMobileNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileNextDateRangePicker'];
-  };
   MuiMultiInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiMultiInputDateRangeField'];
     styleOverrides?: ComponentsOverrides['MuiMultiInputDateRangeField'];
-  };
-  MuiNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiNextDateRangePicker'];
   };
   MuiSingleInputDateRangeField?: {
     defaultProps?: ComponentsProps['MuiSingleInputDateRangeField'];
     styleOverrides?: ComponentsOverrides['MuiSingleInputDateRangeField'];
   };
-  MuiStaticNextDateRangePicker?: {
-    defaultProps?: ComponentsProps['MuiStaticNextDateRangePicker'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticNextDateRangePicker'];
+
+  // Date Range Pickers
+  MuiDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDateRangePicker'];
+  };
+  MuiDesktopDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiDesktopDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDesktopDateRangePicker'];
+  };
+  MuiMobileDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateRangePicker'];
+  };
+  MuiStaticDateRangePicker?: {
+    defaultProps?: ComponentsProps['MuiStaticDateRangePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiStaticDateRangePicker'];
   };
 }
 
