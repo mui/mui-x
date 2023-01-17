@@ -11,11 +11,9 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import {
-  Unstable_NextDatePicker as NextDatePicker,
-  Unstable_NextDateTimePicker as NextDateTimePicker,
-  LocalizationProvider,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
@@ -199,7 +197,7 @@ WrappedGridEditDateInput.propTypes = {
 function GridEditDateCell({ id, field, value, colDef }) {
   const apiRef = useGridApiContext();
 
-  const Component = colDef.type === 'dateTime' ? NextDateTimePicker : NextDatePicker;
+  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
@@ -238,7 +236,7 @@ GridEditDateCell.propTypes = {
 function GridFilterDateInput(props) {
   const { item, showTime, applyValue, apiRef } = props;
 
-  const Component = showTime ? NextDateTimePicker : NextDatePicker;
+  const Component = showTime ? DateTimePicker : DatePicker;
 
   const handleFilterChange = (newValue) => {
     applyValue({ ...item, value: newValue });
