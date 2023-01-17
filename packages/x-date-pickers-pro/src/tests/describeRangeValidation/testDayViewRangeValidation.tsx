@@ -157,11 +157,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       const yesterday = adapterToUse.addDays(now, -1);
 
       testDisabledDate(adapterToUse.format(now, 'dayOfMonth'), [false, false], isDesktop);
-      testDisabledDate(
-        adapterToUse.format(tomorrow, 'dayOfMonth'),
-        [!adapterToUse.isSameMonth(now, tomorrow), false],
-        isDesktop,
-      );
+      testDisabledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [false, false], isDesktop);
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
@@ -185,11 +181,7 @@ export function testDayViewRangeValidation(ElementToTest, getOptions) {
       const yesterday = adapterToUse.addDays(now, -1);
 
       testDisabledDate(adapterToUse.format(now, 'dayOfMonth'), [false, true], isDesktop);
-      testDisabledDate(
-        adapterToUse.format(tomorrow, 'dayOfMonth'),
-        [adapterToUse.isSameMonth(now, tomorrow), true],
-        isDesktop,
-      );
+      testDisabledDate(adapterToUse.format(tomorrow, 'dayOfMonth'), [true, true], isDesktop);
 
       if (!adapterToUse.isSameMonth(yesterday, tomorrow)) {
         setProps({ value: [yesterday, null] });
