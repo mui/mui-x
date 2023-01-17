@@ -60,11 +60,6 @@ export interface UsePickerViewsBaseProps<
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers: PickerViewRendererLookup<TValue, TView, TExternalProps, TAdditionalProps>;
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar?: boolean;
 }
 
 /**
@@ -251,7 +246,7 @@ export const usePickerViews = <
         onViewChange: setView,
         focusedView,
         onFocusedViewChange: setFocusedView,
-        showViewSwitcher: hasMultipleUITimeView && !props.showToolbar,
+        showViewSwitcher: hasMultipleUITimeView,
       });
     },
   };
