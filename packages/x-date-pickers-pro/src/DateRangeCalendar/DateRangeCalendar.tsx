@@ -47,7 +47,7 @@ import {
   isStartOfRange,
   isWithinRange,
 } from '../internal/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
+import { calculateRangeChange, calculateRangePreview } from '../internal/utils/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internal/utils/valueManagers';

@@ -19,7 +19,7 @@ import {
   DateTimePickerTabs,
   DateTimePickerTabsProps,
   ExportedDateTimePickerTabsProps,
-} from '../DateTimePicker/DateTimePickerTabs';
+} from './DateTimePickerTabs';
 import {
   BaseDateValidationProps,
   BaseTimeValidationProps,
@@ -29,7 +29,7 @@ import {
   DateTimePickerToolbar,
   DateTimePickerToolbarProps,
   ExportedDateTimePickerToolbarProps,
-} from '../DateTimePicker/DateTimePickerToolbar';
+} from './DateTimePickerToolbar';
 import { DateTimeValidationError } from '../internals/hooks/validation/useDateTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';

@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const views = {
   hours: '시간을',
@@ -16,14 +15,10 @@ const koKRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '이전 화면 보기',
   openNextView: '다음 화면 보기',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? '연도 선택 화면에서 달력 화면으로 전환하기'
       : '달력 화면에서 연도 선택 화면으로 전환하기',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `텍스트 입력 화면에서 ${viewType} 화면으로 전환하기`
-      : `${viewType} 화면에서 텍스트 입력 화면으로 전환하기`,
 
   // DateRange placeholders
   start: '시작',

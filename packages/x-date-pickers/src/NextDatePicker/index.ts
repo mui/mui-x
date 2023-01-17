@@ -4,3 +4,12 @@ export type {
   NextDatePickerSlotsComponents,
   NextDatePickerSlotsComponentsProps,
 } from './NextDatePicker.types';
+
+export { DatePickerToolbar } from './DatePickerToolbar';
+export type { DatePickerToolbarProps } from './DatePickerToolbar';
+
+export { datePickerToolbarClasses } from './datePickerToolbarClasses';
+export type {
+  DatePickerToolbarClassKey,
+  DatePickerToolbarClasses,
+} from './datePickerToolbarClasses';

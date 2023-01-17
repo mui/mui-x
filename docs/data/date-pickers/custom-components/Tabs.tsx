@@ -7,7 +7,7 @@ import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@
 import {
   DateTimePickerTabs,
   DateTimePickerTabsProps,
-} from '@mui/x-date-pickers/DateTimePicker';
+} from '@mui/x-date-pickers/NextDateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 

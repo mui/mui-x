@@ -5,13 +5,13 @@ import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { openPicker } from 'test/utils/pickers-utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
-export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'new-picker'> = (
+export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   getOptions,
 ) => {
   const { componentFamily, render, values, setNewValue, ...pickerParams } = getOptions();
 
-  if (componentFamily !== 'new-picker') {
+  if (componentFamily !== 'picker') {
     return;
   }
 

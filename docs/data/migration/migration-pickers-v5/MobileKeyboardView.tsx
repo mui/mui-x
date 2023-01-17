@@ -19,7 +19,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   DatePickerToolbar,
   DatePickerToolbarProps,
-} from '@mui/x-date-pickers/DatePicker';
+} from '@mui/x-date-pickers/NextDatePicker';
 
 function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
   const { value, onChange } = props;
