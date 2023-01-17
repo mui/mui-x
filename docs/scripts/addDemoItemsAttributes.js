@@ -1,3 +1,16 @@
+const importToIgnore = (name) => {
+  if (['LocalizationProvider', 'DemoItem', 'DemoContainer'].includes(name)) {
+    return true;
+  }
+  if (name.startsWith('Adapter')) {
+    return true;
+  }
+  if (name.startsWith('use')) {
+    return true;
+  }
+  return false;
+};
+
 export default function transformer(file, api, options) {
   const j = api.jscodeshift;
 
@@ -8,37 +21,58 @@ export default function transformer(file, api, options) {
     trailingComma: true,
   };
 
+  const pickersComponentNames = new Set();
+  root
+    .find(j.ImportDeclaration)
+    .filter(({ node }) => {
+      return node.source.value.startsWith('@mui/x-date-picker');
+    })
+    .forEach((path) => {
+      path.node.specifiers.forEach((node) => {
+        const name = node.local.name;
+
+        if (!importToIgnore(name)) {
+          pickersComponentNames.add(name);
+        }
+      });
+    });
+
   return root
     .find(j.JSXElement)
     .filter((path) => {
-      return path.value.openingElement.name.name === 'DemoItem';
+      return ['DemoItem', 'DemoContainer'].includes(path.value.openingElement.name.name);
     })
-    .forEach((path) => {
-      const firstChildElement = path.value.children?.find((child) => child.type === 'JSXElement');
-      if (!firstChildElement) {
-        return;
-      }
+    .forEach((wrapperPath) => {
+      const children = [];
+      pickersComponentNames.forEach((componentName) => {
+        const isPresent = j(wrapperPath).findJSXElements(componentName).length > 0;
+        if (isPresent) {
+          children.push(componentName);
+        }
+      });
 
-      const childName = firstChildElement.openingElement.name.name;
-
+      children.sort();
       // Remove perviouse prop
-      j(path)
+      j(wrapperPath)
         .find(j.JSXAttribute)
         .filter((attribute) => attribute.node.name.name === 'content')
         .remove();
 
       const newComponent = j.jsxElement(
-        j.jsxOpeningElement(path.node.openingElement.name, [
-          ...path.node.openingElement.attributes,
+        j.jsxOpeningElement(wrapperPath.node.openingElement.name, [
+          ...wrapperPath.node.openingElement.attributes,
           // build and insert our new prop
-          j.jsxAttribute(j.jsxIdentifier('content'), j.stringLiteral(childName)),
+          j.jsxAttribute(
+            j.jsxIdentifier('content'),
+            j.jsxExpressionContainer(j.arrayExpression(children.map(c => j.stringLiteral(c)))),
+          ),
         ]),
-        path.node.closingElement,
-        path.node.children,
+        wrapperPath.node.closingElement,
+        wrapperPath.node.children,
       );
 
       // Replace our original component with our modified one
-      j(path).replaceWith(newComponent);
+      j(wrapperPath).replaceWith(newComponent);
     })
     .toSource(printOptions);
 }
