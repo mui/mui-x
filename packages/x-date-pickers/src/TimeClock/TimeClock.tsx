@@ -12,7 +12,7 @@ import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickersArrowSwitcher } from '../internals/components/PickersArrowSwitcher';
 import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import { useViews } from '../internals/hooks/useViews';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
@@ -81,7 +81,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     components,
     componentsProps,
     slots,
-    slotsProps,
+    slotProps,
     value: valueProp,
     disableIgnoringDatePartForTimeValidation = false,
     maxTime,
@@ -349,7 +349,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
           components={components}
           componentsProps={componentsProps}
           slots={slots}
-          slotsProps={slotsProps}
+          slotProps={slotProps}
           onGoToPrevious={() => setView(previousView!)}
           isPreviousDisabled={!previousView}
           previousLabel={localeText.openPreviousView}
@@ -412,7 +412,7 @@ TimeClock.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -494,15 +494,15 @@ TimeClock.propTypes = {
   shouldDisableTime: PropTypes.func,
   showViewSwitcher: PropTypes.bool,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

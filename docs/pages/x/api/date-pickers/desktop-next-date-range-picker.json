@@ -20,7 +20,7 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
@@ -63,12 +63,8 @@
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showToolbar": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop"
-    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -96,7 +92,6 @@
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "PaperContent": { "default": "React.Fragment", "type": { "name": "elementType" } },
     "Popper": { "default": "Popper from @mui/material", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },

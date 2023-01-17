@@ -23,7 +23,7 @@ import {
   DateRangePickerToolbar,
   DateRangePickerToolbarProps,
   ExportedDateRangePickerToolbarProps,
-} from '../DateRangePicker/DateRangePickerToolbar';
+} from './DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 
 export interface BaseNextDateRangePickerSlotsComponent<TDate>
@@ -56,7 +56,7 @@ export interface BaseNextDateRangePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
@@ -68,7 +68,7 @@ export interface BaseNextDateRangePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseNextDateRangePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -120,6 +120,6 @@ export function useNextDateRangePickerDefaultizedProps<
       toolbar: DateRangePickerToolbar,
       ...(themeProps.slots ?? uncapitalizeObjectKeys(components)),
     },
-    slotsProps: themeProps.slotsProps ?? componentsProps,
+    slotProps: themeProps.slotProps ?? componentsProps,
   };
 }

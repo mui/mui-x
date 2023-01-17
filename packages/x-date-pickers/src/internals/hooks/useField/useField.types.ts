@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
-import { PickerStateValueManager } from '../usePickerState';
+import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -14,7 +14,7 @@ export interface UseFieldParams<
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate, InferError<TInternalProps>>;
+  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
   validator: Validator<
     TValue,

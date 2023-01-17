@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
@@ -12,14 +11,10 @@ const enUSPickers: PickersLocaleText<any> = {
   // View navigation
   openPreviousView: 'open previous view',
   openNextView: 'open next view',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'year view is open, switch to calendar view'
       : 'calendar view is open, switch to year view',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `text input view is open, go to ${viewType} view`
-      : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',

@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const urPKPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,14 +9,10 @@ const urPKPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'پچھلا ویو کھولیں',
   openNextView: 'اگلا ویو کھولیں',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'سال والا ویو کھلا ہے۔ کیلنڈر والا ویو کھولیں'
       : 'کیلنڈر والا ویو کھلا ہے۔ سال والا ویو کھولیں',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `،ٹیکسٹ ویو کھلا ہے ${viewType} ویو کھولیں`
-      : `${viewType} ویو کھلا ہے، ٹیکسٹ ویو کھولیں`,
 
   // DateRange placeholders
   start: 'شروع',

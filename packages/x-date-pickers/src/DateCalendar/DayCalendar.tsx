@@ -9,7 +9,7 @@ import {
   unstable_useControlled as useControlled,
 } from '@mui/utils';
 import clsx from 'clsx';
-import { PickersDay, PickersDayProps } from '../PickersDay/PickersDay';
+import { PickersDay, PickersDayProps, ExportedPickersDayProps } from '../PickersDay/PickersDay';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { PickerOnChangeFn } from '../internals/hooks/useViews';
 import { DAY_SIZE, DAY_MARGIN } from '../internals/constants/dimensions';
@@ -27,7 +27,7 @@ import {
 import { useIsDateDisabled } from '../internals/hooks/validation/useDateValidation';
 import { findClosestEnabledDate } from '../internals/utils/date-utils';
 import { DayCalendarClasses, getDayCalendarUtilityClass } from './dayCalendarClasses';
-import { SlotsAndSlotsProps } from '../internals/utils/slots-migration';
+import { SlotsAndSlotProps } from '../internals/utils/slots-migration';
 
 export interface DayCalendarSlotsComponent<TDate> {
   /**
@@ -46,8 +46,7 @@ export interface DayCalendarSlotsComponentsProps<TDate> {
   >;
 }
 
-export interface ExportedDayCalendarProps<TDate>
-  extends Pick<PickersDayProps<TDate>, 'disableHighlightToday' | 'showDaysOutsideCurrentMonth'> {
+export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
   /**
    * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
@@ -80,12 +79,12 @@ export interface ExportedDayCalendarProps<TDate>
 }
 
 export interface DayCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
     Required<BaseDateValidationProps<TDate>>,
-    SlotsAndSlotsProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
+    SlotsAndSlotProps<DayCalendarSlotsComponent<TDate>, DayCalendarSlotsComponentsProps<TDate>> {
   autoFocus?: boolean;
   className?: string;
   currentMonth: TDate;
@@ -250,7 +249,7 @@ function WrappedDay<TDate extends unknown>({
     components,
     componentsProps,
     slots,
-    slotsProps,
+    slotProps,
   } = parentProps;
 
   const isFocusableDay = focusableDay !== null && utils.isSameDay(day, focusableDay);
@@ -261,7 +260,7 @@ function WrappedDay<TDate extends unknown>({
   // We don't want to pass to ownerState down, to avoid re-rendering all the day whenever a prop changes.
   const { ownerState: dayOwnerState, ...dayProps } = useSlotProps({
     elementType: Day,
-    externalSlotProps: slotsProps?.day ?? componentsProps?.day,
+    externalSlotProps: slotProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
       onKeyDown,

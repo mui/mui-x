@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Box from '@mui/material/Box';
 import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
-import { DateTimePickerTabs } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePickerTabs } from '@mui/x-date-pickers/NextDateTimePicker';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 
@@ -22,8 +22,8 @@ export default function Tabs() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticNextDateTimePicker
         defaultValue={dayjs('2022-04-07')}
-        components={{ Tabs: CustomTabs }}
-        componentsProps={{
+        slots={{ tabs: CustomTabs }}
+        slotProps={{
           tabs: {
             hidden: false,
             dateIcon: <LightModeIcon />,

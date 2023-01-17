@@ -12,10 +12,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 <p class="description">The Time Picker component let the user select a time.</p>
 
 :::warning
-The new Time Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+These components will be renamed in the next release to have the same name as the v5 equivalent pickers
 (`NextTimePicker` will become `TimePicker`, ...)
 :::
 

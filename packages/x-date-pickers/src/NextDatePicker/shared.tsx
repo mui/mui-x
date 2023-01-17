@@ -26,7 +26,7 @@ import {
   DatePickerToolbar,
   DatePickerToolbarProps,
   ExportedDatePickerToolbarProps,
-} from '../DatePicker/DatePickerToolbar';
+} from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
@@ -56,7 +56,7 @@ export interface BaseNextDatePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
@@ -68,7 +68,7 @@ export interface BaseNextDatePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
+  slotProps?: BaseNextDatePickerSlotsComponentsProps<TDate>;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -143,6 +143,6 @@ export function useNextDatePickerDefaultizedProps<
     minDate: applyDefaultDate(utils, themeProps.minDate, defaultDates.minDate),
     maxDate: applyDefaultDate(utils, themeProps.maxDate, defaultDates.maxDate),
     slots: { toolbar: DatePickerToolbar, ...slots },
-    slotsProps: themeProps.slotsProps ?? themeProps.componentsProps,
+    slotProps: themeProps.slotProps ?? themeProps.componentsProps,
   };
 }

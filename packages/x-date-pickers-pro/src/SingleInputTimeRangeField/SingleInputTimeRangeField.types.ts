@@ -34,7 +34,7 @@ export interface SingleInputTimeRangeFieldProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
   /**
@@ -46,7 +46,7 @@ export interface SingleInputTimeRangeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type SingleInputTimeRangeFieldOwnerState<TDate> = SingleInputTimeRangeFieldProps<TDate>;

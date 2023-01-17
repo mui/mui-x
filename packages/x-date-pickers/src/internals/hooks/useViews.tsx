@@ -2,7 +2,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
 import { arrayIncludes } from '../utils/utils';
-import { PickerSelectionState } from './usePickerState';
+import type { PickerSelectionState } from './usePicker';
 import { DateOrTimeView } from '../models';
 import { MakeOptional } from '../models/helpers';
 

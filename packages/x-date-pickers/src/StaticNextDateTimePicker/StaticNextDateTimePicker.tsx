@@ -41,12 +41,15 @@ const StaticNextDateTimePicker = React.forwardRef(function StaticNextDateTimePic
     viewRenderers,
     displayStaticWrapperAs,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
-    slotsProps: {
-      ...defaultizedProps.slotsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       tabs: {
         hidden: displayStaticWrapperAs === 'desktop',
-        ...defaultizedProps.slotsProps?.tabs,
+        ...defaultizedProps.slotProps?.tabs,
+      },
+      toolbar: {
+        hidden: displayStaticWrapperAs === 'desktop',
+        ...defaultizedProps.slotProps?.toolbar,
       },
     },
   };
@@ -96,7 +99,7 @@ StaticNextDateTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -302,25 +305,26 @@ StaticNextDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
   /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

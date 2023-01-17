@@ -15,7 +15,7 @@ import {
   TimePickerToolbarProps,
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
-} from '../TimePicker/TimePickerToolbar';
+} from './TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
@@ -51,7 +51,7 @@ export interface BaseNextTimePickerProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
@@ -63,7 +63,7 @@ export interface BaseNextTimePickerProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: BaseNextTimePickerSlotsComponentsProps;
+  slotProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -109,7 +109,7 @@ export function useNextTimePickerDefaultizedProps<
   }, [themeProps.localeText]);
 
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
-  const slotsProps = themeProps.slotsProps ?? themeProps.componentsProps;
+  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -126,12 +126,12 @@ export function useNextTimePickerDefaultizedProps<
       toolbar: TimePickerToolbar,
       ...slots,
     },
-    slotsProps: {
-      ...slotsProps,
+    slotProps: {
+      ...slotProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...slotsProps?.toolbar,
+        ...slotProps?.toolbar,
       },
     },
   };
