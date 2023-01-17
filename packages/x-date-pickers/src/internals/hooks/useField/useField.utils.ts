@@ -432,6 +432,11 @@ export const doesSectionHaveTrailingZeros = <TDate>(
     return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
   }
 
+  // We can use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
+  if (dateSectionName === 'year') {
+    return utils.formatByString(utils.setYear(utils.date()!, 1), format).length > 1;
+  }
+
   return changeSectionValueFormat(utils, '1', format, format).length > 1;
 };
 
