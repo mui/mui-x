@@ -1,6 +1,6 @@
 <DatePicker
   label="Custom input"
-  components={{
-    TextField: BrowserInput,
+  slots={{
+    textField: BrowserInput,
   }}
 />

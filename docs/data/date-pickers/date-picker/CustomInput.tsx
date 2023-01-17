@@ -25,8 +25,8 @@ export default function CustomInput() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         label="Custom input"
-        components={{
-          TextField: BrowserInput,
+        slots={{
+          textField: BrowserInput,
         }}
       />
     </LocalizationProvider>

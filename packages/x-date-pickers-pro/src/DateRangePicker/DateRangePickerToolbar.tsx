@@ -76,6 +76,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
     onRangePositionChange,
     toolbarFormat,
     className,
+    ...other
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -93,6 +94,7 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
 
   return (
     <DateRangePickerToolbarRoot
+      {...other}
       toolbarTitle={localeText.dateRangePickerToolbarTitle}
       isLandscape={false}
       className={clsx(className, classes.root)}
@@ -129,6 +131,11 @@ DateRangePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,

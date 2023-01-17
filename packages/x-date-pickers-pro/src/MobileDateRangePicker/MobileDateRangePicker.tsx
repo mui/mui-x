@@ -36,7 +36,6 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
     calendars: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,
@@ -50,6 +49,10 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -282,11 +285,6 @@ MobileDateRangePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

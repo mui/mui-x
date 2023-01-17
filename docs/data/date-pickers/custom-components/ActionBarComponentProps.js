@@ -9,7 +9,7 @@ export default function ActionBarComponentProps() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
         defaultValue={dayjs('2022-04-07')}
-        componentsProps={{
+        slotProps={{
           actionBar: {
             actions: ['today'],
           },

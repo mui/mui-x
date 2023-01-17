@@ -22,8 +22,8 @@ export default function Tabs() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDateTimePicker
         defaultValue={dayjs('2022-04-07')}
-        components={{ Tabs: CustomTabs }}
-        componentsProps={{
+        slots={{ tabs: CustomTabs }}
+        slotProps={{
           tabs: {
             hidden: false,
             dateIcon: <LightModeIcon />,

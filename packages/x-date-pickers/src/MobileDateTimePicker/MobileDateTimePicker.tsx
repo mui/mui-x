@@ -46,7 +46,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: DateTimeField,
       ...defaultizedProps.slots,
@@ -63,6 +62,10 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
       tabs: {
         hidden: false,
         ...defaultizedProps.slotProps?.tabs,
@@ -391,11 +394,6 @@ MobileDateTimePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

@@ -35,8 +35,14 @@ const StaticDatePicker = React.forwardRef(function StaticDatePicker<TDate>(
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      toolbar: {
+        hidden: displayStaticWrapperAs === 'desktop',
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+    },
   };
 
   const { renderPicker } = useStaticPicker<TDate, DateView, typeof props>({
@@ -247,11 +253,6 @@ StaticDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

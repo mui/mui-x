@@ -45,7 +45,6 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
     ...defaultizedProps,
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
-    showToolbar: defaultizedProps.showToolbar ?? true,
     slots: {
       field: DateField,
       ...defaultizedProps.slots,
@@ -61,6 +60,10 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -332,11 +335,6 @@ MobileDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

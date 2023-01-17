@@ -75,8 +75,8 @@ describe('<MobileDatePicker />', () => {
       render(
         <MobileDatePicker
           open
-          components={{
-            Toolbar: () => <div data-testid="custom-toolbar" />,
+          slots={{
+            toolbar: () => <div data-testid="custom-toolbar" />,
           }}
         />,
       );
@@ -89,7 +89,7 @@ describe('<MobileDatePicker />', () => {
         <MobileDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          componentsProps={{
+          slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
             },
@@ -98,6 +98,12 @@ describe('<MobileDatePicker />', () => {
       );
 
       expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
+    });
+
+    it('should render the toolbar when `hidden` is `false`', () => {
+      render(<MobileDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
+
+      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
     });
   });
 
@@ -138,8 +144,8 @@ describe('<MobileDatePicker />', () => {
         <MobileDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          components={{
-            Day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          slots={{
+            day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
         />,
       );
@@ -191,12 +197,6 @@ describe('<MobileDatePicker />', () => {
     expect(handleClose.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
-  });
-
-  it('prop `showToolbar` – renders the toolbar', () => {
-    render(<MobileDatePicker open showToolbar />);
-
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
   describe('picker state', () => {

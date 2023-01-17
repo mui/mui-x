@@ -41,7 +41,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
     ...defaultizedProps,
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
-    showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
       openPickerIcon: Calendar,
@@ -59,6 +58,10 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -330,11 +333,6 @@ DesktopDatePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

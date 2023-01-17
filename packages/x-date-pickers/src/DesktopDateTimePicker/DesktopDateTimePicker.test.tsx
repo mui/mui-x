@@ -18,7 +18,7 @@ describe('<DesktopDateTimePicker />', () => {
       render(
         <DesktopDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -74,7 +74,7 @@ describe('<DesktopDateTimePicker />', () => {
       render(
         <DesktopDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
             desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,

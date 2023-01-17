@@ -102,7 +102,7 @@ export default function LayoutBlocks() {
             {currentComponent === 'date' && (
               <StaticDatePicker
                 orientation={orientation}
-                componentsProps={{
+                slotProps={{
                   layout: highlighLayout,
                 }}
               />
@@ -112,7 +112,7 @@ export default function LayoutBlocks() {
               <Box sx={{ position: 'relative' }}>
                 <StaticTimePicker
                   orientation={orientation}
-                  componentsProps={{
+                  slotProps={{
                     layout: highlighLayout,
                   }}
                 />
@@ -122,7 +122,7 @@ export default function LayoutBlocks() {
             {currentComponent === 'date-time' && (
               <StaticDateTimePicker
                 orientation={orientation}
-                componentsProps={{
+                slotProps={{
                   layout: highlighLayout,
                 }}
               />

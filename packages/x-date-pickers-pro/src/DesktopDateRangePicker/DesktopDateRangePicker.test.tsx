@@ -125,7 +125,7 @@ describe('<DesktopDateRangePicker />', () => {
       render(
         <DesktopDateRangePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,

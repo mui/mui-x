@@ -1,6 +1,6 @@
 <MobileDatePicker
-  components={{
-    Layout: LayoutWithKeyboardView,
-    Toolbar: ToolbarWithKeyboardViewSwitch,
+  slots={{
+    layout: LayoutWithKeyboardView,
+    toolbar: ToolbarWithKeyboardViewSwitch,
   }}
 />

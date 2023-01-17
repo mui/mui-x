@@ -48,10 +48,6 @@
       "deprecationInfo": "Consider using <code>shouldDisableTime</code>."
     },
     "shouldDisableTime": { "type": { "name": "func" } },
-    "showToolbar": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop"
-    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {

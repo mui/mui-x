@@ -37,7 +37,13 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TD
     views: ['day'] as const,
     openTo: 'day' as const,
     calendars: defaultizedProps.calendars ?? (displayStaticWrapperAs === 'mobile' ? 1 : 2),
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      toolbar: {
+        hidden: displayStaticWrapperAs === 'desktop',
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+    },
   };
 
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
@@ -223,11 +229,6 @@ StaticDateRangePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

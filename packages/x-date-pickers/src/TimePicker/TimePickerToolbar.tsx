@@ -273,6 +273,11 @@ TimePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   /**

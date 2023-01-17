@@ -89,9 +89,9 @@ export default function AddComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StaticDatePicker
-        components={{
-          Layout: CustomLayout,
-          ActionBar: ActionList,
+        slots={{
+          layout: CustomLayout,
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>
