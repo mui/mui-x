@@ -37,7 +37,7 @@
     },
     "ampmLandscape": {
       "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "am/pm section in landscap mode"
+      "nodeName": "am/pm section in landscape mode"
     },
     "ampmLabel": { "description": "Styles applied to {{nodeName}}.", "nodeName": "am/pm labels" }
   },

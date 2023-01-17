@@ -18,7 +18,7 @@ export interface DateTimePickerToolbarClasses {
   separator: string;
   /** Styles applied to the am/pm section. */
   ampmSelection: string;
-  /** Styles applied to am/pm section in landscap mode. */
+  /** Styles applied to am/pm section in landscape mode. */
   ampmLandscape: string;
   /** Styles applied to am/pm labels. */
   ampmLabel: string;

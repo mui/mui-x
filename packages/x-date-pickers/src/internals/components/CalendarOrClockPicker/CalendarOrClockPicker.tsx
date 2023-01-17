@@ -74,7 +74,7 @@ export interface CalendarOrClockPickerProps<TDate, View extends DateOrTimeView>
   DateInputProps: DateInputPropsLike;
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false if toolbar is displayed
+   * @default `false` if toolbar is displayed
    */
   ampmInClock?: boolean;
   classes?: Partial<CalendarOrClockPickerClasses>;
