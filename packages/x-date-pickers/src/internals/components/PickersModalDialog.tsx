@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSlotProps } from '@mui/base/utils';
 import DialogContent from '@mui/material/DialogContent';
 import Fade from '@mui/material/Fade';
 import MuiDialog, { DialogProps as MuiDialogProps, dialogClasses } from '@mui/material/Dialog';
@@ -7,12 +6,10 @@ import { PaperProps as MuiPaperProps } from '@mui/material/Paper/Paper';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions/transition';
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH } from '../constants/dimensions';
-import { PickersActionBar, PickersActionBarAction } from '../../PickersActionBar';
-import { PickerStateWrapperProps } from '../hooks/usePickerState';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 import { UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
 
-export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsComponent, 'ActionBar'> {
+export interface PickersModalDialogSlotsComponent {
   /**
    * Custom component for the dialog inside which the views are rendered on mobile.
    * @default PickersModalDialogRoot
@@ -30,8 +27,7 @@ export interface PickersModalDialogSlotsComponent extends Pick<PickersSlotsCompo
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogSlotsComponentsProps
-  extends Pick<PickersSlotsComponentsProps, 'actionBar'> {
+export interface PickersModalDialogSlotsComponentsProps {
   /**
    * Props passed down to the [`Dialog`](https://mui.com/material-ui/api/dialog/) component.
    */
@@ -46,7 +42,7 @@ export interface PickersModalDialogSlotsComponentsProps
   mobileTransition?: Partial<MuiTransitionProps>;
 }
 
-export interface PickersModalDialogProps extends PickerStateWrapperProps {
+export interface PickersModalDialogProps extends UsePickerValueActions {
   /**
    * Overrideable components.
    * @default {}
@@ -69,6 +65,7 @@ export interface PickersModalDialogProps extends PickerStateWrapperProps {
    * @default {}
    */
   slotProps?: PickersModalDialogSlotsComponentsProps;
+  open: boolean;
 }
 
 const PickersModalDialogRoot = styled(MuiDialog)({
@@ -88,33 +85,7 @@ const PickersModalDialogContent = styled(DialogContent)({
 });
 
 export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDialogProps>) {
-  const {
-    children,
-    onAccept,
-    onClear,
-    onDismiss,
-    onCancel,
-    onSetToday,
-    open,
-    components,
-    componentsProps,
-    slots,
-    slotProps,
-  } = props;
-
-  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
-    elementType: ActionBar,
-    externalSlotProps: slotProps?.actionBar ?? componentsProps?.actionBar,
-    additionalProps: {
-      onAccept,
-      onClear,
-      onCancel,
-      onSetToday,
-      actions: ['cancel', 'accept'] as PickersActionBarAction[],
-    },
-    ownerState: { wrapperVariant: 'mobile' },
-  });
+  const { children, onDismiss, open, components, componentsProps, slots, slotProps } = props;
 
   const Dialog = slots?.dialog ?? components?.Dialog ?? PickersModalDialogRoot;
   const Transition = slots?.mobileTransition ?? components?.MobileTransition ?? Fade;
@@ -130,7 +101,6 @@ export function PickersModalDialog(props: React.PropsWithChildren<PickersModalDi
       PaperProps={slotProps?.mobilePaper ?? componentsProps?.mobilePaper}
     >
       <PickersModalDialogContent>{children}</PickersModalDialogContent>
-      <ActionBar {...actionBarProps} />
     </Dialog>
   );
 }

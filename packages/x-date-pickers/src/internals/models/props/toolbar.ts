@@ -19,10 +19,6 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   views: readonly DateOrTimeView[];
   disabled?: boolean;
   readOnly?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  isMobileKeyboardViewOpen?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  toggleMobileKeyboardView?: () => void;
 }
 
 export interface ExportedBaseToolbarProps {

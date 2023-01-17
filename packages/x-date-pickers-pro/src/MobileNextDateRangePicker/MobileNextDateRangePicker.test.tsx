@@ -36,7 +36,7 @@ describe('<MobileNextDateRangePicker />', () => {
   describeRangeValidation(MobileNextDateRangePicker, () => ({
     render,
     clock,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     views: ['day'],
     variant: 'mobile',
   }));

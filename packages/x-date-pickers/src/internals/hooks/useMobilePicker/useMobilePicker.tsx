@@ -108,19 +108,7 @@ export const useMobilePicker = <
           slotProps={slotPropsForField}
           inputRef={handleInputRef}
         />
-        <PickersModalDialog
-          {...actions}
-          open={open}
-          slots={{
-            ...slots,
-            // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
-            actionBar: () => null,
-          }}
-          slotProps={{
-            ...slotProps,
-            actionBar: undefined,
-          }}
-        >
+        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
           <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
           </Layout>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createRenderer, MuiRenderResult } from '@mui/monorepo/test/utils/createRenderer';
 import { OpenPickerParams } from 'test/utils/pickers-utils';
-import { PickerV6ComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
+import { PickerComponentFamily } from '@mui/x-date-pickers/tests/describe.types';
 
 interface DescribeValueBaseOptions<TValue> {
   render: (node: React.ReactElement) => MuiRenderResult;
@@ -15,7 +15,7 @@ interface DescribeValueBaseOptions<TValue> {
 
 type DescribeValueNonStaticPickerOptions<TValue> = DescribeValueBaseOptions<TValue> &
   OpenPickerParams & {
-    componentFamily: 'new-picker';
+    componentFamily: 'picker';
     setNewValue: (
       value: TValue,
       pickerParams?: { isOpened?: boolean; applySameValue?: boolean; setEndDate?: boolean },
@@ -23,15 +23,15 @@ type DescribeValueNonStaticPickerOptions<TValue> = DescribeValueBaseOptions<TVal
   };
 
 interface DescribeValueOtherComponentOptions<TValue> extends DescribeValueBaseOptions<TValue> {
-  componentFamily: Exclude<PickerV6ComponentFamily, 'new-picker'>;
+  componentFamily: Exclude<PickerComponentFamily, 'picker'>;
   setNewValue: (value: TValue) => TValue;
 }
 
-export type DescribeValueOptions<C extends PickerV6ComponentFamily, TValue> = C extends 'new-picker'
+export type DescribeValueOptions<C extends PickerComponentFamily, TValue> = C extends 'picker'
   ? DescribeValueNonStaticPickerOptions<TValue>
   : DescribeValueOtherComponentOptions<TValue>;
 
-export type DescribeValueTestSuite<TValue, C extends PickerV6ComponentFamily> = (
+export type DescribeValueTestSuite<TValue, C extends PickerComponentFamily> = (
   ElementToTest: React.ElementType,
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) => void;

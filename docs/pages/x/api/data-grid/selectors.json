@@ -217,7 +217,7 @@
   },
   {
     "name": "gridFocusCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },
@@ -395,7 +395,7 @@
   },
   {
     "name": "gridTabIndexCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },

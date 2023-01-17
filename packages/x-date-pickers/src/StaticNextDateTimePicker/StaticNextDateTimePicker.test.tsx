@@ -5,7 +5,7 @@ import { fireEvent, screen } from '@mui/monorepo/test/utils';
 import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@mui/x-date-pickers/StaticNextDateTimePicker';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { DateTimePickerTabs, DateTimePickerTabsProps } from '../DateTimePicker';
+import { DateTimePickerTabs, DateTimePickerTabsProps } from '../NextDateTimePicker';
 
 describe('<StaticNextDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -16,7 +16,7 @@ describe('<StaticNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'new-static-picker',
+    componentFamily: 'static-picker',
   }));
 
   it('should allow to select the same day and move to the next view', () => {
@@ -60,7 +60,7 @@ describe('<StaticNextDateTimePicker />', () => {
     it('should not render tabs when `hidden` is `true`', () => {
       render(
         <StaticNextDateTimePicker
-          componentsProps={{
+          slotProps={{
             tabs: { hidden: true },
           }}
         />,
@@ -74,7 +74,7 @@ describe('<StaticNextDateTimePicker />', () => {
       render(
         <StaticNextDateTimePicker
           displayStaticWrapperAs="desktop"
-          componentsProps={{
+          slotProps={{
             tabs: { hidden: false },
           }}
         />,
@@ -96,7 +96,7 @@ describe('<StaticNextDateTimePicker />', () => {
       render(
         <StaticNextDateTimePicker
           displayStaticWrapperAs="mobile"
-          components={{ Tabs: CustomPickerTabs }}
+          slots={{ tabs: CustomPickerTabs }}
         />,
       );
 

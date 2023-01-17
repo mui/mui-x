@@ -26,7 +26,7 @@ import {
   DatePickerToolbar,
   DatePickerToolbarProps,
   ExportedDatePickerToolbarProps,
-} from '../DatePicker/DatePickerToolbar';
+} from './DatePickerToolbar';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { DateViewRendererProps } from '../dateViewRenderers';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';

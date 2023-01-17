@@ -19,7 +19,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   DatePickerToolbar,
   DatePickerToolbarProps,
-} from '@mui/x-date-pickers/DatePicker';
+} from '@mui/x-date-pickers/NextDatePicker';
 
 function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
   const { value, onChange } = props;
@@ -99,9 +99,9 @@ export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <MobileNextDatePicker
-        components={{
-          Layout: LayoutWithKeyboardView,
-          Toolbar: ToolbarWithKeyboardViewSwitch,
+        slots={{
+          layout: LayoutWithKeyboardView,
+          toolbar: ToolbarWithKeyboardViewSwitch,
         }}
       />
     </LocalizationProvider>
