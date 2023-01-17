@@ -132,10 +132,6 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
-/**
- * @ignore - internal component.
- */
-
 TimePickerToolbarAmPmSelection.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |

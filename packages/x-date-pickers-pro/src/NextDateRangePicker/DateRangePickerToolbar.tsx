@@ -61,9 +61,6 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
-/**
- * @ignore - internal component.
- */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
