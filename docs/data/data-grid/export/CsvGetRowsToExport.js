@@ -65,19 +65,12 @@ export default function CsvGetRowsToExport() {
     maxColumns: 6,
   });
 
-  const [paginationModel, setPaginationModel] = React.useState({
-    page: 0,
-    pageSize: 10,
-  });
-
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
         loading={loading}
         components={{ Toolbar: CustomToolbar }}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
         pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,
@@ -85,6 +78,12 @@ export default function CsvGetRowsToExport() {
             ...data.initialState?.filter,
             filterModel: {
               items: [{ field: 'quantity', operator: '>', value: '20000' }],
+            },
+          },
+          pagination: {
+            ...data.initialState?.pagination,
+            paginationModel: {
+              pageSize: 10,
             },
           },
         }}

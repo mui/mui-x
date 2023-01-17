@@ -9,8 +9,6 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Pagination from '@mui/material/Pagination';
 
-const PAGE_SIZE = 10;
-
 function Toolbar() {
   const apiRef = useGridApiContext();
   const page = useGridSelector(apiRef, gridPageSelector);
@@ -35,7 +33,7 @@ export default function UseGridSelector() {
   });
 
   const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: PAGE_SIZE,
+    pageSize: 10,
     page: 0,
   });
 

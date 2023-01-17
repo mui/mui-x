@@ -15,11 +15,6 @@ export default function DirectSelector() {
     maxColumns: 10,
   });
 
-  const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: 10,
-    page: 0,
-  });
-
   const apiRef = useGridApiRef();
 
   const handleSelectFirstVisibleRow = () => {
@@ -42,8 +37,13 @@ export default function DirectSelector() {
       <Box sx={{ height: 400, mt: 1 }}>
         <DataGrid
           apiRef={apiRef}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 10,
+              },
+            },
+          }}
           {...data}
         />
       </Box>

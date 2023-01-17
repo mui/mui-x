@@ -73,7 +73,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
-    it('should not apply new page when clicking on next / previous button and onPaginationModelChange is not defined and page is not controlled', () => {
+    it('should not apply new page when clicking on next / previous button and onPaginationModelChange is not defined and paginationModel is controlled', () => {
       render(<BaselineTestCase paginationModel={{ pageSize: 1, page: 0 }} pageSizeOptions={[1]} />);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(0)).to.deep.equal(['0']);

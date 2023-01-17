@@ -276,7 +276,7 @@ export function useGridColumns(
 
       const columnVisibilityModelToExport = gridColumnVisibilityModelSelector(apiRef);
       const shouldExportColumnVisibilityModel =
-        // Always export if the `exportOnlyDirtyModels` property not is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.columnVisibilityModel != null ||

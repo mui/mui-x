@@ -37,7 +37,7 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 The pagination model is an object containing the current page and the size of the page. The default value is `{ page: 0, pageSize: 100 }`. To change the default value, make it controlled by `paginationModel` prop or initialize a custom value using `initialState.pagination.paginationModel`.
 
-### Initialize the pagination model
+### Initializing the pagination model
 
 To initialize the pagination model without controlling it, provide the `paginationModel` to the `initialState` prop. If you don't provide a value for one of the properties, the default value will be used.
 
@@ -62,6 +62,7 @@ const [paginationModel, setPaginationModel] = React.useState({
   pageSize: 25,
   page: 0,
 });
+
 <DataGrid
   paginationModel={paginationModel}
   onPaginationModelChange={setPaginationModel}
@@ -84,7 +85,7 @@ For more information regarding server-side pagination in combination with contro
 
 - Set the prop `paginationMode` to `server`
 - Provide a `rowCount` prop to let the grid know how many pages there are
-- Listen to `onPaginationModelChange` callback to load the rows when the page changes
+- Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
 To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:

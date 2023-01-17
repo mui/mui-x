@@ -76,16 +76,16 @@ describe('<DataGridPro /> - Pagination', () => {
       function GridTest() {
         const basicData = useBasicDemoData(20, 2);
         apiRef = useGridApiRef();
-        const [pageSize, setPageSize] = React.useState(5);
+        const [paginationModel, setPaginationModel] = React.useState({ pageSize: 5, page: 0 });
 
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGridPro
               {...basicData}
               apiRef={apiRef}
-              initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
-              onPaginationModelChange={(model) => setPageSize(model.pageSize)}
-              pageSizeOptions={[pageSize]}
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              pageSizeOptions={[paginationModel.pageSize]}
               pagination
               disableVirtualization
             />

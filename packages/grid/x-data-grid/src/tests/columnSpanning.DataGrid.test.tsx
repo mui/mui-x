@@ -699,16 +699,12 @@ describe('<DataGrid /> - Column Spanning', () => {
     }
 
     function TestCase() {
-      const [paginationModel, setPaginationModel] = React.useState({ pageSize, page: 0 });
-
       return (
         <div style={{ width: 500, height: 300 }}>
           <DataGrid
             columns={columns}
             rows={rows}
-            pagination
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            initialState={{ pagination: { paginationModel: { pageSize } } }}
             pageSizeOptions={[pageSize]}
             disableVirtualization={isJSDOM}
           />
@@ -854,15 +850,11 @@ describe('<DataGrid /> - Column Spanning', () => {
     const rowHeight = 50;
 
     function TestCase() {
-      const [paginationModel, setPaginationModel] = React.useState({ pageSize: 3, page: 0 });
-
       return (
         <div style={{ width: 390, height: 300 }}>
           <DataGrid
-            pagination
             pageSizeOptions={[3]}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            initialState={{ pagination: { paginationModel: { pageSize: 3 } } }}
             columns={[
               { field: 'col0', width: 100, colSpan: ({ value }) => (value === '4-0' ? 3 : 1) },
               { field: 'col1', width: 100 },

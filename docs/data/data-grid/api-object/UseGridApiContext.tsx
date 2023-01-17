@@ -23,11 +23,6 @@ export default function UseGridApiContext() {
     maxColumns: 6,
   });
 
-  const [paginationModel, setPaginationModel] = React.useState({
-    pageSize: 10,
-    page: 0,
-  });
-
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
@@ -35,8 +30,13 @@ export default function UseGridApiContext() {
         components={{
           Toolbar: CustomToolbar,
         }}
-        paginationModel={paginationModel}
-        onPaginationModelChange={setPaginationModel}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 10,
+            },
+          },
+        }}
       />
     </Box>
   );
