@@ -10,7 +10,7 @@ import {
 import { DateView, useLocaleText, useUtils, validateDate } from '../internals';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { Calendar } from '../internals/components/icons';
-import { Unstable_DateField as DateField } from '../DateField';
+import { DateField } from '../DateField';
 import { extractValidationProps } from '../internals/utils/validation';
 import { renderDateViewCalendar } from '../dateViewRenderers';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
@@ -44,17 +44,16 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
     ...defaultizedProps,
     viewRenderers,
     format: getDatePickerFieldFormat(utils, defaultizedProps),
-    showToolbar: defaultizedProps.showToolbar ?? false,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
     slots: {
       openPickerIcon: Calendar,
       field: DateField,
       ...defaultizedProps.slots,
     },
-    slotsProps: {
-      ...defaultizedProps.slotsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.slotsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -62,6 +61,10 @@ const DesktopNextDatePicker = React.forwardRef(function DesktopNextDatePicker<TD
         inputRef: defaultizedProps.inputRef,
         label: defaultizedProps.label,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -105,7 +108,7 @@ DesktopNextDatePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -323,25 +326,26 @@ DesktopNextDatePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
   /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

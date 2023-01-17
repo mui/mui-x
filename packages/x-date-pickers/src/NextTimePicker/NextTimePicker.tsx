@@ -69,7 +69,7 @@ NextTimePicker.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -238,20 +238,15 @@ NextTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
   /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

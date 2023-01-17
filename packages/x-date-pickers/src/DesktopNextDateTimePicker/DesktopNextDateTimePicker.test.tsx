@@ -18,7 +18,7 @@ describe('<DesktopNextDateTimePicker />', () => {
       render(
         <DesktopNextDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -46,7 +46,7 @@ describe('<DesktopNextDateTimePicker />', () => {
       render(
         <DesktopNextDateTimePicker
           open
-          slotsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -74,7 +74,7 @@ describe('<DesktopNextDateTimePicker />', () => {
       render(
         <DesktopNextDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
             desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -145,7 +145,7 @@ describe('<DesktopNextDateTimePicker />', () => {
         <DesktopNextDateTimePicker
           defaultValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          slotsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

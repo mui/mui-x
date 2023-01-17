@@ -30,7 +30,7 @@ The component can be disabled or read-only.
 
 ### Render 1 to 3 months
 
-You can render up to 3 months at the same time using the `calendar` prop:
+You can render up to 3 months at the same time using the `calendars` prop:
 
 {{"demo": "DateRangeCalendarCalendarProp.js"}}
 

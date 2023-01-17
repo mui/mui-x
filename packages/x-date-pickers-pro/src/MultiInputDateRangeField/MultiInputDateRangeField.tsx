@@ -44,7 +44,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 
   const {
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerslotProps,
     components,
     componentsProps,
     value,
@@ -65,14 +65,14 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerslotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
   const Root = slots?.root ?? MultiInputDateRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: slotsProps?.root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -83,20 +83,20 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
   const Separator = slots?.separator ?? MultiInputDateRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotsProps?.separator ?? componentsProps?.separator,
+    externalSlotProps: slotProps?.separator ?? componentsProps?.separator,
     ownerState,
   });
 
@@ -181,7 +181,7 @@ MultiInputDateRangeField.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -280,15 +280,15 @@ MultiInputDateRangeField.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0

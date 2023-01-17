@@ -65,7 +65,7 @@ export interface PickerStaticWrapperProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersStaticWrapperSlotsComponentsProps;
   /**
@@ -77,7 +77,7 @@ export interface PickerStaticWrapperProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: PickersStaticWrapperSlotsComponentsProps;
+  slotProps?: PickersStaticWrapperSlotsComponentsProps;
   /**
    * Locale for components texts
    */
@@ -118,7 +118,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     onDismiss,
     open,
     slots,
-    slotsProps,
+    slotProps,
     components,
     componentsProps,
     localeText,
@@ -131,7 +131,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
   const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: slotsProps?.actionBar ?? componentsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -182,7 +182,7 @@ PickerStaticWrapper.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -201,15 +201,15 @@ PickerStaticWrapper.propTypes = {
   onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

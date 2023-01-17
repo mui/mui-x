@@ -18,7 +18,7 @@ import { DateOrTimeView } from '../models/views';
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
   extends Pick<
     BaseToolbarProps<TValue, TView>,
-    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape'
+    'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView' | 'isLandscape' | 'hidden'
   > {
   className?: string;
   viewType?: 'date' | 'time';
@@ -108,11 +108,16 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     toggleMobileKeyboardView,
     toolbarTitle,
     viewType = 'date',
+    hidden,
   } = props;
 
   const ownerState = props;
   const localeText = useLocaleText();
   const classes = useUtilityClasses(ownerState);
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <PickersToolbarRoot
