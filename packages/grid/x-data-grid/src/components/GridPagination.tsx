@@ -61,16 +61,15 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const warnedOnceMissingInPageSizeOptions = React.useRef(false);
-      const pageSize =
-        rootProps.paginationModel?.pageSize ?? paginationModel.pageSize;
+
       if (
         !warnedOnceMissingInPageSizeOptions.current &&
         !rootProps.autoPageSize &&
-        !rootProps.pageSizeOptions.includes(pageSize)
+        !rootProps.pageSizeOptions.includes(paginationModel.pageSize)
       ) {
         console.warn(
           [
-            `MUI: The page size \`${pageSize}\` is not preset in the \`pageSizeOptions\``,
+            `MUI: The page size \`${paginationModel.pageSize}\` is not preset in the \`pageSizeOptions\``,
             `Add it to show the pagination select.`,
           ].join('\n'),
         );
@@ -84,11 +83,7 @@ export const GridPagination = React.forwardRef<HTMLDivElement, Partial<TablePagi
         ref={ref}
         component="div"
         count={rowCount}
-        page={
-          paginationModel.page <= lastPage
-            ? paginationModel.page
-            : lastPage
-        }
+        page={paginationModel.page <= lastPage ? paginationModel.page : lastPage}
         rowsPerPageOptions={
           rootProps.pageSizeOptions?.includes(paginationModel.pageSize)
             ? rootProps.pageSizeOptions

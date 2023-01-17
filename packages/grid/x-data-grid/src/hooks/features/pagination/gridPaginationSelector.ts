@@ -63,7 +63,13 @@ export const gridPaginationRowRangeSelector = createSelector(
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowEntriesSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
-  (paginationModel, rowTree, rowTreeDepth, visibleSortedRowEntries, visibleSortedTopLevelRowEntries) => {
+  (
+    paginationModel,
+    rowTree,
+    rowTreeDepth,
+    visibleSortedRowEntries,
+    visibleSortedTopLevelRowEntries,
+  ) => {
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
       paginationModel.pageSize * paginationModel.page,

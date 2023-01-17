@@ -265,7 +265,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           <TestCase
             paginationModel={paginationModel}
             onPaginationModelChange={setPaginationModel}
-            pageSizeOptions={[paginationModel.pageSize]}
+            pageSizeOptions={[2, 5]}
           />
         );
       }
