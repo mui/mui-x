@@ -4,10 +4,10 @@
     ...data.initialState,
     pagination: {
       ...data.initialState?.pagination,
-      page: 1,
+      paginationModel: {
+        pageSize: 25,
+        /* page: 0 // default value will be used if not passed */
+      },
     },
   }}
-  pageSize={5}
-  rowsPerPageOptions={[5]}
-  pagination
 />

@@ -1,10 +1,5 @@
 <DataGrid
-  {...data}
-  loading={loading}
   paginationModel={paginationModel}
   onPaginationModelChange={setPaginationModel}
-  hideFooter
-  components={{
-    Toolbar,
-  }}
+  {...data}
 />
