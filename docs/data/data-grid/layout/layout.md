@@ -13,12 +13,6 @@ When using % (percentage) for your height or width, you need to make sure the co
 The browsers fit the element according to a percentage of the parent dimension.
 If the parent has no dimensions, then the % will be zero.
 
-## Flex layout
-
-It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
-
-{{"demo": "FlexLayoutGrid.js", "bg": "inline"}}
-
 ## Predefined dimensions
 
 You can predefine dimensions for the parent of the grid.

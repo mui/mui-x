@@ -16,6 +16,7 @@ import { PickerStateWrapperProps } from '../../hooks/usePickerState';
 import { PickersInputLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { PickersSlotsComponent, PickersSlotsComponentsProps } from '../wrappers/WrapperProps';
+import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 const useUtilityClasses = <TDate extends unknown>(ownerState: PickerStaticWrapperProps<TDate>) => {
   const { classes } = ownerState;
@@ -58,13 +59,25 @@ export interface PickerStaticWrapperProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: PickersStaticWrapperSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersStaticWrapperSlotsComponentsProps;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<PickersStaticWrapperSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: PickersStaticWrapperSlotsComponentsProps;
   /**
    * Locale for components texts
    */
@@ -104,6 +117,8 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     children,
     onDismiss,
     open,
+    slots,
+    slotProps,
     components,
     componentsProps,
     localeText,
@@ -113,10 +128,10 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
 
   const classes = useUtilityClasses(props);
 
-  const ActionBar = components?.ActionBar ?? PickersActionBar;
+  const ActionBar = slots?.actionBar ?? components?.ActionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: componentsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar ?? componentsProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -130,7 +145,7 @@ function PickerStaticWrapper<TDate>(inProps: PickerStaticWrapperProps<TDate>) {
     ownerState: { wrapperVariant: displayStaticWrapperAs },
   });
 
-  const PaperContent = components?.PaperContent ?? React.Fragment;
+  const PaperContent = slots?.paperContent ?? components?.PaperContent ?? React.Fragment;
 
   return (
     <LocalizationProvider localeText={localeText}>
@@ -161,11 +176,13 @@ PickerStaticWrapper.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -183,6 +200,16 @@ PickerStaticWrapper.propTypes = {
   onDismiss: PropTypes.func.isRequired,
   onSetToday: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

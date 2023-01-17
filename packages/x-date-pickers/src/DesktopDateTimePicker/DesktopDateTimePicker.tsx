@@ -79,11 +79,19 @@ export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePi
     onChange,
     value,
     components,
-    componentsProps,
+    componentsProps: providedComponentsProps,
     localeText,
     yearsPerRow = 4,
     ...other
   } = props;
+
+  const componentsProps: DesktopDateTimePickerProps<TDate>['componentsProps'] = {
+    ...providedComponentsProps,
+    tabs: {
+      hidden: true,
+      ...providedComponentsProps?.tabs,
+    },
+  };
 
   const AllDateInputProps = {
     ...inputProps,
@@ -437,14 +445,16 @@ DesktopDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
