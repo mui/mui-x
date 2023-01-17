@@ -26,6 +26,7 @@ import {
   useUtils,
   PickerSelectionState,
   useNow,
+  DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -153,7 +154,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
-  const shouldHavePreview = useMediaQuery('@media (pointer: fine)', { defaultMatches: false });
+  const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
+    defaultMatches: false,
+  });
 
   const {
     value: valueProp,
