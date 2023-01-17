@@ -17,7 +17,7 @@ import {
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
 
-  describeConformance.only(<TimeClock />, () => ({
+  describeConformance(<TimeClock />, () => ({
     classes,
     inheritComponent: 'div',
     wrapMount: wrapPickerMount,
