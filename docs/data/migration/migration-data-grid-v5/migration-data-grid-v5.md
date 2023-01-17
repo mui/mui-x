@@ -156,6 +156,19 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   ```
 
 - The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
+- The `date` and `dateTime` columns now only support `Date` objects as values. To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+
+  ```tsx
+  <DataGrid
+    columns={[
+      {
+        field: 'date',
+        type: 'date',
+        valueGetter: (params) => new Date(params.value),
+      },
+    ]}
+  />
+  ```
 
 ### Column menu
 
