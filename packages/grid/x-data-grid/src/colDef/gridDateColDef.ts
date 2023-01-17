@@ -28,11 +28,17 @@ function throwIfNotDateObject({
 }
 
 export function gridDateFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+  if (!value) {
+    return '';
+  }
   throwIfNotDateObject({ value, columnType: 'date', rowId: id, field });
   return value.toLocaleDateString();
 }
 
 export function gridDateTimeFormatter({ value, field, id }: GridValueFormatterParams<Date>) {
+  if (!value) {
+    return '';
+  }
   throwIfNotDateObject({ value, columnType: 'dateTime', rowId: id, field });
   return value.toLocaleString();
 }
