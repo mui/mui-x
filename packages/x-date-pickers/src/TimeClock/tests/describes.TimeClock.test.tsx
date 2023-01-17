@@ -17,26 +17,15 @@ import {
 describe('<TimeClock /> - Describes', () => {
   const { render, clock } = createPickerRenderer();
 
-  describeConformance(
-    <TimeClock value={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
-    () => ({
-      classes,
-      inheritComponent: 'div',
-      wrapMount: wrapPickerMount,
-      render,
-      refInstanceof: window.HTMLDivElement,
-      muiName: 'MuiTimeClock',
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'propsSpread',
-        'reactTestRenderer',
-        // TODO: fix TimeClock to spread props to root
-        'themeDefaultProps',
-        'themeVariants',
-      ],
-    }),
-  );
+  describeConformance.only(<TimeClock />, () => ({
+    classes,
+    inheritComponent: 'div',
+    wrapMount: wrapPickerMount,
+    render,
+    refInstanceof: window.HTMLDivElement,
+    muiName: 'MuiTimeClock',
+    skip: ['componentProp', 'componentsProp', 'reactTestRenderer', 'themeVariants'],
+  }));
 
   describeValue(TimeClock, () => ({
     render,
