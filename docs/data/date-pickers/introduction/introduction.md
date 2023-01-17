@@ -15,7 +15,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 ## Basic usage
 
-All the components can be uncontrolled or controlled by using the `value` / `onChange` props:
+All the components have a `value` / `onChange` API to set and control the values:
 
 {{"demo": "ControlledComponent.js"}}
 
@@ -35,9 +35,9 @@ import { DatePicker } from '@mui/x-date-pickers-pro';
 
 ### Choose interaction style
 
-The first thing you need to decide, is how the user should be able to select their value:
+Depending on your use case, different interaction styles are preferred.
 
-- For input editing with a popover, use the _Picker_ components:
+- For input editing with a popover for mouse interaction, use the _Picker_ components:
 
 {{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
 
@@ -79,7 +79,7 @@ Each _Picker_ is available in a desktop, mobile and responsive variant:
 
 ### Find your component
 
-Use the form below to find component you need:
+There are many options of components available, each fitting specific use cases. Use the form below to find the component you need:
 
 {{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 

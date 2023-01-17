@@ -17,14 +17,14 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 ## Community or Pro Plan ?
 
-The Date and Time Pickers comes in two packages:
+The Date and Time Pickers are available in two packages:
 
 - `@mui/x-date-pickers`, which is open-source and contains all the components to edit a date and/or a time.
-- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit a range of date and/or time.
+- `@mui/x-date-pickers-pro`, which is [commercially licensed](/x/introduction/licensing/#pro-plan) and contains additional components to edit date and/or time ranges.
 
 ## Date library
 
-Like most picker components available, the MUI Date and Time Pickers require a third-party library to format, parse, and mutate dates.
+The Date and Time Pickers are focused on UI/UX and, like most other picker components available, require a third-party library to format, parse, and mutate dates.
 
 MUI's components let you choose which library you prefer for this purpose.
 This gives you the flexibility to implement any date library you may already be using in your application, without adding an extra one to your bundle.
@@ -49,7 +49,7 @@ If you are using a non-Gregorian calendar (such as Jalali or Hijri), please refe
 If you are already using one of the libraries listed above in your application, then you can keep using it with the Date and Time Pickers as well.
 This will avoid bundling two libraries.
 
-If you are starting a new project without any date manipulation outside of `@mui/x-date-pickers`, then we recommend using `dayjs` because it will have the smallest impact on your application's bundle size.
+If you don't have your own requirements or don't manipulate dates outside of MUI components, then the recommendation is to use `dayjs` because it has the smallest impact on your application's bundle size.
 
 Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 
