@@ -15,7 +15,7 @@ import {
   TimePickerToolbarProps,
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
-} from '../TimePicker/TimePickerToolbar';
+} from './TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';

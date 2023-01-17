@@ -22,7 +22,7 @@ describe('<MobileNextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   it('should render date and time by default', () => {
@@ -73,7 +73,7 @@ describe('<MobileNextDateTimePicker />', () => {
         <MobileNextDateTimePicker
           open
           defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          componentsProps={{
+          slotProps={{
             tabs: { hidden: true },
           }}
         />,

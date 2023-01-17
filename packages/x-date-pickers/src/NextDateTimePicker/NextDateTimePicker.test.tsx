@@ -12,7 +12,7 @@ describe('<NextDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   it('should render in mobile mode when `useMediaQuery` returns `false`', () => {

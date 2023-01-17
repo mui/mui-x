@@ -51,7 +51,7 @@ describe('<DesktopNextDateRangePicker />', () => {
   describeRangeValidation(DesktopNextDateRangePicker, () => ({
     render,
     clock,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     views: ['day'],
   }));
 
@@ -125,7 +125,7 @@ describe('<DesktopNextDateRangePicker />', () => {
       render(
         <DesktopNextDateRangePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
