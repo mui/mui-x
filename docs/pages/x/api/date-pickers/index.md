@@ -55,9 +55,17 @@
 
 - [TimeClock](/x/api/date-pickers/time-clock/)
 
+### Toolbars
+
+- [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar/)
+- [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar/)
+- [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar/)
+- [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar/)
+
 ### Others
 
 - [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/)
+- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
 - [PickersDay](/x/api/date-pickers/pickers-day/)

@@ -53,9 +53,6 @@ type DatePickerToolbarComponent = (<TDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - internal component.
- */
 const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,

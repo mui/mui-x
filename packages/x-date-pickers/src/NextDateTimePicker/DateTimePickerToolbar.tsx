@@ -171,9 +171,6 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
-/**
- * @ignore - internal component.
- */
 function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
