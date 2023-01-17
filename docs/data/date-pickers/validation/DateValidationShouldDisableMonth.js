@@ -13,15 +13,15 @@ const isInCurrentMonth = (date) => date.get('month') === dayjs().get('month');
 export default function DateValidationShouldDisableMonth() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="DatePicker" content="NextDatePicker">
+      <DemoContainer content={['NextDatePicker', 'NextDateTimePicker']}>
+        <DemoItem label="DatePicker" content={['NextDatePicker']}>
           <NextDatePicker
             defaultValue={today}
             shouldDisableMonth={isInCurrentMonth}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
+        <DemoItem label="DateTimePicker" content={['NextDateTimePicker']}>
           <NextDateTimePicker
             defaultValue={today}
             shouldDisableMonth={isInCurrentMonth}

@@ -8,17 +8,17 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 export default function TimeClockAmPm() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={['TimeClock']}>
         <DemoItem
           label="Locale default behavior (enabled for enUS)"
-          content="TimeClock"
+          content={['TimeClock']}
         >
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="AM PM enabled" content="TimeClock">
+        <DemoItem label="AM PM enabled" content={['TimeClock']}>
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} ampm />
         </DemoItem>
-        <DemoItem label="AM PM disabled" content="TimeClock">
+        <DemoItem label="AM PM disabled" content={['TimeClock']}>
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} ampm={false} />
         </DemoItem>
       </DemoContainer>

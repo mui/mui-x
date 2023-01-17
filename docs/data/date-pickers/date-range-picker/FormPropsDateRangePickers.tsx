@@ -7,11 +7,11 @@ import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date
 export default function FormPropsDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="disabled" content="NextDateRangePicker">
+      <DemoContainer content={["NextDateRangePicker"]}>
+        <DemoItem label="disabled" content={["NextDateRangePicker"]}>
           <NextDateRangePicker disabled />
         </DemoItem>
-        <DemoItem label="readOnly" content="NextDateRangePicker">
+        <DemoItem label="readOnly" content={["NextDateRangePicker"]}>
           <NextDateRangePicker readOnly />
         </DemoItem>
       </DemoContainer>

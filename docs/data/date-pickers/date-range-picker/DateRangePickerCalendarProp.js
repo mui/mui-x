@@ -7,14 +7,14 @@ import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date
 export default function DateRangePickerCalendarProp() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="1 calendar" content="NextDateRangePicker">
+      <DemoContainer content={['NextDateRangePicker']}>
+        <DemoItem label="1 calendar" content={['NextDateRangePicker']}>
           <NextDateRangePicker calendars={1} />
         </DemoItem>
-        <DemoItem label="2 calendars" content="NextDateRangePicker">
+        <DemoItem label="2 calendars" content={['NextDateRangePicker']}>
           <NextDateRangePicker calendars={2} />
         </DemoItem>
-        <DemoItem label="3 calendars" content="NextDateRangePicker">
+        <DemoItem label="3 calendars" content={['NextDateRangePicker']}>
           <NextDateRangePicker calendars={3} />
         </DemoItem>
       </DemoContainer>

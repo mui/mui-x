@@ -7,21 +7,21 @@ import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-p
 export default function DateTimePickerViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={['NextDateTimePicker']}>
         <DemoItem
           label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
-          content="NextDateTimePicker"
+          content={['NextDateTimePicker']}
         >
           <NextDateTimePicker
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
           />
         </DemoItem>
-        <DemoItem label={'"day", "hours"'} content="NextDateTimePicker">
+        <DemoItem label={'"day", "hours"'} content={['NextDateTimePicker']}>
           <NextDateTimePicker views={['day', 'hours']} />
         </DemoItem>
         <DemoItem
           label={'"year", "day", "hours", "minutes", "seconds"'}
-          content="NextDateTimePicker"
+          content={['NextDateTimePicker']}
         >
           <NextDateTimePicker
             views={['year', 'day', 'hours', 'minutes', 'seconds']}

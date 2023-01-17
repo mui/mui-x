@@ -1,6 +1,6 @@
-<DemoItem label="TimePicker" content="NextTimePicker">
+<DemoItem label="TimePicker" content={["NextTimePicker"]}>
   <NextTimePicker defaultValue={nineAM} maxTime={fiveAM} />
 </DemoItem>
-<DemoItem label="DateTimePicker" content="NextDateTimePicker">
+<DemoItem label="DateTimePicker" content={["NextDateTimePicker"]}>
   <NextDateTimePicker defaultValue={nineAM} maxTime={fiveAM} />
 </DemoItem>

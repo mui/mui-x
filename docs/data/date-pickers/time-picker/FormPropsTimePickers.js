@@ -7,7 +7,7 @@ import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/N
 export default function FormPropsTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={['NextTimePicker']}>
         <NextTimePicker label="disabled" disabled />
         <NextTimePicker label="readOnly" readOnly />
       </DemoContainer>

@@ -8,11 +8,11 @@ import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 export default function YearMonthCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="YearCalendar" content="YearCalendar">
+      <DemoContainer content={['MonthCalendar', 'YearCalendar']}>
+        <DemoItem label="YearCalendar" content={['YearCalendar']}>
           <YearCalendar />
         </DemoItem>
-        <DemoItem label="MonthCalendar" content="MonthCalendar">
+        <DemoItem label="MonthCalendar" content={['MonthCalendar']}>
           <MonthCalendar />
         </DemoItem>
       </DemoContainer>

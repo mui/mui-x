@@ -7,7 +7,7 @@ import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-p
 export default function BasicDateTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={["NextDateTimePicker"]}>
         <NextDateTimePicker label="Basic date time picker" />
       </DemoContainer>
     </LocalizationProvider>

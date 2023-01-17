@@ -9,7 +9,7 @@ export default function BasicDateRangeField() {
   const [value, setValue] = React.useState<any>([null, null]);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={["MultiInputDateRangeField", "SingleInputDateRangeField"]}>
         <MultiInputDateRangeField
           value={value}
           onChange={(newValue) => setValue(newValue)}

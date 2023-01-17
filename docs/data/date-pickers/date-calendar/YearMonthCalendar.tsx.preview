@@ -1,6 +1,6 @@
-<DemoItem label="YearCalendar" content="YearCalendar">
+<DemoItem label="YearCalendar" content={["YearCalendar"]}>
   <YearCalendar />
 </DemoItem>
-<DemoItem label="MonthCalendar" content="MonthCalendar">
+<DemoItem label="MonthCalendar" content={["MonthCalendar"]}>
   <MonthCalendar />
 </DemoItem>

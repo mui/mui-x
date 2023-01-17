@@ -11,23 +11,29 @@ import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from 
 export default function ResponsiveDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Desktop variant" content="DesktopNextDateRangePicker">
+      <DemoContainer
+        content={[
+          "DesktopNextDateRangePicker",
+          "MobileNextDateRangePicker",
+          "NextDateRangePicker",
+          "StaticNextDateRangePicker"
+        ]}>
+        <DemoItem label="Desktop variant" content={["DesktopNextDateRangePicker"]}>
           <DesktopNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant" content="MobileNextDateRangePicker">
+        <DemoItem label="Mobile variant" content={["MobileNextDateRangePicker"]}>
           <MobileNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Responsive variant" content="NextDateRangePicker">
+        <DemoItem label="Responsive variant" content={["NextDateRangePicker"]}>
           <NextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Static variant" content="StaticNextDateRangePicker">
+        <DemoItem label="Static variant" content={["StaticNextDateRangePicker"]}>
           <StaticNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />

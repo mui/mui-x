@@ -12,14 +12,14 @@ const defaultValue = dayjs('2022-04-07T14:30:22');
 export default function SingleDateFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="DateField" content="DateField">
+      <DemoContainer content={["DateField", "DateTimeField", "TimeField"]}>
+        <DemoItem label="DateField" content={["DateField"]}>
           <DateField defaultValue={defaultValue} />
         </DemoItem>
-        <DemoItem label="TimeField" content="TimeField">
+        <DemoItem label="TimeField" content={["TimeField"]}>
           <TimeField defaultValue={defaultValue} />
         </DemoItem>
-        <DemoItem label="DateTimeField" content="DateTimeField">
+        <DemoItem label="DateTimeField" content={["DateTimeField"]}>
           <DateTimeField defaultValue={defaultValue} />
         </DemoItem>
       </DemoContainer>

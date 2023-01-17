@@ -7,7 +7,7 @@ import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-da
 export default function TimePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={["MobileNextTimePicker"]}>
         <MobileNextTimePicker label={'"minutes"'} openTo="minutes" />
         <MobileNextTimePicker
           label={'"seconds"'}

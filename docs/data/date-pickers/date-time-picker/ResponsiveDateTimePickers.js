@@ -11,17 +11,24 @@ import { Unstable_StaticNextDateTimePicker as StaticNextDateTimePicker } from '@
 export default function ResponsiveDateTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Desktop variant" content="DesktopNextDateTimePicker">
+      <DemoContainer
+        content={[
+          'DesktopNextDateTimePicker',
+          'MobileNextDateTimePicker',
+          'NextDateTimePicker',
+          'StaticNextDateTimePicker',
+        ]}
+      >
+        <DemoItem label="Desktop variant" content={['DesktopNextDateTimePicker']}>
           <DesktopNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" content="MobileNextDateTimePicker">
+        <DemoItem label="Mobile variant" content={['MobileNextDateTimePicker']}>
           <MobileNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" content="NextDateTimePicker">
+        <DemoItem label="Responsive variant" content={['NextDateTimePicker']}>
           <NextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant" content="StaticNextDateTimePicker">
+        <DemoItem label="Static variant" content={['StaticNextDateTimePicker']}>
           <StaticNextDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

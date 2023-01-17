@@ -11,17 +11,23 @@ import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-da
 export default function ResponsiveTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Desktop variant" content="DesktopNextTimePicker">
+      <DemoContainer
+        content={[
+          "DesktopNextTimePicker",
+          "MobileNextTimePicker",
+          "NextTimePicker",
+          "StaticNextTimePicker"
+        ]}>
+        <DemoItem label="Desktop variant" content={["DesktopNextTimePicker"]}>
           <DesktopNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" content="MobileNextTimePicker">
+        <DemoItem label="Mobile variant" content={["MobileNextTimePicker"]}>
           <MobileNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" content="NextTimePicker">
+        <DemoItem label="Responsive variant" content={["NextTimePicker"]}>
           <NextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant" content="StaticNextTimePicker">
+        <DemoItem label="Static variant" content={["StaticNextTimePicker"]}>
           <StaticNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

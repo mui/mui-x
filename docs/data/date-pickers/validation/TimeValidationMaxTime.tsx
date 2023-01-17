@@ -12,11 +12,11 @@ const nineAM = dayjs().set('hour', 9).startOf('hour');
 export default function TimeValidationMaxTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="TimePicker" content="NextTimePicker">
+      <DemoContainer content={["NextDateTimePicker", "NextTimePicker"]}>
+        <DemoItem label="TimePicker" content={["NextTimePicker"]}>
           <NextTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </DemoItem>
-        <DemoItem label="DateTimePicker" content="NextDateTimePicker">
+        <DemoItem label="DateTimePicker" content={["NextDateTimePicker"]}>
           <NextDateTimePicker defaultValue={nineAM} maxTime={fiveAM} />
         </DemoItem>
       </DemoContainer>

@@ -10,7 +10,14 @@ import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-da
 export default function MaterialUIPickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        content={[
+          'DesktopNextDatePicker',
+          'MobileNextDatePicker',
+          'NextDateTimePicker',
+          'NextTimePicker',
+        ]}
+      >
         <DesktopNextDatePicker label="Date desktop" format="MM/DD/YYYY" />
         <MobileNextDatePicker label="Date mobile" format="MM/DD/YYYY" />
         <NextTimePicker label="Time" />

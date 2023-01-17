@@ -7,7 +7,7 @@ import { Unstable_MobileNextDateTimePicker as MobileNextDateTimePicker } from '@
 export default function DateTimePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={['MobileNextDateTimePicker']}>
         <MobileNextDateTimePicker label={'"year"'} openTo="year" />
         <MobileNextDateTimePicker label={'"hours"'} openTo="hours" />
       </DemoContainer>

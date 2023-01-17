@@ -7,7 +7,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 export default function BasicDateField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={["DateField"]}>
         <DateField label="Basic date field" />
       </DemoContainer>
     </LocalizationProvider>

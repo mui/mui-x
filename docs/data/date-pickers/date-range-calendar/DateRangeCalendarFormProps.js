@@ -8,14 +8,14 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 export default function DateRangeCalendarFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="disabled" content="DateRangeCalendar">
+      <DemoContainer content={['DateRangeCalendar']}>
+        <DemoItem label="disabled" content={['DateRangeCalendar']}>
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             disabled
           />
         </DemoItem>
-        <DemoItem label="readOnly" content="DateRangeCalendar">
+        <DemoItem label="readOnly" content={['DateRangeCalendar']}>
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             readOnly

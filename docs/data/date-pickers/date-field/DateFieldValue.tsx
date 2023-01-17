@@ -10,7 +10,7 @@ export default function DateFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer content={["DateField"]}>
         <DateField label="Uncontrolled field" defaultValue={dayjs('2022-04-07')} />
         <DateField
           label="Controlled field"

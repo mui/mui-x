@@ -11,17 +11,23 @@ import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-da
 export default function ResponsiveDatePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Desktop variant" content="DesktopNextDatePicker">
+      <DemoContainer
+        content={[
+          "DesktopNextDatePicker",
+          "MobileNextDatePicker",
+          "NextDatePicker",
+          "StaticNextDatePicker"
+        ]}>
+        <DemoItem label="Desktop variant" content={["DesktopNextDatePicker"]}>
           <DesktopNextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" content="MobileNextDatePicker">
+        <DemoItem label="Mobile variant" content={["MobileNextDatePicker"]}>
           <MobileNextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" content="NextDatePicker">
+        <DemoItem label="Responsive variant" content={["NextDatePicker"]}>
           <NextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Static variant" content="StaticNextDatePicker">
+        <DemoItem label="Static variant" content={["StaticNextDatePicker"]}>
           <StaticNextDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
       </DemoContainer>

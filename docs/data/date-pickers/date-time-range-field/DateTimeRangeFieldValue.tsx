@@ -14,13 +14,13 @@ export default function DateTimeRangeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Uncontrolled field" content="SingleInputDateTimeRangeField">
+      <DemoContainer content={["SingleInputDateTimeRangeField"]}>
+        <DemoItem label="Uncontrolled field" content={["SingleInputDateTimeRangeField"]}>
           <SingleInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-13T18:30')]}
           />
         </DemoItem>
-        <DemoItem label="Controlled field" content="SingleInputDateTimeRangeField">
+        <DemoItem label="Controlled field" content={["SingleInputDateTimeRangeField"]}>
           <SingleInputDateTimeRangeField
             value={value}
             onChange={(newValue) => setValue(newValue)}

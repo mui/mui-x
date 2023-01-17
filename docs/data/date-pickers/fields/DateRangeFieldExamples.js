@@ -14,28 +14,35 @@ const date2 = dayjs('2022-04-12T18:25:14');
 export default function DateRangeFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        content={[
+          'MultiInputDateRangeField',
+          'MultiInputDateTimeRangeField',
+          'MultiInputTimeRangeField',
+          'SingleInputDateRangeField',
+        ]}
+      >
         <DemoItem
           label="SingleInputDateRangeField"
-          content="SingleInputDateRangeField"
+          content={['SingleInputDateRangeField']}
         >
           <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputDateRangeField"
-          content="MultiInputDateRangeField"
+          content={['MultiInputDateRangeField']}
         >
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputTimeRangeField"
-          content="MultiInputTimeRangeField"
+          content={['MultiInputTimeRangeField']}
         >
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputDateTimeRangeField"
-          content="MultiInputDateTimeRangeField"
+          content={['MultiInputDateTimeRangeField']}
         >
           <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
