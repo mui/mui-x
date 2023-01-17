@@ -9,12 +9,11 @@ import { isObject } from '../utils/utils';
 
 export interface GridErrorOverlayProps extends GridOverlayProps {
   error?: DataGridProps['error'];
-  hasError: boolean;
 }
 
 export const GridErrorOverlay = React.forwardRef<HTMLDivElement, GridErrorOverlayProps>(
   function GridErrorOverlay(props, ref) {
-    const { error, hasError, ...other } = props;
+    const { error, ...other } = props;
     const apiRef = useGridApiContext();
     const rootProps = useGridRootProps();
     const defaultLabel = apiRef.current.getLocaleText('errorOverlayDefaultLabel');

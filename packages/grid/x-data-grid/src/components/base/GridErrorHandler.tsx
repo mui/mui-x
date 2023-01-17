@@ -16,7 +16,6 @@ function GridErrorHandler(props: { children: React.ReactNode }) {
       {hasError ? (
         <GridMainContainer>
           <rootProps.components.ErrorOverlay
-            hasError={hasError}
             error={errorState}
             {...rootProps.componentsProps?.errorOverlay}
           />
