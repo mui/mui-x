@@ -19,7 +19,7 @@
   "slots": {},
   "name": "DateTimePickerTabs",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimePickerTabs" },
-  "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerTabs.tsx",
+  "filename": "/packages/x-date-pickers/src/NextDateTimePicker/DateTimePickerTabs.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-components/\">Custom components</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerTabs" },

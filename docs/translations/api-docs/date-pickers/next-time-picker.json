@@ -59,7 +59,6 @@
     "NextIconButton": "Button allowing to switch to the right view.",
     "OpenPickerButton": "Button to open the picker on desktop.",
     "OpenPickerIcon": "Icon displayed in the open picker button on desktop.",
-    "PaperContent": "Custom component wrapping the views of the desktop and static pickers (it is the direct child of the Paper component).",
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
