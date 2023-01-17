@@ -18,7 +18,7 @@ import {
 } from './gridRowSelectionSelector';
 import { gridPaginatedVisibleSortedGridRowIdsSelector } from '../pagination';
 import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
-import { gridVisibleSortedRowIdsSelector } from '../filter/gridFilterSelector';
+import { gridExpandedSortedRowIdsSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from '../../../colDef';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isKeyboardEvent, isNavigationKey } from '../../../utils/keyboardUtils';
@@ -124,7 +124,7 @@ export const useGridRowSelection = (
       const startId = lastRowToggled.current ?? id;
       const isSelected = apiRef.current.isRowSelected(id);
       if (isSelected) {
-        const visibleRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+        const visibleRowIds = gridExpandedSortedRowIdsSelector(apiRef);
         const startIndex = visibleRowIds.findIndex((rowId) => rowId === startId);
         const endIndex = visibleRowIds.findIndex((rowId) => rowId === endId);
         if (startIndex === endIndex) {
@@ -285,7 +285,7 @@ export const useGridRowSelection = (
       logger.debug(`Expanding selection from row ${startId} to row ${endId}`);
 
       // Using rows from all pages allow to select a range across several pages
-      const allPagesRowIds = gridVisibleSortedRowIdsSelector(apiRef);
+      const allPagesRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const startIndex = allPagesRowIds.indexOf(startId);
       const endIndex = allPagesRowIds.indexOf(endId);
       const [start, end] = startIndex > endIndex ? [endIndex, startIndex] : [startIndex, endIndex];
@@ -445,7 +445,7 @@ export const useGridRowSelection = (
 
       const rowsToBeSelected = shouldLimitSelectionToCurrentPage
         ? gridPaginatedVisibleSortedGridRowIdsSelector(apiRef)
-        : gridVisibleSortedRowIdsSelector(apiRef);
+        : gridExpandedSortedRowIdsSelector(apiRef);
 
       apiRef.current.selectRows(rowsToBeSelected, params.value);
     },

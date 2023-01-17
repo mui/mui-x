@@ -12,10 +12,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">The Date Range Picker let the user select a range of dates.</p>
 
 :::warning
-The new Date Range Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+These components will be renamed in the next release to have the same name as the v5 equivalent pickers
 (`NextDateRangePicker` will become `DateRangePicker`, ...)
 :::
 
@@ -73,7 +70,7 @@ The component can be disabled or read-only.
 
 ### Render 1 to 3 months
 
-You can render up to 3 months at the same time using the `calendar` prop.
+You can render up to 3 months at the same time using the `calendars` prop.
 
 :::info
 This prop will be ignored on the mobile picker.

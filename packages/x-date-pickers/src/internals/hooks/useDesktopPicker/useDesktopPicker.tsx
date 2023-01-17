@@ -143,15 +143,8 @@ export const useDesktopPicker = <
           anchorEl={inputRef.current}
           {...actions}
           open={open}
-          slots={{
-            ...slots,
-            // Avoids to render 2 action bar, will be removed once `PickersPopper` stop displaying the action bar.
-            actionBar: () => null,
-          }}
-          slotProps={{
-            ...slotProps,
-            actionBar: undefined,
-          }}
+          slots={slots}
+          slotProps={slotProps}
           shouldRestoreFocus={shouldRestoreFocus}
         >
           <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>

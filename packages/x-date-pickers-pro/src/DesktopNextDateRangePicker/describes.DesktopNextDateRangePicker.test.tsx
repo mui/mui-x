@@ -17,13 +17,13 @@ describe('<DesktopNextDateRangePicker /> - Describes', () => {
   describeRangeValidation(DesktopNextDateRangePicker, () => ({
     render,
     clock,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     views: ['day'],
   }));
 
   describeValue(DesktopNextDateRangePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'date-range',
     variant: 'desktop',
     initialFocus: 'start',

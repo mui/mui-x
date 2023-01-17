@@ -1,6 +1,7 @@
 {
   "props": {
     "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -11,7 +12,7 @@
     "globalClasses": {},
     "name": "MuiDateRangePickerToolbar"
   },
-  "filename": "/packages/x-date-pickers-pro/src/DateRangePicker/DateRangePickerToolbar.tsx",
+  "filename": "/packages/x-date-pickers-pro/src/NextDateRangePicker/DateRangePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateRangePickerToolbar" }

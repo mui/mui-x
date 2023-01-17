@@ -51,8 +51,8 @@ export default function CustomInput() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <NextDatePicker
         label="Custom input"
-        components={{
-          TextField: BrowserInput,
+        slots={{
+          textField: BrowserInput,
         }}
       />
     </LocalizationProvider>

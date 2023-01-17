@@ -19,7 +19,7 @@ describe('<StaticNextTimePicker />', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    componentFamily: 'new-static-picker',
+    componentFamily: 'static-picker',
   }));
 
   describeConformance(<StaticNextTimePicker />, () => ({
