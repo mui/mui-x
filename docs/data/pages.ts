@@ -236,11 +236,13 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
       { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
       {
-        pathname: '/x/api/date-pickers',
+        pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
         children: [
+          { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-field', title: 'DateField' },
+          { pathname: '/x/api/date-pickers/date-picker-toolbar', title: 'DatePickerToolbar' },
           { pathname: '/x/api/date-pickers/date-picker', title: 'DatePicker' },
           {
             pathname: '/x/api/date-pickers/date-range-calendar',
@@ -257,9 +259,21 @@ const pages: MuiPage[] = [
             title: 'DateRangePickerDay',
             plan: 'pro',
           },
+          {
+            pathname: '/x/api/date-pickers/date-range-picker-toolbar',
+            title: 'DateRangePickerToolbar',
+            plan: 'pro',
+          },
           { pathname: '/x/api/date-pickers/date-time-field', title: 'DateTimeField' },
           { pathname: '/x/api/date-pickers/date-time-picker', title: 'DateTimePicker' },
-          { pathname: '/x/api/date-pickers/date-time-picker-tabs', title: 'DateTimePickerTabs' },
+          {
+            pathname: '/x/api/date-pickers/date-time-picker-tabs',
+            title: 'DateTimePickerTabs',
+          },
+          {
+            pathname: '/x/api/date-pickers/date-time-picker-toolbar',
+            title: 'DateTimePickerToolbar',
+          },
           { pathname: '/x/api/date-pickers/day-calendar-skeleton', title: 'DayCalendarSkeleton' },
           { pathname: '/x/api/date-pickers/desktop-date-picker', title: 'DesktopDatePicker' },
           {
@@ -332,6 +346,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/date-pickers/time-clock', title: 'TimeClock' },
           { pathname: '/x/api/date-pickers/time-field', title: 'TimeField' },
           { pathname: '/x/api/date-pickers/time-picker', title: 'TimePicker' },
+          { pathname: '/x/api/date-pickers/time-picker-toolbar', title: 'TimePickerToolbar' },
           { pathname: '/x/api/date-pickers/year-calendar', title: 'YearCalendar' },
         ],
       },
