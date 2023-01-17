@@ -244,9 +244,10 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
       { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
       {
-        pathname: '/x/api/date-pickers',
+        pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
         children: [
+          { pathname: '/x/api/date-pickers', title: 'Index' },
           { pathname: '/x/api/date-pickers/date-calendar', title: 'DateCalendar' },
           { pathname: '/x/api/date-pickers/date-field', title: 'DateField' },
           { pathname: '/x/api/date-pickers/date-picker-toolbar', title: 'DatePickerToolbar' },
