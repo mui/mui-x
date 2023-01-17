@@ -315,6 +315,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   ```
 
 - The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
+- The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
 
 ### CSS classes
 
