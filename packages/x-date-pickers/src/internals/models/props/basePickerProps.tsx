@@ -27,11 +27,6 @@ export interface BaseNextPickerProps<
    */
   sx?: SxProps<Theme>;
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar?: boolean;
-  /**
    * Locale for components texts.
    * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */

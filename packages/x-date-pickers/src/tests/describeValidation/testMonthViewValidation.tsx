@@ -22,7 +22,11 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
       ...(componentFamily !== 'calendar' && {
         open: true,
         reduceAnimations: true,
-        showToolbar: false,
+        ...(componentFamily.includes('legacy-')
+          ? {
+              componentsProps: { toolbar: { hidden: true } },
+            }
+          : { slotProps: { toolbar: { hidden: true } } }),
       }),
     };
 

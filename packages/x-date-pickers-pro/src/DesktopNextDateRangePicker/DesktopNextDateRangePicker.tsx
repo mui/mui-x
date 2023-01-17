@@ -36,7 +36,6 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? false,
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,
@@ -50,6 +49,10 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -282,11 +285,6 @@ DesktopNextDateRangePicker.propTypes = {
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

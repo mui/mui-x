@@ -17,7 +17,7 @@ import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { clamp } from '../../../utils/utils';
-import { GridCellIdentifier } from './gridFocusState';
+import { GridCellCoordinates } from '../../../models/gridCell';
 
 export const focusStateInitializer: GridStateInitializer = (state) => ({
   ...state,
@@ -39,7 +39,7 @@ export const useGridFocus = (
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
 
   const publishCellFocusOut = React.useCallback(
-    (cell: GridCellIdentifier | null, event: GridEventLookup['cellFocusOut']['event']) => {
+    (cell: GridCellCoordinates | null, event: GridEventLookup['cellFocusOut']['event']) => {
       if (cell) {
         // The row might have been deleted
         if (apiRef.current.getRow(cell.id)) {

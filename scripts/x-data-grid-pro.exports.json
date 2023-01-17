@@ -85,7 +85,6 @@
   { "name": "GridCellEditStopParams", "kind": "Interface" },
   { "name": "GridCellEditStopReasons", "kind": "Enum" },
   { "name": "GridCellEventLookup", "kind": "Interface" },
-  { "name": "GridCellIdentifier", "kind": "TypeAlias" },
   { "name": "GridCellIndexCoordinates", "kind": "Interface" },
   { "name": "GridCellMode", "kind": "TypeAlias" },
   { "name": "GridCellModes", "kind": "Enum" },

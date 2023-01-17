@@ -125,7 +125,7 @@ describe('<DesktopNextDateRangePicker />', () => {
       render(
         <DesktopNextDateRangePicker
           open
-          componentsProps={{
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,

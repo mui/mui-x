@@ -9,7 +9,7 @@ import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersT
 import { DateOrTimeView } from '../models/views';
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
-  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape'> {
+  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -74,10 +74,21 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
   ref: React.Ref<HTMLDivElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersToolbar' });
-  const { children, className, isLandscape, landscapeDirection = 'column', toolbarTitle } = props;
+  const {
+    children,
+    className,
+    isLandscape,
+    landscapeDirection = 'column',
+    toolbarTitle,
+    hidden,
+  } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <PickersToolbarRoot
