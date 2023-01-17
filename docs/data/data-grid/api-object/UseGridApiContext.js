@@ -31,6 +31,7 @@ export default function UseGridApiContext() {
           Toolbar: CustomToolbar,
         }}
         initialState={{
+          ...data.initialState,
           pagination: {
             paginationModel: {
               pageSize: 10,

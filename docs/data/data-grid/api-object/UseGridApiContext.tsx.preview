@@ -4,6 +4,7 @@
     Toolbar: CustomToolbar,
   }}
   initialState={{
+    ...data.initialState,
     pagination: {
       paginationModel: {
         pageSize: 10,

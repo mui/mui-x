@@ -15,6 +15,7 @@ export default function MultipleRowSelectionGrid() {
         {...data}
         pagination
         initialState={{
+          ...data.initialState,
           pagination: {
             paginationModel: {
               pageSize: 10,
