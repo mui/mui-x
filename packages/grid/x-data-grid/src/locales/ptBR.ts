@@ -49,7 +49,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Adicionar filtro',
   filterPanelDeleteIconLabel: 'Excluir',
-  filterPanelLinkOperator: 'Operador lógico',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operador',
   filterPanelOperatorAnd: 'E',
   filterPanelOperatorOr: 'Ou',
@@ -80,6 +80,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Exibir colunas',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtrar',
   columnMenuHideColumn: 'Ocultar',
   columnMenuUnsort: 'Desfazer ordenação',

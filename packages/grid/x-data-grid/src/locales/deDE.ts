@@ -49,7 +49,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
   filterPanelDeleteIconLabel: 'Löschen',
-  filterPanelLinkOperator: 'Logische Operatoren',
+  filterPanelLogicOperator: 'Logische Operatoren',
   filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'Und',
   filterPanelOperatorOr: 'Oder',
@@ -80,6 +80,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Zeige alle Spalten',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Sortierung deaktivieren',

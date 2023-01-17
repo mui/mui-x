@@ -18,15 +18,15 @@ import {
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
 import {
-  DatePicker,
-  DateTimePicker,
+  Unstable_NextDatePicker as NextDatePicker,
+  Unstable_NextDateTimePicker as NextDateTimePicker,
   LocalizationProvider,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import TextField from '@mui/material/TextField';
-import InputBase from '@mui/material/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
 import { styled } from '@mui/material/styles';
+import { TextFieldProps } from '@mui/material/TextField';
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -39,7 +39,7 @@ function buildApplyDateFilterFn(
 
   const filterValueMs = filterItem.value.getTime();
 
-  return ({ value }: GridCellParams<Date, any, any>): boolean => {
+  return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
       return false;
     }
@@ -184,15 +184,27 @@ const GridEditDateInput = styled(InputBase)({
   padding: '0 9px',
 });
 
+function WrappedGridEditDateInput(props: TextFieldProps) {
+  const { inputRef, InputProps, ...other } = props;
+  return (
+    <GridEditDateInput
+      fullWidth
+      ref={inputRef}
+      {...InputProps}
+      {...(other as InputBaseProps)}
+    />
+  );
+}
+
 function GridEditDateCell({
   id,
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | string | null>) {
   const apiRef = useGridApiContext();
 
-  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
+  const Component = colDef.type === 'dateTime' ? NextDateTimePicker : NextDatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
@@ -201,18 +213,9 @@ function GridEditDateCell({
   return (
     <Component
       value={value}
-      renderInput={({ inputRef, inputProps, InputProps, disabled, error }) => (
-        <GridEditDateInput
-          fullWidth
-          autoFocus
-          ref={inputRef}
-          {...InputProps}
-          disabled={disabled}
-          error={error}
-          inputProps={inputProps}
-        />
-      )}
+      autoFocus
       onChange={handleChange}
+      slots={{ textField: WrappedGridEditDateInput }}
     />
   );
 }
@@ -222,7 +225,7 @@ function GridFilterDateInput(
 ) {
   const { item, showTime, applyValue, apiRef } = props;
 
-  const Component = showTime ? DateTimePicker : DatePicker;
+  const Component = showTime ? NextDateTimePicker : NextDatePicker;
 
   const handleFilterChange = (newValue: unknown) => {
     applyValue({ ...item, value: newValue });
@@ -231,17 +234,17 @@ function GridFilterDateInput(
   return (
     <Component
       value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      InputAdornmentProps={{
-        sx: {
-          '& .MuiButtonBase-root': {
-            marginRight: -1,
+      autoFocus
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      slotProps={{
+        textField: {
+          variant: 'standard',
+        },
+        inputAdornment: {
+          sx: {
+            '& .MuiButtonBase-root': {
+              marginRight: -1,
+            },
           },
         },
       }}

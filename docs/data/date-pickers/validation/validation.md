@@ -29,17 +29,7 @@ But the same props are available on:
 - the field used by this picker
 
   For example—the validation props showcased with `NextDatePicker` are also available on `DateField`.
-
-- all the variants of the legacy picker,
-
-  For example—the validation props showcased with `NextDatePicker` are also available on:
-
-  - `DatePicker`
-  - `DesktopDatePicker`
-  - `MobileDatePicker`
-  - `StaticDatePicker`
-
-:::
+  :::
 
 ## Invalid values feedback
 
@@ -161,7 +151,7 @@ The simplest way to use it is to pass today's date and only care about the hour 
 For example to disable the afternoon in `dayjs` you can pass `dayjs().set('hour', 12).startOf('hour')`.
 :::
 
-### Disable specific times
+### Disable specific time
 
 The `shouldDisableTime` prop prevents the selection of all values for which it returns `true`.
 
@@ -169,13 +159,20 @@ This callback receives the current view and the value to be tested:
 
 ```tsx
 // Disables the hours between 12 AM and 3 PM.
-shouldDisableTime={(timeValue, view) => currentView === 'hours' && timeValue > 12 && timeValue < 15}
+shouldDisableTime={(value, view) =>
+  view === 'hours' && value.hour() > 12 && value.hour() < 15
+}
 
 // Disables the last quarter of each hour.
-shouldDisableTime={(timeValue, view) => view === 'minutes' && timeValue >= 45};
+shouldDisableTime={(value, view) => view === 'minutes' && value.minute() >= 45}
 
 // Disables the second half of each minute.
-shouldDisableTime={(timeValue, view) => view === 'seconds' && timeValue >= 30};
+shouldDisableTime={(value, view) => view === 'seconds' && value.second() > 30}
+
+// Disable the hours before 10 AM every 3rd day
+shouldDisableTime={(value, view) =>
+  view === 'hours' && value.hour() < 10 && value.date() % 3 === 0
+}
 ```
 
 In the example below—the last quarter of each hour is not selectable.
@@ -201,13 +198,15 @@ For now, you can not use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior—Same for `minDateTime`/`minTime`
 
 ```tsx
-// Disable the values between 6 PM and midnight for every day (tomorrow 5 PM is not disabled).
+// Disable the values between 6 PM and midnight for every day
+// (tomorrow 5 PM is not disabled).
 <DateTimePicker maxTime={dayjs().set('hour', 18).startOf('hour')} />
 
 // Disable the values after today 6 PM (tomorrow 5 PM is disabled).
 <DateTimePicker maxDateTime={dayjs().set('hour', 18).startOf('hour')} />
 
-// Disable the values between midnight and 6 PM for every day (yesterday 5 PM is not disabled).
+// Disable the values between midnight and 6 PM for every day
+// (yesterday 5 PM is not disabled).
 <DateTimePicker minTime={dayjs().set('hour', 18).startOf('hour')} />
 
 // Disable the values before today 6 PM (yesterday 5 PM is disabled).

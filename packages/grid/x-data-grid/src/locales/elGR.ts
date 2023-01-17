@@ -48,7 +48,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
   filterPanelDeleteIconLabel: 'Διαγραφή',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
@@ -79,6 +79,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
   columnMenuHideColumn: 'Απόκρυψη',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',

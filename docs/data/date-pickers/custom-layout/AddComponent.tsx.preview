@@ -1,0 +1,6 @@
+<StaticNextDatePicker
+  slots={{
+    layout: CustomLayout,
+    actionBar: ActionList,
+  }}
+/>

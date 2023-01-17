@@ -29,8 +29,8 @@ describe('<DesktopNextDatePicker />', () => {
       const { getByTestId } = render(
         <DesktopNextDatePicker
           label="icon test example"
-          components={{
-            OpenPickerIcon: HomeIcon,
+          slots={{
+            openPickerIcon: HomeIcon,
           }}
         />,
       );
@@ -39,30 +39,26 @@ describe('<DesktopNextDatePicker />', () => {
     });
   });
 
-  describe('Component slots: PaperContent', () => {
+  describe('Slots: openPickerIcon', () => {
     it('should render custom component', () => {
-      function CustomPaperContent({ children }) {
+      function HomeIcon(props: SvgIconProps) {
         return (
-          <div>
-            <p>test custom content</p>
-            {children}
-          </div>
+          <SvgIcon data-testid="component-test" {...props}>
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </SvgIcon>
         );
       }
-      const testDate = adapterToUse.date(new Date(2000, 0, 1));
-      render(
+
+      const { getByTestId } = render(
         <DesktopNextDatePicker
-          defaultValue={testDate}
-          components={{
-            PaperContent: CustomPaperContent,
+          label="icon test example"
+          slots={{
+            openPickerIcon: HomeIcon,
           }}
         />,
       );
 
-      openPicker({ type: 'date', variant: 'desktop' });
-
-      expect(screen.getByText('test custom content')).not.equal(null);
-      expect(screen.getByText(adapterToUse.format(testDate, 'monthAndYear'))).not.equal(null);
+      expect(getByTestId('component-test')).not.to.equal(null);
     });
   });
 
@@ -82,16 +78,18 @@ describe('<DesktopNextDatePicker />', () => {
     expect(handleChange.callCount).to.equal(1);
   });
 
-  it('prop `showToolbar` – renders toolbar in desktop mode', () => {
-    render(
-      <DesktopNextDatePicker
-        open
-        showToolbar
-        defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
+  describe('Component slots: Toolbar', () => {
+    it('should render toolbar in desktop mode when `hidden` is `false`', () => {
+      render(
+        <DesktopNextDatePicker
+          open
+          componentsProps={{ toolbar: { hidden: false } }}
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+        />,
+      );
 
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    });
   });
 
   it('switches between views uncontrolled', () => {
@@ -99,7 +97,7 @@ describe('<DesktopNextDatePicker />', () => {
     render(
       <DesktopNextDatePicker
         open
-        showToolbar
+        componentsProps={{ toolbar: { hidden: false } }}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
         onViewChange={handleViewChange}
       />,
@@ -119,7 +117,34 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           open
-          componentsProps={{
+          slotProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
+          }}
+        />,
+      );
+      const popper = screen.getByTestId('popper');
+
+      fireEvent.click(popper);
+      fireEvent.touchStart(popper);
+
+      expect(handleClick.callCount).to.equal(1);
+      expect(handleTouchStart.callCount).to.equal(1);
+    });
+  });
+
+  describe('Slots: Popper', () => {
+    it('should forward onClick and onTouchStart', () => {
+      const handleClick = spy();
+      const handleTouchStart = spy();
+      render(
+        <DesktopNextDatePicker
+          open
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -146,7 +171,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           open
-          componentsProps={{
+          slotProps={{
             desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -219,10 +244,10 @@ describe('<DesktopNextDatePicker />', () => {
               defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
               onClose={handleClose}
               onOpen={handleOpen}
-              components={{
-                DesktopTransition: NoTransition,
+              slots={{
+                desktopTransition: NoTransition,
               }}
-              componentsProps={{
+              slotProps={{
                 openPickerButton: {
                   ref: anchorElRef,
                 },
@@ -398,7 +423,7 @@ describe('<DesktopNextDatePicker />', () => {
       render(
         <DesktopNextDatePicker
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

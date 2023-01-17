@@ -4,10 +4,20 @@
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotProps</code>."
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -30,6 +40,10 @@
     "localeText": { "type": { "name": "object" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "monthsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
+    },
     "onAccept": { "type": { "name": "func" } },
     "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
@@ -67,10 +81,8 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showToolbar": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop"
-    },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -92,6 +104,10 @@
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
       }
+    },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
     }
   },
   "slots": {
@@ -99,7 +115,7 @@
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Field": { "type": { "name": "elementType" } },
-    "Input": { "default": "TextField", "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
@@ -108,6 +124,7 @@
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
     "Toolbar": { "default": "DatePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileNextDatePicker",

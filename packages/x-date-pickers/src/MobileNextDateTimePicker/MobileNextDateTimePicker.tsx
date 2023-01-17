@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_DateTimeField as DateTimeField } from '../DateTimeField';
+import { DateTimeField } from '../DateTimeField';
 import { MobileNextDateTimePickerProps } from './MobileNextDateTimePicker.types';
 import { useNextDateTimePickerDefaultizedProps } from '../NextDateTimePicker/shared';
 import {
@@ -46,15 +46,14 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: DateTimeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: DateTimeField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -63,6 +62,14 @@ const MobileNextDateTimePicker = React.forwardRef(function MobileNextDateTimePic
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+      tabs: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.tabs,
+      },
     },
   };
 
@@ -103,18 +110,20 @@ MobileNextDateTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -139,7 +148,7 @@ MobileNextDateTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -154,12 +163,12 @@ MobileNextDateTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -192,7 +201,7 @@ MobileNextDateTimePicker.propTypes = {
    */
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -233,6 +242,11 @@ MobileNextDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -334,6 +348,14 @@ MobileNextDateTimePicker.propTypes = {
     }),
   ]),
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
@@ -344,12 +366,12 @@ MobileNextDateTimePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -358,19 +380,30 @@ MobileNextDateTimePicker.propTypes = {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -409,6 +442,11 @@ MobileNextDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { MobileNextDateTimePicker };

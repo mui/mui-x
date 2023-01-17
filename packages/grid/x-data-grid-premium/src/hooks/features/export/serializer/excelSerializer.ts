@@ -8,13 +8,13 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning, GridStateColDef } from '@mui/x-data-grid/internals';
+import { buildWarning, GridStateColDef, isObject } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
@@ -46,6 +46,8 @@ const getFormattedValueOptions = (
     typeof option === 'object' ? option.label : option,
   );
 };
+
+let invalidDateValueWarnedOnce = false;
 
 const serializeRow = (
   id: GridRowId,
@@ -117,22 +119,49 @@ const serializeRow = (
             warnInvalidFormattedValue();
           }
         }
-        row[column.field] = formattedValue?.label ?? formattedValue;
+        if (isObject<{ label: any }>(formattedValue)) {
+          row[column.field] = formattedValue?.label;
+        } else {
+          row[column.field] = formattedValue as any;
+        }
         break;
       }
       case 'boolean':
       case 'number':
-        row[column.field] = api.getCellParams(id, column.field).value;
+        row[column.field] = api.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const date = api.getCellParams(id, column.field).value;
+        const value = api.getCellParams(id, column.field).value;
         // value may be `undefined` in auto-generated grouping rows
-        if (!date) {
+        if (!value) {
           break;
+        }
+        let date: Date;
+        if (value instanceof Date) {
+          date = value;
+        } else {
+          const valueString = (value ?? '').toString();
+          date = new Date(valueString);
+
+          if (Number.isNaN(date.getTime())) {
+            // Invalid date
+            row[column.field] = valueString;
+            if (process.env.NODE_ENV !== 'production' && !invalidDateValueWarnedOnce) {
+              console.warn(
+                [
+                  `MUI: The cell value "${value}" not a valid value for the \`${column.type}\` column type.`,
+                  `Row id: ${id}, field: ${column.field}.`,
+                  `This value will be exported as is in the Excel file.`,
+                ].join('\n'),
+              );
+              invalidDateValueWarnedOnce = true;
+            }
+            break;
+          }
         }
         const utcDate = new Date(
           Date.UTC(
@@ -150,7 +179,7 @@ const serializeRow = (
       case 'actions':
         break;
       default:
-        row[column.field] = api.getCellParams(id, column.field).formattedValue;
+        row[column.field] = api.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();

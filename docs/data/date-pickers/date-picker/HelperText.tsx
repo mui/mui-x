@@ -8,8 +8,8 @@ export default function HelperText() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <NextDatePicker
         label="Helper text example"
-        componentsProps={{
-          input: {
+        slotProps={{
+          textField: {
             helperText: 'MM / DD / YYYY',
           },
         }}

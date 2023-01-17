@@ -48,7 +48,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
   filterPanelDeleteIconLabel: 'Изтрий',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
@@ -79,6 +79,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Покажи колоните',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Филтри',
   columnMenuHideColumn: 'Скрий',
   columnMenuUnsort: 'Отмени сортирането',

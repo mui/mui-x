@@ -32,7 +32,7 @@ describe('<MobileTimePicker />', () => {
           ampm
           onChange={handleChange}
           open
-          showToolbar
+          componentsProps={{ toolbar: { hidden: false } }}
           value={adapterToUse.date(new Date(2019, 0, 1, 4, 20))}
         />,
       );

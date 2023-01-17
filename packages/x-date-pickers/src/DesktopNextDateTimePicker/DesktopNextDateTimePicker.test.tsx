@@ -18,7 +18,35 @@ describe('<DesktopNextDateTimePicker />', () => {
       render(
         <DesktopNextDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
+            popper: {
+              onClick: handleClick,
+              onTouchStart: handleTouchStart,
+              // @ts-expect-error `data-*` attributes are not recognized in props objects
+              'data-testid': 'popper',
+            },
+          }}
+          defaultValue={null}
+        />,
+      );
+      const popper = screen.getByTestId('popper');
+
+      fireEvent.click(popper);
+      fireEvent.touchStart(popper);
+
+      expect(handleClick.callCount).to.equal(1);
+      expect(handleTouchStart.callCount).to.equal(1);
+    });
+  });
+
+  describe('Slots: Popper', () => {
+    it('should forward onClick and onTouchStart', () => {
+      const handleClick = spy();
+      const handleTouchStart = spy();
+      render(
+        <DesktopNextDateTimePicker
+          open
+          slotProps={{
             popper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -46,7 +74,7 @@ describe('<DesktopNextDateTimePicker />', () => {
       render(
         <DesktopNextDateTimePicker
           open
-          componentsProps={{
+          slotProps={{
             desktopPaper: {
               onClick: handleClick,
               onTouchStart: handleTouchStart,
@@ -117,7 +145,7 @@ describe('<DesktopNextDateTimePicker />', () => {
         <DesktopNextDateTimePicker
           defaultValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
-          componentsProps={{ actionBar: { actions: ['cancel'] } }}
+          slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
       );
       openPicker({ type: 'date', variant: 'desktop' });

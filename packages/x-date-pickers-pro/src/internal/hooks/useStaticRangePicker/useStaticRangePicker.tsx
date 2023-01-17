@@ -2,12 +2,14 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
+  PickersLayout,
+  PickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import {
   DateOrTimeView,
   usePicker,
   WrapperVariantContext,
-  PickersViewLayout,
   DIALOG_WIDTH,
-  PickersViewLayoutSlotsComponentsProps,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
 import {
@@ -16,11 +18,11 @@ import {
 } from './useStaticRangePicker.types';
 import { DateRange, RangePosition } from '../../models/range';
 
-const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersViewLayout;
+})) as unknown as typeof PickersLayout;
 
 /**
  * Hook managing all the range static pickers:
@@ -36,7 +38,7 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
@@ -55,26 +57,28 @@ export const useStaticRangePicker = <
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const componentsPropsForLayout: PickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...componentsProps,
+  const Layout = slots?.layout ?? PickerStaticLayout;
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+    ...slotProps,
     toolbar: {
-      ...componentsProps?.toolbar,
+      ...slotProps?.toolbar,
       rangePosition,
-      onDateRangePositionRange: setRangePosition,
+      onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
-          components={components}
-          componentsProps={componentsPropsForLayout}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotPropsForLayout}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

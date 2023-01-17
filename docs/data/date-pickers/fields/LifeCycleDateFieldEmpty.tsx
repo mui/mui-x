@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function LifeCycleDateFieldEmpty() {
   const [value, setValue] = React.useState<Dayjs | null>(null);

@@ -22,9 +22,9 @@ export interface GridFilterItem {
   operator: string;
 }
 
-enum GridLinkOperator {
+enum GridLogicOperator {
   And = 'and',
   Or = 'or',
 }
 
-export { GridLinkOperator };
+export { GridLogicOperator };

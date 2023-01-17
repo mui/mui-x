@@ -117,6 +117,11 @@ DataGridProRaw.propTypes = {
   columnBuffer: PropTypes.number,
   columnGroupingModel: PropTypes.arrayOf(PropTypes.object),
   /**
+   * Sets the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  columnHeaderHeight: PropTypes.number,
+  /**
    * Set of columns of type [[GridColDef[]]].
    */
   columns: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -125,10 +130,6 @@ DataGridProRaw.propTypes = {
    * @default 3
    */
   columnThreshold: PropTypes.number,
-  /**
-   * Extend native column types with your new column types.
-   */
-  columnTypes: PropTypes.object,
   /**
    * Set the column visibility model of the grid.
    * If defined, the grid will ignore the `hide` property in [[GridColDef]].
@@ -205,11 +206,6 @@ DataGridProRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -239,10 +235,6 @@ DataGridProRaw.propTypes = {
    * @default "cell"
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
-  /**
-   * Set the edit rows model of the grid.
-   */
-  editRowsModel: PropTypes.object,
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -282,7 +274,7 @@ DataGridProRaw.propTypes = {
         value: PropTypes.any,
       }),
     ).isRequired,
-    linkOperator: PropTypes.oneOf(['and', 'or']),
+    logicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -348,11 +340,6 @@ DataGridProRaw.propTypes = {
    * The grouping column used by the tree data.
    */
   groupingColDef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
-   */
-  headerHeight: PropTypes.number,
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -474,13 +461,6 @@ DataGridProRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut: PropTypes.func,
-  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
@@ -568,12 +548,6 @@ DataGridProRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
-  /**
-   * Callback fired when the `editRowsModel` changes.
-   * @param {GridEditRowsModel} editRowsModel With all properties from [[GridEditRowsModel]].
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onEditRowsModelChange: PropTypes.func,
   /**
    * Callback fired when an exception is thrown in the grid.
    * @param {any} args The arguments passed to the `showError` call.
@@ -781,7 +755,7 @@ DataGridProRaw.propTypes = {
    */
   rowCount: PropTypes.number,
   /**
-   * Set the height in pixel of a row in the grid.
+   * Sets the height in pixel of a row in the grid.
    * @default 52
    */
   rowHeight: PropTypes.number,

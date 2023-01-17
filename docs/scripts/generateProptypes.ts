@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fse from 'fs-extra';
 import * as prettier from 'prettier';
 import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src';
-import { fixBabelGeneratorIssues, fixLineEndings } from 'docs/scripts/helpers';
+import { fixBabelGeneratorIssues, fixLineEndings } from '@mui/monorepo/packages/docs-utilities';
 import { getTypeScriptProjects } from './getTypeScriptProjects';
 
 const prettierConfig = prettier.resolveConfig.sync(process.cwd(), {
@@ -18,6 +18,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'classes',
         'components',
         'componentsProps',
+        'slots',
+        'slotProps',
         'columns',
         'currentColumn',
         'colDef',
@@ -82,7 +84,7 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
             // avoid including inherited `children` and `classes` as they (might) need custom implementation to work
             if (
               !definedInInternalModule ||
-              (definedInInternalModule && ['children', 'classes'].includes(prop.name))
+              (definedInInternalModule && ['children', 'classes', 'theme'].includes(prop.name))
             ) {
               shouldExclude = true;
             }

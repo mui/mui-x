@@ -48,7 +48,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
   filterPanelDeleteIconLabel: '削除',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'オペレータ',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
@@ -79,6 +79,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'メニュー',
   columnMenuShowColumns: '列表示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'フィルター',
   columnMenuHideColumn: '列非表示',
   columnMenuUnsort: 'ソート解除',

@@ -1,0 +1,25 @@
+{
+  "props": {
+    "onViewChange": { "type": { "name": "func" }, "required": true },
+    "view": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      },
+      "required": true
+    },
+    "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
+    "toolbarFormat": { "type": { "name": "string" } },
+    "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
+  },
+  "slots": {},
+  "name": "DatePickerToolbar",
+  "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
+  "filename": "/packages/x-date-pickers/src/NextDatePicker/DatePickerToolbar.tsx",
+  "demos": "<ul></ul>",
+  "packages": [
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePickerToolbar" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DatePickerToolbar" }
+  ]
+}

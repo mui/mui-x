@@ -57,7 +57,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
-  filterPanelLinkOperator: 'Логические операторы',
+  filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',
@@ -88,6 +88,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показать столбцы',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фильтр',
   columnMenuHideColumn: 'Скрыть',
   columnMenuUnsort: 'Отменить сортировку',

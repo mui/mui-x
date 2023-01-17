@@ -4,3 +4,15 @@ export type {
   NextDateRangePickerSlotsComponents,
   NextDateRangePickerSlotsComponentsProps,
 } from './NextDateRangePicker.types';
+
+export { DateRangePickerToolbar } from './DateRangePickerToolbar';
+export type { DateRangePickerToolbarProps } from './DateRangePickerToolbar';
+
+export {
+  getDateRangePickerToolbarUtilityClass,
+  dateRangePickerToolbarClasses,
+} from './dateRangePickerToolbarClasses';
+export type {
+  DateRangePickerToolbarClasses,
+  DateRangePickerToolbarClassKey,
+} from './dateRangePickerToolbarClasses';

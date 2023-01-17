@@ -26,8 +26,8 @@ export default function CustomInputs() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <NextDateRangePicker
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-        components={{
-          Input: BrowserInput,
+        slots={{
+          textField: BrowserInput,
         }}
       />
     </LocalizationProvider>

@@ -49,7 +49,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
-  filterPanelLinkOperator: 'Logisk operator',
+  filterPanelLogicOperator: 'Logisk operator',
   filterPanelOperator: 'Operatorer',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
@@ -80,6 +80,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',

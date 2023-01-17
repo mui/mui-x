@@ -49,7 +49,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
   filterPanelDeleteIconLabel: 'Slett',
-  filterPanelLinkOperator: 'Logisk operator',
+  filterPanelLogicOperator: 'Logisk operator',
   filterPanelOperator: 'Operatører',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
@@ -80,6 +80,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',

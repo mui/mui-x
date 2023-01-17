@@ -48,7 +48,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
   filterPanelDeleteIconLabel: 'Törlés',
-  filterPanelLinkOperator: 'Logikai operátor',
+  filterPanelLogicOperator: 'Logikai operátor',
   filterPanelOperator: 'Operátorok',
   filterPanelOperatorAnd: 'És',
   filterPanelOperatorOr: 'Vagy',
@@ -79,6 +79,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Oszlopok megjelenítése',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Szűrők',
   columnMenuHideColumn: 'Elrejtés',
   columnMenuUnsort: 'Sorrend visszaállítása',

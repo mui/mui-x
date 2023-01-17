@@ -2,6 +2,7 @@ export * from '@mui/x-data-grid/internals';
 
 export { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
 export { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
+export { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 export {
   useGridColumnResize,

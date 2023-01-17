@@ -50,7 +50,7 @@ export interface GridLocaleText {
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
   filterPanelDeleteIconLabel: string;
-  filterPanelLinkOperator: string;
+  filterPanelLogicOperator: string;
   filterPanelOperator: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
@@ -81,6 +81,7 @@ export interface GridLocaleText {
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
+  columnMenuManageColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
   columnMenuHideColumn: React.ReactNode;
   columnMenuUnsort: React.ReactNode;

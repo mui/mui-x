@@ -56,7 +56,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
   filterPanelDeleteIconLabel: 'Odstranit',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',
@@ -87,6 +87,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobrazit sloupce',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtr',
   columnMenuHideColumn: 'Skrýt',
   columnMenuUnsort: 'Zrušit filtry',

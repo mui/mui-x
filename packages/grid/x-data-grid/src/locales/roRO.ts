@@ -49,7 +49,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
   filterPanelDeleteIconLabel: 'Ștergere',
-  filterPanelLinkOperator: 'Operatori logici',
+  filterPanelLogicOperator: 'Operatori logici',
   filterPanelOperator: 'Operatori',
   filterPanelOperatorAnd: 'Și',
   filterPanelOperatorOr: 'Sau',
@@ -80,6 +80,7 @@ const roROGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meniu',
   columnMenuShowColumns: 'Afișează toate coloanele',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtru',
   columnMenuHideColumn: 'Ascunde',
   columnMenuUnsort: 'Dezactivare sortare',

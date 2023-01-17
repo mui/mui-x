@@ -1,4 +1,4 @@
-import { MakeOptional } from '@mui/x-date-pickers/internals';
+import { MakeOptional, UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseDesktopRangePickerSlotsComponent,
   UseDesktopRangePickerSlotsComponentsProps,
@@ -12,7 +12,7 @@ import {
 
 export interface DesktopNextDateRangePickerSlotsComponent<TDate>
   extends BaseNextDateRangePickerSlotsComponent<TDate>,
-    MakeOptional<UseDesktopRangePickerSlotsComponent, 'Field'> {}
+    MakeOptional<UseDesktopRangePickerSlotsComponent<TDate, 'day'>, 'Field'> {}
 
 export interface DesktopNextDateRangePickerSlotsComponentsProps<TDate>
   extends BaseNextDateRangePickerSlotsComponentsProps<TDate>,
@@ -29,11 +29,23 @@ export interface DesktopNextDateRangePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: DesktopNextDateRangePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DesktopNextDateRangePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DesktopNextDateRangePickerSlotsComponentsProps<TDate>;
 }

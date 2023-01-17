@@ -1,18 +1,6 @@
 export * from './TimeClock';
-export * from './DatePicker';
-export * from './DateTimePicker';
-export * from './DesktopDatePicker';
-export * from './DesktopDateTimePicker';
-export * from './DesktopTimePicker';
 export * from './LocalizationProvider';
-export * from './MobileDatePicker';
-export * from './MobileDateTimePicker';
-export * from './MobileTimePicker';
 export * from './PickersDay';
-export * from './StaticDatePicker';
-export * from './StaticDateTimePicker';
-export * from './StaticTimePicker';
-export * from './TimePicker';
 export * from './locales';
 
 // Fields
@@ -47,8 +35,12 @@ export * from './StaticNextDateTimePicker';
 export * from './dateViewRenderers';
 export * from './timeViewRenderers';
 
-export { PickerStaticWrapper } from './internals/components/PickerStaticWrapper';
+// Layout
+export * from './PickersLayout';
+export * from './PickersActionBar';
+
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './internals/hooks/validation/useDateTimeValidation';
+export { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from './internals/utils/utils';

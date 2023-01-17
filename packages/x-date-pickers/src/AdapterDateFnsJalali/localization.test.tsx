@@ -1,10 +1,9 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 import enUS from 'date-fns/locale/en-US';
 import faIR from 'date-fns-jalali/locale/fa-IR';
 import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
@@ -12,16 +11,16 @@ import faJalaliIR from 'date-fns-jalali/locale/fa-jalali-IR';
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   enUS: {
-    placeholder: 'mm/dd/yyyy hh:mm (a|p)m',
+    placeholder: 'MM/DD/YYYY hh:mm aa',
     value: '02/25/1397 09:35 AM',
   },
   faIR: {
-    placeholder: 'yyyy/mm/dd hh:mm (a|p)m',
+    placeholder: 'YYYY/MM/DD hh:mm aa',
     value: '1397/02/25 09:35 ق.ظ.',
   },
   faJalaliIR: {
     // Not sure about what's the difference between this and fa-IR
-    placeholder: 'yyyy/mm/dd hh:mm (a|p)m',
+    placeholder: 'YYYY/MM/DD hh:mm aa',
     value: '1397/02/25 09:35 ق.ظ.',
   },
 };
@@ -46,32 +45,15 @@ describe('<AdapterDateFnsJalali />', () => {
       });
 
       it('should have correct placeholder', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={null}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<NextDateTimePicker />);
 
-        expect(screen.getByRole('textbox')).to.have.attr(
-          'placeholder',
-          localizedTexts[localeKey].placeholder,
-        );
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
       });
 
       it('should have well formatted value', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={adapter.date(testDate)}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<NextDateTimePicker value={adapter.date(testDate)} />);
 
-        expect(screen.getByRole('textbox')).to.have.value(localizedTexts[localeKey].value);
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
       });
     });
   });

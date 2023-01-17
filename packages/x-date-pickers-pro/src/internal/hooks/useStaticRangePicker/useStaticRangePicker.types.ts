@@ -1,20 +1,23 @@
 import * as React from 'react';
 import {
-  ExportedPickersViewLayoutSlotsComponent,
-  ExportedPickersViewLayoutSlotsComponentsProps,
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
+import {
   DateOrTimeView,
   BaseNextPickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
 
-export interface UseStaticRangePickerSlotsComponent
-  extends ExportedPickersViewLayoutSlotsComponent {}
+export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersViewLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -31,12 +34,12 @@ export interface UseStaticRangePickerProps<
    * Overrideable components.
    * @default {}
    */
-  components?: UseStaticRangePickerSlotsComponent;
+  slots?: UncapitalizeObjectKeys<UseStaticRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseStaticRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface UseStaticRangePickerParams<

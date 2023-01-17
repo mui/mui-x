@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_TimeField as TimeField } from '../TimeField';
+import { TimeField } from '../TimeField';
 import { DesktopNextTimePickerProps } from './DesktopNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { TimeView, useLocaleText, validateTime } from '../internals';
@@ -38,16 +38,15 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? false,
-    components: {
-      Field: TimeField,
-      OpenPickerIcon: Clock,
-      ...defaultizedProps.components,
+    slots: {
+      field: TimeField,
+      openPickerIcon: Clock,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -56,6 +55,10 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -96,18 +99,20 @@ DesktopNextTimePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -121,7 +126,7 @@ DesktopNextTimePicker.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -131,12 +136,12 @@ DesktopNextTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -255,17 +260,30 @@ DesktopNextTimePicker.propTypes = {
     }),
   ]),
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

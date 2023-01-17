@@ -49,7 +49,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
   filterPanelDeleteIconLabel: 'Poista',
-  filterPanelLinkOperator: 'Logiikkaoperaattori',
+  filterPanelLogicOperator: 'Logiikkaoperaattori',
   filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
@@ -80,6 +80,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',

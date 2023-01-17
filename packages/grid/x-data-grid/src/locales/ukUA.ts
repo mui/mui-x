@@ -72,7 +72,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
   filterPanelDeleteIconLabel: 'Видалити',
-  filterPanelLinkOperator: 'Логічна функція',
+  filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
@@ -103,6 +103,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Показати стовпці',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Приховати',
   columnMenuUnsort: 'Скасувати сортування',

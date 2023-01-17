@@ -7,7 +7,7 @@ import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
   ExportedTimeClockProps,
-} from '../TimeClock/TimeClock';
+} from '../TimeClock/TimeClock.types';
 import { BaseNextPickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
 import { LocalizedComponent, PickersInputLocaleText } from '../locales/utils/pickersLocaleTextApi';
@@ -15,11 +15,12 @@ import {
   TimePickerToolbarProps,
   ExportedTimePickerToolbarProps,
   TimePickerToolbar,
-} from '../TimePicker/TimePickerToolbar';
+} from './TimePickerToolbar';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
+import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface BaseNextTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -44,13 +45,25 @@ export interface BaseNextTimePickerProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: BaseNextTimePickerSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: BaseNextTimePickerSlotsComponentsProps;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<BaseNextTimePickerSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BaseNextTimePickerSlotsComponentsProps;
   /**
    * Define custom view renderers for each section.
    * If `null`, the section will only have field editing.
@@ -66,7 +79,10 @@ type UseNextTimePickerDefaultizedProps<
   Props extends BaseNextTimePickerProps<TDate>,
 > = LocalizedComponent<
   TDate,
-  DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>
+  Omit<
+    DefaultizedProps<Props, 'views' | 'openTo' | keyof BaseTimeValidationProps>,
+    'components' | 'componentsProps'
+  >
 >;
 
 export function useNextTimePickerDefaultizedProps<
@@ -92,6 +108,8 @@ export function useNextTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
+  const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
+  const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
     ...themeProps,
     ampm,
@@ -104,16 +122,16 @@ export function useNextTimePickerDefaultizedProps<
     }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,
-    components: {
-      Toolbar: TimePickerToolbar,
-      ...themeProps.components,
+    slots: {
+      toolbar: TimePickerToolbar,
+      ...slots,
     },
-    componentsProps: {
-      ...themeProps.componentsProps,
+    slotProps: {
+      ...slotProps,
       toolbar: {
         ampm,
         ampmInClock: themeProps.ampmInClock,
-        ...themeProps.componentsProps?.toolbar,
+        ...slotProps?.toolbar,
       },
     },
   };

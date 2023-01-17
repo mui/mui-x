@@ -6,7 +6,7 @@ import {
 } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridRowCountSelector,
   gridRowsLoadingSelector,
@@ -67,7 +67,7 @@ function GridOverlayWrapper(props: React.PropsWithChildren<{}>) {
 
   let height: React.CSSProperties['height'] = viewportInnerSize?.height ?? 0;
   if (rootProps.autoHeight && height === 0) {
-    height = getMinimalContentHeight(apiRef); // Give room to show the overlay when there no rows.
+    height = getMinimalContentHeight(apiRef, rootProps.rowHeight); // Give room to show the overlay when there no rows.
   }
 
   const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
@@ -95,7 +95,7 @@ export function GridOverlays() {
   const rootProps = useGridRootProps();
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && totalRowCount === 0;

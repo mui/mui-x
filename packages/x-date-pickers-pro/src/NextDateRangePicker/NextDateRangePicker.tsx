@@ -50,18 +50,20 @@ NextDateRangePicker.propTypes = {
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -102,7 +104,7 @@ NextDateRangePicker.propTypes = {
    */
   disableDragEditing: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -112,12 +114,12 @@ NextDateRangePicker.propTypes = {
    */
   disableHighlightToday: PropTypes.bool,
   /**
-   * Do not render open picker button (renders only the field).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -137,7 +139,7 @@ NextDateRangePicker.propTypes = {
    */
   format: PropTypes.string,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
@@ -242,15 +244,26 @@ NextDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
