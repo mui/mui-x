@@ -31,6 +31,11 @@ export interface DesktopDatePickerProps<TDate>
   extends Omit<BaseDatePickerProps<TDate>, 'components' | 'componentsProps'>,
     DesktopWrapperProps {
   /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
    */
@@ -72,7 +77,15 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
   const validationError = useDateValidation(props) !== null;
   const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
 
-  const { onChange, value, components, componentsProps, localeText, ...other } = props;
+  const {
+    onChange,
+    value,
+    components,
+    componentsProps,
+    localeText,
+    yearsPerRow = 4,
+    ...other
+  } = props;
 
   const AllDateInputProps = {
     ...inputProps,
@@ -95,6 +108,7 @@ export const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDa
       <CalendarOrClockPicker
         {...pickerProps}
         autoFocus
+        yearsPerRow={yearsPerRow}
         DateInputProps={AllDateInputProps}
         components={components}
         componentsProps={componentsProps}
@@ -237,6 +251,11 @@ DesktopDatePicker.propTypes = {
    */
   minDate: PropTypes.any,
   /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
    * Callback fired when date is accepted @DateIOType.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
@@ -363,14 +382,16 @@ DesktopDatePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -388,4 +409,9 @@ DesktopDatePicker.propTypes = {
    * @default ['year', 'day']
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

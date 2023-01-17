@@ -3,6 +3,7 @@ import {
   DesktopNextDatePickerSlotsComponent,
   DesktopNextDatePickerSlotsComponentsProps,
 } from '../DesktopNextDatePicker';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import {
   MobileNextDatePickerProps,
   MobileNextDatePickerSlotsComponent,
@@ -27,13 +28,30 @@ export interface NextDatePickerProps<TDate>
    */
   desktopModeMediaQuery?: string;
   /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow?: 3 | 4;
+  /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: NextDatePickerSlotsComponents<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: NextDatePickerSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<NextDatePickerSlotsComponents<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: NextDatePickerSlotsComponentsProps<TDate>;
 }

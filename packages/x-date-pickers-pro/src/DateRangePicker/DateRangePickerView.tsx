@@ -57,6 +57,8 @@ export interface ExportedDateRangePickerViewProps<TDate>
       | 'defaultValue'
       | 'onChange'
       | 'onYearChange'
+      | 'monthsPerRow'
+      | 'yearsPerRow'
       | keyof BaseDateValidationProps<TDate>
       | keyof DayValidationProps<TDate>
     > {
@@ -75,10 +77,6 @@ export interface ExportedDateRangePickerViewProps<TDate>
    * @default false
    */
   disableAutoMonthSwitching?: boolean;
-  /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar?: boolean;
   /**
    * className applied to the root component.
    */
@@ -124,7 +122,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     rangePosition,
     onRangePositionChange,
     shouldDisableDate,
-    showToolbar,
     toggleMobileKeyboardView,
     components,
     componentsProps,
@@ -212,7 +209,6 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
     [rangePosition, value, onDateChange, onRangePositionChange, utils, wrapperVariant],
   );
 
-  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = components?.Toolbar;
 
   const renderView = () => {
@@ -253,9 +249,10 @@ function DateRangePickerViewRaw<TDate>(props: DateRangePickerViewProps<TDate>) {
   return (
     <div className={className}>
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-      {shouldRenderToolbar && !!Toolbar && (
+      {!!Toolbar && (
         <Toolbar
           {...componentsProps?.toolbar}
+          hidden={componentsProps?.toolbar?.hidden ?? wrapperVariant === 'desktop'}
           value={value}
           isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
           toggleMobileKeyboardView={toggleMobileKeyboardView}

@@ -1,10 +1,13 @@
 import * as React from 'react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
-import { DateRangePickerDay as MuiDateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
+import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
+import {
+  DateRangePickerDay as MuiDateRangePickerDay,
+  DateRangePickerDayProps,
+} from '@mui/x-date-pickers-pro/DateRangePickerDay';
 
 const DateRangePickerDay = styled(MuiDateRangePickerDay)(
   ({
@@ -32,15 +35,14 @@ const DateRangePickerDay = styled(MuiDateRangePickerDay)(
       borderBottomRightRadius: '50%',
     }),
   }),
-);
+) as React.ComponentType<DateRangePickerDayProps<Dayjs>>;
 
 export default function CustomDateRangePickerDay() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDateRangePicker
-        displayStaticWrapperAs="desktop"
+      <DateRangeCalendar
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-        components={{ Day: DateRangePickerDay }}
+        slots={{ day: DateRangePickerDay }}
       />
     </LocalizationProvider>
   );

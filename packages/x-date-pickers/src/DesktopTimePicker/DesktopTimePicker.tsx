@@ -320,10 +320,6 @@ DesktopTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, show the toolbar even in desktop mode.
-   */
-  showToolbar: PropTypes.bool,
-  /**
    * The value of the picker.
    */
   value: PropTypes.any,

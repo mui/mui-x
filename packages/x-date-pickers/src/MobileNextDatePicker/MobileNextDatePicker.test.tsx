@@ -75,8 +75,8 @@ describe('<MobileNextDatePicker />', () => {
       render(
         <MobileNextDatePicker
           open
-          components={{
-            Toolbar: () => <div data-testid="custom-toolbar" />,
+          slots={{
+            toolbar: () => <div data-testid="custom-toolbar" />,
           }}
         />,
       );
@@ -89,7 +89,44 @@ describe('<MobileNextDatePicker />', () => {
         <MobileNextDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          componentsProps={{
+          slotProps={{
+            toolbar: {
+              toolbarFormat: 'MMMM',
+            },
+          }}
+        />,
+      );
+
+      expect(screen.getByMuiTest('datepicker-toolbar-date').textContent).to.equal('January');
+    });
+
+    it('should render the toolbar when `hidden` is `false`', () => {
+      render(<MobileNextDatePicker open componentsProps={{ toolbar: { hidden: false } }} />);
+
+      expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
+    });
+  });
+
+  describe('Slots: Toolbar', () => {
+    it('should render custom toolbar component', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          slots={{
+            toolbar: () => <div data-testid="custom-toolbar" />,
+          }}
+        />,
+      );
+
+      expect(screen.getByTestId('custom-toolbar')).toBeVisible();
+    });
+
+    it('should format toolbar according to `toolbarFormat` prop', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          slotProps={{
             toolbar: {
               toolbarFormat: 'MMMM',
             },
@@ -107,8 +144,24 @@ describe('<MobileNextDatePicker />', () => {
         <MobileNextDatePicker
           open
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-          components={{
-            Day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          slots={{
+            day: (props) => <PickersDay {...props} data-testid="test-day" />,
+          }}
+        />,
+      );
+
+      expect(screen.getAllByTestId('test-day')).to.have.length(31);
+    });
+  });
+
+  describe('Slots: Day', () => {
+    it('should render custom day', () => {
+      render(
+        <MobileNextDatePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
+          slots={{
+            day: (props) => <PickersDay {...props} data-testid="test-day" />,
           }}
         />,
       );
@@ -133,7 +186,7 @@ describe('<MobileNextDatePicker />', () => {
         onClose={handleClose}
         onChange={handleChange}
         defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
-        componentsProps={{ actionBar: { actions: ['today'] } }}
+        slotProps={{ actionBar: { actions: ['today'] } }}
       />,
     );
     const start = adapterToUse.date();
@@ -144,12 +197,6 @@ describe('<MobileNextDatePicker />', () => {
     expect(handleClose.callCount).to.equal(1);
     expect(handleChange.callCount).to.equal(1);
     expect(adapterToUse.getDiff(handleChange.args[0][0], start)).to.equal(10);
-  });
-
-  it('prop `showToolbar` – renders the toolbar', () => {
-    render(<MobileNextDatePicker open showToolbar />);
-
-    expect(screen.getByMuiTest('picker-toolbar')).toBeVisible();
   });
 
   describe('picker state', () => {

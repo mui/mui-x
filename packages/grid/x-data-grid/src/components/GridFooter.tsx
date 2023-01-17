@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { gridTopLevelRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/rowSelection/gridRowSelectionSelector';
-import { gridVisibleTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
+import { gridFilteredTopLevelRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
@@ -18,7 +18,7 @@ const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(fu
   const rootProps = useGridRootProps();
   const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
   const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
   const selectedRowCountElement =
     !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (

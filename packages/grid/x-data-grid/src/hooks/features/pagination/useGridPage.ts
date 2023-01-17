@@ -10,7 +10,7 @@ import {
 import { GridEventListener } from '../../../models/events';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPageApi, GridPaginationState } from './gridPaginationInterfaces';
-import { gridVisibleTopLevelRowCountSelector } from '../filter';
+import { gridFilteredTopLevelRowCountSelector } from '../filter';
 import { gridPageSelector, gridPageSizeSelector } from './gridPaginationSelector';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { buildWarning } from '../../../utils/warning';
@@ -64,7 +64,7 @@ export const useGridPage = (
 ) => {
   const logger = useGridLogger(apiRef, 'useGridPage');
 
-  const visibleTopLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+  const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
   apiRef.current.registerControlState({
     stateId: 'page',

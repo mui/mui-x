@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_TimeField as TimeField } from '../TimeField';
+import { TimeField } from '../TimeField';
 import { MobileNextTimePickerProps } from './MobileNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { PickerViewRendererLookup, TimeView, useLocaleText, validateTime } from '../internals';
@@ -37,15 +37,14 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: TimeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: TimeField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -54,6 +53,10 @@ const MobileNextTimePicker = React.forwardRef(function MobileNextTimePicker<TDat
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -101,11 +104,13 @@ MobileNextTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -268,10 +273,15 @@ MobileNextTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

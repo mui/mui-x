@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-import { Unstable_TimeField as TimeField } from '../TimeField';
+import { TimeField } from '../TimeField';
 import { DesktopNextTimePickerProps } from './DesktopNextTimePicker.types';
 import { useNextTimePickerDefaultizedProps } from '../NextTimePicker/shared';
 import { TimeView, useLocaleText, validateTime } from '../internals';
@@ -38,16 +38,15 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    showToolbar: defaultizedProps.showToolbar ?? false,
-    components: {
-      Field: TimeField,
-      OpenPickerIcon: Clock,
-      ...defaultizedProps.components,
+    slots: {
+      field: TimeField,
+      openPickerIcon: Clock,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
         className,
@@ -56,6 +55,10 @@ const DesktopNextTimePicker = React.forwardRef(function DesktopNextTimePicker<TD
         label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -103,11 +106,13 @@ DesktopNextTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -270,10 +275,15 @@ DesktopNextTimePicker.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

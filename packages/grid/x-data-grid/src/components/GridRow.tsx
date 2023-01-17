@@ -18,7 +18,7 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
-import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
+import { GridCellCoordinates } from '../models/gridCell';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -48,8 +48,8 @@ export interface GridRowProps {
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
   renderedColumns: GridStateColDef[];
-  cellFocus: GridCellIdentifier | null;
-  cellTabIndex: GridCellIdentifier | null;
+  cellFocus: GridCellCoordinates | null;
+  cellTabIndex: GridCellCoordinates | null;
   editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
@@ -133,10 +133,6 @@ const GridRow = React.forwardRef<
   const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const ownerState = {
     selected,
@@ -454,12 +450,6 @@ const GridRow = React.forwardRef<
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-    const showRightBorder = !isLastColumn
-      ? rootProps.showCellVerticalBorder
-      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
-
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
       indexRelativeToAllColumns,
@@ -468,7 +458,12 @@ const GridRow = React.forwardRef<
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-        const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
+        const cellProps = {
+          width,
+          colSpan,
+          showRightBorder: rootProps.showCellVerticalBorder,
+          indexRelativeToAllColumns,
+        };
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;

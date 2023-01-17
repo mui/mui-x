@@ -6,7 +6,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { MobileNextDateRangePickerProps } from './MobileNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useMobileRangePicker } from '../internal/hooks/useMobileRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -33,23 +33,26 @@ const MobileNextDateRangePicker = React.forwardRef(function MobileNextDateRangeP
   const props = {
     ...defaultizedProps,
     viewRenderers,
-    calendars: defaultizedProps.calendars ?? 1,
+    calendars: 1,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? true,
-    components: {
-      Field: MultiInputDateRangeField,
-      ...defaultizedProps.components,
+    slots: {
+      field: MultiInputDateRangeField,
+      ...defaultizedProps.slots,
     },
-    componentsProps: {
-      ...defaultizedProps.componentsProps,
+    slotProps: {
+      ...defaultizedProps.slotProps,
       field: (ownerState: any) => ({
-        ...resolveComponentProps(defaultizedProps.componentsProps?.field, ownerState),
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         className,
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: false,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -91,11 +94,13 @@ MobileNextDateRangePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -270,15 +275,26 @@ MobileNextDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

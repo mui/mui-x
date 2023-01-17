@@ -5,6 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { Unstable_DesktopNextDateTimePicker as DesktopNextDateTimePicker } from '../DesktopNextDateTimePicker';
 import { Unstable_MobileNextDateTimePicker as MobileNextDateTimePicker } from '../MobileNextDateTimePicker';
 import { NextDateTimePickerProps } from './NextDateTimePicker.types';
+import { DEFAULT_DESKTOP_MODE_MEDIA_QUERY } from '../internals/utils/utils';
 
 type DateTimePickerComponent = (<TDate>(
   props: NextDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -16,7 +17,7 @@ const NextDateTimePicker = React.forwardRef(function NextDateTimePicker<TDate>(
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiNextDateTimePicker' });
 
-  const { desktopModeMediaQuery = '@media (pointer: fine)', ...other } = props;
+  const { desktopModeMediaQuery = DEFAULT_DESKTOP_MODE_MEDIA_QUERY, ...other } = props;
 
   // defaults to `true` in environments where `window.matchMedia` would not be available (i.e. test/jsdom)
   const isDesktop = useMediaQuery(desktopModeMediaQuery, { defaultMatches: true });
@@ -62,11 +63,13 @@ NextDateTimePicker.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -191,6 +194,11 @@ NextDateTimePicker.propTypes = {
    * @default 1
    */
   minutesStep: PropTypes.number,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
    * @template TValue
@@ -328,15 +336,26 @@ NextDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -375,6 +394,11 @@ NextDateTimePicker.propTypes = {
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 4 on desktop, 3 on mobile
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
 
 export { NextDateTimePicker };

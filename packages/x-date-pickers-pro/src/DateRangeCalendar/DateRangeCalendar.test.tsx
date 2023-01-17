@@ -491,6 +491,20 @@ describe('<DateRangeCalendar />', () => {
     });
   });
 
+  describe('Slots: day', () => {
+    it('should render custom day component', () => {
+      render(
+        <DateRangeCalendar
+          slots={{
+            day: (day) => <div key={String(day)} data-testid="slot used" />,
+          }}
+        />,
+      );
+
+      expect(screen.getAllByTestId('slot used')).not.to.have.length(0);
+    });
+  });
+
   describe('prop: disableAutoMonthSwitching', () => {
     it('should go to the month of the end date when changing the start date', () => {
       render(
@@ -579,8 +593,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
@@ -595,8 +609,8 @@ describe('<DateRangeCalendar />', () => {
 
       render(
         <DateRangeCalendar
-          components={{
-            Day: React.memo(RenderCount),
+          slots={{
+            day: React.memo(RenderCount),
           }}
         />,
       );
