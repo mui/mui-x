@@ -10,6 +10,7 @@
     },
     "classes": { "type": { "name": "object" } },
     "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
@@ -30,7 +31,7 @@
     "globalClasses": {},
     "name": "MuiDateTimePickerToolbar"
   },
-  "filename": "/packages/x-date-pickers/src/DateTimePicker/DateTimePickerToolbar.tsx",
+  "filename": "/packages/x-date-pickers/src/NextDateTimePicker/DateTimePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateTimePickerToolbar" },

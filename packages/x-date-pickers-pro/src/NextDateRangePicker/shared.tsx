@@ -23,7 +23,7 @@ import {
   DateRangePickerToolbar,
   DateRangePickerToolbarProps,
   ExportedDateRangePickerToolbarProps,
-} from '../DateRangePicker/DateRangePickerToolbar';
+} from './DateRangePickerToolbar';
 import { DateRangeViewRendererProps } from '../dateRangeViewRenderers';
 
 export interface BaseNextDateRangePickerSlotsComponent<TDate>

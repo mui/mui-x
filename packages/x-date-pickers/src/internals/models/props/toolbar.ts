@@ -19,11 +19,6 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   views: readonly DateOrTimeView[];
   disabled?: boolean;
   readOnly?: boolean;
-  ampmInClock?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  isMobileKeyboardViewOpen?: boolean;
-  // TODO v6: Drop with the legacy pickers
-  toggleMobileKeyboardView?: () => void;
 }
 
 export interface ExportedBaseToolbarProps {
@@ -40,4 +35,9 @@ export interface ExportedBaseToolbarProps {
    * className applied to the root component.
    */
   className?: string;
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden?: boolean;
 }

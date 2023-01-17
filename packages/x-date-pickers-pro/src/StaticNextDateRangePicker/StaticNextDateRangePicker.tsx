@@ -37,7 +37,13 @@ const StaticNextDateRangePicker = React.forwardRef(function StaticNextDateRangeP
     views: ['day'] as const,
     openTo: 'day' as const,
     calendars: defaultizedProps.calendars ?? (displayStaticWrapperAs === 'mobile' ? 1 : 2),
-    showToolbar: defaultizedProps.showToolbar ?? displayStaticWrapperAs === 'mobile',
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      toolbar: {
+        hidden: displayStaticWrapperAs === 'desktop',
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+    },
   };
 
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({
@@ -213,15 +219,16 @@ StaticNextDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

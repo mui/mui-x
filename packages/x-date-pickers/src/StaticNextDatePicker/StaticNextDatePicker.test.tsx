@@ -14,7 +14,7 @@ describe('<StaticNextDatePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day'],
-    componentFamily: 'new-static-picker',
+    componentFamily: 'static-picker',
   }));
 
   it('render proper month', () => {

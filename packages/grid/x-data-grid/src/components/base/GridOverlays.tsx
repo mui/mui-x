@@ -6,7 +6,7 @@ import {
 } from '@mui/utils';
 import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridVisibleRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
   gridRowCountSelector,
   gridRowsLoadingSelector,
@@ -95,7 +95,7 @@ export function GridOverlays() {
   const rootProps = useGridRootProps();
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const visibleRowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+  const visibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const loading = useGridSelector(apiRef, gridRowsLoadingSelector);
 
   const showNoRowsOverlay = !loading && totalRowCount === 0;

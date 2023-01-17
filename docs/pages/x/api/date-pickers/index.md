@@ -34,37 +34,6 @@
 - [MobileNextDateRangePicker](/x/api/date-pickers/mobile-next-date-range-picker/)
 - [StaticNextDateRangePicker](/x/api/date-pickers/static-next-date-range-picker/)
 
-### Pickers (legacy)
-
-#### Date Pickers
-
-- [DatePicker](/x/api/date-pickers/date-picker/)
-- [DesktopDatePicker](/x/api/date-pickers/desktop-date-picker/)
-- [MobileDatePicker](/x/api/date-pickers/mobile-date-picker/)
-- [StaticDatePicker](/x/api/date-pickers/static-date-picker/)
-
-#### Time Pickers
-
-- [TimePicker](/x/api/date-pickers/time-picker/)
-- [DesktopTimePicker](/x/api/date-pickers/desktop-time-picker/)
-- [MobileTimePicker](/x/api/date-pickers/mobile-time-picker/)
-- [StaticTimePicker](/x/api/date-pickers/static-time-picker/)
-
-#### Date Time Pickers
-
-- [DateTimePicker](/x/api/date-pickers/date-time-picker/)
-- [DesktopDateTimePicker](/x/api/date-pickers/desktop-date-time-picker/)
-- [MobileDateTimePicker](/x/api/date-pickers/mobile-date-time-picker/)
-- [StaticDateTimePicker](/x/api/date-pickers/static-date-time-picker/)
-- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
-
-#### Date Range Pickers
-
-- [DateRangePicker](/x/api/date-pickers/date-range-picker/)
-- [DesktopDateRangePicker](/x/api/date-pickers/desktop-date-range-picker/)
-- [MobileDateRangePicker](/x/api/date-pickers/mobile-date-range-picker/)
-- [StaticDateRangePicker](/x/api/date-pickers/static-date-range-picker/)
-
 ### Fields
 
 - [DateField](/x/api/date-pickers/date-field/)

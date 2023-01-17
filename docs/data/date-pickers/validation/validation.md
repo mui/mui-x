@@ -29,17 +29,7 @@ But the same props are available on:
 - the field used by this picker
 
   For example—the validation props showcased with `NextDatePicker` are also available on `DateField`.
-
-- all the variants of the legacy picker,
-
-  For example—the validation props showcased with `NextDatePicker` are also available on:
-
-  - `DatePicker`
-  - `DesktopDatePicker`
-  - `MobileDatePicker`
-  - `StaticDatePicker`
-
-:::
+  :::
 
 ## Invalid values feedback
 

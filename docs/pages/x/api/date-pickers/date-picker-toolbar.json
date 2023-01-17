@@ -9,13 +9,14 @@
       "required": true
     },
     "className": { "type": { "name": "string" } },
+    "hidden": { "type": { "name": "bool" }, "default": "`true` for Desktop, `false` for Mobile." },
     "toolbarFormat": { "type": { "name": "string" } },
     "toolbarPlaceholder": { "type": { "name": "node" }, "default": "\"––\"" }
   },
   "slots": {},
   "name": "DatePickerToolbar",
   "styles": { "classes": ["root", "title"], "globalClasses": {}, "name": "MuiDatePickerToolbar" },
-  "filename": "/packages/x-date-pickers/src/DatePicker/DatePickerToolbar.tsx",
+  "filename": "/packages/x-date-pickers/src/NextDatePicker/DatePickerToolbar.tsx",
   "demos": "<ul></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DatePickerToolbar" },

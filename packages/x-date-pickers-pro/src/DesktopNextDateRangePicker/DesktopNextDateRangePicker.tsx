@@ -6,7 +6,7 @@ import { rangeValueManager } from '../internal/utils/valueManagers';
 import { DesktopNextDateRangePickerProps } from './DesktopNextDateRangePicker.types';
 import { useNextDateRangePickerDefaultizedProps } from '../NextDateRangePicker/shared';
 import { renderDateRangeViewCalendar } from '../dateRangeViewRenderers';
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '../MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '../MultiInputDateRangeField';
 import { useDesktopRangePicker } from '../internal/hooks/useDesktopRangePicker';
 import { validateDateRange } from '../internal/hooks/validation/useDateRangeValidation';
 import { DateRange } from '../internal/models';
@@ -36,7 +36,6 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
     calendars: defaultizedProps.calendars ?? 2,
     views: ['day'] as const,
     openTo: 'day' as const,
-    showToolbar: defaultizedProps.showToolbar ?? false,
     slots: {
       field: MultiInputDateRangeField,
       ...defaultizedProps.slots,
@@ -50,6 +49,10 @@ const DesktopNextDateRangePicker = React.forwardRef(function DesktopNextDateRang
         sx,
         ref,
       }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
     },
   };
 
@@ -272,15 +275,16 @@ DesktopNextDateRangePicker.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
-  /**
-   * If `true`, the toolbar will be visible.
-   * @default `true` for mobile, `false` for desktop
-   */
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

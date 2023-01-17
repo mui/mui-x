@@ -24,7 +24,7 @@ describe('<MobileNextTimePicker /> - Describes', () => {
     render,
     clock,
     views: ['hours', 'minutes'],
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
   }));
 
   describeConformance(<MobileNextTimePicker />, () => ({
@@ -47,7 +47,7 @@ describe('<MobileNextTimePicker /> - Describes', () => {
 
   describeValue(MobileNextTimePicker, () => ({
     render,
-    componentFamily: 'new-picker',
+    componentFamily: 'picker',
     type: 'time',
     variant: 'mobile',
     values: [

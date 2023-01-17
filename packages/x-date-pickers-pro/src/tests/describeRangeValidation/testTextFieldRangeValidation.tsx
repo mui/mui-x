@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeRangeValidationTestSuite } from './describeRangeValidation.types';
 
@@ -27,29 +26,15 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
 ) => {
   const { componentFamily, render, isSingleInput, withDate, withTime } = getOptions();
 
-  if (!['legacy-picker', 'new-picker', 'field'].includes(componentFamily)) {
+  if (!['picker', 'field'].includes(componentFamily)) {
     return;
   }
 
   describe('text field:', () => {
-    const defaultProps =
-      componentFamily === 'legacy-picker'
-        ? {
-            onChange: () => {},
-            renderInput: (startProps, endProps) => (
-              <div>
-                <TextField {...startProps} />
-                <TextField {...endProps} />
-              </div>
-            ),
-          }
-        : {};
-
     it('should accept single day range', () => {
       const onErrorMock = spy();
       render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 0, 1, 10, 15, 0],
@@ -66,7 +51,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 0, 2],
@@ -88,7 +72,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 9],
@@ -150,7 +133,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 9],
@@ -213,7 +195,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 9],
@@ -271,9 +252,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         return <ElementToTest value={[now, now]} {...props} />;
       }
 
-      const { setProps } = render(
-        <WithFakeTimer {...defaultProps} disablePast onError={onErrorMock} />,
-      );
+      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
       let past: null | typeof now = null;
       if (withDate) {
@@ -311,9 +290,7 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
         return <ElementToTest value={[now, now]} {...props} />;
       }
 
-      const { setProps } = render(
-        <WithFakeTimer {...defaultProps} disableFuture onError={onErrorMock} />,
-      );
+      const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
 
       let future: null | typeof now = null;
 
@@ -352,7 +329,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 9],
@@ -397,7 +373,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([[2018, 2, 9], null])}
           minDate={adapterToUse.date(new Date(2018, 2, 11))}
@@ -425,7 +400,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([null, [2018, 2, 9]])}
           minDate={adapterToUse.date(new Date(2018, 2, 15))}
@@ -453,7 +427,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 9],
@@ -497,7 +470,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 10, 9, 0, 0],
@@ -541,7 +513,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 5, 9, 0, 0],
@@ -575,7 +546,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([[2018, 1, 1, 15], null])}
           minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
@@ -602,7 +572,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([null, [2018, 1, 1, 15]])}
           minTime={adapterToUse.date(new Date(2018, 1, 1, 12))}
@@ -629,7 +598,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 10, 9, 0, 0],
@@ -672,7 +640,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 5, 9, 0, 0],
@@ -706,7 +673,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 1, 9, 0, 0],
@@ -741,7 +707,6 @@ export const testTextFieldRangeValidation: DescribeRangeValidationTestSuite = (
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={dateParser([
             [2018, 2, 1, 9, 0, 0],

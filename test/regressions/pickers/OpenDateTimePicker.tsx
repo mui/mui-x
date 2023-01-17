@@ -1,9 +1,8 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
 
 const adapterToUse = new AdapterDateFns();
 
@@ -26,8 +25,7 @@ const NoTransition = React.forwardRef(function NoTransition(
 export default function OpenDateTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DateTimePicker
-        onChange={() => {}}
+      <NextDateTimePicker
         open
         components={{
           DesktopTransition: NoTransition,
@@ -38,7 +36,6 @@ export default function OpenDateTimePicker() {
             'data-testid': 'screenshot-target',
           },
         }}
-        renderInput={(params) => <TextField {...params} />}
         value={adapterToUse.date('2019-01-01T00:00:00.000')}
       />
     </LocalizationProvider>

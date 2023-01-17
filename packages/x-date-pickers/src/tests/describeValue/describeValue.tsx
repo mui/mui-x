@@ -3,8 +3,7 @@ import {
   BaseNextPickerInputProps,
   UsePickerValueNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import { PickersSlotsComponentsProps } from '../../internals/components/wrappers/WrapperProps';
-import { PickerV6ComponentFamily } from '../describe.types';
+import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
 import { testPickerOpenCloseLifeCycle } from './testPickerOpenCloseLifeCycle';
@@ -15,15 +14,14 @@ const TEST_SUITES = [testControlledUnControlled, testPickerOpenCloseLifeCycle, t
 /**
  * Tests various aspects of the picker value.
  */
-export function describeValue<TValue, C extends PickerV6ComponentFamily>(
+export function describeValue<TValue, C extends PickerComponentFamily>(
   ElementToTest: React.ElementType,
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const { defaultProps } = getOptions();
 
   function WrappedElementToTest(
-    props: BaseNextPickerInputProps<TValue, any, any, any> &
-      UsePickerValueNonStaticProps<TValue> & { componentsProps?: PickersSlotsComponentsProps },
+    props: BaseNextPickerInputProps<TValue, any, any, any> & UsePickerValueNonStaticProps<TValue>,
   ) {
     return <ElementToTest {...defaultProps} {...props} />;
   }
