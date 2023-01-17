@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const adapterToUse = new AdapterDateFns();
 
@@ -25,7 +25,7 @@ const NoTransition = React.forwardRef(function NoTransition(
 export default function OpenDatePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <NextDatePicker
+      <DatePicker
         open
         components={{
           DesktopTransition: NoTransition,

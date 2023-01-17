@@ -35,7 +35,7 @@ describe('<DataGrid /> - Keyboard', () => {
   function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
-      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
@@ -48,8 +48,8 @@ describe('<DataGrid /> - Keyboard', () => {
           autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
-          pageSize={PAGE_SIZE}
-          rowsPerPageOptions={[PAGE_SIZE]}
+          initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
+          pageSizeOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
           columnHeaderHeight={HEADER_HEIGHT}
@@ -76,7 +76,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to cell below when pressing "ArrowDown" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(18, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('18-1');
@@ -109,7 +109,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(11, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('11-1');
@@ -344,7 +344,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -463,7 +463,7 @@ describe('<DataGrid /> - Keyboard', () => {
     function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
-        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
@@ -476,8 +476,8 @@ describe('<DataGrid /> - Keyboard', () => {
             autoHeight={isJSDOM}
             rows={data.rows}
             columns={transformColSizes(data.columns)}
-            pageSize={PAGE_SIZE}
-            rowsPerPageOptions={[PAGE_SIZE]}
+            paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
+            pageSizeOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
             columnHeaderHeight={HEADER_HEIGHT}
