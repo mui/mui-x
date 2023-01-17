@@ -41,13 +41,6 @@ describe('<StaticDateTimePicker />', () => {
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
-  it('should not render only toolbar when `showToolbar` is `false`', () => {
-    render(<StaticDateTimePicker showToolbar={false} />);
-
-    expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
-    expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
-  });
-
   describe('prop: displayStaticWrapperAs', () => {
     describe('Component slots: Toolbar', () => {
       it('should render toolbar when `hidden` is `false`', () => {
