@@ -1,4 +1,4 @@
-<NextDatePicker
+<DatePicker
   label="Helper text example"
   slotProps={{
     textField: {

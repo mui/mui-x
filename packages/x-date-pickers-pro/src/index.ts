@@ -16,10 +16,10 @@ export type { RangeFieldSection } from './internal/models/fields';
 export * from './DateRangeCalendar';
 
 // New pickers
-export * from './NextDateRangePicker';
-export * from './DesktopNextDateRangePicker';
-export * from './MobileNextDateRangePicker';
-export * from './StaticNextDateRangePicker';
+export * from './DateRangePicker';
+export * from './DesktopDateRangePicker';
+export * from './MobileDateRangePicker';
+export * from './StaticDateRangePicker';
 
 // View renderers
 export * from './dateRangeViewRenderers';
