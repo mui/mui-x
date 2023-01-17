@@ -16,31 +16,33 @@ createTheme({
         someRandomProp: true,
       },
     },
-    MuiDesktopNextDateRangePicker: {
+
+    // Date Range Pickers
+    MuiDateRangePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiDesktopNextDateRangePicker prop
+        // @ts-expect-error invalid MuiDateRangePicker prop
         someRandomProp: true,
       },
     },
-    MuiMobileNextDateRangePicker: {
+    MuiDesktopDateRangePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiMobileNextDateRangePicker prop
+        // @ts-expect-error invalid MuiDesktopDateRangePicker prop
         someRandomProp: true,
       },
     },
-    MuiNextDateRangePicker: {
+    MuiMobileDateRangePicker: {
       defaultProps: {
         open: true,
-        // @ts-expect-error invalid MuiNextDateRangePicker prop
+        // @ts-expect-error invalid MuiMobileDateRangePicker prop
         someRandomProp: true,
       },
     },
-    MuiStaticNextDateRangePicker: {
+    MuiStaticDateRangePicker: {
       defaultProps: {
         disabled: true,
-        // @ts-expect-error invalid MuiStaticNextDateRangePicker prop
+        // @ts-expect-error invalid MuiStaticDateRangePicker prop
         someRandomProp: true,
       },
     },

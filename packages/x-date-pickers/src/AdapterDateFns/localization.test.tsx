@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
@@ -35,13 +35,13 @@ describe('<AdapterDateFns />', () => {
       });
 
       it('should have correct placeholder', () => {
-        render(<NextDateTimePicker />);
+        render(<DateTimePicker />);
 
         expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
       });
 
       it('should have well formatted value', () => {
-        render(<NextDateTimePicker value={adapter.date(testDate)} />);
+        render(<DateTimePicker value={adapter.date(testDate)} />);
 
         expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
       });

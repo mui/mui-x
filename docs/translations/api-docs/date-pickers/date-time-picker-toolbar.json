@@ -1,5 +1,5 @@
 {
-  "componentDescription": "@ignore - internal component.",
+  "componentDescription": "",
   "propDescriptions": {
     "classes": "Override or extend the styles applied to the component. See <a href=\"#css\">CSS API</a> below for more details.",
     "className": "className applied to the root component.",

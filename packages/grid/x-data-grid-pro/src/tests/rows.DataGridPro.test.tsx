@@ -439,12 +439,12 @@ describe('<DataGridPro /> - Rows', () => {
 
     it('should have all the rows rendered of the page in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoPageSize pagination />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
     });
 
     it('should have all the rows rendered in the DOM when autoPageSize: true', () => {
       render(<TestCaseVirtualization autoHeight />);
-      expect(getRows()).to.have.length(apiRef.current.state.pagination.pageSize);
+      expect(getRows()).to.have.length(apiRef.current.state.pagination.paginationModel.pageSize);
     });
 
     it('should render extra columns when the columnBuffer prop is present', () => {
@@ -505,8 +505,8 @@ describe('<DataGridPro /> - Rows', () => {
           <TestCaseVirtualization
             pagination
             rowHeight={50}
-            pageSize={nbRows}
-            rowsPerPageOptions={[nbRows]}
+            initialState={{ pagination: { paginationModel: { pageSize: nbRows } } }}
+            pageSizeOptions={[nbRows]}
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
@@ -524,9 +524,8 @@ describe('<DataGridPro /> - Rows', () => {
         render(
           <TestCaseVirtualization
             pagination
-            pageSize={32}
-            rowsPerPageOptions={[32]}
-            page={3}
+            initialState={{ pagination: { paginationModel: { pageSize: 32, page: 3 } } }}
+            pageSizeOptions={[32]}
             height={500}
           />,
         );
@@ -678,7 +677,13 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should render the correct rows when changing pages', () => {
-      render(<TestCase pageSize={6} rowsPerPageOptions={[6]} pagination />);
+      render(
+        <TestCase
+          initialState={{ pagination: { paginationModel: { pageSize: 6 } } }}
+          pageSizeOptions={[6]}
+          pagination
+        />,
+      );
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(6);
       act(() => apiRef.current.setPage(1));
       expect(document.querySelectorAll('[role="row"][data-rowindex]')).to.have.length(4);

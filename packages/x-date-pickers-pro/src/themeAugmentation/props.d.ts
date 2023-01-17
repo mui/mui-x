@@ -3,21 +3,23 @@ import { MultiInputDateRangeFieldProps } from '../MultiInputDateRangeField/Multi
 import { SingleInputDateRangeFieldProps } from '../SingleInputDateRangeField/SingleInputDateRangeField.types';
 import { DateRangeCalendarProps } from '../DateRangeCalendar';
 
-import { NextDateRangePickerProps, DateRangePickerToolbarProps } from '../NextDateRangePicker';
-import { DesktopNextDateRangePickerProps } from '../DesktopNextDateRangePicker';
-import { MobileNextDateRangePickerProps } from '../MobileNextDateRangePicker';
-import { StaticNextDateRangePickerProps } from '../StaticNextDateRangePicker';
+import { DateRangePickerProps, DateRangePickerToolbarProps } from '../DateRangePicker';
+import { DesktopDateRangePickerProps } from '../DesktopDateRangePicker';
+import { MobileDateRangePickerProps } from '../MobileDateRangePicker';
+import { StaticDateRangePickerProps } from '../StaticDateRangePicker';
 
 export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
-  MuiDesktopNextDateRangePicker: DesktopNextDateRangePickerProps<unknown>;
-  MuiMobileNextDateRangePicker: MobileNextDateRangePickerProps<unknown>;
   MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown, unknown>;
-  MuiNextDateRangePicker: NextDateRangePickerProps<unknown>;
   MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown, unknown>;
-  MuiStaticNextDateRangePicker: StaticNextDateRangePickerProps<unknown>;
+
+  // Date Range Pickers
+  MuiDateRangePicker: DateRangePickerProps<unknown>;
+  MuiDesktopDateRangePicker: DesktopDateRangePickerProps<unknown>;
+  MuiMobileDateRangePicker: MobileDateRangePickerProps<unknown>;
+  MuiStaticDateRangePicker: StaticDateRangePickerProps<unknown>;
 }
 
 declare module '@mui/material/styles' {

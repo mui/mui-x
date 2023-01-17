@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Time Picker component
-components: NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker
+components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker
 githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -10,11 +10,6 @@ materialDesign: https://m2.material.io/components/date-pickers
 # Date Time Picker
 
 <p class="description">The Date Time Picker component let the user select a date and time.</p>
-
-:::warning
-These components will be renamed in the next release to have the same name as the v5 equivalent pickers
-(`NextDateTimePicker` will become `DateTimePicker`, ...)
-:::
 
 ## Basic usage
 
@@ -41,19 +36,19 @@ The component can be uncontrolled or controlled
 
 The component is available in four variants:
 
-- The `DesktopNextDateTimePicker` component which works best for mouse devices and large screens.
+- The `DesktopDateTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextDateTimePicker` component which works best for touch devices and small screens.
+- The `MobileDateTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDateTimePicker` component which renders `DesktopNextDateTimePicker` or `MobileNextDateTimePicker` depending on the device it runs on.
+- The `DateTimePicker` component which renders `DesktopDateTimePicker` or `MobileDateTimePicker` depending on the device it runs on.
 
 - The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 
-By default, the `NextDateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
