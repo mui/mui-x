@@ -458,11 +458,6 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
   const handleFocus = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) =>
     focusDay(day),
   );
-  const handleBlur = useEventCallback((event: React.FocusEvent<HTMLButtonElement>, day: TDate) => {
-    if (internalHasFocus && utils.isSameDay(internalFocusedDay, day)) {
-      onFocusedViewChange?.(false);
-    }
-  });
 
   const currentMonthNumber = utils.getMonth(currentMonth);
   const validSelectedDays = React.useMemo(
@@ -590,7 +585,6 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     focusableDay={focusableDay}
                     onKeyDown={handleKeyDown}
                     onFocus={handleFocus}
-                    onBlur={handleBlur}
                     onDaySelect={handleDaySelect}
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
