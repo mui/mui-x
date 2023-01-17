@@ -200,8 +200,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.showError` method was removed. Use the `error` prop instead.
 - The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
-- The `apiRef.current.showError` method argument type was narrowed. Same for the `error` prop.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.

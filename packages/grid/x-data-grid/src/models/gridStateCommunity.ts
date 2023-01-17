@@ -19,7 +19,6 @@ import type {
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
-import type { DataGridProps } from './props/DataGridProps';
 
 /**
  * The state of `DataGrid`.
@@ -39,7 +38,6 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  error?: DataGridProps['error'];
 }
 
 /**

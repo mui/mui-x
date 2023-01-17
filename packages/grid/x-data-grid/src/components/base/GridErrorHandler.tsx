@@ -1,22 +1,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 function GridErrorHandler(props: { children: React.ReactNode }) {
   const { children } = props;
-  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const errorState = apiRef.current.state.error;
-  const hasError = !!errorState;
+  const error = rootProps.error;
+  const hasError = !!error;
 
   return (
     <React.Fragment>
       {hasError ? (
         <GridMainContainer>
           <rootProps.components.ErrorOverlay
-            error={errorState}
+            error={error}
             {...rootProps.componentsProps?.errorOverlay}
           />
         </GridMainContainer>
