@@ -2,7 +2,6 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { TimeView } from '@mui/x-date-pickers/internals';
 import { DescribeValidationTestSuite } from './describeValidation.types';
@@ -10,30 +9,19 @@ import { DescribeValidationTestSuite } from './describeValidation.types';
 export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTest, getOptions) => {
   const { componentFamily, render, withDate, withTime } = getOptions();
 
-  if (!['legacy-picker', 'new-picker', 'field'].includes(componentFamily)) {
+  if (!['picker', 'field'].includes(componentFamily)) {
     return;
   }
 
   describe('text field:', () => {
-    const defaultProps =
-      componentFamily === 'legacy-picker'
-        ? {
-            onChange: () => {},
-            renderInput: (params) => <TextField {...params} />,
-            reduceAnimations: true,
-            componentsProps: { toolbar: { hidden: true } },
-          }
-        : {};
-
     it('should apply shouldDisableDate', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withDate) {
+      if (['picker', 'field'].includes(componentFamily) && !withDate) {
         return;
       }
 
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2018, 2, 12))}
           shouldDisableDate={(date) =>
@@ -67,7 +55,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2018, 2, 12))}
           shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
@@ -94,7 +81,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
           value={adapterToUse.date(new Date(2018, 2, 12))}
@@ -125,7 +111,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           shouldDisableClock={(value: number) => value === 10}
           value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
@@ -169,7 +154,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           shouldDisableTime={(value, view: TimeView) => {
             let comparingValue = adapterToUse.getHours(value);
@@ -225,9 +209,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       }
 
       const onErrorMock = spy();
-      const { setProps } = render(
-        <WithFakeTimer {...defaultProps} disablePast onError={onErrorMock} />,
-      );
+      const { setProps } = render(<WithFakeTimer disablePast onError={onErrorMock} />);
 
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
@@ -260,9 +242,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       }
 
       const onErrorMock = spy();
-      const { setProps } = render(
-        <WithFakeTimer {...defaultProps} disableFuture onError={onErrorMock} />,
-      );
+      const { setProps } = render(<WithFakeTimer disableFuture onError={onErrorMock} />);
 
       const tomorrow = adapterToUse.addDays(now, 1);
       const yesterday = adapterToUse.addDays(now, -1);
@@ -282,14 +262,13 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     it('should apply minDate', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withDate) {
+      if (['picker', 'field'].includes(componentFamily) && !withDate) {
         return;
       }
 
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 1))}
           minDate={adapterToUse.date(new Date(2019, 5, 15))}
@@ -313,14 +292,13 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     it('should apply maxDate', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withDate) {
+      if (['picker', 'field'].includes(componentFamily) && !withDate) {
         return;
       }
 
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 25))}
           maxDate={adapterToUse.date(new Date(2019, 5, 15))}
@@ -344,14 +322,13 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     it('should apply minTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
+      if (['picker', 'field'].includes(componentFamily) && !withTime) {
         return;
       }
 
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
           minTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
@@ -374,14 +351,13 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
     });
 
     it('should apply maxTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
+      if (['picker', 'field'].includes(componentFamily) && !withTime) {
         return;
       }
 
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           maxTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
           value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
@@ -411,7 +387,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
           maxDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
@@ -448,7 +423,6 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
-          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
           minDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}

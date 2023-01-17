@@ -12,10 +12,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 <p class="description">The Date Time Picker component let the user select a date and time.</p>
 
 :::warning
-The new Date Time Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
+These components will be renamed in the next release to have the same name as the v5 equivalent pickers
 (`NextDateTimePicker` will become `DateTimePicker`, ...)
 :::
 

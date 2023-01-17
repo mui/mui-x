@@ -16,7 +16,7 @@ import {
 } from '@mui/x-date-pickers/PickersLayout';
 import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
+import { DatePickerToolbar } from '@mui/x-date-pickers/NextDatePicker';
 
 function LayoutWithKeyboardView(props) {
   const { value, onChange } = props;

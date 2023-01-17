@@ -1,5 +1,5 @@
 import { createIsAfterIgnoreDatePart } from '../../utils/time-utils';
-import { useValidation, ValidationProps, Validator } from './useValidation';
+import { Validator } from './useValidation';
 import {
   BaseTimeValidationProps,
   CommonDateTimeValidationError,
@@ -95,11 +95,3 @@ export const validateTime: Validator<
       return null;
   }
 };
-
-// TODO v6: Drop with the legacy pickers
-export const isSameTimeError = (a: unknown, b: unknown) => a === b;
-
-// TODO v6: Drop with the legacy pickers
-export const useTimeValidation = <TDate>(
-  props: ValidationProps<TimeValidationError, TDate | null, TimeComponentValidationProps<TDate>>,
-): TimeValidationError => useValidation(props, validateTime, isSameTimeError, null);
