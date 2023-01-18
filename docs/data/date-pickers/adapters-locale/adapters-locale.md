@@ -176,3 +176,47 @@ This prop is available on all components that render a day calendar, including t
 The example bellow adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
+
+## Use UTC dates
+
+### With dayjs
+
+To use UTC dates with `dayjs`, you have to:
+
+1. Extend `dayjs` with its `utc` plugin
+
+   ```tsx
+   import dayjs from 'dayjs';
+   import utc from 'dayjs/plugin/utc';
+
+   dayjs.extend(utc);
+   ```
+
+2. Pass `dayjs.utc` to `LocalizationProvider`
+
+   ```tsx
+   <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
+     {children}
+   </LocalizationProvider>
+   ```
+
+3. Always pass dates created with `dayjs.utc`:
+
+   ```tsx
+   <DatePicker
+     // ✅ Valid props
+     value={dayjs.utc()}
+     minDate={dayjs.utc().startOf('month')}
+     // ❌ Invalid props
+     value={dayjs()}
+     minDate={dayjs().startOf('month')}
+   />
+   ```
+
+{{"demo": "UTCDayjs.js", "defaultCodeOpen": false}}
+
+### Other libraries
+
+UTC support is an ongoing topic.
+
+We will update the documentation with examples using other date libraries once the support for them will be sufficient.
