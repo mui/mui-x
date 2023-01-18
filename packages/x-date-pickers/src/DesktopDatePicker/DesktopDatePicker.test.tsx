@@ -113,7 +113,7 @@ describe('<DesktopDatePicker />', () => {
     it('should go to the first view when re-opening the picker', () => {
       const handleViewChange = spy();
       render(
-        <DesktopNextDatePicker
+        <DesktopDatePicker
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
           slotProps={{ toolbar: { hidden: false } }}
@@ -136,7 +136,7 @@ describe('<DesktopDatePicker />', () => {
     it('should go to the `openTo` view when re-opening the picker', () => {
       const handleViewChange = spy();
       render(
-        <DesktopNextDatePicker
+        <DesktopDatePicker
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
           openTo="month"
