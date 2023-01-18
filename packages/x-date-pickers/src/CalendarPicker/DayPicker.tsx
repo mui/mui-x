@@ -426,7 +426,7 @@ export function DayPicker<TDate>(inProps: DayPickerProps<TDate>) {
                   return renderDay ? (
                     renderDay(day, validSelectedDays, pickersDayProps)
                   ) : (
-                    <PickersDay key={pickersDayProps.key} {...pickersDayProps} />
+                    <PickersDay {...pickersDayProps} key={pickersDayProps.key} />
                   );
                 })}
               </PickersCalendarWeek>
