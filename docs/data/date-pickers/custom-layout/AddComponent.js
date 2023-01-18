@@ -8,7 +8,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import {
@@ -95,10 +95,10 @@ function CustomLayout(props) {
 export default function AddComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
-        components={{
-          Layout: CustomLayout,
-          ActionBar: ActionList,
+      <StaticDatePicker
+        slots={{
+          layout: CustomLayout,
+          actionBar: ActionList,
         }}
       />
     </LocalizationProvider>

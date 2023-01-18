@@ -1,7 +1,8 @@
 {
-  "componentDescription": "@ignore - internal component.",
+  "componentDescription": "",
   "propDescriptions": {
     "className": "className applied to the root component.",
+    "hidden": "If <code>true</code>, show the toolbar even in desktop mode.",
     "toolbarFormat": "Toolbar date format.",
     "toolbarPlaceholder": "Toolbar value placeholder—it is displayed when the value is empty."
   },

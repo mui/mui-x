@@ -71,8 +71,8 @@ export default function CustomDay() {
       <DateCalendar
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        components={{ Day }}
-        componentsProps={{
+        slots={{ day: Day }}
+        slotProps={{
           day: {
             selectedDay: value,
           } as any,

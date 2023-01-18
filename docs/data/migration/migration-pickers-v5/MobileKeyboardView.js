@@ -14,7 +14,7 @@ import {
   PickersLayoutRoot,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
-import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { DatePickerToolbar } from '@mui/x-date-pickers/DatePicker';
 
@@ -24,10 +24,10 @@ function LayoutWithKeyboardView(props) {
 
   const { toolbar, tabs, content, actionBar } = usePickerLayout({
     ...props,
-    componentsProps: {
-      ...props.componentsProps,
+    slotProps: {
+      ...props.slotProps,
       toolbar: {
-        ...props.componentsProps?.toolbar,
+        ...props.slotProps?.toolbar,
         // @ts-ignore
         showKeyboardViewSwitch: props.wrapperVariant === 'mobile',
         showKeyboardView,
@@ -55,12 +55,12 @@ function LayoutWithKeyboardView(props) {
 }
 
 LayoutWithKeyboardView.propTypes = {
+  onChange: PropTypes.func.isRequired,
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotProps`.
    */
-  componentsProps: PropTypes.shape({
+  slotProps: PropTypes.shape({
     /**
      * Props passed down to the action bar component.
      */
@@ -120,7 +120,6 @@ LayoutWithKeyboardView.propTypes = {
        */
       orientation: PropTypes.oneOf(['landscape', 'portrait']),
       readOnly: PropTypes.bool,
-      showToolbar: PropTypes.bool,
       /**
        * The props used for each component slot.
        * @default {}
@@ -169,6 +168,11 @@ LayoutWithKeyboardView.propTypes = {
        */
       className: PropTypes.string,
       /**
+       * If `true`, show the toolbar even in desktop mode.
+       * @default `true` for Desktop, `false` for Mobile.
+       */
+      hidden: PropTypes.bool,
+      /**
        * Toolbar date format.
        */
       toolbarFormat: PropTypes.string,
@@ -179,7 +183,6 @@ LayoutWithKeyboardView.propTypes = {
       toolbarPlaceholder: PropTypes.node,
     }),
   }),
-  onChange: PropTypes.func.isRequired,
   value: PropTypes.any,
   wrapperVariant: PropTypes.oneOf(['desktop', 'mobile', null]).isRequired,
 };
@@ -227,10 +230,10 @@ ToolbarWithKeyboardViewSwitch.propTypes = {
 export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileNextDatePicker
-        components={{
-          Layout: LayoutWithKeyboardView,
-          Toolbar: ToolbarWithKeyboardViewSwitch,
+      <MobileDatePicker
+        slots={{
+          layout: LayoutWithKeyboardView,
+          toolbar: ToolbarWithKeyboardViewSwitch,
         }}
       />
     </LocalizationProvider>

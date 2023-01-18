@@ -217,7 +217,7 @@
   },
   {
     "name": "gridFocusCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },
@@ -266,6 +266,13 @@
     "returnType": "GridRowId[]",
     "category": "Pagination",
     "description": "Get the id of each row to include in the current page if the pagination is enabled.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridPaginationModelSelector",
+    "returnType": "GridPaginationModel",
+    "category": "Pagination",
+    "description": "Get the pagination model",
     "supportsApiRef": true
   },
   {
@@ -395,7 +402,7 @@
   },
   {
     "name": "gridTabIndexCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },

@@ -82,7 +82,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     ['readOnly', 'disabled'].forEach((prop) => {
       it(`should apply ${prop}="true" prop`, () => {
-        if (!['field', 'new-picker'].includes(componentFamily)) {
+        if (!['field', 'picker'].includes(componentFamily)) {
           return;
         }
         const handleChange = spy();
@@ -97,8 +97,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     it('should not allow editing with keyboard in mobile pickers', () => {
       if (
-        componentFamily !== 'new-picker' ||
-        (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
+        componentFamily !== 'picker' ||
+        (pickerParams as DescribeValueOptions<'picker', any>).variant !== 'mobile'
       ) {
         return;
       }

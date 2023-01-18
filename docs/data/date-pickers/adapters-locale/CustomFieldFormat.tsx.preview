@@ -3,7 +3,7 @@
   format="MM - DD - YYYY"
   defaultValue={dayjs('2022-04-07')}
 />
-<NextDatePicker
+<DatePicker
   label="Date Picker"
   format="YYYY/MM/DD"
   defaultValue={dayjs('2022-04-07')}
