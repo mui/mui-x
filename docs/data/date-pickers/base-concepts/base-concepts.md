@@ -1,13 +1,13 @@
 ---
 product: date-pickers
-title: Date and Time Picker - Introduction
+title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
 waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
 ---
 
-# Date and Time Pickers - Introduction
+# Date and Time Pickers - Base concepts
 
 <p class="description">The Date and Time pickers expose a lot of components to fit your every needs.</p>
 

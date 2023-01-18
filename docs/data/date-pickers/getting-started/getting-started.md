@@ -18,10 +18,14 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 Using your favorite package manager, install:
 
 - `@mui/x-date-pickers-pro` for the commercial version or `@mui/x-date-pickers` for the free community version.
-- The [date library](/x/react-date-pickers/#date-library) to manipulate the date
-  To make the Date and Time Pickers work, you need to install the following packages:
+- The date library to manipulate the date.
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
+
+:::info
+If you need more information about the date library supported by the Date and Time Pickers,
+take a look at the [dedicated section](/x/react-date-pickers/#date-library)
+:::
 
 The Date and Time Pickers package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:

@@ -140,7 +140,7 @@ const pages: MuiPage[] = [
     children: [
       { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
-      { pathname: '/x/react-date-pickers/introduction' },
+      { pathname: '/x/react-date-pickers/base-concepts' },
       {
         pathname: '/x/react-date-pickers/date-pickers',
         title: 'Date components',
