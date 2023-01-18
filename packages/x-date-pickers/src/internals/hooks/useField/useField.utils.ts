@@ -687,6 +687,14 @@ export const applyMeridiemChange = <TDate>(
   return date;
 };
 
+/**
+ * @template TDate
+ * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
+ * @param {TDate} date The date on which the week day must be applied.
+ * @param {string} sectionFormat The format of the week day section.
+ * @param {string} sectionValue The new value of the week day section.
+ * @returns {TDate} The date with the new meridiem.
+ */
 export const applyWeekDayChange = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   date: TDate,
