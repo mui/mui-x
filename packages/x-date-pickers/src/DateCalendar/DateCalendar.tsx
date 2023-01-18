@@ -134,7 +134,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     displayWeekNumber,
     yearsPerRow,
     monthsPerRow,
-    sx,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled({
@@ -295,7 +295,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       <PickersCalendarHeader
         views={views}
