@@ -26,7 +26,7 @@ function Label({
 
   if (isProOnly) {
     return (
-      <Stack direction="row" spacing={0.5}>
+      <Stack direction="row" spacing={0.5} component="span">
         <Tooltip title="Included on Pro package">
           <a href="/x/introduction/licensing/#pro-plan">
             <span className="plan-pro" />

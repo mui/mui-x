@@ -94,4 +94,4 @@ To make sure that everything is set up correctly, try rendering a simple `DatePi
 
 ## What's next ?
 
-Continue to the [next page](/x/react-date-pickers/introduction/) and discover the components available and how to use them.
+Continue to the [next page](/x/react-date-pickers/base-concepts/) and discover the components available and how to use them.

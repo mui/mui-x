@@ -83,7 +83,7 @@ import { DateTime } from 'luxon';
 In desktop mode, the `DateTimePicker` and `TimePicker` components will not display the clock.
 This is the first step towards moving to a [better implementation](https://github.com/mui/mui-x/issues/4483).
 The behavior on mobile mode is still the same.
-If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/introduction/#testing-caveats) to choose the best replacement for it.
+If you were relying on Clock Picker in desktop mode for tests—make sure to check [testing caveats](/x/react-date-pickers/base-concepts/#testing-caveats) to choose the best replacement for it.
 
 You can manually re-enable the clock using the new `viewRenderers` prop.
 The code below enables the `Clock` UI on all the `DesktopTimePicker` and `DesktopDateTimePicker` in your application.
