@@ -53,7 +53,10 @@ export const useStaticRangePicker = <
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,
-    additionalViewProps: {},
+    additionalViewProps: {
+      rangePosition,
+      onRangePositionChange: setRangePosition,
+    },
     wrapperVariant: displayStaticWrapperAs,
   });
 
