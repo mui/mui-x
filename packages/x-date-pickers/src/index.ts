@@ -16,20 +16,20 @@ export * from './YearCalendar';
 export * from './DayCalendarSkeleton';
 
 // New Pickers
-export * from './NextDatePicker';
-export * from './DesktopNextDatePicker';
-export * from './MobileNextDatePicker';
-export * from './StaticNextDatePicker';
+export * from './DatePicker';
+export * from './DesktopDatePicker';
+export * from './MobileDatePicker';
+export * from './StaticDatePicker';
 
-export * from './NextTimePicker';
-export * from './DesktopNextTimePicker';
-export * from './MobileNextTimePicker';
-export * from './StaticNextTimePicker';
+export * from './TimePicker';
+export * from './DesktopTimePicker';
+export * from './MobileTimePicker';
+export * from './StaticTimePicker';
 
-export * from './NextDateTimePicker';
-export * from './DesktopNextDateTimePicker';
-export * from './MobileNextDateTimePicker';
-export * from './StaticNextDateTimePicker';
+export * from './DateTimePicker';
+export * from './DesktopDateTimePicker';
+export * from './MobileDateTimePicker';
+export * from './StaticDateTimePicker';
 
 // View renderers
 export * from './dateViewRenderers';

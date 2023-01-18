@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Picker component
-components: NextDatePicker, DesktopNextDatePicker, MobileNextDatePicker, StaticNextDatePicker
+components: DatePicker, DesktopDatePicker, MobileDatePicker, StaticDatePicker
 githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -10,11 +10,6 @@ materialDesign: https://m2.material.io/components/date-pickers
 # Date Picker
 
 <p class="description">The Date Picker component let the user select a date.</p>
-
-:::warning
-These components will be renamed in the next release to have the same name as the v5 equivalent pickers
-(`NextDatePicker` will become `DatePicker`, ...)
-:::
 
 ## Basic usage
 
@@ -40,19 +35,19 @@ The component can be uncontrolled or controlled
 
 The component is available in four variants:
 
-- The `DesktopNextDatePicker` component which works best for mouse devices and large screens.
+- The `DesktopDatePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextDatePicker` component which works best for touch devices and small screens.
+- The `MobileDatePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDatePicker` component which renders `DesktopNextDatePicker` or `MobileNextDatePicker` depending on the device it runs on.
+- The `DatePicker` component which renders `DesktopDatePicker` or `MobileDatePicker` depending on the device it runs on.
 
 - The `StaticDatePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDatePickers.js"}}
 
-By default, the `NextDatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DatePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning

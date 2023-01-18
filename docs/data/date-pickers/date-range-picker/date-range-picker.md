@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Range Picker component
-components: NextDateRangePicker, DesktopNextDateRangePicker, MobileNextDateRangePicker, StaticNextDateRangePicker, DateRangeCalendar, DateRangePickerDay
+components: DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateRangeCalendar, DateRangePickerDay
 githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -10,11 +10,6 @@ materialDesign: https://m2.material.io/components/date-pickers
 # Date Range Picker [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 <p class="description">The Date Range Picker let the user select a range of dates.</p>
-
-:::warning
-These components will be renamed in the next release to have the same name as the v5 equivalent pickers
-(`NextDateRangePicker` will become `DateRangePicker`, ...)
-:::
 
 ## Basic usage
 
@@ -40,19 +35,19 @@ The component can be uncontrolled or controlled
 
 The component is available in four variants:
 
-- The `DesktopNextDateRangePicker` component which works best for mouse devices and large screens.
+- The `DesktopDateRangePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextDateRangePicker` component which works best for touch devices and small screens.
+- The `MobileDateRangePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDateRangePicker` component which renders `DesktopNextDateRangePicker` or `MobileNextDateRangePicker` depending on the device it runs on.
+- The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
 
 - The `StaticDateRangePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateRangePickers.js"}}
 
-By default, the `NextDateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning

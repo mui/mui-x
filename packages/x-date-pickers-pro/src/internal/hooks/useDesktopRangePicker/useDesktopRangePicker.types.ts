@@ -10,7 +10,7 @@ import {
 import {
   DateOrTimeView,
   UsePickerParams,
-  BaseNextPickerProps,
+  BasePickerProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
@@ -58,7 +58,7 @@ export interface UseDesktopRangePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<
+    BasePickerProps<
       DateRange<TDate>,
       TDate,
       TView,
