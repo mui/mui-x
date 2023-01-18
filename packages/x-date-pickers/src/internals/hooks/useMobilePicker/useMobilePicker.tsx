@@ -13,6 +13,13 @@ import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantC
 import { BaseFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { buildWarning } from '../../utils/warning';
+
+const ariaLabelledByCantBeResolvedWarning = buildWarning([
+  'MUI: `aria-labelledby` can not be resolved.',
+  'Make sure that the picker has a `label` or the toolbar is not hidden.',
+  'Alternatively you can provide a custom `aria-labelledby` to the `mobilePaper` slot props.',
+]);
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -38,6 +45,7 @@ export const useMobilePicker = <
     readOnly,
     disabled,
     localeText,
+    label,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -112,6 +120,21 @@ export const useMobilePicker = <
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
 
+  let labelledById = labelId;
+  if (isToolbarHidden) {
+    if (label) {
+      labelledById = `${labelId}-label`;
+    } else {
+      labelledById = undefined;
+    }
+  }
+  if (
+    !labelledById &&
+    !innerSlotProps?.mobilePaper?.['aria-labelledby'] &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    ariaLabelledByCantBeResolvedWarning();
+  }
   const slotProps = {
     ...innerSlotProps,
     toolbar: {
@@ -119,7 +142,7 @@ export const useMobilePicker = <
       ...innerSlotProps?.toolbar,
     },
     mobilePaper: {
-      'aria-labelledby': isToolbarHidden ? `${labelId}-label` : labelId,
+      'aria-labelledby': labelledById,
       ...innerSlotProps?.mobilePaper,
     },
   };

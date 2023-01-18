@@ -2,7 +2,11 @@ import * as React from 'react';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { DateOrTimeView, MuiPickersAdapter } from '../../models';
-import { BaseNonStaticPickerProps, BasePickerProps } from '../../models/props/basePickerProps';
+import {
+  BaseNonStaticPickerExternalProps,
+  BaseNonStaticPickerProps,
+  BasePickerProps,
+} from '../../models/props/basePickerProps';
 import {
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
@@ -54,7 +58,8 @@ export interface UseMobilePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
-    MobileOnlyPickerProps<TDate> {
+    MobileOnlyPickerProps<TDate>,
+    Pick<BaseNonStaticPickerExternalProps, 'label'> {
   /**
    * Overrideable component slots.
    * @default {}
