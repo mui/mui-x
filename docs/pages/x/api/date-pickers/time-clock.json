@@ -71,8 +71,6 @@
   },
   "name": "TimeClock",
   "styles": { "classes": ["root", "arrowSwitcher"], "globalClasses": {}, "name": "MuiTimeClock" },
-  "spread": false,
-  "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers/src/TimeClock/TimeClock.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/time-clock/\">Time Clock</a></li></ul>",
