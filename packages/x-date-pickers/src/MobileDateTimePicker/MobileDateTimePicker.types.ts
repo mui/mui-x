@@ -19,7 +19,7 @@ export interface MobileDateTimePickerSlotsComponent<TDate>
 
 export interface MobileDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    UseMobilePickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+    Omit<UseMobilePickerSlotsComponentsProps<TDate, DateOrTimeView>, 'toolbar'> {}
 
 export interface MobileDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,

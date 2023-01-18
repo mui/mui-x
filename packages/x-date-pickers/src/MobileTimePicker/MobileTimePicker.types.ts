@@ -19,7 +19,7 @@ export interface MobileTimePickerSlotsComponent<TDate>
 
 export interface MobileTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    UseMobilePickerSlotsComponentsProps<TDate, TimeView> {}
+    Omit<UseMobilePickerSlotsComponentsProps<TDate, TimeView>, 'toolbar'> {}
 
 export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,

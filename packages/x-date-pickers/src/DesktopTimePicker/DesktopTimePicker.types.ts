@@ -19,7 +19,7 @@ export interface DesktopTimePickerSlotsComponent<TDate>
 
 export interface DesktopTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    UseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
+    Omit<UseDesktopPickerSlotsComponentsProps<TDate, TimeView>, 'toolbar'> {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,

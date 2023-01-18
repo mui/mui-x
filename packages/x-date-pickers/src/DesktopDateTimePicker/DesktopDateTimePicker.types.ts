@@ -22,7 +22,7 @@ export interface DesktopDateTimePickerSlotsComponent<TDate>
 
 export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    UseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
+    Omit<UseDesktopPickerSlotsComponentsProps<TDate, DateOrTimeView>, 'toolbar'> {}
 
 export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
