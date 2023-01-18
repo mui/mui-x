@@ -14,6 +14,9 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
   }
 
   describe('text field:', () => {
+    const defaultProps = {
+      label: 'test text field',
+    };
     it('should apply shouldDisableDate', function test() {
       if (['picker', 'field'].includes(componentFamily) && !withDate) {
         return;
@@ -22,6 +25,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2018, 2, 12))}
           shouldDisableDate={(date) =>
@@ -55,6 +59,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2018, 2, 12))}
           shouldDisableYear={(date) => adapterToUse.getYear(date) === 2018}
@@ -81,6 +86,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           shouldDisableMonth={(date) => adapterToUse.getMonth(date) === 2}
           value={adapterToUse.date(new Date(2018, 2, 12))}
@@ -111,6 +117,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           shouldDisableClock={(value: number) => value === 10}
           value={adapterToUse.date(new Date(2018, 2, 12, 10, 5, 0))}
@@ -154,6 +161,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           shouldDisableTime={(value, view: TimeView) => {
             let comparingValue = adapterToUse.getHours(value);
@@ -205,7 +213,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date(new Date());
-        return <ElementToTest value={now} {...props} />;
+        return <ElementToTest {...defaultProps} value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -238,7 +246,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       let now;
       function WithFakeTimer(props) {
         now = adapterToUse.date(new Date());
-        return <ElementToTest value={now} {...props} />;
+        return <ElementToTest {...defaultProps} value={now} {...props} />;
       }
 
       const onErrorMock = spy();
@@ -269,6 +277,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 1))}
           minDate={adapterToUse.date(new Date(2019, 5, 15))}
@@ -299,6 +308,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 25))}
           maxDate={adapterToUse.date(new Date(2019, 5, 15))}
@@ -329,6 +339,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
           minTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
@@ -358,6 +369,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           maxTime={adapterToUse.date(new Date(2010, 0, 1, 12, 0))}
           value={adapterToUse.date(new Date(2019, 5, 15, 10, 15))}
@@ -387,6 +399,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
           maxDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}
@@ -423,6 +436,7 @@ export const testTextFieldValidation: DescribeValidationTestSuite = (ElementToTe
       const onErrorMock = spy();
       const { setProps } = render(
         <ElementToTest
+          {...defaultProps}
           onError={onErrorMock}
           value={adapterToUse.date(new Date(2019, 5, 15, 13, 15))}
           minDateTime={adapterToUse.date(new Date(2019, 5, 15, 12, 0))}

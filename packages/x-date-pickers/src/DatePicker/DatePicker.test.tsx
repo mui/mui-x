@@ -17,7 +17,7 @@ describe('<DatePicker />', () => {
   describe('prop: inputRef', () => {
     it('should forward ref to the text box', () => {
       const inputRef = React.createRef<HTMLInputElement>();
-      render(<DatePicker inputRef={inputRef} />);
+      render(<DatePicker label="test" inputRef={inputRef} />);
 
       expect(inputRef.current).to.have.tagName('input');
     });
@@ -25,7 +25,7 @@ describe('<DatePicker />', () => {
 
   describe('rendering', () => {
     it('should handle controlled `onChange` in desktop mode', () => {
-      render(<DatePicker />);
+      render(<DatePicker label="test" />);
       const input: HTMLInputElement = screen.getByRole('textbox');
 
       fireEvent.change(input, { target: { value: '02/22/2022' } });
@@ -36,7 +36,7 @@ describe('<DatePicker />', () => {
       const originalMatchMedia = window.matchMedia;
       window.matchMedia = stubMatchMedia(false);
 
-      render(<DatePicker />);
+      render(<DatePicker label="test" />);
 
       expect(screen.getByLabelText(/Choose date/)).to.have.tagName('input');
 
@@ -47,7 +47,7 @@ describe('<DatePicker />', () => {
       if (isJSDOM) {
         this.skip();
       }
-      render(<DatePicker defaultValue={new Date(2019, 5, 5)} openTo="year" />);
+      render(<DatePicker label="test" defaultValue={new Date(2019, 5, 5)} openTo="year" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
       expect(document.activeElement).to.have.text('2019');

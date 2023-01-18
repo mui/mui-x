@@ -24,19 +24,22 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
     pickerParams.type === 'date-range' && pickerParams.variant === 'desktop' ? 'tooltip' : 'dialog';
 
   describe('Picker open / close lifecycle', () => {
+    const defaultProps = {
+      label: 'test open close lifecycle',
+    };
     it('should not open on mount if `props.open` is false', () => {
-      render(<ElementToTest />);
+      render(<ElementToTest {...defaultProps} />);
       expect(screen.queryByRole(viewWrapperRole)).to.equal(null);
     });
 
     it('should open on mount if `prop.open` is true', () => {
-      render(<ElementToTest open />);
+      render(<ElementToTest {...defaultProps} open />);
       expect(screen.queryByRole(viewWrapperRole)).toBeVisible();
     });
 
     it('should not open when `prop.disabled` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest disabled onOpen={onOpen} />);
+      render(<ElementToTest {...defaultProps} disabled onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -44,7 +47,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
     it('should not open when `prop.readOnly` is true ', () => {
       const onOpen = spy();
-      render(<ElementToTest readOnly onOpen={onOpen} />);
+      render(<ElementToTest {...defaultProps} readOnly onOpen={onOpen} />);
 
       openPicker(pickerParams);
       expect(onOpen.callCount).to.equal(0);
@@ -57,6 +60,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -91,6 +95,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -126,6 +131,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -153,6 +159,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -199,6 +206,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -237,6 +245,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -265,6 +274,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -292,6 +302,7 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       render(
         <ElementToTest
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -311,7 +322,14 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
       const onAccept = spy();
       const onClose = spy();
 
-      render(<ElementToTest onChange={onChange} onAccept={onAccept} onClose={onClose} />);
+      render(
+        <ElementToTest
+          {...defaultProps}
+          onChange={onChange}
+          onAccept={onAccept}
+          onClose={onClose}
+        />,
+      );
 
       // Dismiss the picker
       userEvent.keyPress(document.body, { key: 'Escape' });

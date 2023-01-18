@@ -6,6 +6,9 @@ import { DesktopDateTimePicker } from '@mui/x-date-pickers/DesktopDateTimePicker
 import { adapterToUse, createPickerRenderer, openPicker } from 'test/utils/pickers-utils';
 
 describe('<DesktopDateTimePicker />', () => {
+  const defaultProps = {
+    label: 'test',
+  };
   const { render } = createPickerRenderer({
     clock: 'fake',
     clockConfig: new Date('2018-01-01T10:05:05.000'),
@@ -17,6 +20,7 @@ describe('<DesktopDateTimePicker />', () => {
       const handleTouchStart = spy();
       render(
         <DesktopDateTimePicker
+          {...defaultProps}
           open
           slotProps={{
             popper: {
@@ -45,6 +49,7 @@ describe('<DesktopDateTimePicker />', () => {
       const handleTouchStart = spy();
       render(
         <DesktopDateTimePicker
+          {...defaultProps}
           open
           slotProps={{
             popper: {
@@ -73,6 +78,7 @@ describe('<DesktopDateTimePicker />', () => {
       const handleTouchStart = spy();
       render(
         <DesktopDateTimePicker
+          {...defaultProps}
           open
           slotProps={{
             desktopPaper: {
@@ -99,7 +105,7 @@ describe('<DesktopDateTimePicker />', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
-      render(<DesktopDateTimePicker onOpen={onOpen} defaultValue={null} />);
+      render(<DesktopDateTimePicker {...defaultProps} onOpen={onOpen} defaultValue={null} />);
 
       userEvent.mousePress(screen.getByLabelText(/Choose date/));
 
@@ -114,6 +120,7 @@ describe('<DesktopDateTimePicker />', () => {
 
       render(
         <DesktopDateTimePicker
+          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -143,6 +150,7 @@ describe('<DesktopDateTimePicker />', () => {
     it('should respect the `localeText` prop', () => {
       render(
         <DesktopDateTimePicker
+          {...defaultProps}
           defaultValue={null}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
           slotProps={{ actionBar: { actions: ['cancel'] } }}

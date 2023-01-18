@@ -14,6 +14,7 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
   describe('day view:', () => {
     const defaultProps = {
       onChange: () => {},
+      label: 'test day view',
       open: true,
       view: 'day',
       reduceAnimations: true,

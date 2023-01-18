@@ -14,6 +14,7 @@ export const testMonthViewValidation: DescribeValidationTestSuite = (ElementToTe
   describe('month view:', () => {
     const defaultProps = {
       onChange: () => {},
+      label: 'test month view',
       ...(views.length > 1 && {
         views: ['month'],
         view: 'month',

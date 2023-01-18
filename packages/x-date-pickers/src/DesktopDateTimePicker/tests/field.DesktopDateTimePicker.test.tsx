@@ -7,7 +7,7 @@ describe('<DesktopDateTimePicker /> - Field', () => {
   const { render } = createPickerRenderer();
 
   it('should pass the ampm prop to the field', () => {
-    const { setProps } = render(<DesktopDateTimePicker ampm />);
+    const { setProps } = render(<DesktopDateTimePicker label="test" ampm />);
 
     const input = screen.getByRole('textbox');
     expectInputValue(input, 'MM / DD / YYYY hh:mm aa');
