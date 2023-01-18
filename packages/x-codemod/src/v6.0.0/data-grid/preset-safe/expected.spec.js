@@ -5,7 +5,7 @@ function App({ column, hideMenu }) {
   return (
     <React.Fragment>
       <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
-      <DataGrid />
+      <DataGrid pageSizeOptions={[5]} />
     </React.Fragment>
   );
 }

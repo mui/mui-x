@@ -207,7 +207,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
   ```
 
-- The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
 
   ```diff
   -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
