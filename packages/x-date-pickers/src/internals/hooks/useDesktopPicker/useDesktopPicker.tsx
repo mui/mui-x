@@ -2,7 +2,7 @@ import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import useForkRef from '@mui/utils/useForkRef';
+import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
 import { PickersPopper } from '../../components/PickersPopper';
 import { DateOrTimeView } from '../../models/views';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
@@ -13,6 +13,13 @@ import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantC
 import { BaseFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
+import { buildWarning } from '../../utils/warning';
+
+const ariaLabelledByCantBeResolvedWarning = buildWarning([
+  'MUI: `aria-labelledby` can not be resolved.',
+  'Make sure that the picker has a `label` or the toolbar is not hidden.',
+  'Alternatively you can provide a custom `aria-labelledby` to the `popper` slot props.',
+]);
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -30,10 +37,21 @@ export const useDesktopPicker = <
   getOpenDialogAriaText,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const { slots, slotProps, className, format, readOnly, disabled, autoFocus, localeText } = props;
+  const {
+    slots,
+    slotProps: innerSlotProps,
+    className,
+    format,
+    readOnly,
+    disabled,
+    autoFocus,
+    localeText,
+    label,
+  } = props;
 
   const utils = useUtils<TDate>();
   const inputRef = React.useRef<HTMLInputElement>(null);
+  const labelId = useId();
 
   const {
     open,
@@ -56,7 +74,7 @@ export const useDesktopPicker = <
   const Field = slots.field;
   const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
-    externalSlotProps: slotProps?.field,
+    externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly,
@@ -71,7 +89,7 @@ export const useDesktopPicker = <
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
   const inputAdornmentProps = useSlotProps({
     elementType: InputAdornment,
-    externalSlotProps: slotProps?.inputAdornment,
+    externalSlotProps: innerSlotProps?.inputAdornment,
     additionalProps: {
       position: 'end' as const,
     },
@@ -81,7 +99,7 @@ export const useDesktopPicker = <
   const OpenPickerButton = slots.openPickerButton ?? IconButton;
   const { ownerState: openPickerButtonOwnerState, ...openPickerButtonProps } = useSlotProps({
     elementType: OpenPickerButton,
-    externalSlotProps: slotProps?.openPickerButton,
+    externalSlotProps: innerSlotProps?.openPickerButton,
     additionalProps: {
       disabled: disabled || readOnly,
       onClick: actions.onOpen,
@@ -98,23 +116,26 @@ export const useDesktopPicker = <
     ...fieldProps.slots,
   };
 
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
+
   const slotPropsForField: BaseFieldProps<TDate | null, unknown>['slotProps'] = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
+      const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
         fieldProps.slotProps?.textField,
         ownerState,
       );
 
       return {
+        ...(isToolbarHidden && { id: labelId }),
         ...inputPropsPassedByField,
         ...externalInputProps,
         InputProps: {
           [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
             <InputAdornment {...inputAdornmentProps}>
               <OpenPickerButton {...openPickerButtonProps}>
-                <OpenPickerIcon {...slotProps?.openPickerIcon} />
+                <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
               </OpenPickerButton>
             </InputAdornment>
           ) : undefined,
@@ -128,6 +149,34 @@ export const useDesktopPicker = <
   const Layout = slots.layout ?? PickersLayout;
 
   const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
+
+  let labelledById = labelId;
+  if (isToolbarHidden) {
+    if (label) {
+      labelledById = `${labelId}-label`;
+    } else {
+      labelledById = undefined;
+    }
+  }
+  if (
+    !labelledById &&
+    // ts complains about unknown prop access without casting
+    !(innerSlotProps?.popper as any)?.['aria-labelledby'] &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    ariaLabelledByCantBeResolvedWarning();
+  }
+  const slotProps = {
+    ...innerSlotProps,
+    toolbar: {
+      titleId: labelId,
+      ...innerSlotProps?.toolbar,
+    },
+    popper: {
+      'aria-labelledby': labelledById,
+      ...innerSlotProps?.desktopPaper,
+    },
+  };
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
