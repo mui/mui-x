@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { SxProps, Theme } from '@mui/material/styles';
-import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { GridPanelContent } from '../GridPanelContent';
 import { GridPanelFooter } from '../GridPanelFooter';
@@ -19,7 +19,7 @@ export interface GetColumnForNewFilterArgs {
 }
 
 export interface GridFilterPanelProps
-  extends Pick<GridFilterFormProps, 'linkOperators' | 'columnsSort'> {
+  extends Pick<GridFilterFormProps, 'logicOperators' | 'columnsSort'> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -37,7 +37,7 @@ export interface GridFilterPanelProps
     GridFilterFormProps,
     | 'columnsSort'
     | 'deleteIconProps'
-    | 'linkOperatorInputProps'
+    | 'logicOperatorInputProps'
     | 'operatorInputProps'
     | 'columnInputProps'
     | 'valueInputProps'
@@ -75,7 +75,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
     const lastFilterRef = React.useRef<any>(null);
 
     const {
-      linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
+      logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
       columnsSort,
       filterFormProps,
       getColumnForNewFilter,
@@ -92,9 +92,9 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef],
     );
 
-    const applyFilterLinkOperator = React.useCallback(
-      (operator: GridLinkOperator) => {
-        apiRef.current.setFilterLinkOperator(operator);
+    const applyFilterLogicOperator = React.useCallback(
+      (operator: GridLogicOperator) => {
+        apiRef.current.setFilterLogicOperator(operator);
       },
       [apiRef],
     );
@@ -183,13 +183,13 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 
     React.useEffect(() => {
       if (
-        linkOperators.length > 0 &&
-        filterModel.linkOperator &&
-        !linkOperators.includes(filterModel.linkOperator)
+        logicOperators.length > 0 &&
+        filterModel.logicOperator &&
+        !logicOperators.includes(filterModel.logicOperator)
       ) {
-        applyFilterLinkOperator(linkOperators[0]);
+        applyFilterLogicOperator(logicOperators[0]);
       }
-    }, [linkOperators, applyFilterLinkOperator, filterModel.linkOperator]);
+    }, [logicOperators, applyFilterLogicOperator, filterModel.logicOperator]);
 
     React.useEffect(() => {
       if (items.length > 0) {
@@ -208,11 +208,11 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               deleteFilter={deleteFilter}
               hasMultipleFilters={hasMultipleFilters}
               showMultiFilterOperators={index > 0}
-              multiFilterOperator={filterModel.linkOperator}
+              multiFilterOperator={filterModel.logicOperator}
               disableMultiFilterOperator={index !== 1}
-              applyMultiFilterOperatorChanges={applyFilterLinkOperator}
+              applyMultiFilterOperatorChanges={applyFilterLogicOperator}
               focusElementRef={index === items.length - 1 ? lastFilterRef : null}
-              linkOperators={linkOperators}
+              logicOperators={logicOperators}
               columnsSort={columnsSort}
               {...filterFormProps}
             />
@@ -274,7 +274,7 @@ GridFilterPanel.propTypes = {
     columnInputProps: PropTypes.any,
     columnsSort: PropTypes.oneOf(['asc', 'desc']),
     deleteIconProps: PropTypes.any,
-    linkOperatorInputProps: PropTypes.any,
+    logicOperatorInputProps: PropTypes.any,
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
   }),
@@ -286,9 +286,9 @@ GridFilterPanel.propTypes = {
   getColumnForNewFilter: PropTypes.func,
   /**
    * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
    */
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
+  logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

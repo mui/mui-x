@@ -124,19 +124,14 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   cursor: 'default',
 });
 
-/**
- * @ignore - internal component.
- */
 function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
     value,
-    isMobileKeyboardViewOpen,
     onChange,
     view,
     onViewChange,
-    toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
@@ -166,8 +161,6 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
   return (
     <DateTimePickerToolbarRoot
       toolbarTitle={localeText.dateTimePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
       {...other}
       ownerState={ownerState}
@@ -262,8 +255,12 @@ DateTimePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -272,7 +269,6 @@ DateTimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
-  toggleMobileKeyboardView: PropTypes.func,
   /**
    * Toolbar date format.
    */

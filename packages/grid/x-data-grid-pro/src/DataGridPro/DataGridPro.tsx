@@ -206,11 +206,6 @@ DataGridProRaw.propTypes = {
    */
   disableDensitySelector: PropTypes.bool,
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: PropTypes.bool,
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
@@ -252,6 +247,7 @@ DataGridProRaw.propTypes = {
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
     rowPinning: PropTypes.bool,
+    warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
    * Filtering can be processed on the server or client-side.
@@ -278,7 +274,7 @@ DataGridProRaw.propTypes = {
         value: PropTypes.any,
       }),
     ).isRequired,
-    linkOperator: PropTypes.oneOf(['and', 'or']),
+    logicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterLogicOperator: PropTypes.oneOf(['and', 'or']),
     quickFilterValues: PropTypes.array,
   }),
@@ -465,13 +461,6 @@ DataGridProRaw.propTypes = {
    */
   onCellEditStop: PropTypes.func,
   /**
-   * Callback fired when a cell loses focus.
-   * @param {GridCellParams} params With all properties from [[GridCellParams]].
-   * @param {MuiEvent<MuiBaseEvent>} event The event object.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onCellFocusOut: PropTypes.func,
-  /**
    * Callback fired when a keydown event comes from a cell element.
    * @param {GridCellParams} params With all properties from [[GridCellParams]].
    * @param {MuiEvent<React.KeyboardEvent>} event The event object.
@@ -594,17 +583,11 @@ DataGridProRaw.propTypes = {
    */
   onMenuOpen: PropTypes.func,
   /**
-   * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * Callback fired when the pagination model has changed.
+   * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPageChange: PropTypes.func,
-  /**
-   * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onPageSizeChange: PropTypes.func,
+  onPaginationModelChange: PropTypes.func,
   /**
    * Callback fired when the pinned columns have changed.
    * @param {GridPinnedColumns} pinnedColumns The changed pinned columns.
@@ -711,16 +694,10 @@ DataGridProRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
-   * The zero-based index of the current page.
-   * @default 0
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
    */
-  page: PropTypes.number,
-  /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
-   * @default 100
-   */
-  pageSize: PropTypes.number,
+  pageSizeOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -733,6 +710,13 @@ DataGridProRaw.propTypes = {
    * @default "client"
    */
   paginationMode: PropTypes.oneOf(['client', 'server']),
+  /**
+   * The pagination model of type [[GridPaginationModel]] which refers to current `page` and `pageSize`.
+   */
+  paginationModel: PropTypes.shape({
+    page: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+  }),
   /**
    * The column fields to display pinned to left or right.
    */
@@ -808,11 +792,6 @@ DataGridProRaw.propTypes = {
    * @default "margin"
    */
   rowSpacingType: PropTypes.oneOf(['border', 'margin']),
-  /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   /**
    * Number of rows from the `rowBuffer` that can be visible before a new slice is rendered.
    * @default 3

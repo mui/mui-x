@@ -73,7 +73,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Додати фільтр',
   // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Видалити',
-  filterPanelLinkOperator: 'Логічна функція',
+  filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',

@@ -50,7 +50,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Thêm bộ lọc',
   // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Xóa',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',

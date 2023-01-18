@@ -29,7 +29,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
 :::
 
-Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
 If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
@@ -65,7 +65,22 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- ✅ The `disableExtendRowFullWidth` prop was removed. Use [`showCellVerticalBorder`](/x/api/data-grid/data-grid/#props) or [`showColumnVerticalBorder`](/x/api/data-grid/data-grid/#props) prop to show or hide right border for cells and header cells respectively.
 - The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
+- The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      cell: {
+        onBlur: (event) => {
+          const cellElement = event.currentTarget;
+          const field = cellElement.getAttribute('data-field');
+          const rowId = cell.parentElement.getAttribute('data-id');
+        },
+      },
+    }}
+  />
+  ```
 
 ### State access
 
@@ -79,7 +94,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
-- The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
+- The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridRowGroupingStateSelector` selector was removed.
 - The `gridFilterStateSelector` selector was removed.
 - The `gridRowsStateSelector` selector was removed.
@@ -90,6 +105,11 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
+- The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
+- The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
+- The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
+- The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
+- The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
 
 ### Events
 
@@ -118,6 +138,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   ```
 
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
+- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
 
 ### Columns
 
@@ -170,12 +191,37 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
 
+### Pagination
+
+- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
+
+  ```diff
+  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
+  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+  ```
+
+- The property `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+
+  ```diff
+  -initialState={{ pagination: { page: 1, pageSize: 10 } }}
+  +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
+  ```
+
+- The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+
+  ```diff
+  -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
+  +<DataGrid pageSizeOptions={[10, 20, 50]} />
+  ```
+
 ### `apiRef` methods
 
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -226,6 +272,12 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
 - The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
+- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
+- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
+- The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
+- The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
+- The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
 
 ### Editing
 
@@ -285,23 +337,17 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +renderCell: (params: GridRenderCellParams<any, any, number>) => {
   ```
 
+- The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
+- The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
+
 ### CSS classes
 
-- To update the outline style of a focused cell, use the `.MuiDataGrid-cell--outlined` class instead of the `:focus-within` selector.
-  ```diff
-  -'.MuiDataGrid-cell:focus-within': {
-  +'.MuiDataGrid-cell--outlined': {
-  ```
-  The new class name is also available in `gridClasses`:
-  ```diff
-  -`.${gridClasses.cell}:focus-within`: {
-  +`.${gridClasses['cell--outlined']}`: {
-  ```
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
-  | ------------------------- | ------------------------------ | ----------------------------------------------- |
-  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
+  | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 
 <!--
 ### Virtualization

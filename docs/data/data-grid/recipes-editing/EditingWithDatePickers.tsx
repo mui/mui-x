@@ -17,16 +17,14 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import {
-  DatePicker,
-  DateTimePicker,
-  LocalizationProvider,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import TextField from '@mui/material/TextField';
-import InputBase from '@mui/material/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
 import { styled } from '@mui/material/styles';
+import { TextFieldProps } from '@mui/material/TextField';
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -184,6 +182,18 @@ const GridEditDateInput = styled(InputBase)({
   padding: '0 9px',
 });
 
+function WrappedGridEditDateInput(props: TextFieldProps) {
+  const { inputRef, InputProps, ...other } = props;
+  return (
+    <GridEditDateInput
+      fullWidth
+      ref={inputRef}
+      {...InputProps}
+      {...(other as InputBaseProps)}
+    />
+  );
+}
+
 function GridEditDateCell({
   id,
   field,
@@ -201,18 +211,9 @@ function GridEditDateCell({
   return (
     <Component
       value={value}
-      renderInput={({ inputRef, inputProps, InputProps, disabled, error }) => (
-        <GridEditDateInput
-          fullWidth
-          autoFocus
-          ref={inputRef}
-          {...InputProps}
-          disabled={disabled}
-          error={error}
-          inputProps={inputProps}
-        />
-      )}
+      autoFocus
       onChange={handleChange}
+      slots={{ textField: WrappedGridEditDateInput }}
     />
   );
 }
@@ -231,17 +232,17 @@ function GridFilterDateInput(
   return (
     <Component
       value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      InputAdornmentProps={{
-        sx: {
-          '& .MuiButtonBase-root': {
-            marginRight: -1,
+      autoFocus
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      slotProps={{
+        textField: {
+          variant: 'standard',
+        },
+        inputAdornment: {
+          sx: {
+            '& .MuiButtonBase-root': {
+              marginRight: -1,
+            },
           },
         },
       }}

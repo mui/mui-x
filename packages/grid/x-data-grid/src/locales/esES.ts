@@ -50,7 +50,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Agregar filtro',
   // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Borrar',
-  filterPanelLinkOperator: 'Operador lógico',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
