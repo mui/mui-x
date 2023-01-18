@@ -142,7 +142,7 @@ const esESGrid: Partial<GridLocaleText> = {
   collapseDetailPanel: 'Contraer',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Reordenar filas',
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregación',
