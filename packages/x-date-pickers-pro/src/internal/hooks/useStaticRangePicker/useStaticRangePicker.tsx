@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -38,7 +39,7 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
@@ -75,6 +76,8 @@ export const useStaticRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotPropsForLayout}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}

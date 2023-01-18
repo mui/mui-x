@@ -53,10 +53,6 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
       }),
       toolbar: {
         hidden: true,
