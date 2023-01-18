@@ -174,7 +174,7 @@ export const useDesktopPicker = <
     },
     popper: {
       'aria-labelledby': labelledById,
-      ...innerSlotProps?.desktopPaper,
+      ...innerSlotProps?.popper,
     },
   };
 
