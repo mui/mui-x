@@ -121,6 +121,8 @@ export const useMobileRangePicker = <
     ...fieldProps.slots,
   };
 
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
+
   const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
@@ -181,13 +183,11 @@ export const useMobileRangePicker = <
 
   const Layout = slots?.layout ?? PickersLayout;
 
-  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
   const finalLocaleText = {
     ...contextLocaleText,
     ...localeText,
   };
   let labelledById = labelId;
-  console.info(localeText);
   if (isToolbarHidden) {
     if (!finalLocaleText?.start && !finalLocaleText?.end) {
       labelledById = undefined;
