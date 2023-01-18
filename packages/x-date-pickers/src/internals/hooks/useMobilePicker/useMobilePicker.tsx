@@ -138,8 +138,8 @@ export const useMobilePicker = <
   const slotProps = {
     ...innerSlotProps,
     toolbar: {
-      titleId: labelId,
       ...innerSlotProps?.toolbar,
+      titleId: labelId,
     },
     mobilePaper: {
       'aria-labelledby': labelledById,

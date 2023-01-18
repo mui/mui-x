@@ -169,8 +169,8 @@ export const useDesktopPicker = <
   const slotProps = {
     ...innerSlotProps,
     toolbar: {
-      titleId: labelId,
       ...innerSlotProps?.toolbar,
+      titleId: labelId,
     },
     popper: {
       'aria-labelledby': labelledById,

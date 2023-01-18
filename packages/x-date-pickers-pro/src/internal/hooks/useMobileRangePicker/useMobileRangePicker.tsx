@@ -174,8 +174,8 @@ export const useMobileRangePicker = <
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
     ...innerSlotProps,
     toolbar: {
-      titleId: labelId,
       ...innerSlotProps?.toolbar,
+      titleId: labelId,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
