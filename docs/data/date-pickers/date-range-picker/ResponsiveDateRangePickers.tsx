@@ -1,34 +1,34 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
-import { Unstable_MobileNextDateRangePicker as MobileNextDateRangePicker } from '@mui/x-date-pickers-pro/MobileNextDateRangePicker';
-import { Unstable_DesktopNextDateRangePicker as DesktopNextDateRangePicker } from '@mui/x-date-pickers-pro/DesktopNextDateRangePicker';
-import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
+import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 
 export default function ResponsiveDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label="Desktop variant">
-          <DesktopNextDateRangePicker
+          <DesktopDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
         <DemoItem label="Mobile variant">
-          <MobileNextDateRangePicker
+          <MobileDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
         <DemoItem label="Responsive variant">
-          <NextDateRangePicker
+          <DateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
         <DemoItem label="Static variant">
-          <StaticNextDateRangePicker
+          <StaticDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>

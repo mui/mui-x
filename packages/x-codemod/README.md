@@ -210,6 +210,7 @@ The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
 - [`row-selection-props-rename`](#row-selection-props-rename)
+- [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 
 #### `column-menu-components-rename`
 
@@ -261,4 +262,18 @@ Data grid props that have been renamed.
 npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
 ```
 
-You can find more details about Data Grid breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
+#### `remove-disableExtendRowFullWidth-prop`
+
+Remove `disableExtendRowFullWidth` prop which is no longer supported.
+
+```diff
+  <DataGrid
+-   disableExtendRowFullWidth
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+```
+
+You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).

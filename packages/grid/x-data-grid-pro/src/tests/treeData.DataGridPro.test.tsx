@@ -15,9 +15,10 @@ import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GridApi,
   GridGroupNode,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowsProp,
   useGridApiRef,
+  GridPaginationModel,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -350,7 +351,7 @@ describe('<DataGridPro /> - Tree Data', () => {
         <Test
           rows={[{ name: 'A' }, { name: 'A.C' }, { name: 'B' }, { name: 'B.A' }]}
           filterModel={{
-            linkOperator: GridLinkOperator.Or,
+            logicOperator: GridLogicOperator.Or,
             items: [
               { field: 'name', operator: 'endsWith', value: 'A', id: 0 },
               { field: 'name', operator: 'endsWith', value: 'B', id: 1 },
@@ -410,8 +411,19 @@ describe('<DataGridPro /> - Tree Data', () => {
   });
 
   describe('pagination', () => {
+    function PaginatedTest({ initialModel }: { initialModel: GridPaginationModel }) {
+      const [paginationModel, setPaginationModel] = React.useState(initialModel);
+      return (
+        <Test
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          pageSizeOptions={[paginationModel.pageSize]}
+        />
+      );
+    }
     it('should respect the pageSize for the top level rows when toggling children expansion', () => {
-      render(<Test pagination pageSize={2} rowsPerPageOptions={[2]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 2, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A', 'B']);
       fireEvent.click(getCell(0, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B', 'B']);
@@ -420,7 +432,7 @@ describe('<DataGridPro /> - Tree Data', () => {
     });
 
     it('should keep the row expansion when switching page', () => {
-      render(<Test pagination pageSize={1} rowsPerPageOptions={[1]} />);
+      render(<PaginatedTest initialModel={{ pageSize: 1, page: 0 }} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       fireEvent.click(getCell(0, 0).querySelector('button'));
       expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'A.B']);

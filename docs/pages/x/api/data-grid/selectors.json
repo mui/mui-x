@@ -146,6 +146,27 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridExpandedRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridExpandedSortedRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "category": "Filtering",
+    "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridExpandedSortedRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Filtering",
+    "description": "Get the id of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFilterModelSelector",
     "returnType": "GridFilterModel",
     "category": "Filtering",
@@ -181,8 +202,22 @@
     "supportsApiRef": true
   },
   {
+    "name": "gridFilteredSortedTopLevelRowEntriesSelector",
+    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
+    "category": "Filtering",
+    "description": "Get the id and the model of the top level rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridFilteredTopLevelRowCountSelector",
+    "returnType": "number",
+    "category": "Filtering",
+    "description": "Get the amount of top level rows accessible after the filtering process.",
+    "supportsApiRef": true
+  },
+  {
     "name": "gridFocusCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },
@@ -231,6 +266,13 @@
     "returnType": "GridRowId[]",
     "category": "Pagination",
     "description": "Get the id of each row to include in the current page if the pagination is enabled.",
+    "supportsApiRef": true
+  },
+  {
+    "name": "gridPaginationModelSelector",
+    "returnType": "GridPaginationModel",
+    "category": "Pagination",
+    "description": "Get the pagination model",
     "supportsApiRef": true
   },
   {
@@ -360,7 +402,7 @@
   },
   {
     "name": "gridTabIndexCellSelector",
-    "returnType": "GridCellIdentifier | null",
+    "returnType": "GridCellCoordinates | null",
     "description": "",
     "supportsApiRef": true
   },
@@ -394,41 +436,6 @@
     "returnType": "string[]",
     "category": "Visible Columns",
     "description": "Get the field of each visible column.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleRowCountSelector",
-    "returnType": "number",
-    "category": "Filtering",
-    "description": "Get the amount of rows accessible after the filtering process.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleSortedRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
-    "category": "Filtering",
-    "description": "Get the id and the model of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleSortedRowIdsSelector",
-    "returnType": "GridRowId[]",
-    "category": "Filtering",
-    "description": "Get the id of the rows accessible after the filtering process.\nDoes not contain the collapsed children.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleSortedTopLevelRowEntriesSelector",
-    "returnType": "{ id: GridRowId; model: GridValidRowModel }[]",
-    "category": "Filtering",
-    "description": "Get the id and the model of the top level rows accessible after the filtering process.",
-    "supportsApiRef": true
-  },
-  {
-    "name": "gridVisibleTopLevelRowCountSelector",
-    "returnType": "number",
-    "category": "Filtering",
-    "description": "Get the amount of top level rows accessible after the filtering process.",
     "supportsApiRef": true
   },
   {

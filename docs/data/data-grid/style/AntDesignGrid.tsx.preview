@@ -1,7 +1,8 @@
 <StyledDataGrid
   checkboxSelection
-  pageSize={5}
-  rowsPerPageOptions={[5]}
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
+  pageSizeOptions={[PAGE_SIZE]}
   components={{
     Pagination: CustomPagination,
   }}

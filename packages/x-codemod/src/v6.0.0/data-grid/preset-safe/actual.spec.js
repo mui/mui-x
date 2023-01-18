@@ -7,6 +7,7 @@ function App({ column, hideMenu }) {
       <DataGrid
         disableMultipleSelection
         showCellRightBorder
+        disableExtendRowFullWidth
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>

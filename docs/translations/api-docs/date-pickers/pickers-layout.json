@@ -3,7 +3,9 @@
   "propDescriptions": {
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
-    "orientation": "Force rendering in particular orientation."
+    "orientation": "Force rendering in particular orientation.",
+    "slotProps": "The props used for each component slot.",
+    "slots": "Overrideable component slots."
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },

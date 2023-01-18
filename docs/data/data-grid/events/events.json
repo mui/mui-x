@@ -40,21 +40,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusIn",
-    "description": "Fired when a cell gains focus.",
-    "params": "GridCellParams<any>",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "cellFocusOut",
-    "description": "Fired when a cell loses focus.",
-    "params": "GridCellParams<any>",
-    "event": "MuiEvent<MuiBaseEvent>",
-    "componentProp": "onCellFocusOut"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell.",
     "params": "GridCellParams<any>",
@@ -241,16 +226,9 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageChange",
-    "description": "Fired when the page changes.",
-    "params": "number",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageSizeChange",
-    "description": "Fired when the page size changes.",
-    "params": "number",
+    "name": "paginationModelChange",
+    "description": "Fired when the pagination model changes.",
+    "params": "GridPaginationModel",
     "event": "MuiEvent<{}>"
   },
   {

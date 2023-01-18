@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
-import { Unstable_MultiInputTimeRangeField as MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
+import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTimeRangeField';
 import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
 
 describe('<MultiInputTimeRangeField />', () => {
