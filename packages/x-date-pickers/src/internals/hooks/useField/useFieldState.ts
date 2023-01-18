@@ -227,7 +227,7 @@ export const useFieldState = <
       activeSection,
     );
 
-    const isOnlyNonEmptySection = activeDateSections.every((section) => {
+    const isTheOnlyNonEmptySection = activeDateSections.every((section) => {
       if (section.startInInput === activeSection.startInInput) {
         return true;
       }
@@ -238,7 +238,7 @@ export const useFieldState = <
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
     const newValue = activeDateManager.getNewValueFromNewActiveDate(null);
 
-    if (isOnlyNonEmptySection) {
+    if (isTheOnlyNonEmptySection) {
       return publishValue(newValue, newSections);
     }
 
