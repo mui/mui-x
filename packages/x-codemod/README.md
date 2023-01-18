@@ -209,7 +209,7 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
-- [`row-selection-renamed-props`](#row-selection-renamed-props)
+- [`row-selection-props-rename`](#row-selection-props-rename)
 
 #### `column-menu-components-rename`
 
@@ -236,12 +236,12 @@ npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
 
-#### `row-selection-renamed-props`
+#### `row-selection-props-rename`
 
 Data grid props that have been renamed.
 
 ```diff
-  <DataGrid
+ <DataGrid
 -  selectionModel={model}
 +  rowSelectionModel={model}
 -  onSelectionModelChange={handler}
@@ -254,7 +254,7 @@ Data grid props that have been renamed.
 +  showCellVerticalBorder
 -  showColumnRightBorder
 +  showColumnVerticalBorder
-  />
+ />
 ```
 
 ```sh
