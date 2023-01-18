@@ -47,6 +47,7 @@ export const useDesktopPicker = <
     autoFocus,
     localeText,
     label,
+    viewRenderers,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -162,7 +163,9 @@ export const useDesktopPicker = <
     !labelledById &&
     // ts complains about unknown prop access without casting
     !(innerSlotProps?.popper as any)?.['aria-labelledby'] &&
-    process.env.NODE_ENV !== 'production'
+    process.env.NODE_ENV !== 'production' &&
+    // exclude cases of pickers without any available views (i.e. DesktopTimePicker)
+    Object.values(viewRenderers).filter(Boolean).length > 0
   ) {
     ariaLabelledByCantBeResolvedWarning();
   }
