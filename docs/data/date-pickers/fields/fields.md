@@ -25,10 +25,6 @@ All fields to edit a range are available in a single input version and in a mult
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
-### Usage with the pickers
-
-The picker components (e.g. `DatePicker`) are using the field to handle their input editing.
-
 :::warning
 The single input range fields are not supported on the range pickers yet (you can't use `SingleInputDateRangeField` in `DateRangePicker`). It's coming.
 

@@ -17,11 +17,11 @@ export default function DateRangeFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <DemoItem label="SingleInputDateRangeField">
-          <SingleInputDateRangeField defaultValue={[date1, date2]} />
-        </DemoItem>
         <DemoItem label="MultiInputDateRangeField">
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
+        </DemoItem>
+        <DemoItem label="SingleInputDateRangeField">
+          <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem label="MultiInputTimeRangeField">
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
