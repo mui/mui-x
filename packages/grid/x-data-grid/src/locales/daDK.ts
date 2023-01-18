@@ -48,7 +48,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
-  // filterPanelDeleteAll: 'Delete all',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Slet',
   filterPanelLinkOperator: 'Logisk operator',
   filterPanelOperator: 'Operatorer',

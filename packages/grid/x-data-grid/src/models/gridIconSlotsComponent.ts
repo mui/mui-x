@@ -124,7 +124,7 @@ export interface GridIconSlotsComponent {
    * Icon displayed for deleting all the active filters from filter panel.
    * @default GridDeleteForeverIcon
    */
-  FilterPanelDeleteAllIcon: React.JSXElementConstructor<any>;
+  FilterPanelRemoveAllIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the `reorder` column type to reorder a row.
    * @default GridDragIcon

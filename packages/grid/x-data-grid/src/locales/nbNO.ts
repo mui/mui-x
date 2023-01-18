@@ -48,7 +48,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
-  // filterPanelDeleteAll: 'Delete all',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Slett',
   filterPanelLinkOperator: 'Logisk operator',
   filterPanelOperator: 'Operatører',

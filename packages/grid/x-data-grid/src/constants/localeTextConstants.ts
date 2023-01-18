@@ -46,7 +46,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
-  filterPanelDeleteAll: 'Delete all',
+  filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelLinkOperator: 'Logic operator',
   filterPanelOperator: 'Operator',

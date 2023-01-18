@@ -313,7 +313,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should work as expected with "Add filter" and "Delete all" buttons ', () => {
+  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
     render(
       <TestCase
         initialState={{
@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
-    const clearButton = screen.getByRole('button', { name: /Delete All/i });
+    const clearButton = screen.getByRole('button', { name: /Remove all/i });
     expect(clearButton).to.have.attribute('disabled');
     fireEvent.click(addButton);
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(2);
@@ -355,7 +355,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
   });
 
-  it('should hide `Delete all` in filter panel when `disableDeleteAllButton` is `true`', () => {
+  it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
     render(
       <TestCase
         initialState={{
@@ -366,12 +366,12 @@ describe('<DataGridPro /> - Filter', () => {
         }}
         componentsProps={{
           filterPanel: {
-            disableDeleteAllButton: true,
+            disableRemoveAllButton: true,
           },
         }}
       />,
     );
-    expect(screen.queryByRole('button', { name: 'Delete all' })).to.equal(null);
+    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {

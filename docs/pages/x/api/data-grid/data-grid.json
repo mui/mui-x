@@ -230,11 +230,11 @@
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "FilterPanelAddIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
-    "FilterPanelDeleteAllIcon": {
+    "FilterPanelDeleteIcon": { "default": "GridDeleteIcon", "type": { "name": "elementType" } },
+    "FilterPanelRemoveAllIcon": {
       "default": "GridDeleteForeverIcon",
       "type": { "name": "elementType" }
     },
-    "FilterPanelDeleteIcon": { "default": "GridDeleteIcon", "type": { "name": "elementType" } },
     "Footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "GroupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",

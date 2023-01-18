@@ -49,10 +49,10 @@ export interface GridFilterPanelProps
    */
   disableAddFilterButton?: boolean;
   /*
-   * If `true`, the `Delete all` button will be disabled
+   * If `true`, the `Remove all` button will be disabled
    * @default false
    */
-  disableDeleteAllButton?: boolean;
+  disableRemoveAllButton?: boolean;
 
   /**
    * @ignore - do not document.
@@ -81,7 +81,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       getColumnForNewFilter,
       children,
       disableAddFilterButton = false,
-      disableDeleteAllButton = false,
+      disableRemoveAllButton = false,
       ...other
     } = props;
 
@@ -166,7 +166,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
-    const deleteAllFilters = () => {
+    const removeAllFilters = () => {
       apiRef.current.setFilterModel({ ...filterModel, items: [] });
     };
 
@@ -220,7 +220,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         </GridPanelContent>
         {!rootProps.disableMultipleColumnsFiltering &&
         !disableAddFilterButton &&
-        !disableDeleteAllButton ? (
+        !disableRemoveAllButton ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
               <rootProps.components.BaseButton
@@ -234,14 +234,14 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
               <span />
             )}
 
-            {!disableDeleteAllButton ? (
+            {!disableRemoveAllButton ? (
               <rootProps.components.BaseButton
                 disabled={items.length < 2}
-                onClick={deleteAllFilters}
-                startIcon={<rootProps.components.FilterPanelDeleteAllIcon />}
+                onClick={removeAllFilters}
+                startIcon={<rootProps.components.FilterPanelRemoveAllIcon />}
                 {...rootProps.componentsProps?.baseButton}
               >
-                {apiRef.current.getLocaleText('filterPanelDeleteAll')}
+                {apiRef.current.getLocaleText('filterPanelRemoveAll')}
               </rootProps.components.BaseButton>
             ) : null}
           </GridPanelFooter>
@@ -266,7 +266,7 @@ GridFilterPanel.propTypes = {
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
   disableAddFilterButton: PropTypes.bool,
-  disableDeleteAllButton: PropTypes.bool,
+  disableRemoveAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
    */

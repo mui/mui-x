@@ -47,7 +47,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
-  // filterPanelDeleteAll: 'Delete all',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: '删除',
   filterPanelLinkOperator: '逻辑操作器',
   filterPanelOperator: '操作器',

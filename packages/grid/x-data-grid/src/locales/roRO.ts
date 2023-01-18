@@ -48,7 +48,7 @@ const roROGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Adăugare filtru',
-  // filterPanelDeleteAll: 'Delete all',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Ștergere',
   filterPanelLinkOperator: 'Operatori logici',
   filterPanelOperator: 'Operatori',

@@ -47,7 +47,7 @@ const huHUGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
-  // filterPanelDeleteAll: 'Delete all',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Törlés',
   filterPanelLinkOperator: 'Logikai operátor',
   filterPanelOperator: 'Operátorok',
