@@ -13,7 +13,10 @@ import {
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
+  useLocaleText,
 } from '@mui/x-date-pickers/internals';
+import { unstable_useId as useId } from '@mui/utils';
+import { buildWarning } from '@mui/x-date-pickers/internals/utils/warning';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
@@ -23,6 +26,12 @@ import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange, RangePosition } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+
+const ariaLabelledByCantBeResolvedWarning = buildWarning([
+  'MUI: `aria-labelledby` can not be resolved.',
+  'Make sure that the picker has `start` or `end` fields  in `localeText` or the toolbar is not hidden.',
+  'Alternatively you can provide a custom `aria-labelledby` to the `mobilePaper` slot props.',
+]);
 
 const releaseInfo = getReleaseInfo();
 
@@ -37,11 +46,21 @@ export const useMobileRangePicker = <
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const { slots, slotProps, className, format, readOnly, disabled, disableOpenPicker, localeText } =
-    props;
+  const {
+    slots,
+    slotProps: innerSlotProps,
+    className,
+    format,
+    readOnly,
+    disabled,
+    disableOpenPicker,
+    localeText,
+  } = props;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const labelId = useId();
+  const contextLocaleText = useLocaleText();
 
   const {
     open,
@@ -85,7 +104,7 @@ export const useMobileRangePicker = <
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
-    externalSlotProps: slotProps?.field,
+    externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
       readOnly: readOnly ?? true,
@@ -105,7 +124,7 @@ export const useMobileRangePicker = <
   const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
+      const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
         fieldProps.slotProps?.textField,
         ownerState,
@@ -114,6 +133,7 @@ export const useMobileRangePicker = <
         ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
 
       return {
+        ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
         ...externalInputProps,
         ...inputPropsPassedByField,
         ...inputPropsPassedByPicker,
@@ -124,7 +144,7 @@ export const useMobileRangePicker = <
       };
     },
     root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(slotProps?.fieldRoot, ownerState);
+      const externalRootProps = resolveComponentProps(innerSlotProps?.fieldRoot, ownerState);
       const rootPropsPassedByField = resolveComponentProps(fieldProps.slotProps?.root, ownerState);
       return {
         ...externalRootProps,
@@ -133,7 +153,10 @@ export const useMobileRangePicker = <
       };
     },
     separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(slotProps?.fieldSeparator, ownerState);
+      const externalSeparatorProps = resolveComponentProps(
+        innerSlotProps?.fieldSeparator,
+        ownerState,
+      );
       const separatorPropsPassedByField = resolveComponentProps(
         fieldProps.slotProps?.separator,
         ownerState,
@@ -147,15 +170,50 @@ export const useMobileRangePicker = <
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...slotProps,
+    ...innerSlotProps,
     toolbar: {
-      ...slotProps?.toolbar,
+      titleId: labelId,
+      ...innerSlotProps?.toolbar,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
   };
 
   const Layout = slots?.layout ?? PickersLayout;
+
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
+  const finalLocaleText = {
+    ...contextLocaleText,
+    ...localeText,
+  };
+  let labelledById = labelId;
+  console.info(localeText);
+  if (isToolbarHidden) {
+    if (!finalLocaleText?.start && !finalLocaleText?.end) {
+      labelledById = undefined;
+    } else {
+      if (finalLocaleText.start) {
+        labelledById = `${labelId}-start-label`;
+      }
+      if (finalLocaleText.end) {
+        labelledById += ` ${labelId}-end-label`;
+      }
+    }
+  }
+  if (
+    !labelledById &&
+    !innerSlotProps?.mobilePaper?.['aria-labelledby'] &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    ariaLabelledByCantBeResolvedWarning();
+  }
+  const slotProps = {
+    ...innerSlotProps,
+    mobilePaper: {
+      'aria-labelledby': labelledById,
+      ...innerSlotProps?.mobilePaper,
+    },
+  };
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
