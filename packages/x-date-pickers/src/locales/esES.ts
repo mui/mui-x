@@ -20,7 +20,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `la vista de entrada de texto está abierta, ir a la vista ${viewType}`
+      : `la vista ${viewType} está abierta, ir a la vista de entrada de texto`,
 
   // DateRange placeholders
   start: 'Empezar',
