@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const views = {
   hours: 'las horas',
@@ -16,11 +15,10 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'abrir la última vista',
   openNextView: 'abrir la siguiente vista',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'la vista del año está abierta, cambie a la vista de calendario'
       : 'la vista de calendario está abierta, cambie a la vista del año',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Empezar',

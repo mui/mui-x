@@ -10,12 +10,13 @@ import {
 import {
   DateOrTimeView,
   UsePickerParams,
-  BaseNextPickerProps,
+  BasePickerProps,
   PickersModalDialogSlotsComponent,
   PickersModalDialogSlotsComponentsProps,
   ExportedBaseToolbarProps,
   MobileOnlyPickerProps,
   UsePickerViewsProps,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -35,11 +36,7 @@ export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrT
 }
 
 export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  // TODO v6: Remove `Pick` once `PickersModalDialog` does not handle the layouting parts
-  extends Pick<
-      PickersModalDialogSlotsComponentsProps,
-      'dialog' | 'mobilePaper' | 'mobileTransition'
-    >,
+  extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
@@ -60,7 +57,7 @@ export interface UseMobileRangePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends MobileRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<
+    BasePickerProps<
       DateRange<TDate>,
       TDate,
       TView,
@@ -69,15 +66,15 @@ export interface UseMobileRangePickerProps<
       MobileRangePickerAdditionalViewProps
     > {
   /**
-   * Overrideable components.
+   * Overrideable component slots.
    * @default {}
    */
-  components: UseMobileRangePickerSlotsComponent<TDate, TView>;
+  slots: UncapitalizeObjectKeys<UseMobileRangePickerSlotsComponent<TDate, TView>>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  componentsProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}

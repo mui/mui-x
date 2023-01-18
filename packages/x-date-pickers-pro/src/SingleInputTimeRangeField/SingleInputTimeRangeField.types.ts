@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
 import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals/models/fields';
+import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { UseTimeRangeFieldDefaultizedProps, UseTimeRangeFieldProps } from '../internal/models';
 
 export interface UseSingleInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
@@ -27,13 +28,25 @@ export interface SingleInputTimeRangeFieldProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: SingleInputTimeRangeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<SingleInputTimeRangeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: SingleInputTimeRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type SingleInputTimeRangeFieldOwnerState<TDate> = SingleInputTimeRangeFieldProps<TDate>;

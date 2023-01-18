@@ -1,61 +1,37 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { isWeekend } from 'date-fns';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { describeConformance, screen } from '@mui/monorepo/test/utils';
-import {
-  wrapPickerMount,
-  createPickerRenderer,
-  adapterToUse,
-  withPickerControls,
-} from 'test/utils/pickers-utils';
+import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/pickers-utils';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-
-const defaultRangeRenderInput = (startProps: TextFieldProps, endProps: TextFieldProps) => (
-  <React.Fragment>
-    <TextField {...startProps} />
-    <TextField {...endProps} />
-  </React.Fragment>
-);
-
-const WrappedStaticDateTimePicker = withPickerControls(StaticDateRangePicker)({
-  renderInput: defaultRangeRenderInput,
-});
 
 describe('<StaticDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  describeConformance(
-    <StaticDateRangePicker
-      onChange={() => {}}
-      renderInput={(props) => <TextField {...props} />}
-      value={[null, null]}
-    />,
-    () => ({
-      classes: {},
-      muiName: 'MuiStaticDateRangePicker',
-      wrapMount: wrapPickerMount,
-      refInstanceof: undefined,
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'themeDefaultProps',
-        'themeStyleOverrides',
-        'themeVariants',
-        'mergeClassName',
-        'propsSpread',
-        'refForwarding',
-        'rootClass',
-        'reactTestRenderer',
-      ],
-    }),
-  );
+  describeConformance(<StaticDateRangePicker />, () => ({
+    classes: {},
+    muiName: 'MuiStaticDateRangePicker',
+    wrapMount: wrapPickerMount,
+    refInstanceof: undefined,
+    skip: [
+      'componentProp',
+      'componentsProp',
+      'themeDefaultProps',
+      'themeStyleOverrides',
+      'themeVariants',
+      'mergeClassName',
+      'propsSpread',
+      'refForwarding',
+      'rootClass',
+      'reactTestRenderer',
+    ],
+  }));
 
   describeRangeValidation(StaticDateRangePicker, () => ({
     render,
     clock,
-    componentFamily: 'legacy-static-picker',
+    componentFamily: 'static-picker',
     views: ['day'],
     variant: 'mobile',
   }));
@@ -63,11 +39,12 @@ describe('<StaticDateRangePicker />', () => {
   it('allows disabling dates', () => {
     render(
       <StaticDateRangePicker
-        renderInput={defaultRangeRenderInput}
         minDate={adapterToUse.date(new Date(2005, 0, 1))}
         shouldDisableDate={isWeekend}
-        onChange={() => {}}
-        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
+        defaultValue={[
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
+        ]}
       />,
     );
 
@@ -81,9 +58,10 @@ describe('<StaticDateRangePicker />', () => {
   it('should render the correct a11y tree structure', () => {
     render(
       <StaticDateRangePicker
-        renderInput={defaultRangeRenderInput}
-        onChange={() => {}}
-        value={[adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 31))]}
+        defaultValue={[
+          adapterToUse.date(new Date(2018, 0, 1)),
+          adapterToUse.date(new Date(2018, 0, 31)),
+        ]}
       />,
     );
 
@@ -97,12 +75,7 @@ describe('<StaticDateRangePicker />', () => {
 
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
-      render(
-        <WrappedStaticDateTimePicker
-          initialValue={[null, null]}
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-        />,
-      );
+      render(<StaticDateRangePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);
     });

@@ -8,6 +8,7 @@ import {
 } from '../internals/components/PickersArrowSwitcher';
 import { TimeView } from '../internals/models/views';
 import { PickerSelectionState } from '../internals/hooks/usePicker/usePickerValue';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export interface ExportedTimeClockProps<TDate>
   extends TimeValidationProps<TDate>,
@@ -45,13 +46,25 @@ export interface TimeClockProps<TDate> extends ExportedTimeClockProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: TimeClockSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: TimeClockSlotsComponentsProps;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<TimeClockSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: TimeClockSlotsComponentsProps;
   /**
    * The selected value.
    * Used when the component is controlled.

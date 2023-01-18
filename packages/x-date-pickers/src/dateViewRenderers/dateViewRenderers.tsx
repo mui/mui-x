@@ -16,13 +16,84 @@ export interface DateViewRendererProps<TDate, TView extends DateOrTimeView>
   focusedView: TView | null;
 }
 
-export const renderDateViewCalendar = <TDate extends unknown>(
-  props: DateViewRendererProps<TDate, any>,
-) => (
+export const renderDateViewCalendar = <TDate extends unknown>({
+  view,
+  onViewChange,
+  views,
+  focusedView,
+  onFocusedViewChange,
+  value,
+  defaultValue,
+  onChange,
+  className,
+  classes,
+  disableFuture,
+  disablePast,
+  minDate,
+  maxDate,
+  shouldDisableDate,
+  shouldDisableMonth,
+  shouldDisableYear,
+  reduceAnimations,
+  onMonthChange,
+  monthsPerRow,
+  onYearChange,
+  yearsPerRow,
+  defaultCalendarMonth,
+  components,
+  componentsProps,
+  slots,
+  slotProps,
+  loading,
+  renderLoading,
+  disableHighlightToday,
+  readOnly,
+  disabled,
+  showDaysOutsideCurrentMonth,
+  dayOfWeekFormatter,
+  sx,
+  autoFocus,
+  fixedWeekNumber,
+  displayWeekNumber,
+}: DateViewRendererProps<TDate, any>) => (
   <DateCalendar
-    {...props}
-    view={props.view as DateView}
-    views={props.views.filter(isDatePickerView)}
-    focusedView={props.focusedView as DateView | null}
+    view={view as DateView}
+    onViewChange={onViewChange}
+    views={views.filter(isDatePickerView)}
+    focusedView={focusedView as DateView | null}
+    onFocusedViewChange={onFocusedViewChange}
+    value={value}
+    defaultValue={defaultValue}
+    onChange={onChange}
+    className={className}
+    classes={classes}
+    disableFuture={disableFuture}
+    disablePast={disablePast}
+    minDate={minDate}
+    maxDate={maxDate}
+    shouldDisableDate={shouldDisableDate}
+    shouldDisableMonth={shouldDisableMonth}
+    shouldDisableYear={shouldDisableYear}
+    reduceAnimations={reduceAnimations}
+    onMonthChange={onMonthChange}
+    monthsPerRow={monthsPerRow}
+    onYearChange={onYearChange}
+    yearsPerRow={yearsPerRow}
+    defaultCalendarMonth={defaultCalendarMonth}
+    components={components}
+    componentsProps={componentsProps}
+    slots={slots}
+    slotProps={slotProps}
+    loading={loading}
+    renderLoading={renderLoading}
+    disableHighlightToday={disableHighlightToday}
+    readOnly={readOnly}
+    disabled={disabled}
+    showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+    dayOfWeekFormatter={dayOfWeekFormatter}
+    sx={sx}
+    autoFocus={autoFocus}
+    fixedWeekNumber={fixedWeekNumber}
+    displayWeekNumber={displayWeekNumber}
   />
 );

@@ -1,6 +1,6 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
-import { Unstable_DateTimeField as DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
   buildFieldInteractions,

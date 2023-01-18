@@ -30,6 +30,7 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
+import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridExperimentalFeatures {
   /**
@@ -162,11 +163,6 @@ export interface DataGridPropsWithDefaultValues {
    */
   density: GridDensity;
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
-   * @default false
-   */
-  disableExtendRowFullWidth: boolean;
-  /**
    * If `true`, column filters are disabled.
    * @default false
    */
@@ -286,7 +282,7 @@ export interface DataGridPropsWithDefaultValues {
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  rowsPerPageOptions: number[];
+  pageSizeOptions: number[];
   /**
    * Sets the type of space between rows added by `getRowSpacing`.
    * @default "margin"
@@ -554,28 +550,15 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onStateChange?: GridEventListener<'stateChange'>;
   /**
-   * The zero-based index of the current page.
-   * @default 0
+   * The pagination model of type [[GridPaginationModel]] which refers to current `page` and `pageSize`.
    */
-  page?: number;
+  paginationModel?: GridPaginationModel;
   /**
-   * Callback fired when the current page has changed.
-   * @param {number} page Index of the page displayed on the Grid.
+   * Callback fired when the pagination model has changed.
+   * @param {GridPaginationModel} model Updated pagination model.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onPageChange?: (page: number, details: GridCallbackDetails) => void;
-  /**
-   * Set the number of rows in one page.
-   * If some of the rows have children (for instance in the tree data), this number represents the amount of top level rows wanted on each page.
-   * @default 100
-   */
-  pageSize?: number;
-  /**
-   * Callback fired when the page size has changed.
-   * @param {number} pageSize Size of the page displayed on the Grid.
-   * @param {GridCallbackDetails} details Additional details for this callback.
-   */
-  onPageSizeChange?: (pageSize: number, details: GridCallbackDetails) => void;
+  onPaginationModelChange?: (model: GridPaginationModel, details: GridCallbackDetails) => void;
   /**
    * Callback fired when the preferences panel is closed.
    * @param {GridPreferencePanelParams} params With all properties from [[GridPreferencePanelParams]].

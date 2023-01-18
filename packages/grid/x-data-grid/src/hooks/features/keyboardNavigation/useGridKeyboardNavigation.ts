@@ -6,7 +6,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSele
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
@@ -57,7 +57,7 @@ export const useGridKeyboardNavigation = (
    */
   const goToCell = React.useCallback(
     (colIndex: number, rowId: GridRowId, closestColumnToUse: 'left' | 'right' = 'left') => {
-      const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
+      const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
       const nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       if (nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan) {
         if (closestColumnToUse === 'left') {

@@ -11,7 +11,6 @@ import { WrapperVariant } from '../../models/common';
 export interface UsePickerLayoutProps {
   disabled?: boolean;
   readOnly?: boolean;
-  showToolbar?: boolean;
   /**
    * Force rendering in particular orientation.
    */
@@ -56,7 +55,6 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeView>({
     wrapperVariant,
     disabled: props.disabled,
     readOnly: props.readOnly,
-    showToolbar: props.showToolbar,
   };
 
   return { layoutProps };
