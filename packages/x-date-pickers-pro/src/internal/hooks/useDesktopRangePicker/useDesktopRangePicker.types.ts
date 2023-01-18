@@ -10,7 +10,7 @@ import {
 import {
   DateOrTimeView,
   UsePickerParams,
-  BaseNextPickerProps,
+  BasePickerProps,
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
@@ -37,11 +37,7 @@ export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOr
 }
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
-  extends Pick<
-      PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
-    >,
+  extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
@@ -62,7 +58,7 @@ export interface UseDesktopRangePickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends DesktopRangeOnlyPickerProps<TDate>,
-    BaseNextPickerProps<
+    BasePickerProps<
       DateRange<TDate>,
       TDate,
       TView,
@@ -79,7 +75,7 @@ export interface UseDesktopRangePickerProps<
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
   /**
@@ -91,7 +87,7 @@ export interface UseDesktopRangePickerProps<
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
+  slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
 export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}

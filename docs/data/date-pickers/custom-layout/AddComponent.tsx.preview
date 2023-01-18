@@ -1,6 +1,6 @@
-<StaticNextDatePicker
-  components={{
-    Layout: CustomLayout,
-    ActionBar: ActionList,
+<StaticDatePicker
+  slots={{
+    layout: CustomLayout,
+    actionBar: ActionList,
   }}
 />

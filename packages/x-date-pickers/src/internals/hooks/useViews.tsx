@@ -1,8 +1,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { unstable_useControlled as useControlled } from '@mui/utils';
-import { arrayIncludes } from '../utils/utils';
-import { PickerSelectionState } from './usePickerState';
+import type { PickerSelectionState } from './usePicker';
 import { DateOrTimeView } from '../models';
 import { MakeOptional } from '../models/helpers';
 
@@ -73,6 +72,7 @@ interface UseViewsResponse<TValue, TView extends DateOrTimeView> {
   setFocusedView: (view: TView, hasFocus: boolean) => void;
   nextView: TView | null;
   previousView: TView | null;
+  defaultView: TView;
   goToNextView: () => void;
   setValueAndGoToNextView: (
     value: TValue,
@@ -110,7 +110,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     }
   }
 
-  const defaultView = React.useRef(arrayIncludes(views, openTo) ? openTo : views[0]);
+  const defaultView = React.useRef(views.includes(openTo!) ? openTo! : views[0]);
   const [view, setView] = useControlled({
     name: 'useViews',
     state: 'view',
@@ -178,6 +178,7 @@ export function useViews<TValue, TView extends DateOrTimeView>({
     setFocusedView: handleFocusedViewChange,
     nextView,
     previousView,
+    defaultView: defaultView.current,
     goToNextView,
     setValueAndGoToNextView,
   };

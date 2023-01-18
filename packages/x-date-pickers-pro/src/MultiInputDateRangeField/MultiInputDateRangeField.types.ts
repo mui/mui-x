@@ -38,7 +38,7 @@ export interface MultiInputDateRangeFieldProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
@@ -50,7 +50,7 @@ export interface MultiInputDateRangeFieldProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
+  slotProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
 }
 
 export type MultiInputDateRangeFieldOwnerState<TDate> = MultiInputDateRangeFieldProps<TDate>;

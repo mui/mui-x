@@ -4,14 +4,14 @@ import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridGroupNode, GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridGroupNode, GridRowId } from '../../../models/gridRows';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { gridFilterableColumnLookupSelector } from '../columns/gridColumnsSelector';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { getDefaultGridFilterModel } from './gridFilterState';
-import { gridFilterModelSelector, gridVisibleSortedRowEntriesSelector } from './gridFilterSelector';
+import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
@@ -278,11 +278,6 @@ export const useGridFilter = (
     [apiRef, logger, props.disableMultipleColumnsFiltering],
   );
 
-  const getVisibleRowModels = React.useCallback<GridFilterApi['getVisibleRowModels']>(() => {
-    const visibleSortedRows = gridVisibleSortedRowEntriesSelector(apiRef);
-    return new Map<GridRowId, GridRowModel>(visibleSortedRows.map((row) => [row.id, row.model]));
-  }, [apiRef]);
-
   const filterApi: GridFilterApi = {
     setFilterLogicOperator,
     unstable_applyFilters: applyFilters,
@@ -292,7 +287,6 @@ export const useGridFilter = (
     setFilterModel,
     showFilterPanel,
     hideFilterPanel,
-    getVisibleRowModels,
     setQuickFilterValues,
   };
 
@@ -306,7 +300,7 @@ export const useGridFilter = (
       const filterModelToExport = gridFilterModelSelector(apiRef);
 
       const shouldExportFilterModel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
         props.filterModel != null ||
