@@ -79,7 +79,7 @@ Each _Picker_ is available in a desktop, mobile and responsive variant:
 
 ### Find your component
 
-There are many options of components available, each fitting specific use cases. Use the form below to find the component you need:
+There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
 {{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 

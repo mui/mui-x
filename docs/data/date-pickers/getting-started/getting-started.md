@@ -57,7 +57,9 @@ yarn add @mui/material @mui/styled-engine-sc styled-components
 Before trying to render any component, you have to make sure that there is a `LocalizationProvider` upper in the React tree.
 This component receives your chosen date library's adapter and makes it accessible to all the Date and Time Pickers component using React context.
 
-Most of the demos in the documentation use the `LocalizationProvider` wrapping only the components being demoed. That's because we aim to keep our examples atomic and functional with copy and paste.
+Each demonstration in the documentation has its own `LocalizationProvider` wrapper.
+This is **not** a pattern to reproduce.
+The reason is to keep examples atomic and functional—especially when running in a CodeSandbox.
 
 However, the general recommendation is to declare the `LocalizationProvider` a single time to wrap your entire application.
 Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.
