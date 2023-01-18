@@ -1,1 +1,1 @@
-<NextDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+<DatePicker value={value} onChange={(newValue) => setValue(newValue)} />

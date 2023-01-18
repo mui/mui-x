@@ -67,12 +67,12 @@ The demo below shows each one of them using their field component:
 
 Each _Picker_ is available in a desktop, mobile and responsive variant:
 
-- The responsive component (e.g. `NextDatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
+- The responsive component (e.g. `DatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
 
-- The desktop component (e.g. `DesktopNextDatePicker`) which works best for mouse devices and large screens.
+- The desktop component (e.g. `DesktopDatePicker`) which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The mobile component (e.g. `MobileNextDatePicker`) which works best for touch devices and small screens.
+- The mobile component (e.g. `MobileDatePicker`) which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
 {{"demo": "ResponsivePickers.js"}}

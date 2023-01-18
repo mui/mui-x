@@ -4,10 +4,10 @@ import Stack from '@mui/material/Stack';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
-import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 function Label({
   componentName,
@@ -45,15 +45,15 @@ export default function CommonlyUsedComponents() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label={<Label componentName="DatePicker" valueType="date" />}>
-          <NextDatePicker />
+          <DatePicker />
         </DemoItem>
         <DemoItem label={<Label componentName="TimePicker" valueType="time" />}>
-          <NextTimePicker />
+          <TimePicker />
         </DemoItem>
         <DemoItem
           label={<Label componentName="DateTimePicker" valueType="date time" />}
         >
-          <NextDateTimePicker />
+          <DateTimePicker />
         </DemoItem>
         <DemoItem
           label={
@@ -64,7 +64,7 @@ export default function CommonlyUsedComponents() {
             />
           }
         >
-          <NextDateRangePicker />
+          <DateRangePicker />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

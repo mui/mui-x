@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function ControlledComponent() {
   const [value, setValue] = React.useState(null);
@@ -11,7 +11,7 @@ export default function ControlledComponent() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <NextDatePicker value={value} onChange={(newValue) => setValue(newValue)} />
+        <DatePicker value={value} onChange={(newValue) => setValue(newValue)} />
       </DemoContainer>
     </LocalizationProvider>
   );
