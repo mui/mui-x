@@ -209,7 +209,7 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
-- [`remove-disableExtendRowFulWidth-prop`](#remove-disableExtendRowFulWidth-prop)
+- [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 
 #### `column-menu-components-rename`
 

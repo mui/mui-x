@@ -65,7 +65,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
-- ✅ The `disableExtendRowFullWidth` prop was removed.
+- ✅ The `disableExtendRowFullWidth` prop was removed. Use [`showCellVerticalBorder`](/x/api/data-grid/data-grid/#props) or [`showColumnVerticalBorder`](/x/api/data-grid/data-grid/#props) prop to show or hide right border for cells and header cells respectively.
 - The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
 - The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
   ```tsx
