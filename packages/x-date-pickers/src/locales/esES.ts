@@ -28,15 +28,15 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
-  clearButtonLabel: 'Limpia',
+  clearButtonLabel: 'Limpiar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: 'Seleccionar fecha',
+  dateTimePickerDefaultToolbarTitle: 'Seleccionar fecha & hora',
+  timePickerDefaultToolbarTitle: 'Seleccionar hora',
+  dateRangePickerDefaultToolbarTitle: 'Seleccionar rango de fecha',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
