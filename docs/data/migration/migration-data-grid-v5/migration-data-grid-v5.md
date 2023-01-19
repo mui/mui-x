@@ -156,6 +156,16 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   ```
 
 - The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
+- The `singleSelect` column type now has a default value formatter that returns the `label` correspoding to the selected value when `valueOptions` is an array of objects.
+  As consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
+  It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
+  To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop:
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+  This prop accepts a callback that is called with the item from `valueOptions` and must return the string to use as new label.
 
 ### Column menu
 
@@ -353,8 +363,9 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 ### Virtualization
 
 TBD
+-->
 
 ### Removals from the public API
 
-TBD
--->
+- The `getGridSingleSelectQuickFilterFn` function was removed.
+  You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
