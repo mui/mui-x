@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
-import { unstable_useId as useId } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
@@ -128,12 +128,10 @@ export const useMobilePicker = <
       labelledById = undefined;
     }
   }
-  if (
-    !labelledById &&
-    !innerSlotProps?.mobilePaper?.['aria-labelledby'] &&
-    process.env.NODE_ENV !== 'production'
-  ) {
-    ariaLabelledByCantBeResolvedWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (!labelledById && !innerSlotProps?.mobilePaper?.['aria-labelledby']) {
+      ariaLabelledByCantBeResolvedWarning();
+    }
   }
   const slotProps = {
     ...innerSlotProps,

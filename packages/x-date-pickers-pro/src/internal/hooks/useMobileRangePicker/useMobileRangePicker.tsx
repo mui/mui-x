@@ -15,7 +15,7 @@ import {
   ExportedBaseToolbarProps,
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
-import { unstable_useId as useId } from '@mui/utils';
+import useId from '@mui/utils/useId';
 import { buildWarning } from '@mui/x-date-pickers/internals/utils/warning';
 import {
   MobileRangePickerAdditionalViewProps,
@@ -200,12 +200,10 @@ export const useMobileRangePicker = <
       }
     }
   }
-  if (
-    !labelledById &&
-    !innerSlotProps?.mobilePaper?.['aria-labelledby'] &&
-    process.env.NODE_ENV !== 'production'
-  ) {
-    ariaLabelledByCantBeResolvedWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (!labelledById && !innerSlotProps?.mobilePaper?.['aria-labelledby']) {
+      ariaLabelledByCantBeResolvedWarning();
+    }
   }
   const slotProps = {
     ...innerSlotProps,

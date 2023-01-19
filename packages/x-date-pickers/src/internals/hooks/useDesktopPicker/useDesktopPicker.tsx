@@ -2,7 +2,8 @@ import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
-import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
+import useForkRef from '@mui/utils/useForkRef';
+import useId from '@mui/utils/useId';
 import { PickersPopper } from '../../components/PickersPopper';
 import { DateOrTimeView } from '../../models/views';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
@@ -47,7 +48,6 @@ export const useDesktopPicker = <
     autoFocus,
     localeText,
     label,
-    viewRenderers,
   } = props;
 
   const utils = useUtils<TDate>();
@@ -159,15 +159,16 @@ export const useDesktopPicker = <
       labelledById = undefined;
     }
   }
-  if (
-    !labelledById &&
-    // ts complains about unknown prop access without casting
-    !(innerSlotProps?.popper as any)?.['aria-labelledby'] &&
-    process.env.NODE_ENV !== 'production' &&
-    // exclude cases of pickers without any available views (i.e. DesktopTimePicker)
-    Object.values(viewRenderers).filter(Boolean).length > 0
-  ) {
-    ariaLabelledByCantBeResolvedWarning();
+  if (process.env.NODE_ENV !== 'production') {
+    if (
+      !labelledById &&
+      // ts complains about unknown prop access without casting
+      !(innerSlotProps?.popper as any)?.['aria-labelledby'] &&
+      // exclude cases of pickers without any available views (i.e. DesktopTimePicker)
+      hasUIView
+    ) {
+      ariaLabelledByCantBeResolvedWarning();
+    }
   }
   const slotProps = {
     ...innerSlotProps,
