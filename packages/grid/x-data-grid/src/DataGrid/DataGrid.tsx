@@ -169,16 +169,6 @@ DataGridRaw.propTypes = {
    */
   editMode: PropTypes.oneOf(['cell', 'row']),
   /**
-   * An error that will turn the grid into its error state and display the error component.
-   */
-  error: PropTypes.oneOfType([
-    PropTypes.shape({
-      message: PropTypes.string.isRequired,
-    }),
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
-  /**
    * Unstable features, breaking changes might be introduced.
    * For each feature, if the flag is not explicitly set to `true`, the feature will be fully disabled and any property / method call will not have any effect.
    */

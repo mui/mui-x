@@ -36,12 +36,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "error": {
-      "type": {
-        "name": "union",
-        "description": "{ message: string }<br>&#124;&nbsp;string<br>&#124;&nbsp;bool"
-      }
-    },
     "experimentalFeatures": {
       "type": {
         "name": "shape",
