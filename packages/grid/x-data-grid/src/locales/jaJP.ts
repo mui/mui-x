@@ -6,7 +6,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '行がありません。',
   noResultsOverlayLabel: '結果がありません。',
-  errorOverlayDefaultLabel: 'エラーが発生しました。',
 
   // Density selector toolbar button text
   toolbarDensity: '行間隔',
