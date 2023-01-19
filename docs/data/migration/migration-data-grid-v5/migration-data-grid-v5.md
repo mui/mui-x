@@ -81,7 +81,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-- The `onError` prop was removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html). The `components.ErrorOverlay` slot was also removed.
 
 ### State access
 
@@ -223,7 +223,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
-- The `apiRef.current.showError` method was removed. Use the `error` prop instead.
+- The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
 - The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
@@ -327,6 +327,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
 - The `GridCellParams` interface was changed. The row generic is now before the cell generic.
+- The `GridErrorOverlay` component was removed.
 
   ```diff
   -extends GridCellParams<V, R, F, N> {
