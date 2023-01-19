@@ -16,7 +16,7 @@ export interface StaticDateTimePickerSlotsComponent<TDate>
 
 export interface StaticDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    Omit<UseStaticPickerSlotsComponentsProps<TDate, DateOrTimeView>, 'toolbar'> {}
+    UseStaticPickerSlotsComponentsProps<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
