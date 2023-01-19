@@ -38,7 +38,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
 
 - The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed.
-Use `paginationModel` and `onPaginationModelChange` instead.
+  Use `paginationModel` and `onPaginationModelChange` instead.
 
   ```diff
   -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
@@ -61,19 +61,19 @@ Use `paginationModel` and `onPaginationModelChange` instead.
   ```
 
 - The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
-To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
-The `components.ErrorOverlay` slot was also removed.
+  To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
+  The `components.ErrorOverlay` slot was also removed.
 
 - The `componentError` event was removed.
-Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+  Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
 
 - The `apiRef.current.showError` method was removed.
-The UI for errors is no longer handled by the grid.
+  The UI for errors is no longer handled by the grid.
 
 - The `GridErrorOverlay` component was removed.
 
 - The `date` and `dateTime` columns now only support `Date` objects as values.
-To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+  To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
 
   ```tsx
   <DataGrid
@@ -133,7 +133,6 @@ To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-gr
 
   If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
 
-
 - The fields components are no longer unstable
 
   ```diff
@@ -142,7 +141,6 @@ To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-gr
   ```
 
 #### Changes
-
 
 - [DateRangeCalendar] Ignore `calendars` prop on mobile (#7526) @flaviendelangle
 - [DateRangeCalendar] Ignore `showDaysOutsideCurrentMonth` when `calendars > 1` (#7529) @flaviendelangle
@@ -561,9 +559,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   ```tsx
   const apiRef = useGridApiRef();
 
-  return (
-    <DataGrid apiRef={apiRef} {...other} />
-  )
+  return <DataGrid apiRef={apiRef} {...other} />;
   ```
 
   See [the documentation](https://next.mui.com/x/react-data-grid/api-object/) for more information.
@@ -1950,11 +1946,14 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 
 _Jan 16, 2023_
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
 - 🌍 Improve Spanish (es-ES) and add Belarusian (be-BY) and Urdu (ur-PK) locales
 - 🐞 Bugfixes
+
 ### `@mui/x-data-grid@v5.17.19` / `@mui/x-data-grid-pro@v5.17.19` / `@mui/x-data-grid-premium@v5.17.19`
 
 #### Changes
+
 - [DataGrid] Improve print support (#7407) @cherniavskii
 - [DataGrid] Improve Spanish (es-ES) locale (#7438) @Anderssxn
 - [DataGridPremium] Fix Excel export not working with date strings (#7478) @cherniavskii
@@ -1963,6 +1962,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 ### `@mui/x-date-pickers@v5.0.14` / `@mui/x-date-pickers-pro@v5.0.14`
 
 #### Changes
+
 - [pickers] Add Belarusian (be-BY) locale (#7450) @volhalink
 - [pickers] Add Urdu (ur-PK) locale (#7449) @MBilalShafi
 
