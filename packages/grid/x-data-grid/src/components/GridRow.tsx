@@ -18,7 +18,7 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
-import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
+import { GridCellCoordinates } from '../models/gridCell';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -48,8 +48,8 @@ export interface GridRowProps {
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
   renderedColumns: GridStateColDef[];
-  cellFocus: GridCellIdentifier | null;
-  cellTabIndex: GridCellIdentifier | null;
+  cellFocus: GridCellCoordinates | null;
+  cellTabIndex: GridCellCoordinates | null;
   editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
@@ -155,7 +155,7 @@ const GridRow = React.forwardRef<
   React.useLayoutEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if pageSize=5 and page=1. However, the index used by the virtualization
+      // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.

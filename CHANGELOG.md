@@ -135,7 +135,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [fields] Fix Android editing (#7444) @flaviendelangle
 - [pickers] Add Belarusian (be-BY) locale (#7395) @volhalink
-- [pickers] Hide am/pm controls when their is no hour view (#7380) @flaviendelangle
+- [pickers] Hide am/pm controls when there is no hour view (#7380) @flaviendelangle
 - [pickers] Hide the tabs by default on `DesktopNextDateTimePicker` (#7503) @flaviendelangle
 - [pickers] Refactor `shouldDisableTime` (#7299) @LukasTy
 - [pickers] Remove `WrapperVariantContext` from `DateTimePickerTabs` (#7374) @LukasTy
@@ -155,7 +155,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 - [core] Handle selection edge case (#7350) @oliviertassinari
 - [core] Improve license message @oliviertassinari
-- [pickers] Move default `closeOnSelect` to prop definition (#7459) @flaviendelangle
+- [core] Move default `closeOnSelect` to prop definition in `usePickerValue` (#7459) @flaviendelangle
 - [core] Move interfaces of UI views to dedicated files (#7458) @flaviendelangle
 - [core] Update package used to import LicenseInfo (#7442) @oliviertassinari
 - [test] Add a few inheritComponent (#7352) @oliviertassinari

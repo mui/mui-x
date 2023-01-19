@@ -272,8 +272,7 @@ export function useGridDimensions(
   useEnhancedEffect(() => updateGridDimensionsRef(), [updateGridDimensionsRef]);
 
   useGridApiOptionHandler(apiRef, 'sortedRowsSet', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageChange', updateGridDimensionsRef);
-  useGridApiOptionHandler(apiRef, 'pageSizeChange', updateGridDimensionsRef);
+  useGridApiOptionHandler(apiRef, 'paginationModelChange', updateGridDimensionsRef);
   useGridApiOptionHandler(apiRef, 'columnsChange', updateGridDimensionsRef);
   useGridApiEventHandler(apiRef, 'resize', handleResize);
   useGridApiOptionHandler(apiRef, 'debouncedResize', props.onResize);

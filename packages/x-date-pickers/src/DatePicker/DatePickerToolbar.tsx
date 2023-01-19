@@ -53,9 +53,6 @@ type DatePickerToolbarComponent = (<TDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - internal component.
- */
 const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
@@ -64,9 +61,7 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   const {
     value,
     isLandscape,
-    isMobileKeyboardViewOpen,
     onChange,
-    toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
@@ -107,8 +102,6 @@ const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
     <DatePickerToolbarRoot
       ref={ref}
       toolbarTitle={localeText.datePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}
       className={classes.root}
       {...other}
@@ -143,7 +136,6 @@ DatePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -157,7 +149,6 @@ DatePickerToolbar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  toggleMobileKeyboardView: PropTypes.func,
   /**
    * Toolbar date format.
    */

@@ -34,7 +34,7 @@ You can use them to get data from the state without worrying about its internal 
 The simplest way to use a selector is to call it as a function with `apiRef` as its first argument:
 
 ```tsx
-const pageSize = gridPageSizeSelector(apiRef);
+const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
 :::info
@@ -42,7 +42,7 @@ Calling with `apiRef.current.state` also works, but may cause side effects when 
 If you still need to call it with the state, don't forget to pass the instance ID as the example:
 
 ```tsx
-const pageSize = gridPageSizeSelector(
+const paginationModel = gridPaginationModelSelector(
   apiRef.current.state,
   apiRef.current.instanceId,
 );
@@ -57,7 +57,7 @@ const pageSize = gridPageSizeSelector(
 If you only need to access the state value in the render of your components, use the `useGridSelector` hook:
 
 ```tsx
-const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
+const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
 ```
 
 :::warning

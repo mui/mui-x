@@ -1,6 +1,6 @@
 <DemoItem label="disabled">
-  <NextDateRangePicker disabled />
+  <DateRangePicker disabled />
 </DemoItem>
 <DemoItem label="readOnly">
-  <NextDateRangePicker readOnly />
+  <DateRangePicker readOnly />
 </DemoItem>

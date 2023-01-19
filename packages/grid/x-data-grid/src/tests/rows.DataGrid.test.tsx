@@ -139,6 +139,7 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should call with isFirstVisible=true in the first row and isLastVisible=true in the last', () => {
       const { rows, columns } = getBasicGridData(4, 2);
+
       const getRowClassName = (params: GridRowClassNameParams) =>
         clsx({ first: params.isFirstVisible, last: params.isLastVisible });
       render(
@@ -147,8 +148,8 @@ describe('<DataGrid /> - Rows', () => {
             rows={rows}
             columns={columns}
             getRowClassName={getRowClassName}
-            pageSize={3}
-            rowsPerPageOptions={[3]}
+            initialState={{ pagination: { paginationModel: { pageSize: 3, page: 0 } } }}
+            pageSizeOptions={[3]}
           />
         </div>,
       );
@@ -803,6 +804,7 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
+
         const { setProps } = render(
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
@@ -812,8 +814,8 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
-            pageSize={10}
-            rowsPerPageOptions={[5, 10]}
+            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+            pageSizeOptions={[5, 10]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
             {...data}
           />,
@@ -838,6 +840,7 @@ describe('<DataGrid /> - Rows', () => {
         const data = getBasicGridData(120, 3);
         const columnHeaderHeight = 50;
         const measuredRowHeight = 100;
+
         const { setProps } = render(
           <TestCase
             getBioContentHeight={() => measuredRowHeight}
@@ -847,8 +850,8 @@ describe('<DataGrid /> - Rows', () => {
             columnHeaderHeight={columnHeaderHeight}
             getRowId={(row) => row.id}
             hideFooter={false}
-            pageSize={25}
-            rowsPerPageOptions={[10, 25]}
+            initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
+            pageSizeOptions={[10, 25]}
             height={columnHeaderHeight + 10 * measuredRowHeight}
             {...data}
           />,
@@ -891,7 +894,13 @@ describe('<DataGrid /> - Rows', () => {
 
     it('should be called with the correct params', () => {
       const getRowSpacing = stub().returns({});
-      render(<TestCase getRowSpacing={getRowSpacing} pageSize={2} rowsPerPageOptions={[2]} />);
+      render(
+        <TestCase
+          getRowSpacing={getRowSpacing}
+          initialState={{ pagination: { paginationModel: { pageSize: 2, page: 0 } } }}
+          pageSizeOptions={[2]}
+        />,
+      );
       expect(getRowSpacing.args[0][0]).to.deep.equal({
         isFirstVisible: true,
         isLastVisible: false,

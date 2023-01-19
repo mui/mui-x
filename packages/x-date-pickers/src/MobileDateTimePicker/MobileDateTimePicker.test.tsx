@@ -7,17 +7,10 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 import {
   adapterToUse,
   createPickerRenderer,
-  FakeTransitionComponent,
   openPicker,
   getClockTouchEvent,
-  withPickerControls,
 } from 'test/utils/pickers-utils';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-
-const WrappedMobileDateTimePicker = withPickerControls(MobileDateTimePicker)({
-  components: { MobileTransition: FakeTransitionComponent },
-  renderInput: (params) => <TextField {...params} />,
-});
 
 describe('<MobileDateTimePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -29,30 +22,15 @@ describe('<MobileDateTimePicker />', () => {
     render,
     clock,
     views: ['year', 'month', 'day', 'hours', 'minutes'],
-    componentFamily: 'legacy-picker',
+    componentFamily: 'picker',
   }));
-
-  it('prop: open – overrides open state', () => {
-    render(
-      <MobileDateTimePicker
-        renderInput={(params) => <TextField {...params} />}
-        open
-        onChange={() => {}}
-        value={adapterToUse.date(new Date(2018, 0, 1))}
-      />,
-    );
-
-    expect(screen.getByRole('dialog')).toBeVisible();
-  });
 
   it('should render date and time by default', () => {
     render(
       <MobileDateTimePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
         open
         componentsProps={{ toolbar: { hidden: false } }}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
 
@@ -67,26 +45,23 @@ describe('<MobileDateTimePicker />', () => {
     render(
       <MobileDateTimePicker
         open
-        onChange={() => {}}
         value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-        renderInput={(params) => <TextField {...params} />}
+        defaultValue={(params) => <TextField {...params} />}
       />,
     );
 
-    expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+    expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
     expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
   });
 
   it('can render seconds on view', () => {
     render(
       <MobileDateTimePicker
-        renderInput={(params) => <TextField {...params} />}
-        onChange={() => {}}
         open
         componentsProps={{ toolbar: { hidden: false } }}
         openTo="seconds"
         views={['seconds']}
-        value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+        defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
       />,
     );
     expect(screen.getByMuiTest('seconds')).to.have.text('22');
@@ -97,16 +72,31 @@ describe('<MobileDateTimePicker />', () => {
       render(
         <MobileDateTimePicker
           open
-          onChange={() => {}}
-          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          renderInput={(params) => <TextField {...params} />}
-          componentsProps={{
+          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          slotProps={{
             tabs: { hidden: true },
           }}
         />,
       );
 
-      expect(screen.getByRole('button', { name: /go to text input view/i })).not.to.equal(null);
+      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
+      expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
+    });
+  });
+
+  describe('Slots: Tabs', () => {
+    it('should not render tabs when `hidden` is `true`', () => {
+      render(
+        <MobileDateTimePicker
+          open
+          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
+          slotProps={{
+            tabs: { hidden: true },
+          }}
+        />,
+      );
+
+      expect(screen.queryByMuiTest('picker-toolbar-title')).not.to.equal(null);
       expect(screen.queryByRole('tab', { name: 'pick date' })).to.equal(null);
     });
   });
@@ -117,13 +107,11 @@ describe('<MobileDateTimePicker />', () => {
         <MobileDateTimePicker
           open
           componentsProps={{ toolbar: { hidden: true } }}
-          onChange={() => {}}
-          value={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         />,
       );
 
-      expect(screen.queryByRole('button', { name: /go to text input view/i })).to.equal(null);
+      expect(screen.queryByMuiTest('picker-toolbar-title')).to.equal(null);
       expect(screen.getByRole('tab', { name: 'pick date' })).not.to.equal(null);
     });
   });
@@ -132,7 +120,7 @@ describe('<MobileDateTimePicker />', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
-      render(<WrappedMobileDateTimePicker onOpen={onOpen} initialValue={null} />);
+      render(<MobileDateTimePicker onOpen={onOpen} defaultValue={null} />);
 
       userEvent.mousePress(screen.getByRole('textbox'));
 
@@ -148,14 +136,15 @@ describe('<MobileDateTimePicker />', () => {
       const onChange = spy();
       const onAccept = spy();
       const onClose = spy();
-      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
+      const defaultValue = adapterToUse.date(new Date(2018, 0, 1));
 
       render(
-        <WrappedMobileDateTimePicker
+        <MobileDateTimePicker
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
-          initialValue={initialValue}
+          defaultValue={defaultValue}
+          ampm
         />,
       );
 
@@ -195,187 +184,11 @@ describe('<MobileDateTimePicker />', () => {
       expect(onAccept.callCount).to.equal(0);
       expect(onClose.callCount).to.equal(0);
     });
-
-    it('should call onClose and onAccept when selecting the minutes if props.closeOnSelect = true', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onAccept = spy();
-      const onClose = spy();
-      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <WrappedMobileDateTimePicker
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-          closeOnSelect
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Change the minutes (already tested)
-      const minuteClockEvent = getClockTouchEvent(53, 'minutes');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', minuteClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', minuteClockEvent);
-
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 15, 11, 53)),
-      );
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onChange with the initial value when clicking the "Cancel" button', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <WrappedMobileDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Cancel the modifications
-      userEvent.mousePress(screen.getByText(/cancel/i));
-      expect(onChange.callCount).to.equal(3); // Date change + hours change + reset
-      expect(onChange.lastCall.args[0]).toEqualDateTime(initialValue);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose and onAccept with the live value and onAccept with the live value when clicking the "OK"', function test() {
-      if (typeof window.Touch === 'undefined' || typeof window.TouchEvent === 'undefined') {
-        this.skip();
-      }
-
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <WrappedMobileDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Change the date (already tested)
-      userEvent.mousePress(screen.getByRole('gridcell', { name: '15' }));
-
-      // Change the hours (already tested)
-      const hourClockEvent = getClockTouchEvent(11, '12hours');
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchmove', hourClockEvent);
-      fireTouchChangedEvent(screen.getByMuiTest('clock'), 'touchend', hourClockEvent);
-
-      // Accept the modifications
-      userEvent.mousePress(screen.getByText(/ok/i));
-      expect(onChange.callCount).to.equal(2); // Date change + hours change
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).toEqualDateTime(
-        adapterToUse.date(new Date(2018, 0, 15, 11)),
-      );
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should call onClose, onChange with empty value and onAccept with empty value when pressing the "Clear" button', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-      const initialValue = adapterToUse.date(new Date(2018, 0, 1));
-
-      render(
-        <WrappedMobileDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={initialValue}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(1);
-      expect(onChange.lastCall.args[0]).to.equal(null);
-      expect(onAccept.callCount).to.equal(1);
-      expect(onAccept.lastCall.args[0]).to.equal(null);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    it('should not call onChange or onAccept when pressing "Clear" button with an already null value', () => {
-      const onChange = spy();
-      const onAccept = spy();
-      const onClose = spy();
-
-      render(
-        <WrappedMobileDateTimePicker
-          onChange={onChange}
-          onAccept={onAccept}
-          onClose={onClose}
-          initialValue={null}
-          componentsProps={{ actionBar: { actions: ['clear'] } }}
-        />,
-      );
-
-      openPicker({ type: 'date-time', variant: 'mobile' });
-
-      // Clear the date
-      userEvent.mousePress(screen.getByText(/clear/i));
-      expect(onChange.callCount).to.equal(0);
-      expect(onAccept.callCount).to.equal(0);
-      expect(onClose.callCount).to.equal(1);
-    });
-
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
   });
 
   describe('localization', () => {
     it('should respect the `localeText` prop', () => {
-      render(
-        <WrappedMobileDateTimePicker
-          initialValue={null}
-          localeText={{ cancelButtonLabel: 'Custom cancel' }}
-        />,
-      );
+      render(<MobileDateTimePicker localeText={{ cancelButtonLabel: 'Custom cancel' }} />);
       openPicker({ type: 'date-time', variant: 'mobile' });
 
       expect(screen.queryByText('Custom cancel')).not.to.equal(null);

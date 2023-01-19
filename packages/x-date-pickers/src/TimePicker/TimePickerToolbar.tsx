@@ -132,10 +132,6 @@ const TimePickerToolbarAmPmSelection = styled('div', {
   },
 }));
 
-/**
- * @ignore - internal component.
- */
-
 TimePickerToolbarAmPmSelection.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -157,11 +153,9 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
     ampmInClock,
     value,
     isLandscape,
-    isMobileKeyboardViewOpen,
     onChange,
     view,
     onViewChange,
-    toggleMobileKeyboardView,
     views,
     disabled,
     readOnly,
@@ -192,12 +186,9 @@ function TimePickerToolbar<TDate extends unknown>(inProps: TimePickerToolbarProp
 
   return (
     <TimePickerToolbarRoot
-      viewType="time"
       landscapeDirection="row"
       toolbarTitle={localeText.timePickerToolbarTitle}
       isLandscape={isLandscape}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       ownerState={ownerState}
       className={classes.root}
       {...other}
@@ -284,7 +275,6 @@ TimePickerToolbar.propTypes = {
    */
   hidden: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
-  isMobileKeyboardViewOpen: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   /**
    * Callback called when a toolbar is clicked
@@ -293,7 +283,6 @@ TimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
-  toggleMobileKeyboardView: PropTypes.func,
   /**
    * Toolbar date format.
    */
