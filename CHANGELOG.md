@@ -3,6 +3,132 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-alpha.16
+
+_Jan 19, 2023_
+
+We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Merge `page` and `pageSize` props into `paginationModel` (#7147) @MBilalShafi
+- 🚀 Rename new pickers components
+- 🌍 Improve Swedish (sv-SE) and Italian (it-IT) locales
+- 📚 Documentation improvements
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v6.0.0-alpha.16` / `@mui/x-data-grid-pro@v6.0.0-alpha.16` / `@mui/x-data-grid-premium@v6.0.0-alpha.16`
+
+#### Breaking changes
+
+- The prop `disableExtendRowFullWidth` was removed.
+  Use `showCellVerticalBorder` or `showColumnVerticalBorder` props to show or hide right border for cells and header cells respectively.
+
+- The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
+
+- The `singleSelect` column type now has a default value formatter that returns the `label` corresponding to the selected value when `valueOptions` is an array of objects.
+  As consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
+  It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
+  To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop.
+  This prop accepts a callback that is called with the item from `valueOptions` and must return the new label.
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+- The `getGridSingleSelectQuickFilterFn` function was removed.
+  You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
+
+- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed.
+Use `paginationModel` and `onPaginationModelChange` instead.
+
+  ```diff
+  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
+  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+  ```
+
+- The property `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed.
+  Use `initialState.pagination.paginationModel` instead.
+
+  ```diff
+  -initialState={{ pagination: { page: 1, pageSize: 10 } }}
+  +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
+  ```
+
+- The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+
+  ```diff
+  -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
+  +<DataGrid pageSizeOptions={[10, 20, 50]} />
+  ```
+
+#### Changes
+
+- [DataGrid] Add default value formatter to `singleSelect` (#7290) @m4theushw
+- [DataGrid] Fix flickering on grid scroll (#7549) @cherniavskii
+- [DataGrid] Merge `page` and `pageSize` props into `paginationModel` (#7147) @MBilalShafi
+- [DataGrid] Remove `GridCellIdentifier` redundant type (#7578) @MBilalShafi
+- [DataGrid] Remove `disableExtendRowFullWidth` prop (#7373) @MBilalShafi
+- [DataGrid] Remove tag limit from `isAnyOf` operator input (#7592) @m4theushw
+- [DataGrid] Use v6 terminology (#7473) @DanailH
+- [DataGridPremium] Keep focus on first selected cell (#7482) @m4theushw
+- [l10n] Update Swedish (sv-SE) locale (#7585) @MaanTyringe
+
+### `@mui/x-date-pickers@v6.0.0-alpha.16` / `@mui/x-date-pickers-pro@v6.0.0-alpha.16`
+
+#### Breaking changes
+
+- The `showToolbar` prop has been moved to the `toolbar` component slot props:
+
+  ```diff
+   <DatePicker
+  -  showToolbar
+  +  slotProps={{
+  +    toolbar: {
+  +      hidden: false,
+  +    }
+  +  }}
+   />
+  ```
+
+#### Changes
+
+- [DateRangeCalendar] Ignore `calendars` prop on mobile (#7526) @flaviendelangle
+- [DateRangeCalendar] Ignore `showDaysOutsideCurrentMonth` when `calendars > 1` (#7529) @flaviendelangle
+- [DateRangePicker] Propagate `rangePosition` to view (#7602) @LukasTy
+- [fields] Fix upper boundary on 12-hours sections (#7618) @flaviendelangle
+- [fields] Publish value when cleaning the last section of a date (#7519) @flaviendelangle
+- [fields] Remove the `Unstable_` prefix for field components (#7185) @flaviendelangle
+- [pickers] Add missing `slots` and `slotProps` on the date range view renderer (#7586) @flaviendelangle
+- [pickers] Drop legacy pickers (#7545) @flaviendelangle
+- [pickers] Fix day calendar row and column index (#7589) @LukasTy
+- [pickers] Go to the default view when opening a picker (#7484) @flaviendelangle
+- [pickers] Make sure the `className` and `sx` props are applied to the field / static root of the picker and never to the view (#7600) @flaviendelangle
+- [pickers] Rename new pickers (#7575) @flaviendelangle
+- [pickers] Rename remaining `components` and `componentSlots` references (#7576) @LukasTy
+- [pickers] Replace `showToolbar` with toolbar slot `hidden` prop (#7498) @LukasTy
+- [pickers] Spread props to the DOM in `DateCalendar` and `TimeClock` (#7587) @flaviendelangle
+- [pickers] Stop using the `WrapperVariantContext` in `DateRangeCalendar` (#7488) @flaviendelangle
+- [l10n] Improve Italian (it-IT) locale (#7582) @marikadeveloper
+
+### `@mui/x-codemod@v6.0.0-alpha.16`
+
+#### Changes
+
+- [codemod] Remove `disableExtendRowFullWidth` prop (#7508) @MBilalShafi
+
+### Docs
+
+- [docs] Clean the field page (#7605) @flaviendelangle
+- [docs] List all pickers toolbar pages in api docs side menu (#7577) @LukasTy
+- [docs] Remove "Flex layout" docs section and demo (#7477) @cherniavskii
+- [docs] Rework the pickers Getting Started page (#7140) @flaviendelangle
+
+### Core
+
+- [core] Add missing need triage label on RFC @oliviertassinari
+- [core] Add release documentation step detailing `x-codemod` package tag change (#7617) @LukasTy
+- [core] Fix typo in `CHANGELOG` (#7611) @flaviendelangle
+- [test] Fix date range picker tests to work with western time zones (#7581) @m4theushw
+
 ## 6.0.0-alpha.15
 
 _Jan 13, 2023_
@@ -315,8 +441,8 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   The `GridEnrichedColDef` type was removed. Use `GridColDef` instead.
   The `GridStateColDef` type was removed.
 
-    If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
-    If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
+  If you use it to type `searchPredicate`, use `GridColumnsPanelProps['searchPredicate']` instead.
+  If you use it to type `getApplyFilterFn`, `GridFilterOperator['getApplyFilterFn']` can be used as replacement.
 
 - Remove GridDensityType enum (#7304) @cherniavskii
 
