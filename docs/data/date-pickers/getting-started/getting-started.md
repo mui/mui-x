@@ -17,7 +17,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 Using your favorite package manager, install:
 
-- `@mui/x-date-pickers-pro` for the commercial version or `@mui/x-date-pickers` for the free community version.
+- `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
@@ -61,7 +61,7 @@ Each demonstration in the documentation has its own `LocalizationProvider` wrapp
 This is **not** a pattern to reproduce.
 The reason is to keep examples atomic and functional—especially when running in a CodeSandbox.
 
-However, the general recommendation is to declare the `LocalizationProvider` a single time to wrap your entire application.
+The general recommendation is to declare the `LocalizationProvider` once, wrapping your entire application.
 Then, you don't need to repeat the boilerplate code for every Date and Time Picker in your application.
 
 {{"component": "modules/components/PickersRenderingInstructions.js"}}
@@ -71,8 +71,8 @@ Then, you don't need to repeat the boilerplate code for every Date and Time Pick
 - All the adapters are exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
 
   ```tsx
-  import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-  import { AdapterDateFns } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
+  import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+  import { AdapterDayjs } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
   ```
 
 - `LocalizationProvider` is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:

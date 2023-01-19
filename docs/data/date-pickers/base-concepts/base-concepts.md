@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 # Date and Time Pickers - Base concepts
 
-<p class="description">The Date and Time pickers expose a lot of components to fit your every needs.</p>
+<p class="description">The Date and Time pickers expose a lot of components to fit your every need.</p>
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
@@ -37,7 +37,7 @@ import { DatePicker } from '@mui/x-date-pickers-pro';
 
 Depending on your use case, different interaction styles are preferred.
 
-- For input editing with a popover for mouse interaction, use the _Picker_ components:
+- For input editing with a popover or modal for mouse interaction, use the _Picker_ components:
 
 {{"demo": "BasicDatePicker.js", "hideToolbar": true, "bg": "inline"}}
 
@@ -65,7 +65,7 @@ The demo below shows each one of them using their field component:
 
 ### Responsiveness
 
-Each _Picker_ is available in a desktop, mobile and responsive variant:
+Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 - The responsive component (e.g. `DatePicker`) which renders the desktop component or the mobile one depending on the device it runs on.
 
