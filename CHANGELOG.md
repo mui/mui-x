@@ -70,15 +70,16 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
   To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
-  The `components.ErrorOverlay` slot was also removed.
+
+- The `components.ErrorOverlay` slot was also removed.
+
+- The `GridErrorOverlay` component was removed.
 
 - The `componentError` event was removed.
   Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
 
 - The `apiRef.current.showError` method was removed.
   The UI for errors is no longer handled by the grid.
-
-- The `GridErrorOverlay` component was removed.
 
 - The `date` and `dateTime` columns now only support `Date` objects as values.
   To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
