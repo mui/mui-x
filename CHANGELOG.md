@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 6.0.0-beta.1
+## 6.0.0-beta.0
 
 _Jan 19, 2023_
 
@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bug fixes
 
-### `@mui/x-data-grid@v6.0.0-beta.1` / `@mui/x-data-grid-pro@v6.0.0-beta.1` / `@mui/x-data-grid-premium@v6.0.0-beta.1`
+### `@mui/x-data-grid@v6.0.0-beta.0` / `@mui/x-data-grid-pro@v6.0.0-beta.0` / `@mui/x-data-grid-premium@v6.0.0-beta.0`
 
 #### Breaking changes
 
@@ -72,7 +72,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
 - [DataGridPremium] Keep focus on first selected cell (#7482) @m4theushw
 - [l10n] Update Swedish (sv-SE) locale (#7585) @MaanTyringe
 
-### `@mui/x-date-pickers@v6.0.0-beta.1` / `@mui/x-date-pickers-pro@v6.0.0-beta.1`
+### `@mui/x-date-pickers@v6.0.0-beta.0` / `@mui/x-date-pickers-pro@v6.0.0-beta.0`
 
 #### Breaking changes
 
@@ -132,7 +132,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
 - [pickers] Stop using the `WrapperVariantContext` in `DateRangeCalendar` (#7488) @flaviendelangle
 - [l10n] Improve Italian (it-IT) locale (#7582) @marikadeveloper
 
-### `@mui/x-codemod@v6.0.0-beta.1`
+### `@mui/x-codemod@v6.0.0-beta.0`
 
 #### Changes
 
@@ -1891,6 +1891,50 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## 5.17.20
+
+_Jan 19, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Italian (it-IT) and Swedish (sv-SE) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.20` / `@mui/x-data-grid-pro@v5.17.20` / `@mui/x-data-grid-premium@v5.17.20`
+
+#### Changes
+
+- [DataGrid] Fix flickering on grid scroll (#7609) @cherniavskii
+- [DataGrid] Remove tag limit from `isAnyOf` operator input (#7616) @m4theushw
+- [l10n] Improve Swedish (sv-SE) locale (#7463) @MaanTyringe
+
+### `@mui/x-date-pickers@v5.0.15` / `@mui/x-date-pickers-pro@v5.0.15`
+
+#### Changes
+
+- [pickers] Ensure `key` is passed without object spreading (#7584) @alexfauquette
+- [l10n] Improve Italian (it-IT) locale (#7547) @marikadeveloper
+
+## 5.17.19
+
+_Jan 16, 2023_
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+- 🌍 Improve Spanish (es-ES) and add Belarusian (be-BY) and Urdu (ur-PK) locales
+- 🐞 Bugfixes
+### `@mui/x-data-grid@v5.17.19` / `@mui/x-data-grid-pro@v5.17.19` / `@mui/x-data-grid-premium@v5.17.19`
+
+#### Changes
+- [DataGrid] Improve print support (#7407) @cherniavskii
+- [DataGrid] Improve Spanish (es-ES) locale (#7438) @Anderssxn
+- [DataGridPremium] Fix Excel export not working with date strings (#7478) @cherniavskii
+- [DataGridPro] Fix missing column headers border with top-pinned rows (#7399) @cherniavskii
+
+### `@mui/x-date-pickers@v5.0.14` / `@mui/x-date-pickers-pro@v5.0.14`
+
+#### Changes
+- [pickers] Add Belarusian (be-BY) locale (#7450) @volhalink
+- [pickers] Add Urdu (ur-PK) locale (#7449) @MBilalShafi
 
 ## 5.17.18
 
