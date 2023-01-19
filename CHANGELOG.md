@@ -98,11 +98,11 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 - Following selectors have been renamed:
 
-  - `gridVisibleSortedRowIdsSelector` renamed to `gridExpandedSortedRowIdsSelector `
-  - `gridVisibleSortedRowEntriesSelector` renamed to `gridExpandedSortedRowEntriesSelector `
-  - `gridVisibleRowCountSelector` renamed to `gridExpandedRowCountSelector `
-  - `gridVisibleSortedTopLevelRowEntriesSelector` renamed to `gridFilteredSortedTopLevelRowEntriesSelector `
-  - `gridVisibleTopLevelRowCountSelector` renamed to `gridFilteredTopLevelRowCountSelector `
+  - `gridVisibleSortedRowIdsSelector` renamed to `gridExpandedSortedRowIdsSelector`
+  - `gridVisibleSortedRowEntriesSelector` renamed to `gridExpandedSortedRowEntriesSelector`
+  - `gridVisibleRowCountSelector` renamed to `gridExpandedRowCountSelector`
+  - `gridVisibleSortedTopLevelRowEntriesSelector` renamed to `gridFilteredSortedTopLevelRowEntriesSelector`
+  - `gridVisibleTopLevelRowCountSelector` renamed to `gridFilteredTopLevelRowCountSelector`
 
 - The `apiRef.current.getVisibleRowModels` method was removed. Use the `gridVisibleSortedRowEntriesSelector` selector instead.
 
@@ -149,7 +149,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   -import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
   +import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
-  // Same for all the other pickers with an `Unstable_` prefix
+   // Same for all the other pickers with an `Unstable_` prefix
   ```
 
   If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
