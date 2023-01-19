@@ -9,7 +9,7 @@ _Jan 19, 2023_
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
-- ✨ Merge `page` and `pageSize` props into `paginationModel` (#7147) @MBilalShafi
+- ✨ Merge `page` and `pageSize` props into `paginationModel`
 - 🚀 Replace old masked picker components with field based ones
 - 🌍 Improve Swedish (sv-SE) and Italian (it-IT) locales
 - 📚 Documentation improvements
@@ -19,7 +19,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 
 #### Breaking changes
 
-- The prop `disableExtendRowFullWidth` was removed.
+- The `disableExtendRowFullWidth` prop was removed.
   Use `showCellVerticalBorder` or `showColumnVerticalBorder` props to show or hide right border for cells and header cells respectively.
 
 - The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
@@ -41,8 +41,16 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   Use `paginationModel` and `onPaginationModelChange` instead.
 
   ```diff
-  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
-  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+   <DataGrid
+    rows={rows}
+     columns={columns}
+  -  page={page}
+  -  pageSize={pageSize}
+  -  onPageChange={handlePageChange}
+  -  onPageSizeChange={handlePageSizeChange}
+  +  paginationModel={{ page, pageSize }}
+  +  onPaginationModelChange={handlePaginationModelChange}
+   />
   ```
 
 - The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed.
