@@ -89,6 +89,29 @@ Use `paginationModel` and `onPaginationModelChange` instead.
    />
   ```
 
+- The new pickers have replaced the legacy one
+
+  If you were using the new pickers with their temporary name, you just have to change your imports.
+
+  ```diff
+  -import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+  +import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+  -import { Unstable_DesktopNextDatePicker as DesktopNextDatePicker } from '@mui/x-date-pickers/DesktopNextDatePicker';
+  +import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+
+  // Same for all the other pickers with an `Unstable_` prefix
+  ```
+
+  If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
+
+
+- The fields components are no longer unstable
+
+  ```diff
+  -import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+  +import { DateField } from '@mui/x-date-pickers/DateField';
+  ```
+
 #### Changes
 
 - [DateRangeCalendar] Ignore `calendars` prop on mobile (#7526) @flaviendelangle
