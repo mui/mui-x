@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.20
+
+_Jan 19, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Italian (it-IT) and Swedish (sv-SE) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.20` / `@mui/x-data-grid-pro@v5.17.20` / `@mui/x-data-grid-premium@v5.17.20`
+
+#### Changes
+
+- [DataGrid] Fix flickering on grid scroll (#7609) @cherniavskii
+- [DataGrid] Remove tag limit from `isAnyOf` operator input (#7616) @m4theushw
+- [l10n] Update Swedish (sv-SE) locale (#7463) @MaanTyringe
+
+### `@mui/x-date-pickers@v5.0.15` / `@mui/x-date-pickers-pro@v5.0.15`
+
+#### Changes
+
+- [pickers] Ensure `key` is passed without object spreading (#7584) @alexfauquette
+- [l10n] Improve Italian (it-IT) locale (#7547) @marikadeveloper
+
 ## 5.17.19
 
 _Jan 16, 2023_
