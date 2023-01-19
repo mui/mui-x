@@ -72,7 +72,7 @@ Then, you don't need to repeat the boilerplate code for every Date and Time Pick
 
   ```tsx
   import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-  import { AdapterDayjs } from '@mui/x-date-pickers-pro/`AdapterDayjs`';
+  import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
   ```
 
 - `LocalizationProvider` is exported by both `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`:
