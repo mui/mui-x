@@ -718,26 +718,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
-      it('should expand content height to one row height when there is an error', () => {
-        const error = { message: 'ERROR' };
-        const rowHeight = 50;
-
-        render(
-          <div style={{ width: 150 }}>
-            <DataGrid
-              columns={[{ field: 'brand' }]}
-              rows={[]}
-              autoHeight
-              error={error}
-              rowHeight={rowHeight}
-            />
-          </div>,
-        );
-        const errorOverlayElement = document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!;
-        expect(errorOverlayElement.textContent).to.equal(error.message);
-        expect(errorOverlayElement.offsetHeight).to.equal(2 * rowHeight);
-      });
-
       it('should apply the autoHeight class to the root element', () => {
         render(
           <div style={{ width: 300 }}>
@@ -885,20 +865,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         </ThemeProvider>,
       );
       expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
-    });
-  });
-
-  describe('Error', () => {
-    it('should display error message when error prop set', () => {
-      const message = 'Error can also be set in props!';
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} error={{ message }} />
-        </div>,
-      );
-      expect(document.querySelector<HTMLElement>('.MuiDataGrid-overlay')!.textContent).to.equal(
-        message,
-      );
     });
   });
 

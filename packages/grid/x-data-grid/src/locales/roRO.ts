@@ -6,7 +6,6 @@ const roROGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Lipsă date',
   noResultsOverlayLabel: 'Nu au fost găsite rezultate.',
-  errorOverlayDefaultLabel: 'A apărut o eroare neașteptată.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Înălțime rând',
