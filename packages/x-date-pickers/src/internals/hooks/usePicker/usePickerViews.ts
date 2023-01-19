@@ -219,6 +219,7 @@ export const usePickerViews = <
     if (newView !== view) {
       setView(newView);
     }
+    setFocusedView(newView, true);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const layoutProps: UsePickerViewsLayoutResponse<TView> = {
