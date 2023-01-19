@@ -675,10 +675,6 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   columns: GridColDef<R>[];
   /**
-   * An error that will turn the grid into its error state and display the error component.
-   */
-  error?: { message: string } | string | boolean | null;
-  /**
    * Return the id of a given [[GridRowModel]].
    */
   getRowId?: GridRowIdGetter<R>;

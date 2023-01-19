@@ -1,13 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@mui/utils';
-import {
-  GridBody,
-  GridErrorHandler,
-  GridFooterPlaceholder,
-  GridHeader,
-  GridRoot,
-} from '../components';
+import { GridBody, GridFooterPlaceholder, GridHeader, GridRoot } from '../components';
 import { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
@@ -26,14 +20,12 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeader />
-          <GridBody
-            ColumnHeadersComponent={DataGridColumnHeaders}
-            VirtualScrollerComponent={DataGridVirtualScroller}
-          />
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
+        <GridHeader />
+        <GridBody
+          ColumnHeadersComponent={DataGridColumnHeaders}
+          VirtualScrollerComponent={DataGridVirtualScroller}
+        />
+        <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
   );

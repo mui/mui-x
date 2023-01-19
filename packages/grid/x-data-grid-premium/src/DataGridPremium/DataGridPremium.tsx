@@ -4,7 +4,6 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license-pro';
 import { chainPropTypes } from '@mui/utils';
 import {
   GridBody,
-  GridErrorHandler,
   GridFooterPlaceholder,
   GridHeader,
   GridRoot,
@@ -34,16 +33,14 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
-        <GridErrorHandler>
-          <GridHeader />
-          <GridBody
-            ColumnHeadersComponent={DataGridProColumnHeaders}
-            VirtualScrollerComponent={DataGridProVirtualScroller}
-          >
-            <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
-          </GridBody>
-          <GridFooterPlaceholder />
-        </GridErrorHandler>
+        <GridHeader />
+        <GridBody
+          ColumnHeadersComponent={DataGridProColumnHeaders}
+          VirtualScrollerComponent={DataGridProVirtualScroller}
+        >
+          <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
+        </GridBody>
+        <GridFooterPlaceholder />
       </GridRoot>
     </GridContextProvider>
   );

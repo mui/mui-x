@@ -724,7 +724,6 @@
     "DensityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
     "DetailPanelCollapseIcon": "Icon displayed on the detail panel toggle column when expanded.",
     "DetailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
-    "ErrorOverlay": "Error overlay component rendered above the grid when an error is caught.",
     "ExportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "FilterPanel": "Filter panel component rendered when clicking the filter button.",
     "FilterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
