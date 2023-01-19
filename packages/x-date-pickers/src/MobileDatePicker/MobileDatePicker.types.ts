@@ -1,7 +1,7 @@
 import {
   UseMobilePickerSlotsComponent,
-  UseMobilePickerSlotsComponentsProps,
   MobileOnlyPickerProps,
+  ExportedUseMobilePickerSlotsComponentsProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDatePickerProps,
@@ -19,7 +19,7 @@ export interface MobileDatePickerSlotsComponent<TDate>
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,
-    UseMobilePickerSlotsComponentsProps<TDate, DateView> {}
+    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateView> {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,

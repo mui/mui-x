@@ -43,10 +43,6 @@ export interface ExportedPickersLayoutSlotsComponentsProps<TValue, TView extends
    * Props passed down to the layoutRoot component.
    */
   layout?: Partial<PickersLayoutProps<TValue, TView>>;
-  /**
-   * Props passed down to the toolbar component.
-   */
-  toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface PickersLayoutSlotsComponent<TValue, TView extends DateOrTimeView>
@@ -68,6 +64,10 @@ export interface PickersLayoutSlotsComponentsProps<TValue, TView extends DateOrT
    * Props passed down to the tabs component.
    */
   tabs?: ExportedBaseTabsProps;
+  /**
+   * Props passed down to the toolbar component.
+   */
+  toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface PickersLayoutProps<TValue, TView extends DateOrTimeView>
