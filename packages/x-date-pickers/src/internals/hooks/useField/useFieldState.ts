@@ -168,14 +168,14 @@ export const useFieldState = <
     return selectedSections;
   }, [selectedSections, state.sections]);
 
-  const publishValue = ({
-    value,
-    referenceValue,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>) => {
+  const publishValue = (
+    { value, referenceValue }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>,
+    sections = state.sections,
+  ) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
-      state.sections,
+      sections,
       value,
       format,
     );
@@ -222,13 +222,30 @@ export const useFieldState = <
 
     const activeSection = state.sections[selectedSectionIndexes.startIndex];
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
+    const activeDateSections = fieldValueManager.getActiveDateSections(
+      state.sections,
+      activeSection,
+    );
+
+    const isTheOnlyNonEmptySection = activeDateSections.every((section) => {
+      if (section.startInInput === activeSection.startInInput) {
+        return true;
+      }
+
+      return section.value === '';
+    });
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
+    const newValue = activeDateManager.getNewValueFromNewActiveDate(null);
+
+    if (isTheOnlyNonEmptySection) {
+      return publishValue(newValue, newSections);
+    }
 
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      ...activeDateManager.getNewValueFromNewActiveDate(null),
+      ...newValue,
     }));
   };
 

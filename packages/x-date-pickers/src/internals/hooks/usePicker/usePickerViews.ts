@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { SxProps } from '@mui/system';
+import { Theme } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { DateOrTimeView } from '../../models';
@@ -81,7 +83,10 @@ export interface UsePickerViewsProps<
   TExternalProps extends UsePickerViewsProps<TValue, TView, any, any>,
   TAdditionalProps extends {},
 > extends UsePickerViewsBaseProps<TValue, TView, TExternalProps, TAdditionalProps>,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps {
+  className?: string;
+  sx?: SxProps<Theme>;
+}
 
 export interface UsePickerViewParams<
   TValue,
@@ -138,15 +143,17 @@ export const usePickerViews = <
 >): UsePickerViewsResponse<TView> => {
   const { onChange, open, onSelectedSectionsChange, onClose } = propsFromPickerValue;
   const { views, openTo, onViewChange, disableOpenPicker, viewRenderers } = props;
+  const { className, sx, ...propsToForwardToView } = props;
 
-  const { view, setView, focusedView, setFocusedView, setValueAndGoToNextView } = useViews({
-    view: undefined,
-    views,
-    openTo,
-    onChange,
-    onViewChange,
-    autoFocus: autoFocusView,
-  });
+  const { view, setView, defaultView, focusedView, setFocusedView, setValueAndGoToNextView } =
+    useViews({
+      view: undefined,
+      views,
+      openTo,
+      onChange,
+      onViewChange,
+      autoFocus: autoFocusView,
+    });
 
   const { hasUIView, viewModeLookup } = React.useMemo(
     () =>
@@ -199,8 +206,24 @@ export const usePickerViews = <
       return;
     }
 
+    let newView = view;
+
+    // If the current view is a field view, go to the last popper view
     if (currentViewMode === 'field' && popperView != null) {
-      setView(popperView);
+      newView = popperView;
+    }
+
+    // If the current view is not the default view and both are UI views
+    if (
+      newView !== defaultView &&
+      viewModeLookup[newView] === 'UI' &&
+      viewModeLookup[defaultView] === 'UI'
+    ) {
+      newView = defaultView;
+    }
+
+    if (newView !== view) {
+      setView(newView);
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -225,7 +248,7 @@ export const usePickerViews = <
       }
 
       return renderer({
-        ...props,
+        ...propsToForwardToView,
         ...additionalViewProps,
         ...propsFromPickerValue,
         views,

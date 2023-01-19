@@ -222,13 +222,10 @@ function WrappedDay<TDate extends unknown>({
   day,
   focusableDay,
   selectedDays,
-  onFocus,
-  onBlur,
-  onKeyDown,
-  onDaySelect,
   isDateDisabled,
   currentMonthNumber,
   isViewFocused,
+  ...other
 }: Pick<PickersDayProps<TDate>, 'onFocus' | 'onBlur' | 'onKeyDown' | 'onDaySelect'> & {
   parentProps: DayCalendarProps<TDate>;
   day: TDate;
@@ -263,15 +260,12 @@ function WrappedDay<TDate extends unknown>({
     externalSlotProps: slotProps?.day ?? componentsProps?.day,
     additionalProps: {
       disableHighlightToday,
-      onKeyDown,
-      onFocus,
-      onBlur,
-      onDaySelect,
       showDaysOutsideCurrentMonth,
       role: 'gridcell',
       isAnimating: isMonthSwitchingAnimating,
       // it is used in date range dragging logic by accessing `dataset.timestamp`
       'data-timestamp': utils.toJsDate(day).valueOf(),
+      ...other,
     },
     ownerState: { ...parentProps, day, selected: isSelected },
   });
@@ -564,11 +558,14 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
             role="rowgroup"
             className={classes.monthContainer}
           >
-            {weeksToDisplay.map((week) => (
+            {weeksToDisplay.map((week, index) => (
               <PickersCalendarWeek
                 role="row"
                 key={`week-${week[0]}`}
                 className={classes.weekContainer}
+                // fix issue of announcing row 1 as row 2
+                // caused by week day labels row
+                aria-rowindex={index + 1}
               >
                 {displayWeekNumber && (
                   <PickersCalendarWeekNumber
@@ -581,7 +578,7 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     {localeText.calendarWeekNumberText(utils.getWeekNumber(week[0]))}
                   </PickersCalendarWeekNumber>
                 )}
-                {week.map((day) => (
+                {week.map((day, dayIndex) => (
                   <WrappedDay
                     key={(day as any).toString()}
                     parentProps={props}
@@ -595,6 +592,8 @@ export function DayCalendar<TDate>(inProps: DayCalendarProps<TDate>) {
                     isDateDisabled={isDateDisabled}
                     currentMonthNumber={currentMonthNumber}
                     isViewFocused={internalHasFocus}
+                    // fix issue of announcing column 1 as column 2 when `displayWeekNumber` is enabled
+                    aria-colindex={dayIndex + 1}
                   />
                 ))}
               </PickersCalendarWeek>

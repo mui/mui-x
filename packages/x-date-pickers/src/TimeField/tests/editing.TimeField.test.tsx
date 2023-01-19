@@ -3,7 +3,12 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse, expectInputValue } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  expectInputValue,
+  getCleanedSelectedContent,
+} from 'test/utils/pickers-utils';
 
 describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -340,6 +345,35 @@ describe('<TimeField /> - Editing', () => {
         readOnly: true,
         keyStrokes: [{ value: '1', expected: '25' }],
       });
+    });
+
+    it('should go to the next section when pressing `2` in a 12-hours format', () => {
+      render(<TimeField format={adapterToUse.formats.fullTime12h} />);
+
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 0);
+
+      // Press "2"
+      fireEvent.change(input, { target: { value: '2:mm aa' } });
+      expectInputValue(input, '02:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
+    });
+
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
+      render(<TimeField format={adapterToUse.formats.fullTime12h} />);
+
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 0);
+
+      // Press "1"
+      fireEvent.change(input, { target: { value: '1:mm aa' } });
+      expectInputValue(input, '01:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('01');
+
+      // Press "3"
+      fireEvent.change(input, { target: { value: '3:mm aa' } });
+      expectInputValue(input, '03:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
     });
   });
 

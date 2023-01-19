@@ -30,10 +30,22 @@ export const useDesktopPicker = <
   getOpenDialogAriaText,
   validator,
 }: UseDesktopPickerParams<TDate, TView, TExternalProps>) => {
-  const { slots, slotProps, className, format, readOnly, disabled, autoFocus, localeText } = props;
+  const {
+    slots,
+    slotProps,
+    className,
+    sx,
+    format,
+    label,
+    inputRef,
+    readOnly,
+    disabled,
+    autoFocus,
+    localeText,
+  } = props;
 
   const utils = useUtils<TDate>();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
 
   const {
     open,
@@ -45,7 +57,7 @@ export const useDesktopPicker = <
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
-    inputRef,
+    inputRef: internalInputRef,
     valueManager,
     validator,
     autoFocusView: true,
@@ -62,7 +74,9 @@ export const useDesktopPicker = <
       readOnly,
       disabled,
       className,
+      sx,
       format,
+      label,
       autoFocus: autoFocus && !props.open,
     },
     ownerState: props,
@@ -127,7 +141,7 @@ export const useDesktopPicker = <
 
   const Layout = slots.layout ?? PickersLayout;
 
-  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
+  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
@@ -140,7 +154,7 @@ export const useDesktopPicker = <
         />
         <PickersPopper
           role="dialog"
-          anchorEl={inputRef.current}
+          anchorEl={internalInputRef.current}
           {...actions}
           open={open}
           slots={slots}

@@ -7,6 +7,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
+import { pickersLayoutClasses } from '@mui/x-date-pickers';
 
 export default function ResponsiveDateRangePickers() {
   return (
@@ -30,6 +31,11 @@ export default function ResponsiveDateRangePickers() {
         <DemoItem label="Static variant">
           <StaticDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            sx={{
+              [`.${pickersLayoutClasses.contentWrapper}`]: {
+                alignItems: 'center',
+              },
+            }}
           />
         </DemoItem>
       </DemoContainer>
