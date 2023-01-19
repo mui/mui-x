@@ -36,7 +36,6 @@
   { "name": "getGridNumericOperators", "kind": "Variable" },
   { "name": "getGridNumericQuickFilterFn", "kind": "Variable" },
   { "name": "getGridSingleSelectOperators", "kind": "Variable" },
-  { "name": "getGridSingleSelectQuickFilterFn", "kind": "Variable" },
   { "name": "getGridStringOperators", "kind": "Variable" },
   { "name": "getGridStringQuickFilterFn", "kind": "Variable" },
   { "name": "getGroupRowIdFromPath", "kind": "Variable" },

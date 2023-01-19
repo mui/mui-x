@@ -9,7 +9,6 @@ import {
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { DateView } from '../internals/models/views';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -23,8 +22,7 @@ export interface DesktopDatePickerSlotsComponentsProps<TDate>
 
 export interface DesktopDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate>,
-    BaseNonStaticPickerExternalProps {
+    DesktopOnlyPickerProps<TDate> {
   /**
    * Years rendered per row.
    * @default 4

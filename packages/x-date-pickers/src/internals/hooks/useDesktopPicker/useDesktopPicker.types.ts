@@ -5,9 +5,9 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
-  BaseNonStaticPickerExternalProps,
   BaseNonStaticPickerProps,
   BasePickerProps,
+  BaseSingleInputNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import {
   PickersPopperSlotsComponent,
@@ -77,6 +77,7 @@ export interface ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView exten
 
 export interface DesktopOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
+    BaseSingleInputNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {
   /**
@@ -91,8 +92,7 @@ export interface UseDesktopPickerProps<
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
-    DesktopOnlyPickerProps<TDate>,
-    Pick<BaseNonStaticPickerExternalProps, 'label'> {
+    DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable component slots.
    * @default {}

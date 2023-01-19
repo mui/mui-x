@@ -9,7 +9,6 @@ import {
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { TimeView } from '../internals/models/views';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -23,8 +22,7 @@ export interface MobileTimePickerSlotsComponentsProps<TDate>
 
 export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate>,
-    BaseNonStaticPickerExternalProps {
+    MobileOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

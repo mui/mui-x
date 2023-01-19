@@ -41,15 +41,17 @@ export const useMobilePicker = <
     slots,
     slotProps: innerSlotProps,
     className,
+    sx,
     format,
+    label,
+    inputRef,
     readOnly,
     disabled,
     localeText,
-    label,
   } = props;
 
   const utils = useUtils<TDate>();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
   const labelId = useId();
 
   const {
@@ -60,7 +62,7 @@ export const useMobilePicker = <
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
-    inputRef,
+    inputRef: internalInputRef,
     valueManager,
     validator,
     autoFocusView: true,
@@ -77,7 +79,9 @@ export const useMobilePicker = <
       readOnly: readOnly ?? true,
       disabled,
       className,
+      sx,
       format,
+      label,
     },
     ownerState: props,
   });
@@ -118,7 +122,7 @@ export const useMobilePicker = <
 
   const Layout = slots.layout ?? PickersLayout;
 
-  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
+  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
 
   let labelledById = labelId;
   if (isToolbarHidden) {
