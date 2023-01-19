@@ -210,7 +210,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
   ```
 
-- The property `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
 
   ```diff
   -initialState={{ pagination: { page: 1, pageSize: 10 } }}

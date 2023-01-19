@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 6.0.0-alpha.16
+## 6.0.0-beta.1
 
 _Jan 19, 2023_
 
@@ -15,7 +15,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - 📚 Documentation improvements
 - 🐞 Bug fixes
 
-### `@mui/x-data-grid@v6.0.0-alpha.16` / `@mui/x-data-grid-pro@v6.0.0-alpha.16` / `@mui/x-data-grid-premium@v6.0.0-alpha.16`
+### `@mui/x-data-grid@v6.0.0-beta.1` / `@mui/x-data-grid-pro@v6.0.0-beta.1` / `@mui/x-data-grid-premium@v6.0.0-beta.1`
 
 #### Breaking changes
 
@@ -45,7 +45,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
   +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
   ```
 
-- The property `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed.
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed.
   Use `initialState.pagination.paginationModel` instead.
 
   ```diff
@@ -72,7 +72,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
 - [DataGridPremium] Keep focus on first selected cell (#7482) @m4theushw
 - [l10n] Update Swedish (sv-SE) locale (#7585) @MaanTyringe
 
-### `@mui/x-date-pickers@v6.0.0-alpha.16` / `@mui/x-date-pickers-pro@v6.0.0-alpha.16`
+### `@mui/x-date-pickers@v6.0.0-beta.1` / `@mui/x-date-pickers-pro@v6.0.0-beta.1`
 
 #### Breaking changes
 
@@ -132,7 +132,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
 - [pickers] Stop using the `WrapperVariantContext` in `DateRangeCalendar` (#7488) @flaviendelangle
 - [l10n] Improve Italian (it-IT) locale (#7582) @marikadeveloper
 
-### `@mui/x-codemod@v6.0.0-alpha.16`
+### `@mui/x-codemod@v6.0.0-beta.1`
 
 #### Changes
 
