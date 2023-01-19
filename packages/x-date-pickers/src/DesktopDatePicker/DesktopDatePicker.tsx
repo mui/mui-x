@@ -24,10 +24,10 @@ const DesktopDatePicker = React.forwardRef(function DesktopDatePicker<TDate>(
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const { className, sx, ...defaultizedProps } = useDatePickerDefaultizedProps<
-    TDate,
-    DesktopDatePickerProps<TDate>
-  >(inProps, 'MuiDesktopDatePicker');
+  const defaultizedProps = useDatePickerDefaultizedProps<TDate, DesktopDatePickerProps<TDate>>(
+    inProps,
+    'MuiDesktopDatePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
