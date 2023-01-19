@@ -24,7 +24,11 @@ function buildApplyDateFilterFn(filterItem, compareFn, showTime = false) {
     return null;
   }
 
-  const filterValueMs = filterItem.value.getTime();
+  // Make a copy of the date to not reset the hours in the original object
+  const filterValueCopy = new Date(filterItem.value);
+  filterValueCopy.setHours(0, 0, 0, 0);
+
+  const filterValueMs = filterValueCopy.getTime();
 
   return ({ value }) => {
     if (!value) {

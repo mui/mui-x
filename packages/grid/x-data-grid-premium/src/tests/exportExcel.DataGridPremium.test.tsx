@@ -352,42 +352,5 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
       expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
     });
-
-    // See https://github.com/mui/mui-x/issues/7391
-    it(`should export string date values`, async () => {
-      function Test() {
-        apiRef = useGridApiRef();
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGridPremium
-              columns={[
-                { field: 'day', type: 'date' },
-                { field: 'hour', type: 'dateTime' },
-              ]}
-              rows={[
-                {
-                  id: 1,
-                  day: '01-01-2022',
-                  hour: '2022-01-01T11:00:00',
-                },
-              ]}
-              apiRef={apiRef}
-            />
-          </div>
-        );
-      }
-      render(<Test />);
-
-      const workbook = await act(() => apiRef.current.getDataAsExcel());
-      const worksheet = workbook!.worksheets[0];
-
-      expect(worksheet.getCell('A1').value).to.equal('day');
-      expect(typeof worksheet.getCell('A2').value).to.equal('object');
-      expect(worksheet.getCell('A2').value instanceof Date).to.equal(true);
-
-      expect(worksheet.getCell('B1').value).to.equal('hour');
-      expect(typeof worksheet.getCell('B2').value).to.equal('object');
-      expect(worksheet.getCell('B2').value instanceof Date).to.equal(true);
-    });
   });
 });

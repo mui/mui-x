@@ -169,6 +169,20 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
   This prop accepts a callback that is called with the item from `valueOptions` and must return the string to use as new label.
 
+- The `date` and `dateTime` columns now only support `Date` objects as values. To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+
+  ```tsx
+  <DataGrid
+    columns={[
+      {
+        field: 'date',
+        type: 'date',
+        valueGetter: (params) => new Date(params.value),
+      },
+    ]}
+  />
+  ```
+
 ### Column menu
 
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
