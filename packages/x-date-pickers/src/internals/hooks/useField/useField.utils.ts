@@ -537,11 +537,19 @@ export const getSectionsBoundaries = <TDate, TSection extends FieldSection>(
           ? utils.getDaysInMonth(currentDate)
           : maxDaysInMonth,
     }),
-    hours: () => ({
-      minimum: 0,
-      // Assumption: All days have the same amount of hours
-      maximum: utils.getHours(endOfYear),
-    }),
+    hours: (currentDate, section) => {
+      const hoursInDay = utils.getHours(endOfYear);
+      const hasMeridiem =
+        utils.formatByString(utils.endOfDay(today), section.formatValue) !== hoursInDay.toString();
+
+      return {
+        minimum: 0,
+        // Assumption: All days have the same amount of hours
+        maximum: hasMeridiem
+          ? Number(utils.formatByString(utils.startOfDay(today), section.formatValue))
+          : hoursInDay,
+      };
+    },
     minutes: () => ({
       minimum: 0,
       // Assumption: All years have the same amount of minutes
