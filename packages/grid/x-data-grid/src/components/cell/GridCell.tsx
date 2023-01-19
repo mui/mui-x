@@ -41,6 +41,7 @@ export interface GridCellProps<V = any, F = V> {
   tabIndex: 0 | -1;
   colSpan?: number;
   disableDragEvents?: boolean;
+  isNotVisible?: boolean;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
@@ -112,6 +113,7 @@ function GridCell(props: GridCellProps) {
     row,
     colSpan,
     disableDragEvents,
+    isNotVisible,
     onClick,
     onDoubleClick,
     onMouseDown,
@@ -176,22 +178,25 @@ function GridCell(props: GridCellProps) {
   );
 
   const style = React.useMemo(() => {
-    const styles = {
+    const cellStyle = {
       minWidth: width,
       maxWidth: width,
       minHeight: height,
       maxHeight: height === 'auto' ? 'none' : height, // max-height doesn't support "auto"
     };
-    //
-    if (width === 0) {
+
+    if (isNotVisible) {
       return {
-        ...styles,
+        ...cellStyle,
         padding: 0,
         opacity: 0,
+        minWidth: 0,
+        maxWidth: 0,
       };
     }
-    return styles;
-  }, [width, height]);
+    return cellStyle;
+  }, [width, height, isNotVisible]);
+
   React.useEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
@@ -309,6 +314,7 @@ GridCell.propTypes = {
   hasFocus: PropTypes.bool,
   height: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
   isEditable: PropTypes.bool,
+  isNotVisible: PropTypes.bool,
   isSelected: PropTypes.bool,
   onClick: PropTypes.func,
   onDoubleClick: PropTypes.func,

@@ -391,6 +391,20 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   };
 
+  const indexOfColumnWithFocusedCell = React.useMemo<number>(() => {
+    if (cellFocus !== null) {
+      return visibleColumns.findIndex((column) => column.field === cellFocus.field);
+    }
+    return -1;
+  }, [cellFocus, visibleColumns]);
+
+  const indexOfRowWithFocusedCell = React.useMemo<number>(() => {
+    if (cellFocus !== null) {
+      return currentPage.rows.findIndex((row) => row.id === cellFocus.id);
+    }
+    return -1;
+  }, [cellFocus, currentPage.rows]);
+
   const getRows = (
     params: {
       renderContext: GridRenderContext | null;
@@ -417,9 +431,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
     const columnBuffer = !disableVirtualization ? rootProps.columnBuffer : 0;
-
-    let isRowWithFocusedCellRendered = false;
-    const { cell } = apiRef.current.state.focus;
 
     const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
       firstIndex: nextRenderContext.firstRowIndex,
@@ -448,10 +459,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
-        if (cell && row.id === cell?.id) {
-          isRowWithFocusedCellRendered = true;
-        }
-
         renderedRows.push(row);
         apiRef.current.calculateColSpan({
           rowId: row.id,
@@ -460,29 +467,31 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           columns: visibleColumns,
         });
       }
+    }
+    // If the selected row is not within the current range of rows being displayed,
+    // we need to render it at either the top or bottom of the rows,
+    // depending on whether it is above or below the range.
 
-      // If the selected row is not within the current range of rows being displayed,
-      // we need to render it at either the top or bottom of the rows,
-      // depending on whether it is above or below the range.
-      if (!isRowWithFocusedCellRendered && cell && !disableVirtualization) {
-        const rows = currentPage.rows.filter((row) => row.id === cell.id);
-        const focusedRow = rows.length > 0 && rows[0];
+    let isRowWithFocusedCellNotInRange = false;
 
-        if (focusedRow) {
-          const index = currentPage.rows.indexOf(focusedRow);
-
-          if (index > firstRowToRender) {
-            renderedRows.push(focusedRow);
-          } else {
-            renderedRows.unshift(focusedRow);
-          }
-          apiRef.current.calculateColSpan({
-            rowId: focusedRow.id,
-            minFirstColumn,
-            maxLastColumn,
-            columns: visibleColumns,
-          });
+    if (indexOfRowWithFocusedCell > -1) {
+      const rowWithFocusedCell = currentPage.rows[indexOfRowWithFocusedCell];
+      if (
+        firstRowToRender > indexOfRowWithFocusedCell ||
+        lastRowToRender < indexOfRowWithFocusedCell
+      ) {
+        isRowWithFocusedCellNotInRange = true;
+        if (indexOfRowWithFocusedCell > firstRowToRender) {
+          renderedRows.push(rowWithFocusedCell);
+        } else {
+          renderedRows.unshift(rowWithFocusedCell);
         }
+        apiRef.current.calculateColSpan({
+          rowId: rowWithFocusedCell.id,
+          minFirstColumn,
+          maxLastColumn,
+          columns: visibleColumns,
+        });
       }
     }
 
@@ -507,20 +516,24 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     // If the selected column is not within the current range of columns being displayed,
     // we need to render it at either the left or right of the columns,
     // depending on whether it is above or below the range.
-    const isAllColumnRendered =
-      maxLastColumn - minFirstColumn === lastColumnToRender - firstColumnToRender;
-    let isColumnWithFocusedCellRendered = false;
-    if (cell && !disableVirtualization && !isAllColumnRendered) {
-      const focusedColumnIndex = visibleColumns.findIndex((column) => column.field === cell.field);
-      if (focusedColumnIndex > -1) {
-        const focusedColumn = visibleColumns[focusedColumnIndex];
-
-        if (firstColumnToRender > focusedColumnIndex && focusedColumnIndex >= minFirstColumn) {
+    let isColumnWithFocusedCellNotInRange = false;
+    if (indexOfColumnWithFocusedCell > -1) {
+      const focusedColumn = visibleColumns[indexOfColumnWithFocusedCell];
+      if (
+        firstColumnToRender > indexOfColumnWithFocusedCell ||
+        lastColumnToRender < indexOfColumnWithFocusedCell
+      ) {
+        isColumnWithFocusedCellNotInRange = true;
+        if (
+          firstColumnToRender > indexOfColumnWithFocusedCell &&
+          indexOfColumnWithFocusedCell >= minFirstColumn
+        ) {
           renderedColumns.unshift(focusedColumn);
-          isColumnWithFocusedCellRendered = true;
-        } else if (lastColumnToRender < focusedColumnIndex && focusedColumnIndex < maxLastColumn) {
+        } else if (
+          lastColumnToRender < indexOfColumnWithFocusedCell &&
+          indexOfColumnWithFocusedCell < maxLastColumn
+        ) {
           renderedColumns.push(focusedColumn);
-          isColumnWithFocusedCellRendered = true;
         }
       }
     }
@@ -529,11 +542,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     for (let i = 0; i < renderedRows.length; i += 1) {
       const { id, model } = renderedRows[i];
-      const isRowVisible = !isRowWithFocusedCellRendered && cell && cell.id === id;
-      const lastVisibleRowIndex =
-        !isRowWithFocusedCellRendered && cell
-          ? firstRowToRender + i === currentPage.rows.length
-          : firstRowToRender + i === currentPage.rows.length - 1;
+      const isRowVisible = isRowWithFocusedCellNotInRange && cellFocus!.id === id;
+      const lastVisibleRowIndex = isRowWithFocusedCellNotInRange
+        ? firstRowToRender + i === currentPage.rows.length
+        : firstRowToRender + i === currentPage.rows.length - 1;
       const baseRowHeight = !apiRef.current.rowHasAutoHeight(id)
         ? apiRef.current.unstable_getRowHeight(id)
         : 'auto';
@@ -550,8 +562,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           key={id}
           row={model}
           rowId={id}
-          isColumnWithFocusedCellRendered={isColumnWithFocusedCellRendered}
-          visible={!isRowVisible}
+          isColumnWithFocusedCellNotInRange={isColumnWithFocusedCellNotInRange}
+          isNotVisible={isRowVisible}
           rowHeight={baseRowHeight}
           cellFocus={cellFocus} // TODO move to inside the row
           cellTabIndex={cellTabIndex} // TODO move to inside the row
