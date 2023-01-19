@@ -7,16 +7,17 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { ValueOptions } from '../../models/colDef/gridColDef';
+import { GridSingleSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
 import {
-  getLabelFromValueOption,
   getValueFromValueOptions,
+  isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export interface GridEditSingleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'> {
+    Omit<SelectProps, 'id' | 'tabIndex' | 'value'>,
+    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'> {
   /**
    * Callback called when the value is changed by the user.
    * @param {SelectChangeEvent<any>} event The event source of the callback.
@@ -28,12 +29,6 @@ export interface GridEditSingleSelectCellProps
    * If true, the select opens by default.
    */
   initialOpen?: boolean;
-  /**
-   * Used to determine the text displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel?: (value: ValueOptions) => string;
 }
 
 function isKeyboardEvent(event: any): event is React.KeyboardEvent {
@@ -61,7 +56,8 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
-    getOptionLabel = getLabelFromValueOption,
+    getOptionLabel: getOptionLabelProp,
+    getOptionValue: getOptionValueProp,
     ...other
   } = props;
 
@@ -73,18 +69,34 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
-  let valueOptions: Array<ValueOptions>;
-  if (typeof colDef.valueOptions === 'function') {
-    valueOptions = colDef.valueOptions!({ id, row, field });
+  let resolvedColumn: GridSingleSelectColDef | null = null;
+  if (isSingleSelectColDef(colDef)) {
+    resolvedColumn = colDef;
+  }
+
+  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+
+  let valueOptions: Array<ValueOptions> | null = null;
+  if (typeof resolvedColumn?.valueOptions === 'function') {
+    valueOptions = resolvedColumn?.valueOptions!({ id, row, field });
   } else {
-    valueOptions = colDef.valueOptions!;
+    valueOptions = resolvedColumn?.valueOptions!;
   }
 
   const handleChange: SelectProps['onChange'] = async (event) => {
+    if (!isSingleSelectColDef(colDef) || !valueOptions) {
+      return;
+    }
+
     setOpen(false);
     const target = event.target as HTMLInputElement;
     // NativeSelect casts the value to a string.
-    const formattedTargetValue = getValueFromValueOptions(target.value, valueOptions);
+    const formattedTargetValue = getValueFromValueOptions(
+      target.value,
+      valueOptions,
+      getOptionValue,
+    );
 
     if (onValueChange) {
       await onValueChange(event, formattedTargetValue);
@@ -118,6 +130,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
 
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
 
+  if (!valueOptions || !resolvedColumn) {
+    return null;
+  }
+
   return (
     <rootProps.components.BaseSelect
       ref={ref}
@@ -136,7 +152,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       {...rootProps.componentsProps?.baseSelect}
     >
       {valueOptions.map((valueOption) => {
-        const value = typeof valueOption === 'object' ? valueOption.value : valueOption;
+        const value = getOptionValue(valueOption);
 
         return (
           <OptionComponent key={value} value={value}>
@@ -175,11 +191,17 @@ GridEditSingleSelectCell.propTypes = {
    */
   formattedValue: PropTypes.any,
   /**
-   * Used to determine the text displayed for a given value option.
+   * Used to determine the label displayed for a given value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
    */
   getOptionLabel: PropTypes.func,
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue: PropTypes.func,
   /**
    * If true, the cell is the active element.
    */
