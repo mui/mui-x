@@ -14,14 +14,14 @@ packageName: '@mui/x-date-pickers'
 
 By default, pickers are made of 4 sub elements present in the following order:
 
-- The **toolbar** displaying the selected date. Can be enforced with `showToolbar` prop.
+- The **toolbar** displaying the selected date. Can be enforced with `slotProps: { toolbar: { hidden: false } }` prop.
 - The **content** displaying the current view. Can be a calendar, or a clock.
-- The **tabs** allowing to switch between day and time views in Date Time Pickers.
-- The **action bar** allowing some interactions. Can be added with [`componentsProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.
+- The **tabs** allowing to switch between day and time views in Date Time Pickers. Can be enforced with `slotProps: { tabs: { hidden: false } }` prop.
+- The **action bar** allowing some interactions. Can be added with [`slotProps.actionBar`](/x/react-date-pickers/custom-components/#action-bar) prop.
 
 By default the `content` and `tabs` are wrapped together in a `contentWrapper` to simplify the layout.
 
-You can [customize those components](/x/react-date-pickers/custom-components/) individually by using `components` and `componentsProps`.
+You can [customize those components](/x/react-date-pickers/custom-components/) individually by using `slots` and `slotProps`.
 
 ## Orientation
 
@@ -72,17 +72,27 @@ Use the `usePickerLayout` hook to get the subcomponents React nodes.
 Then you can fully customize the DOM structure.
 
 ```jsx
-const { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
+import {
+  usePickerLayout,
+  PickersLayoutRoot,
+  pickersLayoutClasses,
+  PickersLayoutContentWrapper,
+} from '@mui/x-date-pickers/PickersLayout';
 
-const MyCustomLayout = (props) => {
-  const { toolbar, tabs, content, actionBar} = usePickerLayout(props);
+function MyCustomLayout(props) {
+  const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   // Put the action bar before the content
-  return <div>
-    {toolbar}
-    {actionBar}
-    {content}
-  </div>
+  return (
+    <PickersLayoutRoot className={pickersLayoutClasses.root} ownerState={props}>
+      {toolbar}
+      {actionBar}
+      <PickersLayoutContentWrapper className={pickersLayoutClasses.contentWrapper}>
+        {tabs}
+        {content}
+      </PickersLayoutContentWrapper>
+    </PickersLayoutRoot>
+  );
 }
 ```
 

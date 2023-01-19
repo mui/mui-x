@@ -70,7 +70,7 @@ const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeVie
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
   const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
-  const { sx, className, ref } = props;
+  const { sx, className, ref, wrapperVariant } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -84,8 +84,17 @@ const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeVie
     >
       {toolbar}
       <PickersLayoutContentWrapper className={classes.contentWrapper}>
-        {tabs}
-        {content}
+        {wrapperVariant === 'desktop' ? (
+          <React.Fragment>
+            {content}
+            {tabs}
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            {tabs}
+            {content}
+          </React.Fragment>
+        )}
       </PickersLayoutContentWrapper>
       {actionBar}
     </PickersLayoutRoot>
@@ -103,11 +112,13 @@ PickersLayout.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
@@ -126,7 +137,16 @@ PickersLayout.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
-  showToolbar: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

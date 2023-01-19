@@ -43,6 +43,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     minTime,
     maxTime,
     minutesStep,
+    shouldDisableClock,
     shouldDisableTime,
     disableIgnoringDatePartForTimeValidation,
     selectedSections,
@@ -66,6 +67,7 @@ export const useTimeField = <TDate, TChildProps extends {}>({
       minTime,
       maxTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
@@ -75,6 +77,6 @@ export const useTimeField = <TDate, TChildProps extends {}>({
     valueManager: singleItemValueManager,
     fieldValueManager: singleItemFieldValueManager,
     validator: validateTime,
-    supportedDateSections: ['hours', 'minutes', 'seconds', 'meridiem'],
+    valueType: 'time',
   });
 };

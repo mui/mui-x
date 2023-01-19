@@ -6,7 +6,6 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '行がありません。',
   noResultsOverlayLabel: '結果がありません。',
-  errorOverlayDefaultLabel: 'エラーが発生しました。',
 
   // Density selector toolbar button text
   toolbarDensity: '行間隔',
@@ -48,7 +47,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'フィルター追加',
   filterPanelDeleteIconLabel: '削除',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'オペレータ',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',

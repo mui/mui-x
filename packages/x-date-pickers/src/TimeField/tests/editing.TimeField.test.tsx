@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { Unstable_TimeField as TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
+import { TimeField, TimeFieldProps } from '@mui/x-date-pickers/TimeField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, adapterToUse, expectInputValue } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  adapterToUse,
+  expectInputValue,
+  getCleanedSelectedContent,
+} from 'test/utils/pickers-utils';
 
 describe('<TimeField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
@@ -45,20 +50,21 @@ describe('<TimeField /> - Editing', () => {
   };
 
   const testChange = <TDate extends unknown>({
-    inputValue,
-    expectedValue,
+    keyStrokes,
     cursorPosition = 1,
     ...props
   }: TimeFieldProps<TDate> & {
-    inputValue: string;
-    expectedValue: string;
+    keyStrokes: { value: string; expected: string }[];
     cursorPosition?: number;
   }) => {
     render(<TimeField {...props} />);
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
-    fireEvent.change(input, { target: { value: inputValue } });
-    expectInputValue(input, expectedValue);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(input, keyStroke.expected);
+    });
   };
 
   describe('key: ArrowDown', () => {
@@ -295,11 +301,10 @@ describe('<TimeField /> - Editing', () => {
   });
 
   describe('Digit editing', () => {
-    it('should set the day to the digit pressed when no digit no value is provided', () => {
+    it('should set the minute to the digit pressed when no digit no value is provided', () => {
       testChange({
         format: adapterToUse.formats.minutes,
-        inputValue: '1',
-        expectedValue: '01',
+        keyStrokes: [{ value: '1', expected: '01' }],
       });
     });
 
@@ -307,17 +312,21 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.minutes,
         defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 3, 32)),
-        inputValue: '1',
-        expectedValue: '31',
+        keyStrokes: [
+          { value: '1', expected: '01' },
+          { value: '2', expected: '12' },
+        ],
       });
     });
 
-    it('should set the day to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
+    it('should set the minute to the digit pressed if the concatenate exceeds the maximum value for the section', () => {
       testChange({
         format: adapterToUse.formats.minutes,
-        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 8, 32)),
-        inputValue: '1',
-        expectedValue: '01',
+        defaultValue: adapterToUse.date(new Date(2022, 5, 15, 14, 3, 32)),
+        keyStrokes: [
+          { value: '7', expected: '07' },
+          { value: '2', expected: '02' },
+        ],
       });
     });
 
@@ -325,8 +334,7 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.minutes,
         readOnly: true,
-        inputValue: '1',
-        expectedValue: 'mm',
+        keyStrokes: [{ value: '1', expected: 'mm' }],
       });
     });
 
@@ -335,9 +343,37 @@ describe('<TimeField /> - Editing', () => {
         format: adapterToUse.formats.minutes,
         defaultValue: adapterToUse.date(),
         readOnly: true,
-        inputValue: '1',
-        expectedValue: '25',
+        keyStrokes: [{ value: '1', expected: '25' }],
       });
+    });
+
+    it('should go to the next section when pressing `2` in a 12-hours format', () => {
+      render(<TimeField format={adapterToUse.formats.fullTime12h} />);
+
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 0);
+
+      // Press "2"
+      fireEvent.change(input, { target: { value: '2:mm aa' } });
+      expectInputValue(input, '02:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
+    });
+
+    it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
+      render(<TimeField format={adapterToUse.formats.fullTime12h} />);
+
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 0);
+
+      // Press "1"
+      fireEvent.change(input, { target: { value: '1:mm aa' } });
+      expectInputValue(input, '01:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('01');
+
+      // Press "3"
+      fireEvent.change(input, { target: { value: '3:mm aa' } });
+      expectInputValue(input, '03:mm aa');
+      expect(getCleanedSelectedContent(input)).to.equal('mm');
     });
   });
 
@@ -346,8 +382,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         readOnly: true,
-        inputValue: 'hh:mm a', // Press "a"
-        expectedValue: 'hh:mm aa',
+        // Press "a"
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm aa' }],
       });
     });
 
@@ -356,8 +392,8 @@ describe('<TimeField /> - Editing', () => {
         format: adapterToUse.formats.fullTime12h,
         defaultValue: adapterToUse.date(),
         readOnly: true,
-        inputValue: '02:25 a',
-        expectedValue: '02:25 pm',
+        // Press "a"
+        keyStrokes: [{ value: '02:25 a', expected: '02:25 pm' }],
       });
     });
 
@@ -365,8 +401,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         cursorPosition: 17,
-        inputValue: 'hh:mm a', // Press "a"
-        expectedValue: 'hh:mm am',
+        // Press "a"
+        keyStrokes: [{ value: 'hh:mm a', expected: 'hh:mm am' }],
       });
     });
 
@@ -374,8 +410,8 @@ describe('<TimeField /> - Editing', () => {
       testChange({
         format: adapterToUse.formats.fullTime12h,
         cursorPosition: 17,
-        inputValue: 'hh:mm p', // Press "p"
-        expectedValue: 'hh:mm pm',
+        // Press "p"
+        keyStrokes: [{ value: 'hh:mm p', expected: 'hh:mm pm' }],
       });
     });
 
@@ -384,8 +420,8 @@ describe('<TimeField /> - Editing', () => {
         format: adapterToUse.formats.fullTime12h,
         defaultValue: adapterToUse.date(),
         cursorPosition: 17,
-        inputValue: '02:25 a', // Press "a"
-        expectedValue: '02:25 am',
+        // Press "a"
+        keyStrokes: [{ value: '02:25 a', expected: '02:25 am' }],
       });
     });
 
@@ -394,8 +430,8 @@ describe('<TimeField /> - Editing', () => {
         format: adapterToUse.formats.fullTime12h,
         defaultValue: adapterToUse.date(new Date(2022, 5, 15, 2, 25, 32)),
         cursorPosition: 17,
-        inputValue: '02:25 p', // Press "p"
-        expectedValue: '02:25 pm',
+        // Press "p"
+        keyStrokes: [{ value: '02:25 p', expected: '02:25 pm' }],
       });
     });
   });

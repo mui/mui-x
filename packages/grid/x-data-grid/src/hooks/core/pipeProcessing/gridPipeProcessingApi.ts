@@ -4,6 +4,7 @@ import {
   GridScrollParams,
   GridColDef,
   GridCellCoordinates,
+  GridCellParams,
 } from '../../../models';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
 import {
@@ -47,6 +48,10 @@ export interface GridPipeProcessingLookup {
   };
   cellClassName: { value: string[]; context: GridCellCoordinates };
   isCellSelected: { value: boolean; context: GridCellCoordinates };
+  canUpdateFocus: {
+    value: boolean;
+    context: { event: MouseEvent | React.KeyboardEvent; cell: GridCellParams | null };
+  };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (

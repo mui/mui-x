@@ -106,8 +106,8 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const prevRenderContext = React.useRef<GridRenderContext | null>(renderContext);
   const prevScrollLeft = React.useRef(0);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
-  const headerHeight = Math.floor(rootProps.headerHeight * densityFactor);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.columnHeaderHeight);
+  const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
   React.useEffect(() => {
     apiRef.current.columnHeadersContainerElementRef!.current!.scrollLeft = 0;
@@ -324,8 +324,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           colDef={colDef}
           colIndex={columnIndex}
           isResizing={resizeCol === colDef.field}
-          isLastColumn={columnIndex === visibleColumns.length - 1}
-          extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           {...other}
@@ -447,7 +445,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
                   colIndex={colIndex}
                   depth={depthIndex}
                   isLastColumn={colIndex === visibleColumns.length - fields.length}
-                  extendRowFullWidth={!rootProps.disableExtendRowFullWidth}
                   maxDepth={headerToRender.length}
                   height={headerHeight}
                   hasFocus={hasFocus}

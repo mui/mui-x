@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
-import { PickerStateValueManager } from '../usePickerState';
+import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -14,7 +14,7 @@ export interface UseFieldParams<
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate, InferError<TInternalProps>>;
+  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
   validator: Validator<
     TValue,
@@ -22,7 +22,7 @@ export interface UseFieldParams<
     InferError<TInternalProps>,
     UseFieldValidationProps<TValue, TInternalProps>
   >;
-  supportedDateSections: MuiDateSectionName[];
+  valueType: FieldValueType;
 }
 
 export interface UseFieldInternalProps<TValue, TError> {
@@ -145,7 +145,7 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
-export type FieldBoundaries<TDate, TSection extends FieldSection> = Record<
+export type FieldSectionsValueBoundaries<TDate, TSection extends FieldSection> = Record<
   MuiDateSectionName,
   (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
 >;
@@ -342,6 +342,8 @@ export type AvailableAdjustKeyCode =
   | 'PageDown'
   | 'Home'
   | 'End';
+
+export type FieldValueType = 'date' | 'time' | 'date-time';
 
 export type SectionNeighbors = {
   [sectionIndex: number]: {

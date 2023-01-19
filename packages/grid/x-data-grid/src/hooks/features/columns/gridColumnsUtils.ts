@@ -8,7 +8,7 @@ import {
   GridColumnsInitialState,
 } from './gridColumnsInterfaces';
 import { GridColumnTypesRecord } from '../../../models';
-import { DEFAULT_GRID_COL_TYPE_KEY, getGridDefaultColumnTypes } from '../../../colDef';
+import { DEFAULT_GRID_COL_TYPE_KEY } from '../../../colDef';
 import { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -21,27 +21,7 @@ import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridCo
 
 export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
 
-export type GridColumnDimensionProperties = typeof COLUMNS_DIMENSION_PROPERTIES[number];
-
-export const computeColumnTypes = (customColumnTypes: GridColumnTypesRecord = {}) => {
-  const mergedColumnTypes: GridColumnTypesRecord = { ...getGridDefaultColumnTypes() };
-
-  Object.entries(customColumnTypes).forEach(([colType, colTypeDef]) => {
-    if (mergedColumnTypes[colType]) {
-      mergedColumnTypes[colType] = {
-        ...mergedColumnTypes[colType],
-        ...colTypeDef,
-      };
-    } else {
-      mergedColumnTypes[colType] = {
-        ...mergedColumnTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
-        ...colTypeDef,
-      };
-    }
-  });
-
-  return mergedColumnTypes;
-};
+export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
 /**
  * Computes width for flex columns.

@@ -6,7 +6,6 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Không có dữ liệu',
   noResultsOverlayLabel: 'Không tìm thấy kết quả.',
-  errorOverlayDefaultLabel: 'Có lỗi xảy ra.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Độ giãn',
@@ -49,7 +48,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Thêm bộ lọc',
   filterPanelDeleteIconLabel: 'Xóa',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Toán tử',
   filterPanelOperatorAnd: 'Và',
   filterPanelOperatorOr: 'Hoặc',
