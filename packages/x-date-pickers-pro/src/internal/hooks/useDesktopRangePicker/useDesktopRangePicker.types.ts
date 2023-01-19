@@ -14,9 +14,11 @@ import {
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
   ExportedBaseToolbarProps,
-  DesktopOnlyPickerProps,
   UsePickerViewsProps,
   UncapitalizeObjectKeys,
+  BaseNonStaticPickerProps,
+  UsePickerValueNonStaticProps,
+  UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange, RangePositionProps } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -50,7 +52,15 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface DesktopRangeOnlyPickerProps<TDate> extends DesktopOnlyPickerProps<TDate> {}
+export interface DesktopRangeOnlyPickerProps<TDate>
+  extends BaseNonStaticPickerProps,
+    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerViewsNonStaticProps {
+  /**
+   * If `true`, the start `input` element is focused during the first mount.
+   */
+  autoFocus?: boolean;
+}
 
 export interface UseDesktopRangePickerProps<
   TDate,

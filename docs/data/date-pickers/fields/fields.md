@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Fields components
-components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, MultiInputDateTimeRangeField
+components: DateField, TimeField, DateTimeField, MultiInputDateRangeField, SingleInputDateRangeField, MultiInputTimeRangeField, SingleInputTimeRangeField, MultiInputDateTimeRangeField, SingleInputDateTimeRangeField
 githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
@@ -15,16 +15,6 @@ packageName: '@mui/x-date-pickers'
 The fields are React components that let you enter a date or time with the keyboard, without using any popover or modal UI.
 They provide refined navigation through arrow keys and support advanced behaviors like localization and validation.
 
-:::warning
-The field components requires an adapter imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
-
-```diff
--import AdapterDayjs from '@date-io/dayjs';
-+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-```
-
-:::
-
 ### Fields to edit a single element
 
 {{"demo": "SingleDateFieldExamples.js", "defaultCodeOpen": false}}
@@ -33,23 +23,13 @@ The field components requires an adapter imported from `@mui/x-date-pickers` or 
 
 All fields to edit a range are available in a single input version and in a multi input version.
 
-:::info
-The single input version of the Time Range Field and the Date Time Range Field will soon be available.
-:::
-
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
-### Usage with the pickers
+:::warning
+The single input range fields are not supported on the range pickers yet (you can't use `SingleInputDateRangeField` in `DateRangePicker`). It's coming.
 
-The picker components (`DatePicker`, `DestkopDatePicker`, `MobileDatePicker`, `DateTimePicker`, ...) do not use the field components yet.
-
-New pickers using them will be released in a few months.
-
-## Form props
-
-The standard form attributes (`disabled`, `readOnly`) are supported by all the field components:
-
-{{"demo": "FormProps.js", "defaultCodeOpen": false}}
+👍 Upvote [issue #7606](https://github.com/mui/mui-x/issues/7606) if you want to see it land faster.
+:::
 
 ## Advanced
 
@@ -92,12 +72,13 @@ In the example below, `onChange` will only be fired if the date is valid and its
 
 Use the `selectedSections` and `onSelectedSectionsChange` props to control which sections are currently being selected.
 
-This prop accepts four formats:
+This prop accepts the following formats:
 
 1. If a number is provided, the section at this index will be selected.
-2. If an object with a `startIndex` and `endIndex` fields are provided, the sections between those two indexes will be selected.
-3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
-4. If `null` is provided, no section will be selected
+2. If `"all"` is provided, all the sections will be selected.
+3. If an object with a `startIndex` and `endIndex` fields are provided, the sections between those two indexes will be selected.
+4. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+5. If `null` is provided, no section will be selected
 
 :::warning
 You need to make sure the input is focused before imperatively updating the selected sections.

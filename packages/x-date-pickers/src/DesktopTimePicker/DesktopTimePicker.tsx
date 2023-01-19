@@ -22,10 +22,10 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all time pickers
-  const { className, sx, ...defaultizedProps } = useTimePickerDefaultizedProps<
-    TDate,
-    DesktopTimePickerProps<TDate>
-  >(inProps, 'MuiDesktopTimePicker');
+  const defaultizedProps = useTimePickerDefaultizedProps<TDate, DesktopTimePickerProps<TDate>>(
+    inProps,
+    'MuiDesktopTimePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: null,
@@ -49,10 +49,6 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
       toolbar: {

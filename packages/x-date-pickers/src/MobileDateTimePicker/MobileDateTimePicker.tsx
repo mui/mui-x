@@ -27,7 +27,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateTimePickerDefaultizedProps<
+  const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     MobileDateTimePickerProps<TDate>
   >(inProps, 'MuiMobileDateTimePicker');
@@ -56,10 +56,6 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
       toolbar: {

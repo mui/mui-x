@@ -206,7 +206,12 @@ export const useGridFocus = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
-      if (event.key === 'Enter' || event.key === 'Tab' || isNavigationKey(event.key)) {
+      if (
+        event.key === 'Enter' ||
+        event.key === 'Tab' ||
+        event.key === 'Shift' ||
+        isNavigationKey(event.key)
+      ) {
         return;
       }
       apiRef.current.setCellFocus(params.id, params.field);
@@ -264,6 +269,15 @@ export const useGridFocus = (
       lastClickedCell.current = null;
 
       const focusedCell = gridFocusCellSelector(apiRef);
+
+      const canUpdateFocus = apiRef.current.unstable_applyPipeProcessors('canUpdateFocus', true, {
+        event,
+        cell: cellParams,
+      });
+
+      if (!canUpdateFocus) {
+        return;
+      }
 
       if (!focusedCell) {
         if (cellParams) {

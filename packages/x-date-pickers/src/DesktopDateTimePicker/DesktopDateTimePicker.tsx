@@ -23,7 +23,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
   const localeText = useLocaleText<TDate>();
 
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateTimePickerDefaultizedProps<
+  const defaultizedProps = useDateTimePickerDefaultizedProps<
     TDate,
     DesktopDateTimePickerProps<TDate>
   >(inProps, 'MuiDesktopDateTimePicker');
@@ -54,10 +54,6 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
         ampm: defaultizedProps.ampm,
       }),
       toolbar: {

@@ -28,10 +28,10 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
   const utils = useUtils<TDate>();
 
   // Props with the default values common to all date pickers
-  const { className, sx, ...defaultizedProps } = useDatePickerDefaultizedProps<
-    TDate,
-    MobileDatePickerProps<TDate>
-  >(inProps, 'MuiMobileDatePicker');
+  const defaultizedProps = useDatePickerDefaultizedProps<TDate, MobileDatePickerProps<TDate>>(
+    inProps,
+    'MuiMobileDatePicker',
+  );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateView, any, {}> = {
     day: renderDateViewCalendar,
@@ -55,10 +55,6 @@ const MobileDatePicker = React.forwardRef(function MobileDatePicker<TDate>(
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
         ref,
-        className,
-        sx,
-        inputRef: defaultizedProps.inputRef,
-        label: defaultizedProps.label,
       }),
       toolbar: {
         hidden: false,

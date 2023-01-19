@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/utils';
-import { getValueFromOption } from './filterPanelUtils';
+import { getLabelFromValueOption, getValueFromOption } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import type { ValueOptions } from '../../../models/colDef/gridColDef';
@@ -18,12 +18,18 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'id'
       | 'filterOptions'
       | 'isOptionEqualToValue'
-      | 'limitTags'
       | 'multiple'
       | 'color'
+      | 'getOptionLabel'
     >,
     GridFilterInputValueProps {
   type?: 'singleSelect';
+  /**
+   * Used to determine the text displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel?: (value: ValueOptions) => string;
 }
 
 const isOptionEqualToValue: AutocompleteProps<
@@ -48,6 +54,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     helperText,
     size,
     variant = 'standard',
+    getOptionLabel = getLabelFromValueOption,
     ...other
   } = props;
   const TextFieldProps = {
@@ -76,17 +83,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const resolvedFormattedValueOptions = React.useMemo(() => {
     return resolvedValueOptions?.map(getValueFromOption);
   }, [resolvedValueOptions]);
-
-  const { valueFormatter, field } = apiRef.current.getColumn(item.field);
-
-  const filterValueOptionFormatter = (option: ValueOptions) => {
-    if (typeof option === 'object') {
-      return option.label;
-    }
-    return valueFormatter && option !== ''
-      ? valueFormatter({ value: option, field, api: apiRef.current })
-      : option;
-  };
 
   // The value is computed from the item.value and used directly
   // If it was done by a useEffect/useState, the Autocomplete could receive incoherent value and options
@@ -132,19 +128,19 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   return (
     <Autocomplete<ValueOptions, true, false, true>
       multiple
-      limitTags={1}
       options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
       id={id}
       value={filterValues}
       onChange={handleChange}
+      getOptionLabel={getOptionLabel}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
           <Chip
             variant="outlined"
             size="small"
-            label={filterValueOptionFormatter(option)}
+            label={getOptionLabel(option)}
             {...getTagProps({ index })}
           />
         ))
@@ -182,6 +178,12 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Used to determine the text displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel: PropTypes.func,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

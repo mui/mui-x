@@ -52,7 +52,7 @@ This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
-Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
 ## Form props

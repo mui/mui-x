@@ -20,7 +20,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
   ref: React.Ref<HTMLDivElement>,
 ) {
   // Props with the default values common to all date time pickers
-  const { className, sx, ...defaultizedProps } = useDateRangePickerDefaultizedProps<
+  const defaultizedProps = useDateRangePickerDefaultizedProps<
     TDate,
     DesktopDateRangePickerProps<TDate>
   >(inProps, 'MuiDesktopDateRangePicker');
@@ -45,8 +45,6 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        className,
-        sx,
         ref,
       }),
       toolbar: {
