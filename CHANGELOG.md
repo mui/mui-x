@@ -60,11 +60,40 @@ Use `paginationModel` and `onPaginationModelChange` instead.
   +<DataGrid pageSizeOptions={[10, 20, 50]} />
   ```
 
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
+To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
+The `components.ErrorOverlay` slot was also removed.
+
+- The `componentError` event was removed.
+Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+
+- The `apiRef.current.showError` method was removed.
+The UI for errors is no longer handled by the grid.
+
+- The `GridErrorOverlay` component was removed.
+
+- The `date` and `dateTime` columns now only support `Date` objects as values.
+To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+
+  ```tsx
+  <DataGrid
+    columns={[
+      {
+        field: 'date',
+        type: 'date',
+        valueGetter: (params) => new Date(params.value),
+      },
+    ]}
+  />
+  ```
+
 #### Changes
 
 - [DataGrid] Add default value formatter to `singleSelect` (#7290) @m4theushw
 - [DataGrid] Fix flickering on grid scroll (#7549) @cherniavskii
 - [DataGrid] Merge `page` and `pageSize` props into `paginationModel` (#7147) @MBilalShafi
+- [DataGrid] Only support `Date` as value in `date` and `dateTime` column types (#7594) @cherniavskii
+- [DataGrid] Remove error boundary (#7579) @cherniavskii
 - [DataGrid] Remove `GridCellIdentifier` redundant type (#7578) @MBilalShafi
 - [DataGrid] Remove `disableExtendRowFullWidth` prop (#7373) @MBilalShafi
 - [DataGrid] Remove tag limit from `isAnyOf` operator input (#7592) @m4theushw
@@ -113,6 +142,7 @@ Use `paginationModel` and `onPaginationModelChange` instead.
   ```
 
 #### Changes
+
 
 - [DateRangeCalendar] Ignore `calendars` prop on mobile (#7526) @flaviendelangle
 - [DateRangeCalendar] Ignore `showDaysOutsideCurrentMonth` when `calendars > 1` (#7529) @flaviendelangle
