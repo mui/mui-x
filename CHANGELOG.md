@@ -10,7 +10,7 @@ _Jan 19, 2023_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - ✨ Merge `page` and `pageSize` props into `paginationModel` (#7147) @MBilalShafi
-- 🚀 Rename new pickers components
+- 🚀 Replace old masked picker components with field based ones
 - 🌍 Improve Swedish (sv-SE) and Italian (it-IT) locales
 - 📚 Documentation improvements
 - 🐞 Bug fixes
@@ -170,14 +170,14 @@ To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-gr
 
 ### Docs
 
-- [docs] Clean the field page (#7605) @flaviendelangle
+- [docs] Clean-up the `field components` page (#7605) @flaviendelangle
 - [docs] List all pickers toolbar pages in api docs side menu (#7577) @LukasTy
 - [docs] Remove "Flex layout" docs section and demo (#7477) @cherniavskii
-- [docs] Rework the pickers Getting Started page (#7140) @flaviendelangle
+- [docs] Rework the pickers "Getting Started" page (#7140) @flaviendelangle
 
 ### Core
 
-- [core] Add missing need triage label on RFC @oliviertassinari
+- [core] Add missing `status: needs triage` label on RFC @oliviertassinari
 - [core] Add release documentation step detailing `x-codemod` package tag change (#7617) @LukasTy
 - [core] Fix typo in `CHANGELOG` (#7611) @flaviendelangle
 - [test] Fix date range picker tests to work with western time zones (#7581) @m4theushw
