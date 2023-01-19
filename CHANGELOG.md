@@ -95,6 +95,18 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   />
   ```
 
+- Following selectors have been renamed:
+
+  - `gridVisibleSortedRowIdsSelector` renamed to `gridExpandedSortedRowIdsSelector `
+  - `gridVisibleSortedRowEntriesSelector` renamed to `gridExpandedSortedRowEntriesSelector `
+  - `gridVisibleRowCountSelector` renamed to `gridExpandedRowCountSelector `
+  - `gridVisibleSortedTopLevelRowEntriesSelector` renamed to `gridFilteredSortedTopLevelRowEntriesSelector `
+  - `gridVisibleTopLevelRowCountSelector` renamed to `gridFilteredTopLevelRowCountSelector `
+
+- The `apiRef.current.getVisibleRowModels` method was removed. Use the `gridVisibleSortedRowEntriesSelector` selector instead.
+
+- The `GridRowScrollEndParams["virtualRowsCount"]` parameter was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
+
 #### Changes
 
 - [DataGrid] Add default value formatter to `singleSelect` (#7290) @m4theushw
