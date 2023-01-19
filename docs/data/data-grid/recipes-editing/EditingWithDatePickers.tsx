@@ -35,7 +35,11 @@ function buildApplyDateFilterFn(
     return null;
   }
 
-  const filterValueMs = filterItem.value.getTime();
+  // Make a copy of the date to not reset the hours in the original object
+  const filterValueCopy = new Date(filterItem.value);
+  filterValueCopy.setHours(0, 0, 0, 0);
+
+  const filterValueMs = filterValueCopy.getTime();
 
   return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
@@ -159,7 +163,7 @@ const dateAdapter = new AdapterDateFns({ locale });
  * `date` column
  */
 
-const dateColumnType: GridColTypeDef<Date | string, string> = {
+const dateColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -255,7 +259,7 @@ function GridFilterDateInput(
  * `dateTime` column
  */
 
-const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
+const dateTimeColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {

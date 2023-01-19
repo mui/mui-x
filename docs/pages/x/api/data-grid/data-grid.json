@@ -36,7 +36,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
         "name": "shape",
@@ -98,7 +97,6 @@
     "onColumnHeaderOver": { "type": { "name": "func" } },
     "onColumnOrderChange": { "type": { "name": "func" } },
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
     "onMenuOpen": { "type": { "name": "func" } },
@@ -227,7 +225,6 @@
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
     "DetailPanelCollapseIcon": { "default": "GridRemoveIcon", "type": { "name": "elementType" } },
     "DetailPanelExpandIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
-    "ErrorOverlay": { "default": "GridErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },

@@ -110,14 +110,7 @@ export function useGridApiInitialization<
     [privateApiRef],
   );
 
-  const showError = React.useCallback<GridCoreApi['showError']>(
-    (args) => {
-      privateApiRef.current.publishEvent('componentError', args);
-    },
-    [privateApiRef],
-  );
-
-  useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent, showError } as any, 'public');
+  useGridApiMethod(privateApiRef, { subscribeEvent, publishEvent } as any, 'public');
 
   React.useEffect(() => {
     const api = privateApiRef.current;
