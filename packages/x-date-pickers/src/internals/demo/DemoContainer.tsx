@@ -118,7 +118,7 @@ export function DemoContainer(props: PickersGridProps) {
 }
 
 interface PickersGridItemProps {
-  label: string;
+  label: React.ReactNode;
   children: React.ReactNode;
 }
 export function DemoItem(props: PickersGridItemProps) {
