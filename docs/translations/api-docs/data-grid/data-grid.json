@@ -102,6 +102,9 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root element of the cell with type=\"actions\""
     },
+    "actionsCellItem": {
+      "description": "Styles applied to each item of the cell with type=\"actions\""
+    },
     "aggregationColumnHeader": {
       "description": "Styles applied to {{nodeName}} when {{conditions}}.",
       "nodeName": "the root element of the column header",
