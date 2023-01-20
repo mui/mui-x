@@ -132,9 +132,9 @@ const esESGrid: Partial<GridLocaleText> = {
   treeDataCollapse: 'ocultar hijos',
 
   // Grouping columns
-   groupingColumnHeaderName: 'Grupo',
-   groupColumn: name => `Agrupar por ${name}`,
-   unGroupColumn: name => `No agrupar por ${name}`,
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `No agrupar por ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Alternar detalle',
