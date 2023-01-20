@@ -225,6 +225,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           open={open}
           target={buttonRef.current}
           position={position}
+          disablePortal
         >
           <MenuList
             id={menuId}
