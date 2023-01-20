@@ -37,10 +37,18 @@ export const useMobileRangePicker = <
 }: UseMobileRangePickerParams<TDate, TView, TExternalProps>) => {
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
-  const { slots, slotProps, className, format, readOnly, disabled, disableOpenPicker, localeText } =
-    props;
+  const {
+    slots,
+    slotProps,
+    className,
+    sx,
+    format,
+    readOnly,
+    disabled,
+    disableOpenPicker,
+    localeText,
+  } = props;
 
-  const fieldRef = React.useRef<HTMLDivElement>(null);
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
   const {
@@ -67,7 +75,7 @@ export const useMobileRangePicker = <
     },
   });
 
-  const fieldslotProps = useRangePickerInputProps({
+  const fieldSlotProps = useRangePickerInputProps({
     wrapperVariant: 'mobile',
     open,
     actions,
@@ -91,8 +99,8 @@ export const useMobileRangePicker = <
       readOnly: readOnly ?? true,
       disabled,
       className,
+      sx,
       format,
-      ref: fieldRef,
     },
     ownerState: props,
   });
@@ -111,7 +119,7 @@ export const useMobileRangePicker = <
         ownerState,
       );
       const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
+        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
 
       return {
         ...externalInputProps,
@@ -129,7 +137,7 @@ export const useMobileRangePicker = <
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
     separator: (ownerState) => {
@@ -141,7 +149,7 @@ export const useMobileRangePicker = <
       return {
         ...externalSeparatorProps,
         ...separatorPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
   };

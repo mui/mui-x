@@ -6,7 +6,6 @@ const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
   noResultsOverlayLabel: 'Resultados no encontrados',
-  errorOverlayDefaultLabel: 'Ha ocurrido un error.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidad',

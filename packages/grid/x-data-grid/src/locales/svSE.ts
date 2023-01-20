@@ -6,7 +6,6 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Inga rader',
   noResultsOverlayLabel: 'Inga resultat funna.',
-  errorOverlayDefaultLabel: 'Ett fel uppstod.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
