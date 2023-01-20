@@ -23,6 +23,7 @@ import {
   useGridApiRef,
   GridApi,
 } from '@mui/x-data-grid';
+import { DataGridPremium, GRID_DETAIL_PANEL_TOGGLE_COL_DEF } from '@mui/x-data-grid-premium';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { getColumnValues, getRow, getActiveCell, getCell } from 'test/utils/helperFn';
 import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity';
@@ -1072,6 +1073,27 @@ describe('<DataGrid /> - Rows', () => {
       act(() => apiRef.current.updateRows([{ id: 2, _action: 'delete' }]));
       act(() => apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]));
       expect(getColumnValues(0)).to.deep.equal(['Apple', 'Atari']);
+    });
+  });
+
+  it('should merge row styles when expanded', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGridPremium
+          getDetailPanelHeight={() => 0}
+          getDetailPanelContent={() => <div />}
+          rows={[{ id: 1, name: 'row 1' }]}
+          columns={[{ ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF, type: 'string' }, { field: 'name' }]}
+          componentsProps={{
+            row: { style: { color: 'yellow' } },
+          }}
+        />
+      </div>,
+    );
+    fireEvent.click(document.querySelector('.MuiDataGrid-detailPanelToggleCell'));
+    expect(getRow(0)).toHaveInlineStyle({
+      color: 'yellow',
+      marginBottom: '0px', // added when expanded
     });
   });
 });
