@@ -138,15 +138,21 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      if (isVisible) {
-        return apiRef.current.setColumnVisibilityModel({});
-      }
+      const currentModel = gridColumnVisibilityModelSelector(apiRef);
+      const newModel = { ...currentModel };
 
-      return apiRef.current.setColumnVisibilityModel(
-        Object.fromEntries(
-          columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
-        ),
-      );
+      columns.forEach((col) => {
+        if (col.hideable !== false) {
+          if (isVisible === true) {
+            // delete the key from the model instead of setting it to `true`
+            delete newModel[col.field];
+          } else {
+            newModel[col.field] = false;
+          }
+        }
+      });
+
+      return apiRef.current.setColumnVisibilityModel(newModel);
     },
     [apiRef, columns],
   );
