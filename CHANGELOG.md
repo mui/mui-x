@@ -18,9 +18,9 @@ We encourage you to try out this version, packed with improvements, bug fixes, a
 **Date and Time pickers**
 - [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
 - [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- Edit date ranges with drag and drop (Pro).
+- [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
 
-You can check the migration guides for the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/)
+You can check the migration guides for the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/) in the documentation.
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible. 
 
@@ -86,7 +86,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - The `error` and `onError` props were removed - the grid no longer catches errors during rendering.
   To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html).
 
-- The `components.ErrorOverlay` slot was also removed.
+- The `components.ErrorOverlay` slot was removed.
 
 - The `GridErrorOverlay` component was removed.
 
@@ -111,7 +111,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
   />
   ```
 
-- Following selectors have been renamed:
+- The following selectors have been renamed:
 
   - `gridVisibleSortedRowIdsSelector` renamed to `gridExpandedSortedRowIdsSelector`
   - `gridVisibleSortedRowEntriesSelector` renamed to `gridExpandedSortedRowEntriesSelector`
@@ -154,7 +154,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
    />
   ```
 
-- The new pickers have replaced the legacy one
+- The new pickers have replaced the legacy one.
 
   If you were using the new pickers with their temporary name, you just have to change your imports.
 
