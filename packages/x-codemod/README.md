@@ -196,6 +196,25 @@ If you were always using the same text value in all your components, consider mo
 
 You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
 
+#### `rename-components-to-slots`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects pickers components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
+
 ### Data grid codemods
 
 #### `preset-safe` for data grid
@@ -210,6 +229,7 @@ The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
 - [`row-selection-props-rename`](#row-selection-props-rename)
+- [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 
 #### `column-menu-components-rename`
@@ -260,6 +280,21 @@ Data grid props that have been renamed.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
+```
+
+#### `rename-rowsPerPageOptions-prop`
+
+Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
+
+```diff
+  <DataGrid
+-   rowsPerPageOptions={[5, 10, 20]}
++   pageSizeOptions={[5, 10, 20]}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
 ```
 
 #### `remove-disableExtendRowFullWidth-prop`

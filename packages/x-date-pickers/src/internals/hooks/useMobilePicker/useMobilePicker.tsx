@@ -29,10 +29,21 @@ export const useMobilePicker = <
   getOpenDialogAriaText,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
-  const { slots, slotProps, className, format, readOnly, disabled, localeText } = props;
+  const {
+    slots,
+    slotProps,
+    className,
+    sx,
+    format,
+    label,
+    inputRef,
+    readOnly,
+    disabled,
+    localeText,
+  } = props;
 
   const utils = useUtils<TDate>();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
 
   const {
     open,
@@ -42,7 +53,7 @@ export const useMobilePicker = <
     fieldProps: pickerFieldProps,
   } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
-    inputRef,
+    inputRef: internalInputRef,
     valueManager,
     validator,
     autoFocusView: true,
@@ -59,7 +70,9 @@ export const useMobilePicker = <
       readOnly: readOnly ?? true,
       disabled,
       className,
+      sx,
       format,
+      label,
     },
     ownerState: props,
   });
@@ -97,7 +110,7 @@ export const useMobilePicker = <
 
   const Layout = slots.layout ?? PickersLayout;
 
-  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
+  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>

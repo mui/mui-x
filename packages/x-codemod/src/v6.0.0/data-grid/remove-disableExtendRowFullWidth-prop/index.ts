@@ -1,4 +1,4 @@
-import removeProps from 'packages/x-codemod/src/util/removeProps';
+import removeProps from '../../../util/removeProps';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];

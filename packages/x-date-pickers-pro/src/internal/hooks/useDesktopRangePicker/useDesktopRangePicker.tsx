@@ -46,6 +46,7 @@ export const useDesktopRangePicker = <
     components,
     componentsProps,
     className,
+    sx,
     format,
     readOnly,
     disabled,
@@ -98,7 +99,7 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const fieldslotProps = useRangePickerInputProps({
+  const fieldSlotProps = useRangePickerInputProps({
     wrapperVariant: 'desktop',
     open,
     actions,
@@ -123,6 +124,7 @@ export const useDesktopRangePicker = <
       readOnly,
       disabled,
       className,
+      sx,
       format,
       autoFocus: autoFocus && !props.open,
       ref: fieldRef,
@@ -147,7 +149,7 @@ export const useDesktopRangePicker = <
         ownerState,
       );
       const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
+        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
 
       return {
         ...externalInputProps,
@@ -168,7 +170,7 @@ export const useDesktopRangePicker = <
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
     separator: (ownerState) => {
@@ -180,7 +182,7 @@ export const useDesktopRangePicker = <
       return {
         ...externalSeparatorProps,
         ...separatorPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
   };

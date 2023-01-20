@@ -45,8 +45,6 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
       field: (ownerState: any) => ({
         ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
         ...extractValidationProps(defaultizedProps),
-        className,
-        sx,
         ref,
       }),
       toolbar: {

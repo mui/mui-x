@@ -8,6 +8,7 @@ function App({ column, hideMenu }) {
         disableMultipleSelection
         showCellRightBorder
         disableExtendRowFullWidth
+        rowsPerPageOptions={[5]}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>
