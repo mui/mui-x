@@ -50,25 +50,38 @@ export class AdapterDayjs extends BaseAdapterDayjs implements MuiPickersAdapter<
 
   constructor(options: Opts) {
     super(options);
-    this.rawDayJsInstance.extend(weekOfYear);
+    defaultDayjs.extend(weekOfYear);
   }
 
   public formatTokenMap = formatTokenMap;
 
   public escapedCharacters = { start: '[', end: ']' };
 
+  private getLocaleFormats = () => {
+    const locales = this.rawDayJsInstance.Ls ?? defaultDayjs.Ls;
+    const locale = this.locale || 'en';
+
+    let localeObject = locales[locale];
+
+    if (localeObject === undefined) {
+      localeNotFoundWarning();
+      localeObject = locales.en;
+    }
+
+    return localeObject.formats;
+  };
+
+  public is12HourCycleInCurrentLocale = () => {
+    /* istanbul ignore next */
+    return /A|a/.test(this.getLocaleFormats().LT || '');
+  };
+
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.
    * We should use this one in the future to support all localized formats.
    */
   public expandFormat = (format: string) => {
-    const localeObject = this.rawDayJsInstance.Ls[this.locale || 'en'];
-
-    if (localeObject === undefined) {
-      localeNotFoundWarning();
-    }
-    const localeFormats =
-      localeObject === undefined ? this.rawDayJsInstance.Ls.en.formats : localeObject.formats;
+    const localeFormats = this.getLocaleFormats();
 
     // @see https://github.com/iamkun/dayjs/blob/dev/src/plugin/localizedFormat/index.js
     const t = (formatBis: string) =>
