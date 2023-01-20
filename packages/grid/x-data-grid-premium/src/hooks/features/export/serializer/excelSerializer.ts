@@ -47,8 +47,6 @@ const getFormattedValueOptions = (
   );
 };
 
-let invalidDateValueWarnedOnce = false;
-
 const serializeRow = (
   id: GridRowId,
   columns: GridStateColDef[],
@@ -135,42 +133,19 @@ const serializeRow = (
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const value = api.getCellParams(id, column.field).value;
+        const value = api.getCellParams<any, Date>(id, column.field).value;
         // value may be `undefined` in auto-generated grouping rows
         if (!value) {
           break;
         }
-        let date: Date;
-        if (value instanceof Date) {
-          date = value;
-        } else {
-          const valueString = (value ?? '').toString();
-          date = new Date(valueString);
-
-          if (Number.isNaN(date.getTime())) {
-            // Invalid date
-            row[column.field] = valueString;
-            if (process.env.NODE_ENV !== 'production' && !invalidDateValueWarnedOnce) {
-              console.warn(
-                [
-                  `MUI: The cell value "${value}" not a valid value for the \`${column.type}\` column type.`,
-                  `Row id: ${id}, field: ${column.field}.`,
-                  `This value will be exported as is in the Excel file.`,
-                ].join('\n'),
-              );
-              invalidDateValueWarnedOnce = true;
-            }
-            break;
-          }
-        }
         const utcDate = new Date(
           Date.UTC(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds(),
+            value.getFullYear(),
+            value.getMonth(),
+            value.getDate(),
+            value.getHours(),
+            value.getMinutes(),
+            value.getSeconds(),
           ),
         );
         row[column.field] = utcDate;

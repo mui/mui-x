@@ -6,7 +6,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nincsenek sorok',
   noResultsOverlayLabel: 'Nincs találat.',
-  errorOverlayDefaultLabel: 'Váratlan hiba történt.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
