@@ -196,6 +196,25 @@ If you were always using the same text value in all your components, consider mo
 
 You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
 
+#### `rename-components-to-slots`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects pickers components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
+
 ### Data grid codemods
 
 #### `preset-safe` for data grid
