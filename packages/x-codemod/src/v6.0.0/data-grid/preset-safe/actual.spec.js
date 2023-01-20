@@ -5,7 +5,7 @@ function App({ column, hideMenu }) {
   return (
     <React.Fragment>
       <SortGridMenuItems column={column} onClick={hideMenu} />
-      <DataGrid disableExtendRowFullWidth />
+      <DataGrid disableExtendRowFullWidth rowsPerPageOptions={[5]} />
     </React.Fragment>
   );
 }

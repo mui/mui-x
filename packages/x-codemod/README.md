@@ -228,6 +228,7 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
+- [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 
 #### `column-menu-components-rename`
@@ -254,6 +255,21 @@ npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 ```
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
+
+#### `rename-rowsPerPageOptions-prop`
+
+Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
+
+```diff
+  <DataGrid
+-   rowsPerPageOptions={[5, 10, 20]}
++   pageSizeOptions={[5, 10, 20]}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
+```
 
 #### `remove-disableExtendRowFullWidth-prop`
 
