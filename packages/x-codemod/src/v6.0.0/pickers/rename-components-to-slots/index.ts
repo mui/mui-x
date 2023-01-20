@@ -38,7 +38,7 @@ export default function transformer(file, api, options) {
 
     .forEach((path) => {
       path.node.specifiers.forEach((node) => {
-        // Process only Joy UI components
+        // Process only date-pickers components
         root.findJSXElements(node.local.name).forEach((elementPath) => {
           if (elementPath.node.type !== 'JSXElement') {
             return;
