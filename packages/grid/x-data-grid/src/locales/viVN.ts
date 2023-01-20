@@ -131,8 +131,8 @@ const viVNGrid: Partial<GridLocaleText> = {
 
   // Grouping columns
   groupingColumnHeaderName: 'Nhóm',
-  groupColumn: name => `Nhóm theo ${name}`,
-  unGroupColumn: name => `Hủy nhóm theo ${name}`,
+  groupColumn: (name) => `Nhóm theo ${name}`,
+  unGroupColumn: (name) => `Hủy nhóm theo ${name}`,
 
   // Master/detail
   detailPanelToggle: 'Ẩn/hiện chi tiết',
