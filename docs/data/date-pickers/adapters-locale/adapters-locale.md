@@ -183,7 +183,7 @@ The example bellow adds a dot at the end of each day in the calendar header:
 
 To use UTC dates with `dayjs`, you have to:
 
-1. Extend `dayjs` with its `utc` plugin
+1. Extend `dayjs` with its `utc` plugin:
 
    ```tsx
    import dayjs from 'dayjs';
@@ -192,7 +192,7 @@ To use UTC dates with `dayjs`, you have to:
    dayjs.extend(utc);
    ```
 
-2. Pass `dayjs.utc` to `LocalizationProvider`
+2. Pass `dayjs.utc` to `LocalizationProvider` `dateLibInstance` prop:
 
    ```tsx
    <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
@@ -203,7 +203,7 @@ To use UTC dates with `dayjs`, you have to:
 3. Always pass dates created with `dayjs.utc`:
 
    ```tsx
-   <DatePicker
+   <DateTimePicker
      // ✅ Valid props
      value={dayjs.utc()}
      minDate={dayjs.utc().startOf('month')}
