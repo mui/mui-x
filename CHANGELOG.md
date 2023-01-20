@@ -7,22 +7,24 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 19, 2023_
 
-After a long period in alpha, we're glad to announce the first MUI X v6 beta! 
+After a long period in alpha, we're glad to announce the first MUI X v6 beta!
 We encourage you to try out this version, packed with improvements, bug fixes, and a few highlighted features ✨:
 
 **Data Grid**
+
 - [Access to the API Object in the community version](https://next.mui.com/x/react-data-grid/api-object/)
 - [Improved column menu](https://next.mui.com/x/react-data-grid/column-menu/)
 - [Cell selection range](https://next.mui.com/x/react-data-grid/cell-selection/) (Premium)
 
 **Date and Time pickers**
+
 - [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
 - [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
 - [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
 
 You can check the migration guides for the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/) in the documentation.
 
-We'd like to offer a big thanks to the 10 contributors who made this release possible. 
+We'd like to offer a big thanks to the 10 contributors who made this release possible.
 
 - ✨ Merge `page` and `pageSize` props into `paginationModel`
 - 🚀 Replace old masked picker components with field based ones
