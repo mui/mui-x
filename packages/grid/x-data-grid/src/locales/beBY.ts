@@ -25,7 +25,6 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма радкоў',
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
-  errorOverlayDefaultLabel: 'Выяўлена памылка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',
@@ -72,7 +71,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
   filterPanelDeleteIconLabel: 'Выдаліць',
-  filterPanelLinkOperator: 'Лагічныя аператары',
+  filterPanelLogicOperator: 'Лагічныя аператары',
   filterPanelOperator: 'Аператары',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
