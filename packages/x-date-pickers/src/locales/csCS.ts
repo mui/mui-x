@@ -9,12 +9,12 @@ const csCSPickers: PickersLocaleText<any> = {
   nextMonth: 'Předchozí month',
 
   // View navigation
-  openPreviousView: 'otevřít předchozí zobrazení', // 🆗
-  openNextView: 'otevřít další zobrazení', // 🆗
+  openPreviousView: 'otevřít předchozí zobrazení', 
+  openNextView: 'otevřít další zobrazení', 
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře' // 🆗
-      : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku', // 🆗
+      ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře' 
+      : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku', 
 
   // DateRange placeholders
   start: 'Začátek',
