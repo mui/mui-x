@@ -49,7 +49,7 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have correct placeholder', () => {
-          render(<DateTimePicker />);
+          render(<DateTimePicker label="test" />);
 
           expectInputValue(
             screen.getByRole('textbox'),
@@ -59,7 +59,7 @@ describe('<AdapterDayjs />', () => {
         });
 
         it('should have well formatted value', () => {
-          render(<DateTimePicker value={adapter.date(testDate)} />);
+          render(<DateTimePicker label="test" value={adapter.date(testDate)} />);
 
           expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
         });
