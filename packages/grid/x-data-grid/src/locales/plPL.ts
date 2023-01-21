@@ -6,7 +6,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
   noResultsOverlayLabel: 'Nie znaleziono wyników.',
-  errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Wysokość rzędu',

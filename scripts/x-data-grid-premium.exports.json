@@ -253,7 +253,6 @@
   { "name": "GridEditRowProps", "kind": "TypeAlias" },
   { "name": "GridEditSingleSelectCell", "kind": "Function" },
   { "name": "GridEditSingleSelectCellProps", "kind": "Interface" },
-  { "name": "GridErrorHandler", "kind": "Function" },
   { "name": "GridEventListener", "kind": "TypeAlias" },
   { "name": "GridEventLookup", "kind": "Interface" },
   { "name": "GridEventPublisher", "kind": "TypeAlias" },

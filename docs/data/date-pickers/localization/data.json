@@ -67,7 +67,7 @@
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 11,
+    "missingKeysCount": 0,
     "totalKeysCount": 34,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/jaJP.ts/"
   },
@@ -115,7 +115,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 15,
+    "missingKeysCount": 11,
     "totalKeysCount": 34,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/esES.ts/"
   },

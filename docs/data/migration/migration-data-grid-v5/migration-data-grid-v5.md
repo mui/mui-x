@@ -45,7 +45,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/es/blog/release/v12.22.12/).
 :::
 
-### Renamed props
+### ✅ Renamed props
 
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
 
@@ -81,6 +81,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html). The `components.ErrorOverlay` slot was also removed.
 
 ### State access
 
@@ -122,6 +123,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
   For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
   The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
 
   ```tsx
   <DataGrid
@@ -167,6 +169,20 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
   This prop accepts a callback that is called with the item from `valueOptions` and must return the string to use as new label.
 
+- The `date` and `dateTime` columns now only support `Date` objects as values. To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+
+  ```tsx
+  <DataGrid
+    columns={[
+      {
+        field: 'date',
+        type: 'date',
+        valueGetter: (params) => new Date(params.value),
+      },
+    ]}
+  />
+  ```
+
 ### Column menu
 
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
@@ -210,14 +226,14 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
   ```
 
-- The property `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
 
   ```diff
   -initialState={{ pagination: { page: 1, pageSize: 10 } }}
   +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
   ```
 
-- The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
 
   ```diff
   -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
@@ -231,6 +247,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
 - The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
@@ -334,6 +351,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
 - The `GridCellParams` interface was changed. The row generic is now before the cell generic.
+- The `GridErrorOverlay` component was removed.
 
   ```diff
   -extends GridCellParams<V, R, F, N> {
