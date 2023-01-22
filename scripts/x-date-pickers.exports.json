@@ -12,7 +12,7 @@
   { "name": "ClockPointerClassKey", "kind": "TypeAlias" },
   { "name": "ClockPointerProps", "kind": "Interface" },
   { "name": "ClockProps", "kind": "Interface" },
-  { "name": "czCZ", "kind": "Variable" },
+  { "name": "csCZ", "kind": "Variable" },
   { "name": "DateCalendar", "kind": "Variable" },
   { "name": "dateCalendarClasses", "kind": "Variable" },
   { "name": "DateCalendarClasses", "kind": "Interface" },
