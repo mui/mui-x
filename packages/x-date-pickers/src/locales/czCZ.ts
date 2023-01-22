@@ -3,7 +3,14 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 
 // This object is not Partial<PickersLocaleText> because it is the default values
 
-const csCSPickers: PickersLocaleText<any> = {
+// maps TimeView to its translation
+const timeViews = {
+  hours: 'Hodiny',
+  minutes: 'Minuty',
+  seconds: 'Sekundy',
+};
+
+const csCZPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Další měsíc',
   nextMonth: 'Předchozí month',
@@ -34,7 +41,7 @@ const csCSPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Vyberte ${view}. ${
+    `${timeViews[view] ?? view} vybrány. ${
       time === null ? 'Není vybrán čas' : `Vybraný čas je ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} hodin`,
@@ -71,4 +78,4 @@ const csCSPickers: PickersLocaleText<any> = {
   fieldMeridiemPlaceholder: () => 'aa',
 };
 
-export const csCS = getPickersLocalization(csCSPickers);
+export const csCZ = getPickersLocalization(csCZPickers);
