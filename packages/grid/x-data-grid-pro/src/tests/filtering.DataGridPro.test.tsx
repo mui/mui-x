@@ -3,7 +3,7 @@ import {
   GridApi,
   DataGridProProps,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridPreferencePanelsValue,
   GridRowModel,
   SUBMIT_FILTER_STROKE_TIME,
@@ -12,6 +12,7 @@ import {
   GetColumnForNewFilterArgs,
   FilterColumnsArgs,
   GridToolbar,
+  gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
@@ -196,7 +197,7 @@ describe('<DataGridPro /> - Filter', () => {
               operator: 'contains',
             },
           ],
-          linkOperator: GridLinkOperator.And,
+          logicOperator: GridLogicOperator.And,
         }}
       />,
     );
@@ -207,7 +208,7 @@ describe('<DataGridPro /> - Filter', () => {
     render(
       <TestCase
         filterModel={{
-          linkOperator: GridLinkOperator.Or,
+          logicOperator: GridLogicOperator.Or,
           items: [
             {
               id: 1,
@@ -314,7 +315,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should allow multiple filter and changing the linkOperator', () => {
+  it('should allow multiple filter and changing the logicOperator', () => {
     const newModel: GridFilterModel = {
       items: [
         {
@@ -330,7 +331,7 @@ describe('<DataGridPro /> - Filter', () => {
           operator: 'endsWith',
         },
       ],
-      linkOperator: GridLinkOperator.Or,
+      logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase filterModel={newModel} />);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -480,7 +481,7 @@ describe('<DataGridPro /> - Filter', () => {
           operator: 'startsWith',
         },
       ],
-      linkOperator: GridLinkOperator.Or,
+      logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(0).querySelector('input');
@@ -504,7 +505,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest visibleRows', () => {
+  it('should show the latest expandedRows', () => {
     render(
       <TestCase
         initialState={{
@@ -521,8 +522,11 @@ describe('<DataGridPro /> - Filter', () => {
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
-    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
-    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
+    expect(gridExpandedSortedRowEntriesSelector(apiRef)[0].model).to.deep.equal({
+      id: 1,
+      brand: 'Adidas',
+    });
   });
 
   it('should not scroll the page when a filter is removed from the panel', function test() {
@@ -541,7 +545,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                linkOperator: GridLinkOperator.Or,
+                logicOperator: GridLogicOperator.Or,
                 items: [
                   { id: 1, field: 'brand', value: 'a', operator: 'contains' },
                   { id: 2, field: 'brand', value: 'm', operator: 'contains' },
@@ -576,7 +580,7 @@ describe('<DataGridPro /> - Filter', () => {
             },
             filter: {
               filterModel: {
-                linkOperator: GridLinkOperator.Or,
+                logicOperator: GridLogicOperator.Or,
                 items: [{ id: 1, field: 'brand', operator: 'isAnyOf' }],
               },
             },
@@ -700,7 +704,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
 
     it('should not update the filter state when the filterModelProp is set', () => {
-      const testFilterModel: GridFilterModel = { items: [], linkOperator: GridLinkOperator.Or };
+      const testFilterModel: GridFilterModel = { items: [], logicOperator: GridLogicOperator.Or };
       render(
         <TestCase
           filterModel={testFilterModel}
@@ -737,7 +741,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(filterForms).to.have.length(2);
       expect(onModelChange.callCount).to.equal(1);
       expect(onModelChange.lastCall.firstArg.items.length).to.deep.equal(2);
-      expect(onModelChange.lastCall.firstArg.linkOperator).to.deep.equal(GridLinkOperator.And);
+      expect(onModelChange.lastCall.firstArg.logicOperator).to.deep.equal(GridLogicOperator.And);
     });
 
     it('should control filter state when the model and the onChange are set', () => {

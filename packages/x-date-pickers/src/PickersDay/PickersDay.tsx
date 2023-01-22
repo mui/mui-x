@@ -19,11 +19,31 @@ import {
   pickersDayClasses,
 } from './pickersDayClasses';
 
+export interface ExportedPickersDayProps {
+  /**
+   * If `true`, today's date is rendering without highlighting with circle.
+   * @default false
+   */
+  disableHighlightToday?: boolean;
+  /**
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
+   * @default false
+   */
+  showDaysOutsideCurrentMonth?: boolean;
+}
+
 export interface PickersDayProps<TDate>
-  extends Omit<
-    ExtendMui<ButtonBaseProps>,
-    'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
-  > {
+  extends ExportedPickersDayProps,
+    Omit<
+      ExtendMui<ButtonBaseProps>,
+      'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'
+    > {
   /**
    * Override or extend the styles applied to the component.
    */
@@ -37,11 +57,7 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   disabled?: boolean;
-  /**
-   * If `true`, today's date is rendering without highlighting with circle.
-   * @default false
-   */
-  disableHighlightToday?: boolean;
+
   /**
    * If `true`, days are rendering without margin. Useful for displaying linked range of days.
    * @default false
@@ -62,11 +78,6 @@ export interface PickersDayProps<TDate>
    * @default false
    */
   selected?: boolean;
-  /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
-   * @default false
-   */
-  showDaysOutsideCurrentMonth?: boolean;
   /**
    * If `true`, renders as today date.
    * @default false
@@ -408,7 +419,13 @@ PickersDayRaw.propTypes = {
    */
   selected: PropTypes.bool,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,

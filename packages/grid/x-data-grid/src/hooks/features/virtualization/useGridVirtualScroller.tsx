@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { unstable_useForkRef as useForkRef } from '@mui/utils';
+import {
+  unstable_useForkRef as useForkRef,
+  unstable_useEnhancedEffect as useEnhancedEffect,
+} from '@mui/utils';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
@@ -213,7 +216,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     containerDimensions,
   ]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (disableVirtualization) {
       renderZoneRef.current!.style.transform = `translate3d(0px, 0px, 0px)`;
     } else {
@@ -223,7 +226,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }
   }, [disableVirtualization]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     setContainerDimensions({
       width: rootRef.current!.clientWidth,
       height: rootRef.current!.clientHeight,
@@ -284,15 +287,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
-  React.useLayoutEffect(() => {
-    if (renderContext) {
-      updateRenderZonePosition(renderContext);
-    }
-  }, [renderContext, updateRenderZonePosition]);
-
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       setRenderContext(nextRenderContext);
+
+      updateRenderZonePosition(nextRenderContext);
 
       const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
         firstIndex: nextRenderContext.firstRowIndex,
@@ -309,10 +308,17 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       prevRenderContext.current = nextRenderContext;
     },
-    [apiRef, setRenderContext, prevRenderContext, currentPage.rows.length, rootProps.rowBuffer],
+    [
+      apiRef,
+      setRenderContext,
+      prevRenderContext,
+      currentPage.rows.length,
+      rootProps.rowBuffer,
+      updateRenderZonePosition,
+    ],
   );
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (containerDimensions.width == null) {
       return;
     }

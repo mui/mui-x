@@ -6,7 +6,6 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'لا توجد صفوف',
   noResultsOverlayLabel: 'لم يتم العثور على نتائج.',
-  errorOverlayDefaultLabel: 'حدث خطأ.',
 
   // Density selector toolbar button text
   toolbarDensity: 'الكثافة',
@@ -49,7 +48,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
-  filterPanelLinkOperator: 'عامل منطقي',
+  filterPanelLogicOperator: 'عامل منطقي',
   filterPanelOperator: 'عامل',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',

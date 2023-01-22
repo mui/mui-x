@@ -31,7 +31,7 @@ To hide the density selector, add the `disableDensitySelector` prop to the Data 
 ### Density prop
 
 Set the vertical density of the Data Grid using the `density` prop.
-This prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied.
+This prop applies the values determined by the `rowHeight` and `columnHeaderHeight` props, if supplied.
 The user can override this setting with the optional toolbar density selector.
 
 The following demo shows a Data Grid with the default density set to `compact`:
@@ -100,7 +100,6 @@ On macOS:
 |                                  <kbd class="key">Shift</kbd>+ Click on cell | Select the range of rows between the first and the last clicked rows |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">A</kbd></kbd> | Select all rows                                                      |
 |              <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows                                     |
-|               <kbd><kbd class="key">Alt</kbd>+<kbd class="key">C</kbd></kbd> | Copy the currently selected rows, including headers                  |
 |                                   <kbd class="key">Ctrl</kbd>+ Click on cell | Enable multi-selection                                               |
 |                         <kbd class="key">Ctrl</kbd>+ Click on a selected row | Deselect the row                                                     |
 

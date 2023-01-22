@@ -12,6 +12,11 @@ export default function UseGridApiRef() {
     maxColumns: 6,
   });
 
+  const [paginationModel, setPaginationModel] = React.useState({
+    page: 0,
+    pageSize: 10,
+  });
+
   const apiRef = useGridApiRef();
 
   const handleGoToPage1 = () => apiRef.current.setPage(1);
@@ -20,7 +25,13 @@ export default function UseGridApiRef() {
     <Stack spacing={1} sx={{ width: '100%' }} alignItems="flex-start">
       <Button onClick={handleGoToPage1}>Go to page 1</Button>
       <Box sx={{ height: 400, width: '100%' }}>
-        <DataGrid {...data} apiRef={apiRef} pagination pageSize={10} />
+        <DataGrid
+          {...data}
+          apiRef={apiRef}
+          pagination
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+        />
       </Box>
     </Stack>
   );

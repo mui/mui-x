@@ -2,7 +2,7 @@ import { useIsLandscape } from '../useIsLandscape';
 import { UsePickerValueLayoutResponse } from './usePickerValue';
 import { UsePickerViewsLayoutResponse } from './usePickerViews';
 import { DateOrTimeView } from '../../models/views';
-import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext';
+import { WrapperVariant } from '../../models/common';
 
 /**
  * Props used to create the layout of the views.
@@ -11,7 +11,6 @@ import { WrapperVariant } from '../../components/wrappers/WrapperVariantContext'
 export interface UsePickerLayoutProps {
   disabled?: boolean;
   readOnly?: boolean;
-  showToolbar?: boolean;
   /**
    * Force rendering in particular orientation.
    */
@@ -56,7 +55,6 @@ export const usePickerLayoutProps = <TValue, TView extends DateOrTimeView>({
     wrapperVariant,
     disabled: props.disabled,
     readOnly: props.readOnly,
-    showToolbar: props.showToolbar,
   };
 
   return { layoutProps };

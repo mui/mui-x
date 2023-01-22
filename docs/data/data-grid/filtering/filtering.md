@@ -47,7 +47,7 @@ This demo implements a basic use case to prevent showing multiple filters for on
 
 The full typing details can be found on the [GridFilterModel API page](/x/api/data-grid/grid-filter-model/).
 
-The filter model is composed of a list of `items` and a `linkOperator`:
+The filter model is composed of a list of `items` and a `logicOperator`:
 
 #### The `items`
 
@@ -62,9 +62,9 @@ A filter item represents a filtering rule and is composed of several elements:
 Some operators do not need any value (for instance the `isEmpty` operator of the `string` column).
 :::
 
-#### The `linkOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+#### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-The `linkOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+The `logicOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
@@ -73,7 +73,7 @@ const filterModel: GridFilterModel = {
     { id: 1, field: 'rating', operator: '>', value: '4' },
     { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
   ],
-  linkOperator: GridLinkOperator.Or,
+  logicOperator: GridLogicOperator.Or,
 };
 
 // Example 2: get rows with rating > 4 AND isAdmin = true
@@ -82,11 +82,11 @@ const filterModel: GridFilterModel = {
     { id: 1, field: 'rating', operator: '>', value: '4' },
     { id: 2, field: 'isAdmin', operator: 'is', value: 'true' },
   ],
-  linkOperator: GridLinkOperator.And,
+  logicOperator: GridLogicOperator.And,
 };
 ```
 
-If no `linkOperator` is provided, the grid will use `GridLinkOperator.Or` by default.
+If no `logicOperator` is provided, the grid will use `GridLogicOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -292,7 +292,7 @@ You can customize the rendering of the filter panel as shown in [the component s
 The customization of the filter panel content can be performed by passing props to the default [`<GridFilterPanel />`](/x/api/data-grid/grid-filter-panel/) component.
 The available props allow overriding:
 
-- The `linkOperators` (can contains `GridLinkOperator.And` and `GridLinkOperator.Or`)
+- The `logicOperators` (can contains `GridLogicOperator.And` and `GridLogicOperator.Or`)
 - The order of the column selector (can be `"asc"` or `"desc"`)
 - Any prop of the input components
 
@@ -300,13 +300,13 @@ Input components can be [customized](/material-ui/customization/how-to-customize
 You can pass a `sx` prop to any input container or you can use CSS selectors on nested components of the filter panel.
 More details are available in the demo.
 
-| Props                    | CSS class                                 |
-| :----------------------- | :---------------------------------------- |
-| `deleteIconProps`        | `MuiDataGrid-filterFormDeleteIcon`        |
-| `linkOperatorInputProps` | `MuiDataGrid-filterFormLinkOperatorInput` |
-| `columnInputProps`       | `MuiDataGrid-filterFormColumnInput`       |
-| `operatorInputProps`     | `MuiDataGrid-filterFormOperatorInput`     |
-| `valueInputProps`        | `MuiDataGrid-filterFormValueInput`        |
+| Props                     | CSS class                                  |
+| :------------------------ | :----------------------------------------- |
+| `deleteIconProps`         | `MuiDataGrid-filterFormDeleteIcon`         |
+| `logicOperatorInputProps` | `MuiDataGrid-filterFormLogicOperatorInput` |
+| `columnInputProps`        | `MuiDataGrid-filterFormColumnInput`        |
+| `operatorInputProps`      | `MuiDataGrid-filterFormOperatorInput`      |
+| `valueInputProps`         | `MuiDataGrid-filterFormValueInput`         |
 
 The value input is a special case, because it can contain a wide variety of components (the one provided or [your custom `InputComponent`](#create-a-custom-operator)).
 To pass props directly to the `InputComponent` and not its wrapper, you can use `valueInputProps.InputComponentProps`.
@@ -339,14 +339,14 @@ By default, the quick filter considers the input as a list of values separated b
 ### Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
-To do so, set `quickFilterLogicOperator` to `GridLinkOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follow:
 
 ```js
 initialState={{
   filter: {
     filterModel: {
       items: [],
-      quickFilterLogicOperator: GridLinkOperator.Or,
+      quickFilterLogicOperator: GridLogicOperator.Or,
     },
   },
 }}
@@ -354,9 +354,8 @@ initialState={{
 
 With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
 
-- For `'string'` columns, the cell must **contain** the value
-- For `'number'` columns, the cell must **equal** the value
-- For `'singleSelect'` columns, the cell must **start with** the value
+- For `'string'` and `'singleSelect'` columns, the cell's formatted value must **contain** the value
+- For `'number'` columns, the cell's formatted value must **equal** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.

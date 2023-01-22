@@ -6,7 +6,6 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Brak danych',
   noResultsOverlayLabel: 'Nie znaleziono wyników.',
-  errorOverlayDefaultLabel: 'Wystąpił błąd.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Wysokość rzędu',
@@ -48,7 +47,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
-  filterPanelLinkOperator: 'Operator logiczny',
+  filterPanelLogicOperator: 'Operator logiczny',
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',

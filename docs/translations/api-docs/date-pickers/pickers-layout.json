@@ -3,7 +3,9 @@
   "propDescriptions": {
     "components": "Overrideable components.",
     "componentsProps": "The props used for each component slot.",
-    "orientation": "Force rendering in particular orientation."
+    "orientation": "Force rendering in particular orientation.",
+    "slotProps": "The props used for each component slot.",
+    "slots": "Overrideable component slots."
   },
   "classDescriptions": {
     "root": { "description": "Styles applied to the root element." },
@@ -20,9 +22,9 @@
     "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" }
   },
   "slotDescriptions": {
-    "Tabs": "Tabs enabling toggling between views.",
-    "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views.",
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar."
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
+    "Tabs": "Tabs enabling toggling between views.",
+    "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views."
   }
 }
