@@ -1,16 +1,20 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
-// This object is not Partial<PickersLocaleText> because it is the default values
-
-// maps TimeView to its translation
+// maps ClockPickerView to its translation
 const timeViews = {
   hours: 'Hodiny',
   minutes: 'Minuty',
   seconds: 'Sekundy',
 };
 
-const csCZPickers: Partial<PickersLocaleText<any>> = {
+// maps PickersToolbar["viewType"] to its translation
+const pickerViews = {
+  calendar: 'kalendáře',
+  clock: 'času',
+};
+
+const csCZPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Další měsíc',
   nextMonth: 'Předchozí month',
@@ -22,7 +26,10 @@ const csCZPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
       : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `Zobrazení pro zadávání textu je otevřené, přepněte do zobrazení ${pickerViews[viewType]}`
+      : `Zobrazení ${pickerViews[viewType]} je otevřené, přepněte do zobrazení textového pole`,
 
   // DateRange placeholders
   start: 'Začátek',
