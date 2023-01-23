@@ -276,9 +276,14 @@ export const useGridPrintExport = (
       } else {
         printWindow.onload = () => {
           handlePrintWindowLoad(printWindow, options);
-          printWindow.contentWindow!.onafterprint = () => {
-            handlePrintWindowAfterPrint(printWindow);
-          };
+
+          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+          mediaQueryList.addEventListener('change', (mql) => {
+            const isAfterPrint = mql.matches === false;
+            if (isAfterPrint) {
+              handlePrintWindowAfterPrint(printWindow);
+            }
+          });
         };
         doc.current!.body.appendChild(printWindow);
       }
