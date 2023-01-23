@@ -60,6 +60,11 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
       }
       return value;
     }
+    case 'date':
+    case 'dateTime': {
+      const date = new Date(value);
+      return date;
+    }
     default:
       return value;
   }
