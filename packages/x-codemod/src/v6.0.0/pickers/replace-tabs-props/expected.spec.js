@@ -9,18 +9,25 @@
 <DateTimePicker
   componentsProps={{
     tabs: {
+      hidden: false,
       dateIcon: <LightModeIcon />,
+      timeIcon: <AcUnitIcon />,
     },
-  }}
->
-  ChildrenString
-</DateTimePicker>;
+  }} />;
 
 <DateTimePicker
   componentsProps={{
+    actionBar: {
+      actions: [],
+    },
+
     tabs: {
-      hidden: false,
+      classes: {
+        root: 'test',
+      },
+
       dateIcon: <LightModeIcon />,
+      hidden: false,
       timeIcon: <AcUnitIcon />,
     },
   }} />;

@@ -6,14 +6,20 @@
   }}
 />;
 
+<DateTimePicker hideTabs={false} dateRangeIcon={<LightModeIcon />} timeIcon={<AcUnitIcon />} />;
+
 <DateTimePicker
+  hideTabs={false}
   componentsProps={{
     tabs: {
+      classes: {
+        root: 'test',
+      },
       dateRangeIcon: <LightModeIcon />,
     },
+    actionBar: {
+      actions: [],
+    },
   }}
->
-  ChildrenString
-</DateTimePicker>;
-
-<DateTimePicker hideTabs={false} dateRangeIcon={<LightModeIcon />} timeIcon={<AcUnitIcon />} />;
+  timeIcon={<AcUnitIcon />}
+/>;
