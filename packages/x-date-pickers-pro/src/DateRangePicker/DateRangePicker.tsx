@@ -6,7 +6,7 @@ import { DesktopDateRangePicker } from '../DesktopDateRangePicker';
 import { MobileDateRangePicker } from '../MobileDateRangePicker';
 import { DateRangePickerProps } from './DateRangePicker.types';
 
-type DatePickerComponent = (<TDate>(
+type DateRangePickerComponent = (<TDate>(
   props: DateRangePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any; displayName: string };
 
@@ -26,7 +26,7 @@ const DateRangePicker = React.forwardRef(function DateRangePicker<TDate>(
   }
 
   return <MobileDateRangePicker ref={ref} {...other} />;
-}) as DatePickerComponent;
+}) as DateRangePickerComponent;
 
 DateRangePicker.displayName = 'DateRangePicker';
 

@@ -6,7 +6,7 @@ import { useSlotProps } from '@mui/base/utils';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 
-type DateRangeFieldComponent = (<TDate>(
+type SingleInputDateRangeFieldComponent = (<TDate>(
   props: SingleInputDateRangeFieldProps<TDate> & React.RefAttributes<HTMLInputElement>,
 ) => JSX.Element) & { propTypes?: any; displayName: string };
 
@@ -49,7 +49,7 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
       inputProps={{ ...fieldProps.inputProps, ref: inputRef, onPaste, inputMode, readOnly }}
     />
   );
-}) as DateRangeFieldComponent;
+}) as SingleInputDateRangeFieldComponent;
 
 SingleInputDateRangeField.displayName = 'SingleInputDateRangeField';
 
