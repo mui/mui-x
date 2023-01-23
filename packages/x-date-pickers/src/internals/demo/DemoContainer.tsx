@@ -61,7 +61,7 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 };
 
 interface DemoItemProps {
-  label: React.ReactNode;
+  label?: React.ReactNode;
   children: React.ReactNode;
 }
 export function DemoItem(props: DemoItemProps) {
@@ -87,7 +87,7 @@ export function DemoItem(props: DemoItemProps) {
 
   return (
     <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
-      <Typography variant="body2">{label}</Typography>
+      {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>
   );
