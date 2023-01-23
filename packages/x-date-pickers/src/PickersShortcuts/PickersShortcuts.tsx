@@ -52,8 +52,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
         {
           maxHeight: VIEW_HEIGHT,
           maxWidth: 200,
-          overflow: 'hidden',
-          '&:hover': { overflow: 'auto' },
+          overflow: 'auto',
         },
         ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
       ]}
