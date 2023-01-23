@@ -82,7 +82,7 @@
     "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "SingleInputDateRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSingleInputDateRangeField" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputDateRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/SingleInputDateRangeField/SingleInputDateRangeField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-field/\">Date Range Field </a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
   "packages": [
