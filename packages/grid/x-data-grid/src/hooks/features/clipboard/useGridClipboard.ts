@@ -157,7 +157,7 @@ export const useGridClipboard = (
     if (columnType === 'number') {
       data = String(cellParams.value);
     } else {
-      data = cellParams.formattedValue;
+      data = cellParams.formattedValue as any;
     }
     copyToClipboard(data);
   }, [apiRef]);
