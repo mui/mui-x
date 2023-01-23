@@ -1,5 +1,5 @@
 import {
-  PickerStateValueManager,
+  PickerValueManager,
   replaceInvalidDateByNull,
   FieldValueManager,
   splitFormatIntoSections,
@@ -14,16 +14,16 @@ import type { TimeRangeValidationError } from '../hooks/validation/useTimeRangeV
 import type { DateTimeRangeValidationError } from '../hooks/validation/useDateTimeRangeValidation';
 import { RangeFieldSection } from '../models/fields';
 
-export type RangePickerStateValueManager<
+export type RangePickerValueManager<
   TValue = [any, any],
   TDate = any,
   TError extends
     | DateRangeValidationError
     | TimeRangeValidationError
     | DateTimeRangeValidationError = any,
-> = PickerStateValueManager<TValue, TDate, TError>;
+> = PickerValueManager<TValue, TDate, TError>;
 
-export const rangeValueManager: RangePickerStateValueManager = {
+export const rangeValueManager: RangePickerValueManager = {
   emptyValue: [null, null],
   getTodayValue: (utils) => [utils.date()!, utils.date()!],
   cleanValue: (utils, value) =>

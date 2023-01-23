@@ -1,24 +1,23 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   undefined: {
-    placeholder: 'm/d/yyyy hh:mm (a|p)m',
+    placeholder: 'MM/DD/YYYY hh:mm aa',
     value: '5/15/2018 09:35 AM',
   },
   fr: {
-    placeholder: 'd/m/yyyy h:m',
-    value: '15/05/2018 09:35',
+    placeholder: 'DD/MM/YYYY hh:mm',
+    value: '15/5/2018 9:35',
   },
   de: {
-    placeholder: 'd.m.yyyy h:m',
-    value: '15.5.2018 09:35',
+    placeholder: 'DD.MM.YYYY hh:mm',
+    value: '15.5.2018 9:35',
   },
 };
 describe('<AdapterLuxon />', () => {
@@ -34,32 +33,15 @@ describe('<AdapterLuxon />', () => {
       });
 
       it('should have correct placeholder', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={null}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<DateTimePicker />);
 
-        expect(screen.getByRole('textbox')).to.have.attr(
-          'placeholder',
-          localizedTexts[localeKey].placeholder,
-        );
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
       });
 
       it('should have well formatted value', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={adapter.date(testDate)}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<DateTimePicker value={adapter.date(testDate)} />);
 
-        expect(screen.getByRole('textbox')).to.have.value(localizedTexts[localeKey].value);
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
       });
     });
   });

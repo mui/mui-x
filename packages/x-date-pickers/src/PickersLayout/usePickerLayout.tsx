@@ -54,7 +54,6 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     isLandscape,
     disabled,
     readOnly,
-    showToolbar,
     children,
     components,
     componentsProps,
@@ -92,7 +91,6 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
 
   // Toolbar
 
-  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
@@ -110,10 +108,7 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
     },
     ownerState: { ...props, wrapperVariant },
   });
-  const toolbar =
-    toolbarHasView(toolbarProps) && shouldRenderToolbar && !!Toolbar ? (
-      <Toolbar {...toolbarProps} />
-    ) : null;
+  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
   // Content
 

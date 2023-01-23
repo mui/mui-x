@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 export default function TimePickerValue() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07T15:30'));
@@ -11,11 +11,11 @@ export default function TimePickerValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <NextTimePicker
+        <TimePicker
           label="Uncontrolled picker"
           defaultValue={dayjs('2022-04-07T15:30')}
         />
-        <NextTimePicker
+        <TimePicker
           label="Controlled picker"
           value={value}
           onChange={(newValue) => setValue(newValue)}

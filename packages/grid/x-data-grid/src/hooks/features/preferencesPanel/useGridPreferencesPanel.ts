@@ -89,7 +89,7 @@ export const useGridPreferencesPanel = (
       const preferencePanelToExport = gridPreferencePanelStateSelector(apiRef.current.state);
 
       const shouldExportPreferencePanel =
-        // Always export if the `exportOnlyDirtyModels` property is activated
+        // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the panel was initialized
         props.initialState?.preferencePanel != null ||

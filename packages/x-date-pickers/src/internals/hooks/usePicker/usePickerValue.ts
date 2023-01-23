@@ -3,7 +3,6 @@ import { unstable_useControlled as useControlled } from '@mui/utils';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
-import { PickerStateValueManager } from '../usePickerState';
 import {
   FieldChangeHandlerContext,
   FieldSelectedSections,
@@ -12,6 +11,67 @@ import {
 import { InferError, useValidation, Validator } from '../validation/useValidation';
 import { UseFieldValidationProps } from '../useField/useField.types';
 import { WrapperVariant } from '../../models/common';
+import { MuiPickersAdapter } from '../../models/muiPickersAdapter';
+
+export interface PickerValueManager<TValue, TDate, TError> {
+  /**
+   * Determines if two values are equal.
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TValue} valueLeft The first value to compare.
+   * @param {TValue} valueRight The second value to compare.
+   * @returns {boolean} A boolean indicating if the two values are equal.
+   */
+  areValuesEqual: (
+    utils: MuiPickersAdapter<TDate>,
+    valueLeft: TValue,
+    valueRight: TValue,
+  ) => boolean;
+  /**
+   * Value to set when clicking the "Clear" button.
+   */
+  emptyValue: TValue;
+  /**
+   * Method returning the value to set when clicking the "Today" button
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @returns {TValue} The value to set when clicking the "Today" button.
+   */
+  getTodayValue: (utils: MuiPickersAdapter<TDate>) => TValue;
+  /**
+   * Method parsing the input value to replace all invalid dates by `null`.
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TValue} value The value to parse.
+   * @returns {TValue} The value without invalid date.
+   */
+  cleanValue: (utils: MuiPickersAdapter<TDate>, value: TValue) => TValue;
+  /**
+   * Generates the new value, given the previous value and the new proposed value.
+   * @template TDate, TValue
+   * @param {MuiPickersAdapter<TDate>} utils The adapter.
+   * @param {TValue} lastValidDateValue The last valid value.
+   * @param {TValue} value The proposed value.
+   * @returns {TValue} The new value.
+   */
+  valueReducer?: (
+    utils: MuiPickersAdapter<TDate>,
+    lastValidDateValue: TValue,
+    value: TValue,
+  ) => TValue;
+  /**
+   * Compare two errors to know if they are equal.
+   * @template TError
+   * @param {TError} error The new error
+   * @param {TError | null} prevError The previous error
+   * @returns {boolean} `true` if the new error is different from the previous one.
+   */
+  isSameError: (error: TError, prevError: TError | null) => boolean;
+  /**
+   * The value identifying no error, used to initialise the error state.
+   */
+  defaultErrorState: TError;
+}
 
 export interface PickerChangeHandlerContext<TError> {
   validationError: TError;
@@ -161,7 +221,7 @@ export interface UsePickerValueParams<
   TExternalProps extends UsePickerValueProps<TValue, any>,
 > {
   props: TExternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate, InferError<TExternalProps>>;
+  valueManager: PickerValueManager<TValue, TDate, InferError<TExternalProps>>;
   wrapperVariant: WrapperVariant;
   validator: Validator<
     TValue,
@@ -171,7 +231,7 @@ export interface UsePickerValueParams<
   >;
 }
 
-interface UsePickerValueActions {
+export interface UsePickerValueActions {
   onAccept: () => void;
   onClear: () => void;
   onDismiss: () => void;

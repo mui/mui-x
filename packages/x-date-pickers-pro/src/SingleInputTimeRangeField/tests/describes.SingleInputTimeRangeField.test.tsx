@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { describeConformance } from '@mui/monorepo/test/utils';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
-import { Unstable_SingleInputTimeRangeField as SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
+import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
 import { createPickerRenderer, wrapPickerMount } from 'test/utils/pickers-utils';
 
 describe('<SingleInputTimeRangeField /> - Describes', () => {

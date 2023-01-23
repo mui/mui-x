@@ -145,7 +145,6 @@ PickersLayout.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
-  showToolbar: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

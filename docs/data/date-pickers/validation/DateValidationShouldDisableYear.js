@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const today = dayjs();
 
@@ -15,13 +15,10 @@ export default function DateValidationShouldDisableYear() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
         <DemoItem label="DatePicker">
-          <NextDatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
+          <DatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
         <DemoItem label="DateTimePicker">
-          <NextDateTimePicker
-            defaultValue={today}
-            shouldDisableYear={isInCurrentYear}
-          />
+          <DateTimePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

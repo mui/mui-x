@@ -1,4 +1,4 @@
-import type { PickerStateValueManager } from '../hooks/usePickerState';
+import type { PickerValueManager } from '../hooks/usePicker';
 import type { DateValidationError } from '../hooks/validation/useDateValidation';
 import type { TimeValidationError } from '../hooks/validation/useTimeValidation';
 import type { DateTimeValidationError } from '../hooks/validation/useDateTimeValidation';
@@ -11,13 +11,13 @@ import {
   getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
-export type SingleItemPickerStateValueManager<
+export type SingleItemPickerValueManager<
   TValue = any,
   TDate = any,
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
-> = PickerStateValueManager<TValue, TDate, TError>;
+> = PickerValueManager<TValue, TDate, TError>;
 
-export const singleItemValueManager: SingleItemPickerStateValueManager = {
+export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
   cleanValue: replaceInvalidDateByNull,

@@ -196,6 +196,25 @@ If you were always using the same text value in all your components, consider mo
 
 You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
 
+#### `rename-components-to-slots`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects pickers components.
+
+```diff
+ <DatePicker
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
+
 ### Data grid codemods
 
 #### `preset-safe` for data grid
@@ -209,6 +228,9 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path|folder>
 The list includes these transformers
 
 - [`column-menu-components-rename`](#column-menu-components-rename)
+- [`row-selection-props-rename`](#row-selection-props-rename)
+- [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
+- [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 
 #### `column-menu-components-rename`
 
@@ -234,5 +256,59 @@ npx @mui/x-codemod v6.0.0/data-grid/column-menu-components-rename <path>
 ```
 
 If you are using `GridRowGroupingColumnMenuItems` and `GridRowGroupableColumnMenuItems` for grouping, consider fixing them manually as these imports are replaced by `GridColumnMenuGroupingItem` and may require some extra work to port.
+
+#### `row-selection-props-rename`
+
+Data grid props that have been renamed.
+
+```diff
+ <DataGrid
+-  selectionModel={model}
++  rowSelectionModel={model}
+-  onSelectionModelChange={handler}
++  onRowSelectionModelChange={handler}
+-  disableSelectionOnClick
++  disableRowSelectionOnClick
+-  disableMultipleSelection
++  disableMultipleRowSelection
+-  showCellRightBorder
++  showCellVerticalBorder
+-  showColumnRightBorder
++  showColumnVerticalBorder
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
+```
+
+#### `rename-rowsPerPageOptions-prop`
+
+Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
+
+```diff
+  <DataGrid
+-   rowsPerPageOptions={[5, 10, 20]}
++   pageSizeOptions={[5, 10, 20]}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
+```
+
+#### `remove-disableExtendRowFullWidth-prop`
+
+Remove `disableExtendRowFullWidth` prop which is no longer supported.
+
+```diff
+  <DataGrid
+-   disableExtendRowFullWidth
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
