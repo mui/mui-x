@@ -2,7 +2,7 @@ import * as React from 'react';
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDateRangePicker as StaticNextDateRangePicker } from '@mui/x-date-pickers-pro/StaticNextDateRangePicker';
+import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 
 const shortcutsItems = [
   {
@@ -66,7 +66,7 @@ const shouldDisableDate = (date) => {
 export default function AdvancedRangeShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDateRangePicker
+      <StaticDateRangePicker
         shouldDisableDate={shouldDisableDate}
         slotProps={{
           shortcuts: {

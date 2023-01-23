@@ -2,8 +2,8 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 
 const getMonthWeekday = (
   monthIndex: number,
@@ -77,7 +77,7 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
 export default function BasicShortcuts() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
+      <StaticDatePicker
         slotProps={{
           shortcuts: {
             items: shortcutsItems,

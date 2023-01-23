@@ -2,8 +2,8 @@ import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_StaticNextDatePicker as StaticNextDatePicker } from '@mui/x-date-pickers/StaticNextDatePicker';
-import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts/PickersShortcuts';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { PickersShortcutsItem } from '@mui/x-date-pickers/PickersShortcuts';
 
 const getMonthWeekday = (
   monthIndex: number,
@@ -55,13 +55,6 @@ const shortcutsItems: PickersShortcutsItem<Dayjs | null>[] = [
     },
   },
   {
-    label: 'Columbus Day',
-    getValue: () => {
-      // (second Monday in October)
-      return getMonthWeekday(9, 1, 2);
-    },
-  },
-  {
     label: 'Veterans Day',
     getValue: () => {
       // (November 11)
@@ -99,7 +92,7 @@ export default function DisabledDatesShortcuts() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StaticNextDatePicker
+      <StaticDatePicker
         slotProps={{
           shortcuts: {
             items: shortcutsItems,

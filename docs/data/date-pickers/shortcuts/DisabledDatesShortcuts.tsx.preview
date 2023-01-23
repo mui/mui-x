@@ -1,4 +1,4 @@
-<StaticNextDatePicker
+<StaticDatePicker
   slotProps={{
     shortcuts: {
       items: shortcutsItems,

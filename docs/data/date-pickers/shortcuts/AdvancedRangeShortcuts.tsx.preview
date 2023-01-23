@@ -1,4 +1,4 @@
-<StaticNextDateRangePicker
+<StaticDateRangePicker
   shouldDisableDate={shouldDisableDate}
   slotProps={{
     shortcuts: {
