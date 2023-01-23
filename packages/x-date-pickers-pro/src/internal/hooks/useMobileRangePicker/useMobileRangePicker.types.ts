@@ -39,7 +39,7 @@ export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrT
 
 export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>,TDate, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
     {},
