@@ -62,6 +62,6 @@ In the following demonstration, it is used to get the next available week and we
 ## Customization
 
 Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
-Here is an example with an horizontal shortcuts.
+Here is an example with horizontal shortcuts.
 
 {{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
