@@ -222,6 +222,34 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiLocalizationProvider: {
+      defaultProps: {
+        adapterLocale: 'fr',
+        // @ts-expect-error invalid MuiLocalizationProvider prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiMonthPicker: {
       defaultProps: {
         disableFuture: true,
@@ -264,18 +292,6 @@ createTheme({
         },
       },
     },
-    MuiPickersFadeTransitionGroup: {
-      defaultProps: {
-        reduceAnimations: true,
-        // @ts-expect-error invalid MuiPickersFadeTransitionGroup prop
-        someRandomProp: true,
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: 'red',
-        },
-      },
-    },
     MuiPickersDay: {
       defaultProps: {
         disabled: true,
@@ -288,6 +304,18 @@ createTheme({
           [`.${pickersDayClasses.today}`]: {
             backgroundColor: 'green',
           },
+        },
+      },
+    },
+    MuiPickersFadeTransitionGroup: {
+      defaultProps: {
+        reduceAnimations: true,
+        // @ts-expect-error invalid MuiPickersFadeTransitionGroup prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
         },
       },
     },
@@ -393,6 +421,50 @@ createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'red',
+        },
+      },
+    },
+    PrivatePickersMonth: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid PrivatePickersMonth prop
+        randomClass: {
+          color: 'black',
+        },
+      },
+    },
+    PrivatePickersSlideTransition: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid PrivatePickersSlideTransition prop
+        randomClass: {
+          color: 'black',
+        },
+      },
+    },
+    PrivatePickersToolbarText: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid PrivatePickersToolbarText prop
+        randomClass: {
+          color: 'black',
+        },
+      },
+    },
+    PrivatePickersYear: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+        },
+        // @ts-expect-error invalid PrivatePickersYear prop
+        randomClass: {
+          color: 'black',
         },
       },
     },
