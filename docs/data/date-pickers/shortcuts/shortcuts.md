@@ -22,9 +22,9 @@ You can use `componentsProps.shortcus` to customize this props. For example to a
 <DatePicker
   componentsProps={{
     shortcuts: {
-      shortcuts: [
+      items: [
         {
-          label: 'Chrismas',
+          label: 'Christmas',
           getValue: () => {
             return dayjs(new Date(2023, 11, 25));
           },
@@ -58,3 +58,10 @@ You can use it to test if a value is valid or not based on the [validation props
 In the following demonstration, it is used to get the next available week and week-end.
 
 {{"demo": "AdvancedRangeShortcuts.js", "bg": "inline"}}
+
+## Customization
+
+Like other [layout's subcomponent](/x/react-date-pickers/custom-layout/), the shortcuts can be customized.
+Here is an example with an horizontal shortcuts.
+
+{{"demo": "CustomizedRangeShortcuts.js", "bg": "inline"}}
