@@ -134,13 +134,7 @@ export const useGridClipboard = (
       delimiter: '\t',
     });
 
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(data).catch(() => {
-        writeToClipboardPolyfill(data);
-      });
-    } else {
-      writeToClipboardPolyfill(data);
-    }
+    copyToClipboard(data);
   }, [apiRef]);
 
   const copyFocusedCellToClipboard = React.useCallback<
@@ -156,6 +150,8 @@ export const useGridClipboard = (
     const columnType = cellParams.colDef.type;
     if (columnType === 'number') {
       data = String(cellParams.value);
+    } else if (columnType === 'date' || columnType === 'dateTime') {
+      data = (cellParams.value as Date)?.toString();
     } else {
       data = cellParams.formattedValue as any;
     }
