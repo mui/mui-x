@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-import { Unstable_DateField as DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
+import { DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import {
   createPickerRenderer,
@@ -17,6 +17,23 @@ describe('<DateField /> - Editing', () => {
   });
 
   const { clickOnInput } = buildFieldInteractions({ clock });
+
+  const selectSection = (input: HTMLInputElement, activeSectionIndex: number) => {
+    const value = input.value.replace(':', '/');
+
+    // TODO: Improve this logic when we will be able to access state.sections from the outside
+    let clickPosition: number;
+    if (activeSectionIndex === 0) {
+      clickPosition = 0;
+    } else {
+      clickPosition =
+        (value.split('/', activeSectionIndex - 1).join('/').length +
+          value.split('/', activeSectionIndex).join('/').length) /
+        2;
+    }
+
+    clickOnInput(input, clickPosition);
+  };
 
   const testKeyPress = <TDate extends unknown>({
     key,
@@ -306,6 +323,30 @@ describe('<DateField /> - Editing', () => {
         key: 'Backspace',
         expectedValue: '2022',
       });
+    });
+
+    it('should only call `onChange` when clearing the last section', () => {
+      const handleChange = spy();
+
+      render(
+        <DateField
+          format={adapterToUse.formats.monthAndYear}
+          defaultValue={adapterToUse.date()}
+          onChange={handleChange}
+        />,
+      );
+
+      const input = screen.getByRole('textbox');
+      selectSection(input, 0);
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(handleChange.callCount).to.equal(0);
+
+      userEvent.keyPress(input, { key: 'ArrowRight' });
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expect(handleChange.callCount).to.equal(1);
+      expect(handleChange.lastCall.firstArg).to.equal(null);
     });
   });
 
@@ -771,6 +812,80 @@ describe('<DateField /> - Editing', () => {
       fireEvent.change(input, { target: { value: '09/16/2022' } });
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
+    });
+  });
+
+  describe('Android editing', () => {
+    let originalUserAgent: string = '';
+
+    beforeEach(() => {
+      originalUserAgent = global.navigator.userAgent;
+      Object.defineProperty(global.navigator, 'userAgent', {
+        configurable: true,
+        writable: true,
+        value:
+          'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.128 Mobile Safari/537.36',
+      });
+    });
+
+    afterEach(() => {
+      Object.defineProperty(global.navigator, 'userAgent', {
+        configurable: true,
+        value: originalUserAgent,
+      });
+    });
+
+    it('should support digit editing', () => {
+      render(<DateField defaultValue={adapterToUse.date(new Date(2022, 4, 16))} />);
+
+      const input = screen.getByRole('textbox');
+      const initialValueStr = input.value;
+      const sectionStart = initialValueStr.indexOf('1');
+
+      clickOnInput(input, sectionStart, sectionStart + 1);
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+
+      // // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '2') } });
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+
+      // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '1') } });
+
+      expectInputValue(input, '05 / 21 / 2022');
+    });
+
+    it('should support letter editing', () => {
+      render(
+        <DateField
+          defaultValue={adapterToUse.date(new Date(2022, 4, 16))}
+          format={`${adapterToUse.formats.month} ${adapterToUse.formats.year}`}
+        />,
+      );
+
+      const input = screen.getByRole('textbox');
+      const initialValueStr = input.value;
+      const sectionStart = initialValueStr.indexOf('M');
+
+      clickOnInput(input, sectionStart, sectionStart + 1);
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+
+      // // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'J') } });
+
+      // Remove the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+
+      // Set the key pressed in the selected section
+      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'u') } });
+
+      expectInputValue(input, 'June 2022');
     });
   });
 });

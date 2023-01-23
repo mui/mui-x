@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateTimePicker as NextDateTimePicker } from '@mui/x-date-pickers/NextDateTimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function DateTimePickerViews() {
   return (
@@ -11,17 +11,15 @@ export default function DateTimePickerViews() {
         <DemoItem
           label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
         >
-          <NextDateTimePicker
+          <DateTimePicker
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
           />
         </DemoItem>
         <DemoItem label={'"day", "hours"'}>
-          <NextDateTimePicker views={['day', 'hours']} />
+          <DateTimePicker views={['day', 'hours']} />
         </DemoItem>
         <DemoItem label={'"year", "day", "hours", "minutes", "seconds"'}>
-          <NextDateTimePicker
-            views={['year', 'day', 'hours', 'minutes', 'seconds']}
-          />
+          <DateTimePicker views={['year', 'day', 'hours', 'minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

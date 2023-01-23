@@ -6,7 +6,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '행이 없습니다.',
   noResultsOverlayLabel: '결과값이 없습니다.',
-  errorOverlayDefaultLabel: '오류가 발생했습니다.',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',
@@ -48,7 +47,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: '필터 추가',
   filterPanelDeleteIconLabel: '삭제',
-  filterPanelLinkOperator: '논리 연산자',
+  filterPanelLogicOperator: '논리 연산자',
   filterPanelOperator: '연산자',
   filterPanelOperatorAnd: '그리고',
   filterPanelOperatorOr: '또는',

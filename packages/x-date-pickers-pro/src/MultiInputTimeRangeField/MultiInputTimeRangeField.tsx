@@ -5,7 +5,7 @@ import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { FieldsTextFieldProps, uncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { MultiInputTimeRangeFieldProps } from './MultiInputTimeRangeField.types';
 import { useMultiInputTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputTimeRangeField';
 
@@ -43,6 +43,8 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
   });
 
   const {
+    slots: innerSlots,
+    slotProps: innerslotProps,
     components,
     componentsProps,
     value,
@@ -55,6 +57,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     minTime,
     maxTime,
     minutesStep,
+    shouldDisableClock,
     shouldDisableTime,
     disableFuture,
     disablePast,
@@ -62,13 +65,15 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     onSelectedSectionsChange,
     ...other
   } = themeProps;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerslotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
-  const Root = components?.Root ?? MultiInputTimeRangeFieldRoot;
+  const Root = slots?.root ?? MultiInputTimeRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: componentsProps?.root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -76,23 +81,23 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     ownerState,
   });
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
 
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const Separator = components?.Separator ?? MultiInputTimeRangeFieldSeparator;
+  const Separator = slots?.separator ?? MultiInputTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: componentsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
   });
 
@@ -123,6 +128,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       minTime,
       maxTime,
       minutesStep,
+      shouldDisableClock,
       shouldDisableTime,
       disableFuture,
       disablePast,
@@ -178,11 +184,13 @@ MultiInputTimeRangeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -285,12 +293,30 @@ MultiInputTimeRangeField.propTypes = {
     }),
   ]),
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0

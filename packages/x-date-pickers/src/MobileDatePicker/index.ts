@@ -3,4 +3,4 @@ export type {
   MobileDatePickerProps,
   MobileDatePickerSlotsComponent,
   MobileDatePickerSlotsComponentsProps,
-} from './MobileDatePicker';
+} from './MobileDatePicker.types';

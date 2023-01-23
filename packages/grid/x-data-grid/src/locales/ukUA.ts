@@ -25,7 +25,6 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Немає рядків',
   noResultsOverlayLabel: 'Дані не знайдено.',
-  errorOverlayDefaultLabel: 'Виявлено помилку.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Висота рядка',
@@ -72,7 +71,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Додати фільтр',
   filterPanelDeleteIconLabel: 'Видалити',
-  filterPanelLinkOperator: 'Логічна функція',
+  filterPanelLogicOperator: 'Логічна функція',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',

@@ -14,7 +14,7 @@ import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { gridVisibleSortedRowEntriesSelector } from '../filter/gridFilterSelector';
+import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridClasses } from '../../../constants/gridClasses';
 
 // Logic copied from https://www.w3.org/TR/wai-aria-practices/examples/listbox/js/listbox.js
@@ -57,7 +57,7 @@ export const useGridScroll = (
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersElementRef!;
   const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
-  const visibleSortedRows = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
+  const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {

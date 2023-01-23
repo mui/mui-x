@@ -6,7 +6,6 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
-  errorOverlayDefaultLabel: 'Une erreur est apparue.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densité',
@@ -49,7 +48,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
   filterPanelDeleteIconLabel: 'Supprimer',
-  filterPanelLinkOperator: 'Opérateur logique',
+  filterPanelLogicOperator: 'Opérateur logique',
   filterPanelOperator: 'Opérateur',
   filterPanelOperatorAnd: 'Et',
   filterPanelOperatorOr: 'Ou',

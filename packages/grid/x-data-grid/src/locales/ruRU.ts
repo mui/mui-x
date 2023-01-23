@@ -6,7 +6,6 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Нет строк',
   noResultsOverlayLabel: 'Данные не найдены.',
-  errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Высота строки',
@@ -57,7 +56,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добавить фильтр',
   filterPanelDeleteIconLabel: 'Удалить',
-  filterPanelLinkOperator: 'Логические операторы',
+  filterPanelLogicOperator: 'Логические операторы',
   filterPanelOperator: 'Операторы',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',

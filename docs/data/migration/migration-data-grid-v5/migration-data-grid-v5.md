@@ -29,7 +29,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
 :::
 
-Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
+Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
 If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
@@ -45,7 +45,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/es/blog/release/v12.22.12/).
 :::
 
-### Renamed props
+### ✅ Renamed props
 
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
 
@@ -57,6 +57,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `disableMultipleSelection` | `disableMultipleRowSelection` |
   | `showCellRightBorder`      | `showCellVerticalBorder`      |
   | `showColumnRightBorder`    | `showColumnVerticalBorder`    |
+  | `headerHeight`             | `columnHeaderHeight`          |
 
 ### Removed props
 
@@ -64,6 +65,23 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   The old behavior can be restored by using `apiRef.current.stopRowEditMode({ ignoreModifications: true })` or `apiRef.current.stopCellEditMode({ ignoreModifications: true })`.
 - The `onColumnVisibilityChange` prop was removed. Use `onColumnVisibilityModelChange` instead.
 - The `components.Header` slot was removed. Use `components.Toolbar` slot instead.
+- ✅ The `disableExtendRowFullWidth` prop was removed. Use [`showCellVerticalBorder`](/x/api/data-grid/data-grid/#props) or [`showColumnVerticalBorder`](/x/api/data-grid/data-grid/#props) prop to show or hide right border for cells and header cells respectively.
+- The `columnTypes` prop was removed. For custom column types see [Custom column types](/x/react-data-grid/column-definition/#custom-column-types) docs.
+- The `onCellFocusOut` prop was removed. Use `componentsProps.cell.onBlur` instead:
+  ```tsx
+  <DataGrid
+    componentsProps={{
+      cell: {
+        onBlur: (event) => {
+          const cellElement = event.currentTarget;
+          const field = cellElement.getAttribute('data-field');
+          const rowId = cell.parentElement.getAttribute('data-id');
+        },
+      },
+    }}
+  />
+  ```
+- The `error` and `onError` props were removed - the grid no longer catches errors during rendering. To catch errors that happen during rendering use the [error boundary](https://reactjs.org/docs/error-boundaries.html). The `components.ErrorOverlay` slot was also removed.
 
 ### State access
 
@@ -77,7 +95,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
 - The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
-- The `gridVisibleRowsSelector` selector was removed. Use `gridVisibleSortedRowIdsSelector` instead.
+- The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridRowGroupingStateSelector` selector was removed.
 - The `gridFilterStateSelector` selector was removed.
 - The `gridRowsStateSelector` selector was removed.
@@ -85,8 +103,14 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridTotalHeaderHeightSelector` selector was removed.
 - The `gridDensityRowHeightSelector` selector was removed.
 - The `gridDensityHeaderHeightSelector` selector was removed.
+- The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
+- The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
+- The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
+- The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
+- The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
+- The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
 
 ### Events
 
@@ -95,7 +119,28 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
+- The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
+  This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
+  For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
+  The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
+- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
+
+  ```tsx
+  <DataGrid
+    onCellEditStop={(params, event) => {
+      if (params.reason !== GridCellEditStopReasons.enterKeyDown) {
+        return;
+      }
+      // Check if the target is inside a Portal
+      if (!event.currentTarget.contains(event.target)) {
+        event.defaultMuiPrevented = true;
+      }
+    }}
+  />
+  ```
+
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
+- The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
 
 ### Columns
 
@@ -110,6 +155,32 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   - return null;
   + return undefined;
    }
+  ```
+
+- The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
+- The `singleSelect` column type now has a default value formatter that returns the `label` correspoding to the selected value when `valueOptions` is an array of objects.
+  As consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
+  It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
+  To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop:
+
+  - `GridEditSingleSelectCell`
+  - `GridFilterInputSingleSelect`
+  - `GridFilterInputMultipleSingleSelect`
+
+  This prop accepts a callback that is called with the item from `valueOptions` and must return the string to use as new label.
+
+- The `date` and `dateTime` columns now only support `Date` objects as values. To parse a string value, use the [`valueGetter`](https://mui.com/x/react-data-grid/column-definition/#value-getter):
+
+  ```tsx
+  <DataGrid
+    columns={[
+      {
+        field: 'date',
+        type: 'date',
+        valueGetter: (params) => new Date(params.value),
+      },
+    ]}
+  />
   ```
 
 ### Column menu
@@ -146,12 +217,38 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
 
+### Pagination
+
+- The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
+
+  ```diff
+  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
+  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+  ```
+
+- The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
+
+  ```diff
+  -initialState={{ pagination: { page: 1, pageSize: 10 } }}
+  +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
+  ```
+
+- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+
+  ```diff
+  -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
+  +<DataGrid pageSizeOptions={[10, 20, 50]} />
+  ```
+
 ### `apiRef` methods
 
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
 - The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
 - The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
+- The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -201,6 +298,13 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
 - The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
+- The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
+- The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
+- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
+- The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
+- The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
+- The `GridLocaleText['filterPanelLinkOperator']` property was renamed to `GridLocaleText['filterPanelLogicOperator']`.
 
 ### Editing
 
@@ -247,6 +351,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
 - The `GridCellParams` interface was changed. The row generic is now before the cell generic.
+- The `GridErrorOverlay` component was removed.
 
   ```diff
   -extends GridCellParams<V, R, F, N> {
@@ -260,20 +365,25 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +renderCell: (params: GridRenderCellParams<any, any, number>) => {
   ```
 
+- The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
+- The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
+
 ### CSS classes
 
 - Some CSS classes were removed or renamed
 
-  | MUI X v5 classes          | MUI X v6 classes               | Note                                            |
-  | ------------------------- | ------------------------------ | ----------------------------------------------- |
-  | `.MuiDataGrid-withBorder` | `.MuiDataGrid-withBorderColor` | The class only sets `border-color` CSS property |
+  | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
+  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
+  | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 
 <!--
 ### Virtualization
 
 TBD
+-->
 
 ### Removals from the public API
 
-TBD
--->
+- The `getGridSingleSelectQuickFilterFn` function was removed.
+  You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.

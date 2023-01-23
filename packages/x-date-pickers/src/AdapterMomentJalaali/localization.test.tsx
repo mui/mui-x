@@ -1,16 +1,15 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 import 'moment/locale/fa';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
   fa: {
-    placeholder: 'yyyy/mm/dd hh:mm',
+    placeholder: 'YYYY/MM/DD hh:mm',
     value: '۱۳۹۷/۰۲/۲۵ ۰۹:۳۵',
   },
 };
@@ -27,32 +26,15 @@ describe('<AdapterMomentJalaali />', () => {
       });
 
       it('should have correct placeholder', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={null}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<DateTimePicker />);
 
-        expect(screen.getByRole('textbox')).to.have.attr(
-          'placeholder',
-          localizedTexts[localeKey].placeholder,
-        );
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
       });
 
       it('should have well formatted value', () => {
-        render(
-          <DateTimePicker
-            renderInput={(params) => <TextField {...params} />}
-            value={adapter.date(testDate)}
-            onChange={() => {}}
-            disableMaskedInput
-          />,
-        );
+        render(<DateTimePicker value={adapter.date(testDate)} />);
 
-        expect(screen.getByRole('textbox')).to.have.value(localizedTexts[localeKey].value);
+        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].value, true);
       });
     });
   });

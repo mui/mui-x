@@ -11,9 +11,10 @@ import {
   GridPreProcessEditCellProps,
   GridRowModes,
 } from '@mui/x-data-grid-pro';
+import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
 import { getCell, getRow } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Row Editing', () => {
@@ -1132,9 +1133,8 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should keep focus on the first column when editing the first column of the first row of the 2nd page', () => {
         render(
           <TestCase
-            rowsPerPageOptions={[2]}
-            pageSize={2}
-            page={1}
+            pageSizeOptions={[2]}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ id: false }}
             pagination
           />,
@@ -1149,9 +1149,8 @@ describe('<DataGridPro /> - Row Editing', () => {
       it('should keep focus on the last column when editing the last column of the last row of the 2nd page', () => {
         render(
           <TestCase
-            rowsPerPageOptions={[2]}
-            pageSize={2}
-            page={1}
+            pageSizeOptions={[2]}
+            initialState={{ pagination: { paginationModel: { pageSize: 2, page: 1 } } }}
             columnVisibilityModel={{ price2M: false, price3M: false }}
             pagination
           />,
@@ -1297,5 +1296,55 @@ describe('<DataGridPro /> - Row Editing', () => {
       setProps({ rowModesModel: { 0: { mode: 'edit' } } });
       expect(onRowModesModelChange.callCount).to.equal(0);
     });
+  });
+
+  it('should correctly handle Portals when pressing Tab to go to the next column', () => {
+    function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
+      const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
+      React.useLayoutEffect(() => {
+        if (hasFocus && inputRef) {
+          inputRef.focus();
+        }
+      }, [hasFocus, inputRef]);
+      return (
+        <Portal>
+          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+        </Portal>
+      );
+    }
+    column1Props.renderEditCell = (props: GridRenderEditCellParams) => (
+      <PortaledEditComponent {...props} />
+    );
+    render(<TestCase />);
+    fireEvent.doubleClick(getCell(0, 1));
+    const input = screen.getByTestId('input');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Tab' });
+    expect(getCell(0, 2).querySelector('input')).toHaveFocus();
+  });
+
+  it('should correctly handle Portals when pressing Shift+Tab to go to the previous column', () => {
+    function PortaledEditComponent({ hasFocus }: GridRenderEditCellParams) {
+      const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null);
+      React.useLayoutEffect(() => {
+        if (hasFocus && inputRef) {
+          inputRef.focus();
+        }
+      }, [hasFocus, inputRef]);
+      return (
+        <Portal>
+          <input ref={(ref) => setInputRef(ref)} data-testid="input" />
+        </Portal>
+      );
+    }
+    column2Props.renderEditCell = (props: GridRenderEditCellParams) => (
+      <PortaledEditComponent {...props} />
+    );
+    render(<TestCase />);
+    fireEvent.doubleClick(getCell(0, 2));
+    const input = screen.getByTestId('input');
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
+    expect(getCell(0, 1).querySelector('input')).toHaveFocus();
   });
 });

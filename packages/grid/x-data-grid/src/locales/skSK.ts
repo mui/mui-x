@@ -6,7 +6,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepredvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -56,7 +55,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
-  filterPanelLinkOperator: 'Logický operátor',
+  filterPanelLogicOperator: 'Logický operátor',
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',

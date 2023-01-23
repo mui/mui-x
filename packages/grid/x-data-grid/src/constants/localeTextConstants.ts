@@ -4,7 +4,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   noRowsLabel: 'No rows',
   noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Density',
@@ -47,7 +46,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
-  filterPanelLinkOperator: 'Logic operator',
+  filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',

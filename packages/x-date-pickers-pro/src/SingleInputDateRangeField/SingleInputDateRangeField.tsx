@@ -19,14 +19,14 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
     name: 'MuiSingleInputDateRangeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
   const textFieldProps: SingleInputDateRangeFieldProps<TDate> = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -74,11 +74,13 @@ SingleInputDateRangeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -240,6 +242,16 @@ SingleInputDateRangeField.propTypes = {
    * The size of the component.
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function DatePickerValue() {
   const [value, setValue] = React.useState(dayjs('2022-04-07'));
@@ -11,11 +11,8 @@ export default function DatePickerValue() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer>
-        <NextDatePicker
-          label="Uncontrolled picker"
-          defaultValue={dayjs('2022-04-07')}
-        />
-        <NextDatePicker
+        <DatePicker label="Uncontrolled picker" defaultValue={dayjs('2022-04-07')} />
+        <DatePicker
           label="Controlled picker"
           value={value}
           onChange={(newValue) => setValue(newValue)}

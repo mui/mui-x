@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useControlled from '@mui/utils/useControlled';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { resolveComponentProps } from '@mui/base/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
@@ -23,9 +24,11 @@ import {
   useNextMonthDisabled,
   usePreviousMonthDisabled,
   useUtils,
-  WrapperVariantContext,
   PickerSelectionState,
   useNow,
+  uncapitalizeObjectKeys,
+  UncapitalizeObjectKeys,
+  DEFAULT_DESKTOP_MODE_MEDIA_QUERY,
 } from '@mui/x-date-pickers/internals';
 import { getReleaseInfo } from '../internal/utils/releaseInfo';
 import {
@@ -44,7 +47,7 @@ import {
   isStartOfRange,
   isWithinRange,
 } from '../internal/utils/date-utils';
-import { calculateRangeChange, calculateRangePreview } from '../DateRangePicker/date-range-manager';
+import { calculateRangeChange, calculateRangePreview } from '../internal/utils/date-range-manager';
 import { DateRange } from '../internal/models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internal/utils/valueManagers';
@@ -153,7 +156,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
   const now = useNow<TDate>();
 
   const props = useDateRangeCalendarDefaultizedProps(inProps, 'MuiDateRangeCalendar');
-  const isMobile = React.useContext(WrapperVariantContext) === 'mobile';
+  const shouldHavePreview = useMediaQuery(DEFAULT_DESKTOP_MODE_MEDIA_QUERY, {
+    defaultMatches: false,
+  });
 
   const {
     value: valueProp,
@@ -173,6 +178,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     calendars,
     components,
     componentsProps,
+    slots: innerSlots,
+    slotProps: innerslotProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -187,6 +194,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     displayWeekNumber,
     ...other
   } = props;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerslotProps ?? componentsProps;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,
@@ -399,13 +408,13 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     },
   );
 
-  const componentsForDayCalendar = {
-    Day: DateRangePickerDay,
-    ...components,
-  } as DayCalendarSlotsComponent<TDate>;
+  const slotsForDayCalendar = {
+    day: DateRangePickerDay,
+    ...slots,
+  } as UncapitalizeObjectKeys<DayCalendarSlotsComponent<TDate>>;
 
-  const componentsPropsForDayCalendar = {
-    ...componentsProps,
+  const slotPropsForDayCalendar = {
+    ...slotProps,
     day: (dayOwnerState) => {
       const { day } = dayOwnerState;
       const isSelectedStartDate = isStartOfRange(utils, day, valueDayRange);
@@ -427,22 +436,24 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         : isSelectedEndDate;
 
       return {
-        isPreviewing: isMobile ? false : isWithinRange(utils, day, previewingRange),
-        isStartOfPreviewing: isMobile ? false : isStartOfRange(utils, day, previewingRange),
-        isEndOfPreviewing: isMobile ? false : isEndOfRange(utils, day, previewingRange),
+        isPreviewing: shouldHavePreview ? isWithinRange(utils, day, previewingRange) : false,
+        isStartOfPreviewing: shouldHavePreview
+          ? isStartOfRange(utils, day, previewingRange)
+          : false,
+        isEndOfPreviewing: shouldHavePreview ? isEndOfRange(utils, day, previewingRange) : false,
         isHighlighting: isWithinRange(utils, day, isDragging ? draggingRange : valueDayRange),
         isStartOfHighlighting,
         isEndOfHighlighting: isDragging
           ? isEndOfRange(utils, day, draggingRange)
           : isSelectedEndDate,
-        onMouseEnter: handleDayMouseEnter,
+        onMouseEnter: shouldHavePreview ? handleDayMouseEnter : undefined,
         // apply selected styling to the dragging start or end day
         isVisuallySelected:
           dayOwnerState.selected || (isDragging && (isStartOfHighlighting || isEndOfHighlighting)),
         'data-position': datePosition,
         ...dragEventHandlers,
         draggable: isElementDraggable ? true : undefined,
-        ...(resolveComponentProps(componentsProps?.day, dayOwnerState) ?? {}),
+        ...(resolveComponentProps(slotProps?.day, dayOwnerState) ?? {}),
       };
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
@@ -505,8 +516,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               disablePast={disablePast}
               disableFuture={disableFuture}
               reduceAnimations={reduceAnimations}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
             />
           ) : (
             <DateRangeCalendarArrowSwitcher
@@ -518,8 +529,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               isNextHidden={index !== calendars - 1}
               isNextDisabled={isNextMonthDisabled}
               nextLabel={localeText.nextMonth}
-              components={components}
-              componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
             >
               {utils.format(month, 'monthAndYear')}
             </DateRangeCalendarArrowSwitcher>
@@ -539,12 +550,12 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             currentMonth={month}
             TransitionProps={CalendarTransitionProps}
             shouldDisableDate={wrappedShouldDisableDate}
-            showDaysOutsideCurrentMonth={showDaysOutsideCurrentMonth}
+            showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
             dayOfWeekFormatter={dayOfWeekFormatter}
             loading={loading}
             renderLoading={renderLoading}
-            components={componentsForDayCalendar}
-            componentsProps={componentsPropsForDayCalendar}
+            slots={slotsForDayCalendar}
+            slotProps={slotPropsForDayCalendar}
             autoFocus={month === focusedMonth}
             fixedWeekNumber={fixedWeekNumber}
             displayWeekNumber={displayWeekNumber}
@@ -579,11 +590,13 @@ DateRangeCalendar.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -697,10 +710,26 @@ DateRangeCalendar.propTypes = {
    */
   shouldDisableDate: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
