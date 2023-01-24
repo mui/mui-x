@@ -90,6 +90,7 @@ The list includes these transformers
 - [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
+- [`replace-tabs-props](#replace-tabs-props)
 
 #### `adapter-change-import`
 
@@ -195,6 +196,29 @@ If you were always using the same text value in all your components, consider mo
 ```
 
 You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
+
+#### `replace-tabs-props`
+
+Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` properties.
+
+```diff
+ <DateTimePicker
+-  hideTabs={false}
+-  dateRangeIcon={<LightModeIcon />}
+-  timeIcon={<AcUnitIcon />}
++  componentsProps={{
++    tabs: {
++      hidden: false,
++      dateIcon: <LightModeIcon />,
++      timeIcon: <AcUnitIcon />,
++    }
++  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+```
 
 #### `rename-components-to-slots`
 
