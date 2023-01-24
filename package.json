@@ -89,7 +89,7 @@
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
     "@mui/utils": "^5.11.2",
     "@octokit/plugin-retry": "^4.0.4",
-    "@octokit/rest": "^19.0.5",
+    "@octokit/rest": "^19.0.7",
     "@playwright/test": "1.29.2",
     "@testing-library/react": "^13.4.0",
     "@types/babel__core": "^7.1.20",
