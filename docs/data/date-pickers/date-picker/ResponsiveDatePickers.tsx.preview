@@ -1,12 +1,12 @@
-<DemoItem label="Desktop variant" components={["DesktopDatePicker"]}>
+<DemoItem label="Desktop variant" component="DesktopDatePicker">
   <DesktopDatePicker defaultValue={dayjs('2022-04-07')} />
 </DemoItem>
-<DemoItem label="Mobile variant" components={["MobileDatePicker"]}>
+<DemoItem label="Mobile variant" component="MobileDatePicker">
   <MobileDatePicker defaultValue={dayjs('2022-04-07')} />
 </DemoItem>
-<DemoItem label="Responsive variant" components={["DatePicker"]}>
+<DemoItem label="Responsive variant" component="DatePicker">
   <DatePicker defaultValue={dayjs('2022-04-07')} />
 </DemoItem>
-<DemoItem label="Static variant" components={["StaticDatePicker"]}>
+<DemoItem label="Static variant" component="StaticDatePicker">
   <StaticDatePicker defaultValue={dayjs('2022-04-07')} />
 </DemoItem>

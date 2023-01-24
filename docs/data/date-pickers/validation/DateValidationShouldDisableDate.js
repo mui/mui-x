@@ -22,21 +22,21 @@ export default function DateValidationShouldDisableDate() {
       <DemoContainer
         components={['DatePicker', 'DateTimePicker', 'DateRangePicker']}
       >
-        <DemoItem label="DatePicker" components={['DatePicker']}>
+        <DemoItem label="DatePicker" component="DatePicker">
           <DatePicker
             defaultValue={nextSunday}
             shouldDisableDate={isWeekend}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
+        <DemoItem label="DateTimePicker" component="DateTimePicker">
           <DateTimePicker
             defaultValue={nextSunday}
             shouldDisableDate={isWeekend}
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" components={['DateRangePicker']}>
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker
             defaultValue={[lastMonday, nextSunday]}
             shouldDisableDate={isWeekend}

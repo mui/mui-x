@@ -19,16 +19,16 @@ export default function ResponsiveDateTimePickers() {
           'StaticDateTimePicker',
         ]}
       >
-        <DemoItem label="Desktop variant" components={['DesktopDateTimePicker']}>
+        <DemoItem label="Desktop variant" component="DesktopDateTimePicker">
           <DesktopDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" components={['MobileDateTimePicker']}>
+        <DemoItem label="Mobile variant" component="MobileDateTimePicker">
           <MobileDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" components={['DateTimePicker']}>
+        <DemoItem label="Responsive variant" component="DateTimePicker">
           <DateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant" components={['StaticDateTimePicker']}>
+        <DemoItem label="Static variant" component="StaticDateTimePicker">
           <StaticDateTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

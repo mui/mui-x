@@ -1,9 +1,9 @@
-<DemoItem label={'"year", "month" and "day"'} components={["DateCalendar"]}>
+<DemoItem label={'"year", "month" and "day"'} component="DateCalendar">
   <DateCalendar defaultValue={dayjs('2022-04-07')} />
 </DemoItem>
-<DemoItem label={'"day"'} components={["DateCalendar"]}>
+<DemoItem label={'"day"'} component="DateCalendar">
   <DateCalendar views={['day']} />
 </DemoItem>
-<DemoItem label={'"month" and "year"'} components={["DateCalendar"]}>
+<DemoItem label={'"month" and "year"'} component="DateCalendar">
   <DateCalendar defaultValue={dayjs('2022-04-07')} />
 </DemoItem>

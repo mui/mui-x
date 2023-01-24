@@ -8,10 +8,10 @@ export default function DateRangeCalendarCalendarProp() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
-        <DemoItem label="1 calendar" components={['DateRangeCalendar']}>
+        <DemoItem label="1 calendar" component="DateRangeCalendar">
           <DateRangeCalendar calendars={1} />
         </DemoItem>
-        <DemoItem label="2 calendars" components={['DateRangeCalendar']}>
+        <DemoItem label="2 calendars" component="DateRangeCalendar">
           <DateRangeCalendar calendars={2} />
         </DemoItem>
       </DemoContainer>

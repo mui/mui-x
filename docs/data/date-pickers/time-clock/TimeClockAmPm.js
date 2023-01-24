@@ -11,14 +11,14 @@ export default function TimeClockAmPm() {
       <DemoContainer components={['TimeClock', 'TimeClock', 'TimeClock']}>
         <DemoItem
           label="Locale default behavior (enabled for enUS)"
-          components={['TimeClock']}
+          component="TimeClock"
         >
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="AM PM enabled" components={['TimeClock']}>
+        <DemoItem label="AM PM enabled" component="TimeClock">
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} ampm />
         </DemoItem>
-        <DemoItem label="AM PM disabled" components={['TimeClock']}>
+        <DemoItem label="AM PM disabled" component="TimeClock">
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} ampm={false} />
         </DemoItem>
       </DemoContainer>

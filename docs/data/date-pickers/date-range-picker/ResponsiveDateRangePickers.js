@@ -20,22 +20,22 @@ export default function ResponsiveDateRangePickers() {
           'StaticDateRangePicker',
         ]}
       >
-        <DemoItem label="Desktop variant" components={['DesktopDateRangePicker']}>
+        <DemoItem label="Desktop variant" component="DesktopDateRangePicker">
           <DesktopDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant" components={['MobileDateRangePicker']}>
+        <DemoItem label="Mobile variant" component="MobileDateRangePicker">
           <MobileDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Responsive variant" components={['DateRangePicker']}>
+        <DemoItem label="Responsive variant" component="DateRangePicker">
           <DateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Static variant" components={['StaticDateRangePicker']}>
+        <DemoItem label="Static variant" component="StaticDateRangePicker">
           <StaticDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             sx={{

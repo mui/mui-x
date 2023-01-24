@@ -23,24 +23,24 @@ export default function DateValidationDisablePast() {
           'DateRangePicker',
         ]}
       >
-        <DemoItem label="DatePicker" components={['DatePicker']}>
+        <DemoItem label="DatePicker" component="DatePicker">
           <DatePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker" components={['TimePicker']}>
+        <DemoItem label="TimePicker" component="TimePicker">
           <TimePicker defaultValue={todayStartOfTheDay} disablePast />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
+        <DemoItem label="DateTimePicker" component="DateTimePicker">
           <DateTimePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" components={['DateRangePicker']}>
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[yesterday, today]} disablePast />
         </DemoItem>
       </DemoContainer>

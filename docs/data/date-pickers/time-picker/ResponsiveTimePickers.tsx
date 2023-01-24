@@ -19,16 +19,16 @@ export default function ResponsiveTimePickers() {
           'StaticTimePicker',
         ]}
       >
-        <DemoItem label="Desktop variant" components={['DesktopTimePicker']}>
+        <DemoItem label="Desktop variant" component="DesktopTimePicker">
           <DesktopTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" components={['MobileTimePicker']}>
+        <DemoItem label="Mobile variant" component="MobileTimePicker">
           <MobileTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" components={['TimePicker']}>
+        <DemoItem label="Responsive variant" component="TimePicker">
           <TimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant" components={['StaticTimePicker']}>
+        <DemoItem label="Static variant" component="StaticTimePicker">
           <StaticTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

@@ -14,10 +14,10 @@ export default function DateValidationShouldDisableYear() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker', 'DateTimePicker']}>
-        <DemoItem label="DatePicker" components={['DatePicker']}>
+        <DemoItem label="DatePicker" component="DatePicker">
           <DatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
+        <DemoItem label="DateTimePicker" component="DateTimePicker">
           <DateTimePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
       </DemoContainer>

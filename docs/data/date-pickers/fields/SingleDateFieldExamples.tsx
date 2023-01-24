@@ -13,13 +13,13 @@ export default function SingleDateFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateField', 'TimeField', 'DateTimeField']}>
-        <DemoItem label="DateField" components={['DateField']}>
+        <DemoItem label="DateField" component="DateField">
           <DateField defaultValue={defaultValue} />
         </DemoItem>
-        <DemoItem label="TimeField" components={['TimeField']}>
+        <DemoItem label="TimeField" component="TimeField">
           <TimeField defaultValue={defaultValue} />
         </DemoItem>
-        <DemoItem label="DateTimeField" components={['DateTimeField']}>
+        <DemoItem label="DateTimeField" component="DateTimeField">
           <DateTimeField defaultValue={defaultValue} />
         </DemoItem>
       </DemoContainer>

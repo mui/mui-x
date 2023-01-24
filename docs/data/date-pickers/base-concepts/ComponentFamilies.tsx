@@ -38,18 +38,18 @@ export default function ComponentFamilies() {
           'MultiInputDateTimeRangeField',
         ]}
       >
-        <DemoItem label="Date" components={['DateField']}>
+        <DemoItem label="Date" component="DateField">
           <DateField defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Time" components={['TimeField']}>
+        <DemoItem label="Time" component="TimeField">
           <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Date Time" components={['DateTimeField']}>
+        <DemoItem label="Date Time" component="DateTimeField">
           <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Range</ProLabel>}
-          components={['MultiInputDateRangeField']}
+          component="MultiInputDateRangeField"
         >
           <MultiInputDateRangeField
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
@@ -57,7 +57,7 @@ export default function ComponentFamilies() {
         </DemoItem>
         <DemoItem
           label={<ProLabel>Time Range</ProLabel>}
-          components={['MultiInputTimeRangeField']}
+          component="MultiInputTimeRangeField"
         >
           <MultiInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
@@ -65,7 +65,7 @@ export default function ComponentFamilies() {
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Time Range</ProLabel>}
-          components={['MultiInputDateTimeRangeField']}
+          component="MultiInputDateTimeRangeField"
         >
           <MultiInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}

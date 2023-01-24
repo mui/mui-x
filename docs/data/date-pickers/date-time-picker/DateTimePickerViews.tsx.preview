@@ -1,15 +1,15 @@
 <DemoItem
   label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
-  components={["DateTimePicker"]}>
+  component="DateTimePicker">
   <DateTimePicker
     views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
   />
 </DemoItem>
-<DemoItem label={'"day", "hours"'} components={["DateTimePicker"]}>
+<DemoItem label={'"day", "hours"'} component="DateTimePicker">
   <DateTimePicker views={['day', 'hours']} />
 </DemoItem>
 <DemoItem
   label={'"year", "day", "hours", "minutes", "seconds"'}
-  components={["DateTimePicker"]}>
+  component="DateTimePicker">
   <DateTimePicker views={['year', 'day', 'hours', 'minutes', 'seconds']} />
 </DemoItem>

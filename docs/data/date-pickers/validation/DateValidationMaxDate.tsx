@@ -16,21 +16,21 @@ export default function DateValidationMaxDate() {
       <DemoContainer
         components={['DatePicker', 'DateTimePicker', 'DateRangePicker']}
       >
-        <DemoItem label="DatePicker" components={['DatePicker']}>
+        <DemoItem label="DatePicker" component="DatePicker">
           <DatePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
+        <DemoItem label="DateTimePicker" component="DateTimePicker">
           <DateTimePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" components={['DateRangePicker']}>
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[yesterday, today]} maxDate={yesterday} />
         </DemoItem>
       </DemoContainer>

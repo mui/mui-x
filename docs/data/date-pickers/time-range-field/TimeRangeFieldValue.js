@@ -17,18 +17,12 @@ export default function TimeRangeFieldValue() {
       <DemoContainer
         components={['SingleInputTimeRangeField', 'SingleInputTimeRangeField']}
       >
-        <DemoItem
-          label="Uncontrolled field"
-          components={['SingleInputTimeRangeField']}
-        >
+        <DemoItem label="Uncontrolled field" component="SingleInputTimeRangeField">
           <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
-        <DemoItem
-          label="Controlled field"
-          components={['SingleInputTimeRangeField']}
-        >
+        <DemoItem label="Controlled field" component="SingleInputTimeRangeField">
           <SingleInputTimeRangeField
             value={value}
             onChange={(newValue) => setValue(newValue)}

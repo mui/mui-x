@@ -22,16 +22,13 @@ export default function DateTimeRangeFieldValue() {
       >
         <DemoItem
           label="Uncontrolled field"
-          components={['SingleInputDateTimeRangeField']}
+          component="SingleInputDateTimeRangeField"
         >
           <SingleInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-13T18:30')]}
           />
         </DemoItem>
-        <DemoItem
-          label="Controlled field"
-          components={['SingleInputDateTimeRangeField']}
-        >
+        <DemoItem label="Controlled field" component="SingleInputDateTimeRangeField">
           <SingleInputDateTimeRangeField
             value={value}
             onChange={(newValue) => setValue(newValue)}
