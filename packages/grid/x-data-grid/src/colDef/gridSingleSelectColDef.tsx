@@ -1,19 +1,26 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { GridColTypeDef, ValueOptions } from '../models/colDef/gridColDef';
+import { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
-import { getLabelFromValueOption } from '../components/panel/filterPanel/filterPanelUtils';
+import {
+  getLabelFromValueOption,
+  isSingleSelectColDef,
+} from '../components/panel/filterPanel/filterPanelUtils';
 
 const isArrayOfObjects = (options: any): options is Array<{ value: any; label: string }> => {
   return typeof options[0] === 'object';
 };
 
-export const GRID_SINGLE_SELECT_COL_DEF: GridColTypeDef = {
+export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   type: 'singleSelect',
   valueFormatter(params) {
     const { id, field, value, api } = params;
     const colDef = params.api.getColumn(field);
+
+    if (!isSingleSelectColDef(colDef)) {
+      return '';
+    }
 
     let valueOptions: Array<ValueOptions>;
     if (typeof colDef.valueOptions === 'function') {

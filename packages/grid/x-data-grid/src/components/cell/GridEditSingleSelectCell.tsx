@@ -7,10 +7,11 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { ValueOptions } from '../../models/colDef/gridColDef';
+import { GridSingleSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
 import {
   getLabelFromValueOption,
   getValueFromValueOptions,
+  isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
@@ -73,14 +74,23 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
-  let valueOptions: Array<ValueOptions>;
-  if (typeof colDef.valueOptions === 'function') {
-    valueOptions = colDef.valueOptions!({ id, row, field });
+  let resolvedColumn: GridSingleSelectColDef | null = null;
+  if (isSingleSelectColDef(colDef)) {
+    resolvedColumn = colDef;
+  }
+
+  let valueOptions: Array<ValueOptions> | undefined;
+  if (typeof resolvedColumn?.valueOptions === 'function') {
+    valueOptions = resolvedColumn?.valueOptions({ id, row, field });
   } else {
-    valueOptions = colDef.valueOptions!;
+    valueOptions = resolvedColumn?.valueOptions;
   }
 
   const handleChange: SelectProps['onChange'] = async (event) => {
+    if (!valueOptions) {
+      return;
+    }
+
     setOpen(false);
     const target = event.target as HTMLInputElement;
     // NativeSelect casts the value to a string.
@@ -117,6 +127,10 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   }, [hasFocus]);
 
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
+
+  if (!valueOptions) {
+    return null;
+  }
 
   return (
     <rootProps.components.BaseSelect

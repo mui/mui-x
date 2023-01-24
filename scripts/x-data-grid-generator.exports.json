@@ -13,7 +13,7 @@
   { "name": "getInitialState", "kind": "Variable" },
   { "name": "getRealGridData", "kind": "Function" },
   { "name": "GridBasicData", "kind": "Interface" },
-  { "name": "GridColDefGenerator", "kind": "Interface" },
+  { "name": "GridColDefGenerator", "kind": "TypeAlias" },
   { "name": "GridDataGeneratorContext", "kind": "Interface" },
   { "name": "GridDemoData", "kind": "Interface" },
   { "name": "loadServerRows", "kind": "Variable" },
