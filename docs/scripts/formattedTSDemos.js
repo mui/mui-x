@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-const { run: jscodeshift } = require('jscodeshift/src/Runner');
 /**
  * Transpiles TypeScript demos to formatted JavaScript.
  * Can be used to verify that JS and TS demos are equivalent. No introduced change
@@ -144,20 +143,6 @@ async function main(argv) {
     ...(await getFiles(path.join(workspaceRoot, 'docs/src/pages'))), // old structure
     ...(await getFiles(path.join(workspaceRoot, 'docs/data'))), // new structure
   ];
-
-  const paths = await getFiles(path.join(workspaceRoot, 'docs/data'));
-  const transformPath = path.resolve('scripts/addDemoItemsAttributes.js');
-
-  // Format pickers demos such that `DemoContainer` and `DemoItem` gets correct `components` prop
-  await jscodeshift(transformPath, paths, {
-    extensions: 'js,ts,jsx,tsx',
-    parser: 'tsx',
-    verbose: 2,
-    quote: 'single',
-    trailingComma: true,
-    wrapColumn: 85,
-    printWidth: 100,
-  });
 
   const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
 
