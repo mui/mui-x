@@ -88,7 +88,7 @@
     "@mui/material": "^5.11.5",
     "@mui/monorepo": "https://github.com/mui/material-ui.git#master",
     "@mui/utils": "^5.11.2",
-    "@octokit/plugin-retry": "^4.0.3",
+    "@octokit/plugin-retry": "^4.0.4",
     "@octokit/rest": "^19.0.5",
     "@playwright/test": "1.29.2",
     "@testing-library/react": "^13.4.0",
