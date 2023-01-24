@@ -46,8 +46,8 @@ export default function transformer(file, api, options) {
       const children = [];
       pickersComponentNames.forEach((componentName) => {
         const foundElements = j(wrapperPath).findJSXElements(componentName);
-        // we need to repeat same component names if there are with same name 
-        foundElements.forEach(() => children.push(componentName))
+        // we need to repeat same component names if there are with same name
+        foundElements.forEach(() => children.push(componentName));
       });
 
       // Remove pervious prop
@@ -62,7 +62,7 @@ export default function transformer(file, api, options) {
           // build and insert our new prop
           j.jsxAttribute(
             j.jsxIdentifier('components'),
-            j.jsxExpressionContainer(j.arrayExpression(children.map(c => j.stringLiteral(c)))),
+            j.jsxExpressionContainer(j.arrayExpression(children.map((c) => j.stringLiteral(c)))),
           ),
         ]),
         wrapperPath.node.closingElement,

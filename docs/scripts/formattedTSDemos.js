@@ -148,7 +148,7 @@ async function main(argv) {
   const paths = await getFiles(path.join(workspaceRoot, 'docs/data'));
   const transformPath = path.resolve('scripts/addDemoItemsAttributes.js');
 
-  // Format pickers demos such that `DemoContainer` and `DemoItem` gets correct `components` prop 
+  // Format pickers demos such that `DemoContainer` and `DemoItem` gets correct `components` prop
   await jscodeshift(transformPath, paths, {
     extensions: 'js,ts,jsx,tsx',
     parser: 'tsx',

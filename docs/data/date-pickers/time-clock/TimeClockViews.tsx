@@ -7,14 +7,17 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 export default function TimeClockViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimeClock", "TimeClock", "TimeClock"]}>
-        <DemoItem label={'"hours", "minutes" and "seconds"'} components={["TimeClock"]}>
+      <DemoContainer components={['TimeClock', 'TimeClock', 'TimeClock']}>
+        <DemoItem
+          label={'"hours", "minutes" and "seconds"'}
+          components={['TimeClock']}
+        >
           <TimeClock views={['hours', 'minutes', 'seconds']} />
         </DemoItem>
-        <DemoItem label={'"hours"'} components={["TimeClock"]}>
+        <DemoItem label={'"hours"'} components={['TimeClock']}>
           <TimeClock views={['hours']} />
         </DemoItem>
-        <DemoItem label={'"minutes" and "seconds"'} components={["TimeClock"]}>
+        <DemoItem label={'"minutes" and "seconds"'} components={['TimeClock']}>
           <TimeClock views={['minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>

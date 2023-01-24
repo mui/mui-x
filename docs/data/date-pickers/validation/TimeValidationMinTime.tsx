@@ -12,11 +12,11 @@ const nineAM = dayjs().set('hour', 9).startOf('hour');
 export default function TimeValidationMinTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimePicker", "DateTimePicker"]}>
-        <DemoItem label="TimePicker" components={["TimePicker"]}>
+      <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+        <DemoItem label="TimePicker" components={['TimePicker']}>
           <TimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
           <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
       </DemoContainer>

@@ -9,7 +9,11 @@ export default function BasicDateTimeRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={["MultiInputDateTimeRangeField", "SingleInputDateTimeRangeField"]}>
+        components={[
+          'MultiInputDateTimeRangeField',
+          'SingleInputDateTimeRangeField',
+        ]}
+      >
         <MultiInputDateTimeRangeField />
         <SingleInputDateTimeRangeField />
       </DemoContainer>

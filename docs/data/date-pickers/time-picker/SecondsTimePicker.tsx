@@ -8,7 +8,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 export default function SecondsTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimePicker", "TimePicker"]}>
+      <DemoContainer components={['TimePicker', 'TimePicker']}>
         <TimePicker
           label="Hours, minutes and seconds"
           views={['hours', 'minutes', 'seconds']}

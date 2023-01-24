@@ -7,7 +7,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 export default function FormPropsTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimePicker", "TimePicker"]}>
+      <DemoContainer components={['TimePicker', 'TimePicker']}>
         <TimePicker label="disabled" disabled />
         <TimePicker label="readOnly" readOnly />
       </DemoContainer>

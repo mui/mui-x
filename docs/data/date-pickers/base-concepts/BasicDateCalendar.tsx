@@ -7,7 +7,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 export default function BasicDateCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateCalendar"]}>
+      <DemoContainer components={['DateCalendar']}>
         <DateCalendar />
       </DemoContainer>
     </LocalizationProvider>

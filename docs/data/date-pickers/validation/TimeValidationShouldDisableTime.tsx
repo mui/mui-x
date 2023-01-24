@@ -16,14 +16,14 @@ const defaultValue = dayjs().set('hour', 10).set('minute', 50).startOf('minute')
 export default function TimeValidationShouldDisableTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimePicker", "DateTimePicker"]}>
-        <DemoItem label="TimePicker" components={["TimePicker"]}>
+      <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+        <DemoItem label="TimePicker" components={['TimePicker']}>
           <TimePicker
             defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
           <DateTimePicker
             defaultValue={defaultValue}
             shouldDisableTime={shouldDisableTime}

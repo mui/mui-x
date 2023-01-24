@@ -30,39 +30,43 @@ export default function ComponentFamilies() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          "DateField",
-          "TimeField",
-          "DateTimeField",
-          "MultiInputDateRangeField",
-          "MultiInputTimeRangeField",
-          "MultiInputDateTimeRangeField"
-        ]}>
-        <DemoItem label="Date" components={["DateField"]}>
+          'DateField',
+          'TimeField',
+          'DateTimeField',
+          'MultiInputDateRangeField',
+          'MultiInputTimeRangeField',
+          'MultiInputDateTimeRangeField',
+        ]}
+      >
+        <DemoItem label="Date" components={['DateField']}>
           <DateField defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Time" components={["TimeField"]}>
+        <DemoItem label="Time" components={['TimeField']}>
           <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Date Time" components={["DateTimeField"]}>
+        <DemoItem label="Date Time" components={['DateTimeField']}>
           <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Range</ProLabel>}
-          components={["MultiInputDateRangeField"]}>
+          components={['MultiInputDateRangeField']}
+        >
           <MultiInputDateRangeField
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Time Range</ProLabel>}
-          components={["MultiInputTimeRangeField"]}>
+          components={['MultiInputTimeRangeField']}
+        >
           <MultiInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
         <DemoItem
           label={<ProLabel>Date Time Range</ProLabel>}
-          components={["MultiInputDateTimeRangeField"]}>
+          components={['MultiInputDateTimeRangeField']}
+        >
           <MultiInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}
           />

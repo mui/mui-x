@@ -8,11 +8,11 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 export default function TimeClockFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["TimeClock", "TimeClock"]}>
-        <DemoItem label="disabled" components={["TimeClock"]}>
+      <DemoContainer components={['TimeClock', 'TimeClock']}>
+        <DemoItem label="disabled" components={['TimeClock']}>
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} disabled />
         </DemoItem>
-        <DemoItem label="readOnly" components={["TimeClock"]}>
+        <DemoItem label="readOnly" components={['TimeClock']}>
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} readOnly />
         </DemoItem>
       </DemoContainer>

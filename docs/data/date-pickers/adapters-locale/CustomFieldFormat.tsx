@@ -9,7 +9,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 export default function CustomFieldFormat() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateField", "DatePicker"]}>
+      <DemoContainer components={['DateField', 'DatePicker']}>
         <DateField
           label="Date Field"
           format="MM - DD - YYYY"

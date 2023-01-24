@@ -12,17 +12,23 @@ export default function ResponsiveTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={["TimePicker", "MobileTimePicker", "DesktopTimePicker", "StaticTimePicker"]}>
-        <DemoItem label="Desktop variant" components={["DesktopTimePicker"]}>
+        components={[
+          'TimePicker',
+          'MobileTimePicker',
+          'DesktopTimePicker',
+          'StaticTimePicker',
+        ]}
+      >
+        <DemoItem label="Desktop variant" components={['DesktopTimePicker']}>
           <DesktopTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Mobile variant" components={["MobileTimePicker"]}>
+        <DemoItem label="Mobile variant" components={['MobileTimePicker']}>
           <MobileTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Responsive variant" components={["TimePicker"]}>
+        <DemoItem label="Responsive variant" components={['TimePicker']}>
           <TimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Static variant" components={["StaticTimePicker"]}>
+        <DemoItem label="Static variant" components={['StaticTimePicker']}>
           <StaticTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>

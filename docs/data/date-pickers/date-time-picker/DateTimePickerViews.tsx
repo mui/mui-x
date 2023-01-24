@@ -7,20 +7,24 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 export default function DateTimePickerViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateTimePicker", "DateTimePicker", "DateTimePicker"]}>
+      <DemoContainer
+        components={['DateTimePicker', 'DateTimePicker', 'DateTimePicker']}
+      >
         <DemoItem
           label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
-          components={["DateTimePicker"]}>
+          components={['DateTimePicker']}
+        >
           <DateTimePicker
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
           />
         </DemoItem>
-        <DemoItem label={'"day", "hours"'} components={["DateTimePicker"]}>
+        <DemoItem label={'"day", "hours"'} components={['DateTimePicker']}>
           <DateTimePicker views={['day', 'hours']} />
         </DemoItem>
         <DemoItem
           label={'"year", "day", "hours", "minutes", "seconds"'}
-          components={["DateTimePicker"]}>
+          components={['DateTimePicker']}
+        >
           <DateTimePicker views={['year', 'day', 'hours', 'minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>

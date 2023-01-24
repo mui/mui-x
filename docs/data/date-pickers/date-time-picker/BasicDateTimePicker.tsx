@@ -7,7 +7,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 export default function BasicDateTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateTimePicker"]}>
+      <DemoContainer components={['DateTimePicker']}>
         <DateTimePicker label="Basic date time picker" />
       </DemoContainer>
     </LocalizationProvider>

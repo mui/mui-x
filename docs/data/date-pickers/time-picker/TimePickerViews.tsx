@@ -7,7 +7,9 @@ import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 export default function TimePickerViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["MobileTimePicker", "MobileTimePicker", "MobileTimePicker"]}>
+      <DemoContainer
+        components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}
+      >
         <MobileTimePicker
           label={'"hours", "minutes" and "seconds"'}
           views={['hours', 'minutes', 'seconds']}

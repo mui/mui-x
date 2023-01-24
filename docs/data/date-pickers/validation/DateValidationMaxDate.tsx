@@ -13,22 +13,24 @@ const yesterday = dayjs().subtract(1, 'day');
 export default function DateValidationMaxDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DatePicker", "DateTimePicker", "DateRangePicker"]}>
-        <DemoItem label="DatePicker" components={["DatePicker"]}>
+      <DemoContainer
+        components={['DatePicker', 'DateTimePicker', 'DateRangePicker']}
+      >
+        <DemoItem label="DatePicker" components={['DatePicker']}>
           <DatePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
           <DateTimePicker
             defaultValue={today}
             maxDate={yesterday}
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" components={["DateRangePicker"]}>
+        <DemoItem label="DateRangePicker" components={['DateRangePicker']}>
           <DateRangePicker defaultValue={[yesterday, today]} maxDate={yesterday} />
         </DemoItem>
       </DemoContainer>

@@ -44,20 +44,29 @@ export default function CommonlyUsedComponents() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={["DatePicker", "TimePicker", "DateTimePicker", "DateRangePicker"]}>
+        components={[
+          'DatePicker',
+          'TimePicker',
+          'DateTimePicker',
+          'DateRangePicker',
+        ]}
+      >
         <DemoItem
           label={<Label componentName="DatePicker" valueType="date" />}
-          components={["DatePicker"]}>
+          components={['DatePicker']}
+        >
           <DatePicker />
         </DemoItem>
         <DemoItem
           label={<Label componentName="TimePicker" valueType="time" />}
-          components={["TimePicker"]}>
+          components={['TimePicker']}
+        >
           <TimePicker />
         </DemoItem>
         <DemoItem
           label={<Label componentName="DateTimePicker" valueType="date time" />}
-          components={["DateTimePicker"]}>
+          components={['DateTimePicker']}
+        >
           <DateTimePicker />
         </DemoItem>
         <DemoItem
@@ -68,7 +77,8 @@ export default function CommonlyUsedComponents() {
               isProOnly
             />
           }
-          components={["DateRangePicker"]}>
+          components={['DateRangePicker']}
+        >
           <DateRangePicker />
         </DemoItem>
       </DemoContainer>

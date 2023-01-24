@@ -7,11 +7,11 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 export default function FormPropsDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateRangePicker", "DateRangePicker"]}>
-        <DemoItem label="disabled" components={["DateRangePicker"]}>
+      <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
+        <DemoItem label="disabled" components={['DateRangePicker']}>
           <DateRangePicker disabled />
         </DemoItem>
-        <DemoItem label="readOnly" components={["DateRangePicker"]}>
+        <DemoItem label="readOnly" components={['DateRangePicker']}>
           <DateRangePicker readOnly />
         </DemoItem>
       </DemoContainer>

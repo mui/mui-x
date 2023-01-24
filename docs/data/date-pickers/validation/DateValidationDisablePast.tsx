@@ -16,25 +16,31 @@ export default function DateValidationDisablePast() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        components={["DatePicker", "DateTimePicker", "TimePicker", "DateRangePicker"]}>
-        <DemoItem label="DatePicker" components={["DatePicker"]}>
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'TimePicker',
+          'DateRangePicker',
+        ]}
+      >
+        <DemoItem label="DatePicker" components={['DatePicker']}>
           <DatePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker" components={["TimePicker"]}>
+        <DemoItem label="TimePicker" components={['TimePicker']}>
           <TimePicker defaultValue={todayStartOfTheDay} disablePast />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
           <DateTimePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" components={["DateRangePicker"]}>
+        <DemoItem label="DateRangePicker" components={['DateRangePicker']}>
           <DateRangePicker defaultValue={[yesterday, today]} disablePast />
         </DemoItem>
       </DemoContainer>

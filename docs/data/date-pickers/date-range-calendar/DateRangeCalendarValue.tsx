@@ -14,13 +14,13 @@ export default function DateRangeCalendarValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateRangeCalendar", "DateRangeCalendar"]}>
-        <DemoItem label="Uncontrolled calendar" components={["DateRangeCalendar"]}>
+      <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
+        <DemoItem label="Uncontrolled calendar" components={['DateRangeCalendar']}>
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Controlled calendar" components={["DateRangeCalendar"]}>
+        <DemoItem label="Controlled calendar" components={['DateRangeCalendar']}>
           <DateRangeCalendar
             value={value}
             onChange={(newValue) => setValue(newValue)}

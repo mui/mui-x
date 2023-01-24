@@ -13,11 +13,11 @@ const isInCurrentYear = (date: Dayjs) => date.get('year') === dayjs().get('year'
 export default function DateValidationShouldDisableYear() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DatePicker", "DateTimePicker"]}>
-        <DemoItem label="DatePicker" components={["DatePicker"]}>
+      <DemoContainer components={['DatePicker', 'DateTimePicker']}>
+        <DemoItem label="DatePicker" components={['DatePicker']}>
           <DatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
-        <DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={['DateTimePicker']}>
           <DateTimePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
         </DemoItem>
       </DemoContainer>

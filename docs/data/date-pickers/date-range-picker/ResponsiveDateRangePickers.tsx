@@ -14,27 +14,28 @@ export default function ResponsiveDateRangePickers() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          "DateRangePicker",
-          "MobileDateRangePicker",
-          "DesktopDateRangePicker",
-          "StaticDateRangePicker"
-        ]}>
-        <DemoItem label="Desktop variant" components={["DesktopDateRangePicker"]}>
+          'DateRangePicker',
+          'MobileDateRangePicker',
+          'DesktopDateRangePicker',
+          'StaticDateRangePicker',
+        ]}
+      >
+        <DemoItem label="Desktop variant" components={['DesktopDateRangePicker']}>
           <DesktopDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant" components={["MobileDateRangePicker"]}>
+        <DemoItem label="Mobile variant" components={['MobileDateRangePicker']}>
           <MobileDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Responsive variant" components={["DateRangePicker"]}>
+        <DemoItem label="Responsive variant" components={['DateRangePicker']}>
           <DateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Static variant" components={["StaticDateRangePicker"]}>
+        <DemoItem label="Static variant" components={['StaticDateRangePicker']}>
           <StaticDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             sx={{

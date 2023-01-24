@@ -18,41 +18,48 @@ export default function DateRangeFieldExamples() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={[
-          "SingleInputDateRangeField",
-          "MultiInputDateRangeField",
-          "SingleInputTimeRangeField",
-          "MultiInputTimeRangeField",
-          "MultiInputDateTimeRangeField",
-          "SingleInputDateTimeRangeField"
-        ]}>
+          'SingleInputDateRangeField',
+          'MultiInputDateRangeField',
+          'SingleInputTimeRangeField',
+          'MultiInputTimeRangeField',
+          'MultiInputDateTimeRangeField',
+          'SingleInputDateTimeRangeField',
+        ]}
+      >
         <DemoItem
           label="MultiInputDateRangeField"
-          components={["MultiInputDateRangeField"]}>
+          components={['MultiInputDateRangeField']}
+        >
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="SingleInputDateRangeField"
-          components={["SingleInputDateRangeField"]}>
+          components={['SingleInputDateRangeField']}
+        >
           <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputTimeRangeField"
-          components={["MultiInputTimeRangeField"]}>
+          components={['MultiInputTimeRangeField']}
+        >
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="SingleInputTimeRangeField"
-          components={["SingleInputTimeRangeField"]}>
+          components={['SingleInputTimeRangeField']}
+        >
           <SingleInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputDateTimeRangeField"
-          components={["MultiInputDateTimeRangeField"]}>
+          components={['MultiInputDateTimeRangeField']}
+        >
           <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="SingleInputDateTimeRangeField"
-          components={["SingleInputDateTimeRangeField"]}>
+          components={['SingleInputDateTimeRangeField']}
+        >
           <SingleInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
       </DemoContainer>
