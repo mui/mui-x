@@ -45,7 +45,7 @@ Below are described the steps you need to make to migrate from v5 to v6.
 The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, since [12.x.x has reached end-of-life this year](https://nodejs.org/es/blog/release/v12.22.12/).
 :::
 
-### Renamed props
+### ✅ Renamed props
 
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
 
@@ -233,7 +233,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +initialState={{ pagination: { paginationModel: { page: 1, pageSize: 10 } } }}
   ```
 
-- The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
+- ✅ The `rowsPerPageOptions` prop was renamed to `pageSizeOptions`.
 
   ```diff
   -<DataGrid rowsPerPageOptions={[10, 20, 50]} />
