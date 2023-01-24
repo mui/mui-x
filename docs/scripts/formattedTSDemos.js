@@ -72,69 +72,69 @@ const TranspileResult = {
 
 async function transpileFile(tsxPath, program, ignoreCache = false) {
   const jsPath = tsxPath.replace('.tsx', '.js');
-  // try {
-  if (!ignoreCache && (await fse.exists(jsPath))) {
-    const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
-    if (jsStat.mtimeMs > tsxStat.mtimeMs) {
-      // JavaScript version is newer, skip transpiling
-      return TranspileResult.Skipped;
-    }
-  }
-
-  const source = await fse.readFile(tsxPath, 'utf8');
-
-  const transformOptions = { ...babelConfig, filename: tsxPath };
-  const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
-  if (enableJSXPreview) {
-    transformOptions.plugins = transformOptions.plugins.concat([
-      [
-        require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
-        { maxLines: 16, outputFilename: `${tsxPath}.preview` },
-      ],
-    ]);
-  }
-  const { code } = await babel.transformAsync(source, transformOptions);
-
-  if (/import \w* from 'prop-types'/.test(code)) {
-    throw new Error('TypeScript demo contains prop-types, please remove them');
-  }
-
-  const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
-    shouldResolveObject: ({ name }) => {
-      const propsToNotResolve = [
-        'classes',
-        'state',
-        'currentColumn',
-        'colDef',
-        'row',
-        'selectedDay',
-        'day',
-      ];
-      if (propsToNotResolve.includes(name)) {
-        return false;
+  try {
+    if (!ignoreCache && (await fse.exists(jsPath))) {
+      const [jsStat, tsxStat] = await Promise.all([fse.stat(jsPath), fse.stat(tsxPath)]);
+      if (jsStat.mtimeMs > tsxStat.mtimeMs) {
+        // JavaScript version is newer, skip transpiling
+        return TranspileResult.Skipped;
       }
-      return undefined;
-    },
-  });
-  const codeWithPropTypes = typescriptToProptypes.inject(propTypesAST, code);
+    }
 
-  const prettierConfig = prettier.resolveConfig.sync(jsPath, {
-    config: path.join(workspaceRoot, 'prettier.config.js'),
-  });
-  const prettierFormat = (jsSource) =>
-    prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
+    const source = await fse.readFile(tsxPath, 'utf8');
 
-  const prettified = prettierFormat(codeWithPropTypes);
-  const formatted = fixBabelGeneratorIssues(prettified);
-  const correctedLineEndings = fixLineEndings(source, formatted);
+    const transformOptions = { ...babelConfig, filename: tsxPath };
+    const enableJSXPreview = !tsxPath.includes(path.join('pages', 'premium-themes'));
+    if (enableJSXPreview) {
+      transformOptions.plugins = transformOptions.plugins.concat([
+        [
+          require.resolve('docsx/src/modules/utils/babel-plugin-jsx-preview'),
+          { maxLines: 16, outputFilename: `${tsxPath}.preview` },
+        ],
+      ]);
+    }
+    const { code } = await babel.transformAsync(source, transformOptions);
 
-  // removed blank lines change potential formatting
-  await fse.writeFile(jsPath, prettierFormat(correctedLineEndings));
-  return TranspileResult.Success;
-  // } catch (err) {
-  //   console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);
-  //   return TranspileResult.Failed;
-  // }
+    if (/import \w* from 'prop-types'/.test(code)) {
+      throw new Error('TypeScript demo contains prop-types, please remove them');
+    }
+
+    const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
+      shouldResolveObject: ({ name }) => {
+        const propsToNotResolve = [
+          'classes',
+          'state',
+          'currentColumn',
+          'colDef',
+          'row',
+          'selectedDay',
+          'day',
+        ];
+        if (propsToNotResolve.includes(name)) {
+          return false;
+        }
+        return undefined;
+      },
+    });
+    const codeWithPropTypes = typescriptToProptypes.inject(propTypesAST, code);
+
+    const prettierConfig = prettier.resolveConfig.sync(jsPath, {
+      config: path.join(workspaceRoot, 'prettier.config.js'),
+    });
+    const prettierFormat = (jsSource) =>
+      prettier.format(jsSource, { ...prettierConfig, filepath: jsPath });
+
+    const prettified = prettierFormat(codeWithPropTypes);
+    const formatted = fixBabelGeneratorIssues(prettified);
+    const correctedLineEndings = fixLineEndings(source, formatted);
+
+    // removed blank lines change potential formatting
+    await fse.writeFile(jsPath, prettierFormat(correctedLineEndings));
+    return TranspileResult.Success;
+  } catch (err) {
+    console.error('Something went wrong transpiling %s\n%s\n', tsxPath, err);
+    return TranspileResult.Failed;
+  }
 }
 
 async function main(argv) {
@@ -148,7 +148,7 @@ async function main(argv) {
   const paths = await getFiles(path.join(workspaceRoot, 'docs/data'));
   const transformPath = path.resolve('scripts/addDemoItemsAttributes.js');
 
-  // Format pickers demo such that `<DemoItem />` get correct prop `content`
+  // Format pickers demos such that `DemoContainer` and `DemoItem` gets correct `components` prop 
   await jscodeshift(transformPath, paths, {
     extensions: 'js,ts,jsx,tsx',
     parser: 'tsx',

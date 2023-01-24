@@ -45,17 +45,15 @@ export default function transformer(file, api, options) {
     .forEach((wrapperPath) => {
       const children = [];
       pickersComponentNames.forEach((componentName) => {
-        const isPresent = j(wrapperPath).findJSXElements(componentName).length > 0;
-        if (isPresent) {
-          children.push(componentName);
-        }
+        const foundElements = j(wrapperPath).findJSXElements(componentName);
+        // we need to repeat same component names if there are with same name 
+        foundElements.forEach(() => children.push(componentName))
       });
 
-      children.sort();
-      // Remove perviouse prop
+      // Remove pervious prop
       j(wrapperPath)
         .find(j.JSXAttribute)
-        .filter((attribute) => attribute.node.name.name === 'content')
+        .filter((attribute) => attribute.node.name.name === 'components')
         .remove();
 
       const newComponent = j.jsxElement(
@@ -63,7 +61,7 @@ export default function transformer(file, api, options) {
           ...wrapperPath.node.openingElement.attributes,
           // build and insert our new prop
           j.jsxAttribute(
-            j.jsxIdentifier('content'),
+            j.jsxIdentifier('components'),
             j.jsxExpressionContainer(j.arrayExpression(children.map(c => j.stringLiteral(c)))),
           ),
         ]),
@@ -71,7 +69,7 @@ export default function transformer(file, api, options) {
         wrapperPath.node.children,
       );
 
-      // Replace our original component with our modified one
+      // Replace the original component with our modified one
       j(wrapperPath).replaceWith(newComponent);
     })
     .toSource(printOptions);
