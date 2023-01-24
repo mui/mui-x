@@ -56,6 +56,18 @@ export default function transformer(file, api, options) {
       }
 
       const isItem = wrapperPath.value.openingElement.name.name === 'DemoItem';
+
+      if (isItem) {
+        const childName = children[0];
+        const isMultiInputRangeField =
+          childName.match(/^MultiInput([A-Za-z]+)RangeField$/) ||
+          childName.match(/^([A-Za-z]+)RangePicker$/);
+        // For now, only multi-input-range-field needs a custom DemoItem
+        if (!isMultiInputRangeField) {
+          return;
+        }
+      }
+
       const propName = isItem ? 'component' : 'components';
       const newValue = isItem
         ? j.stringLiteral(children[0])
@@ -65,7 +77,9 @@ export default function transformer(file, api, options) {
       j(wrapperPath)
         .find(j.JSXAttribute)
         .filter((attribute) => attribute.node.name.name === propName)
-        .remove();
+        .forEach((attribute) => {
+          j(attribute).remove();
+        });
 
       const newComponent = j.jsxElement(
         j.jsxOpeningElement(wrapperPath.node.openingElement.name, [
