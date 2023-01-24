@@ -225,7 +225,7 @@ npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
 Replace props used to customize the `Toolbar` in pickers by slots properties and `localeText`.
 
 ```diff
-<DatePicker
+ <DatePicker
 -  ToolbarComponent={MyToolbar}
 +  components={{ Toolbar: MyToolbar }}
 -  toolbarPlaceholder="__"
