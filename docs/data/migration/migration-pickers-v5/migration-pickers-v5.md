@@ -444,7 +444,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Toolbar (`ToolbarComponent`)
 
-- The `ToolbarComponent` has been replaced by a `Toolbar` component slot:
+- ✅ The `ToolbarComponent` has been replaced by a `Toolbar` component slot:
 
   ```diff
    <DatePicker
@@ -453,7 +453,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slot props:
+- ✅ The `toolbarPlaceholder`, `toolbarFormat`, and `showToolbar` props have been moved to the `toolbar` component slot props:
 
   ```diff
    <DatePicker
@@ -470,7 +470,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The `toolbarTitle` prop has been moved to the localization object:
+- ✅ The `toolbarTitle` prop has been moved to the localization object:
 
   ```diff
    <DatePicker

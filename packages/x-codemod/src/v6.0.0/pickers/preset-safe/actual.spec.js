@@ -15,6 +15,11 @@ function App() {
         <CalendarPicker date={null} onChange={() => {}} />
         <DateRangePicker cancelText={custom_cancelText} okText="string_okText" />
         <DateTimePicker hideTabs={false} dateRangeIcon={<LightModeIcon />} />
+        <DateRangePicker
+          ToolbarComponent={CustomToolbarComponent}
+          toolbarTitle="Title"
+          showToolbar
+        />
       </LocalizationProvider>
     </ThemeProvider>
   );

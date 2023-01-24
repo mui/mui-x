@@ -4,6 +4,7 @@ import transformViewComponentsRename from '../view-components-rename';
 import transformViewComponentsRenameValueProp from '../view-components-rename-value-prop';
 import transformAdapterChangeImport from '../adapter-change-import';
 import transformReplaceTabsProps from '../replace-tabs-props';
+import transformReplaceToolbarPropsBySlot from '../replace-toolbar-props-by-slot';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
@@ -16,6 +17,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = transformViewComponentsRename(file, api, options);
   file.source = transformAdapterChangeImport(file, api, options);
   file.source = transformReplaceTabsProps(file, api, options);
-
+  file.source = transformReplaceToolbarPropsBySlot(file, api, options);
+  
   return file.source;
 }

@@ -25,6 +25,18 @@ function App() {
               dateIcon: <LightModeIcon />,
             },
           }} />
+        <DateRangePicker
+          components={{
+            Toolbar: CustomToolbarComponent,
+          }}
+          localeText={{
+            toolbarTitle: "Title",
+          }}
+          componentsProps={{
+            toolbar: {
+              hidden: false,
+            },
+          }} />
       </LocalizationProvider>
     </ThemeProvider>
   );
