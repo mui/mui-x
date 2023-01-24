@@ -153,6 +153,8 @@ async function main(argv) {
     extensions: 'js,ts,jsx,tsx',
     parser: 'tsx',
     verbose: 2,
+    quote: 'single',
+    trailingComma: true,
   });
 
   const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
