@@ -404,16 +404,25 @@ export const useGridRows = (
       apiRef.current.unstable_caches.rows.idToIdLookup = updatedIdToIdLookup;
       apiRef.current.unstable_caches.rows.ids = updatedRows;
 
-      apiRef.current.setState((state) => ({
-        ...state,
-        rows: {
-          ...state.rows,
+      apiRef.current.setState((state) => {
+        const newRowsState = {
           idRowsLookup: updatedIdRowsLookup,
           idToIdLookup: updatedIdToIdLookup,
           tree: updatedTree,
           ids: updatedRows,
-        },
-      }));
+        };
+        return {
+          ...state,
+          rows: {
+            ...state.rows,
+            ...newRowsState,
+            groupingResponseBeforeRowHydration: {
+              ...state.rows.groupingResponseBeforeRowHydration,
+              ...newRowsState,
+            },
+          },
+        };
+      });
       apiRef.current.publishEvent('rowsSet');
     },
     [apiRef, props.signature, props.getRowId],
