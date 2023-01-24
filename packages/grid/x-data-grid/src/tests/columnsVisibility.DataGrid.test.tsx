@@ -145,7 +145,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
 
-    // See https://github.com/mui/mui-x/issues/7393
+    // Fixes (1) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
     it('should not show hidden non hideable columns when "Show all" is clicked', () => {
       render(
         <TestDataGrid
@@ -164,7 +164,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
     });
 
-    // See https://github.com/mui/mui-x/issues/7393
+    // Fixes (2) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
     it('should not show hidden non hideable columns when "Hide all" is clicked', () => {
       render(
         <TestDataGrid

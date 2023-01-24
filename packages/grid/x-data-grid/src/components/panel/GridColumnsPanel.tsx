@@ -142,8 +142,8 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       const newModel = { ...currentModel };
 
       columns.forEach((col) => {
-        if (col.hideable !== false) {
-          if (isVisible === true) {
+        if (col.hideable) {
+          if (isVisible) {
             // delete the key from the model instead of setting it to `true`
             delete newModel[col.field];
           } else {
