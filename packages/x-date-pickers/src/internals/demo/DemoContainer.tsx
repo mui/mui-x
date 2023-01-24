@@ -55,16 +55,16 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 interface DemoItemProps {
   label?: React.ReactNode;
   children: React.ReactNode;
-  components: string[];
+  component: string;
 }
 export function DemoItem(props: DemoItemProps) {
-  const { label, children, components } = props;
+  const { label, children, component } = props;
 
-  if (!components || components.length === 0) {
-    throw new Error('DemoItem has to have a `components` prop defining component(s) it wraps.');
+  if (!component) {
+    throw new Error('DemoItem has to have a `component` prop defining the component it wraps.');
   }
 
-  const childName = components[0];
+  const childName = component;
   const childType = getChildTypeFromChildName(childName);
 
   let spacing: StackProps['spacing'];

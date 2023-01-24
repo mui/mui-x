@@ -50,20 +50,28 @@ export default function transformer(file, api, options) {
         foundElements.forEach(() => children.push(componentName));
       });
 
+      if (children.length === 0) {
+        // If we did not found children it might be an interactive demo, so we do not modify it
+        return;
+      }
+
+      const isItem = wrapperPath.value.openingElement.name.name === 'DemoItem';
+      const propName = isItem ? 'component' : 'components';
+      const newValue = isItem
+        ? j.stringLiteral(children[0])
+        : j.jsxExpressionContainer(j.arrayExpression(children.map((c) => j.stringLiteral(c))));
+
       // Remove pervious prop
       j(wrapperPath)
         .find(j.JSXAttribute)
-        .filter((attribute) => attribute.node.name.name === 'components')
+        .filter((attribute) => attribute.node.name.name === propName)
         .remove();
 
       const newComponent = j.jsxElement(
         j.jsxOpeningElement(wrapperPath.node.openingElement.name, [
           ...wrapperPath.node.openingElement.attributes,
           // build and insert our new prop
-          j.jsxAttribute(
-            j.jsxIdentifier('components'),
-            j.jsxExpressionContainer(j.arrayExpression(children.map((c) => j.stringLiteral(c)))),
-          ),
+          j.jsxAttribute(j.jsxIdentifier(propName), newValue),
         ]),
         wrapperPath.node.closingElement,
         wrapperPath.node.children,
