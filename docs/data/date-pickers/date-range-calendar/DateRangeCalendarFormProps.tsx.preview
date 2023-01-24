@@ -1,10 +1,10 @@
-<DemoItem label="disabled" content={["DateRangeCalendar"]}>
+<DemoItem label="disabled" components={["DateRangeCalendar"]}>
   <DateRangeCalendar
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
     disabled
   />
 </DemoItem>
-<DemoItem label="readOnly" content={["DateRangeCalendar"]}>
+<DemoItem label="readOnly" components={["DateRangeCalendar"]}>
   <DateRangeCalendar
     defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
     readOnly

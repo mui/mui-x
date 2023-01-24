@@ -1,6 +1,6 @@
-<DemoItem label="disabled" content={["DateCalendar"]}>
+<DemoItem label="disabled" components={["DateCalendar"]}>
   <DateCalendar defaultValue={dayjs('2022-04-07')} disabled />
 </DemoItem>
-<DemoItem label="readOnly" content={["DateCalendar"]}>
+<DemoItem label="readOnly" components={["DateCalendar"]}>
   <DateCalendar defaultValue={dayjs('2022-04-07')} readOnly />
 </DemoItem>

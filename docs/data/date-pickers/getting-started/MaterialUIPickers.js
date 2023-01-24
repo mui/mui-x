@@ -11,11 +11,11 @@ export default function MaterialUIPickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        content={[
+        components={[
+          'NextTimePicker',
+          'NextDateTimePicker',
           'DesktopNextDatePicker',
           'MobileNextDatePicker',
-          'NextDateTimePicker',
-          'NextTimePicker',
         ]}
       >
         <DesktopNextDatePicker label="Date desktop" format="MM/DD/YYYY" />

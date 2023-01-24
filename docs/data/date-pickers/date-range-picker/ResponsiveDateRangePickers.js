@@ -12,29 +12,32 @@ export default function ResponsiveDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        content={[
-          'DesktopNextDateRangePicker',
-          'MobileNextDateRangePicker',
+        components={[
           'NextDateRangePicker',
+          'MobileNextDateRangePicker',
+          'DesktopNextDateRangePicker',
           'StaticNextDateRangePicker',
         ]}
       >
-        <DemoItem label="Desktop variant" content={['DesktopNextDateRangePicker']}>
+        <DemoItem
+          label="Desktop variant"
+          components={['DesktopNextDateRangePicker']}
+        >
           <DesktopNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant" content={['MobileNextDateRangePicker']}>
+        <DemoItem label="Mobile variant" components={['MobileNextDateRangePicker']}>
           <MobileNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Responsive variant" content={['NextDateRangePicker']}>
+        <DemoItem label="Responsive variant" components={['NextDateRangePicker']}>
           <NextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Static variant" content={['StaticNextDateRangePicker']}>
+        <DemoItem label="Static variant" components={['StaticNextDateRangePicker']}>
           <StaticNextDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />

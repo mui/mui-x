@@ -10,11 +10,11 @@ export default function TimeClockValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={["TimeClock"]}>
-        <DemoItem label="Uncontrolled clock" content={["TimeClock"]}>
+      <DemoContainer components={["TimeClock", "TimeClock"]}>
+        <DemoItem label="Uncontrolled clock" components={["TimeClock"]}>
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Controlled clock" content={["TimeClock"]}>
+        <DemoItem label="Controlled clock" components={["TimeClock"]}>
           <TimeClock value={value} onChange={(newValue) => setValue(newValue)} />
         </DemoItem>
       </DemoContainer>

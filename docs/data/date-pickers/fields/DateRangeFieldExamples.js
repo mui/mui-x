@@ -15,34 +15,34 @@ export default function DateRangeFieldExamples() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        content={[
-          'MultiInputDateRangeField',
-          'MultiInputDateTimeRangeField',
-          'MultiInputTimeRangeField',
+        components={[
           'SingleInputDateRangeField',
+          'MultiInputDateRangeField',
+          'MultiInputTimeRangeField',
+          'MultiInputDateTimeRangeField',
         ]}
       >
         <DemoItem
           label="SingleInputDateRangeField"
-          content={['SingleInputDateRangeField']}
+          components={['SingleInputDateRangeField']}
         >
           <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputDateRangeField"
-          content={['MultiInputDateRangeField']}
+          components={['MultiInputDateRangeField']}
         >
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputTimeRangeField"
-          content={['MultiInputTimeRangeField']}
+          components={['MultiInputTimeRangeField']}
         >
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
           label="MultiInputDateTimeRangeField"
-          content={['MultiInputDateTimeRangeField']}
+          components={['MultiInputDateTimeRangeField']}
         >
           <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>

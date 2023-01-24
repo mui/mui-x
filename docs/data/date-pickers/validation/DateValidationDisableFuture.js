@@ -16,31 +16,31 @@ export default function DateValidationDisableFuture() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
-        content={[
+        components={[
           'NextDatePicker',
-          'NextDateRangePicker',
           'NextDateTimePicker',
           'NextTimePicker',
+          'NextDateRangePicker',
         ]}
       >
-        <DemoItem label="DatePicker" content={['NextDatePicker']}>
+        <DemoItem label="DatePicker" components={['NextDatePicker']}>
           <NextDatePicker
             defaultValue={tomorrow}
             disableFuture
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker" content={['NextTimePicker']}>
+        <DemoItem label="TimePicker" components={['NextTimePicker']}>
           <NextTimePicker defaultValue={todayEndOfTheDay} disableFuture />
         </DemoItem>
-        <DemoItem label="DateTimePicker" content={['NextDateTimePicker']}>
+        <DemoItem label="DateTimePicker" components={['NextDateTimePicker']}>
           <NextDateTimePicker
             defaultValue={tomorrow}
             disableFuture
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" content={['NextDateRangePicker']}>
+        <DemoItem label="DateRangePicker" components={['NextDateRangePicker']}>
           <NextDateRangePicker defaultValue={[today, tomorrow]} disableFuture />
         </DemoItem>
       </DemoContainer>

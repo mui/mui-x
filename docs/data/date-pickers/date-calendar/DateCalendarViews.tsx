@@ -8,14 +8,14 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 export default function DateCalendarViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={["DateCalendar"]}>
-        <DemoItem label={'"year", "month" and "day"'} content={["DateCalendar"]}>
+      <DemoContainer components={["DateCalendar", "DateCalendar", "DateCalendar"]}>
+        <DemoItem label={'"year", "month" and "day"'} components={["DateCalendar"]}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label={'"day"'} content={["DateCalendar"]}>
+        <DemoItem label={'"day"'} components={["DateCalendar"]}>
           <DateCalendar views={['day']} />
         </DemoItem>
-        <DemoItem label={'"month" and "year"'} content={["DateCalendar"]}>
+        <DemoItem label={'"month" and "year"'} components={["DateCalendar"]}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
       </DemoContainer>

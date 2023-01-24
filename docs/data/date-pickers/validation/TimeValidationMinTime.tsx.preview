@@ -1,6 +1,6 @@
-<DemoItem label="TimePicker" content={["NextTimePicker"]}>
+<DemoItem label="TimePicker" components={["NextTimePicker"]}>
   <NextTimePicker defaultValue={fiveAM} minTime={nineAM} />
 </DemoItem>
-<DemoItem label="DateTimePicker" content={["NextDateTimePicker"]}>
+<DemoItem label="DateTimePicker" components={["NextDateTimePicker"]}>
   <NextDateTimePicker defaultValue={fiveAM} minTime={nineAM} />
 </DemoItem>

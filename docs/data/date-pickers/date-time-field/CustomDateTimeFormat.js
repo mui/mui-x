@@ -10,7 +10,9 @@ export default function CustomDateTimeFormat() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={['DateTimeField']}>
+      <DemoContainer
+        components={['DateTimeField', 'DateTimeField', 'DateTimeField']}
+      >
         <DateTimeField
           label="Format with meridiem"
           value={value}

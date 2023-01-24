@@ -7,11 +7,11 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 export default function DateRangeCalendarCalendarProp() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={["DateRangeCalendar"]}>
-        <DemoItem label="1 calendar" content={["DateRangeCalendar"]}>
+      <DemoContainer components={["DateRangeCalendar", "DateRangeCalendar"]}>
+        <DemoItem label="1 calendar" components={["DateRangeCalendar"]}>
           <DateRangeCalendar calendars={1} />
         </DemoItem>
-        <DemoItem label="2 calendars" content={["DateRangeCalendar"]}>
+        <DemoItem label="2 calendars" components={["DateRangeCalendar"]}>
           <DateRangeCalendar calendars={2} />
         </DemoItem>
       </DemoContainer>

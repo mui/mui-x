@@ -1,9 +1,9 @@
-<DemoItem label="DateField" content={["DateField"]}>
+<DemoItem label="DateField" components={["DateField"]}>
   <DateField defaultValue={defaultValue} />
 </DemoItem>
-<DemoItem label="TimeField" content={["TimeField"]}>
+<DemoItem label="TimeField" components={["TimeField"]}>
   <TimeField defaultValue={defaultValue} />
 </DemoItem>
-<DemoItem label="DateTimeField" content={["DateTimeField"]}>
+<DemoItem label="DateTimeField" components={["DateTimeField"]}>
   <DateTimeField defaultValue={defaultValue} />
 </DemoItem>

@@ -7,7 +7,7 @@ import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/N
 export default function DatePickerOpenTo() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={['NextDatePicker']}>
+      <DemoContainer components={['NextDatePicker', 'NextDatePicker']}>
         <NextDatePicker label={'"year"'} openTo="year" />
         <NextDatePicker
           label={'"month"'}

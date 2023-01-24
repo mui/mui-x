@@ -13,22 +13,23 @@ const tomorrow = dayjs().add(1, 'day');
 export default function DateValidationMinDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={["NextDatePicker", "NextDateRangePicker", "NextDateTimePicker"]}>
-        <DemoItem label="DatePicker" content={["NextDatePicker"]}>
+      <DemoContainer
+        components={["NextDatePicker", "NextDateTimePicker", "NextDateRangePicker"]}>
+        <DemoItem label="DatePicker" components={["NextDatePicker"]}>
           <NextDatePicker
             defaultValue={today}
             minDate={tomorrow}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" content={["NextDateTimePicker"]}>
+        <DemoItem label="DateTimePicker" components={["NextDateTimePicker"]}>
           <NextDateTimePicker
             defaultValue={today}
             minDate={tomorrow}
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker" content={["NextDateRangePicker"]}>
+        <DemoItem label="DateRangePicker" components={["NextDateRangePicker"]}>
           <NextDateRangePicker defaultValue={[today, tomorrow]} minDate={tomorrow} />
         </DemoItem>
       </DemoContainer>

@@ -9,7 +9,7 @@ import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/N
 export default function CustomFieldFormat() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={['DateField', 'NextDatePicker']}>
+      <DemoContainer components={['DateField', 'NextDatePicker']}>
         <DateField
           label="Date Field"
           format="MM - DD - YYYY"

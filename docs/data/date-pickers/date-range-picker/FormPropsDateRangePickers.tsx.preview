@@ -1,6 +1,6 @@
-<DemoItem label="disabled" content={["NextDateRangePicker"]}>
+<DemoItem label="disabled" components={["NextDateRangePicker"]}>
   <NextDateRangePicker disabled />
 </DemoItem>
-<DemoItem label="readOnly" content={["NextDateRangePicker"]}>
+<DemoItem label="readOnly" components={["NextDateRangePicker"]}>
   <NextDateRangePicker readOnly />
 </DemoItem>

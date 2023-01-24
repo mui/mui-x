@@ -8,7 +8,7 @@ import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/N
 export default function SecondsTimePicker() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer content={["NextTimePicker"]}>
+      <DemoContainer components={["NextTimePicker", "NextTimePicker"]}>
         <NextTimePicker
           label="Hours, minutes and seconds"
           views={['hours', 'minutes', 'seconds']}
