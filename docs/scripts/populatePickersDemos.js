@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const { run: jscodeshift } = require('jscodeshift/src/Runner');
 /**
  * Transpiles TypeScript demos to formatted JavaScript.
