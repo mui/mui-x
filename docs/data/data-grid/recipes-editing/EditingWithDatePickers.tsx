@@ -17,11 +17,9 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import {
-  Unstable_NextDatePicker as NextDatePicker,
-  Unstable_NextDateTimePicker as NextDateTimePicker,
-  LocalizationProvider,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
@@ -37,7 +35,11 @@ function buildApplyDateFilterFn(
     return null;
   }
 
-  const filterValueMs = filterItem.value.getTime();
+  // Make a copy of the date to not reset the hours in the original object
+  const filterValueCopy = new Date(filterItem.value);
+  filterValueCopy.setHours(0, 0, 0, 0);
+
+  const filterValueMs = filterValueCopy.getTime();
 
   return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
@@ -161,7 +163,7 @@ const dateAdapter = new AdapterDateFns({ locale });
  * `date` column
  */
 
-const dateColumnType: GridColTypeDef<Date | string, string> = {
+const dateColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -204,7 +206,7 @@ function GridEditDateCell({
 }: GridRenderEditCellParams<any, Date | string | null>) {
   const apiRef = useGridApiContext();
 
-  const Component = colDef.type === 'dateTime' ? NextDateTimePicker : NextDatePicker;
+  const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
 
   const handleChange = (newValue: unknown) => {
     apiRef.current.setEditCellValue({ id, field, value: newValue });
@@ -225,7 +227,7 @@ function GridFilterDateInput(
 ) {
   const { item, showTime, applyValue, apiRef } = props;
 
-  const Component = showTime ? NextDateTimePicker : NextDatePicker;
+  const Component = showTime ? DateTimePicker : DatePicker;
 
   const handleFilterChange = (newValue: unknown) => {
     applyValue({ ...item, value: newValue });
@@ -257,7 +259,7 @@ function GridFilterDateInput(
  * `dateTime` column
  */
 
-const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
+const dateTimeColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {

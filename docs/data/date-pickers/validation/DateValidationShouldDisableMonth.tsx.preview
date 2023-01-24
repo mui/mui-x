@@ -1,12 +1,12 @@
-<DemoItem label="DatePicker" components={["NextDatePicker"]}>
-  <NextDatePicker
+<DemoItem label="DatePicker" components={["DatePicker"]}>
+  <DatePicker
     defaultValue={today}
     shouldDisableMonth={isInCurrentMonth}
     views={['year', 'month', 'day']}
   />
 </DemoItem>
-<DemoItem label="DateTimePicker" components={["NextDateTimePicker"]}>
-  <NextDateTimePicker
+<DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+  <DateTimePicker
     defaultValue={today}
     shouldDisableMonth={isInCurrentMonth}
     views={['year', 'month', 'day', 'hours', 'minutes']}

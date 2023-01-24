@@ -1,4 +1,4 @@
-<NextDatePicker
+<DatePicker
   label="Custom input"
   slots={{
     textField: BrowserInput,

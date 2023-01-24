@@ -1,11 +1,11 @@
-<DemoItem label="TimePicker" components={["NextTimePicker"]}>
-  <NextTimePicker
+<DemoItem label="TimePicker" components={["TimePicker"]}>
+  <TimePicker
     defaultValue={defaultValue}
     shouldDisableTime={shouldDisableTime}
   />
 </DemoItem>
-<DemoItem label="DateTimePicker" components={["NextDateTimePicker"]}>
-  <NextDateTimePicker
+<DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+  <DateTimePicker
     defaultValue={defaultValue}
     shouldDisableTime={shouldDisableTime}
   />

@@ -1,9 +1,9 @@
-<DemoItem label="1 calendar" components={["NextDateRangePicker"]}>
-  <NextDateRangePicker calendars={1} />
+<DemoItem label="1 calendar" components={["DateRangePicker"]}>
+  <DateRangePicker calendars={1} />
 </DemoItem>
-<DemoItem label="2 calendars" components={["NextDateRangePicker"]}>
-  <NextDateRangePicker calendars={2} />
+<DemoItem label="2 calendars" components={["DateRangePicker"]}>
+  <DateRangePicker calendars={2} />
 </DemoItem>
-<DemoItem label="3 calendars" components={["NextDateRangePicker"]}>
-  <NextDateRangePicker calendars={3} />
+<DemoItem label="3 calendars" components={["DateRangePicker"]}>
+  <DateRangePicker calendars={3} />
 </DemoItem>

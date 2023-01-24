@@ -1,9 +1,6 @@
-<DemoItem label="DatePicker" components={["NextDatePicker"]}>
-  <NextDatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
+<DemoItem label="DatePicker" components={["DatePicker"]}>
+  <DatePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
 </DemoItem>
-<DemoItem label="DateTimePicker" components={["NextDateTimePicker"]}>
-  <NextDateTimePicker
-    defaultValue={today}
-    shouldDisableYear={isInCurrentYear}
-  />
+<DemoItem label="DateTimePicker" components={["DateTimePicker"]}>
+  <DateTimePicker defaultValue={today} shouldDisableYear={isInCurrentYear} />
 </DemoItem>

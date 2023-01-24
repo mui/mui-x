@@ -1,4 +1,10 @@
 <Button onClick={handleGoToPage1}>Go to page 1</Button>
 <Box sx={{ height: 400, width: '100%' }}>
-  <DataGrid {...data} apiRef={apiRef} pagination pageSize={10} />
+  <DataGrid
+    {...data}
+    apiRef={apiRef}
+    pagination
+    paginationModel={paginationModel}
+    onPaginationModelChange={setPaginationModel}
+  />
 </Box>

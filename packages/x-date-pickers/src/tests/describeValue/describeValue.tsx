@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  BaseNextPickerInputProps,
-  UsePickerValueNonStaticProps,
-} from '@mui/x-date-pickers/internals';
+import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
@@ -21,7 +18,7 @@ export function describeValue<TValue, C extends PickerComponentFamily>(
   const { defaultProps } = getOptions();
 
   function WrappedElementToTest(
-    props: BaseNextPickerInputProps<TValue, any, any, any> & UsePickerValueNonStaticProps<TValue>,
+    props: BasePickerInputProps<TValue, any, any, any> & UsePickerValueNonStaticProps<TValue>,
   ) {
     return <ElementToTest {...defaultProps} {...props} />;
   }

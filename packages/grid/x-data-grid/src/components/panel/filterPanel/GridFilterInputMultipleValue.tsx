@@ -57,7 +57,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     <Autocomplete<string, true, false, true>
       multiple
       freeSolo
-      limitTags={1}
       options={[]}
       filterOptions={(options, params) => {
         const { inputValue } = params;
