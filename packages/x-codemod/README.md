@@ -219,6 +219,7 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
 ```
+
 #### `replace-toolbar-props-by-slot`
 
 Replace props used to customize the `Toolbar` in pickers by slots properties and `localeText`.

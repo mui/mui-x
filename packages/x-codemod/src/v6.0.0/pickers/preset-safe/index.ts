@@ -18,6 +18,6 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = transformAdapterChangeImport(file, api, options);
   file.source = transformReplaceTabsProps(file, api, options);
   file.source = transformReplaceToolbarPropsBySlot(file, api, options);
-  
+
   return file.source;
 }
