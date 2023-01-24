@@ -93,18 +93,11 @@ export function DemoItem(props: DemoItemProps) {
 export function DemoContainer(props: DemoGridProps) {
   const { children, components } = props;
 
-  const childrenCount = React.Children.count(children);
+  const childrenCount = components.length;
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
 
-  React.Children.forEach(children, (child: any, index: number) => {
-    let childName = components[index];
-
-    // should be a nested `DemoItem` with it's own `components` defined
-    if (Array.isArray(child.props.components)) {
-      childName = child.props.components[0];
-    }
-
+  components.forEach((childName) => {
     childrenTypes.add(getChildTypeFromChildName(childName));
     childrenSupportedSections.add(getSupportedSectionFromChildName(childName));
   });
