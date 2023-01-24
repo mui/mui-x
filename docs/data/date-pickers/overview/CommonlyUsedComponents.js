@@ -50,21 +50,14 @@ export default function CommonlyUsedComponents() {
           'DateRangePicker',
         ]}
       >
-        <DemoItem
-          label={<Label componentName="DatePicker" valueType="date" />}
-          component="DatePicker"
-        >
+        <DemoItem label={<Label componentName="DatePicker" valueType="date" />}>
           <DatePicker />
         </DemoItem>
-        <DemoItem
-          label={<Label componentName="TimePicker" valueType="time" />}
-          component="TimePicker"
-        >
+        <DemoItem label={<Label componentName="TimePicker" valueType="time" />}>
           <TimePicker />
         </DemoItem>
         <DemoItem
           label={<Label componentName="DateTimePicker" valueType="date time" />}
-          component="DateTimePicker"
         >
           <DateTimePicker />
         </DemoItem>

@@ -54,23 +54,16 @@ const getSupportedSectionFromChildName = (childName: string): PickersSupportedSe
 
 interface DemoItemProps {
   label?: React.ReactNode;
+  component?: string;
   children: React.ReactNode;
-  component: string;
 }
 export function DemoItem(props: DemoItemProps) {
   const { label, children, component } = props;
 
-  if (!component) {
-    throw new Error('DemoItem has to have a `component` prop defining the component it wraps.');
-  }
-
-  const childName = component;
-  const childType = getChildTypeFromChildName(childName);
-
   let spacing: StackProps['spacing'];
   let sx: StackProps['sx'];
 
-  if (childType === 'multi-input-range-field') {
+  if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
     spacing = 2;
     sx = {
       [`& .${textFieldClasses.root}`]: {

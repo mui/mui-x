@@ -13,10 +13,10 @@ export default function TimeValidationMinTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-        <DemoItem label="TimePicker" component="TimePicker">
+        <DemoItem label="TimePicker">
           <TimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
-        <DemoItem label="DateTimePicker" component="DateTimePicker">
+        <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
         </DemoItem>
       </DemoContainer>

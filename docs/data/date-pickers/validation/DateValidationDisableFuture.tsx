@@ -23,17 +23,17 @@ export default function DateValidationDisableFuture() {
           'DateRangePicker',
         ]}
       >
-        <DemoItem label="DatePicker" component="DatePicker">
+        <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={tomorrow}
             disableFuture
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker" component="TimePicker">
+        <DemoItem label="TimePicker">
           <TimePicker defaultValue={todayEndOfTheDay} disableFuture />
         </DemoItem>
-        <DemoItem label="DateTimePicker" component="DateTimePicker">
+        <DemoItem label="DateTimePicker">
           <DateTimePicker
             defaultValue={tomorrow}
             disableFuture

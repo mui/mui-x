@@ -23,17 +23,17 @@ export default function DateValidationDisablePast() {
           'DateRangePicker',
         ]}
       >
-        <DemoItem label="DatePicker" component="DatePicker">
+        <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={yesterday}
             disablePast
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="TimePicker" component="TimePicker">
+        <DemoItem label="TimePicker">
           <TimePicker defaultValue={todayStartOfTheDay} disablePast />
         </DemoItem>
-        <DemoItem label="DateTimePicker" component="DateTimePicker">
+        <DemoItem label="DateTimePicker">
           <DateTimePicker
             defaultValue={yesterday}
             disablePast

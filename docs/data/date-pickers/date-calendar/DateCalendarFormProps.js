@@ -9,10 +9,10 @@ export default function DateCalendarFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar', 'DateCalendar']}>
-        <DemoItem label="disabled" component="DateCalendar">
+        <DemoItem label="disabled">
           <DateCalendar defaultValue={dayjs('2022-04-07')} disabled />
         </DemoItem>
-        <DemoItem label="readOnly" component="DateCalendar">
+        <DemoItem label="readOnly">
           <DateCalendar defaultValue={dayjs('2022-04-07')} readOnly />
         </DemoItem>
       </DemoContainer>

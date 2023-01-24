@@ -12,19 +12,15 @@ export default function DateTimePickerViews() {
       >
         <DemoItem
           label={'"year"", "month", "day", "hours", "minutes" and "seconds"'}
-          component="DateTimePicker"
         >
           <DateTimePicker
             views={['year', 'month', 'day', 'hours', 'minutes', 'seconds']}
           />
         </DemoItem>
-        <DemoItem label={'"day", "hours"'} component="DateTimePicker">
+        <DemoItem label={'"day", "hours"'}>
           <DateTimePicker views={['day', 'hours']} />
         </DemoItem>
-        <DemoItem
-          label={'"year", "day", "hours", "minutes", "seconds"'}
-          component="DateTimePicker"
-        >
+        <DemoItem label={'"year", "day", "hours", "minutes", "seconds"'}>
           <DateTimePicker views={['year', 'day', 'hours', 'minutes', 'seconds']} />
         </DemoItem>
       </DemoContainer>

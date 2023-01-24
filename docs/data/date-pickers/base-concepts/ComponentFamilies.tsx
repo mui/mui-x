@@ -38,13 +38,13 @@ export default function ComponentFamilies() {
           'MultiInputDateTimeRangeField',
         ]}
       >
-        <DemoItem label="Date" component="DateField">
+        <DemoItem label="Date">
           <DateField defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label="Time" component="TimeField">
+        <DemoItem label="Time">
           <TimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label="Date Time" component="DateTimeField">
+        <DemoItem label="Date Time">
           <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem

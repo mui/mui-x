@@ -14,14 +14,14 @@ export default function DateValidationShouldDisableMonth() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DatePicker', 'DateTimePicker']}>
-        <DemoItem label="DatePicker" component="DatePicker">
+        <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={today}
             shouldDisableMonth={isInCurrentMonth}
             views={['year', 'month', 'day']}
           />
         </DemoItem>
-        <DemoItem label="DateTimePicker" component="DateTimePicker">
+        <DemoItem label="DateTimePicker">
           <DateTimePicker
             defaultValue={today}
             shouldDisableMonth={isInCurrentMonth}

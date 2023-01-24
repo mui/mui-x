@@ -32,10 +32,7 @@ export default function DateRangeFieldExamples() {
         >
           <MultiInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
-        <DemoItem
-          label="SingleInputDateRangeField"
-          component="SingleInputDateRangeField"
-        >
+        <DemoItem label="SingleInputDateRangeField">
           <SingleInputDateRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
@@ -44,10 +41,7 @@ export default function DateRangeFieldExamples() {
         >
           <MultiInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
-        <DemoItem
-          label="SingleInputTimeRangeField"
-          component="SingleInputTimeRangeField"
-        >
+        <DemoItem label="SingleInputTimeRangeField">
           <SingleInputTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
         <DemoItem
@@ -56,10 +50,7 @@ export default function DateRangeFieldExamples() {
         >
           <MultiInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
-        <DemoItem
-          label="SingleInputDateTimeRangeField"
-          component="SingleInputDateTimeRangeField"
-        >
+        <DemoItem label="SingleInputDateTimeRangeField">
           <SingleInputDateTimeRangeField defaultValue={[date1, date2]} />
         </DemoItem>
       </DemoContainer>

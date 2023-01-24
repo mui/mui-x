@@ -9,13 +9,13 @@ export default function DateCalendarViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar', 'DateCalendar', 'DateCalendar']}>
-        <DemoItem label={'"year", "month" and "day"'} component="DateCalendar">
+        <DemoItem label={'"year", "month" and "day"'}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
-        <DemoItem label={'"day"'} component="DateCalendar">
+        <DemoItem label={'"day"'}>
           <DateCalendar views={['day']} />
         </DemoItem>
-        <DemoItem label={'"month" and "year"'} component="DateCalendar">
+        <DemoItem label={'"month" and "year"'}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
       </DemoContainer>

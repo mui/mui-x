@@ -9,13 +9,13 @@ export default function DateRangeCalendarFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
-        <DemoItem label="disabled" component="DateRangeCalendar">
+        <DemoItem label="disabled">
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             disabled
           />
         </DemoItem>
-        <DemoItem label="readOnly" component="DateRangeCalendar">
+        <DemoItem label="readOnly">
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             readOnly
