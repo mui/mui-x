@@ -105,7 +105,10 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
     const Component = exportedElements[exportedName];
 
     return (
-      <DemoItem label={getSubPackageFromExportedName(exportedName)} components={[]}>
+      <DemoItem
+        label={getSubPackageFromExportedName(exportedName)}
+        component={exportedName}
+      >
         <Component />
       </DemoItem>
     );
@@ -200,7 +203,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
           <Stack spacing={2}>
             <Typography>Live example:</Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={[]}>{content}</DemoContainer>
+              <DemoContainer components={exportedNames}>{content}</DemoContainer>
             </LocalizationProvider>
           </Stack>
         </React.Fragment>
