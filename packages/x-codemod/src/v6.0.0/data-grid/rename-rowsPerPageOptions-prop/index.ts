@@ -1,8 +1,8 @@
-import removeProps from '../../../util/removeProps';
+import renameProps from '../../../util/renameProps';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
-const props = ['disableExtendRowFullWidth'];
+const props = { rowsPerPageOptions: 'pageSizeOptions' };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
@@ -13,5 +13,5 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     trailingComma: true,
   };
 
-  return removeProps({ root, j, props, componentNames }).toSource(printOptions);
+  return renameProps({ root, j, props, componentNames }).toSource(printOptions);
 }
