@@ -1,8 +1,8 @@
 /**
  * Recusive function that:
  * Return a jscodeshift object with `value` associated to path.
- * The path cons be such as 'tabs.hidden' whcih will return `{ tabs: { hidden: value } }`.
- * If object is not null, path/value will be added respecting the other rpoperties of the object.
+ * The path can be such as 'tabs.hidden' which will return `{ tabs: { hidden: value } }`.
+ * If object is not null, path/value will be added respecting the other properties of the object.
  */
 export const addItemToObject = (path, value, object, j) => {
   const splitedPath = path.split('.');
@@ -32,14 +32,14 @@ export const addItemToObject = (path, value, object, j) => {
     return j.objectExpression([propertyToAdd]);
   }
 
-  // Look if the oobject we got already contains the property we have to use.
+  // Look if the object we got already contains the property we have to use.
   const correspondingObject = (object.properties ?? []).find(
     (property) => property.key.name === targetKey,
   );
 
   const propertyToAdd = j.objectProperty(
     j.identifier(targetKey),
-    // Here we use recusion to mix the new value with the current one
+    // Here we use recursion to mix the new value with the current one
     addItemToObject(remainingPath, value, correspondingObject?.value ?? null, j),
   );
 
@@ -61,7 +61,7 @@ export const transformNestedProp = (elementPath, propName, nestedPath, value, j)
   const initialAttribute = elementPath.value.openingElement.attributes?.find(
     (attribute) => attribute.name.name === propName,
   );
-  // The the objec in JSX element
+  // the object in JSX element
   const initialValue = initialAttribute?.value.expression;
 
   // Add the value
