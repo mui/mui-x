@@ -27,8 +27,8 @@ export default function transformer(file, api, options) {
     .filter(({ node }) => {
       return node.source.value.startsWith('@mui/x-date-picker');
     })
-    .forEach((path) => {
-      path.node.specifiers.forEach((node) => {
+    .forEach((importPath) => {
+      importPath.node.specifiers.forEach((node) => {
         const name = node.local.name;
 
         if (!importToIgnore(name)) {
@@ -39,8 +39,8 @@ export default function transformer(file, api, options) {
 
   return root
     .find(j.JSXElement)
-    .filter((path) => {
-      return ['DemoItem', 'DemoContainer'].includes(path.value.openingElement.name.name);
+    .filter((elementPath) => {
+      return ['DemoItem', 'DemoContainer'].includes(elementPath.value.openingElement.name.name);
     })
     .forEach((wrapperPath) => {
       const children = [];

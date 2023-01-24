@@ -155,6 +155,8 @@ async function main(argv) {
     verbose: 2,
     quote: 'single',
     trailingComma: true,
+    wrapColumn: 85,
+    printWidth: 100,
   });
 
   const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
