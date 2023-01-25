@@ -91,6 +91,8 @@ The list includes these transformers
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 - [`replace-tabs-props](#replace-tabs-props)
+- [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
+- [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 
 #### `adapter-change-import`
 
@@ -218,6 +220,82 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+```
+
+#### `migrate-to-components-componentsProps`
+
+Replace customization props by their equivalent `components` and `componentsProps` properties.
+
+```diff
+ <DatePicker
+-  PopperProps={{ onClick: handleClick }}
++  componentsProps={{ popper: { onClick: handleClick }}}
+ />
+
+ <DatePicker
+-  TransitionComponent={Fade}
++  components={{ DesktopTransition: Fade }}
+ />
+
+ <DatePicker
+-  DialogProps={{ backgroundColor: 'red' }}
++  componentsProps={{ dialog: { backgroundColor: 'red' }}}
+ />
+
+ <DatePicker
+-  PaperProps={{ backgroundColor: 'red' }}
++  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
+ />
+
+ <DatePicker
+-  TrapFocusProps={{ isEnabled: () => false }}
++  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+ />
+
+ <DatePicker
+-  InputProps={{ color: 'primary' }}
++  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
+ />
+
+ <DatePicker
+-  InputAdornmentProps={{ position: 'start' }}
++  componentsProps={{ inputAdornment: { position: 'start' }}}
+ />
+
+ <DatePicker
+-  OpenPickerButtonProps={{ ref: buttonRef }}
++  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
+```
+
+#### `replace-arrows-button-slot`
+
+Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by `PreviousIconButton` and `NextIconButton`.
+
+```diff
+ <DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+-    RightArrowButton: CustomButton,
++    NextIconButton: CustomButton,
+   }}
+
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+-    rightArrowButton: {},
++    nextIconButton: {},
+   }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
 ```
 
 #### `rename-components-to-slots`

@@ -635,7 +635,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   }
   ```
 
-### Popper (`PopperProps`)
+### ✅ Popper (`PopperProps`)
 
 - The `PopperProps` prop has been replaced by a `popper` component slot props:
 
@@ -646,7 +646,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-### Desktop transition (`TransitionComponent`)
+### ✅ Desktop transition (`TransitionComponent`)
 
 - The `TransitionComponent` prop has been replaced by a `DesktopTransition` component slot:
 
@@ -657,29 +657,29 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-### Dialog (`DialogProps`)
+### ✅ Dialog (`DialogProps`)
 
 - The `DialogProps` prop has been replaced by a `dialog` component slot props:
 
   ```diff
    <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ dialog: { backgroundColor: 'red }}}
+  +  componentsProps={{ dialog: { backgroundColor: 'red' }}}
    />
   ```
 
-### Desktop paper (`PaperProps`)
+### ✅ Desktop paper (`PaperProps`)
 
 - The `PaperProps` prop has been replaced by a `desktopPaper` component slot props:
 
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
+  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
    />
   ```
 
-### Desktop TrapFocus (`TrapFocusProp`)
+### ✅ Desktop TrapFocus (`TrapFocusProp`)
 
 - The `TrapFocusProps` prop has been replaced by a `desktopTrapFocus` component slot props:
 
@@ -733,7 +733,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    }
   ```
 
-### Left arrow button
+### ✅ Left arrow button
 
 - The component slot `LeftArrowButton` has been renamed `PreviousIconButton`:
 
@@ -751,7 +751,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
  />
 ```
 
-### Right arrow button
+### ✅ Right arrow button
 
 - The component slot `RightArrowButton` has been renamed `NextIconButton`:
 
@@ -769,19 +769,19 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-### Input
+### ✅ Input
 
 - The `InputProps` prop has been removed.
-  You can use the `InputProps` of the `input` component slot props instead:
+  You can use the `InputProps` of the `textField` component slot props instead:
 
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ input: { InputProps: { color: 'primary' }}}}
+  +  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
    />
   ```
 
-### Input adornment
+### ✅ Input adornment
 
 - The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slot props:
 
@@ -792,7 +792,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-### Open Picker Button
+### ✅ Open Picker Button
 
 - The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slot props:
 
