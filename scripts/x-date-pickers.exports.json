@@ -163,6 +163,7 @@
   { "name": "ptBR", "kind": "Variable" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
   { "name": "renderTimeViewClock", "kind": "Variable" },
+  { "name": "ruRU", "kind": "Variable" },
   { "name": "StaticDatePicker", "kind": "Variable" },
   { "name": "StaticDatePickerProps", "kind": "Interface" },
   { "name": "StaticDatePickerSlotsComponent", "kind": "Interface" },
