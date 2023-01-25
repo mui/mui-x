@@ -17,7 +17,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeView>(
 // TODO: Remove this functions. It get introduced to mark `value` prop in PickersLayoutProps as not required.
 // The true type should be
 // - For pickers value: TDate | null
-// - For rangepickers value: [TDate | null, TDate | null]
+// - For range pickers value: [TDate | null, TDate | null]
 function toolbarHasValue<TValue, TView extends DateOrTimeView>(
   toolbarProps: BaseToolbarProps<TValue | undefined, TView> | any,
 ): toolbarProps is BaseToolbarProps<TValue, TView> {
@@ -61,10 +61,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     components,
     componentsProps,
     slots: innerSlots,
-    slotProps: innerslotProps,
+    slotProps: innerSlotProps,
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
