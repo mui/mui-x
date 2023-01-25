@@ -9,6 +9,21 @@
   }} />;
 
 <DatePicker
+  components={{
+    ActionBar: CustomActionBar,
+    Toolbar: MyToolbar,
+  }}
+  componentsProps={{
+    actionBar: {
+      actions: [],
+    },
+
+    toolbar: {
+      hidden: false,
+    },
+  }} />;
+
+<DatePicker
   componentsProps={{
     toolbar: {
       toolbarPlaceholder: "__",
