@@ -1426,7 +1426,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
    // TimePicker, MobileTimePicker, DateRangePicker and MobileDateRangePicker.
    <DatePicker
   -  DialogProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ dialog: { backgroundColor: 'red }}}
+  +  componentsProps={{ dialog: { backgroundColor: 'red' }}}
    />
   ```
 
@@ -1437,7 +1437,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
    // TimePicker, DesktopTimePicker, DateRangePicker and DesktopDateRangePicker.
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
+  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
    />
   ```
 
