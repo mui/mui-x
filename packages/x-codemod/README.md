@@ -91,6 +91,7 @@ The list includes these transformers
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 - [`replace-tabs-props](#replace-tabs-props)
+- [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 
@@ -220,6 +221,32 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+```
+
+#### `replace-toolbar-props-by-slot`
+
+Replace props used to customize the `Toolbar` in pickers by slots properties and `localeText`.
+
+```diff
+ <DatePicker
+-  ToolbarComponent={MyToolbar}
++  components={{ Toolbar: MyToolbar }}
+-  toolbarPlaceholder="__"
+-  toolbarFormat="DD / MM / YYYY"
+-  showToolbar
++  componentsProps={{
++    toolbar: {
++      toolbarPlaceholder: "__",
++      toolbarFormat: "DD / MM / YYYY",
++      hidden: false,
++    }
++  }}
+-  toolbarTitle="Title"
++  localeText={{ toolbarTitle: "Title" }}
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-toolbar-props-by-slot <path>
 ```
 
 #### `migrate-to-components-componentsProps`

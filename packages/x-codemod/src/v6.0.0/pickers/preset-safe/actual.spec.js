@@ -26,6 +26,11 @@ function App() {
           TransitionComponent={Fade}
           DialogProps={{ backgroundColor: 'red' }}
         />
+        <DateRangePicker
+          ToolbarComponent={CustomToolbarComponent}
+          toolbarTitle="Title"
+          showToolbar
+        />
       </LocalizationProvider>
     </ThemeProvider>
   );

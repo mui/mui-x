@@ -36,6 +36,18 @@ function App() {
 
             dialog: { backgroundColor: 'red' },
           }} />
+        <DateRangePicker
+          components={{
+            Toolbar: CustomToolbarComponent,
+          }}
+          localeText={{
+            toolbarTitle: "Title",
+          }}
+          componentsProps={{
+            toolbar: {
+              hidden: false,
+            },
+          }} />
       </LocalizationProvider>
     </ThemeProvider>
   );
