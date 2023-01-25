@@ -772,12 +772,12 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 ### ✅ Input
 
 - The `InputProps` prop has been removed.
-  You can use the `InputProps` of the `input` component slot props instead:
+  You can use the `InputProps` of the `textField` component slot props instead:
 
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ input: { InputProps: { color: 'primary' }}}}
+  +  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
    />
   ```
 

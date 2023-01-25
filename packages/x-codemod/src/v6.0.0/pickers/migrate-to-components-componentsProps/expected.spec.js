@@ -27,8 +27,15 @@ import { DatePicker } from '@mui/x-date-pickers';
 
 <DatePicker
   componentsProps={{
-    input: {
+    textField: {
       InputProps: { color: 'primary' },
+    },
+  }} />;
+
+<DatePicker
+  componentsProps={{
+    textField: {
+      InputProps: { color: 'secondary' },
     },
   }} />;
 

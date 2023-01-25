@@ -12,6 +12,13 @@ import { DatePicker } from '@mui/x-date-pickers';
 
 <DatePicker InputProps={{ color: 'primary' }} />;
 
+<DatePicker
+  componentsProps={{
+    input: {
+      InputProps: { color: 'secondary' },
+    },
+  }} />;
+
 <DatePicker InputAdornmentProps={{ position: 'start' }} />;
 
 <DatePicker OpenPickerButtonProps={{ ref: buttonRef }} />;

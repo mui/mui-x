@@ -254,7 +254,7 @@ Replace customization props by their equivalent `components` and `componentsProp
 
  <DatePicker
 -  InputProps={{ color: 'primary' }}
-+  componentsProps={{ input: { InputProps: { color: 'primary' }}}}
++  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
  />
 
  <DatePicker

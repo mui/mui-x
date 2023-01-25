@@ -1,5 +1,6 @@
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 import removeProps from '../../../util/removeProps';
+import renameComponentsSlots from '../../../util/renameComponentsSlots';
 
 const propsToSlots = {
   // components
@@ -10,7 +11,7 @@ const propsToSlots = {
   DialogProps: { prop: 'componentsProps', path: 'dialog' },
   PaperProps: { prop: 'componentsProps', path: 'desktopPaper' },
   TrapFocusProps: { prop: 'componentsProps', path: 'desktopTrapFocus' },
-  InputProps: { prop: 'componentsProps', path: 'input.InputProps' },
+  InputProps: { prop: 'componentsProps', path: 'textField.InputProps' },
   InputAdornmentProps: { prop: 'componentsProps', path: 'inputAdornment' },
   OpenPickerButtonProps: { prop: 'componentsProps', path: 'openPickerButton' },
 };
@@ -23,6 +24,8 @@ export default function transformer(file, api, options) {
     quote: 'single',
     trailingComma: true,
   };
+
+  const componentNames = new Set<string>();
 
   root
     .find(j.ImportDeclaration)
@@ -37,6 +40,8 @@ export default function transformer(file, api, options) {
           if (elementPath.node.type !== 'JSXElement') {
             return;
           }
+
+          componentNames.add(node.local.name);
 
           const attributesToTransform = j(elementPath)
             .find(j.JSXAttribute)
@@ -71,7 +76,6 @@ export default function transformer(file, api, options) {
             );
           });
         });
-
         removeProps({
           root,
           componentNames: [node.local.name],
@@ -81,5 +85,12 @@ export default function transformer(file, api, options) {
       });
     });
 
-  return root.toSource(printOptions);
+  return renameComponentsSlots({
+    root,
+    componentNames: Array.from(componentNames),
+    translation: {
+      input: 'textField',
+    },
+    j,
+  }).toSource(printOptions);
 }
