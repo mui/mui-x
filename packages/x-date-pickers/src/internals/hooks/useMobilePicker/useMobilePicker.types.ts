@@ -50,7 +50,7 @@ export interface ExportedUseMobilePickerSlotsComponentsProps<TDate, TView extend
 
 export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends ExportedUseMobilePickerSlotsComponentsProps<TDate, TView>,
-    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TView>, 'toolbar'> {}
+    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,

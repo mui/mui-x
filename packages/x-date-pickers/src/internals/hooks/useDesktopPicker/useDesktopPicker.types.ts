@@ -58,7 +58,7 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
 
 export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView>,
-    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TView>, 'toolbar'> {}
+    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponentsProps,
