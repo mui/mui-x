@@ -1,3 +1,4 @@
+export * from './ruRU';
 export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';
