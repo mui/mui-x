@@ -23,7 +23,7 @@ import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
+    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
@@ -38,7 +38,7 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
 
 export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
+    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
     React.ElementType<BaseFieldProps<TDate | null, unknown>>,
     {},

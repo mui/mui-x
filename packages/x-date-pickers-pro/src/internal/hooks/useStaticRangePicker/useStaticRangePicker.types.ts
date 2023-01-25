@@ -14,10 +14,10 @@ import {
 import { DateRange } from '../../models/range';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {}
+  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
