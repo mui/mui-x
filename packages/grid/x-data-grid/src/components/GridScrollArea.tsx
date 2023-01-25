@@ -20,9 +20,7 @@ interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
 
-type OwnerState = ScrollAreaProps & {
-  classes?: DataGridProcessedProps['classes'];
-};
+type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
@@ -42,7 +40,7 @@ const GridScrollAreaRawRoot = styled('div', {
     { [`&.${gridClasses['scrollArea--right']}`]: styles['scrollArea--right'] },
     styles.scrollArea,
   ],
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   position: 'absolute',
   top: 0,
   zIndex: 101,
@@ -70,7 +68,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
   });
 
   const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
+  const ownerState = { ...rootProps, scrollDirection };
   const classes = useUtilityClasses(ownerState);
   const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
 
@@ -126,6 +124,7 @@ function GridScrollAreaRaw(props: ScrollAreaProps) {
       ref={rootRef}
       className={clsx(classes.root)}
       onDragOver={handleDragOver}
+      ownerState={ownerState}
       style={{ height: headerHeight }}
     />
   ) : null;

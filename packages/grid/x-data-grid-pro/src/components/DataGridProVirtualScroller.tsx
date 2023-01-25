@@ -62,9 +62,7 @@ export const filterColumns = (
   return [leftPinnedColumns, rightPinnedColumns];
 };
 
-type OwnerState = {
-  classes: DataGridProProcessedProps['classes'];
-};
+type OwnerState = DataGridProProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -106,7 +104,7 @@ const VirtualScrollerDetailPanels = styled('div', {
   name: 'MuiDataGrid',
   slot: 'DetailPanels',
   overridesResolver: (props, styles) => styles.detailPanels,
-})({
+})<{ ownerState: OwnerState }>({
   position: 'relative',
 });
 
@@ -123,7 +121,7 @@ const VirtualScrollerPinnedColumns = styled('div', {
     { [`&.${gridClasses['pinnedColumns--right']}`]: styles['pinnedColumns--right'] },
     styles.pinnedColumns,
   ],
-})<{ ownerState: VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
+})<{ ownerState: OwnerState & VirtualScrollerPinnedColumnsProps }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
   return {
     position: 'sticky',
@@ -151,6 +149,11 @@ const VirtualScrollerPinnedColumns = styled('div', {
   };
 });
 
+enum PinnedRowsPosition {
+  top = 'top',
+  bottom = 'bottom',
+}
+
 const VirtualScrollerPinnedRows = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PinnedRows',
@@ -159,7 +162,7 @@ const VirtualScrollerPinnedRows = styled('div', {
     { [`&.${gridClasses['pinnedRows--bottom']}`]: styles['pinnedRows--bottom'] },
     styles.pinnedRows,
   ],
-})<{ ownerState: { position: 'top' | 'bottom' } }>(({ theme, ownerState }) => {
+})<{ ownerState: { position: PinnedRowsPosition } }>(({ theme, ownerState }) => {
   const boxShadowColor = getBoxShadowColor(theme);
   return {
     position: 'sticky',
@@ -169,11 +172,11 @@ const VirtualScrollerPinnedRows = styled('div', {
     ...(theme.vars
       ? { backgroundImage: theme.vars.overlays?.[2] }
       : { ...(theme.palette.mode === 'dark' && { backgroundImage: darkModeBackgroundImage }) }),
-    ...(ownerState.position === 'top' && {
+    ...(ownerState.position === PinnedRowsPosition.top && {
       top: 0,
       boxShadow: `0px 3px 4px -2px ${boxShadowColor}`,
     }),
-    ...(ownerState.position === 'bottom' && {
+    ...(ownerState.position === PinnedRowsPosition.bottom && {
       boxShadow: `0px -3px 4px -2px ${boxShadowColor}`,
       bottom: 0,
     }),
@@ -243,7 +246,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const topPinnedRowsData = React.useMemo(() => pinnedRows?.top || [], [pinnedRows?.top]);
   const bottomPinnedRowsData = React.useMemo(() => pinnedRows?.bottom || [], [pinnedRows?.bottom]);
 
-  const classes = useUtilityClasses({ classes: rootProps.classes });
+  const classes = useUtilityClasses(rootProps);
 
   const {
     renderContext,
@@ -366,7 +369,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       {topPinnedRowsData.length > 0 ? (
         <VirtualScrollerPinnedRows
           className={classes.topPinnedRows}
-          ownerState={{ position: 'top' }}
+          ownerState={{ ...rootProps, position: PinnedRowsPosition.top }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.top }}
           role="rowgroup"
         >
@@ -374,6 +377,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             <VirtualScrollerPinnedColumns
               className={classes.leftPinnedColumns}
               ownerState={{
+                ...rootProps,
                 side: GridPinnedPosition.left,
                 showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
@@ -399,6 +403,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             <VirtualScrollerPinnedColumns
               className={classes.rightPinnedColumns}
               ownerState={{
+                ...rootProps,
                 side: GridPinnedPosition.right,
                 showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
@@ -421,6 +426,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             ref={leftColumns}
             className={classes.leftPinnedColumns}
             ownerState={{
+              ...rootProps,
               side: GridPinnedPosition.left,
               showCellVerticalBorder: rootProps.showCellVerticalBorder,
             }}
@@ -443,6 +449,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           <VirtualScrollerPinnedColumns
             ref={rightColumns}
             ownerState={{
+              ...rootProps,
               side: GridPinnedPosition.right,
               showCellVerticalBorder: rootProps.showCellVerticalBorder,
             }}
@@ -460,7 +467,7 @@ const DataGridProVirtualScroller = React.forwardRef<
           </VirtualScrollerPinnedColumns>
         )}
         {detailPanels.length > 0 && (
-          <VirtualScrollerDetailPanels className={classes.detailPanels}>
+          <VirtualScrollerDetailPanels className={classes.detailPanels} ownerState={rootProps}>
             {detailPanels}
           </VirtualScrollerDetailPanels>
         )}
@@ -468,7 +475,7 @@ const DataGridProVirtualScroller = React.forwardRef<
       {bottomPinnedRowsData.length > 0 ? (
         <VirtualScrollerPinnedRows
           className={classes.bottomPinnedRows}
-          ownerState={{ position: 'bottom' }}
+          ownerState={{ ...rootProps, position: PinnedRowsPosition.bottom }}
           style={{ width: contentProps.style.width, height: pinnedRowsHeight.bottom }}
           role="rowgroup"
         >
@@ -476,6 +483,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             <VirtualScrollerPinnedColumns
               className={classes.leftPinnedColumns}
               ownerState={{
+                ...rootProps,
                 side: GridPinnedPosition.left,
                 showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}
@@ -502,6 +510,7 @@ const DataGridProVirtualScroller = React.forwardRef<
             <VirtualScrollerPinnedColumns
               className={classes.rightPinnedColumns}
               ownerState={{
+                ...rootProps,
                 side: GridPinnedPosition.right,
                 showCellVerticalBorder: rootProps.showCellVerticalBorder,
               }}

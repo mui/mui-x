@@ -9,13 +9,16 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { GridFilterModel } from '../../models/gridFilterModel';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { isDeepEqual } from '../../utils/utils';
+
+type OwnerState = DataGridProcessedProps;
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',
   slot: 'ToolbarQuickFilter',
   overridesResolver: (props, styles) => styles.toolbarQuickFilter,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   width: 'auto',
   paddingBottom: theme.spacing(0.5),
   '& input': {
@@ -126,6 +129,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   return (
     <GridToolbarQuickFilterRoot
       as={rootProps.components.BaseTextField}
+      ownerState={rootProps}
       variant="standard"
       value={searchValue}
       onChange={handleSearchValueChange}

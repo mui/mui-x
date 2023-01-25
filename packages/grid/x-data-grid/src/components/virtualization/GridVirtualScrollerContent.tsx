@@ -6,7 +6,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes']; overflowedContent: boolean };
+type OwnerState = DataGridProcessedProps & { overflowedContent: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, overflowedContent } = ownerState;
@@ -22,7 +22,7 @@ const VirtualScrollerContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScrollerContent',
   overridesResolver: (props, styles) => styles.virtualScrollerContent,
-})({});
+})<{ ownerState: OwnerState }>({});
 
 const GridVirtualScrollerContent = React.forwardRef<
   HTMLDivElement,
@@ -31,7 +31,7 @@ const GridVirtualScrollerContent = React.forwardRef<
   const { className, style, ...other } = props;
   const rootProps = useGridRootProps();
   const ownerState = {
-    classes: rootProps.classes,
+    ...rootProps,
     overflowedContent: !rootProps.autoHeight && style?.minHeight === 'auto',
   };
   const classes = useUtilityClasses(ownerState);
@@ -41,6 +41,7 @@ const GridVirtualScrollerContent = React.forwardRef<
       ref={ref}
       className={clsx(classes.root, className)}
       style={style}
+      ownerState={ownerState}
       {...other}
     />
   );

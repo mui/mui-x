@@ -10,20 +10,17 @@ import {
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
-import { GridRootStyles } from './GridRootStyles';
+import { GridRootStyles, OwnerState } from './GridRootStyles';
 import { gridVisibleColumnDefinitionsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import {
   gridPinnedRowsCountSelector,
   gridRowCountSelector,
 } from '../../hooks/features/rows/gridRowsSelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridDensity } from '../../models/gridDensity';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -31,12 +28,6 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   sx?: SxProps<Theme>;
 }
-
-type OwnerState = {
-  density: GridDensity;
-  autoHeight: DataGridProcessedProps['autoHeight'];
-  classes?: DataGridProcessedProps['classes'];
-};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { autoHeight, density, classes } = ownerState;
@@ -59,19 +50,12 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const apiRef = useGridPrivateApiContext();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
-  const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
-  const ownerState = {
-    density: densityValue,
-    classes: rootProps.classes,
-    autoHeight: rootProps.autoHeight,
-  };
-
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   apiRef.current.register('public', { rootElementRef: rootContainerRef });
 
@@ -95,6 +79,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
     <GridRootStyles
       ref={handleRef}
       className={clsx(className, classes.root)}
+      ownerState={rootProps}
       role="grid"
       aria-colcount={visibleColumns.length}
       aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}

@@ -14,10 +14,10 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-interface OwnerState {
+type OwnerState = DataGridPremiumProcessedProps & {
   classes: DataGridPremiumProcessedProps['classes'];
   colDef: GridColDef;
-}
+};
 
 const GridAggregationHeaderRoot = styled(Box, {
   name: 'MuiDataGrid',
@@ -71,7 +71,7 @@ function GridAggregationHeader(props: GridColumnHeaderParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const ownerState = { classes: rootProps.classes, colDef };
+  const ownerState = { ...rootProps, classes: rootProps.classes, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {
