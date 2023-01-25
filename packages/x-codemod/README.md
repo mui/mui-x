@@ -91,6 +91,7 @@ The list includes these transformers
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 - [`replace-tabs-props](#replace-tabs-props)
+- [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 
 #### `adapter-change-import`
 
