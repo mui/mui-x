@@ -8,7 +8,9 @@ import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTi
 export default function BasicTimeRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={['MultiInputTimeRangeField', 'SingleInputTimeRangeField']}
+      >
         <MultiInputTimeRangeField />
         <SingleInputTimeRangeField />
       </DemoContainer>

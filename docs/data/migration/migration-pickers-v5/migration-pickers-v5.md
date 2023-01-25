@@ -540,7 +540,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Tabs
 
-- The `hideTabs` and `timeIcon` props have been moved to `tabs` component slot props.
+- ✅ The `hideTabs` and `timeIcon` props have been moved to `tabs` component slot props.
   The `dateRangeIcon` prop has been renamed to `dateIcon` and moved to `tabs` component slot props:
 
   ```diff
