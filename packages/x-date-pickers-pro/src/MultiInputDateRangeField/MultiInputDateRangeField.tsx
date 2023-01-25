@@ -44,7 +44,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
 
   const {
     slots: innerSlots,
-    slotProps: innerslotProps,
+    slotProps: innerSlotProps,
     components,
     componentsProps,
     value,
@@ -65,7 +65,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
