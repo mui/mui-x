@@ -10,7 +10,7 @@ export default function TimePickerValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['TimePicker', 'TimePicker']}>
         <TimePicker
           label="Uncontrolled picker"
           defaultValue={dayjs('2022-04-07T15:30')}

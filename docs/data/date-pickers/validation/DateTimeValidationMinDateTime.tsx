@@ -11,7 +11,7 @@ const todayAt3PM = dayjs().set('hour', 15).startOf('hour');
 export default function DateTimeValidationMinDateTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateTimePicker']}>
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={todayAtNoon} minDateTime={todayAt3PM} />
         </DemoItem>
