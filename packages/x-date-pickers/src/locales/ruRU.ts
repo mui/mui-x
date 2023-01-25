@@ -1,7 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
-const ruRUPickers: Partial<PickersLocaleText<any>> = {
+const ruRUPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
