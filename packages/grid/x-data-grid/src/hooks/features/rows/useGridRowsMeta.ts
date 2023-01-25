@@ -99,7 +99,7 @@ export const useGridRowsMeta = (
           rowsHeightLookup.current[row.id].autoHeight = true;
         } else {
           // Default back to base rowHeight if getRowHeight returns null or undefined.
-          baseRowHeight = rowHeightFromUser ?? rowHeight;
+          baseRowHeight = typeof rowHeightFromUser === 'number' ? rowHeightFromUser : rowHeight;
           rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
           rowsHeightLookup.current[row.id].autoHeight = false;
         }
