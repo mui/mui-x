@@ -30,7 +30,7 @@ export default function transformer(file, api, options) {
   root
     .find(j.ImportDeclaration)
     .filter(({ node }) => {
-      return node.source.value.startsWith('@mui/x-date-picker');
+      return node.source.value.startsWith('@mui/x-date-pickers');
     })
 
     .forEach((path) => {
