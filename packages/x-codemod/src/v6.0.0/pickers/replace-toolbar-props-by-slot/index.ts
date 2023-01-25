@@ -1,5 +1,4 @@
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-import renameComponentsSlots from '../../../util/renameComponentsSlots';
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 import removeProps from '../../../util/removeProps';
 
@@ -86,10 +85,5 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   removeProps({ root, componentNames: COMPONENTS, props: Object.keys(propsToSlots), j });
 
-  return renameComponentsSlots({
-    root,
-    componentNames: COMPONENTS,
-    translation: { dateRangeIcon: 'dateIcon' },
-    j,
-  }).toSource(printOptions);
+  return root.toSource(printOptions);
 }
