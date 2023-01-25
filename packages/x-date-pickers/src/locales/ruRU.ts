@@ -12,8 +12,8 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   openNextView: 'открыть следующий вид',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'открыт говодой вид, переключить на календарный вид'
-      : 'открыт календарный вид, переключить на говодой вид',
+      ? 'открыт годовой вид, переключить на календарный вид'
+      : 'открыт календарный вид, переключить на годовой вид',
 
   // DateRange placeholders
   start: 'Начало',
