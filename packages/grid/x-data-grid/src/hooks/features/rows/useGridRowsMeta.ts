@@ -40,6 +40,16 @@ const getValidRowHeight = (
   return defaultRowHeight;
 };
 
+const rowHeightWarning = [
+  `MUI: The \`rowHeight\` prop should be a number greater than 0.`,
+  `The default value will be used instead.`,
+].join('\n');
+
+const getRowHeightWarning = [
+  `MUI: The \`getRowHeight\` prop should return a number greater than 0 or 'auto'.`,
+  `The default value will be used instead.`,
+].join('\n');
+
 /**
  * @requires useGridPageSize (method)
  * @requires useGridPage (method)
@@ -78,10 +88,7 @@ export const useGridRowsMeta = (
   const validRowHeight = getValidRowHeight(
     props.rowHeight,
     DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
-    [
-      `MUI: The \`rowHeight\` prop should be a number greater than 0, but ${props.rowHeight} was provided.`,
-      `The default value of ${DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight}px will be used instead.`,
-    ].join('\n'),
+    rowHeightWarning,
   );
   const rowHeight = Math.floor(validRowHeight * densityFactor);
 
@@ -124,14 +131,7 @@ export const useGridRowsMeta = (
           rowsHeightLookup.current[row.id].autoHeight = true;
         } else {
           // Default back to base rowHeight if getRowHeight returns invalid value.
-          baseRowHeight = getValidRowHeight(
-            rowHeightFromUser,
-            rowHeight,
-            [
-              `MUI: The \`rowHeightFromUser\` prop should return a number greater than 0 or 'auto', but ${rowHeightFromUser} was returned.`,
-              `The value of ${rowHeight}px will be used instead.`,
-            ].join('\n'),
-          );
+          baseRowHeight = getValidRowHeight(rowHeightFromUser, rowHeight, getRowHeightWarning);
           rowsHeightLookup.current[row.id].needsFirstMeasurement = false;
           rowsHeightLookup.current[row.id].autoHeight = false;
         }
