@@ -1,12 +1,11 @@
 const { run: jscodeshift } = require('jscodeshift/src/Runner');
 /**
- * Transpiles TypeScript demos to formatted JavaScript.
- * Can be used to verify that JS and TS demos are equivalent. No introduced change
- * would indicate equivalence.
+ * Add `components` props to <DemoContainer /> in typescript files,
+ * and `component` props to <DemoItem /> if necessary (multi input pickers)
  */
 
 /**
- * List of demos to ignore when transpiling
+ * List of demos to ignore
  * Example: "app-bar/BottomAppBar.tsx"
  */
 const ignoreList = ['/pages.ts'];
