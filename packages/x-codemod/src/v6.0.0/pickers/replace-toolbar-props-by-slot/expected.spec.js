@@ -1,6 +1,11 @@
 <DatePicker
   components={{
     Toolbar: MyToolbar,
+  }}
+  componentsProps={{
+    toolbar: {
+      hidden: true,
+    },
   }} />;
 
 <DatePicker

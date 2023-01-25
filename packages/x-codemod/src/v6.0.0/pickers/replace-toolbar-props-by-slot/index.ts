@@ -65,7 +65,10 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
             ? attribute.value.value.expression
             : attribute.value.value || j.booleanLiteral(true);
         if (attributeName === 'showToolbar') {
-          if (value.type === 'BooleanLiteral') {
+          if (
+            value.type === 'BooleanLiteral' ||
+            (value.type === 'Literal' && typeof value.value === 'boolean')
+          ) {
             value.value = !value.value;
           } else {
             value = j.unaryExpression('!', value as any);

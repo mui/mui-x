@@ -1,4 +1,4 @@
-<DatePicker ToolbarComponent={MyToolbar} />;
+<DatePicker ToolbarComponent={MyToolbar} showToolbar={false} />;
 
 <DatePicker toolbarPlaceholder="__" toolbarFormat="DD / MM / YYYY" showToolbar />;
 
