@@ -19,11 +19,16 @@
     },
     "toolbar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the toolbar" },
     "actionBar": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the action bar" },
-    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" }
+    "tabs": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the tabs" },
+    "shortcuts": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the shortcuts container"
+    }
   },
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
+    "Shortcuts": "Custom component for the shortcuts.",
     "Tabs": "Tabs enabling toggling between views.",
     "Toolbar": "Custom component for the toolbar.\nIt is placed above the picker views."
   }
