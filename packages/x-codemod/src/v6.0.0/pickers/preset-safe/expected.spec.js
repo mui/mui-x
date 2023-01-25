@@ -19,11 +19,16 @@ function App() {
             okButtonLabel: "string_okText"
           }} />
         <DateTimePicker
+          components={{
+            DesktopTransition: Fade,
+          }}
           componentsProps={{
             tabs: {
               hidden: false,
               dateIcon: <LightModeIcon />,
             },
+
+            dialog: { backgroundColor: 'red' },
           }} />
       </LocalizationProvider>
     </ThemeProvider>

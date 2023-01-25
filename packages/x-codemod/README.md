@@ -91,6 +91,7 @@ The list includes these transformers
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
 - [`replace-tabs-props](#replace-tabs-props)
+- [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 
 #### `adapter-change-import`
 
@@ -218,6 +219,56 @@ Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` prop
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+```
+
+#### `migrate-to-components-componentsProps`
+
+Replace customization props by their equivalent `components` adn `componentsProps` properties.
+
+```diff
+ <DatePicker
+-  PopperProps={{ onClick: handleClick }}
++  componentsProps={{ popper: { onClick: handleClick }}}
+ />
+
+ <DatePicker
+-  TransitionComponent={Fade}
++  components={{ DesktopTransition: Fade }}
+ />
+
+ <DatePicker
+-  DialogProps={{ backgroundColor: 'red' }}
++  componentsProps={{ dialog: { backgroundColor: 'red }}}
+ />
+
+ <DatePicker
+-  PaperProps={{ backgroundColor: 'red' }}
++  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
+ />
+
+ <DatePicker
+-  TrapFocusProps={{ isEnabled: () => false }}
++  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+ />
+
+ <DatePicker
+-  InputProps={{ color: 'primary' }}
++  componentsProps={{ input: { InputProps: { color: 'primary' }}}}
+ />
+
+ <DatePicker
+-  InputAdornmentProps={{ position: 'start' }}
++  componentsProps={{ inputAdornment: { position: 'start' }}}
+ />
+
+ <DatePicker
+-  OpenPickerButtonProps={{ ref: buttonRef }}
++  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
 ```
 
 #### `rename-components-to-slots`

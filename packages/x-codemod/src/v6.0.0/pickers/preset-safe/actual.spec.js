@@ -14,7 +14,12 @@ function App() {
       <LocalizationProvider dateAdapter={DayjsUtils} locale="fr">
         <CalendarPicker date={null} onChange={() => {}} />
         <DateRangePicker cancelText={custom_cancelText} okText="string_okText" />
-        <DateTimePicker hideTabs={false} dateRangeIcon={<LightModeIcon />} />
+        <DateTimePicker
+          hideTabs={false}
+          dateRangeIcon={<LightModeIcon />}
+          TransitionComponent={Fade}
+          DialogProps={{ backgroundColor: 'red' }}
+        />
       </LocalizationProvider>
     </ThemeProvider>
   );
