@@ -1,4 +1,3 @@
-export * from './ruRU';
 export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';
@@ -20,4 +19,5 @@ export * from './jaJP';
 export * from './ukUA';
 export * from './urPK';
 export * from './beBY';
+export * from './ruRU';
 export * from './utils/pickersLocaleTextApi';
