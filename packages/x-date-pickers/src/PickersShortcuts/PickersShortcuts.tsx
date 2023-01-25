@@ -33,7 +33,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
     return null;
   }
 
-  const itemsAttributs = items.map((item) => {
+  const resolvedItems = items.map((item) => {
     const newValue = item.getValue({ isValid });
 
     return {
@@ -58,7 +58,7 @@ function PickersShortcuts<TValue>(props: PickersShortcutsProps<TValue>) {
       ]}
       {...other}
     >
-      {itemsAttributs.map((item) => {
+      {resolvedItems.map((item) => {
         return (
           <ListItem key={item.label}>
             <Chip {...item} />

@@ -58,7 +58,7 @@ function CustomRangeShortcuts(props) {
     return null;
   }
 
-  const itemsAttributs = items.map((item) => {
+  const resolvedItems = items.map((item) => {
     const newValue = item.getValue({ isValid });
 
     return {
@@ -89,7 +89,7 @@ function CustomRangeShortcuts(props) {
           },
         })}
       >
-        {itemsAttributs.map((item) => {
+        {resolvedItems.map((item) => {
           return (
             <ListItem key={item.label}>
               <Chip {...item} />

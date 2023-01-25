@@ -61,7 +61,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
     return null;
   }
 
-  const itemsAttributs = items.map((item) => {
+  const resolvedItems = items.map((item) => {
     const newValue = item.getValue({ isValid });
 
     return {
@@ -92,7 +92,7 @@ function CustomRangeShortcuts(props: PickersShortcutsProps<DateRange<Dayjs>>) {
           },
         })}
       >
-        {itemsAttributs.map((item) => {
+        {resolvedItems.map((item) => {
           return (
             <ListItem key={item.label}>
               <Chip {...item} />
