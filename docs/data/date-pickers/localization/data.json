@@ -1,13 +1,5 @@
 [
   {
-    "languageTag": "ru-RU",
-    "importName": "ruRU",
-    "localeName": "Russian",
-    "missingKeysCount": 0,
-    "totalKeysCount": 34,
-    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ruRU.ts/"
-  },
-  {
     "languageTag": "be-BY",
     "importName": "beBY",
     "localeName": "Belarusian",
@@ -126,6 +118,14 @@
     "missingKeysCount": 15,
     "totalKeysCount": 34,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ptBR.ts/"
+  },
+  {
+    "languageTag": "ru-RU",
+    "importName": "ruRU",
+    "localeName": "Russian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 34,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ruRU.ts/"
   },
   {
     "languageTag": "es-ES",
