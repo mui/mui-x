@@ -9,6 +9,7 @@ const VARIABLES = {
   SortGridMenuItems: 'GridColumnMenuSortItem',
   GridColumnPinningMenuItems: 'GridColumnMenuPinningItem',
   GridAggregationColumnMenuItem: 'GridColumnMenuAggregationItem',
+  GridFilterItemProps: 'GridColumnMenuItemProps',
 };
 
 const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;

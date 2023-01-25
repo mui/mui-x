@@ -8,7 +8,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe.only('v6.0.0/data-grid', () => {
+describe('v6.0.0/data-grid', () => {
   describe('rename-selectors-and-events', () => {
     it('transforms props as needed', () => {
       const actual = transform({ source: read('./actual.spec.js') }, { jscodeshift }, {});

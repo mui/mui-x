@@ -1,7 +1,14 @@
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
-const renamedSelectors = { gridSelectionStateSelector: 'gridRowSelectionStateSelector' };
-const renamedEvents = { selectionChange: 'rowSelectionChange' };
+const renamedSelectors = {
+  gridSelectionStateSelector: 'gridRowSelectionStateSelector',
+  gridVisibleSortedRowIdsSelector: 'gridExpandedSortedRowIdsSelector',
+  gridVisibleSortedRowEntriesSelector: 'gridExpandedSortedRowEntriesSelector',
+  gridVisibleRowCountSelector: 'gridExpandedRowCountSelector',
+  gridVisibleSortedTopLevelRowEntriesSelector: 'gridFilteredSortedTopLevelRowEntriesSelector',
+  gridVisibleTopLevelRowCountSelector: 'gridFilteredTopLevelRowCountSelector',
+};
+const renamedEvents = { selectionChange: 'rowSelectionChange', rowsScroll: 'scrollPositionChange' };
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;

@@ -13,6 +13,7 @@ function App () {
         disableMultipleSelection
         showCellRightBorder
         showColumnRightBorder
+        headerHeight
       />
       <DataGridPro
         selectionModel={[]}
@@ -21,6 +22,7 @@ function App () {
         disableMultipleSelection
         showCellRightBorder
         showColumnRightBorder
+        headerHeight
       />
       <DataGridPremium
         selectionModel={[]}
@@ -29,6 +31,7 @@ function App () {
         disableMultipleSelection
         showCellRightBorder
         showColumnRightBorder
+        headerHeight
       />
     </React.Fragment>
   );
