@@ -733,7 +733,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    }
   ```
 
-### Left arrow button
+### Left arrow button ✅
 
 - The component slot `LeftArrowButton` has been renamed `PreviousIconButton`:
 
@@ -751,7 +751,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
  />
 ```
 
-### Right arrow button
+### Right arrow button ✅
 
 - The component slot `RightArrowButton` has been renamed `NextIconButton`:
 

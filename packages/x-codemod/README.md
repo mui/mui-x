@@ -92,6 +92,7 @@ The list includes these transformers
 - [`text-props-to-localeText`](#text-props-to-localeText)
 - [`replace-tabs-props](#replace-tabs-props)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
+- [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 
 #### `adapter-change-import`
 
@@ -269,6 +270,32 @@ Replace customization props by their equivalent `components` adn `componentsProp
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
+```
+
+#### `replace-arrows-button-slot`
+
+Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by `PreviousIconButton` and `NextIconButton`.
+
+```diff
+<DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+-    RightArrowButton: CustomButton,
++    NextIconButton: CustomButton,
+   }}
+
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+-    rightArrowButton: {},
++    nextIconButton: {},
+   }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
 ```
 
 #### `rename-components-to-slots`

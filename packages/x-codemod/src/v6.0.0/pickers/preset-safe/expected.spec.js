@@ -12,7 +12,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-        <DateCalendar value={null} onChange={() => {}} />
+        <DateCalendar
+          value={null}
+          onChange={() => {}}
+          components={{
+            PreviousIconButton: CustomButtonLeft,
+          }}
+        />
         <DateRangePicker
           localeText={{
             cancelButtonLabel: custom_cancelText,
