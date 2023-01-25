@@ -8,7 +8,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 export default function DateCalendarViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateCalendar', 'DateCalendar', 'DateCalendar']}>
         <DemoItem label={'"year", "month" and "day"'}>
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>

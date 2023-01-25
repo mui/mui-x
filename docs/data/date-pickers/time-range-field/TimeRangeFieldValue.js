@@ -14,7 +14,9 @@ export default function TimeRangeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={['SingleInputTimeRangeField', 'SingleInputTimeRangeField']}
+      >
         <DemoItem label="Uncontrolled field">
           <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}

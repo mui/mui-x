@@ -15,7 +15,14 @@ const todayEndOfTheDay = today.endOf('day');
 export default function DateValidationDisableFuture() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'TimePicker',
+          'DateRangePicker',
+        ]}
+      >
         <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={tomorrow}
@@ -33,7 +40,7 @@ export default function DateValidationDisableFuture() {
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker">
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[today, tomorrow]} disableFuture />
         </DemoItem>
       </DemoContainer>

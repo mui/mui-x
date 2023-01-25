@@ -12,9 +12,20 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={DayjsUtils} locale="fr">
-        <CalendarPicker date={null} onChange={() => {}} />
+        <CalendarPicker
+          date={null}
+          onChange={() => {}}
+          components={{
+            LeftArrowButton: CustomButtonLeft,
+          }}
+        />
         <DateRangePicker cancelText={custom_cancelText} okText="string_okText" />
-        <DateTimePicker hideTabs={false} dateRangeIcon={<LightModeIcon />} />
+        <DateTimePicker
+          hideTabs={false}
+          dateRangeIcon={<LightModeIcon />}
+          TransitionComponent={Fade}
+          DialogProps={{ backgroundColor: 'red' }}
+        />
         <DateRangePicker
           ToolbarComponent={CustomToolbarComponent}
           toolbarTitle="Title"
