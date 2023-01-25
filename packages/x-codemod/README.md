@@ -224,7 +224,7 @@ npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
 
 #### `migrate-to-components-componentsProps`
 
-Replace customization props by their equivalent `components` adn `componentsProps` properties.
+Replace customization props by their equivalent `components` and `componentsProps` properties.
 
 ```diff
  <DatePicker
@@ -239,12 +239,12 @@ Replace customization props by their equivalent `components` adn `componentsProp
 
  <DatePicker
 -  DialogProps={{ backgroundColor: 'red' }}
-+  componentsProps={{ dialog: { backgroundColor: 'red }}}
++  componentsProps={{ dialog: { backgroundColor: 'red' }}}
  />
 
  <DatePicker
 -  PaperProps={{ backgroundColor: 'red' }}
-+  componentsProps={{ desktopPaper: { backgroundColor: 'red }}}
++  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
  />
 
  <DatePicker

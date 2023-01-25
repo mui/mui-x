@@ -16,7 +16,7 @@ export default function removeProps({ root, componentNames, props, j }: RemovePr
     .find(j.JSXAttribute)
     .filter((attribute) => props.includes(attribute.node.name.name as string))
     .forEach((attribute) => {
-      // Test if we are not remove  a prop of a nested component
+      // Only remove props from components in componentNames. Not nested ones.
       const attributeParent = attribute.parentPath.parentPath;
       if (
         attributeParent.value.type === 'JSXOpeningElement' &&
