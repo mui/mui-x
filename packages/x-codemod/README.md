@@ -277,7 +277,7 @@ npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
 Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by `PreviousIconButton` and `NextIconButton`.
 
 ```diff
-<DatePicker
+ <DatePicker
    components={{
 -    LeftArrowButton: CustomButton,
 +    PreviousIconButton: CustomButton,
