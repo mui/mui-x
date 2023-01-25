@@ -29,7 +29,7 @@ const ruRUPickers: Partial<PickersLocaleText<any>> = {
   datePickerToolbarTitle: 'Выбрать дату',
   dateTimePickerToolbarTitle: 'Выбрать дату и время',
   timePickerToolbarTitle: 'Выбрать время',
-  dateRangePickerToolbarTitle: 'Выбрать календарный период',
+  dateRangePickerToolbarTitle: 'Выбрать период',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
