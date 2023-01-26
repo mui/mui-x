@@ -120,6 +120,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/ptBR.ts/"
   },
   {
+    "languageTag": "ru-RU",
+    "importName": "ruRU",
+    "localeName": "Russian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 24,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/ruRU.ts/"
+  },
+  {
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",

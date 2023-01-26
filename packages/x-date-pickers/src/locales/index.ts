@@ -19,4 +19,5 @@ export * from './jaJP';
 export * from './ukUA';
 export * from './urPK';
 export * from './beBY';
+export * from './ruRU';
 export * from './utils/pickersLocaleTextApi';
