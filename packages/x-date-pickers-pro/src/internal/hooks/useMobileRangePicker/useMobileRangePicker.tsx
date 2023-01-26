@@ -189,16 +189,14 @@ export const useMobileRangePicker = <
   };
   let labelledById = labelId;
   if (isToolbarHidden) {
-    if (!finalLocaleText?.start && !finalLocaleText?.end) {
-      labelledById = undefined;
-    } else {
-      if (finalLocaleText.start) {
-        labelledById = `${labelId}-start-label`;
-      }
-      if (finalLocaleText.end) {
-        labelledById += ` ${labelId}-end-label`;
-      }
+    const labels: string[] = [];
+    if (finalLocaleText.start) {
+      labels.push(`${labelId}-start-label`);
     }
+    if (finalLocaleText.end) {
+      labels.push(`${labelId}-end-label`);
+    }
+    labelledById = labels.length > 0 ? labels.join(' ') : undefined;
   }
   if (process.env.NODE_ENV !== 'production') {
     if (!labelledById && !innerSlotProps?.mobilePaper?.['aria-labelledby']) {
