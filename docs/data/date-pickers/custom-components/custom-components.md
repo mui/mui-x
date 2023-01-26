@@ -6,12 +6,13 @@ components: DateTimePickerTabs
 
 # Custom components
 
-<p class="description">The date picker lets you customize sub-components.
+<p class="description">The date picker lets you customize sub-components.</p>
 
 :::info
-The components which can be customized are listed under `slots` section in DatePicker API Reference.
+The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
+For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
-</p>
+
 
 ## Overriding components
 
