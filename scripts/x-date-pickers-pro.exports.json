@@ -206,6 +206,7 @@
   { "name": "renderDateRangeViewCalendar", "kind": "Variable" },
   { "name": "renderDateViewCalendar", "kind": "Variable" },
   { "name": "renderTimeViewClock", "kind": "Variable" },
+  { "name": "ruRU", "kind": "Variable" },
   { "name": "SingleInputDateRangeField", "kind": "Variable" },
   { "name": "SingleInputDateRangeFieldProps", "kind": "Interface" },
   { "name": "SingleInputDateTimeRangeField", "kind": "Variable" },
