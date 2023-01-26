@@ -16,7 +16,6 @@ import {
   useLocaleText,
 } from '@mui/x-date-pickers/internals';
 import useId from '@mui/utils/useId';
-import { buildWarning } from '@mui/x-date-pickers/internals/utils/warning';
 import {
   MobileRangePickerAdditionalViewProps,
   UseMobileRangePickerParams,
@@ -26,12 +25,6 @@ import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange, RangePosition } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
-
-const ariaLabelledByCantBeResolvedWarning = buildWarning([
-  'MUI: `aria-labelledby` can not be resolved.',
-  'Make sure that the picker has `start` or `end` fields  in `localeText` or the toolbar is not hidden.',
-  'Alternatively you can provide a custom `aria-labelledby` to the `mobilePaper` slot props.',
-]);
 
 const releaseInfo = getReleaseInfo();
 
@@ -197,11 +190,6 @@ export const useMobileRangePicker = <
       labels.push(`${labelId}-end-label`);
     }
     labelledById = labels.length > 0 ? labels.join(' ') : undefined;
-  }
-  if (process.env.NODE_ENV !== 'production') {
-    if (!labelledById && !innerSlotProps?.mobilePaper?.['aria-labelledby']) {
-      ariaLabelledByCantBeResolvedWarning();
-    }
   }
   const slotProps = {
     ...innerSlotProps,

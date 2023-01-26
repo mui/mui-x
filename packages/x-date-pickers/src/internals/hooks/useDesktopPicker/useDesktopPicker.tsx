@@ -14,13 +14,6 @@ import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantC
 import { BaseFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
-import { buildWarning } from '../../utils/warning';
-
-const ariaLabelledByCantBeResolvedWarning = buildWarning([
-  'MUI: `aria-labelledby` can not be resolved.',
-  'Make sure that the picker has a `label` or the toolbar is not hidden.',
-  'Alternatively you can provide a custom `aria-labelledby` to the `popper` slot props.',
-]);
 
 /**
  * Hook managing all the single-date desktop pickers:
@@ -161,17 +154,6 @@ export const useDesktopPicker = <
       labelledById = `${labelId}-label`;
     } else {
       labelledById = undefined;
-    }
-  }
-  if (process.env.NODE_ENV !== 'production') {
-    if (
-      !labelledById &&
-      // ts complains about unknown prop access without casting
-      !(innerSlotProps?.popper as any)?.['aria-labelledby'] &&
-      // exclude cases of pickers without any available views (i.e. DesktopTimePicker)
-      hasUIView
-    ) {
-      ariaLabelledByCantBeResolvedWarning();
     }
   }
   const slotProps = {

@@ -13,13 +13,6 @@ import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantC
 import { BaseFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
-import { buildWarning } from '../../utils/warning';
-
-const ariaLabelledByCantBeResolvedWarning = buildWarning([
-  'MUI: `aria-labelledby` can not be resolved.',
-  'Make sure that the picker has a `label` or the toolbar is not hidden.',
-  'Alternatively you can provide a custom `aria-labelledby` to the `mobilePaper` slot props.',
-]);
 
 /**
  * Hook managing all the single-date mobile pickers:
@@ -130,11 +123,6 @@ export const useMobilePicker = <
       labelledById = `${labelId}-label`;
     } else {
       labelledById = undefined;
-    }
-  }
-  if (process.env.NODE_ENV !== 'production') {
-    if (!labelledById && !innerSlotProps?.mobilePaper?.['aria-labelledby']) {
-      ariaLabelledByCantBeResolvedWarning();
     }
   }
   const slotProps = {
