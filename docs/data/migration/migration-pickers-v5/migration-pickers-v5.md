@@ -140,7 +140,7 @@ At some point, the mobile pickers should have a prop allowing to have an editabl
 
 ### ✅ Rename `shouldDisableTime` prop
 
-The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
+The `shouldDisableTime` prop signature has been changed. Either rename the prop to `shouldDisableClock` or refactor usage.
 
 ```diff
  <DateTimePicker
