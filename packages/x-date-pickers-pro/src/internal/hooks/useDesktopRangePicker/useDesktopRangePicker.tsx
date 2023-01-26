@@ -42,10 +42,11 @@ export const useDesktopRangePicker = <
 
   const {
     slots: innerSlots,
-    slotProps: innerslotProps,
+    slotProps: innerSlotProps,
     components,
     componentsProps,
     className,
+    sx,
     format,
     readOnly,
     disabled,
@@ -54,7 +55,7 @@ export const useDesktopRangePicker = <
     localeText,
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -98,7 +99,7 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const fieldslotProps = useRangePickerInputProps({
+  const fieldSlotProps = useRangePickerInputProps({
     wrapperVariant: 'desktop',
     open,
     actions,
@@ -123,6 +124,7 @@ export const useDesktopRangePicker = <
       readOnly,
       disabled,
       className,
+      sx,
       format,
       autoFocus: autoFocus && !props.open,
       ref: fieldRef,
@@ -147,7 +149,7 @@ export const useDesktopRangePicker = <
         ownerState,
       );
       const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
+        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
 
       return {
         ...externalInputProps,
@@ -168,7 +170,7 @@ export const useDesktopRangePicker = <
       return {
         ...externalRootProps,
         ...rootPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
     separator: (ownerState) => {
@@ -180,12 +182,12 @@ export const useDesktopRangePicker = <
       return {
         ...externalSeparatorProps,
         ...separatorPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
   };
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,

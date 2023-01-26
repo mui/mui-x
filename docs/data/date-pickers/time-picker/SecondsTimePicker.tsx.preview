@@ -1,10 +1,10 @@
-<NextTimePicker
+<TimePicker
   label="Hours, minutes and seconds"
   views={['hours', 'minutes', 'seconds']}
   format="HH:mm:ss"
   defaultValue={dayjs('2022-04-07T15:30:10')}
 />
-<NextTimePicker
+<TimePicker
   label="Minutes and seconds"
   views={['minutes', 'seconds']}
   openTo="minutes"

@@ -179,7 +179,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     components,
     componentsProps,
     slots: innerSlots,
-    slotProps: innerslotProps,
+    slotProps: innerSlotProps,
     loading,
     renderLoading,
     disableHighlightToday,
@@ -195,7 +195,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     ...other
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const [value, setValue] = useControlled<DateRange<TDate>>({
     controlled: valueProp,

@@ -1,2 +1,2 @@
-<NextDateTimePicker label="disabled" disabled />
-<NextDateTimePicker label="readOnly" readOnly />
+<DateTimePicker label="disabled" disabled />
+<DateTimePicker label="readOnly" readOnly />

@@ -12,15 +12,15 @@ import {
   timeClockClasses,
   clockPointerClasses,
 } from '../TimeClock';
-import { datePickerToolbarClasses } from '../NextDatePicker';
-import { dateTimePickerToolbarClasses } from '../NextDateTimePicker';
+import { datePickerToolbarClasses } from '../DatePicker';
+import { dateTimePickerToolbarClasses } from '../DateTimePicker';
 import {
   pickersArrowSwitcherClasses,
   pickersPopperClasses,
   pickersToolbarClasses,
 } from '../internals';
 import { pickersDayClasses } from '../PickersDay';
-import { timePickerToolbarClasses } from '../NextTimePicker';
+import { timePickerToolbarClasses } from '../TimePicker';
 import { pickersMonthClasses } from '../MonthCalendar';
 
 createTheme({
@@ -157,48 +157,6 @@ createTheme({
         },
       },
     },
-    MuiDesktopNextDatePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiDesktopNextDatePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiDesktopNextDateTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiDesktopNextDateTimePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiDesktopNextTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiDesktopNextTimePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiMobileNextDatePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiMobileNextDatePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiMobileNextDateTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiMobileNextDateTimePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiMobileNextTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiMobileNextTimePicker prop
-        someRandomProp: true,
-      },
-    },
     MuiMonthCalendar: {
       defaultProps: {
         disableFuture: true,
@@ -209,27 +167,6 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
-      },
-    },
-    MuiNextDatePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiNextDatePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiNextDateTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiNextDateTimePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiNextTimePicker: {
-      defaultProps: {
-        open: true,
-        // @ts-expect-error invalid MuiNextTimePicker prop
-        someRandomProp: true,
       },
     },
     MuiPickersArrowSwitcher: {
@@ -400,27 +337,6 @@ createTheme({
         },
       },
     },
-    MuiStaticNextDatePicker: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiStaticNextDatePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiStaticNextDateTimePicker: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiStaticNextDateTimePicker prop
-        someRandomProp: true,
-      },
-    },
-    MuiStaticNextTimePicker: {
-      defaultProps: {
-        disabled: true,
-        // @ts-expect-error invalid MuiStaticNextTimePicker prop
-        someRandomProp: true,
-      },
-    },
     MuiTimeClock: {
       defaultProps: {
         view: 'hours',
@@ -461,6 +377,96 @@ createTheme({
         root: {
           backgroundColor: 'red',
         },
+      },
+    },
+
+    // Date Pickers
+    MuiDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileDatePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileDatePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticDatePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDatePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    // Time Pickers
+    MuiTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDesktopTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticTimePicker prop
+        someRandomProp: true,
+      },
+    },
+
+    // Date Time Pickers
+    MuiDesktopDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDesktopDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiMobileDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiMobileDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiDateTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiDateTimePicker prop
+        someRandomProp: true,
+      },
+    },
+    MuiStaticDateTimePicker: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiStaticDateTimePicker prop
+        someRandomProp: true,
       },
     },
   },

@@ -76,14 +76,19 @@ export default function CsvGetRowsToExport() {
         {...data}
         loading={loading}
         components={{ Toolbar: CustomToolbar }}
-        pageSize={10}
-        rowsPerPageOptions={[10]}
+        pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,
           filter: {
             ...data.initialState?.filter,
             filterModel: {
               items: [{ field: 'quantity', operator: '>', value: '20000' }],
+            },
+          },
+          pagination: {
+            ...data.initialState?.pagination,
+            paginationModel: {
+              pageSize: 10,
             },
           },
         }}

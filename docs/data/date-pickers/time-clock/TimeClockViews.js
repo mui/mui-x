@@ -7,7 +7,7 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 export default function TimeClockViews() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['TimeClock', 'TimeClock', 'TimeClock']}>
         <DemoItem label={'"hours", "minutes" and "seconds"'}>
           <TimeClock views={['hours', 'minutes', 'seconds']} />
         </DemoItem>

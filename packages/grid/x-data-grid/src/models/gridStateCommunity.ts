@@ -38,7 +38,6 @@ export interface GridStateCommunity {
   filter: GridFilterState;
   preferencePanel: GridPreferencePanelState;
   density: GridDensityState;
-  error?: any;
 }
 
 /**

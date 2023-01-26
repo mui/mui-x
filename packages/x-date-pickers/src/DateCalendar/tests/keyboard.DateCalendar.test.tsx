@@ -122,5 +122,20 @@ describe('<DateCalendar /> keyboard interactions', () => {
         });
       });
     });
+
+    describe('navigate months', () => {
+      it('should keep focus on arrow when swiching month', () => {
+        render(<DateCalendar />);
+
+        const nextMonthButton = screen.getByRole('button', { name: 'Next month' });
+        act(() => nextMonthButton.focus());
+        // Don't care about what's focused.
+        // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
+        fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+
+        clock.runToLast();
+        expect(document.activeElement).toHaveAccessibleName('Next month');
+      });
+    });
   });
 });

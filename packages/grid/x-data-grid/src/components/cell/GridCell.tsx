@@ -238,7 +238,12 @@ function GridCell(props: GridCellProps) {
 
   const renderChildren = () => {
     if (children === undefined) {
-      return <div className={classes.content}>{valueToRender?.toString()}</div>;
+      const valueString = valueToRender?.toString();
+      return (
+        <div className={classes.content} title={valueString}>
+          {valueString}
+        </div>
+      );
     }
 
     if (React.isValidElement(children) && managesOwnFocus) {

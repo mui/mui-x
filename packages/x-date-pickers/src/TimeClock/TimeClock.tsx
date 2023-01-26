@@ -99,9 +99,9 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
     openTo,
     onViewChange,
     className,
-    sx,
     disabled,
     readOnly,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled({
@@ -341,7 +341,7 @@ export const TimeClock = React.forwardRef(function TimeClock<TDate extends unkno
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       {showViewSwitcher && (
         <TimeClockArrowSwitcher

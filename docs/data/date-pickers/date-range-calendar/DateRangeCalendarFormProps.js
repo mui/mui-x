@@ -8,7 +8,7 @@ import { DateRangeCalendar } from '@mui/x-date-pickers-pro/DateRangeCalendar';
 export default function DateRangeCalendarFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
         <DemoItem label="disabled">
           <DateRangeCalendar
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
