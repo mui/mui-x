@@ -52,6 +52,10 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
+    "resetValueOnClose": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop."
+    },
     "selectedSections": {
       "type": {
         "name": "union",

@@ -55,6 +55,10 @@
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
+    "resetValueOnClose": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop."
+    },
     "selectedSections": {
       "type": {
         "name": "union",

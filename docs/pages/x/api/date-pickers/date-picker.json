@@ -75,6 +75,10 @@
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
+    "resetValueOnClose": {
+      "type": { "name": "bool" },
+      "default": "`true` for mobile, `false` for desktop."
+    },
     "selectedSections": {
       "type": {
         "name": "union",
