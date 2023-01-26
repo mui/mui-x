@@ -94,6 +94,7 @@ The list includes these transformers
 - [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
+- [`rename-should-disable-time`](#rename-should-disable-time)
 
 #### `adapter-change-import`
 
@@ -323,6 +324,21 @@ Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
+```
+
+#### `rename-should-disable-time`
+
+Replace `shouldDisableTime` by `shouldDisableClock`.
+
+```diff
+  <DateTimePicker
+-   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++   shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
 ```
 
 #### `rename-components-to-slots`
