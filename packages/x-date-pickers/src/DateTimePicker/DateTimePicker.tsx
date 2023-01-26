@@ -283,6 +283,13 @@ DateTimePicker.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
+   * If `true`, on close will reset the value to the value when the picker was opened.
+   *
+   * Might make most sense when in need of resetting the value on modal dismiss/close.
+   * @default `true` for mobile, `false` for desktop.
+   */
+  resetValueOnClose: PropTypes.bool,
+  /**
    * The currently selected sections.
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
