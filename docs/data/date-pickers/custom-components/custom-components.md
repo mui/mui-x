@@ -6,7 +6,12 @@ components: DateTimePickerTabs
 
 # Custom components
 
-<p class="description">The date picker lets you customize sub-components.</p>
+<p class="description">The date picker lets you customize sub-components.
+
+:::info
+The components which can be customized are listed under `slots` section in DatePicker API Reference.
+:::
+</p>
 
 ## Overriding components
 
