@@ -71,8 +71,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
   filterPanelDeleteIconLabel: 'Выдаліць',
-  filterPanelLogicOperator: 'Лагічныя аператары',
-  filterPanelOperator: 'Аператары',
+  filterPanelLinkOperator: 'Лагічныя аператары',
+  filterPanelOperators: 'Аператары',
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
   filterPanelColumns: 'Слупкі',
@@ -102,7 +102,6 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Меню',
   columnMenuShowColumns: 'Паказаць слупкі',
-  columnMenuManageColumns: 'Кіраваць слупкамі',
   columnMenuFilter: 'Фільтр',
   columnMenuHideColumn: 'Схаваць',
   columnMenuUnsort: 'Скасаваць сартыроўку',
