@@ -5,7 +5,7 @@ import { getPickersLocalization } from './utils/getPickersLocalization';
 const timeViews = {
   hours: 'часы',
   minutes: 'минуты',
-  seconds: 'секунды'
+  seconds: 'секунды',
 };
 
 const ruRUPickers: PickersLocaleText<any> = {
