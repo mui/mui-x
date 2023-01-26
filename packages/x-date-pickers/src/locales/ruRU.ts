@@ -20,6 +20,10 @@ const ruRUPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `text input view is open, go to ${viewType} view`
+      : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Начало',
@@ -32,10 +36,10 @@ const ruRUPickers: PickersLocaleText<any> = {
   todayButtonLabel: 'Сегодня',
 
   // Toolbar titles
-  datePickerToolbarTitle: 'Выбрать дату',
-  dateTimePickerToolbarTitle: 'Выбрать дату и время',
-  timePickerToolbarTitle: 'Выбрать время',
-  dateRangePickerToolbarTitle: 'Выбрать период',
+  datePickerDefaultToolbarTitle: 'Выбрать дату',
+  dateTimePickerDefaultToolbarTitle: 'Выбрать дату и время',
+  timePickerDefaultToolbarTitle: 'Выбрать время',
+  dateRangePickerDefaultToolbarTitle: 'Выбрать период',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -45,12 +49,6 @@ const ruRUPickers: PickersLocaleText<any> = {
   hoursClockNumberText: (hours) => `${hours} часов`,
   minutesClockNumberText: (minutes) => `${minutes} минут`,
   secondsClockNumberText: (seconds) => `${seconds} секунд`,
-
-  // Calendar labels
-  calendarWeekNumberHeaderLabel: 'Номер недели',
-  calendarWeekNumberHeaderText: '№',
-  calendarWeekNumberAriaLabelText: (weekNumber) => `Неделя ${weekNumber}`,
-  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -65,15 +63,6 @@ const ruRUPickers: PickersLocaleText<any> = {
   // Table labels
   timeTableLabel: 'выбрать время',
   dateTableLabel: 'выбрать дату',
-
-  // Field section placeholders
-  fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
-  fieldDayPlaceholder: () => 'ДД',
-  fieldHoursPlaceholder: () => 'чч',
-  fieldMinutesPlaceholder: () => 'мм',
-  fieldSecondsPlaceholder: () => 'сс',
-  fieldMeridiemPlaceholder: () => '(д|п)п',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);
