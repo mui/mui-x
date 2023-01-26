@@ -663,8 +663,34 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             />
           </div>,
         );
+        const rowsHeight = rowHeight * baselineProps.rows.length;
         expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
-          columnHeaderHeight + rowHeight * baselineProps.rows.length,
+          columnHeaderHeight + rowsHeight,
+        );
+        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
+          rowsHeight,
+        );
+      });
+
+      it('should have the correct intrinsic height inside of a flex container', () => {
+        const columnHeaderHeight = 40;
+        const rowHeight = 30;
+        render(
+          <div style={{ display: 'flex' }}>
+            <DataGrid
+              {...baselineProps}
+              columnHeaderHeight={columnHeaderHeight}
+              rowHeight={rowHeight}
+              autoHeight
+            />
+          </div>,
+        );
+        const rowsHeight = rowHeight * baselineProps.rows.length;
+        expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+          columnHeaderHeight + rowsHeight,
+        );
+        expect(document.querySelector('.MuiDataGrid-virtualScroller')!.clientHeight).to.equal(
+          rowsHeight,
         );
       });
 
