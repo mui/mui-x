@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { unstable_useControlled as useControlled } from '@mui/utils';
+import useControlled from '@mui/utils/useControlled';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useOpenState } from '../useOpenState';
 import { useLocalizationContext, useUtils } from '../useUtils';
@@ -206,6 +206,13 @@ export interface UsePickerValueNonStaticProps<TValue>
    * Use in controlled mode (see open).
    */
   onOpen?: () => void;
+  /**
+   * If `true`, on close will reset the value to the value when the picker was opened.
+   *
+   * Might make most sense when in need of resetting the value on modal dismiss/close.
+   * @default `true` for mobile, `false` for desktop.
+   */
+  resetValueOnClose?: boolean;
 }
 
 /**
@@ -302,6 +309,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
+    resetValueOnClose = wrapperVariant !== 'desktop',
   } = props;
 
   const utils = useUtils<TDate>();
@@ -429,7 +437,10 @@ export const usePickerValue = <
   const handleDismiss = useEventCallback(() => {
     // Set all dates in state to equal the last committed date.
     // e.g. Reset the state to the last committed value.
-    setDate({ value: dateState.committed, action: 'acceptAndClose' });
+    setDate({
+      value: resetValueOnClose ? dateState.resetFallback : dateState.committed,
+      action: 'acceptAndClose',
+    });
   });
 
   const handleCancel = useEventCallback(() => {
