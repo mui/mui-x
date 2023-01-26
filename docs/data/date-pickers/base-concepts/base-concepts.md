@@ -89,8 +89,8 @@ Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to d
 This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
 A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
 
-- Use `toolbar` id if it is not hidden;
-- Use `label` id (or `start` and `end` ids in case of range picker) if `toolbar` is hidden;
+- Use `toolbar` id if the toolbar is visible;
+- Use the id of the input label if the toolbar is hidden;
 
 :::info
 Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` `slotProps` in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
