@@ -88,7 +88,7 @@
   },
   "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
   "name": "SingleInputTimeRangeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiSingleInputTimeRangeField" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputTimeRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li>\n<li><a href=\"/x/react-date-pickers/time-range-field/\">Time Range Field </a></li></ul>",
   "packages": [
