@@ -86,6 +86,21 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];
     variants?: ComponentsVariants['MuiLocalizationProvider'];
   };
+  MuiMobileDatePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileDatePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDatePicker'];
+    variants?: ComponentsVariants['MuiMobileDatePicker'];
+  };
+  MuiMobileDateTimePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileDateTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileDateTimePicker'];
+    variants?: ComponentsVariants['MuiMobileDateTimePicker'];
+  };
+  MuiMobileTimePicker?: {
+    defaultProps?: ComponentsProps['MuiMobileTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiMobileTimePicker'];
+    variants?: ComponentsVariants['MuiMobileTimePicker'];
+  };
   MuiMonthPicker?: {
     defaultProps?: ComponentsProps['MuiMonthPicker'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiMonthPicker'];
