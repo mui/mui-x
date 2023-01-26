@@ -2,6 +2,9 @@ import { Localization as CoreLocalization } from '@mui/material/locale';
 
 // This file contains copies of the core locales for `MuiTablePagination` released
 // after the `@mui/material` package `v5.4.1` (peer dependency of `@mui/x-data-grid`).
+// This allows not to bump the minimal version of `@mui/material` in peerDependencies which results
+// in broader compatibility between the packages.
+// See https://github.com/mui/mui-x/pull/7646#issuecomment-1404605556 for additional context.
 
 export const beBYCore: CoreLocalization = {
   components: {
