@@ -8,6 +8,12 @@ const timeViews = {
   seconds: 'секунды',
 };
 
+// maps PickersToolbar["viewType"] to its translation
+const viewTypes = {
+  calendar: 'календарный',
+  clock: 'часовой',
+};
+
 const ruRUPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
@@ -22,8 +28,8 @@ const ruRUPickers: PickersLocaleText<any> = {
       : 'открыт календарный вид, переключить на годовой вид',
   inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
     isKeyboardInputOpen
-      ? `text input view is open, go to ${viewType} view`
-      : `${viewType} view is open, go to text input view`,
+      ? `Открыт текстовый вид, перейти на ${viewTypes[viewType]} вид`
+      : `Открыт ${viewTypes[viewType]} вид, перейти на текстовый вид`,
 
   // DateRange placeholders
   start: 'Начало',
