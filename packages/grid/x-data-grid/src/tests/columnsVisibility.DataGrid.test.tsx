@@ -165,7 +165,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     });
 
     // Fixes (2) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
-    it('should not show hidden non hideable columns when "Hide all" is clicked', () => {
+    it('should not show non-hideable columns when "Hide all" is clicked', () => {
       render(
         <TestDataGrid
           components={{ Toolbar: GridToolbar }}
