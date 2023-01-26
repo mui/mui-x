@@ -20,9 +20,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   }
 
   describe('Picker action bar', () => {
-    const defaultProps = {
-      label: 'test action bar',
-    };
     describe('clear action', () => {
       it('should call onClose, onChange with empty value and onAccept with empty value', () => {
         const onChange = spy();
@@ -31,7 +28,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            {...defaultProps}
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -69,7 +65,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            {...defaultProps}
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -94,7 +89,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            {...defaultProps}
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -129,7 +123,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            {...defaultProps}
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}
@@ -156,7 +149,6 @@ export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
 
         render(
           <ElementToTest
-            {...defaultProps}
             onChange={onChange}
             onAccept={onAccept}
             onClose={onClose}

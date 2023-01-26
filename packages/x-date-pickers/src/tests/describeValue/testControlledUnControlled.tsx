@@ -20,33 +20,30 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
   } = getOptions();
 
   describe('Controlled / uncontrolled value', () => {
-    const defaultProps = {
-      label: 'test controlled uncontrolled',
-    };
     it('should render `props.defaultValue` if no `props.value` is passed', () => {
-      render(<ElementToTest {...defaultProps} defaultValue={values[0]} />);
+      render(<ElementToTest defaultValue={values[0]} />);
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if passed', () => {
-      render(<ElementToTest {...defaultProps} value={values[0]} />);
+      render(<ElementToTest value={values[0]} />);
       assertRenderedValue(values[0]);
     });
 
     it('should render `props.value` if both `props.defaultValue` and `props.value` are passed', () => {
-      render(<ElementToTest {...defaultProps} defaultValue={values[0]} value={values[1]} />);
+      render(<ElementToTest defaultValue={values[0]} value={values[1]} />);
       assertRenderedValue(values[1]);
     });
 
     it('should render nothing if neither `props.defaultValue` or `props.value` are passed', () => {
-      render(<ElementToTest {...defaultProps} />);
+      render(<ElementToTest />);
       assertRenderedValue(emptyValue);
     });
 
     it('should call onChange when updating a value defined with `props.defaultValue` and update the rendered value', () => {
       const onChange = spy();
 
-      render(<ElementToTest {...defaultProps} defaultValue={values[0]} onChange={onChange} />);
+      render(<ElementToTest defaultValue={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
       assertRenderedValue(newValue);
@@ -64,7 +61,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     it('should call onChange when updating a value defined with `props.value`', () => {
       const onChange = spy();
 
-      render(<ElementToTest {...defaultProps} value={values[0]} onChange={onChange} />);
+      render(<ElementToTest value={values[0]} onChange={onChange} />);
       const newValue = setNewValue(values[0]);
 
       expect(onChange.callCount).to.equal(componentFamily === 'clock' ? 2 : 1);
@@ -78,7 +75,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
     });
 
     it('should react to `props.value` update', () => {
-      const { setProps } = render(<ElementToTest {...defaultProps} value={values[0]} />);
+      const { setProps } = render(<ElementToTest value={values[0]} />);
       setProps({ value: values[1] });
       assertRenderedValue(values[1]);
     });
@@ -89,14 +86,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
           return;
         }
         const handleChange = spy();
-        render(
-          <ElementToTest
-            {...defaultProps}
-            value={values[0]}
-            onChange={handleChange}
-            {...{ [prop]: true }}
-          />,
-        );
+        render(<ElementToTest value={values[0]} onChange={handleChange} {...{ [prop]: true }} />);
 
         const textBoxes = screen.getAllByRole('textbox');
         textBoxes.forEach((textbox) => {
@@ -114,7 +104,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       }
       const handleChange = spy();
 
-      render(<ElementToTest {...defaultProps} defaultValue={values[0]} onChange={handleChange} />);
+      render(<ElementToTest defaultValue={values[0]} onChange={handleChange} />);
       const input = screen.getAllByRole('textbox')[0];
       act(() => {
         input.focus();

@@ -14,7 +14,6 @@ export const testYearViewValidation: DescribeValidationTestSuite = (ElementToTes
   describe('year view:', () => {
     const defaultProps = {
       onChange: () => {},
-      label: 'test year view',
       ...(views.length > 1 && {
         views: ['year'],
         view: 'year',

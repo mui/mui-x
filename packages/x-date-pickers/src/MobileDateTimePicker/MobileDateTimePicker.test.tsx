@@ -106,7 +106,6 @@ describe('<MobileDateTimePicker />', () => {
       render(
         <MobileDateTimePicker
           open
-          label="test"
           componentsProps={{ toolbar: { hidden: true } }}
           defaultValue={adapterToUse.date(new Date(2021, 10, 20, 10, 1, 22))}
         />,

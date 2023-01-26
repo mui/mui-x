@@ -14,9 +14,6 @@ import {
 } from 'test/utils/pickers-utils';
 
 describe('<DesktopDatePicker />', () => {
-  const defaultProps = {
-    label: 'test',
-  };
   const { render } = createPickerRenderer({ clock: 'fake' });
 
   describe('Component slots: OpenPickerIcon', () => {
@@ -68,7 +65,7 @@ describe('<DesktopDatePicker />', () => {
   it('allows to change selected date from the field according to `format`', () => {
     const handleChange = spy();
 
-    render(<DesktopDatePicker {...defaultProps} onChange={handleChange} />);
+    render(<DesktopDatePicker onChange={handleChange} />);
     const input = screen.getByRole('textbox');
 
     fireEvent.change(input, {
@@ -86,7 +83,6 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          {...defaultProps}
           componentsProps={{ toolbar: { hidden: false } }}
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
         />,
@@ -102,7 +98,6 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          {...defaultProps}
           componentsProps={{ toolbar: { hidden: false } }}
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
@@ -119,7 +114,6 @@ describe('<DesktopDatePicker />', () => {
       const handleViewChange = spy();
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
           slotProps={{ toolbar: { hidden: false } }}
@@ -143,7 +137,6 @@ describe('<DesktopDatePicker />', () => {
       const handleViewChange = spy();
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
           onViewChange={handleViewChange}
           openTo="month"
@@ -173,7 +166,6 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          {...defaultProps}
           slotProps={{
             popper: {
               onClick: handleClick,
@@ -201,7 +193,6 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          {...defaultProps}
           slotProps={{
             popper: {
               onClick: handleClick,
@@ -229,7 +220,6 @@ describe('<DesktopDatePicker />', () => {
       render(
         <DesktopDatePicker
           open
-          {...defaultProps}
           slotProps={{
             desktopPaper: {
               onClick: handleClick,
@@ -300,7 +290,6 @@ describe('<DesktopDatePicker />', () => {
           <React.Fragment>
             <div style={{ height: '200vh' }}>Spacer</div>
             <DesktopDatePicker
-              {...defaultProps}
               defaultValue={adapterToUse.date(new Date(2018, 0, 1))}
               onClose={handleClose}
               onOpen={handleOpen}
@@ -331,7 +320,7 @@ describe('<DesktopDatePicker />', () => {
     it('should open when clicking "Choose date"', () => {
       const onOpen = spy();
 
-      render(<DesktopDatePicker {...defaultProps} onOpen={onOpen} />);
+      render(<DesktopDatePicker onOpen={onOpen} />);
 
       userEvent.mousePress(screen.getByLabelText(/Choose date/));
 
@@ -346,7 +335,6 @@ describe('<DesktopDatePicker />', () => {
 
       render(
         <DesktopDatePicker
-          {...defaultProps}
           onChange={onChange}
           onAccept={onAccept}
           onClose={onClose}
@@ -377,7 +365,6 @@ describe('<DesktopDatePicker />', () => {
     it('should not allow to navigate to previous month if props.minDate is after the last date of the previous month', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 1, 10))}
           minDate={adapterToUse.date(new Date(2018, 1, 5))}
         />,
@@ -391,7 +378,6 @@ describe('<DesktopDatePicker />', () => {
     it('should allow to navigate to previous month if props.minDate is the last date of the previous month', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 1, 10))}
           minDate={adapterToUse.date(new Date(2018, 0, 31))}
         />,
@@ -405,7 +391,6 @@ describe('<DesktopDatePicker />', () => {
     it('should not allow to navigate to next month if props.maxDate is before the last date of the next month', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 1, 10))}
           maxDate={adapterToUse.date(new Date(2018, 1, 20))}
         />,
@@ -419,7 +404,6 @@ describe('<DesktopDatePicker />', () => {
     it('should allow to navigate to next month if props.maxDate is the first date of the next month', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 1, 10))}
           minDate={adapterToUse.date(new Date(2018, 0, 1))}
         />,
@@ -431,7 +415,7 @@ describe('<DesktopDatePicker />', () => {
     });
 
     it('should allow to navigate to previous and next month if props.minDate == null', () => {
-      render(<DesktopDatePicker {...defaultProps} minDate={null} />);
+      render(<DesktopDatePicker minDate={null} />);
 
       openPicker({ type: 'date', variant: 'desktop' });
 
@@ -444,7 +428,6 @@ describe('<DesktopDatePicker />', () => {
     it('should enable the input error state when the current date has an invalid day', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 5, 1))}
           shouldDisableDate={() => true}
         />,
@@ -456,7 +439,6 @@ describe('<DesktopDatePicker />', () => {
     it('should enable the input error state when the current date has an invalid month', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 5, 1))}
           shouldDisableMonth={() => true}
         />,
@@ -468,7 +450,6 @@ describe('<DesktopDatePicker />', () => {
     it('should enable the input error state when the current date has an invalid year', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           defaultValue={adapterToUse.date(new Date(2018, 1, 1))}
           shouldDisableYear={() => true}
         />,
@@ -480,7 +461,7 @@ describe('<DesktopDatePicker />', () => {
 
   it('should throw console warning when invalid `openTo` prop is provided', () => {
     expect(() => {
-      render(<DesktopDatePicker {...defaultProps} defaultValue={null} openTo="month" />);
+      render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
       openPicker({ type: 'date', variant: 'desktop' });
     }).toWarnDev('MUI: `openTo="month"` is not a valid prop.');
@@ -490,7 +471,6 @@ describe('<DesktopDatePicker />', () => {
     it('should respect the `localeText` prop', () => {
       render(
         <DesktopDatePicker
-          {...defaultProps}
           localeText={{ cancelButtonLabel: 'Custom cancel' }}
           slotProps={{ actionBar: { actions: ['cancel'] } }}
         />,
