@@ -32,7 +32,7 @@ const ruRUPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Select ${view}. ${
+    `Выбрать ${view}. ${
       time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} часов`,
@@ -66,7 +66,7 @@ const ruRUPickers: PickersLocaleText<any> = {
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',
-  fieldMeridiemPlaceholder: () => 'дп',
+  fieldMeridiemPlaceholder: () => '(д|п)п',
 };
 
 export const ruRU = getPickersLocalization(ruRUPickers);
