@@ -213,14 +213,19 @@ export const testPickerOpenCloseLifeCycle: DescribeValueTestSuite<any, 'picker'>
 
       // Dismiss the picker
       userEvent.keyPress(document.activeElement!, { key: 'Escape' });
-      expect(onChange.callCount).to.equal(1);
-      expect(onAccept.callCount).to.equal(1);
+      // Closing picker will reset value on mobile (+1 call)
+      expect(onChange.callCount).to.equal(pickerParams.variant === 'mobile' ? 2 : 1);
+      // Closing picker will not accept value on mobile
+      expect(onAccept.callCount).to.equal(pickerParams.variant === 'mobile' ? 0 : 1);
+      // Closing picker will emit `onChange` with value before change
       if (pickerParams.type === 'date-range') {
-        newValue.forEach((value, index) => {
+        (pickerParams.variant === 'mobile' ? values[0] : newValue).forEach((value, index) => {
           expect(onChange.lastCall.args[0][index]).toEqualDateTime(value);
         });
       } else {
-        expect(onChange.lastCall.args[0]).toEqualDateTime(newValue as any);
+        expect(onChange.lastCall.args[0]).toEqualDateTime(
+          pickerParams.variant === 'mobile' ? values[0] : (newValue as any),
+        );
       }
       expect(onClose.callCount).to.equal(1);
     });

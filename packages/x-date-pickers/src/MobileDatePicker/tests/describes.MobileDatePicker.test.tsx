@@ -42,7 +42,7 @@ describe('<MobileDatePicker /> - Describes', () => {
 
       // Close the picker to return to the initial state
       if (!isOpened) {
-        userEvent.keyPress(document.activeElement!, { key: 'Escape' });
+        userEvent.mousePress(screen.getByText('OK'));
         clock.runToLast();
       }
 
