@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
+// Translation map for Clock Label
+const timeViews = {
+  hours: 'часы',
+  minutes: 'минуты',
+  seconds: 'секунды'
+};
+
 const ruRUPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
@@ -32,7 +39,7 @@ const ruRUPickers: PickersLocaleText<any> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `Выбрать ${view}. ${
+    `Выбрать ${timeViews[view]}. ${
       time === null ? 'Время не выбрано' : `Выбрано время ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} часов`,
