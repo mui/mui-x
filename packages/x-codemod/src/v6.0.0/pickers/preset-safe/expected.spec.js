@@ -25,6 +25,7 @@ function App() {
             okButtonLabel: "string_okText"
           }} />
         <DateTimePicker
+          shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
           components={{
             DesktopTransition: Fade,
           }}

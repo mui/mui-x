@@ -138,7 +138,7 @@ The picker components no longer have a keyboard view to render the input inside 
 At some point, the mobile pickers should have a prop allowing to have an editable field without opening the modal.
 :::
 
-### Rename `shouldDisableTime` prop
+### ✅ Rename `shouldDisableTime` prop
 
 The `shouldDisableTime` prop signature has been changed. Either rename the prop usage to `shouldDisableClock` or refactor usage.
 
@@ -150,7 +150,7 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
 
  <DateTimePicker
 -  shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
-+  shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
++  shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
  />
 ```
 

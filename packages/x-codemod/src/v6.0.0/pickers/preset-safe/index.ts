@@ -7,6 +7,7 @@ import transformReplaceTabsProps from '../replace-tabs-props';
 import transformReplaceToolbarPropsBySlot from '../replace-toolbar-props-by-slot';
 import transformMigrateToComponentsComponetsProps from '../migrate-to-components-componentsProps';
 import transformReplaceArrowsButtonSlot from '../replace-arrows-button-slot';
+import transformRenameShouldDisableTime from '../rename-should-disable-time';
 
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
@@ -23,6 +24,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = transformReplaceToolbarPropsBySlot(file, api, options);
   file.source = transformMigrateToComponentsComponetsProps(file, api, options);
   file.source = transformReplaceArrowsButtonSlot(file, api, options);
+  file.source = transformRenameShouldDisableTime(file, api, options);
 
   return file.source;
 }
