@@ -149,6 +149,7 @@ DatePickerToolbar.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */
