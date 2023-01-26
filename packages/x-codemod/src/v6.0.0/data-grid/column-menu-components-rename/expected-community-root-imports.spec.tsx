@@ -4,10 +4,9 @@ import {
   GridColumnMenuHideItem,
   GridColumnMenuColumnsItem,
   GridColumnMenuSortItem,
-  GridColumnMenuItemProps,
 } from '@mui/x-data-grid';
 
-function App({ column, hideMenu }: GridColumnMenuItemProps) {
+function App({ column, hideMenu }) {
   return (
     <React.Fragment>
       <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />

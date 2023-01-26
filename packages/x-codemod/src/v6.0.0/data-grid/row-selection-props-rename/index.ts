@@ -8,7 +8,6 @@ const props = {
   disableMultipleSelection: 'disableMultipleRowSelection',
   showCellRightBorder: 'showCellVerticalBorder',
   showColumnRightBorder: 'showColumnVerticalBorder',
-  headerHeight: 'columnHeaderHeight',
 };
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];

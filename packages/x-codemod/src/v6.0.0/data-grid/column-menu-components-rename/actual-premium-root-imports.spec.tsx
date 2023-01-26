@@ -6,10 +6,9 @@ import {
   SortGridMenuItems,
   GridColumnPinningMenuItems,
   GridAggregationColumnMenuItem,
-  GridFilterItemProps,
 } from '@mui/x-data-grid-premium';
 
-function App({ column, hideMenu }: GridFilterItemProps) {
+function App({ column, hideMenu }) {
   return (
     <React.Fragment>
       <GridFilterMenuItem column={column} onClick={hideMenu} />

@@ -13,7 +13,6 @@ function App () {
         disableMultipleRowSelection
         showCellVerticalBorder
         showColumnVerticalBorder
-        columnHeaderHeight
       />
       <DataGridPro
         rowSelectionModel={[]}
@@ -22,7 +21,6 @@ function App () {
         disableMultipleRowSelection
         showCellVerticalBorder
         showColumnVerticalBorder
-        columnHeaderHeight
       />
       <DataGridPremium
         rowSelectionModel={[]}
@@ -31,7 +29,6 @@ function App () {
         disableMultipleRowSelection
         showCellVerticalBorder
         showColumnVerticalBorder
-        columnHeaderHeight
       />
     </React.Fragment>
   );
