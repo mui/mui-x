@@ -27,7 +27,7 @@ The following steps must be proposed as a pull request.
 - [ ] Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 - [ ] Update the root `package.json`'s version
 - [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
-- [ ] Fix manually the package version in `x-date-pickers/package.json` and `x-date-pickers-pro/package.json`.
+- [ ] Manually fix any package version if it should not be bumped (i.e. `benchmark`, `eslint-plugin-material-ui`).
 - [ ] Open PR with changes and wait for review and green CI.
 - [ ] Merge PR once CI is green, and it has been approved.
 
@@ -38,6 +38,7 @@ The following steps must be proposed as a pull request.
 - [ ] Build the packages: `yarn release:build`.
 - [ ] Release the versions on npm: `yarn release:publish` (you need your 2FA device).
 - [ ] Push the newly created tag: `yarn release:tag`.
+- [ ] If `@mui/x-codemod` has been released, set the pre-release package `tag` to `latest` with: `npm dist-tag add @mui/x-codemod@<released_version> latest`.
 
 ### Publish the documentation
 

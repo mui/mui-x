@@ -35,7 +35,7 @@ The data format for pinned rows is the same as for the `rows` prop (see [Feeding
 
 Pinned rows data should also meet [Row identifier](/x/react-data-grid/row-definition/#row-identifier) requirements.
 
-{{"demo": "RowPinning.js", "disableAd": true, "bg": "inline"}}
+{{"demo": "RowPinning.js", "bg": "inline"}}
 
 :::warning
 Just like the `rows` prop, `pinnedRows` prop should keep the same reference between two renders.
@@ -48,7 +48,7 @@ You can control which rows are pinned by changing `pinnedRows`.
 
 In the demo below we use `actions` column type to add buttons to pin a row either at the top or bottom and change `pinnedRows` prop dynamically.
 
-{{"demo": "RowPinningWithActions.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowPinningWithActions.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Usage with other features
 
@@ -56,7 +56,7 @@ Pinned rows are not affected by sorting and filtering.
 
 Pagination does not impact pinned rows as well - they stay pinned regardless the page number or page size.
 
-{{"demo": "RowPinningWithPagination.js", "disableAd": true, "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "RowPinningWithPagination.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
 Pinned rows do not support the following features:

@@ -3,7 +3,7 @@ export type {
   DateCalendarProps,
   DateCalendarSlotsComponent,
   DateCalendarSlotsComponentsProps,
-} from './DateCalendar';
+} from './DateCalendar.types';
 
 export { getDateCalendarUtilityClass, dateCalendarClasses } from './dateCalendarClasses';
 export type { DateCalendarClassKey, DateCalendarClasses } from './dateCalendarClasses';

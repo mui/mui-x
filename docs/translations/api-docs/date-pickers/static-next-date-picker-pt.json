@@ -9,9 +9,9 @@
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
     "defaultValue": "The default value. Used when the component is not controlled.",
     "disabled": "If <code>true</code>, the picker and text field are disabled.",
-    "disableFuture": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
+    "disableFuture": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
     "disableHighlightToday": "If <code>true</code>, today&#39;s date is rendering without highlighting with circle.",
-    "disablePast": "If <code>true</code> disable values after the current date for date components, time for time components and both for date time components.",
+    "disablePast": "If <code>true</code> disable values before the current date for date components, time for time components and both for date time components.",
     "displayStaticWrapperAs": "Force static wrapper inner components to be rendered in mobile or desktop mode.",
     "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
@@ -50,6 +50,8 @@
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views."
+    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, and action bar"
   }
 }

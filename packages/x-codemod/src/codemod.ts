@@ -90,7 +90,6 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
-    // @ts-expect-error
     builder: (command) => {
       return command
         .positional('codemod', {
@@ -113,6 +112,7 @@ yargs
           type: 'array',
         });
     },
+    // @ts-expect-error
     handler: run,
   })
   .scriptName('npx @mui/x-codemod')

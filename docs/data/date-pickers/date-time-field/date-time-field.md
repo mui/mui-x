@@ -8,12 +8,7 @@ packageName: '@mui/x-date-pickers'
 
 # Date Time Field
 
-<p class="description">The Date Time Field lets the user select a date and a time with the keyboard.</p>
-
-:::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
-:::
+<p class="description">The Date Time Field component lets the user select a date and a time with the keyboard.</p>
 
 ## Basic usage
 

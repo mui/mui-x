@@ -1,0 +1,15 @@
+<StaticDatePicker
+  slotProps={{
+    layout: {
+      sx: {
+        [`.${pickersLayoutClasses.actionBar}`]: {
+          gridColumn: 1,
+          gridRow: 2,
+        },
+      },
+    },
+  }}
+  slots={{
+    actionBar: ActionList,
+  }}
+/>

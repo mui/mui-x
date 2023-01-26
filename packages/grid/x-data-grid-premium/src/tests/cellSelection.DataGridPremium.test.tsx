@@ -3,7 +3,7 @@ import { spy } from 'sinon';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -90,29 +90,10 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       expect(document.querySelector('.Mui-selected')).to.equal(null);
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.click(getCell(2, 1), { shiftKey: true });
       expect(document.querySelectorAll('.Mui-selected')).to.have.length(3 * 2); // 3 rows with 2 cells each
-    });
-
-    it('should consider as the origin for a new range the cell focused when Shift is pressed', () => {
-      render(<TestDataGridSelection />);
-      const cell00 = getCell(0, 0);
-      cell00.focus();
-      fireEvent.click(cell00);
-      fireEvent.keyDown(cell00, { key: 'Shift' });
-      const cell01 = getCell(0, 1);
-      fireEvent.click(cell01, { shiftKey: true });
-      cell01.focus();
-      fireEvent.keyDown(cell01, { key: 'Shift' });
-      expect(cell00).to.have.class('Mui-selected');
-      expect(cell01).to.have.class('Mui-selected');
-      const cell11 = getCell(1, 1);
-      fireEvent.click(cell11, { shiftKey: true });
-      expect(cell00).not.to.have.class('Mui-selected');
-      expect(cell01).to.have.class('Mui-selected');
-      expect(cell11).to.have.class('Mui-selected');
     });
 
     it('should call selectCellRange', () => {
@@ -120,9 +101,9 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 1), { shiftKey: true });
+      userEvent.mousePress(getCell(2, 1), { shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
       expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
         id: 2,
@@ -134,9 +115,9 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       render(<TestDataGridSelection />);
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
-      fireEvent.click(getCell(2, 2), { shiftKey: true });
+      userEvent.mousePress(getCell(2, 2), { shiftKey: true });
 
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeTop']);
       expect(getCell(0, 0)).to.have.class(gridClasses['cell--rangeLeft']);
@@ -153,6 +134,16 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeRight']);
       expect(getCell(2, 2)).to.have.class(gridClasses['cell--rangeBottom']);
     });
+
+    it('should keep the focus on first clicked cell', () => {
+      render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      cell.focus();
+      expect(cell).toHaveFocus();
+      userEvent.mousePress(cell);
+      fireEvent.click(getCell(2, 1), { shiftKey: true });
+      expect(cell).toHaveFocus();
+    });
   });
 
   describe('Shift + arrow keys', () => {
@@ -161,7 +152,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -173,7 +164,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(1, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowUp', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
@@ -185,7 +176,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 1);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowLeft', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
@@ -200,7 +191,7 @@ describe('<DataGridPremium /> - Cell Selection', () => {
       const spiedSelectCellsBetweenRange = spy(apiRef.current, 'unstable_selectCellRange');
       const cell = getCell(0, 0);
       cell.focus();
-      fireEvent.click(cell);
+      userEvent.mousePress(cell);
       fireEvent.keyDown(cell, { key: 'Shift' });
       fireEvent.keyDown(cell, { key: 'ArrowRight', shiftKey: true });
       expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
@@ -208,6 +199,16 @@ describe('<DataGridPremium /> - Cell Selection', () => {
         id: 0,
         field: 'currencyPair',
       });
+    });
+
+    it('should keep the focus on first clicked cell', () => {
+      render(<TestDataGridSelection />);
+      const cell = getCell(0, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.keyDown(cell, { key: 'ArrowDown', shiftKey: true });
+      expect(cell).toHaveFocus();
     });
   });
 

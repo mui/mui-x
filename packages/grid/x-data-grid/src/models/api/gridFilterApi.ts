@@ -1,6 +1,5 @@
-import { GridRowId, GridRowModel } from '../gridRows';
 import { GridFilterModel } from '../gridFilterModel';
-import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../gridFilterItem';
 import { GridControlledStateReasonLookup } from '../events';
 
 /**
@@ -37,10 +36,10 @@ export interface GridFilterApi {
    */
   deleteFilterItem: (item: GridFilterItem) => void;
   /**
-   * Changes the [[GridLinkOperator]] used to connect the filters.
-   * @param {GridLinkOperator} operator The new link operator. It can be: `"and"` or `"or`".
+   * Changes the [[GridLogicOperator]] used to connect the filters.
+   * @param {GridLogicOperator} operator The new logic operator. It can be: `"and"` or `"or`".
    */
-  setFilterLinkOperator: (operator: GridLinkOperator) => void;
+  setFilterLogicOperator: (operator: GridLogicOperator) => void;
   /**
    * Sets the filter model to the one given by `model`.
    * @param {GridFilterModel} model The new filter model.
@@ -50,11 +49,6 @@ export interface GridFilterApi {
     model: GridFilterModel,
     reason?: GridControlledStateReasonLookup['filter'],
   ) => void;
-  /**
-   * Returns a sorted `Map` containing only the visible rows.
-   * @returns {Map<GridRowId, GridRowModel>} The sorted `Map`.
-   */
-  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
   /**
    * Set the quick filter values ot the one given by `values`
    * @param {any[]} values The list of element to quick filter

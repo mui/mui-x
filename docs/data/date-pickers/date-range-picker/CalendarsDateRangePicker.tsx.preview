@@ -1,9 +1,0 @@
-<DemoItem label="1 calendar">
-  <NextDateRangePicker calendars={1} />
-</DemoItem>
-<DemoItem label="2 calendars">
-  <NextDateRangePicker calendars={2} />
-</DemoItem>
-<DemoItem label="3 calendars">
-  <NextDateRangePicker calendars={3} />
-</DemoItem>

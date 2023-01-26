@@ -698,18 +698,21 @@ describe('<DataGrid /> - Column Spanning', () => {
       });
     }
 
-    render(
-      <div style={{ width: 500, height: 300 }}>
-        <DataGrid
-          columns={columns}
-          rows={rows}
-          pagination
-          pageSize={pageSize}
-          rowsPerPageOptions={[pageSize]}
-          disableVirtualization={isJSDOM}
-        />
-      </div>,
-    );
+    function TestCase() {
+      return (
+        <div style={{ width: 500, height: 300 }}>
+          <DataGrid
+            columns={columns}
+            rows={rows}
+            initialState={{ pagination: { paginationModel: { pageSize } } }}
+            pageSizeOptions={[pageSize]}
+            disableVirtualization={isJSDOM}
+          />
+        </div>
+      );
+    }
+
+    render(<TestCase />);
 
     checkRows(0, ['Nike', 'Adidas']);
 
@@ -846,36 +849,87 @@ describe('<DataGrid /> - Column Spanning', () => {
 
     const rowHeight = 50;
 
-    render(
-      <div style={{ width: 390, height: 300 }}>
-        <DataGrid
-          pagination
-          rowsPerPageOptions={[3]}
-          pageSize={3}
-          columns={[
-            { field: 'col0', width: 100, colSpan: ({ value }) => (value === '4-0' ? 3 : 1) },
-            { field: 'col1', width: 100 },
-            { field: 'col2', width: 100 },
-            { field: 'col3', width: 100 },
-            { field: 'col4', width: 100 },
-            { field: 'col5', width: 100 },
-          ]}
-          rows={[
-            { id: 0, col0: '0-0', col1: '0-1', col2: '0-2', col3: '0-3', col4: '0-4', col5: '0-5' },
-            { id: 1, col0: '1-0', col1: '1-1', col2: '1-2', col3: '1-3', col4: '1-4', col5: '1-5' },
-            { id: 2, col0: '2-0', col1: '2-1', col2: '2-2', col3: '2-3', col4: '2-4', col5: '2-5' },
-            { id: 3, col0: '3-0', col1: '3-1', col2: '3-2', col3: '3-3', col4: '3-4', col5: '3-5' },
-            { id: 4, col0: '4-0', col1: '4-1', col2: '4-2', col3: '4-3', col4: '4-4', col5: '4-5' },
-            { id: 5, col0: '5-0', col1: '5-1', col2: '5-2', col3: '5-3', col4: '5-4', col5: '5-5' },
-          ]}
-          columnBuffer={1}
-          columnThreshold={1}
-          rowBuffer={1}
-          rowThreshold={1}
-          rowHeight={rowHeight}
-        />
-      </div>,
-    );
+    function TestCase() {
+      return (
+        <div style={{ width: 390, height: 300 }}>
+          <DataGrid
+            pageSizeOptions={[3]}
+            initialState={{ pagination: { paginationModel: { pageSize: 3 } } }}
+            columns={[
+              { field: 'col0', width: 100, colSpan: ({ value }) => (value === '4-0' ? 3 : 1) },
+              { field: 'col1', width: 100 },
+              { field: 'col2', width: 100 },
+              { field: 'col3', width: 100 },
+              { field: 'col4', width: 100 },
+              { field: 'col5', width: 100 },
+            ]}
+            rows={[
+              {
+                id: 0,
+                col0: '0-0',
+                col1: '0-1',
+                col2: '0-2',
+                col3: '0-3',
+                col4: '0-4',
+                col5: '0-5',
+              },
+              {
+                id: 1,
+                col0: '1-0',
+                col1: '1-1',
+                col2: '1-2',
+                col3: '1-3',
+                col4: '1-4',
+                col5: '1-5',
+              },
+              {
+                id: 2,
+                col0: '2-0',
+                col1: '2-1',
+                col2: '2-2',
+                col3: '2-3',
+                col4: '2-4',
+                col5: '2-5',
+              },
+              {
+                id: 3,
+                col0: '3-0',
+                col1: '3-1',
+                col2: '3-2',
+                col3: '3-3',
+                col4: '3-4',
+                col5: '3-5',
+              },
+              {
+                id: 4,
+                col0: '4-0',
+                col1: '4-1',
+                col2: '4-2',
+                col3: '4-3',
+                col4: '4-4',
+                col5: '4-5',
+              },
+              {
+                id: 5,
+                col0: '5-0',
+                col1: '5-1',
+                col2: '5-2',
+                col3: '5-3',
+                col4: '5-4',
+                col5: '5-5',
+              },
+            ]}
+            columnBuffer={1}
+            columnThreshold={1}
+            rowBuffer={1}
+            rowThreshold={1}
+            rowHeight={rowHeight}
+          />
+        </div>
+      );
+    }
+
+    render(<TestCase />);
 
     fireEvent.click(screen.getByRole('button', { name: /next page/i }));
 

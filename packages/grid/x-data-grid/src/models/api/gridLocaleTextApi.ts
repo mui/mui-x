@@ -8,7 +8,6 @@ export interface GridLocaleText {
   // Root
   noRowsLabel: string;
   noResultsOverlayLabel: string;
-  errorOverlayDefaultLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
@@ -50,7 +49,7 @@ export interface GridLocaleText {
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
   filterPanelDeleteIconLabel: string;
-  filterPanelLinkOperator: string;
+  filterPanelLogicOperator: string;
   filterPanelOperator: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;

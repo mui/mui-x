@@ -1,7 +1,3 @@
----
-title: Data Grid - Column menu
----
-
 # Data Grid - Column menu
 
 <p class="description">Customize your columns menu.</p>

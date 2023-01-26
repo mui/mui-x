@@ -6,7 +6,6 @@ const heILGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'אין שורות',
   noResultsOverlayLabel: 'לא נמצאו תוצאות.',
-  errorOverlayDefaultLabel: 'אירעה שגיאה.',
 
   // Density selector toolbar button text
   toolbarDensity: 'צפיפות',
@@ -49,7 +48,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
   filterPanelDeleteIconLabel: 'מחק',
-  filterPanelLinkOperator: 'אופרטור לוגי',
+  filterPanelLogicOperator: 'אופרטור לוגי',
   filterPanelOperator: 'אופרטור',
   filterPanelOperatorAnd: 'וגם',
   filterPanelOperatorOr: 'או',

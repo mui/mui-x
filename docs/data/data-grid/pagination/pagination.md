@@ -19,7 +19,7 @@ By default, each page contains 100 rows. The user can change the size of the pag
 
 ### Page size options
 
-You can configure the page size the user can choose from with the `rowsPerPageOptions` prop.
+You can configure the page size the user can choose from with the `pageSizeOptions` prop.
 
 {{"demo": "PageSizeCustomOptions.js", "bg": "inline"}}
 
@@ -33,55 +33,43 @@ You can't use both the `autoPageSize` and `autoHeight` props at the same time be
 
 {{"demo": "PageSizeAuto.js", "bg": "inline"}}
 
-### Initialize the page size
+## Pagination model
 
-To initialize the page size without controlling it, provide the page size to the `initialState` prop.
+The pagination model is an object containing the current page and the size of the page. The default value is `{ page: 0, pageSize: 100 }`. To change the default value, make it controlled by `paginationModel` prop or initialize a custom value using `initialState.pagination.paginationModel`.
 
-```tsx
-<DataGrid
-  initialState={{
-    pagination: {
-      pageSize: 10,
-    },
-  }}
-/>
-```
+### Initializing the pagination model
 
-{{"demo": "PageSizeInitialState.js", "bg": "inline"}}
-
-### Controlled page size
-
-Use the `pageSize` prop to control the size of the pages.
-
-You can use the `onPageSizeChange` prop to listen to changes to the page size and update the prop accordingly.
-
-{{"demo": "PageSizeControlled.js", "bg": "inline"}}
-
-## Current page
-
-### Initialize the page
-
-To initialize the page without controlling it, provide the page to the `initialState` prop.
+To initialize the pagination model without controlling it, provide the `paginationModel` to the `initialState` prop. If you don't provide a value for one of the properties, the default value will be used.
 
 ```tsx
 <DataGrid
   initialState={{
     pagination: {
-      page: 1,
+      paginationModel: { pageSize: 25, page: 0 },
     },
   }}
 />
 ```
 
-{{"demo": "PageInitialState.js", "bg": "inline"}}
+{{"demo": "PaginationModelInitialState.js", "bg": "inline"}}
 
-### Controlled page
+### Controlled pagination model
 
-Use the `page` prop to control the size of the pages.
+Pass the `paginationModel` prop to control the size and current page of the grid. You can use the `onPaginationModelChange` prop to listen to changes to the `paginationModel` and update the prop accordingly.
 
-You can use the `onPageChange` prop to listen to changes to the page and update the prop accordingly.
+```tsx
+const [paginationModel, setPaginationModel] = React.useState({
+  pageSize: 25,
+  page: 0,
+});
 
-{{"demo": "PageControlled.js", "bg": "inline"}}
+<DataGrid
+  paginationModel={paginationModel}
+  onPaginationModelChange={setPaginationModel}
+/>;
+```
+
+{{"demo": "PaginationModelControlled.js", "bg": "inline"}}
 
 ## Server-side pagination
 
@@ -97,7 +85,7 @@ For more information regarding server-side pagination in combination with contro
 
 - Set the prop `paginationMode` to `server`
 - Provide a `rowCount` prop to let the data grid know how many pages there are
-- Add an `onPageChange` callback to load the rows when the page changes
+- Use the `onPaginationModelChange` prop callback to load the rows when the page changes
 
 Since `rowCount` prop is used to compute the number of available pages, switching it to `undefined` during loading reset page to zero.
 To avoid this problem, you can keep the previous value of `rowCount` while loading as follow:

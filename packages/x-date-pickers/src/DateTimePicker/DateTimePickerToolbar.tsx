@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { styled, useThemeProps, useTheme, Theme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbarText } from '../internals/components/PickersToolbarText';
@@ -55,6 +56,28 @@ const DateTimePickerToolbarRoot = styled(PickersToolbar, {
   },
 }));
 
+DateTimePickerToolbarRoot.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  classes: PropTypes.object,
+  className: PropTypes.string,
+  isLandscape: PropTypes.bool.isRequired,
+  isMobileKeyboardViewOpen: PropTypes.bool,
+  landscapeDirection: PropTypes.oneOf(['column', 'row']),
+  ownerState: PropTypes.object.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  toggleMobileKeyboardView: PropTypes.func,
+  toolbarTitle: PropTypes.node,
+  viewType: PropTypes.oneOf(['date', 'time']),
+} as any;
+
 const DateTimePickerToolbarDateContainer = styled('div', {
   name: 'MuiDateTimePickerToolbar',
   slot: 'DateContainer',
@@ -76,6 +99,20 @@ const DateTimePickerToolbarTimeContainer = styled('div', {
   }),
 }));
 
+DateTimePickerToolbarTimeContainer.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  as: PropTypes.elementType,
+  ownerState: PropTypes.object.isRequired,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+} as any;
+
 const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   name: 'MuiDateTimePickerToolbar',
   slot: 'Separator',
@@ -87,21 +124,14 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
   cursor: 'default',
 });
 
-/**
- * @ignore - internal component.
- */
-export function DateTimePickerToolbar<TDate extends unknown>(
-  inProps: DateTimePickerToolbarProps<TDate>,
-) {
+function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToolbarProps<TDate>) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerToolbar' });
   const {
     ampm,
     value,
-    isMobileKeyboardViewOpen,
     onChange,
     view,
     onViewChange,
-    toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
@@ -131,11 +161,8 @@ export function DateTimePickerToolbar<TDate extends unknown>(
   return (
     <DateTimePickerToolbarRoot
       toolbarTitle={localeText.dateTimePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
       {...other}
-      isLandscape={false}
       ownerState={ownerState}
     >
       <DateTimePickerToolbarDateContainer className={classes.dateContainer} ownerState={ownerState}>
@@ -149,6 +176,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             value={value ? utils.format(value, 'year') : '–'}
           />
         )}
+
         {views.includes('day') && (
           <PickersToolbarButton
             tabIndex={-1}
@@ -170,6 +198,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             value={value ? formatHours(value) : '--'}
           />
         )}
+
         {views.includes('minutes') && (
           <React.Fragment>
             <DateTimePickerToolbarSeparator
@@ -187,6 +216,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
             />
           </React.Fragment>
         )}
+
         {views.includes('seconds') && (
           <React.Fragment>
             <DateTimePickerToolbarSeparator
@@ -208,3 +238,54 @@ export function DateTimePickerToolbar<TDate extends unknown>(
     </DateTimePickerToolbarRoot>
   );
 }
+
+DateTimePickerToolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ampm: PropTypes.bool,
+  ampmInClock: PropTypes.bool,
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes: PropTypes.object,
+  /**
+   * className applied to the root component.
+   */
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat: PropTypes.string,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  value: PropTypes.any,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
+} as any;
+
+export { DateTimePickerToolbar };

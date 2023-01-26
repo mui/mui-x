@@ -1,110 +1,80 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SxProps } from '@mui/system';
-import {
-  BaseDateTimePickerProps,
-  useDateTimePickerDefaultizedProps,
-  BaseDateTimePickerSlotsComponent,
-  BaseDateTimePickerSlotsComponentsProps,
-} from '../DateTimePicker/shared';
-import {
-  DesktopWrapper,
-  DesktopWrapperProps,
-  DesktopWrapperSlotsComponent,
-  DesktopWrapperSlotsComponentsProps,
-} from '../internals/components/wrappers/DesktopWrapper';
-import { CalendarOrClockPicker } from '../internals/components/CalendarOrClockPicker';
-import { useDateTimeValidation } from '../internals/hooks/validation/useDateTimeValidation';
-import { KeyboardDateInput } from '../internals/components/KeyboardDateInput';
-import { usePickerState } from '../internals/hooks/usePickerState';
-import { DateInputSlotsComponent } from '../internals/components/PureDateInput';
+import { resolveComponentProps } from '@mui/base/utils';
 import { singleItemValueManager } from '../internals/utils/valueManagers';
-
-export interface DesktopDateTimePickerSlotsComponent<TDate>
-  extends BaseDateTimePickerSlotsComponent<TDate>,
-    DesktopWrapperSlotsComponent,
-    DateInputSlotsComponent {}
-
-export interface DesktopDateTimePickerSlotsComponentsProps<TDate>
-  extends BaseDateTimePickerSlotsComponentsProps<TDate>,
-    DesktopWrapperSlotsComponentsProps {}
-
-export interface DesktopDateTimePickerProps<TDate>
-  extends BaseDateTimePickerProps<TDate>,
-    DesktopWrapperProps {
-  /**
-   * Overrideable components.
-   * @default {}
-   */
-  components?: DesktopDateTimePickerSlotsComponent<TDate>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  componentsProps?: DesktopDateTimePickerSlotsComponentsProps<TDate>;
-  /**
-   * The system prop that allows defining system overrides as well as additional CSS styles.
-   */
-  sx?: SxProps;
-}
+import { DateTimeField } from '../DateTimeField';
+import { DesktopDateTimePickerProps } from './DesktopDateTimePicker.types';
+import { useDateTimePickerDefaultizedProps } from '../DateTimePicker/shared';
+import { renderDateViewCalendar } from '../dateViewRenderers';
+import { DateOrTimeView, useLocaleText, validateDateTime } from '../internals';
+import { Calendar } from '../internals/components/icons';
+import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
+import { extractValidationProps } from '../internals/utils/validation';
+import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-/**
- *
- * Demos:
- *
- * - [Date Time Picker](https://mui.com/x/react-date-pickers/date-time-picker/)
- *
- * API:
- *
- * - [DesktopDateTimePicker API](https://mui.com/x/api/date-pickers/desktop-date-time-picker/)
- */
-export const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
+const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TDate>(
   inProps: DesktopDateTimePickerProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const props = useDateTimePickerDefaultizedProps<TDate, DesktopDateTimePickerProps<TDate>>(
-    inProps,
-    'MuiDesktopDateTimePicker',
-  );
+  const localeText = useLocaleText<TDate>();
 
-  const validationError = useDateTimeValidation(props) !== null;
+  // Props with the default values common to all date time pickers
+  const defaultizedProps = useDateTimePickerDefaultizedProps<
+    TDate,
+    DesktopDateTimePickerProps<TDate>
+  >(inProps, 'MuiDesktopDateTimePicker');
 
-  const { pickerProps, inputProps, wrapperProps } = usePickerState(props, singleItemValueManager);
-
-  const { onChange, value, components, componentsProps, localeText, ...other } = props;
-
-  const AllDateInputProps = {
-    ...inputProps,
-    ...other,
-    components,
-    componentsProps,
-    ref,
-    validationError,
+  const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
+    day: renderDateViewCalendar,
+    month: renderDateViewCalendar,
+    year: renderDateViewCalendar,
+    hours: null,
+    minutes: null,
+    seconds: null,
+    ...defaultizedProps.viewRenderers,
   };
 
-  return (
-    <DesktopWrapper
-      {...wrapperProps}
-      DateInputProps={AllDateInputProps}
-      KeyboardDateInputComponent={KeyboardDateInput}
-      components={components}
-      componentsProps={componentsProps}
-      localeText={localeText}
-    >
-      <CalendarOrClockPicker
-        {...pickerProps}
-        autoFocus
-        DateInputProps={AllDateInputProps}
-        components={components}
-        componentsProps={componentsProps}
-        {...other}
-      />
-    </DesktopWrapper>
-  );
+  // Props with the default values specific to the desktop variant
+  const props = {
+    ...defaultizedProps,
+    viewRenderers,
+    yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
+    slots: {
+      field: DateTimeField,
+      openPickerIcon: Calendar,
+      ...defaultizedProps.slots,
+    },
+    slotProps: {
+      ...defaultizedProps.slotProps,
+      field: (ownerState: any) => ({
+        ...resolveComponentProps(defaultizedProps.slotProps?.field, ownerState),
+        ...extractValidationProps(defaultizedProps),
+        ref,
+        ampm: defaultizedProps.ampm,
+      }),
+      toolbar: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.toolbar,
+      },
+      tabs: {
+        hidden: true,
+        ...defaultizedProps.slotProps?.tabs,
+      },
+    },
+  };
+
+  const { renderPicker } = useDesktopPicker<TDate, DateOrTimeView, typeof props>({
+    props,
+    valueManager: singleItemValueManager,
+    getOpenDialogAriaText: localeText.openDatePickerDialogue,
+    validator: validateDateTime,
+  });
+
+  return renderPicker();
 }) as DesktopDateTimePickerComponent;
 
 DesktopDateTimePicker.propTypes = {
@@ -112,11 +82,6 @@ DesktopDateTimePicker.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * Regular expression to detect "accepted" symbols.
-   * @default /\dap/gi
-   */
-  acceptRegex: PropTypes.instanceOf(RegExp),
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -127,30 +92,34 @@ DesktopDateTimePicker.propTypes = {
    * @default false
    */
   ampmInClock: PropTypes.bool,
-  children: PropTypes.node,
   /**
-   * className applied to the root component.
+   * If `true`, the main element is focused during the first mount.
+   * This main element is:
+   * - the element chosen by the visible view if any (i.e: the selected day on the `day` view).
+   * - the `input` element if there is a field rendered.
+   */
+  autoFocus: PropTypes.bool,
+  /**
+   * Class name applied to the root element.
    */
   className: PropTypes.string,
   /**
-   * If `true` the popup or dialog will immediately close after submitting full date.
-   * @default `true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
+   * If `true`, the popover or modal will close after submitting the full date.
+   * @default `true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop).
    */
   closeOnSelect: PropTypes.bool,
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
-  /**
-   * Date tab icon.
-   */
-  dateRangeIcon: PropTypes.node,
   /**
    * Formats the day of week displayed in the calendar header.
    * @param {string} day The day of week provided by the adapter's method `getWeekdays`.
@@ -163,12 +132,17 @@ DesktopDateTimePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The default value.
+   * Used when the component is not controlled.
+   */
+  defaultValue: PropTypes.any,
+  /**
    * If `true`, the picker and text field are disabled.
    * @default false
    */
   disabled: PropTypes.bool,
   /**
-   * If `true` disable values before the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values after the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disableFuture: PropTypes.bool,
@@ -183,17 +157,12 @@ DesktopDateTimePicker.propTypes = {
    */
   disableIgnoringDatePartForTimeValidation: PropTypes.bool,
   /**
-   * Disable mask on the keyboard, this should be used rarely. Consider passing proper mask for your format.
-   * @default false
-   */
-  disableMaskedInput: PropTypes.bool,
-  /**
-   * Do not render open picker button (renders only text field with validation).
+   * If `true`, the open picker button will not be rendered (renders only the field).
    * @default false
    */
   disableOpenPicker: PropTypes.bool,
   /**
-   * If `true` disable values after the current date for date components, time for time components and both for date time components.
+   * If `true`, disable values before the current date for date components, time for time components and both for date time components.
    * @default false
    */
   disablePast: PropTypes.bool,
@@ -208,24 +177,10 @@ DesktopDateTimePicker.propTypes = {
    */
   fixedWeekNumber: PropTypes.number,
   /**
-   * Get aria-label text for control that opens picker dialog. Aria-label text must include selected date. @DateIOType
-   * @template TDate
-   * @param {TDate | null} date The date from which we want to add an aria-text.
-   * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
-   * @returns {string} The aria-text to render inside the dialog.
-   * @default (date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`
+   * Format of the date when rendered in the input(s).
+   * Defaults to localized format based on the used `views`.
    */
-  getOpenDialogAriaText: PropTypes.func,
-  ignoreInvalidInputs: PropTypes.bool,
-  /**
-   * Props to pass to keyboard input adornment.
-   */
-  InputAdornmentProps: PropTypes.object,
-  /**
-   * Format string.
-   */
-  inputFormat: PropTypes.string,
-  InputProps: PropTypes.object,
+  format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
    */
@@ -235,21 +190,21 @@ DesktopDateTimePicker.propTypes = {
       current: PropTypes.object,
     }),
   ]),
+  /**
+   * The label content.
+   */
   label: PropTypes.node,
   /**
-   * If `true` renders `LoadingComponent` in calendar instead of calendar view.
+   * If `true`, calls `renderLoading` instead of rendering the day calendar.
    * Can be used to preload information and show it in calendar.
    * @default false
    */
   loading: PropTypes.bool,
   /**
-   * Locale for components texts
+   * Locale for components texts.
+   * Allows overriding texts coming from `LocalizationProvider` and `theme`.
    */
   localeText: PropTypes.object,
-  /**
-   * Custom mask. Can be used to override generate from format. (e.g. `__/__/____ __:__` or `__/__/____ __:__ _M`).
-   */
-  mask: PropTypes.string,
   /**
    * Maximal selectable date.
    */
@@ -282,34 +237,35 @@ DesktopDateTimePicker.propTypes = {
    */
   minutesStep: PropTypes.number,
   /**
-   * Callback fired when date is accepted @DateIOType.
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
+  /**
+   * Callback fired when the value is accepted.
    * @template TValue
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
-   * Callback fired when the value (the selected date) changes @DateIOType.
-   * @template TValue
+   * Callback fired when the value changes.
+   * @template TValue, TError
    * @param {TValue} value The new value.
-   * @param {string} keyboardInputValue The current value of the keyboard input.
+   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
    */
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be closed.
    * Use in controlled mode (see open).
    */
   onClose: PropTypes.func,
   /**
-   * Callback that fired when input value or new `value` prop validation returns **new** validation error (or value is valid after error).
-   * In case of validation error detected `reason` prop return non-null value and `TextField` must be displayed in `error` state.
-   * This can be used to render appropriate form error.
+   * Callback fired when the error associated to the current value changes.
+   * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
-   *
-   * @template TError, TValue
-   * @param {TError} reason The reason why the current value is not valid.
-   * @param {TValue} value The invalid value.
+   * @template TValue, TError
+   * @param {TError} error The new error describing why the current value is not valid.
+   * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
@@ -325,8 +281,14 @@ DesktopDateTimePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
+   * Callback fired when the selected sections change.
+   * @param {FieldSelectedSections} newValue The new selected sections.
+   */
+  onSelectedSectionsChange: PropTypes.func,
+  /**
    * Callback fired on view change.
-   * @param {DateOrTimeView} view The new view.
+   * @template TView
+   * @param {TView} view The new view.
    */
   onViewChange: PropTypes.func,
   /**
@@ -337,26 +299,19 @@ DesktopDateTimePicker.propTypes = {
   onYearChange: PropTypes.func,
   /**
    * Control the popup or dialog open state.
+   * @default false
    */
   open: PropTypes.bool,
   /**
-   * Props to pass to keyboard adornment button.
-   */
-  OpenPickerButtonProps: PropTypes.object,
-  /**
-   * First view to show.
-   * Must be a valid option from `views` list
-   * @default 'day'
+   * The default visible view.
+   * Used when the component view is not controlled.
+   * Must be a valid option from `views` list.
    */
   openTo: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
   /**
    * Force rendering in particular orientation.
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
-  /**
-   * Make picker read only.
-   * @default false
-   */
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
@@ -364,28 +319,36 @@ DesktopDateTimePicker.propTypes = {
    */
   reduceAnimations: PropTypes.bool,
   /**
-   * The `renderInput` prop allows you to customize the rendered input.
-   * The `props` argument of this render prop contains props of [TextField](https://mui.com/material-ui/api/text-field/#props) that you need to forward.
-   * Pay specific attention to the `ref` and `inputProps` keys.
-   * @example ```jsx
-   * renderInput={props => <TextField {...props} />}
-   * ````
-   * @param {MuiTextFieldPropsType} props The props of the input.
-   * @returns {React.ReactNode} The node to render as the input.
-   */
-  renderInput: PropTypes.func.isRequired,
-  /**
    * Component displaying when passed `loading` true.
    * @returns {React.ReactNode} The node to render when loading.
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
   /**
-   * Custom formatter to be passed into Rifm component.
-   * @param {string} str The un-formatted string.
-   * @returns {string} The formatted string.
+   * The currently selected sections.
+   * This prop accept four formats:
+   * 1. If a number is provided, the section at this index will be selected.
+   * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
+   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 4. If `null` is provided, no section will be selected
+   * If not provided, the selected sections will be handled internally.
    */
-  rifmFormatter: PropTypes.func,
+  selectedSections: PropTypes.oneOfType([
+    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.number,
+    PropTypes.shape({
+      endIndex: PropTypes.number.isRequired,
+      startIndex: PropTypes.number.isRequired,
+    }),
+  ]),
+  /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date.
    * @template TDate
@@ -397,12 +360,12 @@ DesktopDateTimePicker.propTypes = {
    * Disable specific month.
    * @template TDate
    * @param {TDate} month The month to test.
-   * @returns {boolean} If `true` the month will be disabled.
+   * @returns {boolean} If `true`, the month will be disabled.
    */
   shouldDisableMonth: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -411,18 +374,30 @@ DesktopDateTimePicker.propTypes = {
    * Disable specific year.
    * @template TDate
    * @param {TDate} year The year to test.
-   * @returns {boolean} If `true` the year will be disabled.
+   * @returns {boolean} If `true`, the year will be disabled.
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
   /**
-   * If `true`, show the toolbar even in desktop mode.
+   * The props used for each component slot.
+   * @default {}
    */
-  showToolbar: PropTypes.bool,
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -432,18 +407,40 @@ DesktopDateTimePicker.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Time tab icon.
-   */
-  timeIcon: PropTypes.node,
-  /**
-   * The value of the picker.
+   * The selected value.
+   * Used when the component is controlled.
    */
   value: PropTypes.any,
   /**
-   * Array of views to show.
-   * @default ['year', 'day', 'hours', 'minutes']
+   * The visible view.
+   * Used when the component view is controlled.
+   * Must be a valid option from `views` list.
+   */
+  view: PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']),
+  /**
+   * Define custom view renderers for each section.
+   * If `null`, the section will only have field editing.
+   * If `undefined`, internally defined view will be the used.
+   */
+  viewRenderers: PropTypes.shape({
+    day: PropTypes.func,
+    hours: PropTypes.func,
+    minutes: PropTypes.func,
+    month: PropTypes.func,
+    seconds: PropTypes.func,
+    year: PropTypes.func,
+  }),
+  /**
+   * Available views.
    */
   views: PropTypes.arrayOf(
     PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
   ),
+  /**
+   * Years rendered per row.
+   * @default 4
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;
+
+export { DesktopDateTimePicker };
