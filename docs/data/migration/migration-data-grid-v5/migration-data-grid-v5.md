@@ -203,7 +203,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 :::warning
 Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
-- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
 - Rename `GridFilterItemProps` type to `GridColumnMenuItemProps`.
 - If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
   :::
