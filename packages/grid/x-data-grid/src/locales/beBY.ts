@@ -1,4 +1,4 @@
-import { beBY as beBYCore } from '@mui/material/locale';
+import { enUS as beBYCore } from '@mui/material/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -25,6 +25,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма радкоў',
   noResultsOverlayLabel: 'Дадзеныя не знойдзены.',
+  // errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Вышыня радка',
@@ -73,6 +74,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   filterPanelDeleteIconLabel: 'Выдаліць',
   filterPanelLinkOperator: 'Лагічныя аператары',
   filterPanelOperators: 'Аператары',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'І',
   filterPanelOperatorOr: 'Або',
   filterPanelColumns: 'Слупкі',
