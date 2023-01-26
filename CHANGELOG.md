@@ -342,7 +342,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   ```diff
    <DateTimePicker
   -   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
-  +   shouldDisableTime={(time, view) => view === 'hours' && value.hour() < 12}
+  +   shouldDisableTime={(value, view) => view === 'hours' && value.hour() < 12}
    />
   ```
 

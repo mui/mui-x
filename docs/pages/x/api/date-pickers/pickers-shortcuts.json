@@ -19,7 +19,11 @@
   },
   "slots": {},
   "name": "PickersShortcuts",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersShortcuts" },
+  "styles": {
+    "classes": ["root", "padding", "dense", "subheader"],
+    "globalClasses": {},
+    "name": "MuiPickersShortcuts"
+  },
   "filename": "/packages/x-date-pickers/src/PickersShortcuts/PickersShortcuts.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/shortcuts/\">Shortcuts</a></li></ul>",
   "packages": [

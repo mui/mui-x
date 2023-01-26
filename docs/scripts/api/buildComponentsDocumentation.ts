@@ -249,7 +249,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
 
-  reactApi.styles = await parseStyles(reactApi, project.program as any);
+  reactApi.styles = await parseStyles({ project, componentName: reactApi.name });
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
     : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
