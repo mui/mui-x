@@ -1,5 +1,5 @@
 extends: substitution
-message: Except if you refer to the general concept, consider using '%s' instead of '%s'.
+message: Unless you're referring to the general concept, consider using '%s' instead of '%s'.
 level: suggestion
 ignorecase: false
 # swap maps tokens in form of bad: good

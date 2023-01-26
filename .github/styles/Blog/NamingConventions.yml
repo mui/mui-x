@@ -1,5 +1,5 @@
 extends: substitution
-message: To be consitent about capitalization, consider using '%s' instead of '%s'
+message: To be consistent with capitalization, consider using '%s' instead of '%s'.
 level: warning
 ignorecase: false
 # swap maps tokens in form of bad: good
