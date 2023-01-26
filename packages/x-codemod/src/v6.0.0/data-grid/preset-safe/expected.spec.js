@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { DataGrid, GridColumnMenuSortItem } from '@mui/x-data-grid';
+import { DataGrid, GridColumnMenuSortItem, useGridSelector, gridRowSelectionStateSelector } from '@mui/x-data-grid';
 
-function App({ column, hideMenu }) {
+function App({ column, hideMenu, apiRef, handleEvent }) {
+  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
+  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
   return (
     <React.Fragment>
       <DataGrid disableMultipleRowSelection showCellVerticalBorder pageSizeOptions={[5]} />

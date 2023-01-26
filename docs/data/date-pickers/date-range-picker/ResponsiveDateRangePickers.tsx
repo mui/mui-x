@@ -12,23 +12,30 @@ import { pickersLayoutClasses } from '@mui/x-date-pickers';
 export default function ResponsiveDateRangePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
-        <DemoItem label="Desktop variant">
+      <DemoContainer
+        components={[
+          'DateRangePicker',
+          'MobileDateRangePicker',
+          'DesktopDateRangePicker',
+          'StaticDateRangePicker',
+        ]}
+      >
+        <DemoItem label="Desktop variant" component="DesktopDateRangePicker">
           <DesktopDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Mobile variant">
+        <DemoItem label="Mobile variant" component="MobileDateRangePicker">
           <MobileDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Responsive variant">
+        <DemoItem label="Responsive variant" component="DateRangePicker">
           <DateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label="Static variant">
+        <DemoItem label="Static variant" component="StaticDateRangePicker">
           <StaticDateRangePicker
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             sx={{
