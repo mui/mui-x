@@ -24,6 +24,11 @@ export interface ColumnsStylesInterface {
  */
 export interface GridExcelExportOptions extends GridFileExportOptions {
   /**
+   * Function to return the Worker instance to be called.
+   * @returns {() => Worker} A Worker instance.
+   */
+  worker?: () => Worker;
+  /**
    * Name given to the worksheet containing the columns valueOptions.
    * valueOptions are added to this worksheet if they are provided as an array.
    */

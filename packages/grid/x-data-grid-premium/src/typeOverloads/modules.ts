@@ -27,6 +27,10 @@ export interface GridControlledStateEventLookupPremium {
    * Fired when the selection state of one or multiple cells change.
    */
   cellSelectionChange: { params: GridCellSelectionModel };
+  /**
+   * Fired when the state of the Excel export task changes
+   */
+  excelExportStateChange: { params: boolean };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

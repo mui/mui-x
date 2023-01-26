@@ -302,6 +302,66 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Using a web worker
+
+Instead of generating the Excel file locally, you can delegate the task to a web worker.
+This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
+To start using web workers for the Excel export, first you need to create a file with the content below.
+This file will be later used as the worker script, then it's important that it's accessible by a direct URL.
+
+```tsx
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/workers';
+
+setupExcelExportWebWorker();
+```
+
+The final step is to pass the path to the file created to `GridToolbarExport` or the API method:
+
+```tsx
+<GridToolbarExport
+  excelOptions={{
+    worker: () => new Worker('/worker.js'),
+  }}
+/>;
+
+// or
+
+apiRef.current.exportDataAsExcel({
+  worker: () => new Worker('/worker.js'),
+});
+```
+
+:::info
+If you are using Next.js or Webpack 5, use the following syntax instead.
+Make sure to pass the path to the worker script **relative** to the current file.
+It's not necessary to make the script public since [Webpack](https://webpack.js.org/guides/web-workers/) will automatically handle that for you.
+
+```tsx
+<GridToolbarExport
+  excelOptions={{
+    worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+  }}
+/>;
+
+// or
+
+apiRef.current.exportDataAsExcel({
+  worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+});
+```
+
+:::
+
+Since that the main thread is not locked while the data is exported, it is important to give a feedback for users that something is in progress.
+You can pass a callback to the `onExcelExportStateChange` prop and display a message or loader.
+The following demo contains an example:
+
+{{"demo": "ExcelExportWithWebWorker.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::warning
+When opening the demo above in CodeSandbox or StackBlitz you need to manually create the `worker.ts` script.
+:::
+
 ## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 :::warning

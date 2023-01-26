@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { useGridApiMethod, useGridLogger, GridExportDisplayOptions } from '@mui/x-data-grid';
+import {
+  useGridApiMethod,
+  useGridLogger,
+  GridExportDisplayOptions,
+  useGridApiOptionHandler,
+} from '@mui/x-data-grid';
 import {
   useGridRegisterPipeProcessor,
   exportAs,
@@ -8,12 +13,19 @@ import {
   GridPipeProcessor,
 } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import { DataGridPremiumProps } from '../../../models/dataGridPremiumProps';
 import {
   GridExcelExportApi,
   GridExportExtension,
   GridExcelExportOptions,
 } from './gridExcelExportInterface';
-import { buildExcel } from './serializer/excelSerializer';
+import {
+  buildExcel,
+  ExcelExportInitEvent,
+  getDataForValueOptionsSheet,
+  serializeColumns,
+  serializeRow,
+} from './serializer/excelSerializer';
 import { GridExcelExportMenuItem } from '../../../components';
 
 /**
@@ -23,7 +35,10 @@ import { GridExcelExportMenuItem } from '../../../components';
  * @requires useGridSelection (state)
  * @requires useGridParamsApi (method)
  */
-export const useGridExcelExport = (apiRef: React.MutableRefObject<GridPrivateApiPremium>): void => {
+export const useGridExcelExport = (
+  apiRef: React.MutableRefObject<GridPrivateApiPremium>,
+  props: DataGridPremiumProps,
+): void => {
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
 
   const getDataAsExcel = React.useCallback<GridExcelExportApi['getDataAsExcel']>(
@@ -53,21 +68,80 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridPrivateApi
   );
 
   const exportDataAsExcel = React.useCallback<GridExcelExportApi['exportDataAsExcel']>(
-    async (options) => {
-      logger.debug(`Export data as excel`);
+    async (options = {}) => {
+      const {
+        worker: workerFn,
+        exceljsPostProcess,
+        exceljsPreProcess,
+        columnsStyles,
+        getRowsToExport = defaultGetRowsToExport,
+        valueOptionsSheetName = 'Options',
+        ...cloneableOptions
+      } = options;
 
-      const workbook = await getDataAsExcel(options);
-      if (workbook === null) {
+      const sendExcelToUser = (buffer: any) => {
+        const blob = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        exportAs<GridExportExtension>(blob, 'xlsx', options?.fileName);
+      };
+
+      if (!workerFn) {
+        apiRef.current.publishEvent('excelExportStateChange', true);
+
+        const workbook = await getDataAsExcel(options);
+        if (workbook === null) {
+          return;
+        }
+
+        const content = await workbook.xlsx.writeBuffer();
+        apiRef.current.publishEvent('excelExportStateChange', false);
+        sendExcelToUser(content);
         return;
       }
-      const content = await workbook.xlsx.writeBuffer();
-      const blob = new Blob([content], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
 
-      exportAs<GridExportExtension>(blob, 'xlsx', options?.fileName);
+      const worker = workerFn();
+
+      apiRef.current.publishEvent('excelExportStateChange', true);
+
+      worker.onmessage = async (event) => {
+        sendExcelToUser(event.data);
+        apiRef.current.publishEvent('excelExportStateChange', false);
+        worker.terminate();
+      };
+
+      const exportedRowIds = getRowsToExport({ apiRef });
+      const exportedColumns = getColumnsToExport({ apiRef, options });
+      const valueOptionsData = await getDataForValueOptionsSheet(
+        exportedColumns,
+        valueOptionsSheetName,
+        apiRef.current,
+      );
+
+      const serializedColumns = serializeColumns(exportedColumns, options.columnsStyles || {});
+
+      const serializedRows = exportedRowIds.map((id) =>
+        serializeRow(id, exportedColumns, apiRef.current, valueOptionsData),
+      );
+
+      const columnGroupPaths = exportedColumns.reduce<Record<string, string[]>>((acc, column) => {
+        acc[column.field] = apiRef.current.unstable_getColumnGroupPath(column.field);
+        return acc;
+      }, {});
+
+      const message: ExcelExportInitEvent = {
+        serializedColumns,
+        serializedRows,
+        valueOptionsData,
+        columnGroupPaths,
+        columnGroupDetails: apiRef.current.unstable_getAllGroupDetails(),
+        options: cloneableOptions,
+        valueOptionsSheetName,
+      };
+
+      worker.postMessage(message);
     },
-    [logger, getDataAsExcel],
+    [apiRef, getDataAsExcel],
   );
 
   const excelExportApi: GridExcelExportApi = {
@@ -100,4 +174,6 @@ export const useGridExcelExport = (apiRef: React.MutableRefObject<GridPrivateApi
   );
 
   useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
+
+  useGridApiOptionHandler(apiRef, 'excelExportStateChange', props.onExcelExportStateChange);
 };
