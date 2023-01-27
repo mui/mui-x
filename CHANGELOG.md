@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 13 contributors who made this release pos
 
 #### Changes
 
-- [DataGrid] Add `title` to cells (#7695) @thupi
+- [DataGrid] Add `title` attribute to cells (#7695) @thupi
 - [DataGrid] Fix grid state not being updated after print preview is closed (#7680) @cherniavskii
 - [DataGrid] Fix non-hideable columns visibility toggling (#7716) @cherniavskii
 - [DataGrid] Fix scrolling on resize for data grids inside shadow root (#7722) @cherniavskii
