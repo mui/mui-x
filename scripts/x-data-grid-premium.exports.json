@@ -584,6 +584,7 @@
   { "name": "unstable_gridFocusColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_gridTabIndexColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },
+  { "name": "urPK", "kind": "Variable" },
   { "name": "useFirstRender", "kind": "Variable" },
   { "name": "useGridApiContext", "kind": "Variable" },
   { "name": "useGridApiEventHandler", "kind": "Variable" },
