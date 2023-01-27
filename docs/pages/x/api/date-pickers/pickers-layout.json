@@ -21,12 +21,13 @@
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
+    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
     "Tabs": { "type": { "name": "elementType" } },
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "PickersLayout",
   "styles": {
-    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs"],
+    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
     "globalClasses": {},
     "name": "MuiPickersLayout"
   },

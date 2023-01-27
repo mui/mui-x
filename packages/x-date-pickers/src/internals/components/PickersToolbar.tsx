@@ -9,7 +9,7 @@ import { getPickersToolbarUtilityClass, PickersToolbarClasses } from './pickersT
 import { DateOrTimeView } from '../models/views';
 
 export interface PickersToolbarProps<TValue, TView extends DateOrTimeView>
-  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden'> {
+  extends Pick<BaseToolbarProps<TValue, TView>, 'isLandscape' | 'hidden' | 'titleId'> {
   className?: string;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -81,6 +81,7 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
     landscapeDirection = 'column',
     toolbarTitle,
     hidden,
+    titleId,
   } = props;
 
   const ownerState = props;
@@ -97,7 +98,12 @@ export const PickersToolbar = React.forwardRef(function PickersToolbar<
       className={clsx(classes.root, className)}
       ownerState={ownerState}
     >
-      <Typography data-mui-test="picker-toolbar-title" color="text.secondary" variant="overline">
+      <Typography
+        data-mui-test="picker-toolbar-title"
+        color="text.secondary"
+        variant="overline"
+        id={titleId}
+      >
         {toolbarTitle}
       </Typography>
       <PickersToolbarContent

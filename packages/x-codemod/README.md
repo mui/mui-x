@@ -90,6 +90,11 @@ The list includes these transformers
 - [`view-components-rename-value-prop`](#view-components-rename)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
+- [`replace-tabs-props](#replace-tabs-props)
+- [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
+- [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
+- [`replace-arrows-button-slot`](#replace-arrows-button-slot)
+- [`rename-should-disable-time`](#rename-should-disable-time)
 
 #### `adapter-change-import`
 
@@ -196,6 +201,146 @@ If you were always using the same text value in all your components, consider mo
 
 You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
 
+#### `replace-tabs-props`
+
+Replace props used for `Tabs` in DateTime pickers by `componentsProps.tabs` properties.
+
+```diff
+ <DateTimePicker
+-  hideTabs={false}
+-  dateRangeIcon={<LightModeIcon />}
+-  timeIcon={<AcUnitIcon />}
++  componentsProps={{
++    tabs: {
++      hidden: false,
++      dateIcon: <LightModeIcon />,
++      timeIcon: <AcUnitIcon />,
++    }
++  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-tabs-props <path>
+```
+
+#### `replace-toolbar-props-by-slot`
+
+Replace props used to customize the `Toolbar` in pickers by slots properties and `localeText`.
+
+```diff
+ <DatePicker
+-  ToolbarComponent={MyToolbar}
++  components={{ Toolbar: MyToolbar }}
+-  toolbarPlaceholder="__"
+-  toolbarFormat="DD / MM / YYYY"
+-  showToolbar
++  componentsProps={{
++    toolbar: {
++      toolbarPlaceholder: "__",
++      toolbarFormat: "DD / MM / YYYY",
++      hidden: false,
++    }
++  }}
+-  toolbarTitle="Title"
++  localeText={{ toolbarTitle: "Title" }}
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-toolbar-props-by-slot <path>
+```
+
+#### `migrate-to-components-componentsProps`
+
+Replace customization props by their equivalent `components` and `componentsProps` properties.
+
+```diff
+ <DatePicker
+-  PopperProps={{ onClick: handleClick }}
++  componentsProps={{ popper: { onClick: handleClick }}}
+ />
+
+ <DatePicker
+-  TransitionComponent={Fade}
++  components={{ DesktopTransition: Fade }}
+ />
+
+ <DatePicker
+-  DialogProps={{ backgroundColor: 'red' }}
++  componentsProps={{ dialog: { backgroundColor: 'red' }}}
+ />
+
+ <DatePicker
+-  PaperProps={{ backgroundColor: 'red' }}
++  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
+ />
+
+ <DatePicker
+-  TrapFocusProps={{ isEnabled: () => false }}
++  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+ />
+
+ <DatePicker
+-  InputProps={{ color: 'primary' }}
++  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
+ />
+
+ <DatePicker
+-  InputAdornmentProps={{ position: 'start' }}
++  componentsProps={{ inputAdornment: { position: 'start' }}}
+ />
+
+ <DatePicker
+-  OpenPickerButtonProps={{ ref: buttonRef }}
++  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/migrate-to-components-componentsProps <path>
+```
+
+#### `replace-arrows-button-slot`
+
+Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by `PreviousIconButton` and `NextIconButton`.
+
+```diff
+ <DatePicker
+   components={{
+-    LeftArrowButton: CustomButton,
++    PreviousIconButton: CustomButton,
+-    RightArrowButton: CustomButton,
++    NextIconButton: CustomButton,
+   }}
+
+   componentsProps={{
+-    leftArrowButton: {},
++    previousIconButton: {},
+-    rightArrowButton: {},
++    nextIconButton: {},
+   }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
+```
+
+#### `rename-should-disable-time`
+
+Replace `shouldDisableTime` by `shouldDisableClock`.
+
+```diff
+  <DateTimePicker
+-   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++   shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
+```
+
 #### `rename-components-to-slots`
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
@@ -231,24 +376,25 @@ The list includes these transformers
 - [`row-selection-props-rename`](#row-selection-props-rename)
 - [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
+- [`rename-selectors-and-events`](#rename-selectors-and-events)
 
 #### `column-menu-components-rename`
 
 Replace column menu items that have been renamed.
 
 ```diff
-  <CustomColumnMenu>
--   <GridFilterMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
--   <HideGridColMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
--   <GridColumnsMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
--   <SortGridMenuItems column={column} onClick={hideMenu} />
-+   <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
--   <GridColumnPinningMenuItems column={column} onClick={hideMenu} />
-+   <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
-  </CustomColumnMenu>
+ <CustomColumnMenu>
+-  <GridFilterMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
+-  <HideGridColMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
+-  <GridColumnsMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
+-  <SortGridMenuItems column={column} onClick={hideMenu} />
++  <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
+-  <GridColumnPinningMenuItems column={column} onClick={hideMenu} />
++  <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
+ </CustomColumnMenu>
 ```
 
 ```sh
@@ -287,10 +433,10 @@ npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
 Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
 
 ```diff
-  <DataGrid
--   rowsPerPageOptions={[5, 10, 20]}
-+   pageSizeOptions={[5, 10, 20]}
-  />
+ <DataGrid
+-  rowsPerPageOptions={[5, 10, 20]}
++  pageSizeOptions={[5, 10, 20]}
+ />
 ```
 
 ```sh
@@ -302,13 +448,42 @@ npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
 Remove `disableExtendRowFullWidth` prop which is no longer supported.
 
 ```diff
-  <DataGrid
--   disableExtendRowFullWidth
-  />
+ <DataGrid
+-  disableExtendRowFullWidth
+ />
 ```
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+```
+
+#### `rename-selectors-and-events`
+
+Rename selectors and events.
+
+```diff
+ function App() {
+-  useGridApiEventHandler('selectionChange', handleEvent);
+-  apiRef.current.subscribeEvent('selectionChange', handleEvent);
+-  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+-  const sortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
+-  const sortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
+-  const rowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+-  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridVisibleSortedTopLevelRowEntriesSelector);
+-  const topLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
++  useGridApiEventHandler('rowSelectionChange', handleEvent);
++  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
++  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
++  const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
++  const sortedRowEntries = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
++  const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
++  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
++  const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
+ }
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
 ```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).

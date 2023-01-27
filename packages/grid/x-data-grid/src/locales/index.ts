@@ -1,5 +1,6 @@
 // Keys are translated from enUS
 export * from './arSD';
+export * from './beBY';
 export * from './bgBG';
 export * from './csCZ';
 export * from './daDK';
