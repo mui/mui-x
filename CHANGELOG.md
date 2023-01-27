@@ -7,11 +7,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 27, 2023_
 
-We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 New shortcuts component for the date pickers (#7154) @alexfauquette
 - 🌍 Add Belarusian (be-BY), Czech (cs-CZ) and Russian (ru-RU) locales
-- 🌍 Improve Spanish (es-ES), Japanese (ja-JP) and Slovak (sk-SK) locales
+- 🌍 Improve Spanish (es-ES), Japanese (ja-JP), Slovak (sk-SK), and Vietnamese (vi-VN) locales
 - ✨ New codemods for migrating to v6
 - 📚 Documentation improvements
 - 🐞 Bug fixes
