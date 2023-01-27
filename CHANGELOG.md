@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-beta.1
+
+_Jan 27, 2023_
+
+We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Belarusian (be-BY), Czech (cs-CZ) and Russian (ru-RU) locales
+- 🌍 Improve Spanish (es-ES), Japanese (ja-JP) and Slovak (sk-SK) locales
+- ✨ New codemods for migrating to v6
+- 📚 Documentation improvements
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v6.0.0-beta.1` / `@mui/x-data-grid-pro@v6.0.0-beta.1` / `@mui/x-data-grid-premium@v6.0.0-beta.1`
+
+#### Changes
+
+- [DataGrid] Add `title` to cells (#7682) @thupi
+- [DataGrid] Fix `autoHeight` not working properly inside of a flex container (#7701) @cherniavskii
+- [DataGrid] Fix grid state not being updated after print preview is closed (#7642) @cherniavskii
+- [DataGrid] Fix non-hideable columns visibility toggling (#7637) @cherniavskii
+- [DataGrid] Fix scrolling on resize for data grids inside shadow root (#7298) @akiradev
+- [l10n] Add Slovak (sk-SK) translation for aggregation functions (#7702) @m4theushw
+- [l10n] Add missing core locales for `MuiTablePagination` (#7717) @MBilalShafi
+- [l10n] Improve Spanish (es-ES) and Vietnamese (vi-VN) locale (from @WiXSL and @SpacerZ) (#7634) @alexfauquette
+- [l10n] Add Belarusian (be-BY) locale (#7646) @volhalink
+
+### `@mui/x-date-pickers@v6.0.0-beta.1` / `@mui/x-date-pickers-pro@v6.0.0-beta.1`
+
+#### Changes
+
+- [pickers] Fix `aria-labelledby` assignment to dialog (#7608) @LukasTy
+- [pickers] Support `UTC` with `dayjs` (#7610) @flaviendelangle
+- [pickers] Update focus when opening a UI view (#7620) @alexfauquette
+- [DateRangePickers] Add shortcuts component (#7154) @alexfauquette
+- [l10n] Add Czech (cs-CZ) locale (#7645) @OndrejHj04
+- [l10n] Add Russian (ru-RU) locale  (#7706) @rstmzh
+- [l10n] Improve Japanese (ja-JP) locale (#7624) @makoto14
+
+### `@mui/x-codemod@v6.0.0-beta.1`
+
+#### Changes
+
+- [codemod]  Update pickers component toolbar props (#7687) @alexfauquette
+- [codemod] Add `GridColumnMenuItemProps` to `column-menu-components-rename` codemod (#7710) @MBilalShafi
+- [codemod] Add `headerHeight` prop update to `row-selection-props-rename` codemod (#7711) @MBilalShafi
+- [codemod] Add codemod for `components` to `slots` remaining (#7533) @alexfauquette
+- [codemod] Basics migration to components props (#7698) @alexfauquette
+- [codemod] Rename `rowsPerPageOptions` prop to `pageSizeOptions` (#7603) @MBilalShafi
+- [codemod] Rename `shouldDisableTime` prop (#7709) @alexfauquette
+- [codemod] Rename data grid props (#7485) @MBilalShafi
+- [codemod] Rename data grid selectors and events (#7699) @MBilalShafi
+- [codemod] Update `DateTimePicker` component `tabs` props (#7639) @alexfauquette
+
+### Docs
+
+- [docs] Add info callout about available component `slots` (#7714) @Vivek-Prajapatii
+- [docs] Add recipe for pinning grouped column (#7712) @MBilalShafi
+- [docs] Fix 404 links to picker API page @oliviertassinari
+- [docs] Update `DemoContainer` `components` prop using a codemod (#7574) @alexfauquette
+
+### Core
+
+- [core] Fix `innerslotProps` typo (#7697) @LukasTy
+- [core] Upgrade monorepo (#7676) @cherniavskii
+
 ## 6.0.0-beta.0
 
 _Jan 19, 2023_
