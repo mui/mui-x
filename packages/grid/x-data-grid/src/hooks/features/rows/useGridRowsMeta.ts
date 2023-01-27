@@ -33,7 +33,11 @@ const getValidRowHeight = (
   if (typeof rowHeightProp === 'number' && rowHeightProp > 0) {
     return rowHeightProp;
   }
-  if (process.env.NODE_ENV !== 'production' && !warnedOnceInvalidRowHeight) {
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    !warnedOnceInvalidRowHeight &&
+    typeof rowHeightProp !== 'undefined'
+  ) {
     console.warn(warningMessage);
     warnedOnceInvalidRowHeight = true;
   }
