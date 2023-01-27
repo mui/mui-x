@@ -437,10 +437,7 @@ export const usePickerValue = <
   const handleDismiss = useEventCallback(() => {
     // Set all dates in state to equal the last committed date.
     // e.g. Reset the state to the last committed value.
-    setDate({
-      value: resetValueOnClose ? dateState.resetFallback : dateState.committed,
-      action: 'acceptAndClose',
-    });
+    setDate({ value: dateState.committed, action: 'acceptAndClose' });
   });
 
   const handleCancel = useEventCallback(() => {
@@ -503,7 +500,7 @@ export const usePickerValue = <
   const actions: UsePickerValueActions = {
     onClear: handleClear,
     onAccept: handleAccept,
-    onDismiss: handleDismiss,
+    onDismiss: resetValueOnClose ? handleCancel : handleDismiss,
     onCancel: handleCancel,
     onSetToday: handleSetToday,
     onOpen: handleOpen,
