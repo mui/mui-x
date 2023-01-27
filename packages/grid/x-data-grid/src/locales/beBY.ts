@@ -1,4 +1,4 @@
-import { enUS as beBYCore } from '@mui/material/locale';
+import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
