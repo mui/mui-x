@@ -46,16 +46,16 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 #### Changes
 
-- [codemod] Update pickers component toolbar props (#7687) @alexfauquette
+- [codemod] Add pickers `replace-toolbar-props-by-slot` codemod (#7687) @alexfauquette
 - [codemod] Add `GridColumnMenuItemProps` to `column-menu-components-rename` codemod (#7710) @MBilalShafi
 - [codemod] Add `headerHeight` prop update to `row-selection-props-rename` codemod (#7711) @MBilalShafi
-- [codemod] Add codemod for `components` to `slots` remaining (#7533) @alexfauquette
-- [codemod] Basics migration to components props (#7698) @alexfauquette
-- [codemod] Rename `rowsPerPageOptions` prop to `pageSizeOptions` (#7603) @MBilalShafi
-- [codemod] Rename `shouldDisableTime` prop (#7709) @alexfauquette
-- [codemod] Rename data grid props (#7485) @MBilalShafi
-- [codemod] Rename data grid selectors and events (#7699) @MBilalShafi
-- [codemod] Update `DateTimePicker` component `tabs` props (#7639) @alexfauquette
+- [codemod] Add pickers codemod for `components` to `slots` renaming (#7533) @alexfauquette
+- [codemod] Add pickers `migrate-to-components-componentsProps` and `replace-arrows-button-slot` codemods (#7698) @alexfauquette
+- [codemod] Add data grid codemod renaming `rowsPerPageOptions` prop to `pageSizeOptions` (#7603) @MBilalShafi
+- [codemod] Add pickers `rename-should-disable-time` codemod (#7709) @alexfauquette
+- [codemod] Add data grid `row-selection-props-rename` codemod (#7485) @MBilalShafi
+- [codemod] Add data grid `rename-selectors-and-events` codemod (#7699) @MBilalShafi
+- [codemod] Add pickers `replace-tabs-props` codemod (#7639) @alexfauquette
 
 ### Docs
 
