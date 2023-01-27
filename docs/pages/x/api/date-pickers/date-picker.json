@@ -75,7 +75,7 @@
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
     },
-    "resetValueOnClose": {
+    "resetValueOnDismiss": {
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop."
     },

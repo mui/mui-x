@@ -56,7 +56,7 @@
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "resetValueOnClose": {
+    "resetValueOnDismiss": {
       "type": { "name": "bool" },
       "default": "`true` for mobile, `false` for desktop."
     },
