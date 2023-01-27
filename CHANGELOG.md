@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 27, 2023_
 
-We'd like to offer a big thanks to the 16 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 17 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 New shortcuts component for the date pickers (#7154) @alexfauquette
 - 🌍 Add Belarusian (be-BY), Czech (cs-CZ) and Russian (ru-RU) locales
@@ -25,7 +25,7 @@ We'd like to offer a big thanks to the 16 contributors who made this release pos
 - [DataGrid] Fix grid state not being updated after print preview is closed (#7642) @cherniavskii
 - [DataGrid] Fix non-hideable columns visibility toggling (#7637) @cherniavskii
 - [DataGrid] Fix scrolling on resize for data grids inside shadow root (#7298) @akiradev
-- [l10n] Add Slovak (sk-SK) translation for aggregation functions (#7702) @m4theushw
+- [l10n] Add Slovak (sk-SK) translation for aggregation functions (#7702) @msidlo
 - [l10n] Add missing core locales for `MuiTablePagination` (#7717) @MBilalShafi
 - [l10n] Improve Spanish (es-ES) and Vietnamese (vi-VN) locale (#7634) @WiXSL and @SpacerZ
 - [l10n] Add Belarusian (be-BY) locale (#7646) @volhalink
