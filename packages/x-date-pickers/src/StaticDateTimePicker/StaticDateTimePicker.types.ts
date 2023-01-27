@@ -12,7 +12,7 @@ import { DateOrTimeView, MakeOptional, UncapitalizeObjectKeys } from '../interna
 
 export interface StaticDateTimePickerSlotsComponent<TDate>
   extends BaseDateTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate | null, DateOrTimeView> {}
+    UseStaticPickerSlotsComponent<TDate, DateOrTimeView> {}
 
 export interface StaticDateTimePickerSlotsComponentsProps<TDate>
   extends BaseDateTimePickerSlotsComponentsProps<TDate>,

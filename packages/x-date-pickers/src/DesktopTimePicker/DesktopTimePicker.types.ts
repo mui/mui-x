@@ -1,6 +1,6 @@
 import {
   UseDesktopPickerSlotsComponent,
-  UseDesktopPickerSlotsComponentsProps,
+  ExportedUseDesktopPickerSlotsComponentsProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
@@ -18,7 +18,7 @@ export interface DesktopTimePickerSlotsComponent<TDate>
 
 export interface DesktopTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    UseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,

@@ -87,13 +87,14 @@ The list includes these transformers
 
 - [`adapter-change-import`](#adapter-change-import)
 - [`view-components-rename`](#view-components-rename)
-- [`view-components-rename-value-prop`](#view-components-rename)
+- [`view-components-rename-value-prop`](#view-components-rename-value-prop)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
-- [`replace-tabs-props](#replace-tabs-props)
+- [`replace-tabs-props`](#replace-tabs-props)
 - [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
+- [`rename-should-disable-time`](#rename-should-disable-time)
 
 #### `adapter-change-import`
 
@@ -325,6 +326,21 @@ Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by
 npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
 ```
 
+#### `rename-should-disable-time`
+
+Replace `shouldDisableTime` by `shouldDisableClock`.
+
+```diff
+  <DateTimePicker
+-   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++   shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
+```
+
 #### `rename-components-to-slots`
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
@@ -360,24 +376,25 @@ The list includes these transformers
 - [`row-selection-props-rename`](#row-selection-props-rename)
 - [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
+- [`rename-selectors-and-events`](#rename-selectors-and-events)
 
 #### `column-menu-components-rename`
 
 Replace column menu items that have been renamed.
 
 ```diff
-  <CustomColumnMenu>
--   <GridFilterMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
--   <HideGridColMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
--   <GridColumnsMenuItem column={column} onClick={hideMenu} />
-+   <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
--   <SortGridMenuItems column={column} onClick={hideMenu} />
-+   <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
--   <GridColumnPinningMenuItems column={column} onClick={hideMenu} />
-+   <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
-  </CustomColumnMenu>
+ <CustomColumnMenu>
+-  <GridFilterMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuFilterItem colDef={column} onClick={hideMenu} />
+-  <HideGridColMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuHideItem colDef={column} onClick={hideMenu} />
+-  <GridColumnsMenuItem column={column} onClick={hideMenu} />
++  <GridColumnMenuColumnsItem colDef={column} onClick={hideMenu} />
+-  <SortGridMenuItems column={column} onClick={hideMenu} />
++  <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
+-  <GridColumnPinningMenuItems column={column} onClick={hideMenu} />
++  <GridColumnMenuPinningItem colDef={column} onClick={hideMenu} />
+ </CustomColumnMenu>
 ```
 
 ```sh
@@ -416,10 +433,10 @@ npx @mui/x-codemod v6.0.0/data-grid/row-selection-props-rename <path>
 Rename `rowsPerPageOptions` prop to `pageSizeOptions`.
 
 ```diff
-  <DataGrid
--   rowsPerPageOptions={[5, 10, 20]}
-+   pageSizeOptions={[5, 10, 20]}
-  />
+ <DataGrid
+-  rowsPerPageOptions={[5, 10, 20]}
++  pageSizeOptions={[5, 10, 20]}
+ />
 ```
 
 ```sh
@@ -431,13 +448,42 @@ npx @mui/x-codemod v6.0.0/data-grid/rename-rowsPerPageOptions-prop <path>
 Remove `disableExtendRowFullWidth` prop which is no longer supported.
 
 ```diff
-  <DataGrid
--   disableExtendRowFullWidth
-  />
+ <DataGrid
+-  disableExtendRowFullWidth
+ />
 ```
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+```
+
+#### `rename-selectors-and-events`
+
+Rename selectors and events.
+
+```diff
+ function App() {
+-  useGridApiEventHandler('selectionChange', handleEvent);
+-  apiRef.current.subscribeEvent('selectionChange', handleEvent);
+-  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+-  const sortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
+-  const sortedRowEntries = useGridSelector(apiRef, gridVisibleSortedRowEntriesSelector);
+-  const rowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
+-  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridVisibleSortedTopLevelRowEntriesSelector);
+-  const topLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
++  useGridApiEventHandler('rowSelectionChange', handleEvent);
++  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
++  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
++  const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
++  const sortedRowEntries = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
++  const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
++  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
++  const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
+ }
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
 ```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).

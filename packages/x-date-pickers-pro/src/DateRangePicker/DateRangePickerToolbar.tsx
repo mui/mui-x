@@ -136,6 +136,7 @@ DateRangePickerToolbar.propTypes = {
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */
