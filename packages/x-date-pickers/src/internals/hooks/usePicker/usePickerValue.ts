@@ -207,12 +207,12 @@ export interface UsePickerValueNonStaticProps<TValue>
    */
   onOpen?: () => void;
   /**
-   * If `true`, on close will reset the value to the value when the picker was opened.
+   * If `true`, on dismiss will reset the value to the value when the picker was opened.
    *
-   * Might make most sense when in need of resetting the value on modal dismiss/close.
+   * Might make most sense when in need of resetting the value on modal dismiss.
    * @default `true` for mobile, `false` for desktop.
    */
-  resetValueOnClose?: boolean;
+  resetValueOnDismiss?: boolean;
 }
 
 /**
@@ -309,7 +309,7 @@ export const usePickerValue = <
     closeOnSelect = wrapperVariant === 'desktop',
     selectedSections: selectedSectionsProp,
     onSelectedSectionsChange,
-    resetValueOnClose = wrapperVariant !== 'desktop',
+    resetValueOnDismiss = wrapperVariant !== 'desktop',
   } = props;
 
   const utils = useUtils<TDate>();
@@ -500,7 +500,7 @@ export const usePickerValue = <
   const actions: UsePickerValueActions = {
     onClear: handleClear,
     onAccept: handleAccept,
-    onDismiss: resetValueOnClose ? handleCancel : handleDismiss,
+    onDismiss: resetValueOnDismiss ? handleCancel : handleDismiss,
     onCancel: handleCancel,
     onSetToday: handleSetToday,
     onOpen: handleOpen,
