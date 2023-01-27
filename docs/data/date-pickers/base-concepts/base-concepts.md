@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
-## Basic usage
+## Controlled value
 
 All the components have a `value` / `onChange` API to set and control the values:
 
@@ -56,7 +56,7 @@ For example, the `DatePicker` is the combination of the `DateField` and the `Dat
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
-### Date or time editing ?
+### Date or time editing?
 
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:
@@ -81,7 +81,7 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true, "bg": "inline"}}
 
 ## Accessibility
 
