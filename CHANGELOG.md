@@ -10,7 +10,7 @@ _Jan 27, 2023_
 We'd like to offer a big thanks to the 13 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Add Belarusian (be-BY), Czech (cs-CZ), and Russian (ru-RU) locales
-- 🌍 Improve Belarusian (be-BY), Slovak (sk-SK), Japanese (ja-JP), Vietnamese (vi-VN), and Spanish (es-ES) locales
+- 🌍 Improve Slovak (sk-SK), Japanese (ja-JP), Vietnamese (vi-VN), and Spanish (es-ES) locales
 - 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v5.17.21` / `@mui/x-data-grid-pro@v5.17.21` / `@mui/x-data-grid-premium@v5.17.21`
