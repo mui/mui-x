@@ -46,7 +46,7 @@ We'd like to offer a big thanks to the 14 contributors who made this release pos
 
 #### Changes
 
-- [codemod]  Update pickers component toolbar props (#7687) @alexfauquette
+- [codemod] Update pickers component toolbar props (#7687) @alexfauquette
 - [codemod] Add `GridColumnMenuItemProps` to `column-menu-components-rename` codemod (#7710) @MBilalShafi
 - [codemod] Add `headerHeight` prop update to `row-selection-props-rename` codemod (#7711) @MBilalShafi
 - [codemod] Add codemod for `components` to `slots` remaining (#7533) @alexfauquette
