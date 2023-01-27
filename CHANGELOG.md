@@ -36,6 +36,10 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [l10n] Add Russian (ru-RU) locale (#7708) @LukasTy
 - [l10n] Improve Spanish (es-ES) locale (#7614) @WiXSL
 
+### Docs
+
+- [docs] Add info callout about available component `slots` (#7723) @Vivek-Prajapatii
+
 ## 5.17.20
 
 _Jan 19, 2023_
