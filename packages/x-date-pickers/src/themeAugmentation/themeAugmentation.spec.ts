@@ -397,6 +397,13 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiTimePicker: {
+      defaultProps: {
+        open: true,
+        // @ts-expect-error invalid MuiTimePicker prop
+        someRandomProp: true,
+      },
+    },
     MuiTimePickerToolbar: {
       defaultProps: {
         disabled: true,

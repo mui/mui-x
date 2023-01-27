@@ -161,6 +161,11 @@ export interface PickerComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiStaticTimePicker'];
     variants?: ComponentsVariants['MuiStaticTimePicker'];
   };
+  MuiTimePicker?: {
+    defaultProps?: ComponentsProps['MuiTimePicker'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiTimePicker'];
+    variants?: ComponentsVariants['MuiTimePicker'];
+  };
   MuiTimePickerToolbar?: {
     defaultProps?: ComponentsProps['MuiTimePickerToolbar'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiTimePickerToolbar'];
