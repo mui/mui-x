@@ -1,4 +1,4 @@
-import { urPK as urPKCore } from '@mui/material/locale';
+import { urPKCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
