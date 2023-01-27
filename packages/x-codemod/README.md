@@ -87,10 +87,10 @@ The list includes these transformers
 
 - [`adapter-change-import`](#adapter-change-import)
 - [`view-components-rename`](#view-components-rename)
-- [`view-components-rename-value-prop`](#view-components-rename)
+- [`view-components-rename-value-prop`](#view-components-rename-value-prop)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
-- [`replace-tabs-props](#replace-tabs-props)
+- [`replace-tabs-props`](#replace-tabs-props)
 - [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
