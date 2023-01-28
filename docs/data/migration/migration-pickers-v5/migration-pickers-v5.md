@@ -2,7 +2,7 @@
 
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
-## Start using the alpha release
+## Start using the prerelease
 
 In `package.json`, change the version of the date pickers package to `next`.
 
@@ -11,7 +11,7 @@ In `package.json`, change the version of the date pickers package to `next`.
 +"@mui/x-date-pickers": "next",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
+Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-beta.1`.
 
 Since v6 is a major release, it contains some changes that affect the public API.
 These changes were done for consistency, improve stability and make room for new features.
@@ -219,7 +219,7 @@ The `shouldDisableTime` prop signature has been changed. Either rename the prop 
 
 ### ✅ Do not import adapter from `@date-io`
 
-In v5, it was possible to import adapters either from `@date-io` or `@mui/x-date-pickers` which were the same.
+In v5, it was possible to import adapters either from either `@date-io` or `@mui/x-date-pickers` which were the same.
 In v6, the adapters are extended by `@mui/x-date-pickers` to support [fields components](/x/react-date-pickers/fields/).
 Which means adapters can not be imported from `@date-io` anymore. They need to be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`.
 Otherwise, some methods will be missing.
@@ -286,7 +286,7 @@ Component names in the theme have changed as well:
 
 ### ✅ Rename `date` prop to `value`
 
-The `date` prop has been renamed `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
+The `date` prop has been renamed to `value` on `MonthCalendar`, `YearCalendar`, `TimeClock`, and `DateCalendar` (components renamed in previous section):
 
 ```diff
 -<MonthPicker date={dayjs()} />
@@ -583,7 +583,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### Action bar
 
-- The `action` prop of the `actionBar` component slot can no longer receive a callback.
+- The `actions` prop of the `actionBar` component slot can no longer receive a callback.
   Instead, you can pass a callback at the component slot props level
 
   ```diff
@@ -735,7 +735,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### ✅ Left arrow button
 
-- The component slot `LeftArrowButton` has been renamed `PreviousIconButton`:
+- The component slot `LeftArrowButton` has been renamed to `PreviousIconButton`:
 
 ```diff
  <DatePicker
@@ -753,7 +753,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### ✅ Right arrow button
 
-- The component slot `RightArrowButton` has been renamed `NextIconButton`:
+- The component slot `RightArrowButton` has been renamed to `NextIconButton`:
 
   ```diff
    <DatePicker
@@ -783,7 +783,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### ✅ Input adornment
 
-- The `InputAdornmentProps` prop has been replaced by a `inputAdornment` component slot props:
+- The `InputAdornmentProps` prop has been replaced by an `inputAdornment` component slot props:
 
   ```diff
    <DatePicker
@@ -794,7 +794,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
 ### ✅ Open Picker Button
 
-- The `OpenPickerButtonProps` prop has been replaced by a `openPickerButton` component slot props:
+- The `OpenPickerButtonProps` prop has been replaced by an `openPickerButton` component slot props:
 
   ```diff
    <DatePicker
@@ -853,3 +853,16 @@ Component name changes are also reflected in `themeAugmentation`:
    },
  });
 ```
+
+## Rename `components` to `slots` (optional)
+
+The `components` and `componentsProps` props is going to be renamed to `slots` and `slotProps` props respectively.
+This is a slow an ongoing effort between the different MUI libraries, that's why we chose to proceed with deprecating the existing `components` props as well as adding the new `slots` props.
+
+If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-components-to-slots <path>
+```
+
+Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
