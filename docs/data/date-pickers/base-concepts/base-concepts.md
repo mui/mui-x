@@ -81,7 +81,7 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true, "bg": "inline"}}
+{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
 ## Accessibility
 
