@@ -15,7 +15,7 @@ export interface ExportedPickersArrowSwitcherProps {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersArrowSwitcherSlotsComponentsProps;
   /**
@@ -27,7 +27,7 @@ export interface ExportedPickersArrowSwitcherProps {
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: PickersArrowSwitcherSlotsComponentsProps;
+  slotProps?: PickersArrowSwitcherSlotsComponentsProps;
   classes?: Partial<PickersArrowSwitcherClasses>;
 }
 

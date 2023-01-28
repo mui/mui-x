@@ -62,6 +62,7 @@
     "RightArrowIcon": "Icon displayed in the right view switch button.",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar."
+    "Shortcuts": "Custom component for the shortcuts.",
+    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, and action bar"
   }
 }

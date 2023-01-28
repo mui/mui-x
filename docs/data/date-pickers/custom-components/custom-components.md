@@ -8,31 +8,32 @@ components: DateTimePickerTabs
 
 <p class="description">The date picker lets you customize sub-components.</p>
 
+:::info
+The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
+For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
+:::
+
 ## Overriding components
 
-You can override the internal elements of the component (known as "slots") using the `components` prop.
+You can override the internal elements of the component (known as "slots") using the `slots` prop.
 
-Use the `componentsProps` prop if you need to pass additional props to a component slot.
+Use the `slotProps` prop if you need to pass additional props to a component slot.
 
 As an example, you could override the `ActionBar` and pass additional props to the custom component as shown below:
 
 ```jsx
 <DatePicker
   {...otherProps}
-  components={{
+  slots={{
     // Override default <ActionBar /> with a custom one
-    ActionBar: CustomActionBar,
+    actionBar: CustomActionBar,
   }}
-  componentsProps={{
+  slotProps={{
     // pass props `actions={['clear']}` to the actionBar slot
     actionBar: { actions: ['clear'] },
   }}
 />
 ```
-
-:::warning
-The `components` prop uses Pascal case (`ActionBar`), while `componentsProps` uses camel case (`actionBar`).
-:::
 
 ## Action bar
 
@@ -42,11 +43,11 @@ The action bar is available on all picker components.
 It is located at the bottom of the picker's views.
 By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
-You can override the action displayed by passing the `actions` prop to the `actionBar` within `componentsProps`, as shown here:
+You can override the actions displayed by passing the `actions` prop to the `actionBar` within `slotProps`, as shown here:
 
 ```jsx
 <DatePicker
-  componentsProps={{
+  slotProps={{
     // The actions will be the same between desktop and mobile
     actionBar: {
       actions: ['clear'],
@@ -77,7 +78,7 @@ The built-in `ActionBar` component supports four different actions:
 ### Component
 
 If you need to customize the date picker beyond the options described above, you can provide a custom component.
-This can be used in combination with `componentsProps`.
+This can be used in combination with `slotProps`.
 
 In the example below, the actions are the same as in the section above, but they are rendered inside a menu:
 
@@ -89,11 +90,11 @@ The tabs are available on all date time picker components.
 
 ### Component props
 
-You can override the icons displayed by passing props to the `tabs` within `componentsProps`, as shown here:
+You can override the icons displayed by passing props to the `tabs` within `slotProps`, as shown here:
 
 ```jsx
 <DateTimePicker
-  componentsProps={{
+  slotProps={{
     tabs: {
       dateIcon: <LightModeIcon />,
       timeIcon: <AcUnitIcon />,
@@ -107,7 +108,7 @@ This behavior can be overridden by setting the `hidden` prop:
 
 ```jsx
 <DateTimePicker
-  componentsProps={{
+  slotProps={{
     tabs: {
       hidden: false,
     },
@@ -118,7 +119,7 @@ This behavior can be overridden by setting the `hidden` prop:
 ### Component
 
 If you need to customize the date time picker beyond the options described above, you can provide a custom component.
-This can be used in combination with `componentsProps`.
+This can be used in combination with `slotProps`.
 
 In the example below, the tabs are using different icons and have an additional component:
 

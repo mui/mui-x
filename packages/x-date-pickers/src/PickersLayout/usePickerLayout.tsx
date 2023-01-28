@@ -5,6 +5,7 @@ import { PickersActionBar, PickersActionBarAction } from '../PickersActionBar';
 import { PickersLayoutProps, SubComponents } from './PickersLayout.types';
 import { getPickersLayoutUtilityClass } from './pickersLayoutClasses';
 import { DateOrTimeView } from '../internals/models';
+import { PickersShortcuts } from '../PickersShortcuts';
 import { BaseToolbarProps } from '../internals/models/props/toolbar';
 import { uncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -14,17 +15,7 @@ function toolbarHasView<TValue, TView extends DateOrTimeView>(
   return toolbarProps.view !== null;
 }
 
-// TODO: Remove this functions. It get introduced to mark `value` prop in PickersLayoutProps as not required.
-// The true type should be
-// - For pickers value: TDate | null
-// - For rangepickers value: [TDate | null, TDate | null]
-function toolbarHasValue<TValue, TView extends DateOrTimeView>(
-  toolbarProps: BaseToolbarProps<TValue | undefined, TView> | any,
-): toolbarProps is BaseToolbarProps<TValue, TView> {
-  return toolbarProps.value !== undefined;
-}
-
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { classes, isLandscape } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -33,15 +24,20 @@ const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
     actionBar: ['actionBar'],
     tabs: ['tabs'],
     landscape: ['landscape'],
+    shortcuts: ['shortcuts'],
   };
 
   return composeClasses(slots, getPickersLayoutUtilityClass, classes);
 };
 
+interface PickersLayoutPropsWithValueRequired<TValue, TDate, TView extends DateOrTimeView>
+  extends PickersLayoutProps<TValue, TDate, TView> {
+  value: TValue;
+}
 interface UsePickerLayoutResponse extends SubComponents {}
 
-const usePickerLayout = <TValue, TView extends DateOrTimeView>(
-  props: PickersLayoutProps<TValue, TView>,
+const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
+  props: PickersLayoutProps<TValue, TDate, TView>,
 ): UsePickerLayoutResponse => {
   const {
     wrapperVariant,
@@ -54,18 +50,23 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     onViewChange,
     value,
     onChange,
+    isValid,
     isLandscape,
     disabled,
     readOnly,
-    showToolbar,
     children,
     components,
     componentsProps,
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
-  } = props;
+    slotProps: innerSlotProps,
+    // TODO: Remove this "as" hack. It get introduced to mark `value` prop in PickersLayoutProps as not required.
+    // The true type should be
+    // - For pickers value: TDate | null
+    // - For rangepickers value: [TDate | null, TDate | null]
+  } = props as PickersLayoutPropsWithValueRequired<TValue, TDate, TView>;
+
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const classes = useUtilityClasses(props);
 
@@ -74,7 +75,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
   const ActionBar = slots?.actionBar ?? PickersActionBar;
   const actionBarProps = useSlotProps({
     elementType: ActionBar,
-    externalSlotProps: slotsProps?.actionBar,
+    externalSlotProps: slotProps?.actionBar,
     additionalProps: {
       onAccept,
       onClear,
@@ -90,11 +91,10 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   // Toolbar
 
-  const shouldRenderToolbar = showToolbar ?? wrapperVariant !== 'desktop';
   const Toolbar = slots?.toolbar;
   const toolbarProps = useSlotProps({
     elementType: Toolbar!,
-    externalSlotProps: slotsProps?.toolbar,
+    externalSlotProps: slotProps?.toolbar,
     additionalProps: {
       isLandscape,
       onChange,
@@ -108,13 +108,7 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
     },
     ownerState: { ...props, wrapperVariant },
   });
-  const toolbar =
-    toolbarHasView(toolbarProps) &&
-    toolbarHasValue<TValue, TView>(toolbarProps) &&
-    shouldRenderToolbar &&
-    !!Toolbar ? (
-      <Toolbar {...toolbarProps} />
-    ) : null;
+  const toolbar = toolbarHasView(toolbarProps) && !!Toolbar ? <Toolbar {...toolbarProps} /> : null;
 
   // Content
 
@@ -124,13 +118,37 @@ const usePickerLayout = <TValue, TView extends DateOrTimeView>(
 
   const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotsProps?.tabs} /> : null;
+    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
+
+  // Shortcuts
+
+  const Shortcuts = slots?.shortcuts ?? PickersShortcuts;
+  const shortcutsProps = useSlotProps({
+    elementType: Shortcuts!,
+    externalSlotProps: slotProps?.shortcuts,
+    additionalProps: {
+      isValid,
+      isLandscape,
+      onChange,
+      className: classes.shortcuts,
+    },
+    ownerState: {
+      isValid,
+      isLandscape,
+      onChange,
+      className: classes.shortcuts,
+      wrapperVariant,
+    },
+  });
+
+  const shortcuts = view && !!Shortcuts ? <Shortcuts {...shortcutsProps} /> : null;
 
   return {
     toolbar,
     content,
     tabs,
     actionBar,
+    shortcuts,
   };
 };
 

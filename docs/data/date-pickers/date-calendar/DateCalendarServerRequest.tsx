@@ -99,10 +99,10 @@ export default function DateCalendarServerRequest() {
         loading={isLoading}
         onMonthChange={handleMonthChange}
         renderLoading={() => <DayCalendarSkeleton />}
-        components={{
-          Day: ServerDay,
+        slots={{
+          day: ServerDay,
         }}
-        componentsProps={{
+        slotProps={{
           day: {
             highlightedDays,
           } as any,

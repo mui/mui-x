@@ -42,12 +42,12 @@
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "shouldDisableTime": "Disable specific time.<br><br><strong>Signature:</strong><br><code>function(value: TDate, view: TimeView) =&gt; boolean</code><br><em>value:</em> The value to check.<br><em>view:</em> The clock type of the timeValue.<br> <em>returns</em> (boolean): If <code>true</code> the time will be disabled.",
     "size": "The size of the component.",
+    "slotProps": "The props used for each component slot.",
     "slots": "Overrideable component slots.",
-    "slotsProps": "The props used for each component slot.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."
   },
-  "classDescriptions": {},
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": { "Input": "Input rendered." }
 }

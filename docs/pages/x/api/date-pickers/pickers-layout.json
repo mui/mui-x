@@ -10,23 +10,24 @@
       "type": { "name": "object" },
       "default": "{}",
       "deprecated": true,
-      "deprecationInfo": "Please use <code>slotsProps</code>."
+      "deprecationInfo": "Please use <code>slotProps</code>."
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
     },
-    "slots": { "type": { "name": "object" }, "default": "{}" },
-    "slotsProps": { "type": { "name": "object" }, "default": "{}" }
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
+    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
     "Tabs": { "type": { "name": "elementType" } },
     "Toolbar": { "type": { "name": "elementType" } }
   },
   "name": "PickersLayout",
   "styles": {
-    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs"],
+    "classes": ["root", "landscape", "contentWrapper", "toolbar", "actionBar", "tabs", "shortcuts"],
     "globalClasses": {},
     "name": "MuiPickersLayout"
   },

@@ -44,7 +44,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
 
   const {
     slots: innerSlots,
-    slotsProps: innerSlotsProps,
+    slotProps: innerSlotProps,
     components,
     componentsProps,
     value,
@@ -71,14 +71,14 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotsProps = innerSlotsProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
   const Root = slots?.root ?? MultiInputDateTimeRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: slotsProps?.root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -89,19 +89,19 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: slotsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
   const Separator = slots?.separator ?? MultiInputDateTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: slotsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
   });
 
@@ -197,7 +197,7 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -339,15 +339,15 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   shouldDisableTime: PropTypes.func,
   /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0

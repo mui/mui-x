@@ -42,7 +42,7 @@ export default function CustomDateRangePickerDay() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangeCalendar
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-        components={{ Day: DateRangePickerDay }}
+        slots={{ day: DateRangePickerDay }}
       />
     </LocalizationProvider>
   );
