@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
+import { useTheme } from '@mui/material/';
 import {
   CursorCoordinates,
   useGridApiEventHandler,
@@ -74,6 +75,7 @@ export const useGridColumnReorder = (
   const removeDnDStylesTimeout = React.useRef<any>();
   const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
+  const theme = useTheme();
 
   React.useEffect(() => {
     return () => {
@@ -214,9 +216,13 @@ export const useGridColumnReorder = (
 
         const cursorMoveDirectionX = getCursorMoveDirectionX(cursorPosition.current, coordinates);
         const hasMovedLeft =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT && targetColIndex < dragColIndex;
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_LEFT && theme.direction === 'rtl'
+            ? dragColIndex < targetColIndex
+            : targetColIndex < dragColIndex;
         const hasMovedRight =
-          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex;
+          cursorMoveDirectionX === CURSOR_MOVE_DIRECTION_RIGHT && theme.direction === 'rtl'
+            ? targetColIndex < dragColIndex
+            : dragColIndex < targetColIndex;
 
         if (hasMovedLeft || hasMovedRight) {
           let canBeReordered: boolean;
@@ -288,7 +294,7 @@ export const useGridColumnReorder = (
         cursorPosition.current = coordinates;
       }
     },
-    [apiRef, logger],
+    [apiRef, logger, theme.direction],
   );
 
   const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
