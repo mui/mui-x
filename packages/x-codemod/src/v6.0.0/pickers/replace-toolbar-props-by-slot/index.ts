@@ -1,6 +1,7 @@
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 import removeProps from '../../../util/removeProps';
+import renameNestedProps from '../../../util/renameNestedProps';
 
 const propsToSlots = {
   ToolbarComponent: { prop: 'components', path: 'Toolbar' },
@@ -8,6 +9,15 @@ const propsToSlots = {
   toolbarFormat: { prop: 'componentsProps', path: 'toolbar.toolbarFormat' },
   showToolbar: { prop: 'componentsProps', path: 'toolbar.hidden' },
   toolbarTitle: { prop: 'localeText', path: 'toolbarTitle' },
+};
+
+const propsToRename = {
+  localeText: {
+    datePickerDefaultToolbarTitle: 'datePickerToolbarTitle',
+    timePickerDefaultToolbarTitle: 'timePickerToolbarTitle',
+    dateTimePickerDefaultToolbarTitle: 'dateTimePickerToolbarTitle',
+    dateRangePickerDefaultToolbarTitle: 'dateRangePickerToolbarTitle',
+  },
 };
 
 const COMPONENTS = [
@@ -84,6 +94,13 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     });
 
   removeProps({ root, componentNames: COMPONENTS, props: Object.keys(propsToSlots), j });
+
+  renameNestedProps({
+    root,
+    componentNames: COMPONENTS,
+    nestedProps: propsToRename,
+    j,
+  });
 
   return root.toSource(printOptions);
 }
