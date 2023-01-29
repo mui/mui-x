@@ -9,6 +9,8 @@ import Paper from '@mui/material/Paper';
 import Popper, { PopperProps } from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -16,6 +18,8 @@ export interface GridPanelClasses {
   /** Styles applied to the paper element. */
   paper: string;
 }
+
+type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelProps
   extends StandardProps<MUIStyledCommonProps<Theme> & PopperProps, 'children'> {
@@ -36,7 +40,7 @@ const GridPanelRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Panel',
   overridesResolver: (props, styles) => styles.panel,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
 }));
 
@@ -44,7 +48,7 @@ const GridPaperRoot = styled(Paper, {
   name: 'MuiDataGrid',
   slot: 'Paper',
   overridesResolver: (props, styles) => styles.paper,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   minWidth: 300,
   maxHeight: 450,
@@ -54,6 +58,7 @@ const GridPaperRoot = styled(Paper, {
 const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, ...other } = props;
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
 
@@ -102,12 +107,18 @@ const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>((props, ref) 
       ref={ref}
       placement="bottom-start"
       className={clsx(className, classes.panel)}
+      ownerState={rootProps}
       anchorEl={anchorEl}
       modifiers={modifiers}
       {...other}
     >
       <ClickAwayListener mouseEvent="onMouseUp" onClickAway={handleClickAway}>
-        <GridPaperRoot className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
+        <GridPaperRoot
+          className={classes.paper}
+          ownerState={rootProps}
+          elevation={8}
+          onKeyDown={handleKeyDown}
+        >
           {isPlaced && children}
         </GridPaperRoot>
       </ClickAwayListener>

@@ -3,12 +3,16 @@ import Box from '@mui/material/Box';
 import { styled, SxProps, Theme } from '@mui/material/styles';
 import { GridRowId } from '@mui/x-data-grid';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
+import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import { DataGridProProcessedProps } from '../models/dataGridProProps';
+
+type OwnerState = DataGridProProcessedProps;
 
 const DetailPanel = styled(Box, {
   name: 'MuiDataGrid',
   slot: 'DetailPanel',
   overridesResolver: (props, styles) => styles.detailPanel,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: 2,
   width: '100%',
   position: 'absolute',
@@ -35,6 +39,8 @@ const GridDetailPanel = (props: GridDetailPanelProps) => {
   const { rowId, height, style: styleProp = {}, ...other } = props;
   const apiRef = useGridApiContext();
   const ref = React.useRef<HTMLDivElement>();
+  const rootProps = useGridRootProps();
+  const ownerState = rootProps;
 
   React.useLayoutEffect(() => {
     if (height === 'auto' && ref.current && typeof ResizeObserver === 'undefined') {
@@ -66,7 +72,7 @@ const GridDetailPanel = (props: GridDetailPanelProps) => {
 
   const style = { ...styleProp, height };
 
-  return <DetailPanel ref={ref} style={style} {...other} />;
+  return <DetailPanel ref={ref} ownerState={ownerState} style={style} {...other} />;
 };
 
 export { GridDetailPanel };

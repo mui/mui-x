@@ -34,10 +34,8 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = {
+type OwnerState = DataGridProcessedProps & {
   density: GridDensity;
-  autoHeight: DataGridProcessedProps['autoHeight'];
-  classes?: DataGridProcessedProps['classes'];
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -63,9 +61,8 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
   const ownerState = {
+    ...rootProps,
     density: densityValue,
-    classes: rootProps.classes,
-    autoHeight: rootProps.autoHeight,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -92,6 +89,7 @@ const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRo
     <GridRootStyles
       ref={handleRef}
       className={clsx(className, classes.root)}
+      ownerState={ownerState}
       role="grid"
       aria-colcount={visibleColumns.length}
       aria-rowcount={headerGroupingMaxDepth + 1 + pinnedRowsCount + totalRowCount}

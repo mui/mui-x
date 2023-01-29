@@ -18,7 +18,7 @@ type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> &
     sx?: SxProps<Theme>;
   };
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -34,7 +34,7 @@ const GridRowCountRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'RowCount',
   overridesResolver: (props, styles) => styles.rowCount,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   alignItems: 'center',
   display: 'flex',
   margin: theme.spacing(0, 2),
@@ -46,8 +46,7 @@ const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(functio
 ) {
   const { className, rowCount, visibleRowCount, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const ownerState = useGridRootProps();
   const classes = useUtilityClasses(ownerState);
 
   if (rowCount === 0) {
@@ -60,7 +59,12 @@ const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(functio
       : rowCount.toLocaleString();
 
   return (
-    <GridRowCountRoot ref={ref} className={clsx(classes.root, className)} {...other}>
+    <GridRowCountRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={ownerState}
+      {...other}
+    >
       {apiRef.current.getLocaleText('footerTotalRows')} {text}
     </GridRowCountRoot>
   );
