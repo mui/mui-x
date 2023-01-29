@@ -64,7 +64,7 @@
     "markdown-to-jsx": "^7.1.8",
     "marked": "^4.2.12",
     "moment": "^2.29.4",
-    "next": "^13.1.5",
+    "next": "^13.1.6",
     "nprogress": "^0.2.0",
     "postcss": "^8.4.21",
     "prismjs": "^1.29.0",
