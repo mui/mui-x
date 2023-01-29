@@ -1,14 +1,14 @@
 /**
- * Recusive function that:
+ * Recursive function that:
  * Return a jscodeshift object with `value` associated to path.
  * The path can be such as 'tabs.hidden' which will return `{ tabs: { hidden: value } }`.
  * If object is not null, path/value will be added respecting the other properties of the object.
  */
 export const addItemToObject = (path, value, object, j) => {
-  const splitedPath = path.split('.');
+  const splittedPath = path.split('.');
 
   // Final case where we have to add the property to the object.
-  if (splitedPath.length === 1) {
+  if (splittedPath.length === 1) {
     const propertyToAdd = j.objectProperty(j.identifier(path), value);
     if (object === null) {
       return j.objectExpression([propertyToAdd]);
@@ -20,8 +20,8 @@ export const addItemToObject = (path, value, object, j) => {
     ]);
   }
 
-  const remainingPath = splitedPath.slice(1).join('.');
-  const targetKey = splitedPath[0];
+  const remainingPath = splittedPath.slice(1).join('.');
+  const targetKey = splittedPath[0];
 
   if (object === null) {
     // Simplest case, no object to take into consideration
