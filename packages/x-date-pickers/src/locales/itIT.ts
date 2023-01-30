@@ -50,8 +50,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Numero settimana',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: weekNumber => `Settimana ${weekNumber}`,
-  calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Settimana ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -68,8 +68,8 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'scegli una data',
 
   // Field section placeholders
-  fieldYearPlaceholder: params => 'a'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  fieldYearPlaceholder: (params) => 'a'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'gg',
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
