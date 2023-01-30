@@ -4,7 +4,7 @@ import {
   unstable_useForkRef as useForkRef,
   unstable_useEnhancedEffect as useEnhancedEffect,
 } from '@mui/utils';
-import { useTheme } from '@mui/material/';
+import { useTheme } from '@mui/material/styles';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridSelector } from '../../utils/useGridSelector';
