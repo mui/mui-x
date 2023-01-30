@@ -856,8 +856,9 @@ Component name changes are also reflected in `themeAugmentation`:
 
 ## Rename `components` to `slots` (optional)
 
-The `components` and `componentsProps` props is going to be renamed to `slots` and `slotProps` props respectively.
-This is a slow an ongoing effort between the different MUI libraries, that's why we chose to proceed with deprecating the existing `components` props as well as adding the new `slots` props.
+The `components` and `componentsProps` props is being renamed to `slots` and `slotProps` props respectively.
+This is a slow and ongoing effort between the different MUI libraries.
+To smooth the transition, pickers support both the `components` props which are deprecated, and the new `slots` props.
 
 If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
 
