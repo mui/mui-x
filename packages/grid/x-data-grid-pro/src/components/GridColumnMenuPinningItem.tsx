@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -12,16 +13,43 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const theme = useTheme();
 
-  const pinColumn = (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
-    apiRef.current.pinColumn(colDef.field, side);
-    onClick(event);
-  };
+  const pinColumn = React.useCallback(
+    (side: GridPinnedPosition) => (event: React.MouseEvent<HTMLElement>) => {
+      apiRef.current.pinColumn(colDef.field, side);
+      onClick(event);
+    },
+    [apiRef, colDef.field, onClick],
+  );
 
   const unpinColumn = (event: React.MouseEvent<HTMLElement>) => {
     apiRef.current.unpinColumn(colDef.field);
     onClick(event);
   };
+  const renderLeftSideMenuItem = React.useCallback(
+    () => (
+      <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
+        <ListItemIcon>
+          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
+      </MenuItem>
+    ),
+    [apiRef, rootProps, pinColumn],
+  );
+
+  const renderRightSideMenuItem = React.useCallback(
+    () => (
+      <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
+        <ListItemIcon>
+          <rootProps.components.ColumnMenuPinRightIcon fontSize="small" />
+        </ListItemIcon>
+        <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
+      </MenuItem>
+    ),
+    [apiRef, rootProps, pinColumn],
+  );
 
   if (!colDef) {
     return null;
@@ -53,20 +81,18 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     );
   }
 
+  if (theme.direction === 'rtl') {
+    return (
+      <React.Fragment>
+        {renderRightSideMenuItem()}
+        {renderLeftSideMenuItem()}
+      </React.Fragment>
+    );
+  }
   return (
     <React.Fragment>
-      <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
-        <ListItemIcon>
-          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
-      </MenuItem>
-      <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
-        <ListItemIcon>
-          <rootProps.components.ColumnMenuPinRightIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
-      </MenuItem>
+      {renderLeftSideMenuItem()}
+      {renderRightSideMenuItem()}
     </React.Fragment>
   );
 }
