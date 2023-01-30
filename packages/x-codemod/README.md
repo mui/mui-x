@@ -95,6 +95,7 @@ The list includes these transformers
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 - [`rename-should-disable-time`](#rename-should-disable-time)
+- [`rename-inputFormat-prop`](#rename-inputFormat-prop)
 
 #### `adapter-change-import`
 
@@ -339,6 +340,21 @@ Replace `shouldDisableTime` by `shouldDisableClock`.
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
+```
+
+#### `rename-inputFormat-prop`
+
+Replace `inputFormat` prop with `format`.
+
+```diff
+ <DatePicker
+-  inputFormat="YYYY"
++  format="YYYY"
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
 ```
 
 #### `rename-components-to-slots`

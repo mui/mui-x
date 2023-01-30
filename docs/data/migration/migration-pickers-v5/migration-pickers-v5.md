@@ -41,7 +41,7 @@ All other changes must be handled manually.
 
 ## Picker components
 
-### Rename the `inputFormat` prop
+### ✅ Rename the `inputFormat` prop
 
 The `inputFormat` prop has been renamed to `format` on all the pickers components.
 
