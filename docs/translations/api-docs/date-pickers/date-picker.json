@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "acceptValueOnDismiss": "If <code>false</code>, on dismiss will reset the value to the value when the picker was opened.<br>Might make most sense when in need of resetting the value on modal dismiss.",
     "autoFocus": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code>, the popover or modal will close after submitting the full date.",
@@ -39,7 +40,6 @@
     "orientation": "Force rendering in particular orientation.",
     "reduceAnimations": "Disable heavy animations.",
     "renderLoading": "Component displaying when passed <code>loading</code> true.<br><br><strong>Signature:</strong><br><code>function() =&gt; React.ReactNode</code><br><br> <em>returns</em> (React.ReactNode): The node to render when loading.",
-    "resetValueOnDismiss": "If <code>true</code>, on dismiss will reset the value to the value when the picker was opened.<br>Might make most sense when in need of resetting the value on modal dismiss.",
     "selectedSections": "The currently selected sections. This prop accept four formats: 1. If a number is provided, the section at this index will be selected. 2. If an object with a <code>startIndex</code> and <code>endIndex</code> properties are provided, the sections between those two indexes will be selected. 3. If a string of type <code>MuiDateSectionName</code> is provided, the first section with that name will be selected. 4. If <code>null</code> is provided, no section will be selected If not provided, the selected sections will be handled internally.",
     "shouldDisableDate": "Disable specific date.<br><br><strong>Signature:</strong><br><code>function(day: TDate) =&gt; boolean</code><br><em>day:</em> The date to test.<br> <em>returns</em> (boolean): If <code>true</code> the date will be disabled.",
     "shouldDisableMonth": "Disable specific month.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to test.<br> <em>returns</em> (boolean): If <code>true</code>, the month will be disabled.",

@@ -1,5 +1,9 @@
 {
   "props": {
+    "acceptValueOnDismiss": {
+      "type": { "name": "bool" },
+      "default": "`true` for desktop, `false` for mobile."
+    },
     "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
@@ -59,10 +63,6 @@
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
     "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
-    "resetValueOnDismiss": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop."
-    },
     "selectedSections": {
       "type": {
         "name": "union",

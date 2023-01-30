@@ -83,6 +83,13 @@ DesktopDateTimePicker.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   /**
+   * If `false`, on dismiss will reset the value to the value when the picker was opened.
+   *
+   * Might make most sense when in need of resetting the value on modal dismiss.
+   * @default `true` for desktop, `false` for mobile.
+   */
+  acceptValueOnDismiss: PropTypes.bool,
+  /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
@@ -324,13 +331,6 @@ DesktopDateTimePicker.propTypes = {
    * @default () => <span data-mui-test="loading-progress">...</span>
    */
   renderLoading: PropTypes.func,
-  /**
-   * If `true`, on dismiss will reset the value to the value when the picker was opened.
-   *
-   * Might make most sense when in need of resetting the value on modal dismiss.
-   * @default `true` for mobile, `false` for desktop.
-   */
-  resetValueOnDismiss: PropTypes.bool,
   /**
    * The currently selected sections.
    * This prop accept four formats:

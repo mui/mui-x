@@ -1,5 +1,9 @@
 {
   "props": {
+    "acceptValueOnDismiss": {
+      "type": { "name": "bool" },
+      "default": "`true` for desktop, `false` for mobile."
+    },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
@@ -70,10 +74,6 @@
     "renderLoading": {
       "type": { "name": "func" },
       "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
-    },
-    "resetValueOnDismiss": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop."
     },
     "selectedSections": {
       "type": {

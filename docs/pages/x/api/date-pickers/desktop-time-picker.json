@@ -1,5 +1,9 @@
 {
   "props": {
+    "acceptValueOnDismiss": {
+      "type": { "name": "bool" },
+      "default": "`true` for desktop, `false` for mobile."
+    },
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
     "ampmInClock": { "type": { "name": "bool" } },
     "autoFocus": { "type": { "name": "bool" } },
@@ -51,10 +55,6 @@
     },
     "orientation": {
       "type": { "name": "enum", "description": "'landscape'<br>&#124;&nbsp;'portrait'" }
-    },
-    "resetValueOnDismiss": {
-      "type": { "name": "bool" },
-      "default": "`true` for mobile, `false` for desktop."
     },
     "selectedSections": {
       "type": {
