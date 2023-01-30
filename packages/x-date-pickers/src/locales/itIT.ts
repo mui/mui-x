@@ -68,9 +68,9 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'scegli una data',
 
   // Field section placeholders
-  fieldYearPlaceholder: (params) => 'a'.repeat(params.digitAmount),
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
-  fieldDayPlaceholder: () => 'gg',
+  fieldDayPlaceholder: () => 'GG',
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
