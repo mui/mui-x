@@ -4,13 +4,13 @@ import { spy } from 'sinon';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import { DescribeValueTestSuite } from './describeValue.types';
 
-export const testPickerActionBar: DescribeValueTestSuite<any, 'new-picker'> = (
+export const testPickerActionBar: DescribeValueTestSuite<any, 'picker'> = (
   ElementToTest,
   getOptions,
 ) => {
   const { componentFamily, render, values, emptyValue, setNewValue, variant, type } = getOptions();
 
-  if (componentFamily !== 'new-picker') {
+  if (componentFamily !== 'picker') {
     return;
   }
 

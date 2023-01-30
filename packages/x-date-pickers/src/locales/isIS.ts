@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 const isISPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
@@ -10,16 +9,10 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'opna fyrri skoðun',
   openNextView: 'opna næstu skoðun',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => {
-    const viewTypeTranslated = viewType === 'date' ? 'dagatals' : 'klukku';
-    return isKeyboardInputOpen
-      ? `textainnsláttur er opinn, fara í ${viewTypeTranslated}skoðun`
-      : `${viewTypeTranslated}skoðun er opin, opna fyrir textainnslátt`;
-  },
 
   // DateRange placeholders
   start: 'Upphaf',

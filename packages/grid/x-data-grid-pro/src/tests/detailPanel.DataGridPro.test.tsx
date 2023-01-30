@@ -214,10 +214,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(
       <TestCase
         getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
-        initialState={{ detailPanel: { expandedRowIds: [0] } }}
+        pageSizeOptions={[1]}
+        initialState={{
+          detailPanel: { expandedRowIds: [0] },
+          pagination: { paginationModel: { pageSize: 1 } },
+        }}
       />,
     );
     expect(screen.queryByText('Row 0')).not.to.equal(null);
@@ -329,9 +331,9 @@ describe('<DataGridPro /> - Detail panel', () => {
           { id: 1, brand: 'Adidas' },
         ]}
         getDetailPanelContent={getDetailPanelContent}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
 
@@ -365,9 +367,9 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
     //   2x during state initialization
@@ -404,9 +406,9 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        rowsPerPageOptions={[1]}
-        pageSize={1}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
         autoHeight
       />,
     );

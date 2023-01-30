@@ -144,6 +144,44 @@ describe('<DataGridPro /> - Columns Visibility', () => {
       fireEvent.click(screen.getByText('Hide all'));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
     });
+
+    // Fixes (1) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
+    it('should not show hidden non hideable columns when "Show all" is clicked', () => {
+      render(
+        <TestDataGrid
+          components={{ Toolbar: GridToolbar }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: { idBis: false },
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Show all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    });
+
+    // Fixes (2) in in https://github.com/mui/mui-x/issues/7393#issuecomment-1372129661
+    it('should not show non-hideable columns when "Hide all" is clicked', () => {
+      render(
+        <TestDataGrid
+          components={{ Toolbar: GridToolbar }}
+          columns={[{ field: 'id' }, { field: 'idBis', hideable: false }]}
+          initialState={{
+            columns: {
+              columnVisibilityModel: { idBis: false },
+            },
+          }}
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Select columns' }));
+      fireEvent.click(screen.getByText('Hide all'));
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
+    });
   });
 
   describe('prop: initialState.columns.columnVisibilityModel', () => {

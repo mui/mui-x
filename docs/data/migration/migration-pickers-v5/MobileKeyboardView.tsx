@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Dayjs } from 'dayjs';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
@@ -14,23 +15,25 @@ import {
   PickersLayoutProps,
   usePickerLayout,
 } from '@mui/x-date-pickers/PickersLayout';
-import { Unstable_MobileNextDatePicker as MobileNextDatePicker } from '@mui/x-date-pickers/MobileNextDatePicker';
-import { Unstable_DateField as DateField } from '@mui/x-date-pickers/DateField';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { DateField } from '@mui/x-date-pickers/DateField';
 import {
   DatePickerToolbar,
   DatePickerToolbarProps,
 } from '@mui/x-date-pickers/DatePicker';
 
-function LayoutWithKeyboardView(props: PickersLayoutProps<any, DateView>) {
+function LayoutWithKeyboardView(
+  props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>,
+) {
   const { value, onChange } = props;
   const [showKeyboardView, setShowKeyboardView] = React.useState(false);
 
   const { toolbar, tabs, content, actionBar } = usePickerLayout({
     ...props,
-    componentsProps: {
-      ...props.componentsProps,
+    slotProps: {
+      ...props.slotProps,
       toolbar: {
-        ...props.componentsProps?.toolbar,
+        ...props.slotProps?.toolbar,
         // @ts-ignore
         showKeyboardViewSwitch: props.wrapperVariant === 'mobile',
         showKeyboardView,
@@ -98,10 +101,10 @@ function ToolbarWithKeyboardViewSwitch(
 export default function MobileKeyboardView() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <MobileNextDatePicker
-        components={{
-          Layout: LayoutWithKeyboardView,
-          Toolbar: ToolbarWithKeyboardViewSwitch,
+      <MobileDatePicker
+        slots={{
+          layout: LayoutWithKeyboardView,
+          toolbar: ToolbarWithKeyboardViewSwitch,
         }}
       />
     </LocalizationProvider>

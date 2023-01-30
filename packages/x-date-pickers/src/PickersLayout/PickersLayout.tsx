@@ -8,7 +8,7 @@ import { pickersLayoutClasses, getPickersLayoutUtilityClass } from './pickersLay
 import usePickerLayout from './usePickerLayout';
 import { DateOrTimeView } from '../internals/models/views';
 
-const useUtilityClasses = (ownerState: PickersLayoutProps<any, any>) => {
+const useUtilityClasses = (ownerState: PickersLayoutProps<any, any, any>) => {
   const { isLandscape, classes } = ownerState;
   const slots = {
     root: ['root', isLandscape && 'landscape'],
@@ -29,9 +29,15 @@ const PickersLayoutRoot = styled('div', {
   [`& .${pickersLayoutClasses.toolbar}`]: ownerState.isLandscape
     ? {
         gridColumn: theme.direction === 'rtl' ? 3 : 1,
-        gridRow: '1 / 3',
+        gridRow: '2 / 3',
       }
-    : { gridColumn: '1 / 4', gridRow: 1 },
+    : { gridColumn: '2 / 4', gridRow: 1 },
+  [`.${pickersLayoutClasses.shortcuts}`]: ownerState.isLandscape
+    ? { gridColumn: '2 / 4', gridRow: 1 }
+    : {
+        gridColumn: theme.direction === 'rtl' ? 3 : 1,
+        gridRow: '2 / 3',
+      },
   [`& .${pickersLayoutClasses.actionBar}`]: { gridColumn: '1 / 4', gridRow: 3 },
 }));
 
@@ -64,25 +70,26 @@ export const PickersLayoutContentWrapper = styled('div', {
   flexDirection: 'column',
 });
 
-const PickersLayout = function PickersLayout<TValue, TView extends DateOrTimeView>(
-  inProps: PickersLayoutProps<TValue, TView>,
+const PickersLayout = function PickersLayout<TValue, TDate, TView extends DateOrTimeView>(
+  inProps: PickersLayoutProps<TValue, TDate, TView>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickersLayout' });
 
-  const { toolbar, content, tabs, actionBar } = usePickerLayout(props);
-  const { sx, className, ref, wrapperVariant } = props;
+  const { toolbar, content, tabs, actionBar, shortcuts } = usePickerLayout(props);
+  const { sx, className, isLandscape, ref, wrapperVariant } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   return (
     <PickersLayoutRoot
+      ref={ref}
       sx={sx}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
-      ref={ref}
     >
-      {toolbar}
+      {isLandscape ? shortcuts : toolbar}
+      {isLandscape ? toolbar : shortcuts}
       <PickersLayoutContentWrapper className={classes.contentWrapper}>
         {wrapperVariant === 'desktop' ? (
           <React.Fragment>
@@ -118,11 +125,12 @@ PickersLayout.propTypes = {
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   disabled: PropTypes.bool,
   isLandscape: PropTypes.bool.isRequired,
+  isValid: PropTypes.func.isRequired,
   onAccept: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -137,17 +145,16 @@ PickersLayout.propTypes = {
    */
   orientation: PropTypes.oneOf(['landscape', 'portrait']),
   readOnly: PropTypes.bool,
-  showToolbar: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
   /**
    * Overrideable component slots.
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The props used for each component slot.
-   * @default {}
-   */
-  slotsProps: PropTypes.object,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

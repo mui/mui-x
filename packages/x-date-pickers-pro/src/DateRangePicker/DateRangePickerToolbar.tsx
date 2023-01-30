@@ -61,9 +61,6 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
-/**
- * @ignore - internal component.
- */
 const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
@@ -72,12 +69,11 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
 
   const {
     value: [start, end],
-    isMobileKeyboardViewOpen,
-    toggleMobileKeyboardView,
     rangePosition,
     onRangePositionChange,
     toolbarFormat,
     className,
+    ...other
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -95,9 +91,8 @@ const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
 
   return (
     <DateRangePickerToolbarRoot
+      {...other}
       toolbarTitle={localeText.dateRangePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
@@ -133,11 +128,15 @@ DateRangePickerToolbar.propTypes = {
    */
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  isMobileKeyboardViewOpen: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
-  toggleMobileKeyboardView: PropTypes.func,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */

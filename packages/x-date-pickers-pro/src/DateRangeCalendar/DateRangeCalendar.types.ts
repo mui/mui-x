@@ -47,7 +47,7 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 }
 
 export interface ExportedDateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
@@ -130,7 +130,7 @@ export interface DateRangeCalendarProps<TDate>
   /**
    * The props used for each component slot.
    * @default {}
-   * @deprecated Please use `slotsProps`.
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
@@ -142,7 +142,7 @@ export interface DateRangeCalendarProps<TDate>
    * The props used for each component slot.
    * @default {}
    */
-  slotsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

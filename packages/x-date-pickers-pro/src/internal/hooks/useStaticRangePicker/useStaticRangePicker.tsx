@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -38,7 +39,7 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, slots, slotsProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
   const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
 
@@ -53,15 +54,18 @@ export const useStaticRangePicker = <
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,
-    additionalViewProps: {},
+    additionalViewProps: {
+      rangePosition,
+      onRangePositionChange: setRangePosition,
+    },
     wrapperVariant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...slotsProps,
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+    ...slotProps,
     toolbar: {
-      ...slotsProps?.toolbar,
+      ...slotProps?.toolbar,
       rangePosition,
       onRangePositionChange: setRangePosition,
     } as ExportedBaseToolbarProps,
@@ -72,9 +76,11 @@ export const useStaticRangePicker = <
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
-          {...slotsProps?.layout}
+          {...slotProps?.layout}
           slots={slots}
-          slotsProps={slotsPropsForLayout}
+          slotProps={slotPropsForLayout}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}

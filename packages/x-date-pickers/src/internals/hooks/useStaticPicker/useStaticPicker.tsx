@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { DateOrTimeView } from '../../models/views';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
@@ -30,7 +31,7 @@ export const useStaticPicker = <
   validator,
   ref,
 }: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, slots, slotsProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
   const { layoutProps, renderCurrentView } = usePicker<
     TDate | null,
@@ -54,9 +55,11 @@ export const useStaticPicker = <
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
-          {...slotsProps?.layout}
+          {...slotProps?.layout}
           slots={slots}
-          slotsProps={slotsProps}
+          slotProps={slotProps}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}

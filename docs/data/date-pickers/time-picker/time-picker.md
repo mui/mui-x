@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Time Picker component
-components: NextTimePicker, DesktopNextTimePicker, MobileNextTimePicker, StaticNextTimePicker
+components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker
 githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/time-pickers
@@ -10,14 +10,6 @@ materialDesign: https://m2.material.io/components/time-pickers
 # Time Picker
 
 <p class="description">The Time Picker component let the user select a time.</p>
-
-:::warning
-The new Time Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextTimePicker` will become `TimePicker`, ...)
-:::
 
 ## Basic usage
 
@@ -43,24 +35,24 @@ The component can be uncontrolled or controlled
 
 The component is available in four variants:
 
-- The `DesktopNextTimePicker` component which works best for mouse devices and large screens.
+- The `DesktopTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextTimePicker` component which works best for touch devices and small screens.
+- The `MobileTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextTimePicker` component which renders `DesktopNextTimePicker` or `MobileNextTimePicker` depending on the device it runs on.
+- The `TimePicker` component which renders `DesktopTimePicker` or `MobileTimePicker` depending on the device it runs on.
 
 - The `StaticTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveTimePickers.js"}}
 
-By default, the `NextTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
-Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
 ## Form props

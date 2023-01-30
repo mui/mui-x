@@ -31,8 +31,8 @@
     "shouldDisableDate": "Disable specific date. @DateIOType<br><br><strong>Signature:</strong><br><code>function(day: TDate, position: string) =&gt; boolean</code><br><em>day:</em> The date to test.<br><em>position:</em> The date to test, &#39;start&#39; or &#39;end&#39;.<br> <em>returns</em> (boolean): Returns <code>true</code> if the date should be disabled.",
     "showDaysOutsideCurrentMonth": "If <code>true</code>, days that have <code>outsideCurrentMonth={true}</code> are displayed.",
     "showToolbar": "If <code>true</code>, the toolbar will be visible.",
+    "slotProps": "The props used for each component slot.",
     "slots": "Overrideable component slots.",
-    "slotsProps": "The props used for each component slot.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "viewRenderers": "Define custom view renderers for each section. If <code>null</code>, the section will only have field editing. If <code>undefined</code>, internally defined view will be the used."
@@ -41,11 +41,12 @@
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Shortcuts": "Custom component for the shortcuts.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
