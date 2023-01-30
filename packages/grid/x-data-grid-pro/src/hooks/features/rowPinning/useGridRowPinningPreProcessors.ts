@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid/internals';
 import { GridRowEntry, GridRowId, GridRowModel } from '@mui/x-data-grid';
 import { GridApiPro } from '../../../models/gridApiPro';
-import { GridPinnedRowsProp } from './gridRowPinningInterface';
+import type { GridPinnedRowsProp, GridRowPinningInternalCache } from './gridRowPinningInterface';
 
 type GridPinnedRowPosition = keyof GridPinnedRowsProp;
 
@@ -63,10 +63,34 @@ export function addPinnedRow({
   };
 }
 
+export function removePinnedRow({
+  groupingParams,
+  rowId,
+  apiRef,
+}: {
+  groupingParams: GridHydrateRowsValue;
+  rowId: GridRowId;
+  apiRef: React.MutableRefObject<GridApiPro>;
+}) {
+  const idRowsLookup = { ...groupingParams.idRowsLookup };
+  const tree = { ...groupingParams.tree };
+
+  delete idRowsLookup[rowId];
+  delete tree[rowId];
+
+  delete apiRef.current.unstable_caches.rows.idRowsLookup[rowId];
+  delete apiRef.current.unstable_caches.rows.idToIdLookup[rowId];
+}
+
 export const useGridRowPinningPreProcessors = (apiRef: React.MutableRefObject<GridApiPro>) => {
+  const previousPinnedRowsCacheRef = React.useRef<GridRowPinningInternalCache | null>(null);
+
   const addPinnedRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       const pinnedRowsCache = apiRef.current.unstable_caches.pinnedRows || {};
+
+      const previousPinnedRowsCache = previousPinnedRowsCacheRef.current;
+      previousPinnedRowsCacheRef.current = pinnedRowsCache;
 
       let newGroupingParams = {
         ...groupingParams,
@@ -76,6 +100,24 @@ export const useGridRowPinningPreProcessors = (apiRef: React.MutableRefObject<Gr
           pinnedRows: {},
         },
       };
+
+      if (previousPinnedRowsCache) {
+        previousPinnedRowsCache.topIds?.forEach((rowId) => {
+          removePinnedRow({
+            groupingParams: newGroupingParams,
+            rowId,
+            apiRef,
+          });
+        });
+
+        previousPinnedRowsCache.bottomIds?.forEach((rowId) => {
+          removePinnedRow({
+            groupingParams: newGroupingParams,
+            rowId,
+            apiRef,
+          });
+        });
+      }
 
       pinnedRowsCache.topIds?.forEach((rowId) => {
         newGroupingParams = addPinnedRow({
