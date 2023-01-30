@@ -23,6 +23,9 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultRangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" }
+    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
@@ -44,6 +47,8 @@
     "onChange": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
+    "onRangePositionChange": { "type": { "name": "func" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"

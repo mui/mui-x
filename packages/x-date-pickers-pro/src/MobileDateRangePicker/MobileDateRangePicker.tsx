@@ -113,6 +113,11 @@ MobileDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The default position in the range being editing value.
+   * Used when the component is not controlled.
+   */
+  defaultRangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * The default value.
    * Used when the component is not controlled.
    */
@@ -226,6 +231,11 @@ MobileDateRangePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
+   * Callback fired when the range position changes.
+   * @param {RangePosition} rangePosition The new range position.
+   */
+  onRangePositionChange: PropTypes.func,
+  /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
@@ -235,6 +245,11 @@ MobileDateRangePicker.propTypes = {
    * @default false
    */
   open: PropTypes.bool,
+  /**
+   * The position in the range being edited.
+   * Used when the component position is controlled.
+   */
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
