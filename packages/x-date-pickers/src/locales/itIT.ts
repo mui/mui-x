@@ -64,7 +64,7 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
       : "Scegli l'ora",
 
   // Table labels
-  timeTableLabel: 'scegli un ora',
+  timeTableLabel: "scegli un'ora",
   dateTableLabel: 'scegli una data',
 
   // Field section placeholders
