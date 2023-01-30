@@ -307,7 +307,7 @@ export async function getDataForValueOptionsSheet(
       const values = [header, ...formattedValueOptions];
 
       const letter = worksheet.getColumn(column.field).letter;
-      const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${1 + values.length}`;
+      const address = `${valueOptionsSheetName}!$${letter}$2:$${letter}$${values.length}`;
 
       acc[column.field] = { values, address };
 
