@@ -1,4 +1,4 @@
-<DatePicker ToolbarComponent={MyToolbar} showToolbar={false} localeText={{ datePickerDefaultToolbarTitle: 'Pick a date' }} />;
+<DatePicker ToolbarComponent={MyToolbar} showToolbar={false} />;
 
 <DatePicker
   ToolbarComponent={MyToolbar}
@@ -19,11 +19,14 @@
 
 <DatePicker toolbarTitle="Title" />;
 
-<DatePicker
+<LocalizationProvider
   localeText={{
+    start: 'Check-in',
     datePickerDefaultToolbarTitle: 'Pick a Date',
     timePickerDefaultToolbarTitle: 'Pick a Time',
     dateTimePickerDefaultToolbarTitle: 'Pick a Date and Time',
     dateRangePickerDefaultToolbarTitle: 'Pick a Date Range',
   }}
-/>;
+>
+  <DatePicker />
+</LocalizationProvider>;

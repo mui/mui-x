@@ -97,7 +97,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   renameNestedProps({
     root,
-    componentNames: COMPONENTS,
+    componentNames: ['LocalizationProvider'],
     nestedProps: propsToRename,
     j,
   });
