@@ -9,6 +9,7 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  DataGridColumnHeadersFilter,
 } from '@mui/x-data-grid-pro';
 import {
   DataGridProVirtualScroller,
@@ -36,6 +37,7 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
         <GridHeader />
         <GridBody
           ColumnHeadersComponent={DataGridProColumnHeaders}
+          ColumnHeadersFilterComponent={DataGridColumnHeadersFilter}
           VirtualScrollerComponent={DataGridProVirtualScroller}
         >
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />

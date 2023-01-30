@@ -190,6 +190,13 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   renderHeader?: (params: GridColumnHeaderParams<R, V, F>) => React.ReactNode;
   /**
+   * Allows to render a component in the column header filter cell.
+   * @template R, V, F
+   * @param {GridColumnHeaderParams<R, V, F>} params Object containing parameters for the renderer.
+   * @returns {React.ReactNode} The element to be rendered.
+   */
+  renderHeaderFilter?: (params: GridColumnHeaderParams<R, V, F>) => React.ReactNode;
+  /**
    * Header cell element alignment.
    */
   headerAlign?: GridAlignment;

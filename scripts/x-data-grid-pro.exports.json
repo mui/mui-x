@@ -12,6 +12,7 @@
   { "name": "daDK", "kind": "Variable" },
   { "name": "DATA_GRID_PRO_PROPS_DEFAULT_VALUES", "kind": "Variable" },
   { "name": "DataGrid", "kind": "Function" },
+  { "name": "DataGridColumnHeadersFilter", "kind": "Variable" },
   { "name": "DataGridPremium", "kind": "Function" },
   { "name": "DataGridPro", "kind": "Variable" },
   { "name": "DataGridProProps", "kind": "Interface" },
