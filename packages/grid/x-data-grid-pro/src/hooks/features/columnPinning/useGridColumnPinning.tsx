@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   useGridSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -69,7 +70,7 @@ export const useGridColumnPinning = (
   >,
 ): void => {
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-
+  const theme = useTheme();
   // Each visible row (not to be confused with a filter result) is composed of a central .MuiDataGrid-row element
   // and up to two additional .MuiDataGrid-row's, one for the columns pinned to the left and another
   // for those on the right side. When hovering any of these elements, the :hover styles are applied only to
@@ -142,6 +143,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (!params.colIndex || (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0)) {
@@ -171,7 +173,7 @@ export const useGridColumnPinning = (
       }
       return initialValue;
     },
-    [apiRef, pinnedColumns, props.disableColumnPinning],
+    [apiRef, pinnedColumns, props.disableColumnPinning, theme.direction],
   );
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
@@ -195,6 +197,7 @@ export const useGridColumnPinning = (
       const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
         pinnedColumns,
         visibleColumnFields,
+        theme.direction === 'rtl',
       );
 
       if (leftPinnedColumns.length === 0 && rightPinnedColumns.length === 0) {
@@ -213,7 +216,7 @@ export const useGridColumnPinning = (
 
       return initialValue;
     },
-    [apiRef, pinnedColumns],
+    [apiRef, pinnedColumns, theme.direction],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
