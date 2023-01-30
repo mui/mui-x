@@ -11,7 +11,14 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 export default function ResponsiveDatePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'MobileDatePicker',
+          'DesktopDatePicker',
+          'StaticDatePicker',
+        ]}
+      >
         <DemoItem label="Desktop variant">
           <DesktopDatePicker defaultValue={dayjs('2022-04-07')} />
         </DemoItem>

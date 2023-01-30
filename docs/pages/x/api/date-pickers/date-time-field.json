@@ -97,7 +97,7 @@
     "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
   },
   "name": "DateTimeField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateTimeField" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateTimeField" },
   "filename": "/packages/x-date-pickers/src/DateTimeField/DateTimeField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-time-field/\">Date Time Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
   "packages": [

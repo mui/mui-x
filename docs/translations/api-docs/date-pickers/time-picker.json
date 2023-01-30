@@ -52,7 +52,7 @@
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "Field": "Component used to enter the date with the keyboard.",
     "InputAdornment": "Component displayed on the start or end input adornment used to open the picker on desktop.",
-    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar.",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
     "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
@@ -62,6 +62,7 @@
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",
+    "Shortcuts": "Custom component for the shortcuts.",
     "TextField": "Form control with an input to render the value inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }

@@ -73,6 +73,12 @@ This prop will be ignored on the mobile picker.
 
 {{"demo": "DateRangePickerCalendarProp.js"}}
 
+### Add shortcuts
+
+To simplify range selection, you can add [shortcuts](x/react-date-pickers/shortcuts/#range-shortcuts).
+
+{{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Custom input component
 
 You can customize the rendering of the input with the `TextField` component slot.

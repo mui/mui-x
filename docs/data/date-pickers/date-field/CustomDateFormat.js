@@ -10,7 +10,7 @@ export default function CustomDateFormat() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateField', 'DateField']}>
         <DateField
           label="Dash separator"
           value={value}
