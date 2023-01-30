@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  GridColDef,
-  GridColumnGroupingModel,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridColumnGroupingModel } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
