@@ -37,19 +37,19 @@ const isEnabled = () => true;
 
 export interface GridPanelWrapperProps
   extends React.PropsWithChildren<
-      React.HTMLAttributes<HTMLDivElement> & { TrapFocusProps: Omit<TrapFocusProps, 'open'> }
+      React.HTMLAttributes<HTMLDivElement> & { slotProps:any }
     >,
     MUIStyledCommonProps<Theme> {}
 
 const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
-    const { className, TrapFocusProps: TrapFocusPropsProps, ...other } = props;
+    const { className, slotProps, ...other } = props;
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
 
     return (
-      <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...TrapFocusPropsProps}>
+      <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...slotProps}>
         <GridPanelWrapperRoot
           ref={ref}
           tabIndex={-1}
