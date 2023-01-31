@@ -1368,8 +1368,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 - The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
-   // Same on all other pickers
-   <DatePicker
+   <LocalizationProvider
      localeText={{
   -    datePickerDefaultToolbarTitle: 'Date Picker',
   +    datePickerToolbarTitle: 'Date Picker',
