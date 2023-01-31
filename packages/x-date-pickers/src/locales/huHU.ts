@@ -1,7 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
-const huHPickers: Partial<PickersLocaleText<any>> = {
+const huHUPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Előző hónap',
   nextMonth: 'Következő hónap',
@@ -69,4 +69,4 @@ const huHPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'dd',
 };
 
-export const huH = getPickersLocalization(huHPickers);
+export const huH = getPickersLocalization(huHUPickers);
