@@ -283,6 +283,7 @@ TimePickerToolbar.propTypes = {
    */
   onViewChange: PropTypes.func.isRequired,
   readOnly: PropTypes.bool,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */

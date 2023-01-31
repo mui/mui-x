@@ -16,6 +16,7 @@ import { BaseFieldProps } from '../../models/fields';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
+  PickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
@@ -36,7 +37,7 @@ export interface UseMobilePickerSlotsComponent<TDate, TView extends DateOrTimeVi
   TextField?: React.ElementType<TextFieldProps>;
 }
 
-export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+export interface ExportedUseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
@@ -46,6 +47,10 @@ export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOr
   >;
   textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
 }
+
+export interface UseMobilePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends ExportedUseMobilePickerSlotsComponentsProps<TDate, TView>,
+    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,

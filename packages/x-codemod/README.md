@@ -87,13 +87,15 @@ The list includes these transformers
 
 - [`adapter-change-import`](#adapter-change-import)
 - [`view-components-rename`](#view-components-rename)
-- [`view-components-rename-value-prop`](#view-components-rename)
+- [`view-components-rename-value-prop`](#view-components-rename-value-prop)
 - [`localization-provider-rename-locale`](#localization-provider-rename-locale)
 - [`text-props-to-localeText`](#text-props-to-localeText)
-- [`replace-tabs-props](#replace-tabs-props)
+- [`replace-tabs-props`](#replace-tabs-props)
 - [`replace-toolbar-props-by-slot`](#replace-toolbar-props-by-slot)
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
+- [`rename-should-disable-time`](#rename-should-disable-time)
+- [`rename-inputFormat-prop`](#rename-inputFormat-prop)
 
 #### `adapter-change-import`
 
@@ -323,6 +325,36 @@ Replace `LeftArrowButton` and `RightArrowButton` slots for navigation buttons by
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/replace-arrows-button-slot <path>
+```
+
+#### `rename-should-disable-time`
+
+Replace `shouldDisableTime` by `shouldDisableClock`.
+
+```diff
+  <DateTimePicker
+-   shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
++   shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+  />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
+```
+
+#### `rename-inputFormat-prop`
+
+Replace `inputFormat` prop with `format`.
+
+```diff
+ <DatePicker
+-  inputFormat="YYYY"
++  format="YYYY"
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
 ```
 
 #### `rename-components-to-slots`
