@@ -157,7 +157,9 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       options: string[],
       queryValue: string,
     ): ReturnType<QueryApplier<TSection>> => {
-      const matchingValues = options.filter((month) => month.toLowerCase().startsWith(queryValue));
+      const matchingValues = options.filter((option) =>
+        option.toLowerCase().startsWith(queryValue),
+      );
 
       if (matchingValues.length === 0) {
         return { saveQuery: false };
@@ -278,12 +280,13 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       dateSectionName: MuiDateSectionName,
       format: string,
       hasTrailingZeroes: boolean,
+      contentType: 'digit' | 'letter',
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
       const sectionBoundaries = sectionsValueBoundaries[dateSectionName]({
         currentDate: activeDate,
         format,
-        contentType: 'digit',
+        contentType,
       });
 
       if (queryValueNumber > sectionBoundaries.maximum) {
@@ -320,6 +323,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           activeSection.dateSectionName,
           activeSection.formatValue,
           activeSection.hasTrailingZeroes,
+          activeSection.contentType,
         );
       }
 
@@ -331,6 +335,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           activeSection.dateSectionName,
           'MM',
           doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
+          'digit',
         );
 
         if (isQueryResponseWithoutValue(response)) {
@@ -357,6 +362,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           activeSection.dateSectionName,
           activeSection.formatValue,
           activeSection.hasTrailingZeroes,
+          activeSection.contentType,
         );
         if (isQueryResponseWithoutValue(response)) {
           return response;

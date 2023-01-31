@@ -432,7 +432,7 @@ export const doesSectionHaveTrailingZeros = <TDate>(
     return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
   }
 
-  // We can use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
+  // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
   if (dateSectionName === 'year') {
     return utils.formatByString(utils.setYear(utils.date()!, 1), format).length > 1;
   }
@@ -701,7 +701,7 @@ export const applyMeridiemChange = <TDate>(
  * @param {TDate} date The date on which the week day must be applied.
  * @param {string} sectionFormat The format of the week day section.
  * @param {string} sectionValue The new value of the week day section.
- * @returns {TDate} The date with the new meridiem.
+ * @returns {TDate} The date with the new week day.
  */
 export const applyWeekDayChange = <TDate>(
   utils: MuiPickersAdapter<TDate>,

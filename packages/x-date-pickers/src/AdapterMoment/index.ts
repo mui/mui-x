@@ -18,7 +18,10 @@ const formatTokenMap: MuiFormatTokenMap = {
   DD: 'day',
 
   // Day of the week
+  E: 'weekDay',
   e: 'weekDay',
+  d: 'weekDay',
+  dd: { sectionName: 'weekDay', contentType: 'letter' },
   ddd: { sectionName: 'weekDay', contentType: 'letter' },
   dddd: { sectionName: 'weekDay', contentType: 'letter' },
 
