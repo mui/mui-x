@@ -6,6 +6,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'کوئی قطاریں نہیں',
   noResultsOverlayLabel: 'کوئی نتائج نہیں',
+  errorOverlayDefaultLabel: 'ایک مسئلہ ہو گیا',
 
   // Density selector toolbar button text
   toolbarDensity: 'کثافت',
@@ -48,8 +49,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'نیا فلٹر',
   filterPanelDeleteIconLabel: 'ختم کریں',
-  filterPanelLogicOperator: 'لاجک آپریٹر',
-  filterPanelOperator: 'آپریٹر',
+  filterPanelLinkOperator: 'لاجک آپریٹر',
+  filterPanelOperators: 'آپریٹر',
+
+  // TODO v6: rename to filterPanelOperator
   filterPanelOperatorAnd: 'اور',
   filterPanelOperatorOr: 'یا',
   filterPanelColumns: 'کالمز',
@@ -79,7 +82,6 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'مینیو',
   columnMenuShowColumns: 'کالم دکھائیں',
-  columnMenuManageColumns: 'کالم مینج کریں',
   columnMenuFilter: 'فلٹر',
   columnMenuHideColumn: 'چھپائیں',
   columnMenuUnsort: 'sort ختم کریں',

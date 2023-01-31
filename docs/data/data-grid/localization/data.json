@@ -229,7 +229,7 @@
     "localeName": "Urdu (Pakistan)",
     "missingKeysCount": 0,
     "totalKeysCount": 93,
-    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/urPK.ts/"
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/grid/x-data-grid/src/locales/urPK.ts/"
   },
   {
     "languageTag": "vi-VN",
