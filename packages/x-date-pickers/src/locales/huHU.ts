@@ -69,4 +69,4 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   fieldMeridiemPlaceholder: () => 'dd',
 };
 
-export const huH = getPickersLocalization(huHUPickers);
+export const huHU = getPickersLocalization(huHUPickers);
