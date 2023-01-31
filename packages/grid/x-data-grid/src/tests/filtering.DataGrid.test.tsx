@@ -5,14 +5,9 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
-  getGridBooleanOperators,
-  getGridDateOperators,
-  getGridNumericOperators,
-  getGridSingleSelectOperators,
-  getGridStringOperators,
+  GridToolbarFilterButton,
   GridColDef,
   GridFilterItem,
-  GridFilterOperator,
   GridPreferencePanelsValue,
   GridToolbar,
 } from '@mui/x-data-grid';
@@ -1111,100 +1106,65 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('customized value displaying in the filter button tooltip works', () => {
-    it('should displayed filter button tooltip text matches getValueAsString call', () => {
-      const isMatch = (
-        item: GridFilterItem,
-        getValueAsString: NonNullable<GridFilterOperator['getValueAsString']>,
-      ) => {
-        const { value } = item;
-        const setFuncToOperator = (operator: GridFilterOperator) => ({
-          ...operator,
-          getValueAsString,
-        });
-
-        const { unmount } = render(
-          <TestCase
+  describe('custom `filterOperators`', () => {
+    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+      render(
+        <div style={{ width: '100%', height: '400px' }}>
+          <DataGrid
+            filterModel={{
+              items: [{ field: 'name', operator: 'contains', value: 'John' }],
+            }}
             rows={[
               {
+                id: 0,
+                name: 'John Doe',
+              },
+              {
                 id: 1,
-                brand: 'NIKE',
-                year: 1964,
-                status: 'offline',
-                isPublished: true,
-                lastOnline: new Date(2023, 1, 30),
+                name: 'Mike Smith',
               },
             ]}
             columns={[
               {
-                field: 'brand',
+                field: 'name',
                 type: 'string',
-                filterOperators: getGridStringOperators().map(setFuncToOperator),
-              },
-              {
-                field: 'year',
-                type: 'number',
-                filterOperators: getGridNumericOperators().map(setFuncToOperator),
-              },
-              {
-                field: 'status',
-                type: 'singleSelect',
-                filterOperators: getGridSingleSelectOperators().map(setFuncToOperator),
-              },
-              {
-                field: 'isPublished',
-                type: 'boolean',
-                filterOperators: getGridBooleanOperators().map(setFuncToOperator),
-              },
-              {
-                field: 'lastOnline',
-                type: 'dateTime',
-                filterOperators: getGridDateOperators().map(setFuncToOperator),
+                filterOperators: [
+                  {
+                    label: 'Contains',
+                    value: 'contains',
+                    getApplyFilterFn: (filterItem) => {
+                      return (params) => {
+                        if (
+                          !filterItem.field ||
+                          !filterItem.value ||
+                          !filterItem.operator ||
+                          !params.value
+                        ) {
+                          return null;
+                        }
+                        return params.value.includes(filterItem.value);
+                      };
+                    },
+                    getValueAsString: (value) => `"${value}" text string`,
+                  },
+                ],
               },
             ]}
-            filterModel={{
-              items: [item],
-            }}
-          />,
-        );
+            components={{ Toolbar: GridToolbarFilterButton }}
+          />
+        </div>,
+      );
 
-        const filterButton = document.querySelector('button[aria-label="Show filters"]');
-        fireEvent.mouseEnter(filterButton);
+      const filterButton = screen.getAllByRole('button', { name: 'Show filters' })[0];
+      expect(screen.queryByRole('tooltip')).to.equal(null);
 
-        const match = screen.findByText(getValueAsString(value)) !== null;
-        unmount();
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
 
-        return match;
-      };
+      const tooltip = screen.getByRole('tooltip');
 
-      expect(
-        isMatch(
-          { field: 'brand', operator: 'equals', value: 'NIKE' },
-          (value: string) => `«${value}»`,
-        ),
-      ).to.equal(true);
-      expect(
-        isMatch(
-          { field: 'year', operator: '=', value: 1964 },
-          (value: number) => `Formed in ${value} year`,
-        ),
-      ).to.equal(true);
-      expect(
-        isMatch(
-          { field: 'status', operator: 'is', value: 'offline' },
-          (value: string) => `Admin is ${value}`,
-        ),
-      ).to.equal(true);
-      expect(
-        isMatch({ field: 'isPublished', operator: 'is', value: true }, (value: boolean) =>
-          value ? 'yes' : 'no',
-        ),
-      ).to.equal(true);
-      expect(
-        isMatch({ field: 'lastOnline', operator: 'is', value: '2023-01-30' }, (value: string) =>
-          value.replace(/-/g, ' '),
-        ),
-      ).to.equal(true);
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('"John" text string');
     });
   });
 
