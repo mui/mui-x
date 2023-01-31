@@ -32,6 +32,7 @@ function App() {
           }} />
         <DateTimePicker
           shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+          format="YYYY-MM-DD HH:mm"
           components={{
             DesktopTransition: Fade,
           }}

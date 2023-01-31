@@ -32,6 +32,7 @@ function App() {
           TransitionComponent={Fade}
           DialogProps={{ backgroundColor: 'red' }}
           shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+          inputFormat="YYYY-MM-DD HH:mm"
         />
         <DateRangePicker
           ToolbarComponent={CustomToolbarComponent}

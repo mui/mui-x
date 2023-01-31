@@ -95,6 +95,7 @@ The list includes these transformers
 - [`migrate-to-components-componentsProps`](#migrate-to-components-componentsProps)
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 - [`rename-should-disable-time`](#rename-should-disable-time)
+- [`rename-inputFormat-prop`](#rename-inputFormat-prop)
 - [`rename-default-toolbar-title-localeText`](#rename-default-toolbar-title-localeText)
 
 #### `adapter-change-import`
@@ -342,6 +343,21 @@ Replace `shouldDisableTime` by `shouldDisableClock`.
 npx @mui/x-codemod v6.0.0/pickers/rename-should-disable-time <path>
 ```
 
+#### `rename-inputFormat-prop`
+
+Replace `inputFormat` prop with `format`.
+
+```diff
+ <DatePicker
+-  inputFormat="YYYY"
++  format="YYYY"
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
+```
+
 #### `rename-default-toolbar-title-localeText`
 
 Rename toolbar related translation keys, removing `Default` part from them to better fit their usage.
@@ -351,13 +367,10 @@ Rename toolbar related translation keys, removing `Default` part from them to be
    localeText={{
 -    datePickerDefaultToolbarTitle: 'Date Picker',
 +    datePickerToolbarTitle: 'Date Picker',
-
 -    timePickerDefaultToolbarTitle: 'Time Picker',
 +    timePickerToolbarTitle: 'Time Picker',
-
 -    dateTimePickerDefaultToolbarTitle: 'Date Time Picker',
 +    dateTimePickerToolbarTitle: 'Date Time Picker',
-
 -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
 +    dateRangePickerToolbarTitle: 'Date Range Picker',
    }}
