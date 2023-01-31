@@ -479,7 +479,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The toolbar related translation keys have been renamed to better fit their usage:
+- ✅ The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
    <LocalizationProvider
