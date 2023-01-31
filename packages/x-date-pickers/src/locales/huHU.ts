@@ -11,8 +11,8 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   openNextView: 'Következő nézet megnyitása',
   calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
-      ? 'az év választó már nyitva, válts a naptár nézetre'
-      : 'a naptár nézet már nyitva, válts az év-választóra',
+      ? 'az évválasztó már nyitva, váltson a naptárnézetre'
+      : 'a naptárnézet már nyitva, váltson az évválasztóra',
 
   // DateRange placeholders
   start: 'Kezdet',
@@ -28,7 +28,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   datePickerToolbarTitle: 'Dátum kiválasztása',
   dateTimePickerToolbarTitle: 'Dátum és idő kiválasztása',
   timePickerToolbarTitle: 'Idő kiválasztása',
-  dateRangePickerToolbarTitle: 'Dátum határok kiválasztása',
+  dateRangePickerToolbarTitle: 'Dátumhatárok kiválasztása',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -48,16 +48,16 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Válassz dátumot, a kiválasztott dátum: ${utils.format(value, 'fullDate')}`
-      : 'Válassz dátumot',
+      ? `Válasszon dátumot, a kiválasztott dátum: ${utils.format(value, 'fullDate')}`
+      : 'Válasszon dátumot',
   openTimePickerDialogue: (value, utils) =>
     value !== null && utils.isValid(value)
-      ? `Válassz időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
-      : 'Válassz időt',
+      ? `Válasszon időt, a kiválasztott idő: ${utils.format(value, 'fullTime')}`
+      : 'Válasszon időt',
 
   // Table labels
-  timeTableLabel: 'válassz időt',
-  dateTableLabel: 'válassz dátumot',
+  timeTableLabel: 'válasszon időt',
+  dateTableLabel: 'válasszon dátumot',
 
   // Field section placeholders
   fieldYearPlaceholder: (params) => 'É'.repeat(params.digitAmount),
