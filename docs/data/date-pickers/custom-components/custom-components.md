@@ -7,6 +7,11 @@ title: Date and Time pickers - Custom components
 
 <p class="description">The date picker lets users select a date from a menu.</p>
 
+:::info
+The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
+For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
+:::
+
 ## Overriding components
 
 You can override the internal elements of the component (known as "slots") using the `components` prop.
