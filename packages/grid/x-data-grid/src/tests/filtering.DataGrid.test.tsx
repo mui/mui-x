@@ -1155,7 +1155,7 @@ describe('<DataGrid /> - Filter', () => {
         </div>,
       );
 
-      const filterButton = screen.getAllByRole('button', { name: 'Show filters' })[0];
+      const filterButton = document.querySelector('button[aria-label="Show filters"]');;
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
       fireEvent.mouseOver(filterButton);
