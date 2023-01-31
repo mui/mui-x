@@ -27,28 +27,22 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     apiRef.current.unpinColumn(colDef.field);
     onClick(event);
   };
-  const renderLeftSideMenuItem = React.useCallback(
-    () => (
-      <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
-        <ListItemIcon>
-          <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
-      </MenuItem>
-    ),
-    [apiRef, rootProps, pinColumn],
+  const pinToLeftMenuItem = (
+    <MenuItem onClick={pinColumn(GridPinnedPosition.left)}>
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuPinLeftIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('pinToLeft')}</ListItemText>
+    </MenuItem>
   );
 
-  const renderRightSideMenuItem = React.useCallback(
-    () => (
-      <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
-        <ListItemIcon>
-          <rootProps.components.ColumnMenuPinRightIcon fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
-      </MenuItem>
-    ),
-    [apiRef, rootProps, pinColumn],
+  const pinToRightMenuItem = (
+    <MenuItem onClick={pinColumn(GridPinnedPosition.right)}>
+      <ListItemIcon>
+        <rootProps.components.ColumnMenuPinRightIcon fontSize="small" />
+      </ListItemIcon>
+      <ListItemText>{apiRef.current.getLocaleText('pinToRight')}</ListItemText>
+    </MenuItem>
   );
 
   if (!colDef) {
@@ -84,15 +78,15 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   if (theme.direction === 'rtl') {
     return (
       <React.Fragment>
-        {renderRightSideMenuItem()}
-        {renderLeftSideMenuItem()}
+        {pinToRightMenuItem}
+        {pinToLeftMenuItem}
       </React.Fragment>
     );
   }
   return (
     <React.Fragment>
-      {renderLeftSideMenuItem()}
-      {renderRightSideMenuItem()}
+      {pinToLeftMenuItem}
+      {pinToRightMenuItem}
     </React.Fragment>
   );
 }
