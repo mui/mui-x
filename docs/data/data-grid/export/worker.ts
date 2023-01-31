@@ -1,3 +1,3 @@
-import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/workers';
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
 
 setupExcelExportWebWorker();

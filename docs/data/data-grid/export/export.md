@@ -310,7 +310,7 @@ To start using web workers for the Excel export, first you need to create a file
 This file will be later used as the worker script, then it's important that it's accessible by a direct URL.
 
 ```tsx
-import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium/workers';
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
 
 setupExcelExportWebWorker();
 ```
@@ -333,8 +333,8 @@ apiRef.current.exportDataAsExcel({
 
 :::info
 If you are using Next.js or Webpack 5, use the following syntax instead.
-Make sure to pass the path to the worker script **relative** to the current file.
-It's not necessary to make the script public since [Webpack](https://webpack.js.org/guides/web-workers/) will automatically handle that for you.
+Make sure to pass the **relative path**, considering the current file, to the worker script.
+It is not necessary to make the script public since [Webpack](https://webpack.js.org/guides/web-workers/) will automatically handle that for you.
 
 ```tsx
 <GridToolbarExport
@@ -352,9 +352,9 @@ apiRef.current.exportDataAsExcel({
 
 :::
 
-Since that the main thread is not locked while the data is exported, it is important to give a feedback for users that something is in progress.
+Since the main thread is not locked while the data is exported, it is important to give feedback for users that something is in progress.
 You can pass a callback to the `onExcelExportStateChange` prop and display a message or loader.
-The following demo contains an example:
+The following demo contains an example using a [Snackbar](/material-ui/react-snackbar/):
 
 {{"demo": "ExcelExportWithWebWorker.js", "bg": "inline", "defaultCodeOpen": false}}
 
