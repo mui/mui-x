@@ -11,7 +11,13 @@ const theme = createTheme({});
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+      <LocalizationProvider
+        dateAdapter={AdapterDayjs}
+        adapterLocale="fr"
+        localeText={{
+          datePickerToolbarTitle: 'Pick a Date',
+        }}
+      >
         <DateCalendar
           value={null}
           onChange={() => {}}
