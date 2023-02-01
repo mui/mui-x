@@ -54,6 +54,15 @@ function GridActionsCell(props: GridActionsCellProps) {
   const buttonId = useId();
   const rootProps = useGridRootProps();
 
+  if (!hasActions(colDef)) {
+    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
+  }
+
+  const options = colDef.getActions(apiRef.current.getRowParams(id));
+  const iconButtons = options.filter((option) => !option.props.showInMenu);
+  const menuButtons = options.filter((option) => option.props.showInMenu);
+  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
+
   React.useLayoutEffect(() => {
     if (!hasFocus) {
       Object.entries(touchRippleRefs.current).forEach(([index, ref]) => {
@@ -90,21 +99,16 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          setFocusedButtonIndex(0);
+          if (theme.direction === 'rtl') {
+            setFocusedButtonIndex(numberOfButtons - 1);
+          } else {
+            setFocusedButtonIndex(0);
+          }
         }
       },
     }),
-    [],
+    [numberOfButtons, theme.direction],
   );
-
-  if (!hasActions(colDef)) {
-    throw new Error('MUI: Missing the `getActions` property in the `GridColDef`.');
-  }
-
-  const options = colDef.getActions(apiRef.current.getRowParams(id));
-  const iconButtons = options.filter((option) => !option.props.showInMenu);
-  const menuButtons = options.filter((option) => option.props.showInMenu);
-  const numberOfButtons = iconButtons.length + (menuButtons.length ? 1 : 0);
 
   React.useEffect(() => {
     if (focusedButtonIndex >= numberOfButtons) {
