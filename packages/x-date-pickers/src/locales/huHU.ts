@@ -33,7 +33,9 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   // Clock labels
   clockLabelText: (view, time, adapter) =>
     `${view} kiválasztása. ${
-      time === null ? 'Nincs idő kiválasztva' : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`
+      time === null
+        ? 'Nincs idő kiválasztva'
+        : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`
     }`,
   hoursClockNumberText: (hours) => `${hours} óra`,
   minutesClockNumberText: (minutes) => `${minutes} perc`,
