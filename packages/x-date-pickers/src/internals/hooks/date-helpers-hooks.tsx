@@ -3,7 +3,7 @@ import { useUtils } from './useUtils';
 import { PickerOnChangeFn } from './useViews';
 import { getMeridiem, convertToMeridiem } from '../utils/time-utils';
 
-interface MonthValidationOptions<TDate> {
+export interface MonthValidationOptions<TDate> {
   disablePast?: boolean;
   disableFuture?: boolean;
   minDate: TDate;

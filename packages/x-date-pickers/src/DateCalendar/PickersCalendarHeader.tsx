@@ -1,6 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Fade from '@mui/material/Fade';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import { SlotComponentProps, useSlotProps } from '@mui/base/utils';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import IconButton from '@mui/material/IconButton';
@@ -8,7 +9,6 @@ import SvgIcon from '@mui/material/SvgIcon';
 import { SlideDirection } from './PickersSlideTransition';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
 import { PickersFadeTransitionGroup } from './PickersFadeTransitionGroup';
-import { DateComponentValidationProps } from '../internals/hooks/validation/useDateValidation';
 import { ArrowDropDown } from '../internals/components/icons';
 import {
   PickersArrowSwitcher,
@@ -19,6 +19,7 @@ import {
 import {
   usePreviousMonthDisabled,
   useNextMonthDisabled,
+  MonthValidationOptions,
 } from '../internals/hooks/date-helpers-hooks';
 import { DateView } from '../internals/models';
 import {
@@ -64,7 +65,7 @@ export interface PickersCalendarHeaderSlotsComponentsProps<TDate>
 
 export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
-    DateComponentValidationProps<TDate> {
+    MonthValidationOptions<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -95,7 +96,18 @@ export interface PickersCalendarHeaderProps<TDate>
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
   labelId?: string;
+  /**
+   * Override or extend the styles applied to the component.
+   */
   classes?: Partial<PickersCalendarHeaderClasses>;
+  /**
+   * className applied to the root element.
+   */
+  className?: string;
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx?: SxProps<Theme>;
 }
 
 const useUtilityClasses = (ownerState: PickersCalendarHeaderOwnerState<any>) => {
@@ -180,10 +192,17 @@ const PickersCalendarHeaderSwitchViewIcon = styled(ArrowDropDown, {
   transform: 'rotate(0deg)',
 }));
 
+type PickersCalendarHeaderComponent = <TDate>(
+  props: PickersCalendarHeaderProps<TDate> & React.RefAttributes<HTMLButtonElement>,
+) => JSX.Element;
+
 /**
  * @ignore - do not document.
  */
-export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps<TDate>) {
+export const PickersCalendarHeader = React.forwardRef(function PickersCalendarHeader<TDate>(
+  inProps: PickersCalendarHeaderProps<TDate>,
+  ref: React.Ref<HTMLDivElement>,
+) {
   const localeText = useLocaleText<TDate>();
   const utils = useUtils<TDate>();
 
@@ -206,6 +225,8 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     reduceAnimations,
     views,
     labelId,
+    className,
+    ...other
   } = props;
 
   const ownerState = props;
@@ -269,7 +290,12 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   }
 
   return (
-    <PickersCalendarHeaderRoot ownerState={ownerState} className={classes.root}>
+    <PickersCalendarHeaderRoot
+      {...other}
+      ownerState={ownerState}
+      className={clsx(className, classes.root)}
+      ref={ref}
+    >
       <PickersCalendarHeaderLabelContainer
         role="presentation"
         onClick={handleToggleView}
@@ -313,4 +339,4 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
       </Fade>
     </PickersCalendarHeaderRoot>
   );
-}
+}) as PickersCalendarHeaderComponent;

@@ -47,6 +47,7 @@
     }
   },
   "slotDescriptions": {
+    "CalendarHeader": "",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "NextIconButton": "Button allowing to switch to the right view.",

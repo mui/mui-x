@@ -112,6 +112,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "CalendarHeader": { "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
     "Field": { "type": { "name": "elementType" } },

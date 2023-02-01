@@ -165,6 +165,7 @@
   { "name": "pickersCalendarHeaderClasses", "kind": "Variable" },
   { "name": "PickersCalendarHeaderClasses", "kind": "Interface" },
   { "name": "PickersCalendarHeaderClassKey", "kind": "TypeAlias" },
+  { "name": "PickersCalendarHeaderProps", "kind": "Interface" },
   { "name": "PickersComponentAgnosticLocaleText", "kind": "Interface" },
   { "name": "PickersComponentSpecificLocaleText", "kind": "Interface" },
   { "name": "PickersDay", "kind": "Variable" },

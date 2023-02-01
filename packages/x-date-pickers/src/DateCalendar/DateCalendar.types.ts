@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { SxProps } from '@mui/system';
 import { Theme } from '@mui/material/styles';
+import { SlotComponentProps } from '@mui/base';
 import {
+  PickersCalendarHeader,
+  PickersCalendarHeaderProps,
   PickersCalendarHeaderSlotsComponent,
   PickersCalendarHeaderSlotsComponentsProps,
 } from './PickersCalendarHeader';
@@ -27,11 +30,15 @@ import { ExportedMonthCalendarProps } from '../MonthCalendar/MonthCalendar.types
 
 export interface DateCalendarSlotsComponent<TDate>
   extends PickersCalendarHeaderSlotsComponent,
-    DayCalendarSlotsComponent<TDate> {}
+    DayCalendarSlotsComponent<TDate> {
+  CalendarHeader?: React.ElementType<PickersCalendarHeaderProps<TDate>>;
+}
 
 export interface DateCalendarSlotsComponentsProps<TDate>
   extends PickersCalendarHeaderSlotsComponentsProps<TDate>,
-    DayCalendarSlotsComponentsProps<TDate> {}
+    DayCalendarSlotsComponentsProps<TDate> {
+  calendarHeader?: SlotComponentProps<typeof PickersCalendarHeader, {}, DateCalendarProps<TDate>>;
+}
 
 export interface ExportedDateCalendarProps<TDate>
   extends ExportedDayCalendarProps,

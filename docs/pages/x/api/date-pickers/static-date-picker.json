@@ -96,6 +96,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "CalendarHeader": { "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },

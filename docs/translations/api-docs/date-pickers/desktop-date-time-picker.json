@@ -65,6 +65,7 @@
   "classDescriptions": {},
   "slotDescriptions": {
     "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "CalendarHeader": "",
     "Day": "Custom component for day.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/pickers-day/\">PickersDay</a> component.",
     "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
     "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",

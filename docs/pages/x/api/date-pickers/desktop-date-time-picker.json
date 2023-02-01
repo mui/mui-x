@@ -129,6 +129,7 @@
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
+    "CalendarHeader": { "type": { "name": "elementType" } },
     "Day": { "default": "PickersDay", "type": { "name": "elementType" } },
     "DesktopPaper": { "default": "PickersPopperPaper", "type": { "name": "elementType" } },
     "DesktopTransition": {
