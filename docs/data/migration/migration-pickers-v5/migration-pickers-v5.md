@@ -479,11 +479,11 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The toolbar related translation keys have been renamed to better fit their usage:
+- ✅ The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
-   <DatePicker
-    localeText={{
+   <LocalizationProvider
+     localeText={{
   -    datePickerDefaultToolbarTitle: 'Date Picker',
   +    datePickerToolbarTitle: 'Date Picker',
 
@@ -495,7 +495,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
   +    dateRangePickerToolbarTitle: 'Date Range Picker',
-    }}
+     }}
    />
   ```
 

@@ -516,7 +516,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
-    /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
+    /\\.\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
