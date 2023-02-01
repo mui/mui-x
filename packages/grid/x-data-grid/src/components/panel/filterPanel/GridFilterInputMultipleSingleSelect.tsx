@@ -18,7 +18,6 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'id'
       | 'filterOptions'
       | 'isOptionEqualToValue'
-      | 'limitTags'
       | 'multiple'
       | 'color'
     >,
@@ -132,7 +131,6 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   return (
     <Autocomplete<ValueOptions, true, false, true>
       multiple
-      limitTags={1}
       options={resolvedValueOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       filterOptions={filter}
