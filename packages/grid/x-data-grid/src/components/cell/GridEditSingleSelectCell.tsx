@@ -7,7 +7,7 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridEditModes } from '../../models/gridEditRowModel';
-import { GridSingleSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import { ValueOptions } from '../../models/colDef/gridColDef';
 import {
   getLabelFromValueOption,
   getValueFromValueOptions,
@@ -74,23 +74,28 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (isSingleSelectColDef(colDef)) {
-    resolvedColumn = colDef;
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current?.focus();
+    }
+  }, [hasFocus]);
+
+  if (!isSingleSelectColDef(colDef)) {
+    return null;
   }
 
   let valueOptions: Array<ValueOptions> | undefined;
-  if (typeof resolvedColumn?.valueOptions === 'function') {
-    valueOptions = resolvedColumn?.valueOptions({ id, row, field });
+  if (typeof colDef?.valueOptions === 'function') {
+    valueOptions = colDef?.valueOptions({ id, row, field });
   } else {
-    valueOptions = resolvedColumn?.valueOptions;
+    valueOptions = colDef?.valueOptions;
+  }
+
+  if (!valueOptions) {
+    return null;
   }
 
   const handleChange: SelectProps['onChange'] = async (event) => {
-    if (!valueOptions) {
-      return;
-    }
-
     setOpen(false);
     const target = event.target as HTMLInputElement;
     // NativeSelect casts the value to a string.
@@ -120,17 +125,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     setOpen(true);
   };
 
-  useEnhancedEffect(() => {
-    if (hasFocus) {
-      inputRef.current.focus();
-    }
-  }, [hasFocus]);
-
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
-
-  if (!valueOptions) {
-    return null;
-  }
 
   return (
     <rootProps.components.BaseSelect
