@@ -9,7 +9,8 @@
     "packages/grid/x-data-grid-premium",
     "packages/grid/x-data-grid-generator",
     "packages/x-date-pickers",
-    "packages/x-date-pickers-pro"
+    "packages/x-date-pickers-pro",
+    "packages/x-charts"
   ],
   "publishDirectory": {
     "@mui/x-license-pro": "packages/x-license-pro/build",
@@ -18,7 +19,8 @@
     "@mui/x-data-grid-premium": "packages/grid/x-data-grid-premium/build",
     "@mui/x-data-grid-generator": "packages/grid/x-data-grid-generator/build",
     "@mui/x-date-pickers": "packages/x-date-pickers/build",
-    "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build"
+    "@mui/x-date-pickers-pro": "packages/x-date-pickers-pro/build",
+    "@mui/x-charts": "packages/x-charts/build"
   },
   "sandboxes": [
     "new",

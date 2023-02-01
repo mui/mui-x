@@ -76,6 +76,7 @@ ponyfillGlobal.muiDocConfig = {
       '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
       '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+      '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       'date-fns': 'latest',
       exceljs: 'latest',
     };
