@@ -96,6 +96,7 @@ The list includes these transformers
 - [`replace-arrows-button-slot`](#replace-arrows-button-slot)
 - [`rename-should-disable-time`](#rename-should-disable-time)
 - [`rename-inputFormat-prop`](#rename-inputFormat-prop)
+- [`rename-default-toolbar-title-localeText`](#rename-default-toolbar-title-localeText)
 
 #### `adapter-change-import`
 
@@ -355,6 +356,29 @@ Replace `inputFormat` prop with `format`.
 
 ```sh
 npx @mui/x-codemod v6.0.0/pickers/rename-inputFormat-prop <path>
+```
+
+#### `rename-default-toolbar-title-localeText`
+
+Rename toolbar related translation keys, removing `Default` part from them to better fit their usage.
+
+```diff
+ <LocalizationProvider
+   localeText={{
+-    datePickerDefaultToolbarTitle: 'Date Picker',
++    datePickerToolbarTitle: 'Date Picker',
+-    timePickerDefaultToolbarTitle: 'Time Picker',
++    timePickerToolbarTitle: 'Time Picker',
+-    dateTimePickerDefaultToolbarTitle: 'Date Time Picker',
++    dateTimePickerToolbarTitle: 'Date Time Picker',
+-    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
++    dateRangePickerToolbarTitle: 'Date Range Picker',
+   }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
 #### `rename-components-to-slots`

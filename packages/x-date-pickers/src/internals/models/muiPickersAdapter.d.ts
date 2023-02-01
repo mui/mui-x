@@ -22,6 +22,7 @@ export type MuiDateSectionName =
   | 'year'
   | 'month'
   | 'day'
+  | 'weekDay'
   | 'hours'
   | 'minutes'
   | 'seconds'
