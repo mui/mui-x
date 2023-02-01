@@ -1,6 +1,13 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
 
+// maps TimeView to its translation
+const timeViews = {
+  hours: 'Óra',
+  minutes: 'Perc',
+  seconds: 'Másodperc',
+};
+
 const huHUPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Előző hónap',
@@ -32,14 +39,14 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
-    `${view} kiválasztása. ${
+    `${timeViews[view] ?? view} kiválasztása. ${
       time === null
-        ? 'Nincs idő kiválasztva'
+        ? 'Nincs kiválasztva idő'
         : `A kiválasztott idő ${adapter.format(time, 'fullTime')}`
     }`,
-  hoursClockNumberText: (hours) => `${hours} óra`,
-  minutesClockNumberText: (minutes) => `${minutes} perc`,
-  secondsClockNumberText: (seconds) => `${seconds} másodperc`,
+  hoursClockNumberText: (hours) => `${hours} ${timeViews.hours.toLowerCase()}`,
+  minutesClockNumberText: (minutes) => `${minutes} ${timeViews.minutes.toLowerCase()}`,
+  secondsClockNumberText: (seconds) => `${seconds}  ${timeViews.seconds.toLowerCase()}`,
 
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Hét',
