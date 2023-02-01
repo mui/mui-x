@@ -101,8 +101,9 @@ StaticDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * The default position in the range being editing value.
+   * The position in the range (start or end date) edited on mount.
    * Used when the component is not controlled.
+   * @default 'start'
    */
   defaultRangePosition: PropTypes.oneOf(['end', 'start']),
   /**
@@ -209,7 +210,7 @@ StaticDateRangePicker.propTypes = {
    */
   onRangePositionChange: PropTypes.func,
   /**
-   * The position in the range being edited.
+   * The position in the range (start or end date) currently edited.
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),

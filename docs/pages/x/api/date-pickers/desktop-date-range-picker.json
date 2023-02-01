@@ -28,7 +28,8 @@
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
     "defaultRangePosition": {
-      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" }
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'start'"
     },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },

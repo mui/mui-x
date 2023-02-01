@@ -4,13 +4,14 @@ import { RangePosition } from '../models/range';
 
 export interface UseRangePositionProps {
   /**
-   * The position in the range being edited.
+   * The position in the range (start or end date) currently edited.
    * Used when the component position is controlled.
    */
   rangePosition?: RangePosition;
   /**
-   * The default position in the range being editing value.
+   * The position in the range (start or end date) edited on mount.
    * Used when the component is not controlled.
+   * @default 'start'
    */
   defaultRangePosition?: RangePosition;
   /**
@@ -27,8 +28,8 @@ export interface UseRangePositionResponse {
 
 export const useRangePosition = (props: UseRangePositionProps): UseRangePositionResponse => {
   const [rangePosition, setRangePosition] = useControlled({
-    name: 'MonthCalendar',
-    state: 'value',
+    name: 'useRangePosition',
+    state: 'rangePosition',
     controlled: props.rangePosition,
     default: props.defaultRangePosition ?? 'start',
   });
