@@ -49,7 +49,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
     const classes = useUtilityClasses(ownerState);
 
     return (
-      <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...slotProps}>
+      <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
         <GridPanelWrapperRoot
           ref={ref}
           tabIndex={-1}
