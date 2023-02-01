@@ -137,9 +137,12 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
-export type FieldSectionsValueBoundaries<TDate, TSection extends FieldSection> = Record<
+export type FieldSectionsValueBoundaries<TDate> = Record<
   MuiDateSectionName,
-  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+  (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
+    minimum: number;
+    maximum: number;
+  }
 >;
 
 export type FieldChangeHandler<TValue, TError> = (

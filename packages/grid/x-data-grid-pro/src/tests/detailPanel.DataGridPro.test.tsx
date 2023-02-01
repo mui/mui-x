@@ -653,4 +653,22 @@ describe('<DataGridPro /> - Detail panel', () => {
       });
     });
   });
+
+  it('should merge row styles when expanded', () => {
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 0}
+        nbRows={1}
+        getDetailPanelContent={() => <div />}
+        componentsProps={{
+          row: { style: { color: 'yellow' } },
+        }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+    expect(getRow(0)).toHaveInlineStyle({
+      color: 'yellow',
+      marginBottom: '0px', // added when expanded
+    });
+  });
 });

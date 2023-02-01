@@ -10,7 +10,7 @@ const timeViews = {
   seconds: 'Sekundy',
 };
 
-const csCZPickers: PickersLocaleText<any> = {
+const csCZPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Další měsíc',
   nextMonth: 'Předchozí month',
@@ -72,6 +72,7 @@ const csCZPickers: PickersLocaleText<any> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
