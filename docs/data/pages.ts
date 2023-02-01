@@ -235,8 +235,15 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
-      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
-      { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+      {
+        pathname: '/x/react-date-pickers/visual-customization',
+        title: 'Visual customization',
+        children: [
+          { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
+          { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+          { pathname: '/x/react-date-pickers/shortcuts', title: 'Shortcuts' },
+        ],
+      },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
@@ -319,6 +326,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
+          { pathname: '/x/api/date-pickers/pickers-shortcuts', title: 'PickersShortcuts' },
           {
             pathname: '/x/api/date-pickers/single-input-date-range-field',
             title: 'SingleInputDateRangeField',

@@ -42,7 +42,14 @@ Label.propTypes = {
 export default function CommonlyUsedComponents() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'TimePicker',
+          'DateTimePicker',
+          'DateRangePicker',
+        ]}
+      >
         <DemoItem label={<Label componentName="DatePicker" valueType="date" />}>
           <DatePicker />
         </DemoItem>
@@ -62,6 +69,7 @@ export default function CommonlyUsedComponents() {
               isProOnly
             />
           }
+          component="DateRangePicker"
         >
           <DateRangePicker />
         </DemoItem>

@@ -9,11 +9,11 @@ import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 import { UsePickerParams } from '../usePicker';
 import { UsePickerViewsProps } from '../usePicker/usePickerViews';
 
-export interface UseStaticPickerSlotsComponent<TValue, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<TValue, TView> {}
+export interface UseStaticPickerSlotsComponent<TDate, TView extends DateOrTimeView>
+  extends ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {}
 
 export interface UseStaticPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {}
+  extends ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {}
 
 export interface StaticOnlyPickerProps {
   /**
@@ -39,7 +39,7 @@ export interface UseStaticPickerProps<
    * @default {}
    * @deprecated Please use `slots`.
    */
-  components?: UseStaticPickerSlotsComponent<TDate | null, TView>;
+  components?: UseStaticPickerSlotsComponent<TDate, TView>;
   /**
    * The props used for each component slot.
    * @default {}

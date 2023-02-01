@@ -83,6 +83,19 @@ There are many components available, each fitting specific use cases. Use the fo
 
 {{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
 
+## Accessibility
+
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
+This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
+A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
+
+- Use `toolbar` id if the toolbar is visible;
+- Use the id of the input label if the toolbar is hidden;
+
+:::info
+Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` `slotProps` in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
+:::
+
 ## TypeScript
 
 In order to benefit from the [CSS overrides](/material-ui/customization/theme-components/#global-style-overrides) and [default prop customization](/material-ui/customization/theme-components/#default-props) with the theme, TypeScript users need to import the following types.

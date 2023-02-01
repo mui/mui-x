@@ -19,7 +19,9 @@ const isWeekend = (date) => {
 export default function DateValidationShouldDisableDate() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={['DatePicker', 'DateTimePicker', 'DateRangePicker']}
+      >
         <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={nextSunday}
@@ -34,7 +36,7 @@ export default function DateValidationShouldDisableDate() {
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker">
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker
             defaultValue={[lastMonday, nextSunday]}
             shouldDisableDate={isWeekend}

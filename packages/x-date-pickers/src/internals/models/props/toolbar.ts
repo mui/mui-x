@@ -19,6 +19,7 @@ export interface BaseToolbarProps<TValue, TView extends DateOrTimeView>
   views: readonly DateOrTimeView[];
   disabled?: boolean;
   readOnly?: boolean;
+  titleId?: string;
 }
 
 export interface ExportedBaseToolbarProps {
