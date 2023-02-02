@@ -175,8 +175,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     onMonthChange,
     defaultCalendarMonth,
     rangePosition: rangePositionProp,
-    defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp,
+    defaultRangePosition: inDefaultRangePosition,
+    onRangePositionChange: inOnRangePositionChange,
     calendars,
     components,
     componentsProps,
@@ -208,8 +208,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
 
   const { rangePosition, onRangePositionChange } = useRangePosition({
     rangePosition: rangePositionProp,
-    defaultRangePosition: defaultRangePositionProp,
-    onRangePositionChange: onRangePositionChangeProp,
+    defaultRangePosition: inDefaultRangePosition,
+    onRangePositionChange: inOnRangePositionChange,
   });
 
   const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
@@ -609,7 +609,7 @@ DateRangeCalendar.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * The position in the range (start or end date) edited on mount.
+   * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'
    */
@@ -693,7 +693,7 @@ DateRangeCalendar.propTypes = {
    */
   onRangePositionChange: PropTypes.func,
   /**
-   * The position in the range (start or end date) currently edited.
+   * The position in the currently edited date range.
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),

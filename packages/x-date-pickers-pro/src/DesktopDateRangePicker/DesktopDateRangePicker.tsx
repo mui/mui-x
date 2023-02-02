@@ -113,7 +113,7 @@ DesktopDateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
-   * The position in the range (start or end date) edited on mount.
+   * The initial position in the edited date range.
    * Used when the component is not controlled.
    * @default 'start'
    */
@@ -247,7 +247,7 @@ DesktopDateRangePicker.propTypes = {
    */
   open: PropTypes.bool,
   /**
-   * The position in the range (start or end date) currently edited.
+   * The position in the currently edited date range.
    * Used when the component position is controlled.
    */
   rangePosition: PropTypes.oneOf(['end', 'start']),
