@@ -207,4 +207,24 @@ describe('<DateField /> - Selection', () => {
       expect(getCleanedSelectedContent(input)).to.equal('MM');
     });
   });
+
+  describe('key: Tab', () => {
+    it('should move selection to the next section when one section is selected', () => {
+      render(<DateField />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 'MM');
+      expect(getCleanedSelectedContent(input)).to.equal('MM');
+      userEvent.keyPress(input, { key: 'Tab' });
+      expect(getCleanedSelectedContent(input)).to.equal('DD');
+    });
+
+    it('should move selection to the previous section when one section is selected and Shift is pressed', () => {
+      render(<DateField />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 'DD');
+      expect(getCleanedSelectedContent(input)).to.equal('DD');
+      userEvent.keyPress(input, { key: 'Tab', shiftKey: true });
+      expect(getCleanedSelectedContent(input)).to.equal('MM');
+    });
+  });
 });
