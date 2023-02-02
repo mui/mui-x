@@ -12,8 +12,8 @@ export interface PickersProComponentsPropsList {
   MuiDateRangeCalendar: DateRangeCalendarProps<unknown>;
   MuiDateRangePickerDay: DateRangePickerDayProps<unknown>;
   MuiDateRangePickerToolbar: DateRangePickerToolbarProps<unknown>;
-  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown, unknown>;
-  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown, unknown>;
+  MuiMultiInputDateRangeField: MultiInputDateRangeFieldProps<unknown>;
+  MuiSingleInputDateRangeField: SingleInputDateRangeFieldProps<unknown>;
 
   // Date Range Pickers
   MuiDateRangePicker: DateRangePickerProps<unknown>;
