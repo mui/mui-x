@@ -7,8 +7,16 @@ export interface PickersProComponentNameToClassKey {
   MuiDateRangeCalendar: DateRangeCalendarClassKey;
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
   MuiDateRangePickerToolbar: DateRangePickerToolbarClassKey;
+
+  // Multi input range fields
   MuiMultiInputDateRangeField: never;
+  MuiMultiInputDateTimeRangeField: never;
+  MuiMultiInputTimeRangeField: never;
+
+  // Single input range fields
   MuiSingleInputDateRangeField: never;
+  MuiSingleInputDateTimeRangeField: never;
+  MuiSingleInputTimeRangeField: never;
   
   // Date Range Pickers
   MuiDateRangePicker: never;

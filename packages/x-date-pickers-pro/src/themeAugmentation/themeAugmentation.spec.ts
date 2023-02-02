@@ -62,6 +62,8 @@ createTheme({
         },
       },
     },
+
+    // Multi input range fields
     MuiMultiInputDateRangeField: {
       defaultProps: {
         disabled: true,
@@ -69,10 +71,40 @@ createTheme({
         someRandomProp: true,
       },
     },
+    MuiMultiInputDateTimeRangeField: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiMultiInputDateTimeRangeField prop
+        someRandomProp: true,
+      },
+    },
+    MuiMultiInputTimeRangeField: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiMultiInputTimeRangeField prop
+        someRandomProp: true,
+      },
+    },
+
+    // Single input range fields
     MuiSingleInputDateRangeField: {
       defaultProps: {
         disabled: true,
         // @ts-expect-error invalid MuiSingleInputDateRangeField prop
+        someRandomProp: true,
+      },
+    },
+    MuiSingleInputDateTimeRangeField: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiSingleInputDateTimeRangeField prop
+        someRandomProp: true,
+      },
+    },
+    MuiSingleInputTimeRangeField: {
+      defaultProps: {
+        disabled: true,
+        // @ts-expect-error invalid MuiSingleInputTimeRangeField prop
         someRandomProp: true,
       },
     },
