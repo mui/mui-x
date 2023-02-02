@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { DataGrid, GridColumnMenuSortItem } from '@mui/x-data-grid';
 
-function App({ column, hideMenu }) {
+function App({ column, hideMenu, apiRef }) {
+  const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator');
   return (
     <React.Fragment>
       <DataGrid disableMultipleRowSelection showCellVerticalBorder pageSizeOptions={[5]} />

@@ -8,9 +8,14 @@ const renamedIdentifiers = {
   linkOperators: 'logicOperators',
   setFilterLinkOperator: 'setFilterLogicOperator',
 };
+
 const renamedLiterals = {
   filterPanelLinkOperator: 'filterPanelLogicOperator',
-  '& .MuiDataGrid-filterFormLinkOperatorInput': '& .MuiDataGrid-filterFormLogicOperatorInput',
+};
+
+const renamedClasses = {
+  'MuiDataGrid-filterFormLinkOperatorInput': 'MuiDataGrid-filterFormLogicOperatorInput',
+  'MuiDataGrid-withBorder': 'MuiDataGrid-withBorderColor',
 };
 
 const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
@@ -32,8 +37,8 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
 
   if (matchingImports.length > 0) {
     // Rename the identifiers
-    // - import { gridSelectionStateSelector } from '@mui/x-data-grid'
-    // + import { gridRowSelectionStateSelector } from '@mui/x-data-grid'
+    // - import { linkOperatorInputProps } from '@mui/x-data-grid'
+    // + import { logicOperatorInputProps } from '@mui/x-data-grid'
     root
       .find(j.Identifier)
       .filter((path) => !!renamedIdentifiers[path.node.name])
@@ -46,6 +51,30 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
       .find(j.Literal)
       .filter((path) => !!renamedLiterals[path.node.value as any])
       .replaceWith((path) => j.literal(renamedLiterals[path.node.value as any]));
+
+    // Rename the classes
+    // - 'MuiDataGrid-filterFormLinkOperatorInput'
+    // + 'MuiDataGrid-filterFormLogicOperatorInput'
+    root
+      .find(j.Literal)
+      .filter(
+        (path) =>
+          !!Object.keys(renamedClasses).find((className) => {
+            const literal = path.node.value as any;
+            return (
+              typeof literal === 'string' &&
+              literal.includes(className) &&
+              !literal.includes(renamedClasses[className])
+            );
+          }),
+      )
+      .replaceWith((path) => {
+        const literal = path.node.value as any;
+        const targetClassKey = Object.keys(renamedClasses).find((className) =>
+          literal.includes(className),
+        )!;
+        return j.literal(literal.replace(targetClassKey, renamedClasses[targetClassKey]));
+      });
   }
 
   return root.toSource(printOptions);
