@@ -4,6 +4,9 @@ import { DataGrid, SortGridMenuItems, useGridSelector, gridSelectionStateSelecto
 function App({ column, hideMenu, apiRef, handleEvent }) {
   apiRef.current.subscribeEvent('selectionChange', handleEvent);
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+  const handleCellFocusOut = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
   return (
     <React.Fragment>
       <DataGrid
@@ -11,6 +14,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
         showCellRightBorder
         disableExtendRowFullWidth
         rowsPerPageOptions={[5]}
+        onCellFocusOut={handleCellFocusOut}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>

@@ -2,9 +2,10 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { DataGridPro, GridEventListener } from '@mui/x-data-grid-pro';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
+import { someCustomEvent } from 'my-awesome-library';
 
 function App() {
-  const handleCellFocusOut: GridEventListener<'cellFocusOut'> = (params, event) => {
+  const handleCellFocusOut = (params, event) => {
     event.defaultMuiPrevented = true;
   };
   return (
@@ -18,18 +19,17 @@ function App() {
               const rowId = cell.parentElement.getAttribute('data-id');
             },
           },
-        }}
-      />
-      <DataGridPro 
+        }} />
+      <DataGridPro
         componentsProps={{
           cell: {
             onBlur: handleCellFocusOut,
           },
         }} />
-      <DataGridPro 
+      <DataGridPremium
         componentsProps={{
           cell: {
-            onBlur: handleCellFocusOut,
+            onBlur: someCustomEvent,
           },
         }} />
     </React.Fragment>
