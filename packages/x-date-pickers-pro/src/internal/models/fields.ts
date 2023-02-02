@@ -8,6 +8,7 @@ import {
   FieldSection,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
+
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
 }
