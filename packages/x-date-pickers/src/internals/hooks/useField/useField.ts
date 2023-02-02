@@ -264,6 +264,39 @@ export const useField = <
         break;
       }
 
+      // Move selection to previous or next section
+      case event.key === 'Tab': {
+        // No section is selected: should never happen
+        if (selectedSectionIndexes == null) {
+          break;
+        }
+
+        const isReversed = event.shiftKey;
+
+        // The selection reaches the last section, we let the browser handle the Tab and move to the next item.
+        if (!isReversed && selectedSectionIndexes.endIndex === state.sections.length - 1) {
+          break;
+        }
+
+        // The selection reaches the first section, we let the browser handle the Tab and move to the previous item.
+
+        if (isReversed && selectedSectionIndexes.startIndex === 0) {
+          break;
+        }
+
+        event.preventDefault();
+
+        const nextSectionIndex = isReversed
+          ? sectionOrder.neighbors[selectedSectionIndexes.startIndex].leftIndex
+          : sectionOrder.neighbors[selectedSectionIndexes.endIndex].rightIndex;
+
+        if (nextSectionIndex !== null) {
+          setSelectedSections(nextSectionIndex);
+        }
+
+        break;
+      }
+
       // Reset the value of the selected section
       case ['Backspace', 'Delete'].includes(event.key): {
         event.preventDefault();
