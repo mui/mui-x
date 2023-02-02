@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## v5.17.22
+
+_Feb 2, 2023_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Urdu (ur-PK) locale
+- 🌍 Improve French (fr-FR) and Italian (it-IT) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.22` / `@mui/x-data-grid-pro@v5.17.22` / `@mui/x-data-grid-premium@v5.17.22`
+
+#### Changes
+
+- [DataGrid] Fix an error when deleting pinned row using the buttons in the `actions` column (#7767) @cherniavskii
+- [DataGrid] Fix print preview regression in Chrome browser (#7405) @cherniavskii
+- [l10n] Add Urdu (ur-PK) locale (#7778) @MBilalShafi
+- [l10n] Improve French (fr-FR) locale (#7795) @Vivek-Prajapatii
+
+### `@mui/x-date-pickers@v5.0.17` / `@mui/x-date-pickers-pro@v5.0.17`
+
+#### Changes
+
+- [TimePicker] Add missing `themeAugmentation` entry (#7732) @LukasTy
+- [l10n] Improve Italian (it-IT) locale (#7761) @simonecervini
+
 ## v5.17.21
 
 _Jan 27, 2023_
