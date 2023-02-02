@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix an error when deleting pinned row using actions column button (#7767) @cherniavskii
+- [DataGrid] Fix an error when deleting pinned row using the buttons in the `actions` column (#7767) @cherniavskii
 - [DataGrid] Fix print preview regression in Chrome browser (#7405) @cherniavskii
 - [l10n] Add Urdu (ur-PK) locale (#7778) @MBilalShafi
 - [l10n] Improve French (fr-FR) locale (#7795) @Vivek-Prajapatii
