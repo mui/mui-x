@@ -72,6 +72,7 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'É'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'HHHH' : 'HH'),
   fieldDayPlaceholder: () => 'NN',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'óó',
   fieldMinutesPlaceholder: () => 'pp',
   fieldSecondsPlaceholder: () => 'mm',
