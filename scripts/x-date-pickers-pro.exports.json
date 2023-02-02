@@ -120,6 +120,7 @@
   { "name": "getPickersDayUtilityClass", "kind": "Function" },
   { "name": "getTimeClockUtilityClass", "kind": "Function" },
   { "name": "getYearCalendarUtilityClass", "kind": "Function" },
+  { "name": "huHU", "kind": "Variable" },
   { "name": "isIS", "kind": "Variable" },
   { "name": "itIT", "kind": "Variable" },
   { "name": "jaJP", "kind": "Variable" },

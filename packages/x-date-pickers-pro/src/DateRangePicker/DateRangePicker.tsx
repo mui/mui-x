@@ -78,6 +78,12 @@ DateRangePicker.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The initial position in the edited date range.
+   * Used when the component is not controlled.
+   * @default 'start'
+   */
+  defaultRangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * The default value.
    * Used when the component is not controlled.
    */
@@ -197,6 +203,11 @@ DateRangePicker.propTypes = {
    */
   onOpen: PropTypes.func,
   /**
+   * Callback fired when the range position changes.
+   * @param {RangePosition} rangePosition The new range position.
+   */
+  onRangePositionChange: PropTypes.func,
+  /**
    * Callback fired when the selected sections change.
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
@@ -206,6 +217,11 @@ DateRangePicker.propTypes = {
    * @default false
    */
   open: PropTypes.bool,
+  /**
+   * The position in the currently edited date range.
+   * Used when the component position is controlled.
+   */
+  rangePosition: PropTypes.oneOf(['end', 'start']),
   readOnly: PropTypes.bool,
   /**
    * Disable heavy animations.
@@ -228,7 +244,17 @@ DateRangePicker.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,

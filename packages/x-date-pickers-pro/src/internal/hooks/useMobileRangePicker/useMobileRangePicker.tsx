@@ -23,8 +23,9 @@ import {
 } from './useMobileRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -51,7 +52,7 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
   const labelId = useId();
   const contextLocaleText = useLocaleText();
 
@@ -75,7 +76,7 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
   });
 
@@ -88,7 +89,7 @@ export const useMobileRangePicker = <
     disableOpenPicker,
     localeText,
     rangePosition,
-    onRangePositionChange: setRangePosition,
+    onRangePositionChange,
   });
 
   const Field = slots.field;
@@ -170,7 +171,7 @@ export const useMobileRangePicker = <
       ...innerSlotProps?.toolbar,
       titleId: labelId,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
 
