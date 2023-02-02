@@ -32,6 +32,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [fields] Support week day formats (#7392) @flaviendelangle
 - [pickers] Allow to initialize and control the `rangePosition` on all range components (#7764) @flaviendelangle
 - [pickers] Hide scrollbars in the date calendar container (#7766) @Vivek-Prajapatii
+- [pickers] Remove the dependency on `rifm` (#7785) @alexfauquette
 
 ### `@mui/x-codemod@v6.0.0-beta.2`
 
@@ -49,9 +50,8 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 ### Core
 
-- [core] Bump `loader-utils` (#7735) @LukasTy
+- [core] Fix l10n data file (#7804) @flaviendelangle
 - [core] Fix Next.js warning (#7754) @oliviertassinari
-- [core] Remove `rifm` dependency (#7785) @alexfauquette
 - [core] Remove unused demos (#7758) @flaviendelangle
 
 ## 6.0.0-beta.1
