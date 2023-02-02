@@ -31,9 +31,10 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - [fields] Support week day formats (#7392) @flaviendelangle
 - [pickers] Allow to initialize and control the `rangePosition` on all range components (#7764) @flaviendelangle
+- [pickers] Fix theme augmentation (#7800) @LukasTy
 - [pickers] Hide scrollbars in the date calendar container (#7766) @Vivek-Prajapatii
 - [pickers] Remove the dependency on `rifm` (#7785) @alexfauquette
-
+- 
 ### `@mui/x-codemod@v6.0.0-beta.2`
 
 #### Changes
@@ -2071,6 +2072,32 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## v5.17.22
+
+_Feb 2, 2023_
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Urdu (ur-PK) locale
+- 🌍 Improve French (fr-FR) and Italian (it-IT) locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.22` / `@mui/x-data-grid-pro@v5.17.22` / `@mui/x-data-grid-premium@v5.17.22`
+
+#### Changes
+
+- [DataGrid] Fix an error when deleting pinned row using the buttons in the `actions` column (#7767) @cherniavskii
+- [DataGrid] Fix print preview regression in Chrome browser (#7405) @cherniavskii
+- [l10n] Add Urdu (ur-PK) locale (#7778) @MBilalShafi
+- [l10n] Improve French (fr-FR) locale (#7795) @Vivek-Prajapatii
+
+### `@mui/x-date-pickers@v5.0.17` / `@mui/x-date-pickers-pro@v5.0.17`
+
+#### Changes
+
+- [TimePicker] Add missing `themeAugmentation` entry (#7732) @LukasTy
+- [l10n] Improve Italian (it-IT) locale (#7761) @simonecervini
 
 ## v5.17.21
 
