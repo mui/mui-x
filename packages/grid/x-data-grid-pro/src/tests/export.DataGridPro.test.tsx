@@ -481,7 +481,9 @@ describe('<DataGridPro /> - Export', () => {
         );
       }
       render(<TestCaseCSVExport />);
-      expect(apiRef.current.getDataAsCsv()).to.equal(['id,isAdmin', '0,Yes', '1,No'].join('\r\n'));
+      expect(apiRef.current.getDataAsCsv()).to.equal(
+        ['id,isAdmin', '0,true', '1,false'].join('\r\n'),
+      );
     });
 
     it('should warn when a value of a field is an object and no `valueFormatter` is provided', () => {
