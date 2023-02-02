@@ -34,6 +34,8 @@
   { "name": "DateRange", "kind": "TypeAlias" },
   { "name": "DateRangeCalendar", "kind": "Variable" },
   { "name": "dateRangeCalendarClasses", "kind": "Variable" },
+  { "name": "DateRangeCalendarClasses", "kind": "Interface" },
+  { "name": "DateRangeCalendarClassKey", "kind": "TypeAlias" },
   { "name": "DateRangeCalendarProps", "kind": "Interface" },
   { "name": "DateRangeCalendarSlotsComponent", "kind": "Interface" },
   { "name": "DateRangeCalendarSlotsComponentsProps", "kind": "Interface" },
