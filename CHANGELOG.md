@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v6.0.0-beta.2
+## 6.0.0-beta.2
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
@@ -2073,7 +2073,7 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
-## v5.17.22
+## 5.17.22
 
 _Feb 2, 2023_
 
@@ -2099,7 +2099,7 @@ We'd like to offer a big thanks to the 4 contributors who made this release poss
 - [TimePicker] Add missing `themeAugmentation` entry (#7732) @LukasTy
 - [l10n] Improve Italian (it-IT) locale (#7761) @simonecervini
 
-## v5.17.21
+## 5.17.21
 
 _Jan 27, 2023_
 

@@ -2506,47 +2506,6 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/x-data-grid-premium@6.0.0-beta.1":
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-premium/-/x-data-grid-premium-6.0.0-beta.1.tgz#5e96cf3d9caa33a4ef13d2145d7989784bdca034"
-  integrity sha512-FXnUE8FL3rB1BH128Xo9HJ6lwMgI09KTLWbVP6i55w+R5kevYBAP0MJ+S8gSrHAQ6KkZneLI7XK/6GzUiCc56w==
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/utils" "^5.11.2"
-    "@mui/x-data-grid" "6.0.0-beta.1"
-    "@mui/x-data-grid-pro" "6.0.0-beta.1"
-    "@mui/x-license-pro" "6.0.0-beta.0"
-    "@types/format-util" "^1.0.2"
-    clsx "^1.2.1"
-    exceljs "^4.3.0"
-    prop-types "^15.8.1"
-    reselect "^4.1.7"
-
-"@mui/x-data-grid-pro@6.0.0-beta.1":
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid-pro/-/x-data-grid-pro-6.0.0-beta.1.tgz#ba4f4ddf8d70e2afb2994bbc592f86fb345c126f"
-  integrity sha512-4+tY2hIsbFQXbUBatQDw2/wMjZGXO6OmY0QZdj36dyBV2Pp0bdDQBI2U75T3WJVCPgohGZrwbRiO+S5WsqV0hg==
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/utils" "^5.11.2"
-    "@mui/x-data-grid" "6.0.0-beta.1"
-    "@mui/x-license-pro" "6.0.0-beta.0"
-    "@types/format-util" "^1.0.2"
-    clsx "^1.2.1"
-    prop-types "^15.8.1"
-    reselect "^4.1.7"
-
-"@mui/x-data-grid@6.0.0-beta.1":
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-6.0.0-beta.1.tgz#cb55aea48686d6ee0fd0517bebb0e6a2cb951a6b"
-  integrity sha512-WCIX8NItz1qx14n3M/aj4TjWx7kVKxz3BNOxiV76Hk9W8OTHZvn+sggvUhDY6NUo8nA0t8KTnapzrS+bwWV32w==
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/utils" "^5.11.2"
-    clsx "^1.2.1"
-    prop-types "^15.8.1"
-    reselect "^4.1.7"
-
 "@mui/x-data-grid@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-4.0.0.tgz#e9e9c33a8b86e85872c48f30f4a8de72ee819153"
