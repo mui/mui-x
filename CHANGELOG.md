@@ -34,7 +34,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [pickers] Fix theme augmentation (#7800) @LukasTy
 - [pickers] Hide scrollbars in the date calendar container (#7766) @Vivek-Prajapatii
 - [pickers] Remove the dependency on `rifm` (#7785) @alexfauquette
-- 
+
 ### `@mui/x-codemod@v6.0.0-beta.2`
 
 #### Changes
