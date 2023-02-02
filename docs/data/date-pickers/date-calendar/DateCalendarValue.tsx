@@ -10,7 +10,7 @@ export default function DateCalendarValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
         <DemoItem label="Uncontrolled calendar">
           <DateCalendar defaultValue={dayjs('2022-04-07')} />
         </DemoItem>

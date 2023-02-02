@@ -13,7 +13,7 @@ const isInCurrentMonth = (date) => date.get('month') === dayjs().get('month');
 export default function DateValidationShouldDisableMonth() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DatePicker', 'DateTimePicker']}>
         <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={today}

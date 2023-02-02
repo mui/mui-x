@@ -13,7 +13,8 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps } from '../internal/models';
+import { DateRange } from '../internal/models';
+import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -34,7 +35,7 @@ export interface DateRangePickerToolbarProps<TDate>
       BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
-    RangePositionProps {
+    UseRangePositionResponse {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
@@ -136,6 +137,7 @@ DateRangePickerToolbar.propTypes = {
   onRangePositionChange: PropTypes.func.isRequired,
   rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
   readOnly: PropTypes.bool,
+  titleId: PropTypes.string,
   /**
    * Toolbar date format.
    */

@@ -1,9 +1,9 @@
-import { NextDatePicker } from '@mui/x-date-pickers';
-import { NextDateRangePicker } from '@mui/x-date-pickers-pro';
+import { DatePicker } from '@mui/x-date-pickers';
+import { DateRangePicker } from '@mui/x-date-pickers-pro';
 import TextField from '@mui/material/TextField';
 
 <div>
-  <NextDateRangePicker
+  <DateRangePicker
     componentsProps={{
       layout: {
         sx: {
@@ -15,7 +15,7 @@ import TextField from '@mui/material/TextField';
       Layout: test,
     }}
   />
-  <NextDatePicker
+  <DatePicker
     components={{
       Layout: CustomLayout,
     }}

@@ -15,7 +15,14 @@ const todayStartOfTheDay = today.startOf('day');
 export default function DateValidationDisablePast() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'DatePicker',
+          'DateTimePicker',
+          'TimePicker',
+          'DateRangePicker',
+        ]}
+      >
         <DemoItem label="DatePicker">
           <DatePicker
             defaultValue={yesterday}
@@ -33,7 +40,7 @@ export default function DateValidationDisablePast() {
             views={['year', 'month', 'day', 'hours', 'minutes']}
           />
         </DemoItem>
-        <DemoItem label="DateRangePicker">
+        <DemoItem label="DateRangePicker" component="DateRangePicker">
           <DateRangePicker defaultValue={[yesterday, today]} disablePast />
         </DemoItem>
       </DemoContainer>

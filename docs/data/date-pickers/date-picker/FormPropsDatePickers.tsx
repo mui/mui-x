@@ -7,7 +7,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 export default function FormPropsDatePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DatePicker', 'DatePicker']}>
         <DatePicker label="disabled" disabled />
         <DatePicker label="readOnly" readOnly />
       </DemoContainer>

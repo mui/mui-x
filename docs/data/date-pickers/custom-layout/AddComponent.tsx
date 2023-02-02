@@ -58,7 +58,7 @@ function RestaurantHeader() {
   );
 }
 
-function CustomLayout(props: PickersLayoutProps<Dayjs | null, DateView>) {
+function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) {
   const { toolbar, tabs, content, actionBar } = usePickerLayout(props);
 
   return (

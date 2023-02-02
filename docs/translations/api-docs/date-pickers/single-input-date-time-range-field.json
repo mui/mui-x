@@ -48,6 +48,6 @@
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."
   },
-  "classDescriptions": {},
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
   "slotDescriptions": { "Input": "Input rendered." }
 }

@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { DataGrid, SortGridMenuItems } from '@mui/x-data-grid';
+import { DataGrid, SortGridMenuItems, useGridSelector, gridSelectionStateSelector } from '@mui/x-data-grid';
 
-function App({ column, hideMenu, apiRef }) {
+function App({ column, hideMenu, apiRef, handleEvent }) {
   const localeText = apiRef.current.getLocaleText('filterPanelLinkOperator');
+  apiRef.current.subscribeEvent('selectionChange', handleEvent);
+  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
   return (
     <React.Fragment>
       <DataGrid
