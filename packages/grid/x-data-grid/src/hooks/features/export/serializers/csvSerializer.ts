@@ -37,13 +37,7 @@ const serializeRow = (
         objectFormattedValueWarning();
       }
     }
-    let valueToSerialize: any;
-    if (column.type === 'number') {
-      valueToSerialize = cellParams.value;
-    } else {
-      valueToSerialize = cellParams.formattedValue;
-    }
-    return serializeCellValue(valueToSerialize, delimiterCharacter);
+    return serializeCellValue(cellParams.formattedValue, delimiterCharacter);
   });
 
 interface BuildCSVOptions {
