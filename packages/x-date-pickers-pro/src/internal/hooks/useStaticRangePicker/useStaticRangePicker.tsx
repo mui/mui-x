@@ -17,7 +17,8 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
+import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -41,7 +42,7 @@ export const useStaticRangePicker = <
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
   const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const { layoutProps, renderCurrentView } = usePicker<
     DateRange<TDate>,
@@ -56,7 +57,7 @@ export const useStaticRangePicker = <
     autoFocusView: autoFocus ?? false,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
     wrapperVariant: displayStaticWrapperAs,
   });
@@ -67,7 +68,7 @@ export const useStaticRangePicker = <
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
 

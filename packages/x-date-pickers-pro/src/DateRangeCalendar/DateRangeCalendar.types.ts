@@ -17,9 +17,10 @@ import {
   ExportedUseViewsOptions,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import { UseRangePositionProps } from '../internal/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -97,7 +98,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDateRangeCalendarProps<TDate>,
-    Partial<RangePositionProps> {
+    UseRangePositionProps {
   /**
    * The selected value.
    * Used when the component is controlled.
