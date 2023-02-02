@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
 export interface BaseFieldProps<TValue, TError>
@@ -12,24 +11,19 @@ export interface BaseFieldProps<TValue, TError>
   format?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
-  /**
-   * @deprecated Please use `slots`.
-   */
-  components?: {
-    TextField?: React.ElementType<TextFieldProps>;
-  };
-  /**
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  };
+}
+
+/**
+ * Props the single input field can receive when used inside a picker.
+ * Do not take into account props that would be passed directly through `props.slotProps.field`.
+ */
+export interface BaseSingleInputFieldProps<TValue, TError>
+  extends BaseFieldProps<TValue, TError>,
+    Pick<TextFieldProps, 'InputProps' | 'inputProps'> {
   slots?: {
     textField?: React.ElementType<TextFieldProps>;
   };
-  slotProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  };
+  slotProps?: {};
 }
 
 export interface FieldsTextFieldProps

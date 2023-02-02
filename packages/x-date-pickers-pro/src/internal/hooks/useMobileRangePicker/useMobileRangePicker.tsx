@@ -121,30 +121,16 @@ export const useMobileRangePicker = <
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
-
       return {
         ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
         ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
+        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
       };
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(innerSlotProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotProps?.root, ownerState);
       return {
         ...externalRootProps,
-        ...rootPropsPassedByField,
         ...fieldSlotProps.root,
       };
     },
@@ -153,13 +139,8 @@ export const useMobileRangePicker = <
         innerSlotProps?.fieldSeparator,
         ownerState,
       );
-      const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.separator,
-        ownerState,
-      );
       return {
         ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
         ...fieldSlotProps.root,
       };
     },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import MuiInputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import useForkRef from '@mui/utils/useForkRef';
@@ -11,7 +11,7 @@ import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
-import { BaseFieldProps } from '../../models/fields';
+import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
@@ -48,6 +48,7 @@ export const useDesktopPicker = <
   const utils = useUtils<TDate>();
   const internalInputRef = React.useRef<HTMLInputElement>(null);
   const labelId = useId();
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
   const {
     open,
@@ -65,23 +66,6 @@ export const useDesktopPicker = <
     autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'desktop',
-  });
-
-  const Field = slots.field;
-  const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
-    elementType: Field,
-    externalSlotProps: innerSlotProps?.field,
-    additionalProps: {
-      ...pickerFieldProps,
-      readOnly,
-      disabled,
-      className,
-      sx,
-      format,
-      label,
-      autoFocus: autoFocus && !props.open,
-    },
-    ownerState: props,
   });
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
@@ -109,39 +93,43 @@ export const useDesktopPicker = <
 
   const OpenPickerIcon = slots.openPickerIcon;
 
-  const slotsForField: BaseFieldProps<TDate | null, unknown>['slots'] = {
+  const Field = slots.field;
+  const fieldProps: BaseSingleInputFieldProps<
+    TDate | null,
+    InferError<TExternalProps>
+  > = useSlotProps({
+    elementType: Field,
+    externalSlotProps: innerSlotProps?.field,
+    additionalProps: {
+      ...pickerFieldProps,
+      ...(isToolbarHidden && { id: labelId }),
+      readOnly,
+      disabled,
+      className,
+      sx,
+      format,
+      label,
+      autoFocus: autoFocus && !props.open,
+    },
+    ownerState: props,
+  });
+
+  if (hasUIView) {
+    fieldProps.InputProps = {
+      ...fieldProps.InputProps,
+      [`${inputAdornmentProps.position}Adornment`]: (
+        <InputAdornment {...inputAdornmentProps}>
+          <OpenPickerButton {...openPickerButtonProps}>
+            <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
+          </OpenPickerButton>
+        </InputAdornment>
+      ),
+    };
+  }
+
+  const slotsForField: BaseSingleInputFieldProps<TDate | null, unknown>['slots'] = {
     textField: slots.textField,
     ...fieldProps.slots,
-  };
-
-  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
-
-  const slotPropsForField: BaseFieldProps<TDate | null, unknown>['slotProps'] = {
-    ...fieldProps.slotProps,
-    textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.textField,
-        ownerState,
-      );
-
-      return {
-        ...(isToolbarHidden && { id: labelId }),
-        ...inputPropsPassedByField,
-        ...externalInputProps,
-        InputProps: {
-          [`${inputAdornmentProps.position}Adornment`]: hasUIView ? (
-            <InputAdornment {...inputAdornmentProps}>
-              <OpenPickerButton {...openPickerButtonProps}>
-                <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
-              </OpenPickerButton>
-            </InputAdornment>
-          ) : undefined,
-          ...inputPropsPassedByField?.InputProps,
-          ...externalInputProps?.InputProps,
-        },
-      };
-    },
   };
 
   const Layout = slots.layout ?? PickersLayout;
@@ -171,12 +159,7 @@ export const useDesktopPicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
-        <Field
-          {...fieldProps}
-          slots={slotsForField}
-          slotProps={slotPropsForField}
-          inputRef={handleInputRef}
-        />
+        <Field {...fieldProps} slots={slotsForField} inputRef={handleInputRef} />
         <PickersPopper
           role="dialog"
           anchorEl={internalInputRef.current}

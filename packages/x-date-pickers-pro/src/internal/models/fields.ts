@@ -8,7 +8,6 @@ import {
   FieldSection,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-
 export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
 }
@@ -32,19 +31,11 @@ type BaseMultiInputFieldSlotsComponentsProps = {
   separator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
 };
 
-export interface BaseMultiInputFieldProps<TValue, TError>
-  extends Omit<
-    BaseFieldProps<TValue, TError>,
-    'components' | 'componentsProps' | 'slots' | 'slotProps'
-  > {
-  /**
-   * @deprecated Please use `slots`.
-   */
-  components?: BaseMultiInputFieldSlotsComponent;
-  /**
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: BaseMultiInputFieldSlotsComponentsProps;
+/**
+ * Props the multi input field can receive when used inside a picker.
+ * Do not take into account props that would be passed directly through `props.slotProps.field`.
+ */
+export interface BaseMultiInputFieldProps<TValue, TError> extends BaseFieldProps<TValue, TError> {
   slots?: UncapitalizeObjectKeys<BaseMultiInputFieldSlotsComponent>;
   slotProps?: BaseMultiInputFieldSlotsComponentsProps;
 }
