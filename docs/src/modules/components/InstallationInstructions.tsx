@@ -1,4 +1,3 @@
-/* eslint-disable  material-ui/no-hardcoded-labels */
 import * as React from 'react';
 // @ts-expect-error
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
