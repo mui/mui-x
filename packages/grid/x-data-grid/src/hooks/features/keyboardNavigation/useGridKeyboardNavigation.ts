@@ -109,40 +109,56 @@ export const useGridKeyboardNavigation = (
     [currentPageRows],
   );
 
-  const goToRightCell = React.useCallback(
-    (colIndexBefore: number, lastColIndex: number, rowIndexBefore: number) => {
-      if (colIndexBefore < lastColIndex) {
-        goToCell(colIndexBefore + 1, getRowIdFromIndex(rowIndexBefore), 'right');
+  const getLeftColumnIndex = React.useCallback(
+    ({
+      currentColIndex,
+      firstColIndex,
+      lastColIndex,
+      direction,
+    }: {
+      currentColIndex: number;
+      firstColIndex: number;
+      lastColIndex: number;
+      direction: 'rtl' | 'ltr';
+    }) => {
+      if (direction === 'ltr') {
+        if (currentColIndex > firstColIndex) {
+          return currentColIndex - 1;
+        }
+      } else if (direction === 'rtl') {
+        if (currentColIndex < lastColIndex) {
+          return currentColIndex + 1;
+        }
       }
+      return null;
     },
-    [goToCell, getRowIdFromIndex],
+    [],
   );
 
-  const goToLeftCell = React.useCallback(
-    (colIndexBefore: number, firstColIndex: number, rowIndexBefore: number) => {
-      if (colIndexBefore > firstColIndex) {
-        goToCell(colIndexBefore - 1, getRowIdFromIndex(rowIndexBefore));
+  const getRightColumnIndex = React.useCallback(
+    ({
+      currentColIndex,
+      firstColIndex,
+      lastColIndex,
+      direction,
+    }: {
+      currentColIndex: number;
+      firstColIndex: number;
+      lastColIndex: number;
+      direction: 'rtl' | 'ltr';
+    }) => {
+      if (direction === 'rtl') {
+        if (currentColIndex > firstColIndex) {
+          return currentColIndex - 1;
+        }
+      } else if (direction === 'ltr') {
+        if (currentColIndex < lastColIndex) {
+          return currentColIndex + 1;
+        }
       }
+      return null;
     },
-    [goToCell, getRowIdFromIndex],
-  );
-
-  const goToRightColumnHeader = React.useCallback(
-    (colIndexBefore: number, lastColIndex: number, event: React.KeyboardEvent<HTMLElement>) => {
-      if (colIndexBefore < lastColIndex) {
-        goToHeader(colIndexBefore + 1, event);
-      }
-    },
-    [goToHeader],
-  );
-
-  const goToLeftColumnHeader = React.useCallback(
-    (colIndexBefore: number, firstColIndex: number, event: React.KeyboardEvent<HTMLElement>) => {
-      if (colIndexBefore > firstColIndex) {
-        goToHeader(colIndexBefore - 1, event);
-      }
-    },
-    [goToHeader],
+    [],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
@@ -182,19 +198,29 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'ArrowRight': {
-          if (theme.direction === 'ltr') {
-            goToRightColumnHeader(colIndexBefore, lastColIndex, event);
-          } else if (theme.direction === 'rtl') {
-            goToLeftColumnHeader(colIndexBefore, firstColIndex, event);
+          const rightColIndex = getRightColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction: theme.direction,
+          });
+
+          if (rightColIndex !== null) {
+            goToHeader(rightColIndex, event);
           }
+
           break;
         }
 
         case 'ArrowLeft': {
-          if (theme.direction === 'ltr') {
-            goToLeftColumnHeader(colIndexBefore, firstColIndex, event);
-          } else if (theme.direction === 'rtl') {
-            goToRightColumnHeader(colIndexBefore, lastColIndex, event);
+          const leftColIndex = getLeftColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction: theme.direction,
+          });
+          if (leftColIndex !== null) {
+            goToHeader(leftColIndex, event);
           }
           break;
         }
@@ -257,8 +283,8 @@ export const useGridKeyboardNavigation = (
       getRowIdFromIndex,
       goToHeader,
       goToGroupHeader,
-      goToRightColumnHeader,
-      goToLeftColumnHeader,
+      getRightColumnIndex,
+      getLeftColumnIndex,
     ],
   );
 
@@ -429,19 +455,35 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'ArrowRight': {
-          if (direction === 'ltr') {
-            goToRightCell(colIndexBefore, lastColIndex, rowIndexBefore);
-          } else if (direction === 'rtl') {
-            goToLeftCell(colIndexBefore, firstColIndex, rowIndexBefore);
+          const rightColIndex = getRightColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction,
+          });
+          if (rightColIndex !== null) {
+            goToCell(
+              rightColIndex,
+              getRowIdFromIndex(rowIndexBefore),
+              direction === 'rtl' ? 'left' : 'right',
+            );
           }
           break;
         }
 
         case 'ArrowLeft': {
-          if (direction === 'ltr') {
-            goToLeftCell(colIndexBefore, firstColIndex, rowIndexBefore);
-          } else if (direction === 'rtl') {
-            goToRightCell(colIndexBefore, lastColIndex, rowIndexBefore);
+          const leftColIndex = getLeftColumnIndex({
+            currentColIndex: colIndexBefore,
+            firstColIndex,
+            lastColIndex,
+            direction,
+          });
+          if (leftColIndex !== null) {
+            goToCell(
+              leftColIndex,
+              getRowIdFromIndex(rowIndexBefore),
+              direction === 'rtl' ? 'right' : 'left',
+            );
           }
           break;
         }
@@ -529,8 +571,8 @@ export const useGridKeyboardNavigation = (
       getRowIdFromIndex,
       goToCell,
       goToHeader,
-      goToRightCell,
-      goToLeftCell,
+      getRightColumnIndex,
+      getLeftColumnIndex,
     ],
   );
 
