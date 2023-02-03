@@ -77,8 +77,8 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
           .toString();
 
       const getFilterItemValue = (item: GridFilterItem): string => {
-        const { getValueAsString } = lookup[item.field!].filterOperators!.find(
-          (operator) => operator.value === item.operator,
+        const { getValueAsString } = lookup[item.columnField!].filterOperators!.find(
+          (operator) => operator.value === item.operatorValue,
         )!;
 
         return getValueAsString ? getValueAsString(item.value) : item.value;

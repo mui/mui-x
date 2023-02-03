@@ -1192,7 +1192,7 @@ describe('<DataGrid /> - Filter', () => {
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
             filterModel={{
-              items: [{ field: 'name', operator: 'contains', value: 'John' }],
+              items: [{ columnField: 'name', operatorValue: 'contains', value: 'John' }],
             }}
             rows={[
               {
@@ -1215,9 +1215,9 @@ describe('<DataGrid /> - Filter', () => {
                     getApplyFilterFn: (filterItem) => {
                       return (params) => {
                         if (
-                          !filterItem.field ||
+                          !filterItem.columnField ||
                           !filterItem.value ||
-                          !filterItem.operator ||
+                          !filterItem.operatorValue ||
                           !params.value
                         ) {
                           return null;
