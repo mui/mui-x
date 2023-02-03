@@ -1,5 +1,5 @@
-import { ASTPath, ImportDeclaration } from 'jscodeshift';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
+import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
 
 const renamedIdentifiers = {
   GridLinkOperator: 'GridLogicOperator',
@@ -7,6 +7,16 @@ const renamedIdentifiers = {
   linkOperator: 'logicOperator',
   linkOperators: 'logicOperators',
   setFilterLinkOperator: 'setFilterLogicOperator',
+};
+
+const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
+
+const preRequisiteUsages: { [identifierName: string]: PreRequisiteUsage } = {
+  GridLinkOperator: {
+    possiblePaths: ['initialState.filter', 'filterModel', 'componentsProps.filter'],
+    components: ['DataGrid', 'DataGridPro', 'DataGridPremium'],
+    packageRegex: PACKAGE_REGEXP,
+  },
 };
 
 const renamedLiterals = {
@@ -18,12 +28,6 @@ const renamedClasses = {
   'MuiDataGrid-withBorder': 'MuiDataGrid-withBorderColor',
 };
 
-const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
-
-const matchImport = (path: ASTPath<ImportDeclaration>) =>
-  ((path.node.source.value as any).toString() || '').match(PACKAGE_REGEXP);
-
-// Press ctrl+space for code completion
 export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
   const root = j(file.source);
@@ -33,16 +37,28 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
     trailingComma: true,
   };
 
-  const matchingImports = root.find(j.ImportDeclaration).filter((path) => !!matchImport(path));
+  const matchingImports = root
+    .find(j.ImportDeclaration)
+    .filter((path) => !!matchImport(path, PACKAGE_REGEXP));
 
   if (matchingImports.length > 0) {
     // Rename the identifiers
-    // - import { linkOperatorInputProps } from '@mui/x-data-grid'
-    // + import { logicOperatorInputProps } from '@mui/x-data-grid'
-    root
-      .find(j.Identifier)
-      .filter((path) => !!renamedIdentifiers[path.node.name])
-      .replaceWith((path) => j.importSpecifier(j.identifier(renamedIdentifiers[path.node.name])));
+    // <DataGrid
+    //  componentsProps={{
+    //    filter: {
+    // -   linkOperators: [GridLinkOperator.And],
+    // +   logicOperators: [GridLogicOperator.And],
+    //      filterFormProps: {
+    // -      linkOperatorInputProps: {
+    // +      logicOperatorInputProps: {
+    //          variant: 'outlined',
+    //          size: 'small',
+    //        },
+    //      },
+    //    },
+    //  }}
+    // />
+    renameIdentifiers({ j, root, identifiers: renamedIdentifiers, preRequisiteUsages });
 
     // Rename the literals
     // - apiRef.current.getLocaleText('filterPanelLinkOperator')
