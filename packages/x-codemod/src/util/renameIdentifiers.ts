@@ -126,7 +126,11 @@ export default function renameIdentifiers({
       if (!preRequisiteUsages || !preRequisiteUsages[path.node.name]) {
         return j.importSpecifier(j.identifier(identifiers[path.node.name]));
       }
-      const shouldReplace = checkPreRequisitesSatisfied(j, root, preRequisiteUsages[path.node.name]);
+      const shouldReplace = checkPreRequisitesSatisfied(
+        j,
+        root,
+        preRequisiteUsages[path.node.name],
+      );
       if (shouldReplace) {
         return j.importSpecifier(j.identifier(identifiers[path.node.name]));
       }
