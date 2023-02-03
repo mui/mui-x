@@ -3,22 +3,21 @@ import type { Collection, JSCodeshift, ASTPath, ImportDeclaration } from 'jscode
 
 export interface PreRequisiteUsage {
   /**
-   * Comma separated list of possible paths one of which must be
-   * found for the pre-req to be satisfied.
-   * Example: ['initialState.filter', 'filterModel', 'componentsProps.filter']
+   * List of possible paths, if defined, at least one of them must be found
+   * for the pre-req to be satisfied.
+   * Example value: ['initialState.filter', 'filterModel', 'componentsProps.filter']
    */
   possiblePaths?: string[];
   /**
-   * Comma separated list of components, one of which must be found
+   * List of components, one of which must be found
    * as an imported component (and also imported from one of the given packages,
    * if `packageRegex` is provided) for pre-req to be satisfied.
-   * Example: ['DataGrid', 'DataGridPro', 'DataGridPremium']
+   * Example value: ['DataGrid', 'DataGridPro', 'DataGridPremium']
    */
   components?: string[];
   /**
-   * If packageRegex is passed then one of the `components` must be
-   * imported from import declaration which satisfies `packageRegex`
-   * Example: /@mui\/x-data-grid(-pro|-premium)?/
+   * If packageRegex is passed then one of the import declarations must satisfy `packageRegex`
+   * Example value: /@mui\/x-data-grid(-pro|-premium)?/
    */
   packageRegex?: RegExp;
 }
@@ -46,6 +45,15 @@ const findDeepASTPath = (j, currentPath, currentIdentifiers) => {
   return findDeepASTPath(j, currentPath, currentIdentifiers.slice(1));
 };
 
+/**
+ * Checks if all pre-requisites are satisfied for the given path `root`.
+ * For it to be satisfied, at least one condition of all the pre-requisites must be fulfilled.
+ *
+ * @param {*} j
+ * @param {*} root
+ * @param {PreRequisiteUsage} preReqs
+ * @returns {boolean}
+ */
 const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boolean => {
   if (preReqs.packageRegex || preReqs.components) {
     // check if any of the components is imported from a package which satisfies `preReqs.packageRegex`
@@ -103,7 +111,7 @@ const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boole
  * Renames identifiers based on the `identifiers` object passed plus an optional `preRequisiteUsages` object
  * to control renaming based on certain conditions.
  *
- * @export
+ * @export renameIdentifiers
  * @param {RenameIdentifiersArgs} {
  *   root, // jscodeshift root
  *   identifiers, // object of identifiers to rename

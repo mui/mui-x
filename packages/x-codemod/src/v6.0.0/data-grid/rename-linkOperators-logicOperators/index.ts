@@ -11,10 +11,27 @@ const renamedIdentifiers = {
 
 const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
 
+const GridComponents = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
+
 const preRequisiteUsages: { [identifierName: string]: PreRequisiteUsage } = {
   GridLinkOperator: {
     possiblePaths: ['initialState.filter', 'filterModel', 'componentsProps.filter'],
-    components: ['DataGrid', 'DataGridPro', 'DataGridPremium'],
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  linkOperatorInputProps: {
+    possiblePaths: ['componentsProps.filter'],
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  linkOperator: {
+    possiblePaths: ['initialState.filter', 'filterModel', 'componentsProps.filter'],
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  linkOperators: {
+    possiblePaths: ['componentsProps.filter'],
+    components: GridComponents,
     packageRegex: PACKAGE_REGEXP,
   },
 };
