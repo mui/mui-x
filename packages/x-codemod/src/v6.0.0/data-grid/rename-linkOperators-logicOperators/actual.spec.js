@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { DataGrid, GridLinkOperator } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
+import { DataGridPremium, GridLinkOperator } from '@mui/x-data-grid-premium'
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -9,7 +10,22 @@ const useStyles = makeStyles({
   },
 });
 
-function App ({ apiRef }) {
+function Wrapper () {
+  const apiRef = {};
+  return <App 
+    apiRef={apiRef}
+    initialState={{
+      filter: {
+        filterModel: {
+          items: [],
+          linkOperator: GridLinkOperator.Or,
+          quickFilterLogicOperator: GridLinkOperator.Or,
+        },
+      },
+    }}/>;
+}
+
+function App ({ apiRef, initialState }) {
   const classes = useStyles();
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [],
@@ -48,6 +64,7 @@ function App ({ apiRef }) {
           '& .MuiDataGrid-withBorder': { borderColor: '#456' },
         }}
       />
+      <DataGridPremium initialState={initialState} />
     </React.Fragment>
   );
 }
