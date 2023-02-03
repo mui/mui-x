@@ -3,7 +3,7 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import { transformNestedProp } from '../../../util/addComponentsSlots';
 
 const componentNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
-const propsToSlots = {
+const propsToRename = {
   onCellFocusOut: { prop: 'componentsProps', path: 'cell.onBlur' },
 };
 
@@ -25,7 +25,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
       const attributesToTransform = j(path)
         .find(j.JSXAttribute)
         .filter((attribute) =>
-          Object.keys(propsToSlots).includes(attribute.value.name.name as string),
+          Object.keys(propsToRename).includes(attribute.value.name.name as string),
         );
       attributesToTransform.forEach((attribute) => {
         const attributeName = attribute.value.name.name as string;
@@ -37,15 +37,15 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
         transformNestedProp(
           path,
-          propsToSlots[attributeName].prop,
-          propsToSlots[attributeName].path,
+          propsToRename[attributeName].prop,
+          propsToRename[attributeName].path,
           value,
           j,
         );
       });
     });
 
-  return removeProps({ root, j, props: Object.keys(propsToSlots), componentNames }).toSource(
+  return removeProps({ root, j, props: Object.keys(propsToRename), componentNames }).toSource(
     printOptions,
   );
 }
