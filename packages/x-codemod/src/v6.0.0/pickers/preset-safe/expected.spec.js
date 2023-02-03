@@ -11,7 +11,13 @@ const theme = createTheme({});
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+      <LocalizationProvider
+        dateAdapter={AdapterDayjs}
+        adapterLocale="fr"
+        localeText={{
+          datePickerToolbarTitle: 'Pick a Date',
+        }}
+      >
         <DateCalendar
           value={null}
           onChange={() => {}}
@@ -26,6 +32,7 @@ function App() {
           }} />
         <DateTimePicker
           shouldDisableClock={(timeValue, view) => view === 'hours' && timeValue < 12}
+          format="YYYY-MM-DD HH:mm"
           components={{
             DesktopTransition: Fade,
           }}
