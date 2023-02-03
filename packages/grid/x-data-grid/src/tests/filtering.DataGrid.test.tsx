@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
+  GridToolbarFilterButton,
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
@@ -1182,6 +1183,68 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+  });
+
+  describe('custom `filterOperators`', () => {
+    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+      render(
+        <div style={{ width: '100%', height: '400px' }}>
+          <DataGrid
+            filterModel={{
+              items: [{ columnField: 'name', operatorValue: 'contains', value: 'John' }],
+            }}
+            rows={[
+              {
+                id: 0,
+                name: 'John Doe',
+              },
+              {
+                id: 1,
+                name: 'Mike Smith',
+              },
+            ]}
+            columns={[
+              {
+                field: 'name',
+                type: 'string',
+                filterOperators: [
+                  {
+                    label: 'Contains',
+                    value: 'contains',
+                    getApplyFilterFn: (filterItem) => {
+                      return (params) => {
+                        if (
+                          !filterItem.columnField ||
+                          !filterItem.value ||
+                          !filterItem.operatorValue ||
+                          !params.value
+                        ) {
+                          return null;
+                        }
+                        return params.value.includes(filterItem.value);
+                      };
+                    },
+                    getValueAsString: (value) => `"${value}" text string`,
+                  },
+                ],
+              },
+            ]}
+            components={{ Toolbar: GridToolbarFilterButton }}
+          />
+        </div>,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]');
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('"John" text string');
     });
   });
 

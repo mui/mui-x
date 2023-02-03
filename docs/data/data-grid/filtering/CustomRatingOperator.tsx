@@ -6,6 +6,7 @@ import {
   DataGrid,
   GridFilterItem,
   GridFilterOperator,
+  GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -66,6 +67,7 @@ const ratingOnlyOperators: GridFilterOperator[] = [
     },
     InputComponent: RatingInputValue,
     InputComponentProps: { type: 'number' },
+    getValueAsString: (value: number) => `${value} Stars`,
   },
 ];
 
@@ -96,6 +98,9 @@ export default function CustomRatingOperator() {
       <DataGrid
         {...data}
         columns={columns}
+        components={{
+          Toolbar: GridToolbarFilterButton,
+        }}
         initialState={{
           ...data.initialState,
           filter: {
