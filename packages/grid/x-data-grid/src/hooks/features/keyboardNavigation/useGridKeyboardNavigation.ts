@@ -109,57 +109,51 @@ export const useGridKeyboardNavigation = (
     [currentPageRows],
   );
 
-  const getLeftColumnIndex = React.useCallback(
-    ({
-      currentColIndex,
-      firstColIndex,
-      lastColIndex,
-      direction,
-    }: {
-      currentColIndex: number;
-      firstColIndex: number;
-      lastColIndex: number;
-      direction: 'rtl' | 'ltr';
-    }) => {
-      if (direction === 'ltr') {
-        if (currentColIndex > firstColIndex) {
-          return currentColIndex - 1;
-        }
-      } else if (direction === 'rtl') {
-        if (currentColIndex < lastColIndex) {
-          return currentColIndex + 1;
-        }
+  const getLeftColumnIndex = ({
+    currentColIndex,
+    firstColIndex,
+    lastColIndex,
+    direction,
+  }: {
+    currentColIndex: number;
+    firstColIndex: number;
+    lastColIndex: number;
+    direction: 'rtl' | 'ltr';
+  }) => {
+    if (direction === 'rtl') {
+      if (currentColIndex < lastColIndex) {
+        return currentColIndex + 1;
       }
-      return null;
-    },
-    [],
-  );
+    } else if (direction === 'ltr') {
+      if (currentColIndex > firstColIndex) {
+        return currentColIndex - 1;
+      }
+    }
+    return null;
+  };
 
-  const getRightColumnIndex = React.useCallback(
-    ({
-      currentColIndex,
-      firstColIndex,
-      lastColIndex,
-      direction,
-    }: {
-      currentColIndex: number;
-      firstColIndex: number;
-      lastColIndex: number;
-      direction: 'rtl' | 'ltr';
-    }) => {
-      if (direction === 'rtl') {
-        if (currentColIndex > firstColIndex) {
-          return currentColIndex - 1;
-        }
-      } else if (direction === 'ltr') {
-        if (currentColIndex < lastColIndex) {
-          return currentColIndex + 1;
-        }
+  const getRightColumnIndex = ({
+    currentColIndex,
+    firstColIndex,
+    lastColIndex,
+    direction,
+  }: {
+    currentColIndex: number;
+    firstColIndex: number;
+    lastColIndex: number;
+    direction: 'rtl' | 'ltr';
+  }) => {
+    if (direction === 'rtl') {
+      if (currentColIndex > firstColIndex) {
+        return currentColIndex - 1;
       }
-      return null;
-    },
-    [],
-  );
+    } else if (direction === 'ltr') {
+      if (currentColIndex < lastColIndex) {
+        return currentColIndex + 1;
+      }
+    }
+    return null;
+  };
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
@@ -283,8 +277,6 @@ export const useGridKeyboardNavigation = (
       getRowIdFromIndex,
       goToHeader,
       goToGroupHeader,
-      getRightColumnIndex,
-      getLeftColumnIndex,
     ],
   );
 
@@ -564,16 +556,7 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [
-      apiRef,
-      currentPageRows,
-      theme.direction,
-      getRowIdFromIndex,
-      goToCell,
-      goToHeader,
-      getRightColumnIndex,
-      getLeftColumnIndex,
-    ],
+    [apiRef, currentPageRows, theme.direction, getRowIdFromIndex, goToCell, goToHeader],
   );
 
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
