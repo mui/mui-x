@@ -63,6 +63,17 @@ async function runTransform(
 
   // eslint-disable-next-line no-console -- debug information
   console.log(`Executing command: jscodeshift ${args.join(' ')}`);
+  console.warn(`
+====================================
+IMPORTANT NOTICE ABOUT CODEMOD USAGE
+====================================
+Not all use-cases are covered by codemods. Some advanced cases like props spreading, cross file dependencies, etc should be handled manually.
+
+For example if a codemod renames some props but they are being passed using spread operator they may not be transformed as expected.
+<DatePicker {...pickerProps} />
+  
+Make sure to test your app after running codemods, ensure you don't have any console errors and all of your tests are passing.
+`);
   const jscodeshiftProcess = childProcess.spawnSync('node', args, { stdio: 'inherit' });
 
   if (jscodeshiftProcess.error) {
@@ -90,6 +101,7 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
+    // @ts-expect-error
     builder: (command) => {
       return command
         .positional('codemod', {
@@ -112,7 +124,6 @@ yargs
           type: 'array',
         });
     },
-    // @ts-expect-error
     handler: run,
   })
   .scriptName('npx @mui/x-codemod')

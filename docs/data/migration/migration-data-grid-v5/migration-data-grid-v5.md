@@ -35,6 +35,18 @@ If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/prese
 
 All other changes must be handled manually.
 
+:::warning
+Not all use-cases are covered by codemods. Some advanced cases like props spreading, cross file dependencies, etc should be handled manually.
+
+For example if a codemod renames some props but they are being passed using spread operator they may not be transformed as expected.
+
+```tsx
+<DataGrid {...newProps} />
+```
+
+Make sure to test your app after running codemods, ensure you don't have any console errors and all of your tests are passing.
+:::
+
 ## Breaking changes
 
 Since v6 is a major release, it contains some changes that affect the public API.
