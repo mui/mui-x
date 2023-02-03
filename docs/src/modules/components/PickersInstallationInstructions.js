@@ -3,8 +3,8 @@ import * as React from 'react';
 import InstallationInstructions from './InstallationInstructions';
 
 const packages = {
-  Community: '@mui/x-date-pickers',
-  Pro: '@mui/x-date-pickers-pro',
+  Community: '@mui/x-date-pickers@next',
+  Pro: '@mui/x-date-pickers-pro@next',
 };
 
 const peerDependency = {
