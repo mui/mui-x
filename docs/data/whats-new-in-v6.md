@@ -13,7 +13,7 @@
 
 - [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
 - [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- [Shortcuts in calendar the view](https://next.mui.com/x/react-date-pickers/shortcuts/)
+- [Shortcuts for specific dates in Date Pickers](https://next.mui.com/x/react-date-pickers/shortcuts/)
 - [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 
