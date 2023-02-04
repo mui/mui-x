@@ -202,7 +202,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
           </Select>
         </FormControl>
       </Stack>
-      {exportedNames.length > 0 && (
+      {exportedNames.length > 0 ? (
         <React.Fragment>
           <div>
             {docPages.map((docPage) => (
@@ -224,8 +224,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
             </LocalizationProvider>
           </Stack>
         </React.Fragment>
-      )}
-      {exportedNames.length === 0 && (
+      ) : (
         <Typography>This component is not available yet</Typography>
       )}
     </Stack>
