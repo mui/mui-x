@@ -123,6 +123,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
 
     return (
       <DemoItem
+        key={exportedName}
         label={getSubPackageFromExportedName(exportedName)}
         component={exportedName}
       >
@@ -206,7 +207,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
         <React.Fragment>
           <div>
             {docPages.map((docPage) => (
-              <div>
+              <div key={docPage.path}>
                 <Link href={docPage.path} rel="noopener" target="_blank">
                   {docPage.name} documentation
                 </Link>
