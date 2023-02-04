@@ -107,8 +107,8 @@ export default function ComponentExplorerNoSnap() {
 
       return isPro
         ? `
-import { ${exportedName} } from '@mui/x-date-pickers-pro';
-import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}';`
+import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}';
+import { ${exportedName} } from '@mui/x-date-pickers-pro';`
         : `
 import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}';
 import { ${exportedName} } from '@mui/x-date-pickers';
