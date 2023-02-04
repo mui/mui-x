@@ -106,13 +106,15 @@ export default function ComponentExplorerNoSnap() {
       const isPro = cleanName.includes('Range');
 
       return isPro
-        ? `import { ${exportedName} } from '@mui/x-date-pickers-pro';
+        ? `
+import { ${exportedName} } from '@mui/x-date-pickers-pro';
 import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}';`
-        : `import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}';
+        : `
+import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}';
 import { ${exportedName} } from '@mui/x-date-pickers';
 import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
     })
-    .join('\n\n');
+    .join('\n');
 
   const content = exportedNames.map((exportedName) => {
     const Component = exportedElements[
