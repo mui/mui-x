@@ -99,15 +99,11 @@ function GridActionsCell(props: GridActionsCellProps) {
       focus() {
         // If ignoreCallToFocus is true, then one of the buttons was clicked and the focus is already set
         if (!ignoreCallToFocus.current) {
-          if (theme.direction === 'rtl') {
-            setFocusedButtonIndex(numberOfButtons - 1);
-          } else {
-            setFocusedButtonIndex(0);
-          }
+          setFocusedButtonIndex(0);
         }
       },
     }),
-    [numberOfButtons, theme.direction],
+    [],
   );
 
   React.useEffect(() => {
