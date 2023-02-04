@@ -1,3 +1,4 @@
+import renameCSSClasses from 'packages/x-codemod/src/util/renameCSSClasses';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
 
@@ -88,26 +89,7 @@ export default function transform(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI
     // Rename the classes
     // - 'MuiDataGrid-filterFormLinkOperatorInput'
     // + 'MuiDataGrid-filterFormLogicOperatorInput'
-    root
-      .find(j.Literal)
-      .filter(
-        (path) =>
-          !!Object.keys(renamedClasses).find((className) => {
-            const literal = path.node.value as any;
-            return (
-              typeof literal === 'string' &&
-              literal.includes(className) &&
-              !literal.includes(renamedClasses[className])
-            );
-          }),
-      )
-      .replaceWith((path) => {
-        const literal = path.node.value as any;
-        const targetClassKey = Object.keys(renamedClasses).find((className) =>
-          literal.includes(className),
-        )!;
-        return j.literal(literal.replace(targetClassKey, renamedClasses[targetClassKey]));
-      });
+    renameCSSClasses({ j, root, renamedClasses });
   }
 
   return root.toSource(printOptions);
