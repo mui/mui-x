@@ -154,7 +154,9 @@ export const useGridColumnPinning = (
       const columnsTotalWidth = gridColumnsTotalWidthSelector(apiRef);
       const columnPositions = gridColumnPositionsSelector(apiRef);
       const clientWidth = apiRef.current.virtualScrollerRef!.current!.clientWidth;
-      const scrollLeft = apiRef.current.virtualScrollerRef!.current!.scrollLeft;
+
+      // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
+      const scrollLeft = Math.abs(apiRef.current.virtualScrollerRef!.current!.scrollLeft);
       const offsetWidth = visibleColumns[params.colIndex].computedWidth;
       const offsetLeft = columnPositions[params.colIndex];
 
