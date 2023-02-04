@@ -2,10 +2,16 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
+    pathname: '/x/whats-new-in-v6',
+    title: "✨ What's new in v6? ✨",
+    icon: 'VisibilityIcon',
+  },
+  {
     pathname: '/x/introduction-group',
     title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
+      //{ pathname:'lero', title:'🌟 Whats new in v6 🌟'},
       { pathname: `/x/introduction`, title: 'Overview' },
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
@@ -364,7 +370,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/migration-group',
-    title: 'Migration',
+    title: 'Migration Guides',
     icon: 'BookIcon',
     children: [
       {
