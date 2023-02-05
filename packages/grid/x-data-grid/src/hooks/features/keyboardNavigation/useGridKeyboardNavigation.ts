@@ -29,6 +29,52 @@ function enrichPageRowsWithPinnedRows(
   return [...(pinnedRows.top || []), ...rows, ...(pinnedRows.bottom || [])];
 }
 
+const getLeftColumnIndex = ({
+  currentColIndex,
+  firstColIndex,
+  lastColIndex,
+  direction,
+}: {
+  currentColIndex: number;
+  firstColIndex: number;
+  lastColIndex: number;
+  direction: 'rtl' | 'ltr';
+}) => {
+  if (direction === 'rtl') {
+    if (currentColIndex < lastColIndex) {
+      return currentColIndex + 1;
+    }
+  } else if (direction === 'ltr') {
+    if (currentColIndex > firstColIndex) {
+      return currentColIndex - 1;
+    }
+  }
+  return null;
+};
+
+const getRightColumnIndex = ({
+  currentColIndex,
+  firstColIndex,
+  lastColIndex,
+  direction,
+}: {
+  currentColIndex: number;
+  firstColIndex: number;
+  lastColIndex: number;
+  direction: 'rtl' | 'ltr';
+}) => {
+  if (direction === 'rtl') {
+    if (currentColIndex > firstColIndex) {
+      return currentColIndex - 1;
+    }
+  } else if (direction === 'ltr') {
+    if (currentColIndex < lastColIndex) {
+      return currentColIndex + 1;
+    }
+  }
+  return null;
+};
+
 /**
  * @requires useGridSorting (method) - can be after
  * @requires useGridFilter (state) - can be after
@@ -108,52 +154,6 @@ export const useGridKeyboardNavigation = (
     },
     [currentPageRows],
   );
-
-  const getLeftColumnIndex = ({
-    currentColIndex,
-    firstColIndex,
-    lastColIndex,
-    direction,
-  }: {
-    currentColIndex: number;
-    firstColIndex: number;
-    lastColIndex: number;
-    direction: 'rtl' | 'ltr';
-  }) => {
-    if (direction === 'rtl') {
-      if (currentColIndex < lastColIndex) {
-        return currentColIndex + 1;
-      }
-    } else if (direction === 'ltr') {
-      if (currentColIndex > firstColIndex) {
-        return currentColIndex - 1;
-      }
-    }
-    return null;
-  };
-
-  const getRightColumnIndex = ({
-    currentColIndex,
-    firstColIndex,
-    lastColIndex,
-    direction,
-  }: {
-    currentColIndex: number;
-    firstColIndex: number;
-    lastColIndex: number;
-    direction: 'rtl' | 'ltr';
-  }) => {
-    if (direction === 'rtl') {
-      if (currentColIndex > firstColIndex) {
-        return currentColIndex - 1;
-      }
-    } else if (direction === 'ltr') {
-      if (currentColIndex < lastColIndex) {
-        return currentColIndex + 1;
-      }
-    }
-    return null;
-  };
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     (params, event) => {
