@@ -17,4 +17,4 @@
 
 ## Migrating from v5?
 
-Migration guides are there for both the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/), with a complete list of breaking changes and a few [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
+Migration guides are available for both the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/), with a complete list of breaking changes and a few [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
