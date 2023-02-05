@@ -10,13 +10,11 @@
 
 ## Date and Time pickers
 
-
 - [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
 - [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
 - [Shortcuts for picking specific dates in a calendar](https://next.mui.com/x/react-date-pickers/shortcuts/)
 - [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-
 ## Migrating from v5?
 
-Migration guides are there for both the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/), listing all breaking changes and providing a few [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to help with your migrating experience.
+Migration guides are there for both the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/), with a complete list of breaking changes and a few [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
