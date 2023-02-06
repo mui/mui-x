@@ -14,6 +14,15 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
         disableMultipleRowSelection
         showCellVerticalBorder
         pageSizeOptions={[5]}
+        filterModel={{
+          items: [
+            {
+              field: 'column',
+              operator: 'contains',
+              value: 'a',
+            },
+          ],
+        }}
         componentsProps={{
           cell: {
             onBlur: handleCellFocusOut,
