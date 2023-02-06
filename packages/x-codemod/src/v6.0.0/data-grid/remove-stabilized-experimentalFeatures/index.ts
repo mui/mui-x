@@ -3,7 +3,7 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentsNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const propName = 'experimentalFeatures';
-const propertyToRemove = 'newEditingApi';
+const propKey = 'newEditingApi';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
@@ -14,7 +14,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     trailingComma: true,
   };
 
-  removeObjectProperty({ root, j, propName, componentsNames, propertyToRemove });
+  removeObjectProperty({ root, j, propName, componentsNames, propKey });
 
   return root.toSource(printOptions);
 }

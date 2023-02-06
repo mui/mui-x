@@ -14,7 +14,7 @@ interface RemoveObjectPropertyArgs {
    * <DataGrid experimentalFeatures={{ newEditingApi: true }} />
    * pass "newEditingApi"
    */
-  propertyToRemove: string;
+  propKey: string;
   j: JSCodeshift;
 }
 
@@ -22,7 +22,7 @@ export default function removeObjectProperty({
   root,
   propName,
   componentsNames,
-  propertyToRemove,
+  propKey,
   j,
 }: RemoveObjectPropertyArgs) {
   root
@@ -43,7 +43,7 @@ export default function removeObjectProperty({
         const objectKey = (path.value.key as any).name as any;
         definedKeys.push(objectKey);
       });
-      if (definedKeys.length === 1 && definedKeys[0] === propertyToRemove) {
+      if (definedKeys.length === 1 && definedKeys[0] === propKey) {
         // only that property is defined, remove the whole prop
         j(element)
           .find(j.JSXAttribute)
@@ -53,7 +53,7 @@ export default function removeObjectProperty({
           });
       } else {
         objectProperties.forEach((path) => {
-          if ((path.value.key as any).name === propertyToRemove) {
+          if ((path.value.key as any).name === propKey) {
             j(path).remove();
           }
         });
