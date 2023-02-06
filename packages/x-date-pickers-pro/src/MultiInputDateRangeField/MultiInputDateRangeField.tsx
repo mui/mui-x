@@ -141,6 +141,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
   return (
     <Root {...rootProps}>
       <TextField
+        fullWidth
         {...startDateProps}
         inputProps={{
           ...startDateProps.inputProps,
@@ -152,6 +153,7 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       />
       <Separator {...separatorProps} />
       <TextField
+        fullWidth
         {...endDateProps}
         inputProps={{
           ...endDateProps.inputProps,

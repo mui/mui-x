@@ -47,6 +47,7 @@ export const useDesktopPicker = <
 
   const utils = useUtils<TDate>();
   const internalInputRef = React.useRef<HTMLInputElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
   const labelId = useId();
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
@@ -117,7 +118,8 @@ export const useDesktopPicker = <
   if (hasUIView) {
     fieldProps.InputProps = {
       ...fieldProps.InputProps,
-      [`${inputAdornmentProps.position}Adornment`]: (
+      ref: containerRef,
+          [`${inputAdornmentProps.position}Adornment`]: (
         <InputAdornment {...inputAdornmentProps}>
           <OpenPickerButton {...openPickerButtonProps}>
             <OpenPickerIcon {...innerSlotProps?.openPickerIcon} />
@@ -162,7 +164,8 @@ export const useDesktopPicker = <
         <Field {...fieldProps} slots={slotsForField} inputRef={handleInputRef} />
         <PickersPopper
           role="dialog"
-          anchorEl={internalInputRef.current}
+          placement="bottom-start"
+          anchorEl={containerRef.current}
           {...actions}
           open={open}
           slots={slots}
