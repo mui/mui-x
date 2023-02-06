@@ -416,6 +416,7 @@ The list includes these transformers
 - [`row-selection-props-rename`](#row-selection-props-rename)
 - [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
+- [`rename-linkOperators-logicOperators`](#rename-linkOperators-logicOperators)
 - [`rename-selectors-and-events`](#rename-selectors-and-events)
 
 #### `column-menu-components-rename`
@@ -495,6 +496,61 @@ Remove `disableExtendRowFullWidth` prop which is no longer supported.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/remove-disableExtendRowFullWidth-prop <path>
+```
+
+#### `rename-linkOperators-logicOperators`
+
+Rename `linkOperators` related props to `logicOperators` and rename classes.
+
+```diff
+ const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [],
+-   linkOperator: GridLinkOperator.Or,
+-   quickFilterLogicOperator: GridLinkOperator.Or,
++   logicOperator: GridLogicOperator.Or,
++   quickFilterLogicOperator: GridLogicOperator.Or,
+  });
+- apiRef.current.setFilterLinkOperator('and')
+- const localeText = apiRef.current.getLocaleText('filterPanelLinkOperator')
++ apiRef.current.setFilterLogicOperator('and')
++ const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator')
+ <DataGrid
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [],
+-       linkOperator: GridLinkOperator.Or,
+-       quickFilterLogicOperator: GridLinkOperator.Or,
++       logicOperator: GridLogicOperator.Or,
++       quickFilterLogicOperator: GridLogicOperator.Or,
+      },
+    },
+  }}
+  filterModel={filterModel}
+  componentsProps={{
+    filter: {
+-     linkOperators: [GridLinkOperator.And],
++     logicOperators: [GridLogicOperator.And],
+      filterFormProps: {
+-       linkOperatorInputProps: {
++       logicOperatorInputProps: {
+          variant: 'outlined',
+          size: 'small',
+        },
+      },
+    },
+  }}
+  sx={{
+-   '& .MuiDataGrid-filterFormLinkOperatorInput': { mr: 2 },
+-   '& .MuiDataGrid-withBorder': { borderColor: '#456' },
++   '& .MuiDataGrid-filterFormLogicOperatorInput': { mr: 2 },
++   '& .MuiDataGrid-withBorderColor': { borderColor: '#456' },
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
 ```
 
 #### `rename-selectors-and-events`
