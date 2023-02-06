@@ -5,6 +5,9 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
   const localeText = apiRef.current.getLocaleText('filterPanelLinkOperator');
   apiRef.current.subscribeEvent('selectionChange', handleEvent);
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
+  const handleCellFocusOut = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
   return (
     <React.Fragment>
       <DataGrid
@@ -21,6 +24,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
             },
           ],
         }}
+        onCellFocusOut={handleCellFocusOut}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>
