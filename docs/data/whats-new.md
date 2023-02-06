@@ -6,7 +6,7 @@
 
 - [ApiRef available in the community version](/x/react-data-grid/api-object/)
 - [Improved column menu](/x/react-data-grid/column-menu/)
-- [Cell selection range](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#pro-premium)
+- [Cell range selection](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#pro-premium)
 
 ## Date and Time pickers
 
