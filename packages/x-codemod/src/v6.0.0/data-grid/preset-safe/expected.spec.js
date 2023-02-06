@@ -5,9 +5,20 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
   const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator');
   apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
   const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
+  const handleCellFocusOut = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
   return (
     <React.Fragment>
-      <DataGrid disableMultipleRowSelection showCellVerticalBorder pageSizeOptions={[5]} />
+      <DataGrid
+        disableMultipleRowSelection
+        showCellVerticalBorder
+        pageSizeOptions={[5]}
+        componentsProps={{
+          cell: {
+            onBlur: handleCellFocusOut,
+          },
+        }} />
       <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
     </React.Fragment>
   );
