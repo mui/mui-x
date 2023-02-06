@@ -78,12 +78,11 @@ export interface ExportedDateRangeCalendarProps<TDate>
    */
   reduceAnimations?: boolean;
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
+  onMonthChange?: (month: TDate) => void;
   /**
    * The number of calendars to render.
    * @default 2
