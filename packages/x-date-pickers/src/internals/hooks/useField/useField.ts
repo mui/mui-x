@@ -372,6 +372,16 @@ export const useField = <
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // If `state.tempValueStrAndroid` is still defined when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called the two `onChange` calls and would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && selectedSectionIndexes != null) {
+      clearActiveSection();
+    }
+  }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const valueStr = React.useMemo(
     () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),
     [state.sections, fieldValueManager, state.tempValueStrAndroid],
