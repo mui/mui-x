@@ -4,6 +4,7 @@ import renameRowsPerPageOptions from '../rename-rowsPerPageOptions-prop';
 import removeDisableExtendRowFullWidth from '../remove-disableExtendRowFullWidth-prop';
 import renameLinkOperatorsLogicOperators from '../rename-linkOperators-logicOperators';
 import renameSelectorsAndEvents from '../rename-selectors-and-events';
+import replaceOnCellFocusOut from '../replace-onCellFocusOut-prop';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
@@ -13,6 +14,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = removeDisableExtendRowFullWidth(file, api, options);
   file.source = renameLinkOperatorsLogicOperators(file, api, options);
   file.source = renameSelectorsAndEvents(file, api, options);
+  file.source = replaceOnCellFocusOut(file, api, options);
 
   return file.source;
 }
