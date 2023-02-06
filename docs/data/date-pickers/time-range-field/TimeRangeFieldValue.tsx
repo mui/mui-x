@@ -1,10 +1,10 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { DateRange } from '@mui/x-date-pickers-pro/DateRangePicker';
+import { DateRange } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_SingleInputTimeRangeField as SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
+import { SingleInputTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputTimeRangeField';
 
 export default function TimeRangeFieldValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>(() => [
@@ -14,7 +14,9 @@ export default function TimeRangeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={['SingleInputTimeRangeField', 'SingleInputTimeRangeField']}
+      >
         <DemoItem label="Uncontrolled field">
           <SingleInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}

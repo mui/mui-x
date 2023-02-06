@@ -287,15 +287,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     ],
   );
 
-  React.useLayoutEffect(() => {
-    if (renderContext) {
-      updateRenderZonePosition(renderContext);
-    }
-  }, [renderContext, updateRenderZonePosition]);
-
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
       setRenderContext(nextRenderContext);
+
+      updateRenderZonePosition(nextRenderContext);
 
       const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
         firstIndex: nextRenderContext.firstRowIndex,
@@ -312,7 +308,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       prevRenderContext.current = nextRenderContext;
     },
-    [apiRef, setRenderContext, prevRenderContext, currentPage.rows.length, rootProps.rowBuffer],
+    [
+      apiRef,
+      setRenderContext,
+      prevRenderContext,
+      currentPage.rows.length,
+      rootProps.rowBuffer,
+      updateRenderZonePosition,
+    ],
   );
 
   useEnhancedEffect(() => {
@@ -489,6 +492,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = apiRef.current.isRowSelectable(id);
       }
 
+      const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+      const { style: rowStyle, ...rowProps } =
+        (typeof getRowProps === 'function' && getRowProps(id, model)) || {};
+
       rows.push(
         <rootProps.components.Row
           key={id}
@@ -507,8 +514,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           containerWidth={availableSpace}
           isLastVisible={lastVisibleRowIndex}
           position={position}
-          {...(typeof getRowProps === 'function' ? getRowProps(id, model) : {})}
-          {...rootProps.componentsProps?.row}
+          {...rowProps}
+          {...rootRowProps}
+          style={{
+            ...rowStyle,
+            ...rootRowStyle,
+          }}
         />,
       );
     }

@@ -22,7 +22,7 @@ import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { defaultReduceAnimations } from '../internals/utils/defaultReduceAnimations';
 import { getDateCalendarUtilityClass } from './dateCalendarClasses';
 import { BaseDateValidationProps } from '../internals/hooks/validation/models';
-import { PickerSelectionState } from '../internals/hooks/usePickerState';
+import type { PickerSelectionState } from '../internals/hooks/usePicker';
 
 const useUtilityClasses = (ownerState: DateCalendarProps<any>) => {
   const { classes } = ownerState;
@@ -127,10 +127,14 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     dayOfWeekFormatter,
     components,
     componentsProps,
+    slots,
+    slotProps,
     loading,
     renderLoading,
     displayWeekNumber,
-    sx,
+    yearsPerRow,
+    monthsPerRow,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled({
@@ -291,7 +295,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       <PickersCalendarHeader
         views={views}
@@ -308,6 +312,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
         labelId={gridLabelId}
         components={components}
         componentsProps={componentsProps}
+        slots={slots}
+        slotProps={slotProps}
       />
       <DateCalendarViewTransitionContainer
         reduceAnimations={reduceAnimations}
@@ -325,6 +331,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               shouldDisableYear={shouldDisableYear}
               hasFocus={hasFocus}
               onFocusedViewChange={(isViewFocused) => setFocusedView('year', isViewFocused)}
+              yearsPerRow={yearsPerRow}
             />
           )}
 
@@ -338,6 +345,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               onChange={handleDateMonthChange}
               shouldDisableMonth={shouldDisableMonth}
               onFocusedViewChange={(isViewFocused) => setFocusedView('month', isViewFocused)}
+              monthsPerRow={monthsPerRow}
             />
           )}
 
@@ -363,6 +371,8 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
               displayWeekNumber={displayWeekNumber}
               components={components}
               componentsProps={componentsProps}
+              slots={slots}
+              slotProps={slotProps}
               loading={loading}
               renderLoading={renderLoading}
             />
@@ -390,11 +400,13 @@ DateCalendar.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -461,6 +473,11 @@ DateCalendar.propTypes = {
    * Minimal selectable date.
    */
   minDate: PropTypes.any,
+  /**
+   * Months rendered per row.
+   * @default 3
+   */
+  monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value changes.
    * @template TDate
@@ -538,10 +555,26 @@ DateCalendar.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
-   * If `true`, days that have `outsideCurrentMonth={true}` are displayed.
+   * If `true`, days outside the current month are rendered:
+   *
+   * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
+   *
+   * - if `fixedWeekNumber` is not defined, renders day to fill the first and last week of the current month.
+   *
+   * - ignored if `calendars` equals more than `1` on range pickers.
    * @default false
    */
   showDaysOutsideCurrentMonth: PropTypes.bool,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */
@@ -565,4 +598,9 @@ DateCalendar.propTypes = {
    * Available views.
    */
   views: PropTypes.arrayOf(PropTypes.oneOf(['day', 'month', 'year']).isRequired),
+  /**
+   * Years rendered per row.
+   * @default 3
+   */
+  yearsPerRow: PropTypes.oneOf([3, 4]),
 } as any;

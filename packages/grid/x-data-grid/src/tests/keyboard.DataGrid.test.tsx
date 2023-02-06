@@ -11,7 +11,7 @@ import {
   getColumnValues,
   getRow,
 } from 'test/utils/helperFn';
-import { DataGrid, DataGridProps, GridColDef, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, GridColDef } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -35,7 +35,7 @@ describe('<DataGrid /> - Keyboard', () => {
   function NavigationTestCaseNoScrollX(
     props: Omit<
       DataGridProps,
-      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+      'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
     > & {},
   ) {
     const data = useBasicDemoData(100, 3);
@@ -48,14 +48,14 @@ describe('<DataGrid /> - Keyboard', () => {
           autoHeight={isJSDOM}
           rows={data.rows}
           columns={transformColSizes(data.columns)}
-          pageSize={PAGE_SIZE}
-          rowsPerPageOptions={[PAGE_SIZE]}
+          initialState={{ pagination: { paginationModel: { pageSize: PAGE_SIZE } } }}
+          pageSizeOptions={[PAGE_SIZE]}
           rowBuffer={PAGE_SIZE}
           rowHeight={ROW_HEIGHT}
           columnHeaderHeight={HEADER_HEIGHT}
           hideFooter
           filterModel={{ items: [{ field: 'id', operator: '>', value: 10 }] }}
-          experimentalFeatures={{ columnGrouping: true }}
+          experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
           {...props}
         />
       </div>
@@ -76,7 +76,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to cell below when pressing "ArrowDown" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(18, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('18-1');
@@ -109,7 +109,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the cell above when pressing "ArrowUp" on a cell on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       const cell = getCell(11, 1);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('11-1');
@@ -300,57 +300,6 @@ describe('<DataGrid /> - Keyboard', () => {
     });
   });
 
-  describe('cell outline', () => {
-    it('should add the outlined class to the cell when it is focused', () => {
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(8, 1);
-      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
-      userEvent.mousePress(cell);
-      expect(cell).to.have.class(gridClasses['cell--outlined']);
-    });
-
-    it('should remove the outlined class from the cell when Tab is pressed', () => {
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
-      expect(cell).to.have.class(gridClasses['cell--outlined']);
-      fireEvent.keyDown(cell, { key: 'Tab' });
-      act(() => cell.blur());
-      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
-      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
-    });
-
-    it('should keep the cell focusable after Tab is pressed', () => {
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
-      expect(cell).to.have.attr('tabindex', '0');
-      fireEvent.keyDown(cell, { key: 'Tab' });
-      act(() => cell.blur());
-      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
-      expect(cell).to.have.attr('tabindex', '0');
-    });
-
-    it('should add the outlined class to the cell when it is focused via Tab', () => {
-      render(<NavigationTestCaseNoScrollX />);
-      const cell = getCell(8, 1);
-      userEvent.mousePress(cell);
-      expect(cell).to.have.class(gridClasses['cell--outlined']);
-
-      // Simulates cell losing focus to another element with Tab
-      fireEvent.keyDown(cell, { key: 'Tab' });
-      act(() => cell.blur());
-      fireEvent.keyUp(document.activeElement, { key: 'Tab' });
-      expect(cell).not.to.have.class(gridClasses['cell--outlined']);
-
-      // Simulates cell gaining focus again with Shift+Tab
-      fireEvent.keyDown(document.activeElement, { key: 'Tab', shiftKey: true });
-      act(() => cell.focus());
-      fireEvent.keyUp(cell, { key: 'Tab', shiftKey: true });
-      expect(cell).to.have.class(gridClasses['cell--outlined']);
-    });
-  });
-
   describe('column header navigation', () => {
     it('should scroll horizontally when navigating between column headers with arrows', function test() {
       if (isJSDOM) {
@@ -395,7 +344,7 @@ describe('<DataGrid /> - Keyboard', () => {
     });
 
     it('should move to the first row when pressing "ArrowDown" on a column header on the 2nd page', () => {
-      render(<NavigationTestCaseNoScrollX page={1} />);
+      render(<NavigationTestCaseNoScrollX paginationModel={{ page: 1, pageSize: PAGE_SIZE }} />);
       act(() => getColumnHeaderCell(1).focus());
       expect(getActiveColumnHeader()).to.equal('1');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
@@ -514,7 +463,7 @@ describe('<DataGrid /> - Keyboard', () => {
     function NavigationTestGroupingCaseNoScrollX(
       props: Omit<
         DataGridProps,
-        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'rowsPerPageOptions'
+        'autoHeight' | 'rows' | 'columns' | 'pageSize' | 'pageSizeOptions'
       > & {},
     ) {
       const data = getBasicGridData(10, 10);
@@ -527,15 +476,15 @@ describe('<DataGrid /> - Keyboard', () => {
             autoHeight={isJSDOM}
             rows={data.rows}
             columns={transformColSizes(data.columns)}
-            pageSize={PAGE_SIZE}
-            rowsPerPageOptions={[PAGE_SIZE]}
+            paginationModel={{ pageSize: PAGE_SIZE, page: 0 }}
+            pageSizeOptions={[PAGE_SIZE]}
             rowBuffer={PAGE_SIZE}
             rowHeight={ROW_HEIGHT}
             columnHeaderHeight={HEADER_HEIGHT}
             hideFooter
             disableVirtualization
             columnGroupingModel={columnGroupingModel}
-            experimentalFeatures={{ columnGrouping: true }}
+            experimentalFeatures={{ warnIfFocusStateIsNotSynced: true, columnGrouping: true }}
             {...props}
           />
         </div>

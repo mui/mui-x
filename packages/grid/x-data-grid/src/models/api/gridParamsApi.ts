@@ -27,7 +27,7 @@ export interface GridParamsApi {
    */
   getCellParams: <
     R extends GridValidRowModel = any,
-    V = any,
+    V = unknown,
     F = V,
     N extends GridTreeNode = GridTreeNode,
   >(

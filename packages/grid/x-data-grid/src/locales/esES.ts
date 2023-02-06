@@ -6,7 +6,6 @@ const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
   noResultsOverlayLabel: 'Resultados no encontrados',
-  errorOverlayDefaultLabel: 'Ha ocurrido un error.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidad',
@@ -49,7 +48,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
   filterPanelDeleteIconLabel: 'Borrar',
-  filterPanelLinkOperator: 'Operador lógico',
+  filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',
   filterPanelOperatorAnd: 'Y',
   filterPanelOperatorOr: 'O',
@@ -126,30 +125,30 @@ const esESGrid: Partial<GridLocaleText> = {
   unpin: 'Desanclar',
 
   // Tree Data
-  // treeDataGroupingHeaderName: 'Group',
-  // treeDataExpand: 'see children',
-  // treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'Grupo',
+  treeDataExpand: 'mostrar hijos',
+  treeDataCollapse: 'ocultar hijos',
 
   // Grouping columns
-  // groupingColumnHeaderName: 'Group',
-  // groupColumn: name => `Group by ${name}`,
-  // unGroupColumn: name => `Stop grouping by ${name}`,
+  groupingColumnHeaderName: 'Grupo',
+  groupColumn: (name) => `Agrupar por ${name}`,
+  unGroupColumn: (name) => `No agrupar por ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Alternar detalle',
   expandDetailPanel: 'Expandir',
-  collapseDetailPanel: 'reducirse',
+  collapseDetailPanel: 'Contraer',
 
   // Row reordering text
-  // rowReorderingHeaderName: 'Row reordering',
+  rowReorderingHeaderName: 'Reordenar filas',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
+  aggregationMenuItemHeader: 'Agregación',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'avg',
   aggregationFunctionLabelMin: 'min',
   aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationFunctionLabelSize: 'tamaño',
 };
 
 export const esES: Localization = getGridLocalization(esESGrid, esESCore);

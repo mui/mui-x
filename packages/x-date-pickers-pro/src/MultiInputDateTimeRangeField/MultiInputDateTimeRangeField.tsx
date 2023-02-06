@@ -5,7 +5,7 @@ import MuiTextField from '@mui/material/TextField';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { useSlotProps } from '@mui/base/utils';
-import { FieldsTextFieldProps } from '@mui/x-date-pickers/internals';
+import { FieldsTextFieldProps, uncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import { MultiInputDateTimeRangeFieldProps } from './MultiInputDateTimeRangeField.types';
 import { useMultiInputDateTimeRangeField } from '../internal/hooks/useMultiInputRangeField/useMultiInputDateTimeRangeField';
 
@@ -43,6 +43,8 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   });
 
   const {
+    slots: innerSlots,
+    slotProps: innerSlotProps,
     components,
     componentsProps,
     value,
@@ -68,13 +70,15 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     onSelectedSectionsChange,
     ...other
   } = themeProps;
+  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
+  const slotProps = innerSlotProps ?? componentsProps;
 
   const ownerState = themeProps;
 
-  const Root = components?.Root ?? MultiInputDateTimeRangeFieldRoot;
+  const Root = slots?.root ?? MultiInputDateTimeRangeFieldRoot;
   const rootProps = useSlotProps({
     elementType: Root,
-    externalSlotProps: componentsProps?.root,
+    externalSlotProps: slotProps?.root,
     externalForwardedProps: other,
     additionalProps: {
       ref,
@@ -82,22 +86,22 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     ownerState,
   });
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? MuiTextField;
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField,
     ownerState: { ...ownerState, position: 'end' },
   });
 
-  const Separator = components?.Separator ?? MultiInputDateTimeRangeFieldSeparator;
+  const Separator = slots?.separator ?? MultiInputDateTimeRangeFieldSeparator;
   const separatorProps = useSlotProps({
     elementType: Separator,
-    externalSlotProps: componentsProps?.separator,
+    externalSlotProps: slotProps?.separator,
     ownerState,
   });
 
@@ -187,11 +191,13 @@ MultiInputDateTimeRangeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -302,7 +308,17 @@ MultiInputDateTimeRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -332,6 +348,16 @@ MultiInputDateTimeRangeField.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   /**
    * Defines the space between immediate children.
    * @default 0

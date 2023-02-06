@@ -6,7 +6,6 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Inga rader',
   noResultsOverlayLabel: 'Inga resultat funna.',
-  errorOverlayDefaultLabel: 'Ett fel uppstod.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densitet',
@@ -49,7 +48,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lägg till filter',
   filterPanelDeleteIconLabel: 'Ta bort',
-  filterPanelLinkOperator: 'Logisk operatör',
+  filterPanelLogicOperator: 'Logisk operatör',
   filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Och',
   filterPanelOperatorOr: 'Eller',
@@ -123,7 +122,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Column pinning text
   pinToLeft: 'Fäst till vänster',
   pinToRight: 'Fäst till höger',
-  unpin: 'Ta bort fäste',
+  unpin: 'Ta bort fästning',
 
   // Tree Data
   treeDataGroupingHeaderName: 'Grupp',
@@ -136,7 +135,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   unGroupColumn: (name) => `Sluta gruppera efter ${name}`,
 
   // Master/detail
-  // detailPanelToggle: 'Detail panel toggle',
+  detailPanelToggle: 'Växla detaljpanel',
   expandDetailPanel: 'Expandera',
   collapseDetailPanel: 'Kollapsa',
 
@@ -144,12 +143,12 @@ const svSEGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Ordna om rader',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Aggregering',
+  aggregationFunctionLabelSum: 'sum',
+  aggregationFunctionLabelAvg: 'medel',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'antal',
 };
 
 export const svSE: Localization = getGridLocalization(svSEGrid, svSECore);

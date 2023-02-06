@@ -17,7 +17,7 @@
   },
   "slots": {},
   "name": "PickersActionBar",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiPickersActionBar" },
+  "styles": { "classes": ["root", "spacing"], "globalClasses": {}, "name": "MuiPickersActionBar" },
   "filename": "/packages/x-date-pickers/src/PickersActionBar/PickersActionBar.tsx",
   "inheritance": null,
   "demos": "<ul><li><a href=\"/x/react-date-pickers/custom-layout/\">Custom layout</a></li></ul>",

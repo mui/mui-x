@@ -4,15 +4,14 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import { GridColDef, ValueOptions } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { getValueFromValueOptions } from './filterPanelUtils';
+import { getLabelFromValueOption, getValueFromValueOptions } from './filterPanelUtils';
 
 const renderSingleSelectOptions = (
-  { valueOptions, valueFormatter, field }: GridColDef,
-  api: GridApiCommunity,
+  { valueOptions, field }: GridColDef,
   OptionComponent: React.ElementType,
+  getOptionLabel: (value: ValueOptions) => React.ReactNode,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
@@ -22,26 +21,38 @@ const renderSingleSelectOptions = (
   return iterableColumnValues.map((option) => {
     const isOptionTypeObject = typeof option === 'object';
 
-    const key = isOptionTypeObject ? option.value : option;
     const value = isOptionTypeObject ? option.value : option;
-
-    const formattedValue =
-      valueFormatter && option !== '' ? valueFormatter({ value: option, field, api }) : option;
-    const content = isOptionTypeObject ? option.label : formattedValue;
+    const label = getOptionLabel(option);
 
     return (
-      <OptionComponent key={key} value={value}>
-        {content}
+      <OptionComponent key={value} value={value}>
+        {label}
       </OptionComponent>
     );
   });
 };
 
 export type GridFilterInputSingleSelectProps = GridFilterInputValueProps &
-  TextFieldProps & { type?: 'singleSelect' };
+  TextFieldProps & {
+    type?: 'singleSelect';
+    /**
+     * Used to determine the text displayed for a given value option.
+     * @param {ValueOptions} value The current value option.
+     * @returns {string} The text to be displayed.
+     */
+    getOptionLabel?: (value: ValueOptions) => string;
+  };
 
 function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
-  const { item, applyValue, type, apiRef, focusElementRef, ...others } = props;
+  const {
+    item,
+    applyValue,
+    type,
+    apiRef,
+    focusElementRef,
+    getOptionLabel = getLabelFromValueOption,
+    ...others
+  } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
   const rootProps = useGridRootProps();
@@ -115,8 +126,8 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     >
       {renderSingleSelectOptions(
         apiRef.current.getColumn(item.field),
-        apiRef.current,
         isSelectNative ? 'option' : MenuItem,
+        getOptionLabel,
       )}
     </rootProps.components.BaseTextField>
   );
@@ -135,6 +146,12 @@ GridFilterInputSingleSelect.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Used to determine the text displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel: PropTypes.func,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

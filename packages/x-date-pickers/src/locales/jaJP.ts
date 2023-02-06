@@ -1,18 +1,11 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { DateView } from '../internals/models';
 
 // maps TimeView to its translation
 const timeViews = {
   hours: '時間',
   minutes: '分',
   seconds: '秒',
-};
-
-// maps PickersToolbar["viewType"] to its translation
-const pickerViews = {
-  date: 'カレンダー表示',
-  time: '時計表示',
 };
 
 const jaJPPickers: Partial<PickersLocaleText<any>> = {
@@ -23,14 +16,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前の表示を開く',
   openNextView: '次の表示を開く',
-  calendarViewSwitchingButtonAriaLabel: (view: DateView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
-    isKeyboardInputOpen
-      ? `テキスト入力表示から${pickerViews[viewType]}に切り替える`
-      : `${pickerViews[viewType]}からテキスト入力表示に切り替える`,
 
   // DateRange placeholders
   start: '開始',
@@ -60,10 +49,10 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   secondsClockNumberText: (seconds) => `${seconds} ${timeViews.seconds}`,
 
   // Calendar labels
-  // calendarWeekNumberHeaderLabel: 'Week number',
-  // calendarWeekNumberHeaderText: '#',
-  // calendarWeekNumberAriaLabelText: weekNumber => `Week ${weekNumber}`,
-  // calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberHeaderLabel: '週番号',
+  calendarWeekNumberHeaderText: '#',
+  calendarWeekNumberAriaLabelText: (weekNumber) => `${weekNumber}週目`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -80,13 +69,14 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: '日付を選択',
 
   // Field section placeholders
-  // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
-  // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
-  // fieldDayPlaceholder: () => 'DD',
-  // fieldHoursPlaceholder: () => 'hh',
-  // fieldMinutesPlaceholder: () => 'mm',
-  // fieldSecondsPlaceholder: () => 'ss',
-  // fieldMeridiemPlaceholder: () => 'aa',
+  fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
+  fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
+  fieldHoursPlaceholder: () => 'hh',
+  fieldMinutesPlaceholder: () => 'mm',
+  fieldSecondsPlaceholder: () => 'ss',
+  fieldMeridiemPlaceholder: () => 'aa',
 };
 
 export const jaJP = getPickersLocalization(jaJPPickers);

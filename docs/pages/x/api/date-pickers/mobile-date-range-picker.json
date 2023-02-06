@@ -1,12 +1,6 @@
 {
   "props": {
-    "onChange": { "type": { "name": "func" }, "required": true },
-    "renderInput": { "type": { "name": "func" }, "required": true },
-    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" }, "required": true },
-    "acceptRegex": {
-      "type": { "name": "instanceOf", "description": "RegExp" },
-      "default": "/\\dap/gi"
-    },
+    "autoFocus": { "type": { "name": "bool" } },
     "calendars": {
       "type": { "name": "enum", "description": "1<br>&#124;&nbsp;2<br>&#124;&nbsp;3" },
       "default": "2"
@@ -14,81 +8,97 @@
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
       "type": { "name": "bool" },
-      "default": "`true` for Desktop, `false` for Mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
+      "default": "`true` for desktop, `false` for mobile (based on the chosen wrapper and `desktopModeMediaQuery` prop)."
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotProps</code>."
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultRangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'start'"
+    },
+    "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
+    "disableDragEditing": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
     "disableHighlightToday": { "type": { "name": "bool" } },
-    "disableMaskedInput": { "type": { "name": "bool" } },
     "disableOpenPicker": { "type": { "name": "bool" } },
     "disablePast": { "type": { "name": "bool" } },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
-    "getOpenDialogAriaText": {
-      "type": { "name": "func" },
-      "default": "(date, utils) => `Choose date, selected date is ${utils.format(date, 'fullDate')}`"
-    },
-    "InputAdornmentProps": { "type": { "name": "object" } },
-    "inputFormat": { "type": { "name": "string" } },
-    "inputRef": {
-      "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
-    },
+    "format": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" } },
     "localeText": { "type": { "name": "object" } },
-    "mask": { "type": { "name": "string" }, "default": "'__/__/____'" },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
     "onAccept": { "type": { "name": "func" } },
+    "onChange": { "type": { "name": "func" } },
     "onClose": { "type": { "name": "func" } },
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
+    "onRangePositionChange": { "type": { "name": "func" } },
+    "onSelectedSectionsChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
-    "OpenPickerButtonProps": { "type": { "name": "object" } },
-    "readOnly": { "type": { "name": "bool" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
     },
-    "renderLoading": {
-      "type": { "name": "func" },
-      "default": "() => <span data-mui-test=\"loading-progress\">...</span>"
+    "renderLoading": { "type": { "name": "func" }, "default": "() => \"...\"" },
+    "selectedSections": {
+      "type": {
+        "name": "union",
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+      }
     },
-    "rifmFormatter": { "type": { "name": "func" } },
     "shouldDisableDate": { "type": { "name": "func" } },
-    "shouldDisableMonth": { "type": { "name": "func" } },
-    "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
-    "showToolbar": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       }
-    }
+    },
+    "value": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
+    "viewRenderers": { "type": { "name": "shape", "description": "{ day?: func }" } }
   },
   "slots": {
     "ActionBar": { "default": "PickersActionBar", "type": { "name": "elementType" } },
     "Day": { "default": "DateRangePickersDay", "type": { "name": "elementType" } },
     "Dialog": { "default": "PickersModalDialogRoot", "type": { "name": "elementType" } },
+    "Field": { "type": { "name": "elementType" } },
+    "FieldRoot": { "type": { "name": "elementType" } },
+    "FieldSeparator": { "type": { "name": "elementType" } },
+    "Layout": { "type": { "name": "elementType" } },
     "LeftArrowIcon": { "default": "ArrowLeft", "type": { "name": "elementType" } },
     "MobilePaper": { "default": "Paper from @mui/material", "type": { "name": "elementType" } },
     "MobileTransition": { "default": "Fade from @mui/material", "type": { "name": "elementType" } },
     "NextIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
-    "OpenPickerIcon": { "default": "Calendar or Clock", "type": { "name": "elementType" } },
     "PreviousIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "RightArrowIcon": { "default": "ArrowRight", "type": { "name": "elementType" } },
+    "Shortcuts": { "default": "PickersShortcuts", "type": { "name": "elementType" } },
     "SwitchViewButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "SwitchViewIcon": { "default": "ArrowDropDown", "type": { "name": "elementType" } },
-    "Toolbar": { "type": { "name": "elementType" } }
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } },
+    "Toolbar": { "default": "DateTimePickerToolbar", "type": { "name": "elementType" } }
   },
   "name": "MobileDateRangePicker",
   "styles": { "classes": [], "globalClasses": {}, "name": "MuiMobileDateRangePicker" },
@@ -96,7 +106,7 @@
   "forwardsRefTo": "HTMLDivElement",
   "filename": "/packages/x-date-pickers-pro/src/MobileDateRangePicker/MobileDateRangePicker.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-date-pickers/legacy-date-range-picker/\">Date Range Picker </a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-range-picker/\">Date Range Picker </a></li>\n<li><a href=\"/x/react-date-pickers/validation/\">Validation</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "MobileDateRangePicker" }
   ]

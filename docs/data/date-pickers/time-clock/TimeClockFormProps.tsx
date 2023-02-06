@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
@@ -8,7 +8,7 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 export default function TimeClockFormProps() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['TimeClock', 'TimeClock']}>
         <DemoItem label="disabled">
           <TimeClock defaultValue={dayjs('2022-04-07T15:30')} disabled />
         </DemoItem>

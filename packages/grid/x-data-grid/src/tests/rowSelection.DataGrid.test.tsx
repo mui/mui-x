@@ -43,7 +43,15 @@ describe('<DataGrid /> - Row Selection', () => {
   function TestDataGridSelection(props: Partial<DataGridProps>) {
     return (
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid {...defaultData} {...props} autoHeight={isJSDOM} />
+        <DataGrid
+          {...defaultData}
+          {...props}
+          autoHeight={isJSDOM}
+          experimentalFeatures={{
+            warnIfFocusStateIsNotSynced: true,
+            ...props.experimentalFeatures,
+          }}
+        />
       </div>
     );
   }
@@ -224,7 +232,13 @@ describe('<DataGrid /> - Row Selection', () => {
     });
 
     it('should select all visible rows regardless of pagination', () => {
-      render(<TestDataGridSelection checkboxSelection pageSize={1} rowsPerPageOptions={[1]} />);
+      render(
+        <TestDataGridSelection
+          checkboxSelection
+          initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
+          pageSizeOptions={[1]}
+        />,
+      );
       const selectAllCheckbox = document.querySelector('input[type="checkbox"]');
       fireEvent.click(selectAllCheckbox);
       expect(getSelectedRowIds()).to.deep.equal([0]);
@@ -310,8 +324,8 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -632,8 +646,8 @@ describe('<DataGrid /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );
@@ -651,9 +665,8 @@ describe('<DataGrid /> - Row Selection', () => {
       const { setProps } = render(
         <TestDataGridSelection
           checkboxSelection
-          pagination
-          pageSize={2}
-          rowsPerPageOptions={[2]}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
+          pageSizeOptions={[2]}
           onRowSelectionModelChange={onRowSelectionModelChange}
         />,
       );

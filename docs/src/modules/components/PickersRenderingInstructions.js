@@ -60,7 +60,7 @@ export default function PickersRenderingInstructions() {
         </ToggleButtonGroup>
         <TextField
           size="small"
-          label="date-library"
+          label="Date library"
           value={libraryUsed}
           onChange={handleLibraryUsedChange}
           select

@@ -10,6 +10,7 @@
     "disablePast": "If <code>true</code>, disable values before the current date for date components, time for time components and both for date time components.",
     "maxDate": "Maximal selectable date.",
     "minDate": "Minimal selectable date.",
+    "monthsPerRow": "Months rendered per row.",
     "onChange": "Callback fired when the value changes.<br><br><strong>Signature:</strong><br><code>function(value: TDate | null) =&gt; void</code><br><em>value:</em> The new value.",
     "readOnly": "If <code>true</code> picker is readonly",
     "shouldDisableMonth": "Disable specific month.<br><br><strong>Signature:</strong><br><code>function(month: TDate) =&gt; boolean</code><br><em>month:</em> The month to test.<br> <em>returns</em> (boolean): If <code>true</code>, the month will be disabled.",

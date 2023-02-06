@@ -6,7 +6,6 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Няма редове',
   noResultsOverlayLabel: 'Няма намерени резултати.',
-  errorOverlayDefaultLabel: 'Възникна грешка.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Гъстота',
@@ -48,7 +47,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
   filterPanelDeleteIconLabel: 'Изтрий',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Оператори',
   filterPanelOperatorAnd: 'И',
   filterPanelOperatorOr: 'Или',

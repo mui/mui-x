@@ -43,11 +43,4 @@ export interface GridFocusPrivateApi {
     field: string,
     direction: 'below' | 'right' | 'left',
   ) => void;
-  /**
-   * Checks if a given cell has outline.
-   * @param {GridRowId} id The row id.
-   * @param {string} field The column field.
-   * @returns {boolean} Whether the cell has outline or not.
-   */
-  isCellOutlined: (id: GridRowId, field: string) => boolean;
 }

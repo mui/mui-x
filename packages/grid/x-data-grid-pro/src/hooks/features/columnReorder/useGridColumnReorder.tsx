@@ -6,6 +6,8 @@ import {
   getDataGridUtilityClass,
   GridEventListener,
   useGridLogger,
+  useGridApiOptionHandler,
+  GridColumnOrderChangeParams,
 } from '@mui/x-data-grid';
 import { GridStateInitializer } from '@mui/x-data-grid/internals';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
@@ -54,7 +56,10 @@ export const useGridColumnReorder = (
   apiRef: React.MutableRefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnReorder' | 'keepColumnPositionIfDraggedOutside' | 'classes'
+    | 'disableColumnReorder'
+    | 'keepColumnPositionIfDraggedOutside'
+    | 'classes'
+    | 'onColumnOrderChange'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
@@ -306,9 +311,17 @@ export const useGridColumnReorder = (
       if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
-      }
+        originColumnIndex.current = null;
+      } else {
+        // Emit the columnOrderChange event only once when the reordering stops.
+        const columnOrderChangeParams: GridColumnOrderChangeParams = {
+          column: apiRef.current.getColumn(dragColField),
+          targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(dragColField),
+          oldIndex: originColumnIndex.current!,
+        };
 
-      originColumnIndex.current = null;
+        apiRef.current.publishEvent('columnOrderChange', columnOrderChangeParams);
+      }
 
       apiRef.current.setState((state) => ({
         ...state,
@@ -325,4 +338,5 @@ export const useGridColumnReorder = (
   useGridApiEventHandler(apiRef, 'columnHeaderDragEnd', handleDragEnd);
   useGridApiEventHandler(apiRef, 'cellDragEnter', handleDragEnter);
   useGridApiEventHandler(apiRef, 'cellDragOver', handleDragOver);
+  useGridApiOptionHandler(apiRef, 'columnOrderChange', props.onColumnOrderChange);
 };

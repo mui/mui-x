@@ -1,26 +1,28 @@
-import { DateRangePickerInputClassKey } from '../DateRangePicker/dateRangePickerInputClasses';
-import { DateRangePickerToolbarClassKey } from '../DateRangePicker/dateRangePickerToolbarClasses';
-import { DateRangePickerViewDesktopClassKey } from '../DateRangePicker/dateRangePickerViewDesktopClasses';
 import { DateRangePickerDayClassKey } from '../DateRangePickerDay';
-import { DateRangeCalendarClassKey } from '../DateRangeCalendar/dateRangeCalendarClasses';
+import { DateRangeCalendarClassKey } from '../DateRangeCalendar';
+import { DateRangePickerToolbarClassKey } from '../DateRangePicker';
 
 // prettier-ignore
 export interface PickersProComponentNameToClassKey {
-  MuiDateRangeCalendar: DateRangeCalendarClassKey
-  MuiDateRangePicker: never;
+  MuiDateRangeCalendar: DateRangeCalendarClassKey;
   MuiDateRangePickerDay: DateRangePickerDayClassKey;
-  MuiDateRangePickerInput: DateRangePickerInputClassKey;
   MuiDateRangePickerToolbar: DateRangePickerToolbarClassKey;
-  MuiDateRangePickerViewDesktop: DateRangePickerViewDesktopClassKey;
-  MuiDesktopDateRangePicker: never;
-  MuiDesktopNextDateRangePicker: never;
-  MuiMobileDateRangePicker: never;
-  MuiMobileNextDateRangePicker: never;
+
+  // Multi input range fields
   MuiMultiInputDateRangeField: never;
-  MuiNextDateRangePicker: never;
+  MuiMultiInputDateTimeRangeField: never;
+  MuiMultiInputTimeRangeField: never;
+
+  // Single input range fields
   MuiSingleInputDateRangeField: never;
+  MuiSingleInputDateTimeRangeField: never;
+  MuiSingleInputTimeRangeField: never;
+  
+  // Date Range Pickers
+  MuiDateRangePicker: never;
+  MuiDesktopDateRangePicker: never;
+  MuiMobileDateRangePicker: never;
   MuiStaticDateRangePicker: never;
-  MuiStaticNextDateRangePicker: never;
 }
 
 declare module '@mui/material/styles' {

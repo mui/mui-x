@@ -1,6 +1,6 @@
 {
   "name": "GridPaginationApi",
-  "description": "The pagination API interface that is available in the grid apiRef.",
+  "description": "The pagination API interface that is available in the grid `apiRef`.",
   "properties": [
     {
       "name": "setPage",
@@ -11,6 +11,11 @@
       "name": "setPageSize",
       "description": "Sets the number of displayed rows to the value given by <code>pageSize</code>.",
       "type": "(pageSize: number) => void"
+    },
+    {
+      "name": "setPaginationModel",
+      "description": "Sets the <code>paginationModel</code> to a new value.",
+      "type": "(model: GridPaginationModel) => void"
     }
   ]
 }

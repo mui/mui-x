@@ -61,10 +61,6 @@ export interface GridClasses {
    */
   'cell--withRenderer': string;
   /**
-   * Styles applied to the cell element if the cell is outlined.
-   */
-  'cell--outlined': string;
-  /**
    * Styles applied to the cell element if it is at the top edge of a cell selection range.
    */
   'cell--rangeTop': string;
@@ -283,7 +279,7 @@ export interface GridClasses {
   /**
    * Styles applied to the link operator inout of the filter form component.
    */
-  filterFormLinkOperatorInput: string;
+  filterFormLogicOperatorInput: string;
   /**
    * Styles applied to the column input of the filter form component.
    */
@@ -552,7 +548,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'cell--textLeft',
   'cell--textRight',
   'cell--withRenderer',
-  'cell--outlined',
   'cell--rangeTop',
   'cell--rangeBottom',
   'cell--rangeLeft',
@@ -607,7 +602,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editInputCell',
   'filterForm',
   'filterFormDeleteIcon',
-  'filterFormLinkOperatorInput',
+  'filterFormLogicOperatorInput',
   'filterFormColumnInput',
   'filterFormOperatorInput',
   'filterFormValueInput',

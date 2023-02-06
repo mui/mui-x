@@ -1,4 +1,0 @@
-<StaticNextDateRangePicker
-  displayStaticWrapperAs="desktop"
-  defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-/>
