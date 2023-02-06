@@ -20,7 +20,7 @@
 Install the latest v6 now to enjoy the new features and overall improvements!
 
 - [Data Grid](/x/react-data-grid/getting-started/#installation)
-- [Date Pickers](/x/react-date-pickers/getting-started/#installation)
+- [Date and Time Pickers](/x/react-date-pickers/getting-started/#installation)
 
 ## Migrating from v5?
 
