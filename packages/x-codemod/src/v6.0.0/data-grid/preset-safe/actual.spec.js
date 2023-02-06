@@ -15,6 +15,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
         showCellRightBorder
         disableExtendRowFullWidth
         rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
         onCellFocusOut={handleCellFocusOut}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
