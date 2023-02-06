@@ -9,6 +9,10 @@ export interface GridClasses {
    */
   actionsCell: string;
   /**
+   * Styles applied to each item of the cell with type="actions"
+   */
+  actionsCellItem: string;
+  /**
    * Styles applied to the root element of the column header when aggregated.
    */
   aggregationColumnHeader: string;
@@ -536,6 +540,7 @@ export function getDataGridUtilityClass(slot: string): string {
 
 export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'actionsCell',
+  'actionsCellItem',
   'aggregationColumnHeader',
   'aggregationColumnHeader--alignLeft',
   'aggregationColumnHeader--alignCenter',

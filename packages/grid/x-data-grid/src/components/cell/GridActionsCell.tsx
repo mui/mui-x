@@ -2,13 +2,26 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MenuList from '@mui/material/MenuList';
-import { unstable_useId as useId } from '@mui/utils';
+import { unstable_useId as useId, unstable_composeClasses as composeClasses } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { gridClasses } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
 import { GridActionsColDef } from '../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['actionsCell'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
 
 const hasActions = (colDef: any): colDef is GridActionsColDef =>
   typeof colDef.getActions === 'function';
@@ -51,6 +64,7 @@ function GridActionsCell(props: GridActionsCellProps) {
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootProps.classes });
 
   React.useLayoutEffect(() => {
     if (!hasFocus) {
@@ -173,7 +187,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       role="menu"
       ref={rootRef}
       tabIndex={-1}
-      className={gridClasses.actionsCell}
+      className={classes.root}
       onKeyDown={handleRootKeyDown}
       {...other}
     >
@@ -211,6 +225,7 @@ function GridActionsCell(props: GridActionsCellProps) {
           open={open}
           target={buttonRef.current}
           position={position}
+          disablePortal
         >
           <MenuList
             id={menuId}

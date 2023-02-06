@@ -352,6 +352,7 @@
   "styles": {
     "classes": [
       "actionsCell",
+      "actionsCellItem",
       "aggregationColumnHeader",
       "aggregationColumnHeader--alignLeft",
       "aggregationColumnHeader--alignCenter",

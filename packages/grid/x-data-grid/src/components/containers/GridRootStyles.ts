@@ -35,6 +35,9 @@ export const GridRootStyles = styled('div', {
       [`&.${gridClasses['root--disableUserSelection']} .${gridClasses.cell}`]:
         styles['root--disableUserSelection'],
     },
+    { [`& .${gridClasses.actionsCell}`]: styles.actionsCell },
+    { [`& .${gridClasses.actionsCellItem}`]: styles.actionsCellItem },
+    { [`& .${gridClasses.booleanCell}`]: styles.booleanCell },
     { [`& .${gridClasses.editBooleanCell}`]: styles.editBooleanCell },
     { [`& .${gridClasses['cell--editing']}`]: styles['cell--editing'] },
     { [`& .${gridClasses['cell--textCenter']}`]: styles['cell--textCenter'] },

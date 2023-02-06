@@ -1,8 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import clsx from 'clsx';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type GridActionsCellItemProps = {
   label: string;
@@ -12,9 +17,23 @@ export type GridActionsCellItemProps = {
   | ({ showInMenu: true } & MenuItemProps)
 );
 
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
+
+const useUtilityClasses = (ownerState: OwnerState) => {
+  const { classes } = ownerState;
+
+  const slots = {
+    root: ['actionsCellItem'],
+  };
+
+  return composeClasses(slots, getDataGridUtilityClass, classes);
+};
+
 const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellItemProps>(
   (props, ref) => {
-    const { label, icon, showInMenu, onClick, ...other } = props;
+    const { label, icon, showInMenu, onClick, className, ...other } = props;
+    const rootProps = useGridRootProps();
+    const classes = useUtilityClasses({ classes: rootProps.classes });
 
     const handleClick = (event: any) => {
       if (onClick) {
@@ -38,7 +57,12 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
     }
 
     return (
-      <MenuItem ref={ref} {...(other as any)} onClick={onClick}>
+      <MenuItem
+        ref={ref}
+        {...(other as any)}
+        onClick={onClick}
+        className={clsx(classes.root, className)}
+      >
         {icon && <ListItemIcon>{icon}</ListItemIcon>}
         {label}
       </MenuItem>
