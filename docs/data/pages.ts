@@ -369,7 +369,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/migration-group',
-    title: 'Migration Guides',
+    title: 'Migration',
     icon: 'BookIcon',
     children: [
       {
