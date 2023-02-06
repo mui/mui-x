@@ -9,8 +9,8 @@ interface DataGridVirtualScrollerProps extends React.HTMLAttributes<HTMLDivEleme
   disableVirtualization?: boolean;
 }
 
-const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtualScrollerProps>(
-  function DataGridVirtualScroller(props, ref) {
+const DataGridVirtualScrollerPure = React.forwardRef<HTMLDivElement, DataGridVirtualScrollerProps>(
+  function DataGridVirtualScrollerPure(props, ref) {
     const { className, disableVirtualization, ...other } = props;
 
     const { getRootProps, getContentProps, getRenderZoneProps, getRows } = useGridVirtualScroller({
@@ -31,4 +31,5 @@ const DataGridVirtualScroller = React.forwardRef<HTMLDivElement, DataGridVirtual
   },
 );
 
+const DataGridVirtualScroller = React.memo(DataGridVirtualScrollerPure);
 export { DataGridVirtualScroller };

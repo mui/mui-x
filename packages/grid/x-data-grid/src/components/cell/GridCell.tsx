@@ -89,7 +89,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 let warnedOnce = false;
 
-function GridCell(props: GridCellProps) {
+function Cell(props: GridCellProps) {
   const {
     align,
     children,
@@ -287,7 +287,7 @@ function GridCell(props: GridCellProps) {
   );
 }
 
-GridCell.propTypes = {
+Cell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -319,4 +319,5 @@ GridCell.propTypes = {
   width: PropTypes.number.isRequired,
 } as any;
 
+const GridCell = React.memo(Cell);
 export { GridCell };

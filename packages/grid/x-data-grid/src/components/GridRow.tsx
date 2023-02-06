@@ -94,10 +94,10 @@ function EmptyCell({ width }: { width: number }) {
   return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
-const GridRow = React.forwardRef<
+const GridRowPure = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & GridRowProps
->(function GridRow(props, refProp) {
+>(function GridRowPure(props, refProp) {
   const {
     selected,
     rowId,
@@ -512,7 +512,7 @@ const GridRow = React.forwardRef<
   );
 });
 
-GridRow.propTypes = {
+GridRowPure.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -538,4 +538,5 @@ GridRow.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
+const GridRow = React.memo(GridRowPure);
 export { GridRow };
