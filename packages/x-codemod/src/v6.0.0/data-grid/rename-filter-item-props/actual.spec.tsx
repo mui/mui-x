@@ -27,7 +27,7 @@ function App() {
         columnField: 'score',
         operatorValue: '>',
         value: 100,
-      }
+      },
     ],
   });
   return (
@@ -62,14 +62,16 @@ function App() {
         columns={columns}
         rows={rows}
         filterModel={proFilterModel}
-        onFilterModelChange={(model) => setProFilterModel(model)} />
+        onFilterModelChange={(model) => setProFilterModel(model)}
+      />
       <DataGridPremium
         columns={columns}
         rows={rows}
         filterModel={premiumFilterModel.current}
         onFilterModelChange={(model) => {
-          premiumFilterModel.current = model
-        }} />
+          premiumFilterModel.current = model;
+        }}
+      />
     </React.Fragment>
   );
 }
