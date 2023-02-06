@@ -294,8 +294,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Filtering
 
-- The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
-- The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
+- ✅ The `GridFilterItem['columnField']` was renamed to `GridFilterItem['field']`
+- ✅ The `GridFilterItem['operatorValue']` was renamed to `GridFilterItem['operator']`
 - The `GridFilterItem['operator']` is now required.
 - The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
 - ✅ The `GridLinkOperator` enum was renamed to `GridLogicOperator`.

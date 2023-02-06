@@ -12,6 +12,15 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
         showCellRightBorder
         disableExtendRowFullWidth
         rowsPerPageOptions={[5]}
+        filterModel={{
+          items: [
+            {
+              columnField: 'column',
+              operatorValue: 'contains',
+              value: 'a',
+            },
+          ],
+        }}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>

@@ -417,6 +417,7 @@ The list includes these transformers
 - [`rename-rowsPerPageOptions-prop`](#rename-rowsPerPageOptions-prop)
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 - [`rename-linkOperators-logicOperators`](#rename-linkOperators-logicOperators)
+- [`rename-filter-item-props`](#rename-filter-item-props)
 - [`rename-selectors-and-events`](#rename-selectors-and-events)
 
 #### `column-menu-components-rename`
@@ -551,6 +552,47 @@ Rename `linkOperators` related props to `logicOperators` and rename classes.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/rename-linkOperators-logicOperators <path>
+```
+
+#### `rename-filter-item-props`
+
+Rename filter item props to the new values.
+
+```diff
+ <DataGrid
+  columns={columns}
+  rows={rows}
+  initialState={{
+    filter: {
+      filterModel: {
+        items: [
+          {
+-           columnField: 'column',
+-           operatorValue: 'contains',
++           field: 'column',
++           operator: 'contains',
+            value: 'a',
+          },
+        ],
+      },
+    },
+  }}
+  filterModel={{
+    items: [
+      {
+-       columnField: 'column',
+-       operatorValue: 'contains',
++       field: 'column',
++       operator: 'contains',
+        value: 'a',
+      },
+    ],
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-filter-item-props <path>
 ```
 
 #### `rename-selectors-and-events`

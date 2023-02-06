@@ -9,7 +9,7 @@ function read(fileName) {
 }
 
 describe('v6.0.0/data-grid', () => {
-  describe('filter-item-props-rename', () => {
+  describe('rename-filter-item-props', () => {
     it('transforms imports as needed', () => {
       const actual = transform(
         { source: read('./actual.spec.tsx') },

@@ -7,7 +7,19 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
   const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
   return (
     <React.Fragment>
-      <DataGrid disableMultipleRowSelection showCellVerticalBorder pageSizeOptions={[5]} />
+      <DataGrid
+        disableMultipleRowSelection
+        showCellVerticalBorder
+        pageSizeOptions={[5]}
+        filterModel={{
+          items: [
+            {
+              field: 'column',
+              operator: 'contains',
+              value: 'a',
+            },
+          ],
+        }} />
       <GridColumnMenuSortItem colDef={column} onClick={hideMenu} />
     </React.Fragment>
   );
