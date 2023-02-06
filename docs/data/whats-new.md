@@ -4,17 +4,17 @@
 
 ## Data Grid
 
-- [ApiRef available in the community version](https://next.mui.com/x/react-data-grid/api-object/)
-- [Improved column menu](https://next.mui.com/x/react-data-grid/column-menu/)
-- [Cell selection range](https://next.mui.com/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#pro-premium)
+- [ApiRef available in the community version](/x/react-data-grid/api-object/)
+- [Improved column menu](/x/react-data-grid/column-menu/)
+- [Cell selection range](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#pro-premium)
 
 ## Date and Time pickers
 
-- [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
-- [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- [Shortcuts for picking specific dates in a calendar](https://next.mui.com/x/react-date-pickers/shortcuts/)
-- [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+- [Fields: the new default input for pickers](/x/react-date-pickers/fields/).
+- [Improved layout customization](/x/react-date-pickers/custom-layout/)
+- [Shortcuts for picking specific dates in a calendar](/x/react-date-pickers/shortcuts/)
+- [Edit date ranges with drag and drop](/x/react-date-pickers/date-range-calendar/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
 ## Migrating from v5?
 
-Migration guides are available for both the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/), with a complete list of the breaking changes and an expanding list of [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
+Migration guides are available for both the [Data Grid](/x/migration/migration-data-grid-v5/) and [Date Pickers](/x/migration/migration-pickers-v5/), with a complete list of the breaking changes and an expanding list of [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
