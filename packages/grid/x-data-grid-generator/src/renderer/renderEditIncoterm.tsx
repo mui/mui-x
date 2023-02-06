@@ -17,8 +17,8 @@ function EditIncoterm(props: GridRenderEditCellParams<string | null>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const handleChange: SelectProps['onChange'] = (event) => {
-    apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
+  const handleChange: SelectProps['onChange'] = async (event) => {
+    await apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
 
     if (rootProps.experimentalFeatures?.newEditingApi) {
       apiRef.current.stopCellEditMode({ id, field });

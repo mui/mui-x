@@ -32,8 +32,8 @@ function EditCountry(props: GridRenderEditCellParams<CountryIsoOption>) {
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<CountryIsoOption, false, true, false>['onChange']>
   >(
-    (event, newValue) => {
-      apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
+    async (event, newValue) => {
+      await apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
       if (!(event as any).key) {
         if (rootProps.experimentalFeatures?.newEditingApi) {
           apiRef.current.stopCellEditMode({ id, field });

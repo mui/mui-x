@@ -13,8 +13,8 @@ function EditRating(props: GridRenderEditCellParams<number>) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
 
-  const handleChange = (event: any) => {
-    apiRef.current.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
+  const handleChange = async (event: any) => {
+    await apiRef.current.setEditCellValue({ id, field, value: Number(event.target.value) }, event);
     // Check if the event is not from the keyboard
     // https://github.com/facebook/react/issues/7407
     if (event.nativeEvent.clientX !== 0 && event.nativeEvent.clientY !== 0) {
