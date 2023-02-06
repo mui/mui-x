@@ -600,6 +600,17 @@ describe('<DataGridPro /> - Column pinning', () => {
         expect(apiRef.current.isColumnPinned('currencyPair')).to.equal(false);
       });
     });
+
+    // See https://github.com/mui/mui-x/issues/7819
+    describe('`getCellElement` method should return cell element', () => {
+      it('should return the correct value', () => {
+        render(
+          <TestCase initialState={{ pinnedColumns: { left: ['id'], right: ['price16M'] } }} />,
+        );
+        const cellElement = apiRef.current.getCellElement(0, 'currencyPair');
+        expect(cellElement).not.to.equal(null);
+      });
+    });
   });
 
   describe('column menu', () => {
