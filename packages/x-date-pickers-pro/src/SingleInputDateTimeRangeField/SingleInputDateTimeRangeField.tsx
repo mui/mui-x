@@ -18,11 +18,11 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
     name: 'MuiSingleInputDateTimeRangeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const Input = components?.Input ?? TextField;
+  const Input = slots?.input ?? components?.Input ?? TextField;
   const inputProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps({
     elementType: Input,
     externalSlotProps: componentsProps?.input,
@@ -76,11 +76,13 @@ SingleInputDateTimeRangeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -251,13 +253,31 @@ SingleInputDateTimeRangeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
       startIndex: PropTypes.number.isRequired,
     }),
   ]),
+  /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
   /**
    * Disable specific date. @DateIOType
    * @template TDate
@@ -268,7 +288,7 @@ SingleInputDateTimeRangeField.propTypes = {
   shouldDisableDate: PropTypes.func,
   /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -277,6 +297,16 @@ SingleInputDateTimeRangeField.propTypes = {
    * The size of the component.
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

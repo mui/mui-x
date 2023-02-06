@@ -1,2 +1,6 @@
 export { StaticDateRangePicker } from './StaticDateRangePicker';
-export type { StaticDateRangePickerProps } from './StaticDateRangePicker';
+export type {
+  StaticDateRangePickerProps,
+  StaticDateRangePickerSlotsComponent,
+  StaticDateRangePickerSlotsComponentsProps,
+} from './StaticDateRangePicker.types';

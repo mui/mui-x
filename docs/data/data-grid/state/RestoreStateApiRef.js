@@ -151,8 +151,7 @@ ViewListItem.propTypes = {
         filterModel: PropTypes.object,
       }),
       pagination: PropTypes.shape({
-        page: PropTypes.number,
-        pageSize: PropTypes.number,
+        paginationModel: PropTypes.object,
       }),
       pinnedColumns: PropTypes.shape({
         left: PropTypes.arrayOf(PropTypes.string),

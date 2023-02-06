@@ -1,28 +1,35 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from 'docsx/src/modules/components/DemoContainer';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextTimePicker as NextTimePicker } from '@mui/x-date-pickers/NextTimePicker';
-import { Unstable_MobileNextTimePicker as MobileNextTimePicker } from '@mui/x-date-pickers/MobileNextTimePicker';
-import { Unstable_DesktopNextTimePicker as DesktopNextTimePicker } from '@mui/x-date-pickers/DesktopNextTimePicker';
-import { Unstable_StaticNextTimePicker as StaticNextTimePicker } from '@mui/x-date-pickers/StaticNextTimePicker';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
 
 export default function ResponsiveTimePickers() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'TimePicker',
+          'MobileTimePicker',
+          'DesktopTimePicker',
+          'StaticTimePicker',
+        ]}
+      >
         <DemoItem label="Desktop variant">
-          <DesktopNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+          <DesktopTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem label="Mobile variant">
-          <MobileNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+          <MobileTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem label="Responsive variant">
-          <NextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+          <TimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
         <DemoItem label="Static variant">
-          <StaticNextTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
+          <StaticTimePicker defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

@@ -6,7 +6,6 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepředvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -56,7 +55,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
   filterPanelDeleteIconLabel: 'Odstranit',
-  // filterPanelLinkOperator: 'Logic operator',
+  // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Nebo',

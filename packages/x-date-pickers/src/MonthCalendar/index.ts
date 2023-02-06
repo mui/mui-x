@@ -1,5 +1,5 @@
 export { MonthCalendar } from './MonthCalendar';
-export type { MonthCalendarProps } from './MonthCalendar';
+export type { MonthCalendarProps } from './MonthCalendar.types';
 
 export { monthCalendarClasses, getMonthCalendarUtilityClass } from './monthCalendarClasses';
 export type { MonthCalendarClasses, MonthCalendarClassKey } from './monthCalendarClasses';

@@ -38,6 +38,7 @@ The following steps must be proposed as a pull request.
 - [ ] Build the packages: `yarn release:build`.
 - [ ] Release the versions on npm: `yarn release:publish` (you need your 2FA device).
 - [ ] Push the newly created tag: `yarn release:tag`.
+- [ ] If `@mui/x-codemod` has been released, set the pre-release package `tag` to `latest` with: `npm dist-tag add @mui/x-codemod@<released_version> latest`.
 
 ### Publish the documentation
 

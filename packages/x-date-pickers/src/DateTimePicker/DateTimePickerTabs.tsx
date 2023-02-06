@@ -5,10 +5,6 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
-import {
-  WrapperVariantContext,
-  WrapperVariant,
-} from '../internals/components/wrappers/WrapperVariantContext';
 import { DateOrTimeView } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
@@ -62,9 +58,7 @@ export interface DateTimePickerTabsProps
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
-type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -77,17 +71,15 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
-  ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop `order` with the legacy pickers
-    order: 1,
+  '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
       top: 0,
     },
-  }),
+  },
 }));
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
@@ -101,9 +93,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   } = props;
 
   const localeText = useLocaleText();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-  const ownerState = { ...props, wrapperVariant };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onViewChange(tabToView(value));
@@ -115,7 +105,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={ownerState}
+      ownerState={props}
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}

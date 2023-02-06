@@ -19,14 +19,14 @@ const TimeField = React.forwardRef(function TimeField<TDate>(
     name: 'MuiTimeField',
   });
 
-  const { components, componentsProps, ...other } = themeProps;
+  const { slots, slotProps, components, componentsProps, ...other } = themeProps;
 
   const ownerState = themeProps;
 
-  const TextField = components?.TextField ?? MuiTextField;
+  const TextField = slots?.textField ?? components?.TextField ?? MuiTextField;
   const { inputRef: externalInputRef, ...textFieldProps }: TimeFieldProps<TDate> = useSlotProps({
     elementType: TextField,
-    externalSlotProps: componentsProps?.textField,
+    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
@@ -77,11 +77,13 @@ TimeField.propTypes = {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components: PropTypes.object,
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps: PropTypes.object,
   /**
@@ -236,7 +238,17 @@ TimeField.propTypes = {
    * If not provided, the selected sections will be handled internally.
    */
   selectedSections: PropTypes.oneOfType([
-    PropTypes.oneOf(['all', 'day', 'hours', 'meridiem', 'minutes', 'month', 'seconds', 'year']),
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
     PropTypes.number,
     PropTypes.shape({
       endIndex: PropTypes.number.isRequired,
@@ -244,8 +256,16 @@ TimeField.propTypes = {
     }),
   ]),
   /**
+   * Disable specific clock time.
+   * @param {number} clockValue The value to check.
+   * @param {TimeView} view The clock type of the timeValue.
+   * @returns {boolean} If `true` the time will be disabled.
+   * @deprecated Consider using `shouldDisableTime`.
+   */
+  shouldDisableClock: PropTypes.func,
+  /**
    * Disable specific time.
-   * @param {number} timeValue The value to check.
+   * @param {TDate} value The value to check.
    * @param {TimeView} view The clock type of the timeValue.
    * @returns {boolean} If `true` the time will be disabled.
    */
@@ -254,6 +274,16 @@ TimeField.propTypes = {
    * The size of the component.
    */
   size: PropTypes.oneOf(['medium', 'small']),
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots: PropTypes.object,
   style: PropTypes.object,
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.

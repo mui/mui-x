@@ -15,10 +15,12 @@ import {
   PickersCalendarHeaderSlotsComponentsProps,
   DayCalendarProps,
   ExportedUseViewsOptions,
+  UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps, DayRangeValidationProps } from '../internal/models';
+import { DateRange, DayRangeValidationProps } from '../internal/models';
 import { DateRangeCalendarClasses } from './dateRangeCalendarClasses';
 import { DateRangePickerDay, DateRangePickerDayProps } from '../DateRangePickerDay';
+import { UseRangePositionProps } from '../internal/hooks/useRangePosition';
 
 export type DateRangePosition = 'start' | 'end';
 
@@ -46,7 +48,7 @@ export interface DateRangeCalendarSlotsComponentsProps<TDate>
 }
 
 export interface ExportedDateRangeCalendarProps<TDate>
-  extends ExportedDayCalendarProps<TDate>,
+  extends ExportedDayCalendarProps,
     BaseDateValidationProps<TDate>,
     DayRangeValidationProps<TDate>,
     // TODO: Add the other props of `ExportedUseViewOptions` once `DateRangeCalendar` handles several views
@@ -96,7 +98,7 @@ export interface ExportedDateRangeCalendarProps<TDate>
 
 export interface DateRangeCalendarProps<TDate>
   extends ExportedDateRangeCalendarProps<TDate>,
-    Partial<RangePositionProps> {
+    UseRangePositionProps {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -123,13 +125,25 @@ export interface DateRangeCalendarProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: DateRangeCalendarSlotsComponent<TDate>;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
 }
 
 export interface DateRangeCalendarOwnerState<TDate> extends DateRangeCalendarProps<TDate> {

@@ -1,2 +1,2 @@
-<NextTimePicker label="disabled" disabled />
-<NextTimePicker label="readOnly" readOnly />
+<TimePicker label="disabled" disabled />
+<TimePicker label="readOnly" readOnly />

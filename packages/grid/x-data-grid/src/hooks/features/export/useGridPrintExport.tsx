@@ -3,7 +3,7 @@ import { unstable_ownerDocument as ownerDocument } from '@mui/utils';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { GridPrintExportApi } from '../../../models/api/gridPrintExportApi';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { gridVisibleRowCountSelector } from '../filter/gridFilterSelector';
+import { gridExpandedRowCountSelector } from '../filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridPrintExportOptions } from '../../../models/gridExport';
 import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
@@ -258,7 +258,7 @@ export const useGridPrintExport = (
       previousColumnVisibility.current = gridColumnVisibilityModelSelector(apiRef);
 
       if (props.pagination) {
-        const visibleRowCount = gridVisibleRowCountSelector(apiRef);
+        const visibleRowCount = gridExpandedRowCountSelector(apiRef);
         apiRef.current.setPageSize(visibleRowCount);
       }
 
@@ -274,9 +274,14 @@ export const useGridPrintExport = (
       } else {
         printWindow.onload = () => {
           handlePrintWindowLoad(printWindow, options);
-          printWindow.contentWindow!.onafterprint = () => {
-            handlePrintWindowAfterPrint(printWindow);
-          };
+
+          const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
+          mediaQueryList.addEventListener('change', (mql) => {
+            const isAfterPrint = mql.matches === false;
+            if (isAfterPrint) {
+              handlePrintWindowAfterPrint(printWindow);
+            }
+          });
         };
         doc.current!.body.appendChild(printWindow);
       }

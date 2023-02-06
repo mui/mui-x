@@ -3,7 +3,6 @@ import type { GridApiCommon, GridPrivateApiCommon } from '../../models/api/gridA
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridLoggerFactory } from './useGridLoggerFactory';
 import { useGridApiInitialization } from './useGridApiInitialization';
-import { useGridErrorHandler } from './useGridErrorHandler';
 import { useGridLocaleText } from './useGridLocaleText';
 import { useGridPipeProcessing } from './pipeProcessing';
 import { useGridStrategyProcessing } from './strategyProcessing';
@@ -17,11 +16,10 @@ export const useGridInitialization = <
   Api extends GridApiCommon,
 >(
   inputApiRef: React.MutableRefObject<Api> | undefined,
-  props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'error' | 'localeText'>,
+  props: Pick<DataGridProcessedProps, 'signature' | 'logger' | 'logLevel' | 'localeText'>,
 ) => {
   const privateApiRef = useGridApiInitialization<PrivateApi, Api>(inputApiRef, props);
   useGridLoggerFactory(privateApiRef, props);
-  useGridErrorHandler(privateApiRef, props);
   useGridStateInitialization(privateApiRef, props);
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);

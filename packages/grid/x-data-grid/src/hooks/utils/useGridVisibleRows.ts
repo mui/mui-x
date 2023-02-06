@@ -4,7 +4,7 @@ import {
   gridPaginationRowRangeSelector,
   gridPaginatedVisibleSortedGridRowEntriesSelector,
 } from '../features/pagination/gridPaginationSelector';
-import { gridVisibleSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
+import { gridExpandedSortedRowEntriesSelector } from '../features/filter/gridFilterSelector';
 import type { GridApiCommon, GridRowEntry } from '../../models';
 
 export const getVisibleRows = <Api extends GridApiCommon>(
@@ -18,7 +18,7 @@ export const getVisibleRows = <Api extends GridApiCommon>(
     range = gridPaginationRowRangeSelector(apiRef);
     rows = gridPaginatedVisibleSortedGridRowEntriesSelector(apiRef);
   } else {
-    rows = gridVisibleSortedRowEntriesSelector(apiRef);
+    rows = gridExpandedSortedRowEntriesSelector(apiRef);
     if (rows.length === 0) {
       range = null;
     } else {

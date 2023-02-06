@@ -6,7 +6,6 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
   noResultsOverlayLabel: 'Sonuç bulunamadı.',
-  errorOverlayDefaultLabel: 'Bir hata oluştu.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Yoğunluk',
@@ -48,7 +47,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
   filterPanelDeleteIconLabel: 'Kaldır',
-  filterPanelLinkOperator: 'Mantıksal operatörler',
+  filterPanelLogicOperator: 'Mantıksal operatörler',
   filterPanelOperator: 'Operatör',
   filterPanelOperatorAnd: 'Ve',
   filterPanelOperatorOr: 'Veya',

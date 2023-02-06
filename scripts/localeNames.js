@@ -6,6 +6,7 @@ module.exports = {
   'hy-AM': 'Armenian',
   'az-AZ': 'Azerbaijani',
   'bn-BD': 'Bangla',
+  'be-BY': 'Belarusian',
   'bg-BG': 'Bulgarian',
   'ca-ES': 'Catalan',
   'zh-HK': 'Chinese (Hong Kong)',

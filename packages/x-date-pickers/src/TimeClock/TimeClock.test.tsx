@@ -2,39 +2,17 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
-  describeConformance,
   fireEvent,
   fireTouchChangedEvent,
   screen,
   within,
   getAllByRole,
 } from '@mui/monorepo/test/utils';
-import { TimeClock, timeClockClasses as classes } from '@mui/x-date-pickers/TimeClock';
-import { adapterToUse, wrapPickerMount, createPickerRenderer } from 'test/utils/pickers-utils';
+import { TimeClock } from '@mui/x-date-pickers/TimeClock';
+import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 
 describe('<TimeClock />', () => {
   const { render } = createPickerRenderer();
-
-  describeConformance(
-    <TimeClock value={adapterToUse.date()} showViewSwitcher onChange={() => {}} />,
-    () => ({
-      classes,
-      inheritComponent: 'div',
-      wrapMount: wrapPickerMount,
-      render,
-      refInstanceof: window.HTMLDivElement,
-      muiName: 'MuiTimeClock',
-      skip: [
-        'componentProp',
-        'componentsProp',
-        'propsSpread',
-        'reactTestRenderer',
-        // TODO: fix TimeClock to spread props to root
-        'themeDefaultProps',
-        'themeVariants',
-      ],
-    }),
-  );
 
   it('renders a listbox with a name', () => {
     render(<TimeClock value={null} onChange={() => {}} />);
@@ -173,20 +151,20 @@ describe('<TimeClock />', () => {
     expect(reason).to.equal('partial');
   });
 
-  it('should call `shouldDisableTime` with the hours with meridiem', () => {
-    const shouldDisableTime = spy(() => false);
+  it('should call `shouldDisableClock` with the hours with meridiem', () => {
+    const shouldDisableClock = spy(() => false);
 
     render(
       <TimeClock
         autoFocus
         value={adapterToUse.date(new Date(2019, 0, 1, 18, 20))}
         onChange={() => {}}
-        shouldDisableTime={shouldDisableTime}
+        shouldDisableClock={shouldDisableClock}
         ampm
       />,
     );
 
-    const hours = shouldDisableTime
+    const hours = shouldDisableClock
       .getCalls()
       .filter((el) => el.lastArg === 'hours')
       .map((el) => el.firstArg);

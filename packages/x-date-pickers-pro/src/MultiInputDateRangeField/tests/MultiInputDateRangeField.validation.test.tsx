@@ -1,4 +1,4 @@
-import { Unstable_MultiInputDateRangeField as MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 import { createPickerRenderer } from 'test/utils/pickers-utils';
 
