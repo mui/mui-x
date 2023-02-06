@@ -2,7 +2,7 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/whats-new-in-v6',
+    pathname: '/x/whats-new',
     title: "✨ What's new in v6? ✨",
     icon: 'VisibilityIcon',
   },
