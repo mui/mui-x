@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
+import useId from '@mui/utils/useId';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { DateOrTimeView } from '../../models';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
@@ -10,7 +11,7 @@ import { useUtils } from '../useUtils';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseFieldProps } from '../../models/fields';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
 
 /**
@@ -22,18 +23,29 @@ import { InferError } from '../validation/useValidation';
 export const useMobilePicker = <
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseMobilePickerProps<TDate, TView, any>,
+  TExternalProps extends UseMobilePickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
   getOpenDialogAriaText,
-  viewLookup,
   validator,
 }: UseMobilePickerParams<TDate, TView, TExternalProps>) => {
-  const { components, componentsProps, className, format, disabled, localeText } = props;
+  const {
+    slots,
+    slotProps: innerSlotProps,
+    className,
+    sx,
+    format,
+    label,
+    inputRef,
+    readOnly,
+    disabled,
+    localeText,
+  } = props;
 
   const utils = useUtils<TDate>();
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const internalInputRef = React.useRef<HTMLInputElement>(null);
+  const labelId = useId();
 
   const {
     open,
@@ -41,45 +53,57 @@ export const useMobilePicker = <
     layoutProps,
     renderCurrentView,
     fieldProps: pickerFieldProps,
-  } = usePicker({
+  } = usePicker<TDate | null, TDate, TView, TExternalProps, {}>({
     props,
-    inputRef,
-    viewLookup,
+    inputRef: internalInputRef,
     valueManager,
     validator,
+    autoFocusView: true,
     additionalViewProps: {},
     wrapperVariant: 'mobile',
   });
 
-  const Field = components.Field;
+  const Field = slots.field;
   const fieldProps: BaseFieldProps<TDate | null, InferError<TExternalProps>> = useSlotProps({
     elementType: Field,
-    externalSlotProps: componentsProps?.field,
+    externalSlotProps: innerSlotProps?.field,
     additionalProps: {
       ...pickerFieldProps,
-      readOnly: true,
+      readOnly: readOnly ?? true,
       disabled,
       className,
+      sx,
       format,
+      label,
     },
     ownerState: props,
   });
 
-  const componentsPropsForField: BaseFieldProps<TDate, unknown>['componentsProps'] = {
-    ...fieldProps.componentsProps,
-    input: (ownerState) => {
-      const externalInputProps = resolveComponentProps(componentsProps?.input, ownerState);
+  const slotsForField: BaseFieldProps<TDate, unknown>['slots'] = {
+    textField: slots.textField,
+    ...fieldProps.slots,
+  };
+
+  const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
+
+  const slotPropsForField: BaseFieldProps<TDate, unknown>['slotProps'] = {
+    ...fieldProps.slotProps,
+    textField: (ownerState) => {
+      const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
       const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.componentsProps?.input,
+        fieldProps.slotProps?.textField,
         ownerState,
       );
 
       return {
+        ...(isToolbarHidden && { id: labelId }),
         ...inputPropsPassedByField,
         ...externalInputProps,
-        disabled: props.disabled,
-        onClick: props.readOnly || props.disabled ? undefined : actions.onOpen,
-        onKeyDown: onSpaceOrEnter(actions.onOpen),
+        disabled,
+        ...(!(disabled || readOnly) && {
+          onClick: actions.onOpen,
+          onKeyDown: onSpaceOrEnter(actions.onOpen),
+        }),
         inputProps: {
           'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
           ...inputPropsPassedByField?.inputProps,
@@ -89,39 +113,43 @@ export const useMobilePicker = <
     },
   };
 
-  const componentsForField: BaseFieldProps<TDate, unknown>['components'] = {
-    ...fieldProps.components,
-    Input: components.Input,
-  };
+  const Layout = slots.layout ?? PickersLayout;
 
-  const handleInputRef = useForkRef(inputRef, fieldProps.inputRef);
+  const handleInputRef = useForkRef(internalInputRef, fieldProps.inputRef, inputRef);
+
+  let labelledById = labelId;
+  if (isToolbarHidden) {
+    if (label) {
+      labelledById = `${labelId}-label`;
+    } else {
+      labelledById = undefined;
+    }
+  }
+  const slotProps = {
+    ...innerSlotProps,
+    toolbar: {
+      ...innerSlotProps?.toolbar,
+      titleId: labelId,
+    },
+    mobilePaper: {
+      'aria-labelledby': labelledById,
+      ...innerSlotProps?.mobilePaper,
+    },
+  };
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
         <Field
           {...fieldProps}
-          components={componentsForField}
-          componentsProps={componentsPropsForField}
+          slots={slotsForField}
+          slotProps={slotPropsForField}
           inputRef={handleInputRef}
         />
-        <PickersModalDialog
-          {...actions}
-          open={open}
-          components={{
-            ...components,
-            // Avoids to render 2 action bar, will be removed once `PickersModalDialog` stop displaying the action bar.
-            ActionBar: () => null,
-          }}
-          componentsProps={componentsProps}
-        >
-          <PickersViewLayout
-            {...layoutProps}
-            components={components}
-            componentsProps={componentsProps}
-          >
+        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}
-          </PickersViewLayout>
+          </Layout>
         </PickersModalDialog>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>

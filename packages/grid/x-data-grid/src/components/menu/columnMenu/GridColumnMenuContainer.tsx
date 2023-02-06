@@ -2,13 +2,19 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import MenuList from '@mui/material/MenuList';
+import { styled } from '@mui/material/styles';
+
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
-import { GridColumnMenuProps } from './GridColumnMenuProps';
+import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 import { gridClasses } from '../../../constants/gridClasses';
 
-const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
-  function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {
-    const { hideMenu, currentColumn, open, id, labelledby, className, children, ...other } = props;
+const StyledMenuList = styled(MenuList)(() => ({
+  minWidth: 248,
+}));
+
+const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
+  function GridColumnMenuContainer(props, ref) {
+    const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -23,7 +29,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
     );
 
     return (
-      <MenuList
+      <StyledMenuList
         id={id}
         ref={ref}
         className={clsx(gridClasses.menuList, className)}
@@ -33,7 +39,7 @@ const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMen
         {...other}
       >
         {children}
-      </MenuList>
+      </StyledMenuList>
     );
   },
 );
@@ -43,7 +49,7 @@ GridColumnMenuContainer.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  currentColumn: PropTypes.object.isRequired,
+  colDef: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,

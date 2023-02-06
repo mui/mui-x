@@ -38,10 +38,6 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   openPreviousView: string;
   openNextView: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: DateView) => string;
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'date' | 'time',
-  ) => string;
 
   // DateRange placeholders
   start: string;
@@ -71,6 +67,7 @@ export interface PickersComponentAgnosticLocaleText<TDate> {
   fieldYearPlaceholder: (params: { digitAmount: number }) => string;
   fieldMonthPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
   fieldDayPlaceholder: () => string;
+  fieldWeekDayPlaceholder: (params: { contentType: 'letter' | 'digit' }) => string;
   fieldHoursPlaceholder: () => string;
   fieldMinutesPlaceholder: () => string;
   fieldSecondsPlaceholder: () => string;

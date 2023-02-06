@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import TextField from '@mui/material/TextField';
 import { act, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers-utils';
 import { DateView } from '../internals/models/views';
 
-describe('<StaticDatePicker /> keyboard interactions', () => {
+describe('<StaticDatePicker /> - Keyboard interactions', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describe('Calendar keyboard navigation', () => {
@@ -15,9 +14,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         <StaticDatePicker
           autoFocus
           displayStaticWrapperAs="desktop"
-          value={adapterToUse.date(new Date(2020, 7, 13))}
-          onChange={() => {}}
-          renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
+          defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
         />,
       );
 
@@ -37,9 +34,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date(new Date(2020, 7, 13))}
-            onChange={() => {}}
-            renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
+            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
           />,
         );
 
@@ -68,9 +63,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           <StaticDatePicker
             autoFocus
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date(new Date(2020, 7, initialDay))}
-            onChange={() => {}}
-            renderInput={(params) => <TextField placeholder="10/10/2018" {...params} />}
+            defaultValue={adapterToUse.date(new Date(2020, 7, initialDay))}
           />,
         );
 
@@ -91,10 +84,8 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
       <StaticDatePicker
         autoFocus
         displayStaticWrapperAs="desktop"
-        value={adapterToUse.date(new Date(2020, 7, 13))}
+        defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
         minDate={adapterToUse.date(new Date(2020, 7, 13))}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
       />,
     );
 
@@ -123,9 +114,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
             openTo="year"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date(new Date(2020, 7, 13))}
-            onChange={() => {}}
-            renderInput={(params) => <TextField {...params} />}
+            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
           />,
         );
 
@@ -151,9 +140,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
             views={['month']}
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date(new Date(2020, 7, 13))}
-            onChange={() => {}}
-            renderInput={(params) => <TextField {...params} />}
+            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
           />,
         );
 
@@ -179,9 +166,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
             openTo="day"
             reduceAnimations
             displayStaticWrapperAs="desktop"
-            value={adapterToUse.date(new Date(2020, 7, 13))}
-            onChange={() => {}}
-            renderInput={(params) => <TextField {...params} />}
+            defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
           />,
         );
 
@@ -207,9 +192,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
           views={[view]}
           reduceAnimations
           displayStaticWrapperAs="desktop"
-          value={adapterToUse.date(new Date(2020, 7, 13))}
-          onChange={() => {}}
-          renderInput={(params) => <TextField {...params} />}
+          defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
         />,
       );
 
@@ -224,9 +207,7 @@ describe('<StaticDatePicker /> keyboard interactions', () => {
         openTo="day"
         reduceAnimations
         displayStaticWrapperAs="desktop"
-        value={adapterToUse.date(new Date(2020, 7, 13))}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
+        defaultValue={adapterToUse.date(new Date(2020, 7, 13))}
       />,
     );
 

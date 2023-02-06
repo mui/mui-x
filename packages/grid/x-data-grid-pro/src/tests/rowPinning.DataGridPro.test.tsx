@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'GBPEUR' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'GBPEUR' }],
       },
     });
 
@@ -336,7 +336,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     // should show pinned rows even if there's no filtering results
     setProps({
       filterModel: {
-        items: [{ columnField: 'currencyPair', operatorValue: 'equals', value: 'whatever' }],
+        items: [{ field: 'currencyPair', operator: 'equals', value: 'whatever' }],
       },
     });
 
@@ -576,7 +576,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       this.skip();
     }
 
-    const headerHeight = 56;
+    const columnHeaderHeight = 56;
     const rowHeight = 52;
     const rowCount = 10;
 
@@ -585,14 +585,14 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowCount={rowCount}
         colCount={2}
         rowHeight={rowHeight}
-        headerHeight={headerHeight}
+        columnHeaderHeight={columnHeaderHeight}
         hideFooter
         autoHeight
       />,
     );
 
     expect(document.querySelector(`.${gridClasses.main}`)!.clientHeight).to.equal(
-      headerHeight + rowHeight * rowCount,
+      columnHeaderHeight + rowHeight * rowCount,
     );
   });
 
@@ -609,7 +609,7 @@ describe('<DataGridPro /> - Row pinning', () => {
         rowHeight={52}
         pagination
         autoPageSize
-        headerHeight={56}
+        columnHeaderHeight={56}
         hideFooter
       />,
     );
@@ -647,8 +647,8 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        pageSize={5}
-        rowsPerPageOptions={[5]}
+        initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+        pageSizeOptions={[5]}
       />,
     );
 
@@ -675,8 +675,8 @@ describe('<DataGridPro /> - Row pinning', () => {
         colCount={5}
         height={500}
         pagination
-        pageSize={pageSize}
-        rowsPerPageOptions={[pageSize]}
+        initialState={{ pagination: { paginationModel: { pageSize } } }}
+        pageSizeOptions={[pageSize]}
       />,
     );
 
@@ -765,7 +765,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
     render(<BaselineTestCase rowCount={rowCount} colCount={1} />);
 
-    expect(screen.getByRole('grid').getAttribute('aria-rowcount')).to.equal(`${rowCount + 1}`); // +1 for header row
+    expect(screen.getByRole('grid')).to.have.attribute('aria-rowcount', `${rowCount + 1}`); // +1 for header row
   });
 
   // https://github.com/mui/mui-x/issues/5845
@@ -775,7 +775,7 @@ describe('<DataGridPro /> - Row pinning', () => {
       <BaselineTestCase rowCount={2} colCount={1} rows={[]} getRowClassName={() => className} />,
     );
 
-    expect(getRowById(0)!.classList.contains(className)).to.equal(true);
-    expect(getRowById(1)!.classList.contains(className)).to.equal(true);
+    expect(getRowById(0)!).to.have.class(className);
+    expect(getRowById(1)!).to.have.class(className);
   });
 });

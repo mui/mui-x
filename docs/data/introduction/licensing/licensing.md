@@ -158,13 +158,14 @@ You only need to install the key once in your application.
 When using Next.js, you should call `setLicenseKey` in [`_app.js`](https://nextjs.org/docs/advanced-features/custom-app):
 
 ```tsx
+import { LicenseInfo } from '@mui/x-license-pro';
+
 LicenseInfo.setLicenseKey('YOUR_LICENSE_KEY');
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp(props) {
+  const { Component, pageProps } = props;
   return <Component {...pageProps} />;
 }
-
-export default MyApp;
 ```
 
 :::

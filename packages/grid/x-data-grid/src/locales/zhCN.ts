@@ -6,7 +6,6 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '没有数据。',
   noResultsOverlayLabel: '未找到数据。',
-  errorOverlayDefaultLabel: '发生错误。',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',
@@ -48,10 +47,8 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: '添加筛选器',
   filterPanelDeleteIconLabel: '删除',
-  filterPanelLinkOperator: '逻辑操作器',
-  filterPanelOperators: '操作器',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: '逻辑操作器',
+  filterPanelOperator: '操作器',
   filterPanelOperatorAnd: '与',
   filterPanelOperatorOr: '或',
   filterPanelColumns: '列',
@@ -81,6 +78,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: '菜单',
   columnMenuShowColumns: '显示',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: '筛选器',
   columnMenuHideColumn: '隐藏',
   columnMenuUnsort: '恢复默认',

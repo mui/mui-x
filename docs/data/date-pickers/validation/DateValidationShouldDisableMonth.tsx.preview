@@ -1,0 +1,14 @@
+<DemoItem label="DatePicker">
+  <DatePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day']}
+  />
+</DemoItem>
+<DemoItem label="DateTimePicker">
+  <DateTimePicker
+    defaultValue={today}
+    shouldDisableMonth={isInCurrentMonth}
+    views={['year', 'month', 'day', 'hours', 'minutes']}
+  />
+</DemoItem>

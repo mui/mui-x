@@ -8,36 +8,6 @@
 
 #### Date Pickers
 
-- [NextDatePicker](/x/api/date-pickers/next-date-picker/)
-- [DesktopNextDatePicker](/x/api/date-pickers/desktop-next-date-picker/)
-- [MobileNextDatePicker](/x/api/date-pickers/mobile-next-date-picker/)
-- [StaticNextDatePicker](/x/api/date-pickers/static-next-date-picker/)
-
-#### Time Pickers
-
-- [NextTimePicker](/x/api/date-pickers/next-time-picker/)
-- [DesktopNextTimePicker](/x/api/date-pickers/desktop-next-time-picker/)
-- [MobileNextTimePicker](/x/api/date-pickers/mobile-next-time-picker/)
-- [StaticNextTimePicker](/x/api/date-pickers/static-next-time-picker/)
-
-#### Date Time Pickers
-
-- [NextDateTimePicker](/x/api/date-pickers/next-date-time-picker/)
-- [DesktopNextDateTimePicker](/x/api/date-pickers/desktop-next-date-time-picker/)
-- [MobileNextDateTimePicker](/x/api/date-pickers/mobile-next-date-time-picker/)
-- [StaticNextDateTimePicker](/x/api/date-pickers/static-next-date-time-picker/)
-
-#### Date Range Pickers
-
-- [NextDateRangePicker](/x/api/date-pickers/next-date-range-picker/)
-- [DesktopNextDateRangePicker](/x/api/date-pickers/desktop-next-date-range-picker/)
-- [MobileNextDateRangePicker](/x/api/date-pickers/mobile-next-date-range-picker/)
-- [StaticNextDateRangePicker](/x/api/date-pickers/static-next-date-range-picker/)
-
-### Pickers (legacy)
-
-#### Date Pickers
-
 - [DatePicker](/x/api/date-pickers/date-picker/)
 - [DesktopDatePicker](/x/api/date-pickers/desktop-date-picker/)
 - [MobileDatePicker](/x/api/date-pickers/mobile-date-picker/)
@@ -72,8 +42,6 @@
 - [MultiInputDateRangeField](/x/api/date-pickers/multi-input-date-range-field/)
 - [SingleInputDateRangeField](/x/api/date-pickers/single-input-date-range-field/)
 - [MultiInputTimeRangeField](/x/api/date-pickers/multi-input-time-range-field/)
-- [SingleInputTimeRangeField](/x/api/date-pickers/single-input-time-range-field/)
-- [SingleInputDateTimeRangeField](/x/api/date-pickers/single-input-date-time-range-field/)
 - [MultiInputDateTimeRangeField](/x/api/date-pickers/multi-input-date-time-range-field/)
 
 ### Calendars
@@ -87,9 +55,17 @@
 
 - [TimeClock](/x/api/date-pickers/time-clock/)
 
+### Toolbars
+
+- [DatePickerToolbar](/x/api/date-pickers/date-picker-toolbar/)
+- [TimePickerToolbar](/x/api/date-pickers/time-picker-toolbar/)
+- [DateTimePickerToolbar](/x/api/date-pickers/date-time-picker-toolbar/)
+- [DateRangePickerToolbar](/x/api/date-pickers/date-range-picker-toolbar/)
+
 ### Others
 
 - [DateRangePickerDay](/x/api/date-pickers/date-range-picker-day/)
+- [DateTimePickerTabs](/x/api/date-pickers/date-time-picker-tabs/)
 - [DayCalendarSkeleton](/x/api/date-pickers/day-calendar-skeleton/)
 - [LocalizationProvider](/x/api/date-pickers/localization-provider/)
 - [PickersDay](/x/api/date-pickers/pickers-day/)

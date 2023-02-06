@@ -6,7 +6,6 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'لا توجد صفوف',
   noResultsOverlayLabel: 'لم يتم العثور على نتائج.',
-  errorOverlayDefaultLabel: 'حدث خطأ.',
 
   // Density selector toolbar button text
   toolbarDensity: 'الكثافة',
@@ -49,10 +48,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'إضافة مرشِح',
   filterPanelDeleteIconLabel: 'حذف',
-  filterPanelLinkOperator: 'عامل منطقي',
-  filterPanelOperators: 'عامل',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'عامل منطقي',
+  filterPanelOperator: 'عامل',
   filterPanelOperatorAnd: 'و',
   filterPanelOperatorOr: 'أو',
   filterPanelColumns: 'الأعمدة',
@@ -82,6 +79,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'القائمة',
   columnMenuShowColumns: 'إظهار الأعمدة',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'المرشِح',
   columnMenuHideColumn: 'إخفاء',
   columnMenuUnsort: 'الغاء الفرز',

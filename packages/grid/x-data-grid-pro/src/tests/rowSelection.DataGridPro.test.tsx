@@ -50,9 +50,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       const selectAllCheckbox = screen.getByRole('checkbox', {
@@ -67,9 +67,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
       fireEvent.click(getCell(0, 0).querySelector('input'));
@@ -107,9 +107,9 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly={false}
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -140,11 +140,12 @@ describe('<DataGridPro /> - Row Selection', () => {
         <TestDataGridSelection
           checkboxSelection
           checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
+
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -160,12 +161,13 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          checkboxSelectionVisibleOnly
+          pageSizeOptions={[2]}
         />,
       );
+
       fireEvent.click(getCell(0, 0).querySelector('input'));
       expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
@@ -183,10 +185,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       render(
         <TestDataGridSelection
           checkboxSelection
-          checkboxSelectionVisibleOnly
-          pageSize={2}
+          initialState={{ pagination: { paginationModel: { pageSize: 2 } } }}
           pagination
-          rowsPerPageOptions={[2]}
+          pageSizeOptions={[2]}
         />,
       );
 
@@ -371,7 +372,7 @@ describe('<DataGridPro /> - Row Selection', () => {
     it('should select only filtered rows selecting a range', () => {
       render(
         <TestDataGridSelection
-          filterModel={{ items: [{ columnField: 'id', value: 1, operatorValue: '!=' }] }}
+          filterModel={{ items: [{ field: 'id', value: 1, operator: '!=' }] }}
         />,
       );
       act(() => apiRef.current.selectRowRange({ startId: 0, endId: 2 }, true));
@@ -388,9 +389,9 @@ describe('<DataGridPro /> - Row Selection', () => {
       apiRef.current.setFilterModel({
         items: [
           {
-            columnField: 'currencyPair',
+            field: 'currencyPair',
             value: 'usd',
-            operatorValue: 'startsWith',
+            operator: 'startsWith',
           },
         ],
       }),

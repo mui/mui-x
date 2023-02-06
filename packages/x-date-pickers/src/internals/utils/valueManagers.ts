@@ -1,4 +1,4 @@
-import type { PickerStateValueManager } from '../hooks/usePickerState';
+import type { PickerValueManager } from '../hooks/usePicker';
 import type { DateValidationError } from '../hooks/validation/useDateValidation';
 import type { TimeValidationError } from '../hooks/validation/useTimeValidation';
 import type { DateTimeValidationError } from '../hooks/validation/useDateTimeValidation';
@@ -6,17 +6,18 @@ import type { FieldSection, FieldValueManager } from '../hooks/useField';
 import { replaceInvalidDateByNull } from './date-utils';
 import {
   addPositionPropertiesToSections,
-  createDateStrFromSections,
+  createDateStrForInputFromSections,
   splitFormatIntoSections,
+  getSectionOrder,
 } from '../hooks/useField/useField.utils';
 
-export type SingleItemPickerStateValueManager<
+export type SingleItemPickerValueManager<
   TValue = any,
   TDate = any,
   TError extends DateValidationError | TimeValidationError | DateTimeValidationError = any,
-> = PickerStateValueManager<TValue, TDate, TError>;
+> = PickerValueManager<TValue, TDate, TError>;
 
-export const singleItemValueManager: SingleItemPickerStateValueManager = {
+export const singleItemValueManager: SingleItemPickerValueManager = {
   emptyValue: null,
   getTodayValue: (utils) => utils.date()!,
   cleanValue: replaceInvalidDateByNull,
@@ -35,7 +36,7 @@ export const singleItemFieldValueManager: FieldValueManager<
     value == null || !utils.isValid(value) ? prevReferenceValue : value,
   getSectionsFromValue: (utils, localeText, prevSections, date, format) =>
     addPositionPropertiesToSections(splitFormatIntoSections(utils, localeText, format, date)),
-  getValueStrFromSections: (sections) => createDateStrFromSections(sections, true),
+  getValueStrFromSections: (sections) => createDateStrForInputFromSections(sections),
   getActiveDateSections: (sections) => sections,
   getActiveDateManager: (utils, state) => ({
     activeDate: state.value,
@@ -53,4 +54,6 @@ export const singleItemFieldValueManager: FieldValueManager<
   parseValueStr: (valueStr, referenceValue, parseDate) =>
     parseDate(valueStr.trim(), referenceValue),
   hasError: (error) => error != null,
+  getSectionOrder: (utils, localeText, format, isRTL) =>
+    getSectionOrder(splitFormatIntoSections(utils, localeText, format, null), isRTL),
 };

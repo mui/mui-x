@@ -12,10 +12,37 @@ export interface BaseFieldProps<TValue, TError>
   format?: string;
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
+  /**
+   * @deprecated Please use `slots`.
+   */
   components?: {
-    Input?: React.ElementType<TextFieldProps>;
+    TextField?: React.ElementType<TextFieldProps>;
   };
+  /**
+   * @deprecated Please use `slotProps`.
+   */
   componentsProps?: {
-    input?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  };
+  slots?: {
+    textField?: React.ElementType<TextFieldProps>;
+  };
+  slotProps?: {
+    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
   };
 }
+
+export interface FieldsTextFieldProps
+  extends Omit<
+    TextFieldProps,
+    | 'autoComplete'
+    | 'error'
+    | 'maxRows'
+    | 'minRows'
+    | 'multiline'
+    | 'placeholder'
+    | 'rows'
+    | 'select'
+    | 'SelectProps'
+    | 'type'
+  > {}

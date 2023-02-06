@@ -1,5 +1,9 @@
-import { useUtils, useDefaultDates, applyDefaultDate } from '@mui/x-date-pickers/internals';
-import { useField } from '@mui/x-date-pickers/internals-fields';
+import {
+  useUtils,
+  useDefaultDates,
+  applyDefaultDate,
+  useField,
+} from '@mui/x-date-pickers/internals';
 import {
   UseSingleInputDateRangeFieldDefaultizedProps,
   UseSingleInputDateRangeFieldParams,
@@ -66,6 +70,6 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,
     validator: validateDateRange,
-    supportedDateSections: ['year', 'month', 'day'],
+    valueType: 'date',
   });
 };

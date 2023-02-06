@@ -1,3 +1,1 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <NextTimePicker label="Basic time picker" />
-</LocalizationProvider>
+<TimePicker label="Basic time picker" />

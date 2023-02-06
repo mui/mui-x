@@ -3,7 +3,7 @@ import {
   GridCellParams,
   GridFilterItem,
   GridFilterModel,
-  GridLinkOperator,
+  GridLogicOperator,
   GridRowId,
 } from '../../../models';
 import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -24,14 +24,14 @@ type GridFilterItemApplier = {
 
 type GridFilterItemApplierNotAggregated = (
   rowId: GridRowId,
-  shouldApplyItem?: (columnField: string) => boolean,
+  shouldApplyItem?: (field: string) => boolean,
 ) => GridFilterItemResult;
 
 /**
  * Adds default values to the optional fields of a filter items.
  * @param {GridFilterItem} item The raw filter item.
  * @param {React.MutableRefObject<GridApiCommunity>} apiRef The API of the grid.
- * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operatorValue.
+ * @return {GridFilterItem} The clean filter item with an uniq ID and an always-defined operator.
  * TODO: Make the typing reflect the different between GridFilterInputItem and GridFilterItem.
  */
 export const cleanFilterItem = (
@@ -44,11 +44,11 @@ export const cleanFilterItem = (
     cleanItem.id = Math.round(Math.random() * 1e5);
   }
 
-  if (cleanItem.operatorValue == null) {
+  if (cleanItem.operator == null) {
     // Selects a default operator
     // We don't use `apiRef.current.getColumn` because it is not ready during state initialization
-    const column = gridColumnLookupSelector(apiRef)[cleanItem.columnField];
-    cleanItem.operatorValue = column && column!.filterOperators![0].value!;
+    const column = gridColumnLookupSelector(apiRef)[cleanItem.field];
+    cleanItem.operator = column && column!.filterOperators![0].value!;
   }
 
   return cleanItem;
@@ -63,14 +63,14 @@ const filterModelDisableMultiColumnsFilteringWarning = buildWarning(
 );
 
 const filterModelMissingItemIdWarning = buildWarning(
-  "MUI: The 'id' field is required on `filterModel.items` when you use multiple filters.",
+  'MUI: The `id` field is required on `filterModel.items` when you use multiple filters.',
   'error',
 );
 
-const filterModelMissingItemOperatorWarning = buildWarning([
-  'MUI: One of your filtering item have no `operatorValue` provided.',
-  'This property will become required on `@mui/x-data-grid@6.X`.',
-]);
+const filterModelMissingItemOperatorWarning = buildWarning(
+  'MUI: The `operator` field is required on `filterModel.items`, one or more of your filtering item has no `operator` provided.',
+  'error',
+);
 
 export const sanitizeFilterModel = (
   model: GridFilterModel,
@@ -89,7 +89,7 @@ export const sanitizeFilterModel = (
   }
 
   const hasItemsWithoutIds = hasSeveralItems && items.some((item) => item.id == null);
-  const hasItemWithoutOperator = items.some((item) => item.operatorValue == null);
+  const hasItemWithoutOperator = items.some((item) => item.operator == null);
 
   if (hasItemsWithoutIds) {
     filterModelMissingItemIdWarning();
@@ -131,11 +131,11 @@ const getFilterCallbackFromItem = (
   filterItem: GridFilterItem,
   apiRef: React.MutableRefObject<GridApiCommunity>,
 ): GridFilterItemApplier | null => {
-  if (!filterItem.columnField || !filterItem.operatorValue) {
+  if (!filterItem.field || !filterItem.operator) {
     return null;
   }
 
-  const column = apiRef.current.getColumn(filterItem.columnField);
+  const column = apiRef.current.getColumn(filterItem.field);
   if (!column) {
     return null;
   }
@@ -157,11 +157,11 @@ const getFilterCallbackFromItem = (
   }
 
   const filterOperator = filterOperators.find(
-    (operator) => operator.value === newFilterItem.operatorValue,
+    (operator) => operator.value === newFilterItem.operator,
   )!;
   if (!filterOperator) {
     throw new Error(
-      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
+      `MUI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operator}'.`,
     );
   }
 
@@ -171,7 +171,7 @@ const getFilterCallbackFromItem = (
   }
 
   const fn = (rowId: GridRowId) => {
-    const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.columnField!);
+    const cellParams = apiRef.current.getCellParams(rowId, newFilterItem.field!);
 
     return applyFilterOnRow(cellParams);
   };
@@ -203,7 +203,7 @@ export const buildAggregatedFilterItemsApplier = (
     const resultPerItemId: GridFilterItemResult = {};
 
     const filteredAppliers = shouldApplyFilter
-      ? appliers.filter((applier) => shouldApplyFilter(applier.item.columnField))
+      ? appliers.filter((applier) => shouldApplyFilter(applier.item.field))
       : appliers;
 
     filteredAppliers.forEach((applier) => {
@@ -231,7 +231,7 @@ export const buildAggregatedQuickFilterApplier = (
 
   const columnsFields = gridColumnFieldsSelector(apiRef);
 
-  const appliersPerColumnField: {
+  const appliersPerField: {
     [field: string]: (null | ((params: GridCellParams) => boolean))[];
   } = {};
   columnsFields.forEach((field) => {
@@ -240,16 +240,14 @@ export const buildAggregatedQuickFilterApplier = (
     if (!getApplyQuickFilterFn) {
       return;
     }
-    appliersPerColumnField[field] = quickFilterValues.map((value) =>
+    appliersPerField[field] = quickFilterValues.map((value) =>
       getApplyQuickFilterFn(value, column, apiRef),
     );
   });
 
   // If some value does not have an applier we ignore them
   const sanitizedQuickFilterValues = quickFilterValues.filter((value, index) =>
-    Object.keys(appliersPerColumnField).some(
-      (field) => appliersPerColumnField[field][index] != null,
-    ),
+    Object.keys(appliersPerField).some((field) => appliersPerField[field][index] != null),
   );
 
   if (sanitizedQuickFilterValues.length === 0) {
@@ -258,22 +256,22 @@ export const buildAggregatedQuickFilterApplier = (
 
   return (rowId, shouldApplyFilter) => {
     const usedCellParams: { [field: string]: GridCellParams } = {};
-    const columnsFieldsToFilter: string[] = [];
+    const fieldsToFilter: string[] = [];
 
-    Object.keys(appliersPerColumnField).forEach((columnField) => {
-      if (!shouldApplyFilter || shouldApplyFilter(columnField)) {
-        usedCellParams[columnField] = apiRef.current.getCellParams(rowId, columnField);
-        columnsFieldsToFilter.push(columnField);
+    Object.keys(appliersPerField).forEach((field) => {
+      if (!shouldApplyFilter || shouldApplyFilter(field)) {
+        usedCellParams[field] = apiRef.current.getCellParams(rowId, field);
+        fieldsToFilter.push(field);
       }
     });
 
     const quickFilterValueResult: GridQuickFilterValueResult = {};
     sanitizedQuickFilterValues.forEach((value, index) => {
-      const isPassing = columnsFieldsToFilter.some((field) => {
-        if (appliersPerColumnField[field][index] == null) {
+      const isPassing = fieldsToFilter.some((field) => {
+        if (appliersPerField[field][index] == null) {
           return false;
         }
-        return appliersPerColumnField[field][index]?.(usedCellParams[field]);
+        return appliersPerField[field][index]?.(usedCellParams[field]);
       });
       quickFilterValueResult[value] = isPassing;
     });
@@ -318,7 +316,7 @@ export const passFilterLogic = (
   // Defaultize operators
   const quickFilterLogicOperator =
     filterModel.quickFilterLogicOperator ?? getDefaultGridFilterModel().quickFilterLogicOperator;
-  const linkOperator = filterModel.linkOperator ?? getDefaultGridFilterModel().linkOperator;
+  const logicOperator = filterModel.logicOperator ?? getDefaultGridFilterModel().logicOperator;
 
   // get result for filter items model
   if (cleanedAllFilterItemResults.length > 0) {
@@ -327,7 +325,7 @@ export const passFilterLogic = (
       return cleanedAllFilterItemResults.some((filterItemResult) => filterItemResult[item.id!]);
     };
 
-    if (linkOperator === GridLinkOperator.And) {
+    if (logicOperator === GridLogicOperator.And) {
       const passesAllFilters = cleanedFilterItems.every(filterItemPredicate);
       if (!passesAllFilters) {
         return false;
@@ -349,7 +347,7 @@ export const passFilterLogic = (
       );
     };
 
-    if (quickFilterLogicOperator === GridLinkOperator.And) {
+    if (quickFilterLogicOperator === GridLogicOperator.And) {
       const passesAllQuickFilterValues =
         filterModel.quickFilterValues.every(quickFilterValuePredicate);
       if (!passesAllQuickFilterValues) {

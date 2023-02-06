@@ -6,13 +6,13 @@ const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
-const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
+const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 
 const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,
@@ -23,6 +23,7 @@ module.exports = withDocsInfra({
     // #default-branch-switch
     SOURCE_CODE_ROOT_URL: 'https://github.com/mui/mui-x/blob/next',
     SOURCE_CODE_REPO: 'https://github.com/mui/mui-x',
+    GITHUB_TEMPLATE_DOCS_FEEDBACK: '6.docs-feedback.yml',
   },
   webpack: (config, options) => {
     const plugins = config.plugins.slice();
@@ -62,7 +63,7 @@ module.exports = withDocsInfra({
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('@mui/monorepo/docs/packages/markdown/loader'),
+                use: require.resolve('@mui/monorepo/packages/markdown/loader'),
               },
             ],
           },

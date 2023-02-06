@@ -28,7 +28,7 @@ export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   );
 });
 
-export function renderLink(params: GridRenderCellParams<string, any, any>) {
+export function renderLink(params: GridRenderCellParams<any, string, any>) {
   if (params.value == null) {
     return '';
   }

@@ -17,7 +17,7 @@ You can find more information on the corresponding feature documentation page.
 
 {{"demo": "InitialState.js", "bg": "inline"}}
 
-## Access the state [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## Access the state
 
 The state is exposed on the `apiRef` object.
 
@@ -34,7 +34,7 @@ You can use them to get data from the state without worrying about its internal 
 The simplest way to use a selector is to call it as a function with `apiRef` as its first argument:
 
 ```tsx
-const pageSize = gridPageSizeSelector(apiRef);
+const paginationModel = gridPaginationModelSelector(apiRef);
 ```
 
 :::info
@@ -42,7 +42,7 @@ Calling with `apiRef.current.state` also works, but may cause side effects when 
 If you still need to call it with the state, don't forget to pass the instance ID as the example:
 
 ```tsx
-const pageSize = gridPageSizeSelector(
+const paginationModel = gridPaginationModelSelector(
   apiRef.current.state,
   apiRef.current.instanceId,
 );
@@ -57,7 +57,7 @@ const pageSize = gridPageSizeSelector(
 If you only need to access the state value in the render of your components, use the `useGridSelector` hook:
 
 ```tsx
-const pageSize = useGridSelector(apiRef, gridPageSizeSelector);
+const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
 ```
 
 :::warning
@@ -92,7 +92,7 @@ If you restore the page using `initialState` before the data is fetched, the Dat
 
 {{"demo": "RestoreStateInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Restore the state with apiRef [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+### Restore the state with apiRef
 
 You can pass the state returned by `apiRef.current.exportState()` to the `apiRef.current.restoreState` method.
 In the demo below, clicking on **Save current view** will create a snapshot of the changes made in the state, considering the initial state.

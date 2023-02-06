@@ -60,12 +60,11 @@ const FULL_INITIAL_STATE: GridInitialState = {
   },
   filter: {
     filterModel: {
-      items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+      items: [{ field: 'id', operator: '<', value: '5' }],
     },
   },
   pagination: {
-    page: 1,
-    pageSize: 2,
+    paginationModel: { page: 1, pageSize: 2 },
   },
   pinnedColumns: {
     left: ['id'],
@@ -96,7 +95,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           autoHeight={isJSDOM}
           apiRef={apiRef}
           disableVirtualization
-          rowsPerPageOptions={[100, 2]}
+          pageSizeOptions={[100, 2]}
           {...props}
           initialState={{
             ...props.initialState,
@@ -124,8 +123,7 @@ describe('<DataGridPro /> - State Persistence', () => {
           filterModel: getDefaultGridFilterModel(),
         },
         pagination: {
-          page: 0,
-          pageSize: 100,
+          paginationModel: { page: 0, pageSize: 100 },
         },
         pinnedColumns: {},
         preferencePanel: {
@@ -157,8 +155,10 @@ describe('<DataGridPro /> - State Persistence', () => {
           filterModel={FULL_INITIAL_STATE.filter?.filterModel}
           sortModel={FULL_INITIAL_STATE.sorting?.sortModel}
           columnVisibilityModel={FULL_INITIAL_STATE.columns?.columnVisibilityModel}
-          page={FULL_INITIAL_STATE.pagination?.page}
-          pageSize={FULL_INITIAL_STATE.pagination?.pageSize}
+          paginationModel={{
+            page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
+            pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
+          }}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
@@ -179,8 +179,10 @@ describe('<DataGridPro /> - State Persistence', () => {
           filterModel={FULL_INITIAL_STATE.filter?.filterModel}
           sortModel={FULL_INITIAL_STATE.sorting?.sortModel}
           columnVisibilityModel={FULL_INITIAL_STATE.columns?.columnVisibilityModel}
-          page={FULL_INITIAL_STATE.pagination?.page}
-          pageSize={FULL_INITIAL_STATE.pagination?.pageSize}
+          paginationModel={{
+            page: FULL_INITIAL_STATE.pagination?.paginationModel?.page!,
+            pageSize: FULL_INITIAL_STATE.pagination?.paginationModel?.pageSize!,
+          }}
           pinnedColumns={FULL_INITIAL_STATE.pinnedColumns}
           // Some portable states don't have a controllable model
           initialState={{
@@ -207,13 +209,12 @@ describe('<DataGridPro /> - State Persistence', () => {
     it('should export the current version of the exportable state', () => {
       render(<TestCase />);
       act(() => {
-        apiRef.current.setPageSize(2);
-        apiRef.current.setPage(1);
+        apiRef.current.setPaginationModel({ page: 1, pageSize: 2 });
         apiRef.current.setPinnedColumns({ left: ['id'] });
         apiRef.current.showPreferences(GridPreferencePanelsValue.filters);
         apiRef.current.setSortModel([{ field: 'id', sort: 'desc' }]);
         apiRef.current.setFilterModel({
-          items: [{ columnField: 'id', operatorValue: '<', value: '5' }],
+          items: [{ field: 'id', operator: '<', value: '5' }],
         });
         apiRef.current.setColumnIndex('category', 1);
         apiRef.current.setColumnWidth('category', 75);
@@ -248,8 +249,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       act(() =>
         apiRef.current.restoreState({
           pagination: {
-            page: 1,
-            pageSize: 2,
+            paginationModel: { page: 1, pageSize: 2 },
           },
         }),
       );
@@ -259,14 +259,13 @@ describe('<DataGridPro /> - State Persistence', () => {
 
     it('should restore controlled sub-state', () => {
       function ControlledTest() {
-        const [page, setPage] = React.useState(0);
+        const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 5 });
 
         return (
           <TestCase
-            page={page}
-            onPageChange={(newPage) => {
-              setPage(newPage);
-            }}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[2, 5]}
           />
         );
       }
@@ -275,8 +274,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       act(() =>
         apiRef.current.restoreState({
           pagination: {
-            page: 1,
-            pageSize: 2,
+            paginationModel: { page: 1, pageSize: 2 },
           },
         }),
       );

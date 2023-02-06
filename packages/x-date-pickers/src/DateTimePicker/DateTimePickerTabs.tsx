@@ -5,10 +5,6 @@ import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { Time, DateRange } from '../internals/components/icons';
-import {
-  WrapperVariantContext,
-  WrapperVariant,
-} from '../internals/components/wrappers/WrapperVariantContext';
 import { DateOrTimeView } from '../internals/models';
 import { useLocaleText } from '../internals/hooks/useUtils';
 import {
@@ -19,8 +15,8 @@ import { BaseTabsProps, ExportedBaseTabsProps } from '../internals/models/props/
 
 type TabValue = 'date' | 'time';
 
-const viewToTab = (openView: DateOrTimeView): TabValue => {
-  if (['day', 'month', 'year'].includes(openView)) {
+const viewToTab = (view: DateOrTimeView): TabValue => {
+  if (['day', 'month', 'year'].includes(view)) {
     return 'date';
   }
 
@@ -45,7 +41,7 @@ export interface ExportedDateTimePickerTabsProps extends ExportedBaseTabsProps {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon?: React.ReactNode;
+  dateIcon?: React.ReactNode;
   /**
    * Time tab icon.
    * @default Time
@@ -62,9 +58,7 @@ export interface DateTimePickerTabsProps
   classes?: Partial<DateTimePickerTabsClasses>;
 }
 
-type OwnerState = DateTimePickerTabsProps & { wrapperVariant: WrapperVariant };
-
-const useUtilityClasses = (ownerState: OwnerState) => {
+const useUtilityClasses = (ownerState: DateTimePickerTabsProps) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -77,23 +71,21 @@ const DateTimePickerTabsRoot = styled(Tabs, {
   name: 'MuiDateTimePickerTabs',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: OwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: DateTimePickerTabsProps }>(({ theme }) => ({
   boxShadow: `0 -1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
-  ...(ownerState.wrapperVariant === 'desktop' && {
-    // TODO v6: Drop order when the old pickers are removed
-    order: 1,
+  '&:last-child': {
     boxShadow: `0 1px 0 0 inset ${(theme.vars || theme).palette.divider}`,
     [`& .${tabsClasses.indicator}`]: {
       bottom: 'auto',
       top: 0,
     },
-  }),
+  },
 }));
 
 const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTabsProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiDateTimePickerTabs' });
   const {
-    dateRangeIcon = <DateRange />,
+    dateIcon = <DateRange />,
     onViewChange,
     timeIcon = <Time />,
     view,
@@ -101,9 +93,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
   } = props;
 
   const localeText = useLocaleText();
-  const wrapperVariant = React.useContext(WrapperVariantContext);
-  const ownerState = { ...props, wrapperVariant };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(props);
 
   const handleChange = (event: React.SyntheticEvent, value: TabValue) => {
     onViewChange(tabToView(value));
@@ -115,7 +105,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
 
   return (
     <DateTimePickerTabsRoot
-      ownerState={ownerState}
+      ownerState={props}
       variant="fullWidth"
       value={viewToTab(view)}
       onChange={handleChange}
@@ -124,7 +114,7 @@ const DateTimePickerTabs = function DateTimePickerTabs(inProps: DateTimePickerTa
       <Tab
         value="date"
         aria-label={localeText.dateTableLabel}
-        icon={<React.Fragment>{dateRangeIcon}</React.Fragment>}
+        icon={<React.Fragment>{dateIcon}</React.Fragment>}
       />
       <Tab
         value="time"
@@ -148,7 +138,7 @@ DateTimePickerTabs.propTypes = {
    * Date tab icon.
    * @default DateRange
    */
-  dateRangeIcon: PropTypes.node,
+  dateIcon: PropTypes.node,
   /**
    * Toggles visibility of the tabs allowing view switching.
    * @default `window.innerHeight < 667` for `DesktopDateTimePicker` and `MobileDateTimePicker`, `displayStaticWrapperAs === 'desktop'` for `StaticDateTimePicker`

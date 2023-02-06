@@ -1,6 +1,2 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={3}>
-    <NextTimePicker label="disabled" disabled />
-    <NextTimePicker label="readOnly" readOnly />
-  </Stack>
-</LocalizationProvider>
+<TimePicker label="disabled" disabled />
+<TimePicker label="readOnly" readOnly />

@@ -10,7 +10,7 @@ import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridR
 import {
   GridEditModes,
   GridRowModes,
-  GridEditRowsModel,
+  GridEditingState,
   GridCellModes,
 } from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -18,7 +18,7 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
-import { GridCellIdentifier } from '../hooks/features/focus/gridFocusState';
+import { GridCellCoordinates } from '../models/gridCell';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -48,9 +48,9 @@ export interface GridRowProps {
   lastColumnToRender: number;
   visibleColumns: GridStateColDef[];
   renderedColumns: GridStateColDef[];
-  cellFocus: GridCellIdentifier | null;
-  cellTabIndex: GridCellIdentifier | null;
-  editRowsState: GridEditRowsModel;
+  cellFocus: GridCellCoordinates | null;
+  cellTabIndex: GridCellCoordinates | null;
+  editRowsState: GridEditingState;
   position: 'left' | 'center' | 'right';
   row?: GridRowModel;
   isLastVisible?: boolean;
@@ -91,7 +91,7 @@ function EmptyCell({ width }: { width: number }) {
 
   const style = { width };
 
-  return <div className="MuiDataGrid-cell" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
+  return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
 const GridRow = React.forwardRef<
@@ -133,10 +133,6 @@ const GridRow = React.forwardRef<
   const handleRef = useForkRef(ref, refProp);
 
   const ariaRowIndex = index + headerGroupingMaxDepth + 2; // 1 for the header row and 1 as it's 1-based
-  const { hasScrollX, hasScrollY } = apiRef.current.getRootDimensions() ?? {
-    hasScrollX: false,
-    hasScrollY: false,
-  };
 
   const ownerState = {
     selected,
@@ -159,7 +155,7 @@ const GridRow = React.forwardRef<
   React.useLayoutEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if pageSize=5 and page=1. However, the index used by the virtualization
+      // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
@@ -273,7 +269,10 @@ const GridRow = React.forwardRef<
         column.field,
       );
 
-      const classNames: string[] = [];
+      const classNames = apiRef.current.unstable_applyPipeProcessors('cellClassName', [], {
+        id: rowId,
+        field: column.field,
+      });
 
       const disableDragEvents =
         (rootProps.disableColumnReorder && column.disableReorder) ||
@@ -293,7 +292,7 @@ const GridRow = React.forwardRef<
       }
 
       const editCellState = editRowsState[rowId] ? editRowsState[rowId][column.field] : null;
-      let content: React.ReactNode = null;
+      let content: React.ReactNode;
 
       if (editCellState == null && column.renderCell) {
         content = column.renderCell({ ...cellParams, api: apiRef.current });
@@ -340,6 +339,11 @@ const GridRow = React.forwardRef<
           ? 0
           : -1;
 
+      const isSelected = apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
+        id: rowId,
+        field: column.field,
+      });
+
       return (
         <rootProps.components.Cell
           key={column.field}
@@ -354,6 +358,7 @@ const GridRow = React.forwardRef<
           cellMode={cellParams.cellMode}
           colIndex={cellProps.indexRelativeToAllColumns}
           isEditable={cellParams.isEditable}
+          isSelected={isSelected}
           hasFocus={hasFocus}
           tabIndex={tabIndex}
           className={clsx(classNames)}
@@ -445,12 +450,6 @@ const GridRow = React.forwardRef<
     const column = renderedColumns[i];
     const indexRelativeToAllColumns = firstColumnToRender + i;
 
-    const isLastColumn = indexRelativeToAllColumns === visibleColumns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
-    const showRightBorder = !isLastColumn
-      ? rootProps.showCellRightBorder
-      : !removeLastBorderRight && rootProps.disableExtendRowFullWidth;
-
     const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
       rowId,
       indexRelativeToAllColumns,
@@ -459,7 +458,12 @@ const GridRow = React.forwardRef<
     if (cellColSpanInfo && !cellColSpanInfo.spannedByColSpan) {
       if (rowType !== 'skeletonRow') {
         const { colSpan, width } = cellColSpanInfo.cellProps;
-        const cellProps = { width, colSpan, showRightBorder, indexRelativeToAllColumns };
+        const cellProps = {
+          width,
+          colSpan,
+          showRightBorder: rootProps.showCellVerticalBorder,
+          indexRelativeToAllColumns,
+        };
         cells.push(getCell(column, cellProps));
       } else {
         const { width } = cellColSpanInfo.cellProps;

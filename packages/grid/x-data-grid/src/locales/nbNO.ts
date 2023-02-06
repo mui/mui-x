@@ -6,7 +6,6 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fant ingen resultat.',
-  errorOverlayDefaultLabel: 'Det skjedde en feil.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tetthet',
@@ -49,10 +48,8 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Legg til filter',
   filterPanelDeleteIconLabel: 'Slett',
-  filterPanelLinkOperator: 'Logisk operator',
-  filterPanelOperators: 'Operatører',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logisk operator',
+  filterPanelOperator: 'Operatører',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonner',
@@ -82,6 +79,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Meny',
   columnMenuShowColumns: 'Vis kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Usorter',

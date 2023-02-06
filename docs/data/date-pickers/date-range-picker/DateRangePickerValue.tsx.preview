@@ -1,15 +1,11 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={4}>
-    <GridItem label="Uncontrolled picker" spacing={2}>
-      <NextDateRangePicker
-        defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-      />
-    </GridItem>
-    <GridItem label="Controlled picker" spacing={2}>
-      <NextDateRangePicker
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-      />
-    </GridItem>
-  </Stack>
-</LocalizationProvider>
+<DemoItem label="Uncontrolled picker" component="DateRangePicker">
+  <DateRangePicker
+    defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+  />
+</DemoItem>
+<DemoItem label="Controlled picker" component="DateRangePicker">
+  <DateRangePicker
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+  />
+</DemoItem>

@@ -71,23 +71,30 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
       }
 
       const getOperatorLabel = (item: GridFilterItem): string =>
-        lookup[item.columnField!].filterOperators!.find(
-          (operator) => operator.value === item.operatorValue,
-        )!.label ||
+        lookup[item.field!].filterOperators!.find((operator) => operator.value === item.operator)!
+          .label ||
         apiRef.current
-          .getLocaleText(`filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys)!
+          .getLocaleText(`filterOperator${capitalize(item.operator!)}` as GridTranslationKeys)!
           .toString();
+
+      const getFilterItemValue = (item: GridFilterItem): string => {
+        const { getValueAsString } = lookup[item.field!].filterOperators!.find(
+          (operator) => operator.value === item.operator,
+        )!;
+
+        return getValueAsString ? getValueAsString(item.value) : item.value;
+      };
 
       return (
         <div>
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
           <GridToolbarFilterListRoot className={classes.root}>
             {activeFilters.map((item, index) => ({
-              ...(lookup[item.columnField!] && (
+              ...(lookup[item.field!] && (
                 <li key={index}>
-                  {`${lookup[item.columnField!].headerName || item.columnField}
+                  {`${lookup[item.field!].headerName || item.field}
                   ${getOperatorLabel(item)}
-                  ${item.value ?? ''}`}
+                  ${item.value ? getFilterItemValue(item) : ''}`}
                 </li>
               )),
             }))}

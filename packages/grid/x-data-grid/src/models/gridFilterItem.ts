@@ -10,7 +10,7 @@ export interface GridFilterItem {
   /**
    * The column from which we want to filter the rows.
    */
-  columnField: string;
+  field: string;
   /**
    * The filtering value.
    * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -18,14 +18,13 @@ export interface GridFilterItem {
   value?: any;
   /**
    * The name of the operator we want to apply.
-   * Will become required on `@mui/x-data-grid@6.X`.
    */
-  operatorValue?: string;
+  operator: string;
 }
 
-enum GridLinkOperator {
+enum GridLogicOperator {
   And = 'and',
   Or = 'or',
 }
 
-export { GridLinkOperator };
+export { GridLogicOperator };

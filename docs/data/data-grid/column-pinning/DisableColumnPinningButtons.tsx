@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
   DataGridPro,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   GridColumnMenuContainer,
-  SortGridMenuItems,
-  HideGridColMenuItem,
-  GridColumnsMenuItem,
-  GridFilterMenuItem,
+  GridColumnMenuSortItem,
+  GridColumnMenuHideItem,
+  GridColumnMenuColumnsItem,
+  GridColumnMenuFilterItem,
   GridColumnMenuProps,
 } from '@mui/x-data-grid-pro';
 import {
@@ -18,18 +18,14 @@ import {
 } from '@mui/x-data-grid-generator';
 
 export function CustomColumnMenu(props: GridColumnMenuProps) {
-  const { hideMenu, currentColumn, color, ...other } = props;
+  const { hideMenu, colDef, color, ...other } = props;
 
   return (
-    <GridColumnMenuContainer
-      hideMenu={hideMenu}
-      currentColumn={currentColumn}
-      {...other}
-    >
-      <SortGridMenuItems onClick={hideMenu} column={currentColumn} />
-      <GridFilterMenuItem onClick={hideMenu} column={currentColumn} />
-      <HideGridColMenuItem onClick={hideMenu} column={currentColumn} />
-      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn} />
+    <GridColumnMenuContainer hideMenu={hideMenu} colDef={colDef} {...other}>
+      <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuHideItem onClick={hideMenu} colDef={colDef} />
+      <GridColumnMenuColumnsItem onClick={hideMenu} colDef={colDef} />
     </GridColumnMenuContainer>
   );
 }
@@ -47,7 +43,7 @@ export default function DisableColumnPinningButtons() {
   );
 }
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 160, editable: true },
   { field: 'email', headerName: 'Email', width: 200, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },

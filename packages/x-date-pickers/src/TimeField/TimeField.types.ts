@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
 import { UseFieldInternalProps } from '../internals/hooks/useField';
 import { TimeValidationError } from '../internals/hooks/validation/useTimeValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import { BaseTimeValidationProps, TimeValidationProps } from '../internals/hooks/validation/models';
+import { FieldsTextFieldProps, UncapitalizeObjectKeys } from '../internals';
 
 export interface UseTimeFieldParams<TDate, TChildProps extends {}> {
   props: UseTimeFieldComponentProps<TDate, TChildProps>;
@@ -33,29 +34,43 @@ export type UseTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
 > &
   UseTimeFieldProps<TDate>;
 
-export interface TimeFieldProps<TDate> extends UseTimeFieldComponentProps<TDate, TextFieldProps> {
+export interface TimeFieldProps<TDate>
+  extends UseTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: TimeFieldSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: TimeFieldSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<TimeFieldSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: TimeFieldSlotsComponentsProps<TDate>;
 }
 
 export type TimeFieldOwnerState<TDate> = TimeFieldProps<TDate>;
 
 export interface TimeFieldSlotsComponent {
   /**
-   * Input rendered.
-   * @default TextField
+   * Form control with an input to render the value.
+   * Receives the same props as `@mui/material/TextField`.
+   * @default TextField from '@mui/material'
    */
-  Input?: React.ElementType;
+  TextField?: React.ElementType;
 }
 
 export interface TimeFieldSlotsComponentsProps<TDate> {
-  input?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
+  textField?: SlotComponentProps<typeof TextField, {}, TimeFieldOwnerState<TDate>>;
 }

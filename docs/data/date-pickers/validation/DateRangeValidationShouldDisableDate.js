@@ -1,7 +1,5 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
@@ -16,11 +14,10 @@ const isWeekend = (date) => {
 };
 
 export default function DateRangeValidationShouldDisableDate() {
-  const [value, setValue] = React.useState([lastSunday, nextSunday]);
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
+        defaultValue={[lastSunday, nextSunday]}
         shouldDisableDate={(date, position) => {
           if (position === 'end') {
             return false;
@@ -28,15 +25,6 @@ export default function DateRangeValidationShouldDisableDate() {
 
           return isWeekend(date);
         }}
-        value={value}
-        onChange={(newValue) => setValue(newValue)}
-        renderInput={(startProps, endProps) => (
-          <React.Fragment>
-            <TextField {...startProps} />
-            <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
-          </React.Fragment>
-        )}
       />
     </LocalizationProvider>
   );

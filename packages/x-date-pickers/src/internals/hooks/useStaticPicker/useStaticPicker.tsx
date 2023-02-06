@@ -1,18 +1,19 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { DateOrTimeView } from '../../models/views';
 import { UseStaticPickerParams, UseStaticPickerProps } from './useStaticPicker.types';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
-import { PickersViewLayout } from '../../components/PickersViewLayout';
+import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
 
-const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-})) as unknown as typeof PickersViewLayout;
+})) as unknown as typeof PickersLayout;
 
 /**
  * Hook managing all the single-date static pickers:
@@ -21,39 +22,48 @@ const PickerStaticViewLayout = styled(PickersViewLayout)(({ theme }) => ({
  * - StaticTimePicker
  */
 export const useStaticPicker = <
-  TValue,
   TDate,
   TView extends DateOrTimeView,
-  TExternalProps extends UseStaticPickerProps<TValue, TDate, TView, any>,
+  TExternalProps extends UseStaticPickerProps<TDate, TView, any, TExternalProps>,
 >({
   props,
   valueManager,
-  viewLookup,
   validator,
   ref,
-}: UseStaticPickerParams<TValue, TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs } = props;
+}: UseStaticPickerParams<TDate, TView, TExternalProps>) => {
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const { layoutProps, renderCurrentView } = usePicker({
+  const { layoutProps, renderCurrentView } = usePicker<
+    TDate | null,
+    TDate,
+    TView,
+    TExternalProps,
+    {}
+  >({
     props,
-    viewLookup,
     valueManager,
     validator,
+    autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
     wrapperVariant: displayStaticWrapperAs,
   });
 
+  const Layout = slots?.layout ?? PickerStaticLayout;
+
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
-        <PickerStaticViewLayout
+        <Layout
           {...layoutProps}
-          components={components}
-          componentsProps={componentsProps}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotProps}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}
-        </PickerStaticViewLayout>
+        </Layout>
       </WrapperVariantContext.Provider>
     </LocalizationProvider>
   );

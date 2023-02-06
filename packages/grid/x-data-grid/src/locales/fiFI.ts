@@ -6,7 +6,6 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  errorOverlayDefaultLabel: 'Tapahtui virhe.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tiiveys',
@@ -49,10 +48,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Lisää suodatin',
   filterPanelDeleteIconLabel: 'Poista',
-  filterPanelLinkOperator: 'Logiikkaoperaattori',
-  filterPanelOperators: 'Operaattorit',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logiikkaoperaattori',
+  filterPanelOperator: 'Operaattorit',
   filterPanelOperatorAnd: 'Ja',
   filterPanelOperatorOr: 'Tai',
   filterPanelColumns: 'Sarakkeet',
@@ -82,6 +79,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Valikko',
   columnMenuShowColumns: 'Näytä sarakkeet',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Suodata',
   columnMenuHideColumn: 'Piilota',
   columnMenuUnsort: 'Poista järjestys',

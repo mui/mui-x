@@ -6,7 +6,6 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Nincsenek sorok',
   noResultsOverlayLabel: 'Nincs találat.',
-  errorOverlayDefaultLabel: 'Váratlan hiba történt.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Sormagasság',
@@ -48,10 +47,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Szűrő hozzáadása',
   filterPanelDeleteIconLabel: 'Törlés',
-  filterPanelLinkOperator: 'Logikai operátor',
-  filterPanelOperators: 'Operátorok',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logikai operátor',
+  filterPanelOperator: 'Operátorok',
   filterPanelOperatorAnd: 'És',
   filterPanelOperatorOr: 'Vagy',
   filterPanelColumns: 'Oszlopok',
@@ -81,6 +78,7 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Oszlopok megjelenítése',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Szűrők',
   columnMenuHideColumn: 'Elrejtés',
   columnMenuUnsort: 'Sorrend visszaállítása',

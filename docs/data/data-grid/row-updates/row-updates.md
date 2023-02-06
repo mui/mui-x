@@ -10,13 +10,13 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-{{"demo": "UpdateRowsProp.js", "bg": "inline", "disableAd": true}}
+{{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
-## The `updateRows` method [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+## The `updateRows` method
 
 If you want to only update part of the rows, you can use the `apiRef.current.updateRows` method.
 
-{{"demo": "UpdateRowsApiRef.js", "bg": "inline", "disableAd": true}}
+{{"demo": "UpdateRowsApiRef.js", "bg": "inline"}}
 
 The default behavior of `updateRows` API is to upsert rows.
 So if a row has an id that is not in the current list of rows then it will be added to the grid.
@@ -26,6 +26,9 @@ Alternatively, if you would like to delete a row, you would need to pass an extr
 ```ts
 apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
 ```
+
+> The free version of the `DataGrid` is limited to a single row update per `apiRef.current.updateRows` call.
+> Multiple row updates at a time are supported in [Pro](/x/introduction/licensing/#pro-plan) and [Premium](/x/introduction/licensing/#premium-plan) plans.
 
 ## Infinite loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
@@ -81,7 +84,7 @@ When receiving updates more frequently than this threshold, the grid will wait b
 
 The following demo updates the rows every 10 ms, but they are only applied every 2 seconds.
 
-{{"demo": "ThrottledRowsGrid.js", "bg": "inline"}}
+{{"demo": "ThrottledRowsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## API
 

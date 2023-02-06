@@ -6,7 +6,6 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Geen resultaten.',
   noResultsOverlayLabel: 'Geen resultaten gevonden.',
-  errorOverlayDefaultLabel: 'Er deed zich een fout voor.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Grootte',
@@ -49,10 +48,8 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Filter toevoegen',
   filterPanelDeleteIconLabel: 'Verwijderen',
-  filterPanelLinkOperator: 'Logische operator',
-  filterPanelOperators: 'Operatoren',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logische operator',
+  filterPanelOperator: 'Operatoren',
   filterPanelOperatorAnd: 'En',
   filterPanelOperatorOr: 'Of',
   filterPanelColumns: 'Kolommen',
@@ -82,6 +79,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Toon kolommen',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filteren',
   columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Annuleer sortering',

@@ -19,7 +19,7 @@ import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import type { GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -66,7 +66,7 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * If not specified, the order is derived from the `columns` prop.
    */
   sort?: 'asc' | 'desc';
-  searchPredicate?: (column: GridStateColDef, searchValue: string) => boolean;
+  searchPredicate?: (column: GridColDef, searchValue: string) => boolean;
   /*
    * If `true`, the column search field will be focused automatically.
    * If `false`, the first column switch input will be focused automatically.
@@ -74,6 +74,16 @@ export interface GridColumnsPanelProps extends GridPanelWrapperProps {
    * @default true
    */
   autoFocusSearchField?: boolean;
+  /*
+   * If `true`, the `Hide all` button will not be displayed.
+   * @default false
+   */
+  disableHideAllButton?: boolean;
+  /*
+   * If `true`, the `Show all` button will be disabled
+   * @default false
+   */
+  disableShowAllButton?: boolean;
 }
 
 const collator = new Intl.Collator();
@@ -99,6 +109,8 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
     sort,
     searchPredicate = defaultSearchPredicate,
     autoFocusSearchField = true,
+    disableHideAllButton = false,
+    disableShowAllButton = false,
     ...other
   } = props;
 
@@ -126,15 +138,21 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   const toggleAllColumns = React.useCallback(
     (isVisible: boolean) => {
-      if (isVisible) {
-        return apiRef.current.setColumnVisibilityModel({});
-      }
+      const currentModel = gridColumnVisibilityModelSelector(apiRef);
+      const newModel = { ...currentModel };
 
-      return apiRef.current.setColumnVisibilityModel(
-        Object.fromEntries(
-          columns.filter((col) => col.hideable !== false).map((col) => [col.field, false]),
-        ),
-      );
+      columns.forEach((col) => {
+        if (col.hideable) {
+          if (isVisible) {
+            // delete the key from the model instead of setting it to `true`
+            delete newModel[col.field];
+          } else {
+            newModel[col.field] = false;
+          }
+        }
+      });
+
+      return apiRef.current.setColumnVisibilityModel(newModel);
     },
     [apiRef, columns],
   );
@@ -165,7 +183,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   }, [autoFocusSearchField]);
 
   let firstHideableColumnFound = false;
-  const isFirstHideableColumn = (column: GridStateColDef) => {
+  const isFirstHideableColumn = (column: GridColDef) => {
     if (firstHideableColumnFound === false && column.hideable !== false) {
       firstHideableColumnFound = true;
       return true;
@@ -220,20 +238,31 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
           ))}
         </GridColumnsPanelRoot>
       </GridPanelContent>
-      <GridPanelFooter>
-        <rootProps.components.BaseButton
-          onClick={() => toggleAllColumns(false)}
-          {...rootProps.componentsProps?.baseButton}
-        >
-          {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
-        </rootProps.components.BaseButton>
-        <rootProps.components.BaseButton
-          onClick={() => toggleAllColumns(true)}
-          {...rootProps.componentsProps?.baseButton}
-        >
-          {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
-        </rootProps.components.BaseButton>
-      </GridPanelFooter>
+      {disableShowAllButton && disableHideAllButton ? null : (
+        <GridPanelFooter>
+          {!disableHideAllButton ? (
+            <rootProps.components.BaseButton
+              onClick={() => toggleAllColumns(false)}
+              {...rootProps.componentsProps?.baseButton}
+              disabled={disableHideAllButton}
+            >
+              {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
+            </rootProps.components.BaseButton>
+          ) : (
+            <span />
+          )}
+
+          {!disableShowAllButton ? (
+            <rootProps.components.BaseButton
+              onClick={() => toggleAllColumns(true)}
+              {...rootProps.componentsProps?.baseButton}
+              disabled={disableShowAllButton}
+            >
+              {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
+            </rootProps.components.BaseButton>
+          ) : null}
+        </GridPanelFooter>
+      )}
     </GridPanelWrapper>
   );
 }
@@ -244,6 +273,8 @@ GridColumnsPanel.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   autoFocusSearchField: PropTypes.bool,
+  disableHideAllButton: PropTypes.bool,
+  disableShowAllButton: PropTypes.bool,
   searchPredicate: PropTypes.func,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;

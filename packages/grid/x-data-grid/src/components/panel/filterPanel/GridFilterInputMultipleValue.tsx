@@ -57,7 +57,6 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     <Autocomplete<string, true, false, true>
       multiple
       freeSolo
-      limitTags={1}
       options={[]}
       filterOptions={(options, params) => {
         const { inputValue } = params;
@@ -105,9 +104,9 @@ GridFilterInputMultipleValue.propTypes = {
     PropTypes.object,
   ]),
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   type: PropTypes.oneOf(['number', 'text']),

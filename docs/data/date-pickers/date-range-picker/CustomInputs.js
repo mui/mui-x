@@ -5,20 +5,25 @@ import Box from '@mui/material/Box';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDateRangePicker as NextDateRangePicker } from '@mui/x-date-pickers-pro/NextDateRangePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
-function BrowserInput(props) {
-  const { inputProps, InputProps, ownerState, ...other } = props;
+const BrowserInput = function BrowserInput(props) {
+  const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <input {...inputProps} {...other} />
+    <Box sx={{ display: 'flex', alignItems: 'center' }} ref={InputProps?.ref}>
+      <input ref={inputRef} {...inputProps} {...other} />
       {InputProps?.endAdornment}
     </Box>
   );
-}
+};
 
 BrowserInput.propTypes = {
+  /**
+   * If `true`, the label is displayed in an error state.
+   * @default false
+   */
+  error: PropTypes.bool,
   /**
    * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
    */
@@ -30,16 +35,25 @@ BrowserInput.propTypes = {
    * component depending on the `variant` prop value.
    */
   InputProps: PropTypes.object,
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.any.isRequired,
+    }),
+  ]),
   ownerState: PropTypes.any,
 };
 
 export default function CustomInputs() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDateRangePicker
+      <DateRangePicker
         defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
-        components={{
-          Input: BrowserInput,
+        slots={{
+          textField: BrowserInput,
         }}
       />
     </LocalizationProvider>

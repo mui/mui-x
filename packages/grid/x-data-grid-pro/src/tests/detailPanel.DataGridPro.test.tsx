@@ -25,7 +25,7 @@ import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Detail panel', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render, clock } = createRenderer({ clock: 'fake' });
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -214,10 +214,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     render(
       <TestCase
         getDetailPanelContent={({ id }) => <div>Row {id}</div>}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
-        initialState={{ detailPanel: { expandedRowIds: [0] } }}
+        pageSizeOptions={[1]}
+        initialState={{
+          detailPanel: { expandedRowIds: [0] },
+          pagination: { paginationModel: { pageSize: 1 } },
+        }}
       />,
     );
     expect(screen.queryByText('Row 0')).not.to.equal(null);
@@ -230,13 +232,13 @@ describe('<DataGridPro /> - Detail panel', () => {
       this.skip(); // Needs layout
     }
     const rowHeight = 50;
-    const headerHeight = 50;
+    const columnHeaderHeight = 50;
     render(
       <TestCase
         getDetailPanelHeight={() => rowHeight}
         getDetailPanelContent={() => <div />}
         rowHeight={rowHeight}
-        headerHeight={headerHeight}
+        columnHeaderHeight={columnHeaderHeight}
         initialState={{
           detailPanel: {
             expandedRowIds: [0],
@@ -329,9 +331,9 @@ describe('<DataGridPro /> - Detail panel', () => {
           { id: 1, brand: 'Adidas' },
         ]}
         getDetailPanelContent={getDetailPanelContent}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
 
@@ -365,9 +367,9 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        pageSize={1}
-        rowsPerPageOptions={[1]}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
       />,
     );
     //   2x during state initialization
@@ -404,9 +406,9 @@ describe('<DataGridPro /> - Detail panel', () => {
         ]}
         getDetailPanelContent={() => <div>Detail</div>}
         getDetailPanelHeight={getDetailPanelHeight}
-        rowsPerPageOptions={[1]}
-        pageSize={1}
         pagination
+        pageSizeOptions={[1]}
+        initialState={{ pagination: { paginationModel: { pageSize: 1 } } }}
         autoHeight
       />,
     );
@@ -500,6 +502,20 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '502px' }); // 500px + 2px spacing
+  });
+
+  it('should not reuse detail panel components', () => {
+    function DetailPanel() {
+      const [today] = React.useState(() => new Date());
+      return <div>Date is {today.toISOString()}</div>;
+    }
+    const { setProps } = render(
+      <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
+    );
+    expect(screen.queryByText('Date is 1970-01-01T00:00:00.000Z')).not.to.equal(null);
+    clock.tick(100);
+    setProps({ detailPanelExpandedRowIds: [1] });
+    expect(screen.queryByText('Date is 1970-01-01T00:00:00.100Z')).not.to.equal(null);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
@@ -635,6 +651,24 @@ describe('<DataGridPro /> - Detail panel', () => {
         expect(screen.queryByText('Row 1')).not.to.equal(null);
         expect(screen.queryByText('Row 2')).not.to.equal(null);
       });
+    });
+  });
+
+  it('should merge row styles when expanded', () => {
+    render(
+      <TestCase
+        getDetailPanelHeight={() => 0}
+        nbRows={1}
+        getDetailPanelContent={() => <div />}
+        componentsProps={{
+          row: { style: { color: 'yellow' } },
+        }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+    expect(getRow(0)).toHaveInlineStyle({
+      color: 'yellow',
+      marginBottom: '0px', // added when expanded
     });
   });
 });

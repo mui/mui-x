@@ -26,6 +26,7 @@ import {
   pickersCalendarHeaderClasses,
   PickersCalendarHeaderClasses,
 } from './pickersCalendarHeaderClasses';
+import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
 export type ExportedCalendarHeaderProps<TDate> = Pick<PickersCalendarHeaderProps<TDate>, 'classes'>;
 
@@ -67,18 +68,30 @@ export interface PickersCalendarHeaderProps<TDate>
   /**
    * Overrideable components.
    * @default {}
+   * @deprecated Please use `slots`.
    */
   components?: PickersCalendarHeaderSlotsComponent;
   /**
    * The props used for each component slot.
    * @default {}
+   * @deprecated Please use `slotProps`.
    */
   componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
+  /**
+   * Overrideable component slots.
+   * @default {}
+   */
+  slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   currentMonth: TDate;
   disabled?: boolean;
   views: readonly DateView[];
   onMonthChange: (date: TDate, slideDirection: SlideDirection) => void;
-  openView: DateView;
+  view: DateView;
   reduceAnimations: boolean;
   onViewChange?: (view: DateView) => void;
   labelId?: string;
@@ -150,7 +163,7 @@ const PickersCalendarHeaderSwitchViewButton = styled(IconButton, {
   ownerState: PickersCalendarHeaderOwnerState<any>;
 }>(({ ownerState }) => ({
   marginRight: 'auto',
-  ...(ownerState.openView === 'year' && {
+  ...(ownerState.view === 'year' && {
     [`.${pickersCalendarHeaderClasses.switchViewIcon}`]: {
       transform: 'rotate(180deg)',
     },
@@ -177,8 +190,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
   const props = useThemeProps({ props: inProps, name: 'MuiPickersCalendarHeader' });
 
   const {
-    components = {},
-    componentsProps = {},
+    components,
+    componentsProps,
+    slots,
+    slotProps,
     currentMonth: month,
     disabled,
     disableFuture,
@@ -187,7 +202,7 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     minDate,
     onMonthChange,
     onViewChange,
-    openView: currentView,
+    view,
     reduceAnimations,
     views,
     labelId,
@@ -197,23 +212,27 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
 
   const classes = useUtilityClasses(props);
 
-  const SwitchViewButton = components.SwitchViewButton ?? PickersCalendarHeaderSwitchViewButton;
+  const SwitchViewButton =
+    slots?.switchViewButton ??
+    components?.SwitchViewButton ??
+    PickersCalendarHeaderSwitchViewButton;
   const switchViewButtonProps = useSlotProps({
     elementType: SwitchViewButton,
-    externalSlotProps: componentsProps.switchViewButton,
+    externalSlotProps: slotProps?.switchViewButton ?? componentsProps?.switchViewButton,
     additionalProps: {
       size: 'small',
-      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(currentView),
+      'aria-label': localeText.calendarViewSwitchingButtonAriaLabel(view),
     },
     ownerState,
     className: classes.switchViewButton,
   });
 
-  const SwitchViewIcon = components.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
+  const SwitchViewIcon =
+    slots?.switchViewIcon ?? components?.SwitchViewIcon ?? PickersCalendarHeaderSwitchViewIcon;
   // The spread is here to avoid this bug mui/material-ui#34056
   const { ownerState: switchViewIconOwnerState, ...switchViewIconProps } = useSlotProps({
     elementType: SwitchViewIcon,
-    externalSlotProps: componentsProps.switchViewIcon,
+    externalSlotProps: slotProps?.switchViewIcon ?? componentsProps?.switchViewIcon,
     ownerState: undefined,
     className: classes.switchViewIcon,
   });
@@ -236,10 +255,10 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
     }
 
     if (views.length === 2) {
-      onViewChange(views.find((view) => view !== currentView) || views[0]);
+      onViewChange(views.find((el) => el !== view) || views[0]);
     } else {
       // switching only between first 2
-      const nextIndexToOpen = views.indexOf(currentView) !== 0 ? 0 : 1;
+      const nextIndexToOpen = views.indexOf(view) !== 0 ? 0 : 1;
       onViewChange(views[nextIndexToOpen]);
     }
   };
@@ -278,10 +297,12 @@ export function PickersCalendarHeader<TDate>(inProps: PickersCalendarHeaderProps
           </SwitchViewButton>
         )}
       </PickersCalendarHeaderLabelContainer>
-      <Fade in={currentView === 'day'}>
+      <Fade in={view === 'day'}>
         <PickersArrowSwitcher
           components={components}
           componentsProps={componentsProps}
+          slots={slots}
+          slotProps={slotProps}
           onGoToPrevious={selectPreviousMonth}
           isPreviousDisabled={isPreviousMonthDisabled}
           previousLabel={localeText.previousMonth}

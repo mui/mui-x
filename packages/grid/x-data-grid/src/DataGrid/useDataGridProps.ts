@@ -6,11 +6,11 @@ import {
   DataGridForcedPropsKey,
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
-import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS, GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import { GridDensityTypes, GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
-  apiRef: undefined,
   disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
   disableMultipleRowSelection: true,
@@ -23,8 +23,6 @@ const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProces
   keepColumnPositionIfDraggedOutside: false,
   signature: 'DataGrid',
 };
-
-export const MAX_PAGE_SIZE = 100;
 
 /**
  * The default values of `DataGridPropsWithDefaultValues` to inject in the props of DataGrid.
@@ -39,8 +37,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   columnThreshold: 3,
   rowThreshold: 3,
   rowSelection: true,
-  density: GridDensityTypes.Standard,
-  disableExtendRowFullWidth: false,
+  density: 'standard',
   disableColumnFilter: false,
   disableColumnMenu: false,
   disableColumnSelector: false,
@@ -52,7 +49,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterMode: 'client',
-  headerHeight: 56,
+  columnHeaderHeight: 56,
   hideFooter: false,
   hideFooterPagination: false,
   hideFooterRowCount: false,
@@ -62,10 +59,10 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   pagination: false,
   paginationMode: 'client',
   rowHeight: 52,
-  rowsPerPageOptions: [25, 50, 100],
+  pageSizeOptions: [25, 50, 100],
   rowSpacingType: 'margin',
-  showCellRightBorder: false,
-  showColumnRightBorder: false,
+  showCellVerticalBorder: false,
+  showColumnVerticalBorder: false,
   sortingOrder: ['asc' as const, 'desc' as const, null],
   sortingMode: 'client',
   throttleRowsMs: 0,
@@ -76,10 +73,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 };
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
-  if (inProps.pageSize! > MAX_PAGE_SIZE) {
-    throw new Error(`'props.pageSize' cannot exceed 100 in DataGrid.`);
-  }
-
   const themedProps = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
 
   const localeText = React.useMemo(

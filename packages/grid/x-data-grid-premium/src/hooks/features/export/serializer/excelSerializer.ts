@@ -1,6 +1,5 @@
 import type * as Excel from 'exceljs';
 import {
-  GridStateColDef,
   GridRowId,
   GridColDef,
   GridValueFormatterParams,
@@ -9,13 +8,13 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning } from '@mui/x-data-grid/internals';
+import { buildWarning, GridStateColDef, isObject } from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
 const getExcelJs = async () => {
-  const { default: excelJsDefault } = await import('exceljs');
-  return excelJsDefault;
+  const excelJsModule = await import('exceljs');
+  return excelJsModule.default ?? excelJsModule;
 };
 
 const warnInvalidFormattedValue = buildWarning([
@@ -118,31 +117,35 @@ const serializeRow = (
             warnInvalidFormattedValue();
           }
         }
-        row[column.field] = formattedValue?.label ?? formattedValue;
+        if (isObject<{ label: any }>(formattedValue)) {
+          row[column.field] = formattedValue?.label;
+        } else {
+          row[column.field] = formattedValue as any;
+        }
         break;
       }
       case 'boolean':
       case 'number':
-        row[column.field] = api.getCellParams(id, column.field).value;
+        row[column.field] = api.getCellParams(id, column.field).value as any;
         break;
       case 'date':
       case 'dateTime': {
         // Excel does not do any timezone conversion, so we create a date using UTC instead of local timezone
         // Solution from: https://github.com/exceljs/exceljs/issues/486#issuecomment-432557582
         // About Date.UTC(): https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC#exemples
-        const date = api.getCellParams(id, column.field).value;
+        const value = api.getCellParams<any, Date>(id, column.field).value;
         // value may be `undefined` in auto-generated grouping rows
-        if (!date) {
+        if (!value) {
           break;
         }
         const utcDate = new Date(
           Date.UTC(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds(),
+            value.getFullYear(),
+            value.getMonth(),
+            value.getDate(),
+            value.getHours(),
+            value.getMinutes(),
+            value.getSeconds(),
           ),
         );
         row[column.field] = utcDate;
@@ -151,7 +154,7 @@ const serializeRow = (
       case 'actions':
         break;
       default:
-        row[column.field] = api.getCellParams(id, column.field).formattedValue;
+        row[column.field] = api.getCellParams(id, column.field).formattedValue as any;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
@@ -173,7 +176,7 @@ const defaultColumnsStyles = {
   [GRID_DATETIME_COL_DEF.type as string]: { numFmt: 'dd.mm.yyyy hh:mm' },
 };
 
-const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesInterface) => {
+const serializeColumn = (column: GridColDef, columnsStyles: ColumnsStylesInterface) => {
   const { field, type } = column;
 
   return {
@@ -188,7 +191,7 @@ const serializeColumn = (column: GridStateColDef, columnsStyles: ColumnsStylesIn
 
 const addColumnGroupingHeaders = (
   worksheet: Excel.Worksheet,
-  columns: GridStateColDef[],
+  columns: GridColDef[],
   api: GridApi,
 ) => {
   const maxDepth = Math.max(
@@ -213,7 +216,7 @@ const addColumnGroupingHeaders = (
     });
 
     const newRow = worksheet.addRow(
-      row.map((group) => (group.groupId === null ? null : group?.headerName || group.groupId)),
+      row.map((group) => (group.groupId === null ? null : group?.headerName ?? group.groupId)),
     );
 
     // use `rowCount`, since worksheet can have additional rows added in `exceljsPreProcess`
@@ -288,7 +291,7 @@ export async function buildExcel(
   }
 
   if (includeHeaders) {
-    worksheet.addRow(columns.map((column) => column.headerName || column.field));
+    worksheet.addRow(columns.map((column) => column.headerName ?? column.field));
   }
 
   const columnsWithArrayValueOptions = columns.filter(
@@ -312,7 +315,7 @@ export async function buildExcel(
         api,
       );
       valueOptionsWorksheet.getColumn(column.field).values = [
-        column.headerName || column.field,
+        column.headerName ?? column.field,
         ...formattedValueOptions,
       ];
 

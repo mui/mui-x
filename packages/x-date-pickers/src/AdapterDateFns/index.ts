@@ -3,7 +3,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import getWeek from 'date-fns/getWeek';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
   y: 'year',
@@ -16,6 +16,27 @@ const formatTokenMap: MuiFormatTokenMap = {
   MMM: { sectionName: 'month', contentType: 'letter' },
   LLL: { sectionName: 'month', contentType: 'letter' },
   LLLL: { sectionName: 'month', contentType: 'letter' },
+  E: { sectionName: 'weekDay', contentType: 'letter' },
+  EE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionName: 'weekDay', contentType: 'letter' },
+  i: 'weekDay',
+  ii: 'weekDay',
+  iii: { sectionName: 'weekDay', contentType: 'letter' },
+  iiii: { sectionName: 'weekDay', contentType: 'letter' },
+  e: 'weekDay',
+  ee: 'weekDay',
+  eee: { sectionName: 'weekDay', contentType: 'letter' },
+  eeee: { sectionName: 'weekDay', contentType: 'letter' },
+  eeeee: { sectionName: 'weekDay', contentType: 'letter' },
+  eeeeee: { sectionName: 'weekDay', contentType: 'letter' },
+  c: 'weekDay',
+  cc: 'weekDay',
+  ccc: { sectionName: 'weekDay', contentType: 'letter' },
+  cccc: { sectionName: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionName: 'weekDay', contentType: 'letter' },
+  cccccc: { sectionName: 'weekDay', contentType: 'letter' },
   d: 'day',
   dd: 'day',
   H: 'hours',
@@ -29,8 +50,12 @@ const formatTokenMap: MuiFormatTokenMap = {
   aaa: 'meridiem',
 };
 
-export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickerFieldAdapter<Date> {
+export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdapter<Date> {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: "'", end: "'" };
 
   public expandFormat = (format: string) => {
     const longFormatRegexp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;

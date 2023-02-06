@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { GridCellParams } from '../models/params/gridCellParams';
-import { GridActionsColDef, GridColDef, GridColumns, GridRowParams } from '../models';
+import { GridColDef, GridRowParams } from '../models';
 
 function RenderCellParamsExplicitTyping() {
   return (
@@ -16,8 +16,7 @@ function RenderCellParamsExplicitTyping() {
         },
         {
           field: 'price2',
-          renderCell: (params: GridRenderCellParams<number>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
+          renderCell: (params: GridRenderCellParams<any, any, number>) => {
             return params.value.toUpperCase();
           },
         },
@@ -30,7 +29,6 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price4',
           renderCell: (params: GridRenderCellParams<any, { price: number }>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
             return params.row.price.toUpperCase();
           },
         },
@@ -44,7 +42,7 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price6',
           type: 'actions',
-          // @ts-expect-error `price` is expected to be a number because of GridEnrichedCallDef
+          // @ts-expect-error `price` is expected to be a number because of GridColDef
           getActions: (params: GridRowParams<{ price: string }>) => {
             return params.row.price.toUpperCase();
           },
@@ -52,8 +50,7 @@ function RenderCellParamsExplicitTyping() {
         {
           field: 'price7',
           type: 'actions',
-          getActions: (params: GridRowParams<{ price: number }>) => {
-            // @ts-expect-error `toUpperCase` doesn't exist in number
+          getActions: (params: GridRowParams) => {
             return params.row.price.toUpperCase();
           },
         },
@@ -65,7 +62,7 @@ function RenderCellParamsExplicitTyping() {
 function CellParamsFromRowModel() {
   type PriceRowModel = { price1: number; price2: string };
 
-  const actionColumn: GridActionsColDef<PriceRowModel> = {
+  const actionColumn: GridColDef<PriceRowModel> = {
     field: 'price1',
     type: 'actions',
     getActions: (params) => {
@@ -82,7 +79,7 @@ function CellParamsFromRowModel() {
     },
   };
 
-  const columns: GridColumns<PriceRowModel> = [
+  const columns: GridColDef<PriceRowModel>[] = [
     {
       field: 'price1',
       type: 'actions',
@@ -108,11 +105,10 @@ function CellParamsValue() {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams) => {
+      onCellClick={(params: GridCellParams<any, any>) => {
         params.value!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<number>) => {
-        // @ts-expect-error `toUpperCase` doesn't exist in number
+      onCellDoubleClick={(params: GridCellParams<any, any>) => {
         params.value!.toUpperCase();
       }}
     />
@@ -127,7 +123,7 @@ function CellParamsRow() {
       onCellClick={(params: GridCellParams) => {
         params.row.brand!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<any, { brand: number }>) => {
+      onCellDoubleClick={(params: GridCellParams<{ brand: number }, any>) => {
         // @ts-expect-error `toUpperCase` doesn't exist in number
         params.row.brand!.toUpperCase();
       }}
@@ -140,11 +136,10 @@ function CellParamsFormattedValue() {
     <DataGrid
       rows={[]}
       columns={[{ field: 'brand' }]}
-      onCellClick={(params: GridCellParams<any>) => {
+      onCellClick={(params: GridCellParams<any, any>) => {
         params.formattedValue!.toUpperCase();
       }}
-      onCellDoubleClick={(params: GridCellParams<any, any, number>) => {
-        // @ts-expect-error `toUpperCase` doesn't exist in number
+      onCellDoubleClick={(params: GridCellParams<any, any>) => {
         params.formattedValue!.toUpperCase();
       }}
     />

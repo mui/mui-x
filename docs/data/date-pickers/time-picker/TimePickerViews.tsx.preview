@@ -1,0 +1,10 @@
+<MobileTimePicker
+  label={'"hours", "minutes" and "seconds"'}
+  views={['hours', 'minutes', 'seconds']}
+/>
+<MobileTimePicker label={'"hours"'} views={['hours']} />
+<MobileTimePicker
+  label={'"minutes" and "seconds"'}
+  views={['minutes', 'seconds']}
+  format="mm:ss"
+/>

@@ -1,7 +1,18 @@
 {
   "props": {
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "autoFocus": { "type": { "name": "bool" } },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotProps</code>."
+    },
     "dayOfWeekFormatter": {
       "type": { "name": "func" },
       "default": "(day) => day.charAt(0).toUpperCase()"
@@ -14,10 +25,21 @@
     "disablePast": { "type": { "name": "bool" } },
     "displayWeekNumber": { "type": { "name": "bool" } },
     "fixedWeekNumber": { "type": { "name": "number" }, "default": "undefined" },
+    "focusedView": {
+      "type": {
+        "name": "enum",
+        "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
+      }
+    },
     "loading": { "type": { "name": "bool" } },
     "maxDate": { "type": { "name": "any" } },
     "minDate": { "type": { "name": "any" } },
+    "monthsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
+    },
     "onChange": { "type": { "name": "func" } },
+    "onFocusedViewChange": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onViewChange": { "type": { "name": "func" } },
     "onYearChange": { "type": { "name": "func" } },
@@ -25,8 +47,7 @@
       "type": {
         "name": "enum",
         "description": "'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'"
-      },
-      "default": "'day'"
+      }
     },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
@@ -41,6 +62,8 @@
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "showDaysOutsideCurrentMonth": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -58,8 +81,11 @@
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;'day'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'year'&gt;"
-      },
-      "default": "['year', 'day']"
+      }
+    },
+    "yearsPerRow": {
+      "type": { "name": "enum", "description": "3<br>&#124;&nbsp;4" },
+      "default": "3"
     }
   },
   "slots": {
@@ -78,7 +104,7 @@
     "name": "MuiDateCalendar"
   },
   "filename": "/packages/x-date-pickers/src/DateCalendar/DateCalendar.tsx",
-  "demos": "<ul></ul>",
+  "demos": "<ul><li><a href=\"/x/react-date-pickers/date-calendar/\">Date Calendar</a></li></ul>",
   "packages": [
     { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateCalendar" },
     { "packageName": "@mui/x-date-pickers", "componentName": "DateCalendar" }

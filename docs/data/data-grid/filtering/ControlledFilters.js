@@ -14,8 +14,8 @@ export default function ControlledFilters() {
   const [filterModel, setFilterModel] = React.useState({
     items: [
       {
-        columnField: 'rating',
-        operatorValue: '>',
+        field: 'rating',
+        operator: '>',
         value: '2.5',
       },
     ],

@@ -1,4 +1,4 @@
-import { useValidation, ValidationProps, Validator } from './useValidation';
+import { Validator } from './useValidation';
 import {
   validateDate,
   DateValidationError,
@@ -38,22 +38,3 @@ export const validateDateTime: Validator<
 };
 
 export type DateTimeValidationError = DateValidationError | TimeValidationError;
-
-/**
- * TODO v6: Remove
- */
-export const isSameDateTimeError = (a: DateTimeValidationError, b: DateTimeValidationError) =>
-  a === b;
-
-/**
- * TODO v6: Remove
- */
-export function useDateTimeValidation<TDate>(
-  props: ValidationProps<
-    DateTimeValidationError,
-    TDate | null,
-    DateTimeComponentValidationProps<TDate>
-  >,
-): DateTimeValidationError {
-  return useValidation(props, validateDateTime, isSameDateTimeError, null);
-}

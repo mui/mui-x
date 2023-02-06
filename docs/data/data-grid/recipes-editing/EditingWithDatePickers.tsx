@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridColumns,
+  GridColDef,
   GridRowsProp,
   useGridApiContext,
   GridRenderEditCellParams,
@@ -17,16 +17,14 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@mui/x-data-grid-generator';
-import {
-  DatePicker,
-  DateTimePicker,
-  LocalizationProvider,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import TextField from '@mui/material/TextField';
-import InputBase from '@mui/material/InputBase';
+import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import locale from 'date-fns/locale/en-US';
 import { styled } from '@mui/material/styles';
+import { TextFieldProps } from '@mui/material/TextField';
 
 function buildApplyDateFilterFn(
   filterItem: GridFilterItem,
@@ -37,9 +35,13 @@ function buildApplyDateFilterFn(
     return null;
   }
 
-  const filterValueMs = filterItem.value.getTime();
+  // Make a copy of the date to not reset the hours in the original object
+  const filterValueCopy = new Date(filterItem.value);
+  filterValueCopy.setHours(0, 0, 0, 0);
 
-  return ({ value }: GridCellParams<Date, any, any>): boolean => {
+  const filterValueMs = filterValueCopy.getTime();
+
+  return ({ value }: GridCellParams<any, Date>): boolean => {
     if (!value) {
       return false;
     }
@@ -161,7 +163,7 @@ const dateAdapter = new AdapterDateFns({ locale });
  * `date` column
  */
 
-const dateColumnType: GridColTypeDef<Date | string, string> = {
+const dateColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATE_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -184,12 +186,19 @@ const GridEditDateInput = styled(InputBase)({
   padding: '0 9px',
 });
 
+function WrappedGridEditDateInput(props: TextFieldProps) {
+  const { InputProps, ...other } = props;
+  return (
+    <GridEditDateInput fullWidth {...InputProps} {...(other as InputBaseProps)} />
+  );
+}
+
 function GridEditDateCell({
   id,
   field,
   value,
   colDef,
-}: GridRenderEditCellParams<Date | string | null>) {
+}: GridRenderEditCellParams<any, Date | string | null>) {
   const apiRef = useGridApiContext();
 
   const Component = colDef.type === 'dateTime' ? DateTimePicker : DatePicker;
@@ -201,18 +210,9 @@ function GridEditDateCell({
   return (
     <Component
       value={value}
-      renderInput={({ inputRef, inputProps, InputProps, disabled, error }) => (
-        <GridEditDateInput
-          fullWidth
-          autoFocus
-          ref={inputRef}
-          {...InputProps}
-          disabled={disabled}
-          error={error}
-          inputProps={inputProps}
-        />
-      )}
+      autoFocus
       onChange={handleChange}
+      slots={{ textField: WrappedGridEditDateInput }}
     />
   );
 }
@@ -231,17 +231,17 @@ function GridFilterDateInput(
   return (
     <Component
       value={item.value || null}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="standard"
-          label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-        />
-      )}
-      InputAdornmentProps={{
-        sx: {
-          '& .MuiButtonBase-root': {
-            marginRight: -1,
+      autoFocus
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      slotProps={{
+        textField: {
+          variant: 'standard',
+        },
+        inputAdornment: {
+          sx: {
+            '& .MuiButtonBase-root': {
+              marginRight: -1,
+            },
           },
         },
       }}
@@ -254,7 +254,7 @@ function GridFilterDateInput(
  * `dateTime` column
  */
 
-const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
+const dateTimeColumnType: GridColTypeDef<Date, string> = {
   ...GRID_DATETIME_COL_DEF,
   resizable: false,
   renderEditCell: (params) => {
@@ -272,7 +272,7 @@ const dateTimeColumnType: GridColTypeDef<Date | string, string> = {
   },
 };
 
-const columns: GridColumns = [
+const columns: GridColDef[] = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'age', headerName: 'Age', type: 'number', editable: true },
   {

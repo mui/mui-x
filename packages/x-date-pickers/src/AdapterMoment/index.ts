@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: MuiFormatTokenMap = {
@@ -12,10 +12,18 @@ const formatTokenMap: MuiFormatTokenMap = {
   MMM: { sectionName: 'month', contentType: 'letter' },
   MMMM: { sectionName: 'month', contentType: 'letter' },
 
-  // Day of Month
+  // Day of the month
   D: 'day',
   Do: 'day',
   DD: 'day',
+
+  // Day of the week
+  E: 'weekDay',
+  e: 'weekDay',
+  d: 'weekDay',
+  dd: { sectionName: 'weekDay', contentType: 'letter' },
+  ddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dddd: { sectionName: 'weekDay', contentType: 'letter' },
 
   // Year
   Y: 'year',
@@ -46,9 +54,13 @@ const formatTokenMap: MuiFormatTokenMap = {
 
 export class AdapterMoment
   extends BaseAdapterMoment
-  implements MuiPickerFieldAdapter<defaultMoment.Moment>
+  implements MuiPickersAdapter<defaultMoment.Moment>
 {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: '[', end: ']' };
 
   /**
    * The current getFormatHelperText method uses an outdated format parsing logic.

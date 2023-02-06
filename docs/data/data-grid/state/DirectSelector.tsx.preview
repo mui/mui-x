@@ -1,6 +1,0 @@
-<Button size="small" onClick={handleSelectFirstVisibleRow}>
-  Toggle the selection of the 1st row of the page
-</Button>
-<Box sx={{ height: 400, mt: 1 }}>
-  <DataGridPro apiRef={apiRef} pagination pageSize={10} {...data} />
-</Box>

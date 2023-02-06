@@ -15,8 +15,8 @@ import { GridApiCommunity } from '../api/gridApiCommunity';
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
 export interface GridCellParams<
-  V = any,
   R extends GridValidRowModel = any,
+  V = unknown,
   F = V,
   N extends GridTreeNode = GridTreeNode,
 > {
@@ -75,11 +75,11 @@ export interface FocusElement {
  * GridCellParams containing api.
  */
 export interface GridRenderCellParams<
-  V = any,
   R extends GridValidRowModel = any,
+  V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<V, R, F, N> {
+> extends GridCellParams<R, V, F, N> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -96,11 +96,11 @@ export interface GridRenderCellParams<
  * GridEditCellProps containing api.
  */
 export interface GridRenderEditCellParams<
-  V = any,
   R extends GridValidRowModel = any,
+  V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<V, R, F, N>,
+> extends GridCellParams<R, V, F, N>,
     GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
@@ -112,10 +112,10 @@ export interface GridRenderEditCellParams<
  * Parameters passed to `colDef.valueGetter`.
  */
 export interface GridValueGetterParams<
+  R extends GridValidRowModel = any,
   V = any,
-  R extends GridValidRowModel = GridValidRowModel,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends Omit<GridCellParams<V, R, any, N>, 'formattedValue' | 'isEditable'> {
+> extends Omit<GridCellParams<R, V, any, N>, 'formattedValue' | 'isEditable'> {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -123,7 +123,7 @@ export interface GridValueGetterParams<
   /**
    * The default value for the cell that the `valueGetter` is overriding.
    */
-  value: GridCellParams<V, R, any>['value'];
+  value: GridCellParams<R, V, any>['value'];
 }
 
 /**

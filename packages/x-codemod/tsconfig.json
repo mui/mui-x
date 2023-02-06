@@ -1,7 +1,15 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
+    // @date-io libraries produce duplicate type `DateType`
+    "skipLibCheck": true,
     "types": ["react", "mocha", "node"]
   },
-  "include": ["src/**/*", "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts"]
+  "include": [
+    "src/**/*",
+    "../../node_modules/@mui/monorepo/test/utils/initMatchers.ts",
+    "../../node_modules/@mui/material/themeCssVarsAugmentation",
+    "../../node_modules/date-fns"
+  ],
+  "exclude": ["src/**/actual*.ts*"]
 }

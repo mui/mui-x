@@ -6,7 +6,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepredvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -56,10 +55,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Pridať filter',
   filterPanelDeleteIconLabel: 'Odstrániť',
-  filterPanelLinkOperator: 'Logický operátor',
-  filterPanelOperators: 'Operátory',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logický operátor',
+  filterPanelOperator: 'Operátory',
   filterPanelOperatorAnd: 'A',
   filterPanelOperatorOr: 'Alebo',
   filterPanelColumns: 'Stĺpce',
@@ -89,6 +86,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Zobraziť stĺpce',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Skryť',
   columnMenuUnsort: 'Zrušiť filtre',
@@ -171,12 +169,12 @@ const skSKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregácia',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'priemer',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'počet',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

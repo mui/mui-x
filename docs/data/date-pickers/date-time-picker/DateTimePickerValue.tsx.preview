@@ -1,13 +1,9 @@
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-  <Stack spacing={2} direction="row">
-    <NextDateTimePicker
-      label="Uncontrolled picker"
-      defaultValue={dayjs('2022-04-07T15:30')}
-    />
-    <NextDateTimePicker
-      label="Controlled picker"
-      value={value}
-      onChange={(newValue) => setValue(newValue)}
-    />
-  </Stack>
-</LocalizationProvider>
+<DateTimePicker
+  label="Uncontrolled picker"
+  defaultValue={dayjs('2022-04-07T15:30')}
+/>
+<DateTimePicker
+  label="Controlled picker"
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>

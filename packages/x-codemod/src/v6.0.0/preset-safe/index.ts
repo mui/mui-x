@@ -1,8 +1,10 @@
-import transformLocalizationProviderRenameLocale from '../localization-provider-rename-locale';
+import transformPickers from '../pickers/preset-safe';
+import transformDataGrid from '../data-grid/preset-safe';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
-  file.source = transformLocalizationProviderRenameLocale(file, api, options);
+  file.source = transformPickers(file, api, options);
+  file.source = transformDataGrid(file, api, options);
 
   return file.source;
 }

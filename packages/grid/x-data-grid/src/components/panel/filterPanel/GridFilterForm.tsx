@@ -15,7 +15,7 @@ import clsx from 'clsx';
 import { gridFilterableColumnDefinitionsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { gridFilterModelSelector } from '../../../hooks/features/filter/gridFilterSelector';
 import { useGridSelector } from '../../../hooks/utils/useGridSelector';
-import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -45,7 +45,7 @@ export interface GridFilterFormProps {
   /**
    * The current logic operator applied.
    */
-  multiFilterOperator?: GridLinkOperator;
+  multiFilterOperator?: GridLogicOperator;
   /**
    * If `true`, disables the logic operator field but still renders it.
    */
@@ -62,9 +62,9 @@ export interface GridFilterFormProps {
   applyFilterChanges: (item: GridFilterItem) => void;
   /**
    * Callback called when the logic operator is changed.
-   * @param {GridLinkOperator} operator The new logic operator.
+   * @param {GridLogicOperator} operator The new logic operator.
    */
-  applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
+  applyMultiFilterOperatorChanges: (operator: GridLogicOperator) => void;
   /**
    * Callback called when the delete button is clicked.
    * @param {GridFilterItem} item The deleted [[GridFilterItem]].
@@ -78,9 +78,9 @@ export interface GridFilterFormProps {
   filterColumns?: (args: FilterColumnsArgs) => GridColDef['field'][];
   /**
    * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
    */
-  linkOperators?: GridLinkOperator[];
+  logicOperators?: GridLogicOperator[];
   /**
    * Changes how the options in the columns selector should be ordered.
    * If not specified, the order is derived from the `columns` prop.
@@ -95,7 +95,7 @@ export interface GridFilterFormProps {
    * Props passed to the logic operator input component.
    * @default {}
    */
-  linkOperatorInputProps?: any;
+  logicOperatorInputProps?: any;
   /**
    * Props passed to the operator input component.
    * @default {}
@@ -125,7 +125,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['filterForm'],
     deleteIcon: ['filterFormDeleteIcon'],
-    linkOperatorInput: ['filterFormLinkOperatorInput'],
+    logicOperatorInput: ['filterFormLogicOperatorInput'],
     columnInput: ['filterFormColumnInput'],
     operatorInput: ['filterFormOperatorInput'],
     valueInput: ['filterFormValueInput'],
@@ -154,10 +154,10 @@ const FilterFormDeleteIcon = styled(FormControl, {
   marginBottom: theme.spacing(0.2),
 }));
 
-const FilterFormLinkOperatorInput = styled(FormControl, {
+const FilterFormLogicOperatorInput = styled(FormControl, {
   name: 'MuiDataGrid',
-  slot: 'FilterFormLinkOperatorInput',
-  overridesResolver: (_, styles) => styles.filterFormLinkOperatorInput,
+  slot: 'FilterFormLogicOperatorInput',
+  overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
 })({
   minWidth: 55,
   marginRight: 5,
@@ -182,14 +182,14 @@ const FilterFormValueInput = styled(FormControl, {
   overridesResolver: (_, styles) => styles.filterFormValueInput,
 })({ width: 190 });
 
-const getLinkOperatorLocaleKey = (linkOperator: GridLinkOperator) => {
-  switch (linkOperator) {
-    case GridLinkOperator.And:
+const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
+  switch (logicOperator) {
+    case GridLogicOperator.And:
       return 'filterPanelOperatorAnd';
-    case GridLinkOperator.Or:
+    case GridLogicOperator.Or:
       return 'filterPanelOperatorOr';
     default:
-      throw new Error('MUI: Invalid `linkOperator` property in the `GridFilterPanel`.');
+      throw new Error('MUI: Invalid `logicOperator` property in the `GridFilterPanel`.');
   }
 };
 
@@ -209,11 +209,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       disableMultiFilterOperator,
       applyMultiFilterOperatorChanges,
       focusElementRef,
-      linkOperators = [GridLinkOperator.And, GridLinkOperator.Or],
+      logicOperators = [GridLogicOperator.And, GridLogicOperator.Or],
       columnsSort,
       filterColumns,
       deleteIconProps = {},
-      linkOperatorInputProps = {},
+      logicOperatorInputProps = {},
       operatorInputProps = {},
       columnInputProps = {},
       valueInputProps = {},
@@ -233,7 +233,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const valueRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
 
-    const hasLinkOperatorColumn: boolean = hasMultipleFilters && linkOperators.length > 0;
+    const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
     const baseFormControlProps = rootProps.componentsProps?.baseFormControl || {};
 
@@ -249,13 +249,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       }
 
       const filteredFields = filterColumns({
-        field: item.columnField,
+        field: item.field,
         columns: filterableColumns,
         currentFilters: filterModel?.items || [],
       });
 
       return filterableColumns.filter((column) => filteredFields.includes(column.field));
-    }, [filterColumns, filterModel?.items, filterableColumns, item.columnField]);
+    }, [filterColumns, filterModel?.items, filterableColumns, item.field]);
 
     const sortedFilteredColumns = React.useMemo(() => {
       switch (columnsSort) {
@@ -274,22 +274,20 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       }
     }, [filteredColumns, columnsSort]);
 
-    const currentColumn = item.columnField ? apiRef.current.getColumn(item.columnField) : null;
+    const currentColumn = item.field ? apiRef.current.getColumn(item.field) : null;
 
     const currentOperator = React.useMemo(() => {
-      if (!item.operatorValue || !currentColumn) {
+      if (!item.operator || !currentColumn) {
         return null;
       }
 
-      return currentColumn.filterOperators?.find(
-        (operator) => operator.value === item.operatorValue,
-      );
+      return currentColumn.filterOperators?.find((operator) => operator.value === item.operator);
     }, [item, currentColumn]);
 
     const changeColumn = React.useCallback(
       (event: SelectChangeEvent) => {
-        const columnField = event.target.value as string;
-        const column = apiRef.current.getColumn(columnField)!;
+        const field = event.target.value as string;
+        const column = apiRef.current.getColumn(field)!;
 
         if (column.field === currentColumn!.field) {
           // column did not change
@@ -298,7 +296,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         // try to keep the same operator when column change
         const newOperator =
-          column.filterOperators!.find((operator) => operator.value === item.operatorValue) ||
+          column.filterOperators!.find((operator) => operator.value === item.operator) ||
           column.filterOperators![0];
 
         // Erase filter value if the input component is modified
@@ -308,8 +306,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          columnField,
-          operatorValue: newOperator.value,
+          field,
+          operator: newOperator.value,
           value: eraseItemValue ? undefined : item.value,
         });
       },
@@ -318,11 +316,9 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const changeOperator = React.useCallback(
       (event: SelectChangeEvent) => {
-        const operatorValue = event.target.value as string;
+        const operator = event.target.value as string;
 
-        const newOperator = currentColumn?.filterOperators!.find(
-          (operator) => operator.value === operatorValue,
-        );
+        const newOperator = currentColumn?.filterOperators!.find((op) => op.value === operator);
 
         const eraseItemValue =
           !newOperator?.InputComponent ||
@@ -330,20 +326,20 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
         applyFilterChanges({
           ...item,
-          operatorValue,
+          operator,
           value: eraseItemValue ? undefined : item.value,
         });
       },
       [applyFilterChanges, item, currentColumn, currentOperator],
     );
 
-    const changeLinkOperator = React.useCallback(
+    const changeLogicOperator = React.useCallback(
       (event: SelectChangeEvent) => {
-        const linkOperator =
-          (event.target.value as string) === GridLinkOperator.And.toString()
-            ? GridLinkOperator.And
-            : GridLinkOperator.Or;
-        applyMultiFilterOperatorChanges(linkOperator);
+        const logicOperator =
+          (event.target.value as string) === GridLogicOperator.And.toString()
+            ? GridLogicOperator.And
+            : GridLogicOperator.Or;
+        applyMultiFilterOperatorChanges(logicOperator);
       },
       [applyMultiFilterOperatorChanges],
     );
@@ -397,40 +393,40 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
           </IconButton>
         </FilterFormDeleteIcon>
-        <FilterFormLinkOperatorInput
+        <FilterFormLogicOperatorInput
           variant="standard"
           as={rootProps.components.BaseFormControl}
           {...baseFormControlProps}
-          {...linkOperatorInputProps}
+          {...logicOperatorInputProps}
           sx={{
-            display: hasLinkOperatorColumn ? 'flex' : 'none',
+            display: hasLogicOperatorColumn ? 'flex' : 'none',
             visibility: showMultiFilterOperators ? 'visible' : 'hidden',
             ...(baseFormControlProps.sx || {}),
-            ...(linkOperatorInputProps.sx || {}),
+            ...(logicOperatorInputProps.sx || {}),
           }}
           className={clsx(
-            classes.linkOperatorInput,
+            classes.logicOperatorInput,
             baseFormControlProps.className,
-            linkOperatorInputProps.className,
+            logicOperatorInputProps.className,
           )}
         >
           <rootProps.components.BaseSelect
             inputProps={{
-              'aria-label': apiRef.current.getLocaleText('filterPanelLinkOperator'),
+              'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
             value={multiFilterOperator}
-            onChange={changeLinkOperator}
-            disabled={!!disableMultiFilterOperator || linkOperators.length === 1}
+            onChange={changeLogicOperator}
+            disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
           >
-            {linkOperators.map((linkOperator) => (
-              <OptionComponent key={linkOperator.toString()} value={linkOperator.toString()}>
-                {apiRef.current.getLocaleText(getLinkOperatorLocaleKey(linkOperator))}
+            {logicOperators.map((logicOperator) => (
+              <OptionComponent key={logicOperator.toString()} value={logicOperator.toString()}>
+                {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
               </OptionComponent>
             ))}
           </rootProps.components.BaseSelect>
-        </FilterFormLinkOperatorInput>
+        </FilterFormLogicOperatorInput>
         <FilterFormColumnInput
           variant="standard"
           as={rootProps.components.BaseFormControl}
@@ -449,7 +445,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
-            value={item.columnField || ''}
+            value={item.field || ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
             {...rootProps.componentsProps?.baseSelect}
@@ -473,13 +469,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
         >
           <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
-            {apiRef.current.getLocaleText('filterPanelOperators')}
+            {apiRef.current.getLocaleText('filterPanelOperator')}
           </InputLabel>
           <rootProps.components.BaseSelect
             labelId={operatorSelectLabelId}
-            label={apiRef.current.getLocaleText('filterPanelOperators')}
+            label={apiRef.current.getLocaleText('filterPanelOperator')}
             id={operatorSelectId}
-            value={item.operatorValue}
+            value={item.operator}
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
@@ -534,7 +530,7 @@ GridFilterForm.propTypes = {
   applyFilterChanges: PropTypes.func.isRequired,
   /**
    * Callback called when the logic operator is changed.
-   * @param {GridLinkOperator} operator The new logic operator.
+   * @param {GridLogicOperator} operator The new logic operator.
    */
   applyMultiFilterOperatorChanges: PropTypes.func.isRequired,
   /**
@@ -588,21 +584,21 @@ GridFilterForm.propTypes = {
    * The [[GridFilterItem]] representing this form.
    */
   item: PropTypes.shape({
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     value: PropTypes.any,
   }).isRequired,
   /**
    * Props passed to the logic operator input component.
    * @default {}
    */
-  linkOperatorInputProps: PropTypes.any,
+  logicOperatorInputProps: PropTypes.any,
   /**
    * Sets the available logic operators.
-   * @default [GridLinkOperator.And, GridLinkOperator.Or]
+   * @default [GridLogicOperator.And, GridLogicOperator.Or]
    */
-  linkOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
+  logicOperators: PropTypes.arrayOf(PropTypes.oneOf(['and', 'or']).isRequired),
   /**
    * The current logic operator applied.
    */

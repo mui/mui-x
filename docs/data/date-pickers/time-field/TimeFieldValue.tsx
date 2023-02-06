@@ -1,16 +1,16 @@
 import * as React from 'react';
 import dayjs, { Dayjs } from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_TimeField as TimeField } from '@mui/x-date-pickers/TimeField';
+import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 export default function TimeFieldValue() {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack spacing={{ xs: 4, lg: 2 }} direction={{ xs: 'column', lg: 'row' }}>
+      <DemoContainer components={['TimeField', 'TimeField']}>
         <TimeField
           label="Uncontrolled field"
           defaultValue={dayjs('2022-04-07T15:30')}
@@ -20,7 +20,7 @@ export default function TimeFieldValue() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import Stack from '@mui/material/Stack';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Unstable_SingleInputDateRangeField as SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function DateRangeFieldValue() {
   const [value, setValue] = React.useState(() => [
@@ -14,10 +14,8 @@ export default function DateRangeFieldValue() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Stack
-        spacing={{ xs: 4, xl: 2 }}
-        direction={{ xs: 'column', xl: 'row' }}
-        sx={{ '& > *': { width: 300 } }}
+      <DemoContainer
+        components={['SingleInputDateRangeField', 'SingleInputDateRangeField']}
       >
         <SingleInputDateRangeField
           label="Uncontrolled field"
@@ -28,7 +26,7 @@ export default function DateRangeFieldValue() {
           value={value}
           onChange={(newValue) => setValue(newValue)}
         />
-      </Stack>
+      </DemoContainer>
     </LocalizationProvider>
   );
 }

@@ -4,7 +4,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   noRowsLabel: 'No rows',
   noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Density',
@@ -47,8 +46,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Filter panel text
   filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
-  filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logic operator',
+  filterPanelOperator: 'Operator',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
@@ -78,8 +77,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
+  columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Hide',
+  columnMenuHideColumn: 'Hide column',
   columnMenuUnsort: 'Unsort',
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',

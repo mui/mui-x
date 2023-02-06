@@ -1,13 +1,7 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { MuiFormatTokenMap, MuiPickerFieldAdapter } from '../internals/models';
-import { buildWarning } from '../internals/utils/warning';
-
-const luxonVersionWarning = buildWarning([
-  'Your luxon version does not support `expandFormat`.',
-  'Consider upgrading it to v3.0.2 or above to have access to the helper text.',
-]);
+import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: MuiFormatTokenMap = {
   s: 'seconds',
@@ -26,6 +20,15 @@ const formatTokenMap: MuiFormatTokenMap = {
   d: 'day',
   dd: 'day',
 
+  c: 'weekDay',
+  ccc: { sectionName: 'weekDay', contentType: 'letter' },
+  cccc: { sectionName: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionName: 'weekDay', contentType: 'letter' },
+  E: 'weekDay',
+  EEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionName: 'weekDay', contentType: 'letter' },
+
   L: 'month',
   LL: 'month',
   LLL: { sectionName: 'month', contentType: 'letter' },
@@ -42,8 +45,12 @@ const formatTokenMap: MuiFormatTokenMap = {
   yyyy: 'year',
 };
 
-export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdapter<DateTime> {
+export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<DateTime> {
+  public isMUIAdapter = true;
+
   public formatTokenMap = formatTokenMap;
+
+  public escapedCharacters = { start: "'", end: "'" };
 
   public expandFormat = (format: string) => {
     if (!DateTime.expandFormat) {
@@ -59,10 +66,6 @@ export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickerFieldAdap
 
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
-    if (!DateTime.expandFormat) {
-      luxonVersionWarning();
-      return '';
-    }
     return this.expandFormat(format).replace(/(a)/g, '(a|p)m').toLocaleLowerCase();
   };
 

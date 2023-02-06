@@ -5,7 +5,6 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Δεν υπάρχουν καταχωρήσεις',
   noResultsOverlayLabel: 'Δεν βρέθηκαν αποτελέσματα.',
-  errorOverlayDefaultLabel: 'Παρουσιάστηκε απρόβλεπτο σφάλμα.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Ύψος σειράς',
@@ -48,10 +47,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Προσθήκη φίλτρου',
   filterPanelDeleteIconLabel: 'Διαγραφή',
-  // filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Τελεστές',
-
-  // TODO v6: rename to filterPanelOperator
+  // filterPanelLogicOperator: 'Logic operator',
+  filterPanelOperator: 'Τελεστές',
   filterPanelOperatorAnd: 'Καί',
   filterPanelOperatorOr: 'Ή',
   filterPanelColumns: 'Στήλες',
@@ -81,6 +78,7 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Μενού',
   columnMenuShowColumns: 'Εμφάνιση στηλών',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Φίλτρο',
   columnMenuHideColumn: 'Απόκρυψη',
   columnMenuUnsort: 'Απενεργοποίηση ταξινόμησης',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function RatingInputValue(props) {
@@ -55,7 +55,7 @@ RatingInputValue.propTypes = {
     /**
      * The column from which we want to filter the rows.
      */
-    columnField: PropTypes.string.isRequired,
+    field: PropTypes.string.isRequired,
     /**
      * Must be unique.
      * Only useful when the model contains several items.
@@ -63,9 +63,8 @@ RatingInputValue.propTypes = {
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     /**
      * The name of the operator we want to apply.
-     * Will become required on `@mui/x-data-grid@6.X`.
      */
-    operatorValue: PropTypes.string,
+    operator: PropTypes.string.isRequired,
     /**
      * The filtering value.
      * The operator filtering function will decide for each row if the row values is correct compared to this value.
@@ -79,11 +78,7 @@ const ratingOnlyOperators = [
     label: 'Above',
     value: 'above',
     getApplyFilterFn: (filterItem) => {
-      if (
-        !filterItem.columnField ||
-        !filterItem.value ||
-        !filterItem.operatorValue
-      ) {
+      if (!filterItem.field || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
@@ -93,6 +88,7 @@ const ratingOnlyOperators = [
     },
     InputComponent: RatingInputValue,
     InputComponentProps: { type: 'number' },
+    getValueAsString: (value) => `${value} Stars`,
   },
 ];
 
@@ -123,6 +119,9 @@ export default function CustomRatingOperator() {
       <DataGrid
         {...data}
         columns={columns}
+        components={{
+          Toolbar: GridToolbarFilterButton,
+        }}
         initialState={{
           ...data.initialState,
           filter: {
@@ -131,9 +130,9 @@ export default function CustomRatingOperator() {
               items: [
                 {
                   id: 1,
-                  columnField: 'rating',
+                  field: 'rating',
                   value: '3.5',
-                  operatorValue: 'above',
+                  operator: 'above',
                 },
               ],
             },

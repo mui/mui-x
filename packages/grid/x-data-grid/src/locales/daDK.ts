@@ -6,7 +6,6 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
-  errorOverlayDefaultLabel: 'Der skete en fejl.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tæthed',
@@ -49,10 +48,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Filter panel text
   filterPanelAddFilter: 'Tilføj filter',
   filterPanelDeleteIconLabel: 'Slet',
-  filterPanelLinkOperator: 'Logisk operator',
-  filterPanelOperators: 'Operatorer',
-
-  // TODO v6: rename to filterPanelOperator
+  filterPanelLogicOperator: 'Logisk operator',
+  filterPanelOperator: 'Operatorer',
   filterPanelOperatorAnd: 'Og',
   filterPanelOperatorOr: 'Eller',
   filterPanelColumns: 'Kolonne',
@@ -82,6 +79,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Vis Kolonner',
+  // columnMenuManageColumns: 'Manage columns',
   columnMenuFilter: 'Filtre',
   columnMenuHideColumn: 'Skjul',
   columnMenuUnsort: 'Fjern sortering',

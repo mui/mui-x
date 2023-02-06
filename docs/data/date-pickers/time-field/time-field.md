@@ -1,15 +1,14 @@
 ---
+product: date-pickers
 title: React Time Field component
+components: TimeField
+githubLabel: 'component: pickers'
+packageName: '@mui/x-date-pickers'
 ---
 
 # Time Field
 
-<p class="description">The Time Field lets the user select a time with the keyboard.</p>
-
-:::warning
-This component is unstable.
-It might receive breaking changes on its props to have the best component possible by the time of the stable release.
-:::
+<p class="description">The Time Field component lets the user select a time with the keyboard.</p>
 
 ## Basic usage
 

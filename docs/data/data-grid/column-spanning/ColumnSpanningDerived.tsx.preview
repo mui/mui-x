@@ -7,10 +7,9 @@
     },
   }}
   autoHeight
-  disableExtendRowFullWidth
   disableRowSelectionOnClick
   hideFooter
-  showCellRightBorder
-  showColumnRightBorder
+  showCellVerticalBorder
+  showColumnVerticalBorder
   disableColumnReorder
 />

@@ -1,0 +1,7 @@
+<StaticDatePicker
+  displayStaticWrapperAs="desktop"
+  defaultValue={dayjs('2022-04-07')}
+  slotProps={{
+    toolbar: { toolbarFormat: 'ddd DD MMMM', hidden: false },
+  }}
+/>

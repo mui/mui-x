@@ -1,0 +1,10 @@
+<DateRangePicker
+  defaultValue={[lastSunday, nextSunday]}
+  shouldDisableDate={(date, position) => {
+    if (position === 'end') {
+      return false;
+    }
+
+    return isWeekend(date);
+  }}
+/>

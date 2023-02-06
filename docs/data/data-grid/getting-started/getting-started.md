@@ -6,13 +6,11 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
-```sh
-// with npm
-npm install @mui/x-data-grid
+:::warning
+Note we're using the `next` tag to download the latest v6 **beta** version.
+:::
 
-// with yarn
-yarn add @mui/x-data-grid
-```
+{{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 The grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:
@@ -27,7 +25,7 @@ yarn add @mui/material @emotion/react @emotion/styled
 
 <!-- #react-peer-version -->
 
-Please note that [react](https://www.npmjs.com/package/react) >= 17.0.0 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.0 are peer dependencies.
+Please note that [react](https://www.npmjs.com/package/react) >= 17.0.2 and [react-dom](https://www.npmjs.com/package/react-dom) >= 17.0.2 are peer dependencies.
 
 MUI is using [emotion](https://emotion.sh/docs/introduction) as a styling engine by default. If you want to use [`styled-components`](https://styled-components.com/) instead, run:
 
@@ -169,10 +167,10 @@ The enterprise components come in two plans: Pro and Premium.
 | [Row reordering](/x/react-data-grid/row-ordering/)                                     |    ❌     |                 ✅                 |                     ✅                     |
 | [Row pinning](/x/react-data-grid/row-pinning/)                                         |    ❌     |                 ✅                 |                     ✅                     |
 | **Selection**                                                                          |           |                                    |                                            |
-| [Single row selection](/x/react-data-grid/selection/#single-row-selection)             |    ✅     |                 ✅                 |                     ✅                     |
-| [Checkbox selection](/x/react-data-grid/selection/#checkbox-selection)                 |    ✅     |                 ✅                 |                     ✅                     |
-| [Multiple row selection](/x/react-data-grid/selection/#multiple-row-selection)         |    ❌     |                 ✅                 |                     ✅                     |
-| [Cell range selection](/x/react-data-grid/selection/#range-selection)                  |    ❌     |                 ❌                 |                     🚧                     |
+| [Single row selection](/x/react-data-grid/row-selection/#single-row-selection)         |    ✅     |                 ✅                 |                     ✅                     |
+| [Checkbox selection](/x/react-data-grid/row-selection/#checkbox-selection)             |    ✅     |                 ✅                 |                     ✅                     |
+| [Multiple row selection](/x/react-data-grid/row-selection/#multiple-row-selection)     |    ❌     |                 ✅                 |                     ✅                     |
+| [Cell range selection](/x/react-data-grid/cell-selection/)                             |    ❌     |                 ❌                 |                     ✅                     |
 | **Filtering**                                                                          |           |                                    |                                            |
 | [Quick filter](/x/react-data-grid/filtering/#quick-filter)                             |    ✅     |                 ✅                 |                     ✅                     |
 | [Column filters](/x/react-data-grid/filtering/#single-and-multi-filtering)             |    ✅     |                 ✅                 |                     ✅                     |
