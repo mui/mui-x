@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.20.7",
-    "@mui/utils": "^5.11.2",
+    "@mui/utils": "^5.11.7",
     "@mui/x-data-grid": "6.0.0-beta.2",
     "@mui/x-license-pro": "6.0.0-beta.0",
     "@types/format-util": "^1.0.2",

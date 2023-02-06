@@ -418,6 +418,8 @@ The list includes these transformers
 - [`remove-disableExtendRowFullWidth-prop`](#remove-disableExtendRowFullWidth-prop)
 - [`rename-linkOperators-logicOperators`](#rename-linkOperators-logicOperators)
 - [`rename-selectors-and-events`](#rename-selectors-and-events)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalFeatures)
+- [`replace-onCellFocusOut-prop`](#replace-onCellFocusOut-prop)
 
 #### `column-menu-components-rename`
 
@@ -580,6 +582,50 @@ Rename selectors and events.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
+```
+
+#### `remove-stabilized-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    newEditingApi: true,
+-  }}
+ />
+```
+
+```diff
+ <DataGrid
+  experimentalFeatures={{
+-   newEditingApi: true,
+    columnGrouping: true,
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
+```
+
+#### `replace-onCellFocusOut-prop`
+
+Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
+
+```diff
+ <DataGrid
+-  onCellFocusOut={handleBlur}
++  componentsProps={{
++    cell: {
++      onBlur: handleBlur,
++    },
++  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 ```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).

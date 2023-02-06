@@ -53,7 +53,7 @@
     "@date-io/jalaali": "^2.16.1",
     "@date-io/luxon": "^2.16.1",
     "@date-io/moment": "^2.16.1",
-    "@mui/utils": "^5.11.2",
+    "@mui/utils": "^5.11.7",
     "@types/react-transition-group": "^4.4.5",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
