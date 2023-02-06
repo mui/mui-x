@@ -1,4 +1,5 @@
 [
+  { "name": "BaseSingleInputFieldProps", "kind": "Interface" },
   { "name": "beBY", "kind": "Variable" },
   { "name": "clockClasses", "kind": "Variable" },
   { "name": "ClockClasses", "kind": "Interface" },
