@@ -12,6 +12,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
         showCellRightBorder
         disableExtendRowFullWidth
         rowsPerPageOptions={[5]}
+        experimentalFeatures={{ newEditingApi: true }}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />
     </React.Fragment>
