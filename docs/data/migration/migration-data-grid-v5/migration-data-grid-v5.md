@@ -307,7 +307,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### Editing
 
-- The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
+- ✅ The editing API that is enabled by default was replaced with a new API that contains better support for server-side persistence, validation and customization. This new editing feature was already available in v5 under the `newEditingApi` experimental flag. In v6, this flag can be removed.
   ```diff
    <DataGrid
   -  experimentalFeatures={{ newEditingApi: true }}
