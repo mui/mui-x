@@ -63,6 +63,17 @@ async function runTransform(
 
   // eslint-disable-next-line no-console -- debug information
   console.log(`Executing command: jscodeshift ${args.join(' ')}`);
+  console.warn(`
+====================================
+IMPORTANT NOTICE ABOUT CODEMOD USAGE
+====================================
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies and etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+<DatePicker {...pickerProps} />
+  
+After running the codemods, make sure to test your application and that you don't have any console errors.
+`);
   const jscodeshiftProcess = childProcess.spawnSync('node', args, { stdio: 'inherit' });
 
   if (jscodeshiftProcess.error) {
