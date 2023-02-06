@@ -203,7 +203,25 @@ function GridCell(props: GridCellProps) {
     }
   }, [hasFocus, cellMode, apiRef]);
 
-  let handleFocus: any = other.onFocus;
+  let handleFocus: any = React.useCallback(
+    (event: React.FocusEvent<HTMLDivElement>) => {
+      const rect = cellRef.current!.getBoundingClientRect();
+
+      const isInViewPort =
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || cellRef.current!.clientHeight) &&
+        rect.right <= (window.innerWidth || cellRef.current!.clientWidth);
+
+      if (!isInViewPort) {
+        cellRef.current!.scrollIntoView({ block: 'nearest' });
+      }
+      if (other.onFocus) {
+        other.onFocus(event);
+      }
+    },
+    [other],
+  );
 
   if (
     process.env.NODE_ENV === 'test' &&

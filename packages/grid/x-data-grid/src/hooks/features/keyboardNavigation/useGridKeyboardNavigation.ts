@@ -559,28 +559,7 @@ export const useGridKeyboardNavigation = (
     [apiRef, currentPageRows, theme.direction, getRowIdFromIndex, goToCell, goToHeader],
   );
 
-  const handleCellFocusIn = React.useCallback<GridEventListener<'cellFocusIn'>>(
-    (params) => {
-      const cellElement = apiRef.current.getCellElement(params.id, params.field);
-      if (cellElement) {
-        const rect = cellElement.getBoundingClientRect();
-
-        const isInViewPort =
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <= (window.innerHeight || cellElement.clientHeight) &&
-          rect.right <= (window.innerWidth || cellElement.clientWidth);
-
-        if (!isInViewPort) {
-          cellElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-      }
-    },
-    [apiRef],
-  );
-
   useGridApiEventHandler(apiRef, 'columnHeaderKeyDown', handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'columnGroupHeaderKeyDown', handleColumnGroupHeaderKeyDown);
   useGridApiEventHandler(apiRef, 'cellKeyDown', handleCellKeyDown);
-  useGridApiEventHandler(apiRef, 'cellFocusIn', handleCellFocusIn);
 };
