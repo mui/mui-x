@@ -44,7 +44,7 @@
     "directory": "packages/x-date-pickers"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.7",
+    "@babel/runtime": "^7.20.13",
     "@date-io/core": "^2.16.0",
     "@date-io/date-fns": "^2.16.0",
     "@date-io/date-fns-jalali": "^2.16.0",
