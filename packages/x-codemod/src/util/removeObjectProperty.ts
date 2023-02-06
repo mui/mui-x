@@ -48,10 +48,9 @@ export default function removeObjectProperty({
         j(element)
           .find(j.JSXAttribute)
           .filter((a) => a.value.name.name === propName)
-          .forEach(path => {
+          .forEach((path) => {
             j(path).remove();
-          })
-          
+          });
       } else {
         objectProperties.forEach((path) => {
           if ((path.value.key as any).name === propertyToRemove) {

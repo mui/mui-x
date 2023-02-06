@@ -603,7 +603,7 @@ Remove feature flags for stabilized `experimentalFeatures`.
   }}
  />
 ```
-  
+
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```

@@ -4,7 +4,7 @@ import renameRowsPerPageOptions from '../rename-rowsPerPageOptions-prop';
 import removeDisableExtendRowFullWidth from '../remove-disableExtendRowFullWidth-prop';
 import renameLinkOperatorsLogicOperators from '../rename-linkOperators-logicOperators';
 import renameSelectorsAndEvents from '../rename-selectors-and-events';
-import removeExperimentalFeatures from '../remove-stabilized-experimentalFeatures'
+import removeExperimentalFeatures from '../remove-stabilized-experimentalFeatures';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {

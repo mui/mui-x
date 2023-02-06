@@ -14,7 +14,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     trailingComma: true,
   };
 
-  removeObjectProperty({ root, j, propName, componentsNames, propertyToRemove })
-  
+  removeObjectProperty({ root, j, propName, componentsNames, propertyToRemove });
+
   return root.toSource(printOptions);
 }
