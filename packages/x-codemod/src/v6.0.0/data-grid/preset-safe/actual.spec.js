@@ -24,6 +24,7 @@ function App({ column, hideMenu, apiRef, handleEvent }) {
             },
           ],
         }}
+        experimentalFeatures={{ newEditingApi: true }}
         onCellFocusOut={handleCellFocusOut}
       />
       <SortGridMenuItems column={column} onClick={hideMenu} />

@@ -5,6 +5,7 @@ import removeDisableExtendRowFullWidth from '../remove-disableExtendRowFullWidth
 import renameLinkOperatorsLogicOperators from '../rename-linkOperators-logicOperators';
 import renameFilterItemProps from '../rename-filter-item-props';
 import renameSelectorsAndEvents from '../rename-selectors-and-events';
+import removeExperimentalFeatures from '../remove-stabilized-experimentalFeatures';
 import replaceOnCellFocusOut from '../replace-onCellFocusOut-prop';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
@@ -16,6 +17,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = renameLinkOperatorsLogicOperators(file, api, options);
   file.source = renameFilterItemProps(file, api, options);
   file.source = renameSelectorsAndEvents(file, api, options);
+  file.source = removeExperimentalFeatures(file, api, options);
   file.source = replaceOnCellFocusOut(file, api, options);
 
   return file.source;

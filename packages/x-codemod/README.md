@@ -419,6 +419,7 @@ The list includes these transformers
 - [`rename-linkOperators-logicOperators`](#rename-linkOperators-logicOperators)
 - [`rename-filter-item-props`](#rename-filter-item-props)
 - [`rename-selectors-and-events`](#rename-selectors-and-events)
+- [`remove-stabilized-experimentalFeatures`](#remove-stabilized-experimentalFeatures)
 - [`replace-onCellFocusOut-prop`](#replace-onCellFocusOut-prop)
 
 #### `column-menu-components-rename`
@@ -623,6 +624,31 @@ Rename selectors and events.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/rename-selectors-and-events <path>
+```
+
+#### `remove-stabilized-experimentalFeatures`
+
+Remove feature flags for stabilized `experimentalFeatures`.
+
+```diff
+ <DataGrid
+-  experimentalFeatures={{
+-    newEditingApi: true,
+-  }}
+ />
+```
+
+```diff
+ <DataGrid
+  experimentalFeatures={{
+-   newEditingApi: true,
+    columnGrouping: true,
+  }}
+ />
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/remove-stabilized-experimentalFeatures <path>
 ```
 
 #### `replace-onCellFocusOut-prop`
