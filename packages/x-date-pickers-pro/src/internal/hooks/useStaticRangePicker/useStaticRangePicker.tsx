@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -16,7 +17,8 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
+import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -38,9 +40,9 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, components, componentsProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const { layoutProps, renderCurrentView } = usePicker<
     DateRange<TDate>,
@@ -53,17 +55,20 @@ export const useStaticRangePicker = <
     valueManager,
     validator,
     autoFocusView: autoFocus ?? false,
-    additionalViewProps: {},
+    additionalViewProps: {
+      rangePosition,
+      onRangePositionChange,
+    },
     wrapperVariant: displayStaticWrapperAs,
   });
 
-  const Layout = components?.Layout ?? PickerStaticLayout;
-  const componentsPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
-    ...componentsProps,
+  const Layout = slots?.layout ?? PickerStaticLayout;
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
+    ...slotProps,
     toolbar: {
-      ...componentsProps?.toolbar,
+      ...slotProps?.toolbar,
       rangePosition,
-      onDateRangePositionRange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
 
@@ -72,8 +77,11 @@ export const useStaticRangePicker = <
       <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
-          components={components}
-          componentsProps={componentsPropsForLayout}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotPropsForLayout}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}

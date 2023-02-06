@@ -160,11 +160,6 @@ function GridCell(props: GridCellProps) {
   const publish = React.useCallback(
     (eventName: keyof GridCellEventLookup, propHandler: any) =>
       (event: React.SyntheticEvent<HTMLDivElement>) => {
-        // Ignore portal
-        if (!event.currentTarget.contains(event.target as Element)) {
-          return;
-        }
-
         // The row might have been deleted during the click
         if (!apiRef.current.getRow(rowId)) {
           return;
@@ -243,7 +238,12 @@ function GridCell(props: GridCellProps) {
 
   const renderChildren = () => {
     if (children === undefined) {
-      return <div className={classes.content}>{valueToRender?.toString()}</div>;
+      const valueString = valueToRender?.toString();
+      return (
+        <div className={classes.content} title={valueString}>
+          {valueString}
+        </div>
+      );
     }
 
     if (React.isValidElement(children) && managesOwnFocus) {

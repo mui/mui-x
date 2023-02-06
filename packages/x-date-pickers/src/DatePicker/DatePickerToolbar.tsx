@@ -1,6 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import { styled, useThemeProps } from '@mui/material/styles';
+import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { PickersToolbar } from '../internals/components/PickersToolbar';
 import { useLocaleText, useUtils } from '../internals/hooks/useUtils';
@@ -14,6 +15,7 @@ import {
 
 export interface DatePickerToolbarProps<TDate> extends BaseToolbarProps<TDate | null, DateView> {
   classes?: Partial<DatePickerToolbarClasses>;
+  sx?: SxProps<Theme>;
 }
 
 export interface ExportedDatePickerToolbarProps extends ExportedBaseToolbarProps {}
@@ -34,6 +36,9 @@ const DatePickerToolbarRoot = styled(PickersToolbar, {
   overridesResolver: (_, styles) => styles.root,
 })({});
 
+/**
+ * @ignore - do not document.
+ */
 const DatePickerToolbarTitle = styled(Typography, {
   name: 'MuiDatePickerToolbar',
   slot: 'Title',
@@ -48,10 +53,7 @@ type DatePickerToolbarComponent = (<TDate>(
   props: DatePickerToolbarProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
 
-/**
- * @ignore - internal component.
- */
-export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
+const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDate>(
   inProps: DatePickerToolbarProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
@@ -59,9 +61,7 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
   const {
     value,
     isLandscape,
-    isMobileKeyboardViewOpen,
     onChange,
-    toggleMobileKeyboardView,
     toolbarFormat,
     toolbarPlaceholder = '––',
     views,
@@ -102,8 +102,6 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     <DatePickerToolbarRoot
       ref={ref}
       toolbarTitle={localeText.datePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={isLandscape}
       className={classes.root}
       {...other}
@@ -120,3 +118,55 @@ export const DatePickerToolbar = React.forwardRef(function DatePickerToolbar<TDa
     </DatePickerToolbarRoot>
   );
 }) as DatePickerToolbarComponent;
+
+DatePickerToolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  /**
+   * className applied to the root component.
+   */
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
+  isLandscape: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  /**
+   * Callback called when a toolbar is clicked
+   * @template TView
+   * @param {TView} view The view to open
+   */
+  onViewChange: PropTypes.func.isRequired,
+  readOnly: PropTypes.bool,
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+  titleId: PropTypes.string,
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat: PropTypes.string,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  value: PropTypes.any,
+  /**
+   * Currently visible picker view.
+   */
+  view: PropTypes.oneOf(['day', 'month', 'year']).isRequired,
+  views: PropTypes.arrayOf(
+    PropTypes.oneOf(['day', 'hours', 'minutes', 'month', 'seconds', 'year']).isRequired,
+  ).isRequired,
+} as any;
+
+export { DatePickerToolbar };

@@ -19,7 +19,7 @@ import {
   useGridApiRef,
   GridGroupingColDefOverrideParams,
   getGroupRowIdFromPath,
-  GridLinkOperator,
+  GridLogicOperator,
   GridGroupNode,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
@@ -1527,7 +1527,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
             {
               field: 'category1',
               valueGetter: (params) => `value ${params.row.category1}`,
-              groupingValueGetter: (params: GridGroupingValueGetterParams<string>) =>
+              groupingValueGetter: (params: GridGroupingValueGetterParams<any, string>) =>
                 `groupingValue ${params.row.category1}`,
             },
           ]}
@@ -2245,7 +2245,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
                       value: 'Cat A',
                     },
                   ],
-                  linkOperator: GridLinkOperator.Or,
+                  logicOperator: GridLogicOperator.Or,
                 },
               },
             }}

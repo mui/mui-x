@@ -5,7 +5,6 @@ import { ElementSize } from '../../models/elementSize';
 import { GridMainContainer } from '../containers/GridMainContainer';
 import { GridAutoSizer } from '../GridAutoSizer';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getTotalHeaderHeight } from '../../hooks/features/columns/gridColumnsUtils';
 
 interface GridBodyProps {
   children?: React.ReactNode;
@@ -28,8 +27,6 @@ function GridBody(props: GridBodyProps) {
   const { children, VirtualScrollerComponent, ColumnHeadersComponent } = props;
   const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps.headerHeight);
-
   const [isVirtualizationDisabled, setIsVirtualizationDisabled] = React.useState(
     rootProps.disableVirtualization,
   );
@@ -80,23 +77,10 @@ function GridBody(props: GridBodyProps) {
         disableHeight={rootProps.autoHeight}
         onResize={handleResize}
       >
-        {(size: { height?: number; width: number }) => {
-          const style = {
-            width: size.width,
-            // If `autoHeight` is on, there will be no height value.
-            // In this case, let the container to grow whatever it needs.
-            height: size.height ? size.height - totalHeaderHeight : 'auto',
-            marginTop: totalHeaderHeight,
-          } as React.CSSProperties;
-
-          return (
-            <VirtualScrollerComponent
-              ref={virtualScrollerRef}
-              style={style}
-              disableVirtualization={isVirtualizationDisabled}
-            />
-          );
-        }}
+        <VirtualScrollerComponent
+          ref={virtualScrollerRef}
+          disableVirtualization={isVirtualizationDisabled}
+        />
       </GridAutoSizer>
       {children}
     </GridMainContainer>

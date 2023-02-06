@@ -121,7 +121,10 @@ function extractSlots(options: {
     throw new Error(`The \`components\` prop in \`${componentName}\` is not an interface.`);
   }
 
-  const types = (propInterface as ttp.InterfaceType).types;
+  const types = [...(propInterface as ttp.InterfaceType).types].sort((a, b) =>
+    a[0] > b[0] ? 1 : -1,
+  );
+
   types.forEach(([name, prop]) => {
     const parsed = parseDoctrine(prop.jsDoc || '', { sloppy: true });
     const description = renderMarkdownInline(parsed.description);
@@ -246,7 +249,7 @@ const buildComponentDocumentation = async (options: {
 
   reactApi.demos = findXDemos(reactApi.name, pagesMarkdown);
 
-  reactApi.styles = await parseStyles(reactApi, project.program as any);
+  reactApi.styles = await parseStyles({ project, componentName: reactApi.name });
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
     : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
@@ -513,7 +516,7 @@ Page.getInitialProps = () => {
   const req = require.context(
     'docsx/translations/api-docs/${project.documentationFolderName}',
     false,
-    /\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
+    /\\.\\/${kebabCase(reactApi.name)}(-[a-z]{2})?\\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 

@@ -8,8 +8,18 @@
       },
       "default": "'primary'"
     },
-    "components": { "type": { "name": "object" }, "default": "{}" },
-    "componentsProps": { "type": { "name": "object" }, "default": "{}" },
+    "components": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slots</code>."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "deprecated": true,
+      "deprecationInfo": "Please use <code>slotProps</code>."
+    },
     "defaultValue": { "type": { "name": "any" } },
     "disabled": { "type": { "name": "bool" } },
     "disableFuture": { "type": { "name": "bool" } },
@@ -46,13 +56,15 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },
     "shouldDisableMonth": { "type": { "name": "func" } },
     "shouldDisableYear": { "type": { "name": "func" } },
     "size": { "type": { "name": "enum", "description": "'medium'<br>&#124;&nbsp;'small'" } },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": { "type": { "name": "object" }, "default": "{}" },
     "sx": {
       "type": {
         "name": "union",
@@ -68,13 +80,15 @@
       "default": "'outlined'"
     }
   },
-  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "slots": {
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+  },
   "name": "DateField",
-  "styles": { "classes": [], "globalClasses": {}, "name": "MuiDateField" },
+  "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiDateField" },
   "filename": "/packages/x-date-pickers/src/DateField/DateField.tsx",
   "demos": "<ul><li><a href=\"/x/react-date-pickers/date-field/\">Date Field</a></li>\n<li><a href=\"/x/react-date-pickers/fields/\">Fields</a></li></ul>",
   "packages": [
-    { "packageName": "@mui/x-date-pickers-pro", "componentName": "Unstable_DateField" },
-    { "packageName": "@mui/x-date-pickers", "componentName": "Unstable_DateField" }
+    { "packageName": "@mui/x-date-pickers-pro", "componentName": "DateField" },
+    { "packageName": "@mui/x-date-pickers", "componentName": "DateField" }
   ]
 }

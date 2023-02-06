@@ -35,7 +35,7 @@ export default function StylingAllCells() {
       <DataGrid
         rows={rows}
         columns={columns}
-        getCellClassName={(params: GridCellParams<number>) => {
+        getCellClassName={(params: GridCellParams<any, any, number>) => {
           if (params.field === 'city' || params.value == null) {
             return '';
           }

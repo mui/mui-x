@@ -90,7 +90,6 @@ yargs
   .command({
     command: '$0 <codemod> <paths...>',
     describe: 'Applies a `@mui/x-codemod` to the specified paths',
-    // @ts-expect-error
     builder: (command) => {
       return command
         .positional('codemod', {
@@ -113,13 +112,11 @@ yargs
           type: 'array',
         });
     },
+    // @ts-expect-error
     handler: run,
   })
   .scriptName('npx @mui/x-codemod')
-  .example(
-    '$0 v6.0.0/localization-provider-rename-locale src',
-    'Run "localization-provider-rename-locale" codemod on "src" path',
-  )
+  .example('$0 v6.0.0/preset-safe src', 'Run "preset-safe" codemod on "src" path')
   .example(
     '$0 v6.0.0/component-rename-prop src -- --component=DataGrid --from=prop --to=newProp',
     'Run "component-rename-prop" codemod in "src" path on "DataGrid" component with custom "from" and "to" arguments',

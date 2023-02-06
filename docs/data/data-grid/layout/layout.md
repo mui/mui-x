@@ -1,6 +1,6 @@
 # Data Grid - Layout
 
-<p class="description">The data grid offers multiple layout mode.</p>
+<p class="description">The data grid offers multiple layout modes.</p>
 
 :::error
 By default, the grid has **no intrinsic dimensions**. It occupies the space its parent leaves.
@@ -12,12 +12,6 @@ The grid will raise an error in the console if its container has no intrinsic di
 When using % (percentage) for your height or width, you need to make sure the container you are putting the grid into also has an intrinsic dimension.
 The browsers fit the element according to a percentage of the parent dimension.
 If the parent has no dimensions, then the % will be zero.
-
-## Flex layout
-
-It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
-
-{{"demo": "FlexLayoutGrid.js", "bg": "inline"}}
 
 ## Predefined dimensions
 

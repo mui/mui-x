@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
+  GridToolbarFilterButton,
   GridColDef,
   GridFilterItem,
   GridPreferencePanelsValue,
@@ -72,23 +73,6 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
-    });
-
-    it('should apply the model when filtering extended columns', () => {
-      render(
-        <TestCase
-          rows={[
-            { id: 0, price: 0 },
-            { id: 1, price: 1 },
-          ]}
-          columnTypes={{ price: { extendType: 'number' } }}
-          columns={[{ field: 'price', type: 'price' }]}
-          filterModel={{
-            items: [{ field: 'price', operator: '=', value: 1 }],
-          }}
-        />,
-      );
-      expect(getColumnValues(0)).to.deep.equal(['1']);
     });
 
     it('should apply the model when row prop changes', () => {
@@ -902,7 +886,7 @@ describe('<DataGrid /> - Filter', () => {
     };
 
     const ALL_ROWS_COUNTRY = ['', '', 'United States', 'Germany'];
-    const ALL_ROWS_YEAR = ['', '', '1974', '1984'];
+    const ALL_ROWS_YEAR = ['', '', 'Year 1974', 'Year 1984'];
 
     it('should filter with operator "is"', () => {
       // With simple options
@@ -917,7 +901,9 @@ describe('<DataGrid /> - Filter', () => {
       );
 
       // With object options
-      expect(getRows({ field: 'year', operator: 'is', value: 1974 }).year).to.deep.equal(['1974']);
+      expect(getRows({ field: 'year', operator: 'is', value: 1974 }).year).to.deep.equal([
+        'Year 1974',
+      ]);
       expect(getRows({ field: 'year', operator: 'is', value: undefined }).year).to.deep.equal(
         ALL_ROWS_YEAR,
       );
@@ -942,7 +928,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getRows({ field: 'year', operator: 'not', value: 1974 }).year).to.deep.equal([
         '',
         '',
-        '1984',
+        'Year 1984',
       ]);
       expect(getRows({ field: 'year', operator: 'not', value: undefined }).year).to.deep.equal(
         ALL_ROWS_YEAR,
@@ -966,7 +952,7 @@ describe('<DataGrid /> - Filter', () => {
 
       // With object options
       expect(getRows({ field: 'year', operator: 'isAnyOf', value: [1974] }).year).to.deep.equal([
-        '1974',
+        'Year 1974',
       ]);
       expect(getRows({ field: 'year', operator: 'isAnyOf', value: [] }).year).to.deep.equal(
         ALL_ROWS_YEAR,
@@ -1117,6 +1103,68 @@ describe('<DataGrid /> - Filter', () => {
         />,
       );
       expect(screen.queryByLabelText('1 active filter')).not.to.equal(null);
+    });
+  });
+
+  describe('custom `filterOperators`', () => {
+    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+      render(
+        <div style={{ width: '100%', height: '400px' }}>
+          <DataGrid
+            filterModel={{
+              items: [{ field: 'name', operator: 'contains', value: 'John' }],
+            }}
+            rows={[
+              {
+                id: 0,
+                name: 'John Doe',
+              },
+              {
+                id: 1,
+                name: 'Mike Smith',
+              },
+            ]}
+            columns={[
+              {
+                field: 'name',
+                type: 'string',
+                filterOperators: [
+                  {
+                    label: 'Contains',
+                    value: 'contains',
+                    getApplyFilterFn: (filterItem) => {
+                      return (params) => {
+                        if (
+                          !filterItem.field ||
+                          !filterItem.value ||
+                          !filterItem.operator ||
+                          !params.value
+                        ) {
+                          return null;
+                        }
+                        return params.value.includes(filterItem.value);
+                      };
+                    },
+                    getValueAsString: (value) => `"${value}" text string`,
+                  },
+                ],
+              },
+            ]}
+            components={{ Toolbar: GridToolbarFilterButton }}
+          />
+        </div>,
+      );
+
+      const filterButton = document.querySelector('button[aria-label="Show filters"]');
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      fireEvent.mouseOver(filterButton);
+      clock.tick(1000); // tooltip display delay
+
+      const tooltip = screen.getByRole('tooltip');
+
+      expect(tooltip).toBeVisible();
+      expect(tooltip.textContent).to.contain('"John" text string');
     });
   });
 

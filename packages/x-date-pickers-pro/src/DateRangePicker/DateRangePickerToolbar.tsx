@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -12,7 +13,8 @@ import {
   useLocaleText,
   ExportedBaseToolbarProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps } from '../internal/models';
+import { DateRange } from '../internal/models';
+import { UseRangePositionResponse } from '../internal/hooks/useRangePosition';
 import {
   DateRangePickerToolbarClasses,
   getDateRangePickerToolbarUtilityClass,
@@ -33,7 +35,7 @@ export interface DateRangePickerToolbarProps<TDate>
       BaseToolbarProps<DateRange<TDate>, 'day'>,
       'views' | 'view' | 'onViewChange' | 'onChange' | 'isLandscape'
     >,
-    RangePositionProps {
+    UseRangePositionResponse {
   classes?: Partial<DateRangePickerToolbarClasses>;
 }
 
@@ -60,10 +62,7 @@ const DateRangePickerToolbarContainer = styled('div', {
   display: 'flex',
 });
 
-/**
- * @ignore - internal component.
- */
-export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
+const DateRangePickerToolbar = React.forwardRef(function DateRangePickerToolbar<
   TDate extends unknown,
 >(inProps: DateRangePickerToolbarProps<TDate>, ref: React.Ref<HTMLDivElement>) {
   const utils = useUtils<TDate>();
@@ -71,12 +70,11 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   const {
     value: [start, end],
-    isMobileKeyboardViewOpen,
-    toggleMobileKeyboardView,
     rangePosition,
     onRangePositionChange,
     toolbarFormat,
     className,
+    ...other
   } = props;
 
   const localeText = useLocaleText<TDate>();
@@ -94,9 +92,8 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
 
   return (
     <DateRangePickerToolbarRoot
+      {...other}
       toolbarTitle={localeText.dateRangePickerToolbarTitle}
-      isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
-      toggleMobileKeyboardView={toggleMobileKeyboardView}
       isLandscape={false}
       className={clsx(className, classes.root)}
       ownerState={ownerState}
@@ -120,3 +117,37 @@ export const DateRangePickerToolbar = React.forwardRef(function DateRangePickerT
     </DateRangePickerToolbarRoot>
   );
 });
+
+DateRangePickerToolbar.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  classes: PropTypes.object,
+  /**
+   * className applied to the root component.
+   */
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  /**
+   * If `true`, show the toolbar even in desktop mode.
+   * @default `true` for Desktop, `false` for Mobile.
+   */
+  hidden: PropTypes.bool,
+  onRangePositionChange: PropTypes.func.isRequired,
+  rangePosition: PropTypes.oneOf(['end', 'start']).isRequired,
+  readOnly: PropTypes.bool,
+  titleId: PropTypes.string,
+  /**
+   * Toolbar date format.
+   */
+  toolbarFormat: PropTypes.string,
+  /**
+   * Toolbar value placeholder—it is displayed when the value is empty.
+   * @default "––"
+   */
+  toolbarPlaceholder: PropTypes.node,
+  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+} as any;
+
+export { DateRangePickerToolbar };

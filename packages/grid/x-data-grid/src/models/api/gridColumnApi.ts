@@ -58,6 +58,12 @@ export interface GridColumnApi {
    * @param {number} width The new width.
    */
   setColumnWidth: (field: string, width: number) => void;
+  /**
+   * Gets the index of a column relative to the columns that are reachable by scroll.
+   * @param {string} field The column field.
+   * @returns {number} The index of the column.
+   */
+  getColumnIndexRelativeToVisibleColumns: (field: string) => number;
 }
 
 export interface GridColumnReorderApi {
