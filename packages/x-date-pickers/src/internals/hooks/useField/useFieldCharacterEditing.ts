@@ -431,12 +431,8 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
         let newSectionValue: number;
         // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
-        // We can't parse the year alone, some date library (like dayjs) don't support it.
         // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
-        if (
-          activeSection.contentType === 'digit' &&
-          ['day', 'year'].includes(activeSection.dateSectionName)
-        ) {
+        if (activeSection.contentType === 'digit' && activeSection.dateSectionName === 'day') {
           newSectionValue = Number(response.sectionValue);
         } else {
           // The month is stored as 0-indexed in the date (0 = January, 1 = February, ...).

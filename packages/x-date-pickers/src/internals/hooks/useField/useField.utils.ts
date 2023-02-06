@@ -434,7 +434,24 @@ export const doesSectionHaveTrailingZeros = <TDate>(
 
   // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
   if (dateSectionName === 'year') {
-    return utils.formatByString(utils.setYear(utils.date()!, 1), format).length > 1;
+    const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
+    // It's a 2-digit year format with trailing zeroes
+    if (formatted2001 === '1') {
+      return false;
+    }
+    // It's a 2-digit year format without trailing zeroes
+    if (formatted2001 === '01') {
+      return true;
+    }
+
+    const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
+    // It's a 4-digit year format without trailing zeroes
+    if (formatted0001 === '1') {
+      return false;
+    }
+
+    // It's a 2-digit year format with trailing zeroes
+    return true;
   }
 
   return changeSectionValueFormat(utils, '1', format, format).length > 1;
