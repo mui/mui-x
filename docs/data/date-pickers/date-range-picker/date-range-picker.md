@@ -75,7 +75,7 @@ This prop will be ignored on the mobile picker.
 
 ### Add shortcuts
 
-To simplify range selection, you can add [shortcuts](x/react-date-pickers/shortcuts/#range-shortcuts).
+To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
 

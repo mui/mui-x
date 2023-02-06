@@ -90,14 +90,12 @@ export default function ComponentExplorerNoSnap() {
 
       return isPro
         ? `
-import { ${exportedName} } from '@mui/x-date-pickers-pro'    
-import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}'    
-`
+import { ${exportedName} } from '@mui/x-date-pickers-pro/${subPackage}';
+import { ${exportedName} } from '@mui/x-date-pickers-pro';`
         : `
-import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}'    
-import { ${exportedName} } from '@mui/x-date-pickers'
-import { ${exportedName} } from '@mui/x-date-pickers-pro'    
-`;
+import { ${exportedName} } from '@mui/x-date-pickers/${subPackage}';
+import { ${exportedName} } from '@mui/x-date-pickers';
+import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
     })
     .join('\n');
 
@@ -106,6 +104,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
 
     return (
       <DemoItem
+        key={exportedName}
         label={getSubPackageFromExportedName(exportedName)}
         component={exportedName}
       >
@@ -185,11 +184,11 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
           </Select>
         </FormControl>
       </Stack>
-      {exportedNames.length > 0 && (
+      {exportedNames.length > 0 ? (
         <React.Fragment>
           <div>
             {docPages.map((docPage) => (
-              <div>
+              <div key={docPage.path}>
                 <Link href={docPage.path} rel="noopener" target="_blank">
                   {docPage.name} documentation
                 </Link>
@@ -207,9 +206,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro'
             </LocalizationProvider>
           </Stack>
         </React.Fragment>
-      )}
-
-      {exportedNames.length === 0 && (
+      ) : (
         <Typography>This component is not available yet</Typography>
       )}
     </Stack>
