@@ -154,7 +154,7 @@ const pages: MuiPage[] = [
         plan: 'pro',
       },
       {
-        pathname: '/x/api/date-pickers',
+        pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/date-pickers', title: 'Index' },

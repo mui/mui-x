@@ -6,7 +6,7 @@ const pkg = require('../package.json');
 const dataGridPkg = require('../packages/grid/x-data-grid/package.json');
 const datePickersPkg = require('../packages/x-date-pickers/package.json');
 const { findPages } = require('./src/modules/utils/find');
-const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
+const { LANGUAGES, LANGUAGES_SSR } = require('./config');
 
 const workspaceRoot = path.join(__dirname, '../');
 
@@ -62,7 +62,7 @@ module.exports = withDocsInfra({
             oneOf: [
               {
                 resourceQuery: /@mui\/markdown/,
-                use: require.resolve('@mui/monorepo/docs/packages/markdown/loader'),
+                use: require.resolve('@mui/monorepo/packages/markdown/loader'),
               },
             ],
           },

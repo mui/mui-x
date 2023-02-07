@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 import * as prettier from 'prettier';
 import kebabCase from 'lodash/kebabCase';
 import path from 'path';
-import { renderInline as renderMarkdownInline } from '@mui/monorepo/docs/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
 import {
   escapeCell,
   getSymbolDescription,
