@@ -201,14 +201,18 @@ function AppWrapper(props) {
     }
   }, []);
 
-  const activePage = findActivePage(pages, router.pathname);
-
   let fonts = [];
   if (router.pathname.match(/onepirate/)) {
     fonts = [
       'https://fonts.googleapis.com/css?family=Roboto+Condensed:700|Work+Sans:300,400&display=swap',
     ];
   }
+
+  const pageContextValue = React.useMemo(() => {
+    const { activePage, activePageParents } = findActivePage(pages, router.pathname);
+
+    return { activePage, activePageParents, pages };
+  }, [router.pathname]);
 
   return (
     <React.Fragment>
@@ -220,7 +224,7 @@ function AppWrapper(props) {
       <UserLanguageProvider defaultUserLanguage={pageProps.userLanguage}>
         <CodeCopyProvider>
           <CodeVariantProvider>
-            <PageContext.Provider value={{ activePage, pages }}>
+            <PageContext.Provider value={pageContextValue}>
               <ThemeProvider>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}

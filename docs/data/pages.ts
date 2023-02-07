@@ -2,8 +2,8 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
-    pathname: '/x/introduction',
-    scopePathnames: ['/x/introduction'],
+    pathname: '/x/introduction-group',
+    title: 'Introduction',
     icon: 'DescriptionIcon',
     children: [
       { pathname: `/x/introduction`, title: 'Overview' },
@@ -14,9 +14,8 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/react-data-grid',
-    scopePathnames: ['/x/api/data-grid'],
-    title: 'Data grid',
+    pathname: '/x/react-data-grid-group',
+    title: 'Data Grid',
     icon: 'TableViewIcon',
     children: [
       { pathname: '/x/react-data-grid', title: 'Overview' },
@@ -26,7 +25,6 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/layout' },
       {
         pathname: '/x/react-data-grid/columns',
-        scopePathnames: ['/x/react-data-grid/column-'],
         children: [
           { pathname: '/x/react-data-grid/column-definition' },
           { pathname: '/x/react-data-grid/column-dimensions' },
@@ -40,7 +38,6 @@ const pages: MuiPage[] = [
       },
       {
         pathname: '/x/react-data-grid/rows',
-        scopePathnames: ['/x/react-data-grid/row-', '/x/react-data-grid/master-detail'],
         children: [
           { pathname: '/x/react-data-grid/row-definition' },
           { pathname: '/x/react-data-grid/row-updates' },
@@ -64,14 +61,8 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
       {
-        pathname: '/x/react-data-grid/row-grouping',
+        pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',
-        scopePathnames: [
-          '/x/react-data-grid/row-grouping',
-          '/x/react-data-grid/tree-data',
-          '/x/react-data-grid/aggregation',
-          '/x/react-data-grid/pivoting',
-        ],
         children: [
           { pathname: '/x/react-data-grid/row-grouping', plan: 'premium' },
           { pathname: '/x/react-data-grid/tree-data', plan: 'pro' },
@@ -81,12 +72,7 @@ const pages: MuiPage[] = [
       },
       {
         title: 'Advanced',
-        pathname: '/x/react-data-grid/api-object',
-        scopePathnames: [
-          '/x/react-data-grid/api-object',
-          '/x/react-data-grid/events',
-          '/x/react-data-grid/state',
-        ],
+        pathname: '/x/react-data-grid/advanced',
         children: [
           { pathname: '/x/react-data-grid/api-object', title: 'API object' },
           { pathname: '/x/react-data-grid/events' },
@@ -96,14 +82,13 @@ const pages: MuiPage[] = [
       {
         title: 'Recipes',
         pathname: '/x/react-data-grid/recipes',
-        scopePathnames: ['/x/react-data-grid/recipes-'],
         children: [
           { pathname: '/x/react-data-grid/recipes-editing', title: 'Editing' },
           { pathname: '/x/react-data-grid/recipes-row-grouping', title: 'Row grouping' },
         ],
       },
       {
-        pathname: '/x/api/data-grid',
+        pathname: '/x/api/data-grid-group',
         title: 'API Reference',
         children: [
           { pathname: '/x/api/data-grid', title: 'Index' },
@@ -144,8 +129,7 @@ const pages: MuiPage[] = [
   },
   {
     pathname: '/x/react-date-pickers',
-    scopePathnames: ['/x/api/date-pickers'],
-    title: 'Date and Time pickers',
+    title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
       { pathname: '/x/react-date-pickers/getting-started' },
