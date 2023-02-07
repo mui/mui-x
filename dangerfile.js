@@ -5,19 +5,10 @@ const prettier = require('prettier');
 
 const dangerCommand = process.env.DANGER_COMMAND;
 
-type SnapshotType = {
-  [name: string]: {
-    min: number;
-    max: number;
-    mean: number;
-    median: number;
-    stdDev: number;
-  };
-};
 async function reportBundleSize() {
   const snapshotPath = path.join(__dirname, './performance-snapshot.json');
   const prettierConfigPath = path.join(__dirname, './prettier.config.js');
-  const snapshot: SnapshotType = await fse.readJSON(snapshotPath);
+  const snapshot = await fse.readJSON(snapshotPath);
 
   const headers = `
 | Test case | Unit | Min | Max | Median | Mean | σ |
@@ -49,7 +40,7 @@ function addDeployPreviewUrls() {
    * The incoming docsPath from danger does not start with `/`
    * e.g. ['docs/data/data-grid/editing/editing.md']
    */
-  function formatFileToLink(docsPath: string) {
+  function formatFileToLink(docsPath) {
     const url = docsPath.replace('docs/data', 'x/').replace(/\/[^/]+\.md$/, '/');
 
     return url
