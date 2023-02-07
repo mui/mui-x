@@ -11,6 +11,16 @@ materialDesign: https://material.io/components/date-pickers
 
 <p class="description">This component combines the date & time pickers.</p>
 
+:::success
+This component has received several major improvements on the new **v6 beta**:
+
+- [Fields: the new default input for pickers](https://next.mui.com//x/react-date-pickers/fields/).
+- [Improved layout customization](https://next.mui.com//x/react-date-pickers/custom-layout/)
+- [Shortcuts for picking specific dates in a calendar](https://next.mui.com//x/react-date-pickers/shortcuts/)
+
+You can also take a look at [the dedicated blog post](https://mui.com/blog/v6-beta-pickers/) and the [new documentation of the DateTimePicker](https://next.mui.com/x/react-date-pickers/date-time-picker/) for more information.
+:::
+
 It allows the user to select both date and time with the same control.
 
 Note that this component is the [DatePicker](/x/react-date-pickers/date-picker/) and [TimePicker](/x/react-date-pickers/time-picker/)
