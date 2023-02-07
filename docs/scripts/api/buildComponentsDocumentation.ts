@@ -14,22 +14,11 @@ import generatePropTypeDescription, {
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
 import { LANGUAGES } from 'docs/config';
-import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
-import {
-  renderInline as renderMarkdownInline,
-  getHeaders,
-  getTitle,
-} from '@mui/monorepo/packages/markdown';
+import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
 import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
 import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
-import {
-  DocumentedInterfaces,
-  getJsdocDefaultValue,
-  linkify,
-  getSymbolJSDocTags,
-  writePrettifiedFile,
-} from './utils';
+import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
 interface ReactApi extends ReactDocgenApi {
@@ -190,11 +179,6 @@ const buildComponentDocumentation = async (options: {
   projects: Projects;
   documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
-  pagesMarkdown: ReadonlyArray<{
-    components: readonly string[];
-    filename: string;
-    pathname: string;
-  }>;
 }) => {
   const { filename, project, documentationRoot, documentedInterfaces, projects } = options;
 
@@ -517,16 +501,6 @@ export default async function buildComponentsDocumentation(
 ) {
   const { documentationRoot, documentedInterfaces, projects } = options;
 
-  const pagesMarkdown = findPagesMarkdownNew()
-    .map((markdown) => {
-      const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
-      return {
-        ...markdown,
-        components: getHeaders(markdownSource).components,
-      };
-    })
-    .filter((markdown) => markdown.components.length > 0);
-
   const promises = Array.from(projects.values()).flatMap((project) => {
     if (!project.getComponentsWithApiDoc) {
       return [];
@@ -540,7 +514,6 @@ export default async function buildComponentsDocumentation(
           project,
           projects,
           documentationRoot,
-          pagesMarkdown,
           documentedInterfaces,
         });
       } catch (error: any) {
