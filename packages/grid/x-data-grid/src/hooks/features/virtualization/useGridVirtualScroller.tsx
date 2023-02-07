@@ -18,7 +18,7 @@ import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { clamp } from '../../../utils/utils';
+import { clamp, isDeepEqual } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -293,6 +293,9 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
+      if (isDeepEqual(prevRenderContext.current, nextRenderContext)) {
+        return;
+      }
       setRenderContext(nextRenderContext);
 
       updateRenderZonePosition(nextRenderContext);
