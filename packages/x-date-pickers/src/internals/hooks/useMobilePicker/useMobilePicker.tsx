@@ -88,6 +88,7 @@ export const useMobilePicker = <
     ownerState: props,
   });
 
+  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   fieldProps.inputProps = {
     ...fieldProps.inputProps,
     'aria-label': getOpenDialogAriaText(pickerFieldProps.value, utils),
@@ -125,7 +126,12 @@ export const useMobilePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
-        <Field {...fieldProps} slots={slotsForField} inputRef={handleInputRef} />
+        <Field
+          {...fieldProps}
+          slots={slotsForField}
+          slotProps={slotProps}
+          inputRef={handleInputRef}
+        />
         <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
           <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
             {renderCurrentView()}

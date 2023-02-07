@@ -115,6 +115,7 @@ export const useDesktopPicker = <
     ownerState: props,
   });
 
+  // TODO: Move to `useSlotProps` when https://github.com/mui/material-ui/pull/35088 will be merged
   if (hasUIView) {
     fieldProps.InputProps = {
       ...fieldProps.InputProps,
@@ -161,7 +162,12 @@ export const useDesktopPicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
-        <Field {...fieldProps} slots={slotsForField} inputRef={handleInputRef} />
+        <Field
+          {...fieldProps}
+          slots={slotsForField}
+          slotProps={slotProps}
+          inputRef={handleInputRef}
+        />
         <PickersPopper
           role="dialog"
           placement="bottom-start"
