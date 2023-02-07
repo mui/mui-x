@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateField as useDateField,
   UseDateFieldComponentProps,
+  UseDateFieldProps,
 } from '@mui/x-date-pickers/DateField';
 import {
   DateValidationError,
@@ -28,10 +29,9 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   endTextFieldProps: inEndTextFieldProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputDateRangeFieldParams<
-  TDate,
-  TChildProps
->): UseMultiInputRangeFieldResponse<TChildProps> => {
+}: UseMultiInputDateRangeFieldParams<TDate, TChildProps>): UseMultiInputRangeFieldResponse<
+  Omit<TChildProps, keyof UseDateFieldProps<TDate>>
+> => {
   const sharedProps = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 

@@ -9,6 +9,7 @@ export interface BaseFieldProps<TValue, TError>
   className?: string;
   sx?: SxProps<Theme>;
   format?: string;
+  disabled?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
 }
@@ -17,9 +18,17 @@ export interface BaseFieldProps<TValue, TError>
  * Props the single input field can receive when used inside a picker.
  * Do not take into account props that would be passed directly through `props.slotProps.field`.
  */
-export interface BaseSingleInputFieldProps<TValue, TError>
-  extends BaseFieldProps<TValue, TError>,
-    Pick<TextFieldProps, 'InputProps' | 'inputProps'> {
+export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProps<TValue, TError> {
+  label?: React.ReactNode;
+  id?: string;
+  InputProps?: {
+    ref?: React.Ref<any>;
+    endAdornment?: React.ReactNode;
+    startAdornment?: React.ReactNode;
+  };
+  inputProps?: {
+    'aria-label'?: string;
+  };
   slots?: {
     textField?: React.ElementType<TextFieldProps>;
   };
