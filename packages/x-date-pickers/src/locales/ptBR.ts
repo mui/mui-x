@@ -27,10 +27,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Hoje',
 
   // Toolbar titles
-  // datePickerDefaultToolbarTitle: 'Select date',
-  // dateTimePickerDefaultToolbarTitle: 'Select date & time',
-  // timePickerDefaultToolbarTitle: 'Select time',
-  // dateRangePickerDefaultToolbarTitle: 'Select date range',
+  datePickerDefaultToolbarTitle: 'Selecione a data',
+  dateTimePickerDefaultToolbarTitle: 'Seleciona data e hora',
+  timePickerDefaultToolbarTitle: 'Selecione a hora',
+  dateRangePickerDefaultToolbarTitle: 'Selecione o intervalo entre datas',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
