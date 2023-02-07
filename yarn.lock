@@ -2432,7 +2432,7 @@
 
 "@mui/monorepo@https://github.com/LukasTy/material-ui.git#generate-templates-doc":
   version "5.11.7"
-  resolved "https://github.com/LukasTy/material-ui.git#3005ac72a0591e4cb066f1615387a17291dd6dc2"
+  resolved "https://github.com/LukasTy/material-ui.git#2b90be92945679fd02ecf951432da2e68ed69663"
 
 "@mui/private-theming@^5.11.7":
   version "5.11.7"
