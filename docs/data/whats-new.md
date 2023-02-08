@@ -1,4 +1,4 @@
-# ✨ What's new in v6? ✨
+# ✨ What's new in MUI X v6? ✨
 
 <p class="description">Discover the new features on the latest major version.</p>
 
