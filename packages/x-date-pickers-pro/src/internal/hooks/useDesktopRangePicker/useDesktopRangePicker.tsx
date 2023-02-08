@@ -136,7 +136,9 @@ export const useDesktopRangePicker = <
     ...fieldProps.slots,
   };
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
@@ -152,6 +154,7 @@ export const useDesktopRangePicker = <
         ...fieldSlotProps.root,
       };
     },
+    separator: slotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {

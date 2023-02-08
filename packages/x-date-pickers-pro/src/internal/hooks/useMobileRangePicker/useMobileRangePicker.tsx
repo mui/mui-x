@@ -117,7 +117,9 @@ export const useMobileRangePicker = <
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
@@ -134,16 +136,7 @@ export const useMobileRangePicker = <
         ...fieldSlotProps.root,
       };
     },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(
-        innerSlotProps?.fieldSeparator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...fieldSlotProps.root,
-      };
-    },
+    separator: innerSlotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {

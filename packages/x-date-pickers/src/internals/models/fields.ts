@@ -13,7 +13,7 @@ export interface BaseFieldProps<TValue, TError>
 
 /**
  * Props the single input field can receive when used inside a picker.
- * Do not take into account props that would be passed directly through `props.slotProps.field`.
+ * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProps<TValue, TError> {
   label?: React.ReactNode;
