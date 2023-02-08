@@ -3,7 +3,7 @@ import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
 } from '@mui/utils';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
@@ -118,6 +118,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
   const apiRef = useGridApiContext();
   const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
   const [scrollbarSize, setScrollbarSize] = React.useState(0);
+  const theme = useTheme();
 
   const handleContentSizeChange = useEventCallback(() => {
     const rootDimensions = apiRef.current.getRootDimensions();
@@ -134,7 +135,11 @@ export const DataGridProColumnHeaders = React.forwardRef<
   useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
+    pinnedColumns,
+    visibleColumnFields,
+    theme.direction === 'rtl',
+  );
 
   const {
     isDragging,

@@ -6,13 +6,11 @@
 
 Using your favorite package manager, install `@mui/x-data-grid-pro` or `@mui/x-data-grid-premium` for the commercial version, or `@mui/x-data-grid` for the free community version.
 
-```sh
-// with npm
-npm install @mui/x-data-grid
+:::warning
+Note we're using the `next` tag to download the latest v6 **beta** version.
+:::
 
-// with yarn
-yarn add @mui/x-data-grid
-```
+{{"component": "modules/components/DataGridInstallationInstructions.js"}}
 
 The grid package has a peer dependency on `@mui/material`.
 If you are not already using it in your project, you can install it with:

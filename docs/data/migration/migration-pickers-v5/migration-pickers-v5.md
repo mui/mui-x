@@ -39,6 +39,20 @@ If you have already applied the `v6.0.0/pickers/preset-safe` (or `v6.0.0/preset-
 
 All other changes must be handled manually.
 
+:::warning
+Not all use cases are covered by codemods. In some scenarios, like props spreading, cross-file dependencies, etc., the changes are not properly identified and therefore must be handled manually.
+
+For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
+
+```tsx
+<DatePicker {...pickerProps} />
+```
+
+After running the codemods, make sure to test your application and that you don't have any console errors.
+
+Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
+:::
+
 ## Picker components
 
 ### ✅ Rename the `inputFormat` prop
@@ -479,11 +493,11 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
    />
   ```
 
-- The toolbar related translation keys have been renamed to better fit their usage:
+- ✅ The toolbar related translation keys have been renamed to better fit their usage:
 
   ```diff
-   <DatePicker
-    localeText={{
+   <LocalizationProvider
+     localeText={{
   -    datePickerDefaultToolbarTitle: 'Date Picker',
   +    datePickerToolbarTitle: 'Date Picker',
 
@@ -495,7 +509,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
 
   -    dateRangePickerDefaultToolbarTitle: 'Date Range Picker',
   +    dateRangePickerToolbarTitle: 'Date Range Picker',
-    }}
+     }}
    />
   ```
 

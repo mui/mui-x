@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-date-pickers-pro",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "description": "The commercial edition of the date picker components (MUI X).",
   "author": "MUI Team",
   "main": "./src/index.js",
@@ -41,18 +41,17 @@
     "directory": "packages/x-date-pickers-pro"
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.7",
+    "@babel/runtime": "^7.20.13",
     "@date-io/date-fns": "^2.16.0",
     "@date-io/dayjs": "^2.16.0",
     "@date-io/luxon": "^2.16.1",
     "@date-io/moment": "^2.16.1",
-    "@mui/utils": "^5.11.2",
-    "@mui/x-date-pickers": "6.0.0-beta.1",
+    "@mui/utils": "^5.11.7",
+    "@mui/x-date-pickers": "6.0.0-beta.2",
     "@mui/x-license-pro": "6.0.0-beta.0",
     "clsx": "^1.2.1",
     "prop-types": "^15.8.1",
-    "react-transition-group": "^4.4.5",
-    "rifm": "^0.12.1"
+    "react-transition-group": "^4.4.5"
   },
   "peerDependencies": {
     "@mui/material": "^5.4.1",

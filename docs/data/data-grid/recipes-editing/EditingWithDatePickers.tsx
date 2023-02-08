@@ -187,14 +187,9 @@ const GridEditDateInput = styled(InputBase)({
 });
 
 function WrappedGridEditDateInput(props: TextFieldProps) {
-  const { inputRef, InputProps, ...other } = props;
+  const { InputProps, ...other } = props;
   return (
-    <GridEditDateInput
-      fullWidth
-      ref={inputRef}
-      {...InputProps}
-      {...(other as InputBaseProps)}
-    />
+    <GridEditDateInput fullWidth {...InputProps} {...(other as InputBaseProps)} />
   );
 }
 

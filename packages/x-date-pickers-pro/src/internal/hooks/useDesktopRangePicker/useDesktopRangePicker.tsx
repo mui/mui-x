@@ -24,8 +24,9 @@ import {
 } from './useDesktopRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -59,7 +60,8 @@ export const useDesktopRangePicker = <
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const {
     open,
@@ -82,7 +84,7 @@ export const useDesktopRangePicker = <
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
   });
 
@@ -109,7 +111,7 @@ export const useDesktopRangePicker = <
     localeText,
     onBlur: handleBlur,
     rangePosition,
-    onRangePositionChange: setRangePosition,
+    onRangePositionChange,
   });
 
   const Field = slots.field;
@@ -192,7 +194,7 @@ export const useDesktopRangePicker = <
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
   const Layout = slots?.layout ?? PickersLayout;

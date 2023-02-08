@@ -52,6 +52,7 @@ import { DateRange } from '../internal/models';
 import { DateRangePickerDay, dateRangePickerDayClasses as dayClasses } from '../DateRangePickerDay';
 import { rangeValueManager } from '../internal/utils/valueManagers';
 import { useDragRange } from './useDragRange';
+import { useRangePosition } from '../internal/hooks/useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -173,8 +174,9 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     reduceAnimations,
     onMonthChange,
     defaultCalendarMonth,
-    rangePosition: rangePositionProps,
-    onRangePositionChange,
+    rangePosition: rangePositionProp,
+    defaultRangePosition: inDefaultRangePosition,
+    onRangePositionChange: inOnRangePositionChange,
     calendars,
     components,
     componentsProps,
@@ -204,16 +206,15 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     state: 'value',
   });
 
-  const [rangePosition, setRangePosition] = useControlled<DateRangePosition>({
-    controlled: rangePositionProps,
-    default: 'start',
-    name: 'DateRangeCalendar',
-    state: 'rangePosition',
+  const { rangePosition, onRangePositionChange } = useRangePosition({
+    rangePosition: rangePositionProp,
+    defaultRangePosition: inDefaultRangePosition,
+    onRangePositionChange: inOnRangePositionChange,
   });
 
   const handleDatePositionChange = useEventCallback((position: DateRangePosition) => {
     if (rangePosition !== position) {
-      setRangePosition(position);
+      onRangePositionChange(position);
     }
   });
 
@@ -231,8 +232,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
         allowRangeFlip,
       });
 
-      setRangePosition(nextSelection);
-      onRangePositionChange?.(nextSelection);
+      onRangePositionChange(nextSelection);
 
       const isFullRangeSelected = rangePosition === 'end' && isRangeValid(utils, newRange);
 
@@ -609,6 +609,12 @@ DateRangeCalendar.propTypes = {
    */
   defaultCalendarMonth: PropTypes.any,
   /**
+   * The initial position in the edited date range.
+   * Used when the component is not controlled.
+   * @default 'start'
+   */
+  defaultRangePosition: PropTypes.oneOf(['end', 'start']),
+  /**
    * The default selected value.
    * Used when the component is not controlled.
    */
@@ -675,13 +681,20 @@ DateRangeCalendar.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
+  /**
+   * Callback fired when the range position changes.
+   * @param {RangePosition} rangePosition The new range position.
+   */
   onRangePositionChange: PropTypes.func,
+  /**
+   * The position in the currently edited date range.
+   * Used when the component position is controlled.
+   */
   rangePosition: PropTypes.oneOf(['end', 'start']),
   /**
    * Make picker read only.
@@ -700,7 +713,7 @@ DateRangeCalendar.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
