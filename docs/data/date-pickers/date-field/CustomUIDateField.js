@@ -14,7 +14,7 @@ const UnstyledDateField = (props) => {
   return (
     <InputUnstyled
       {...inputProps}
-      slotProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
+      componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
 };
@@ -40,13 +40,13 @@ export default function CustomUIDateField() {
           label={<FormLabel>Using unstyled input</FormLabel>}
           control={<UnstyledDateField value={value} onChange={handleChange} />}
           labelPlacement="top"
-          sx={{ alignItems: 'stretch' }}
+          sx={{ margin: 0 }}
         />
         <FormControlLabel
           label={<FormLabel>Using browser input</FormLabel>}
           control={<BrowserInputDateField value={value} onChange={handleChange} />}
           labelPlacement="top"
-          sx={{ alignItems: 'stretch' }}
+          sx={{ margin: 0 }}
         />
       </Stack>
     </LocalizationProvider>
