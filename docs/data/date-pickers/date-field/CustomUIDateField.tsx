@@ -59,13 +59,13 @@ export default function CustomUIDateField() {
           label={<FormLabel>Using unstyled input</FormLabel>}
           control={<UnstyledDateField value={value} onChange={handleChange} />}
           labelPlacement="top"
-          sx={{ alignItems: 'stretch' }}
+          sx={{ margin: 0 }}
         />
         <FormControlLabel
           label={<FormLabel>Using browser input</FormLabel>}
           control={<BrowserInputDateField value={value} onChange={handleChange} />}
           labelPlacement="top"
-          sx={{ alignItems: 'stretch' }}
+          sx={{ margin: 0 }}
         />
       </Stack>
     </LocalizationProvider>
