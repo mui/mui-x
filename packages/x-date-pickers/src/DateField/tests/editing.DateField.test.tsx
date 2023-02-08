@@ -315,6 +315,21 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, 'MMMM YYYY');
     });
 
+    it('should not keep query after typing again on a cleared section', () => {
+      render(<DateField format={adapterToUse.formats.year} />);
+      const input = screen.getByRole('textbox');
+      clickOnInput(input, 1);
+
+      fireEvent.change(input, { target: { value: '2' } }); // press "2"
+      expectInputValue(input, '0002');
+
+      userEvent.keyPress(input, { key: 'Backspace' });
+      expectInputValue(input, 'YYYY');
+
+      fireEvent.change(input, { target: { value: '2' } }); // press "2"
+      expectInputValue(input, '0002');
+    });
+
     it('should not clear the sections when props.readOnly = true', () => {
       testKeyPress({
         format: adapterToUse.formats.year,
@@ -407,9 +422,38 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it('should support 2-digits year format when a value is provided', () => {
+      testChange({
+        format: 'yy', // This format is not present in any of the adapter formats
+        defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
+        keyStrokes: [
+          { value: '2', expected: '02' },
+          { value: '2', expected: '22' },
+          { value: '3', expected: '03' },
+        ],
+      });
+    });
+
     it('should support 4-digits year format', () => {
       testChange({
         format: adapterToUse.formats.year,
+        keyStrokes: [
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '2', expected: '2022' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '3', expected: '2023' },
+        ],
+      });
+    });
+
+    it('should support 4-digits year format when a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.year,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
         keyStrokes: [
           { value: '2', expected: '0002' },
           { value: '0', expected: '0020' },
