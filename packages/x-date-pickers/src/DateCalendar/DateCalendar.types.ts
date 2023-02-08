@@ -67,18 +67,17 @@ export interface ExportedDateCalendarProps<TDate>
    */
   renderLoading?: () => React.ReactNode;
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
   onYearChange?: (year: TDate) => void;
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
-  onMonthChange?: (month: TDate) => void | Promise<void>;
+  onMonthChange?: (month: TDate) => void;
 }
 
 export interface DateCalendarProps<TDate>

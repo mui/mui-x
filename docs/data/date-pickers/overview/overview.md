@@ -4,7 +4,7 @@ title: Date and Time Picker React components
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
 # Date and Time Pickers
@@ -13,9 +13,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
+## Overview
+
 {{"demo": "CommonlyUsedComponents.js"}}
 
-## Community or Pro Plan ?
+## Community or Pro Plan?
 
 The Date and Time Pickers are available in two packages:
 
@@ -62,11 +64,11 @@ Here is the weight added to your gzipped bundle size by each of these libraries 
 
 :::info
 The results above were obtained in October 2022 with the latest version of each library.
-The bundling strategy was taken care of by a Create React App, and no locale was loaded for any of the libraries.
+The bundling of the JavaScript modules was done by a Create React App, and no locale was loaded for any of the libraries.
 
-The results may vary in your application depending on the version of each library, the locale, and the bundling strategy used.
+The results may vary in your application depending on the version of each library, the locale, and the bundler used.
 :::
 
-## What's next ?
+## What's next?
 
 Continue to the [next page](/x/react-date-pickers/getting-started/) and learn how to prepare your application for the Date and Time Pickers.

@@ -6,16 +6,16 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-function BrowserInput(props) {
+const BrowserInput = function BrowserInput(props) {
   const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }} ref={InputProps?.ref}>
       <input ref={inputRef} {...inputProps} {...other} />
       {InputProps?.endAdornment}
     </Box>
   );
-}
+};
 
 BrowserInput.propTypes = {
   /**

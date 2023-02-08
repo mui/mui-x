@@ -4,7 +4,7 @@ title: Date and Time Picker - Getting started
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
 # Date and Time Pickers - Getting Started
@@ -19,6 +19,10 @@ Using your favorite package manager, install:
 
 - `@mui/x-date-pickers` for the free community version or `@mui/x-date-pickers-pro` for the commercial version.
 - The date library to manipulate the date.
+
+:::warning
+Note we're using the `next` tag to download the latest v6 **beta** version.
+:::
 
 {{"component": "modules/components/PickersInstallationInstructions.js"}}
 
@@ -94,6 +98,6 @@ To make sure that everything is set up correctly, try rendering a simple `DatePi
 
 {{"demo": "FirstComponent.js"}}
 
-## What's next ?
+## What's next?
 
 Continue to the [next page](/x/react-date-pickers/base-concepts/) and discover the components available and how to use them.

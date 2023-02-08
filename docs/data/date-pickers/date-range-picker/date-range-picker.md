@@ -75,7 +75,7 @@ This prop will be ignored on the mobile picker.
 
 ### Add shortcuts
 
-To simplify range selection, you can add [shortcuts](x/react-date-pickers/shortcuts/#range-shortcuts).
+To simplify range selection, you can add [shortcuts](/x/react-date-pickers/shortcuts/#range-shortcuts).
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -89,16 +89,6 @@ Make sure to spread `inputProps` correctly to the custom input component.
 ## Validation
 
 You can find the documentation in the [Validation page](/x/react-date-pickers/validation/)
-
-## 🚧 Pre-defined range shortcuts
-
-:::warning
-This feature isn't implemented yet. It's coming.
-
-👍 Upvote [issue #4563](https://github.com/mui/mui-x/issues/4563) if you want to see it land faster.
-:::
-
-Range shortcuts allows your users to select a commonly-used range in one click (eg: last week, last month, …)
 
 ## 🚧 Month Range Picker
 
