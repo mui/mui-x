@@ -32,6 +32,7 @@ import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
 import CellSelectionGrid from '../cell-selection/CellSelectionGrid';
+import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 
 export const featuresSet = [
   {
@@ -174,6 +175,15 @@ export const featuresSet = [
     plan: 'Premium',
     detailPage: '/cell-selection/',
     demo: <CellSelectionGrid />,
+    newBadge: true,
+  },
+  {
+    id: 18,
+    name: 'New column menu',
+    description: 'More customization and improved design on v6',
+    plan: 'Community',
+    detailPage: '/column-menu/',
+    demo: <AddNewColumnMenuGrid />,
     newBadge: true,
   },
 ];

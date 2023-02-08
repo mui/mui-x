@@ -35,6 +35,8 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import CellSelectionGrid from '../cell-selection/CellSelectionGrid';
+import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 
 type Row = {
   id: number;
@@ -79,7 +81,6 @@ export const featuresSet: Row[] = [
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
-    newBadge: true,
     demo: <LazyLoadingGrid />,
   },
   {
@@ -139,16 +140,14 @@ export const featuresSet: Row[] = [
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
-    newBadge: true,
   },
   {
     id: 12,
-    name: 'Aggretation and Summary rows',
+    name: 'Aggregation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
-    newBadge: true,
   },
   {
     id: 13,
@@ -182,6 +181,24 @@ export const featuresSet: Row[] = [
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
+  },
+  {
+    id: 17,
+    name: 'Cell range Selection',
+    description: 'Allow users to select individual cells or a range of cells',
+    plan: 'Premium',
+    detailPage: '/cell-selection/',
+    demo: <CellSelectionGrid />,
+    newBadge: true,
+  },
+  {
+    id: 18,
+    name: 'New column menu',
+    description: 'More customization and improved design on v6',
+    plan: 'Community',
+    detailPage: '/column-menu/',
+    demo: <AddNewColumnMenuGrid />,
+    newBadge: true,
   },
 ];
 
@@ -237,7 +254,7 @@ const columns: GridColDef[] = [
   {
     field: 'name',
     headerName: 'Feature name',
-    maxWidth: 160,
+    maxWidth: 170,
     flex: 0.2,
     minWidth: 100,
     groupable: false,
