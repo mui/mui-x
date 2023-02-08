@@ -170,8 +170,9 @@ export const featuresSet = [
   },
   {
     id: 17,
-    name: 'Cell range Selection',
-    description: 'Allow users to select individual cells or a range of cells',
+    name: 'Cell Range Selection',
+    description:
+      'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
     detailPage: '/cell-selection/',
     demo: <CellSelectionGrid />,
@@ -179,7 +180,7 @@ export const featuresSet = [
   },
   {
     id: 18,
-    name: 'New column menu',
+    name: 'Column Menu',
     description: 'More customization and improved design on v6',
     plan: 'Community',
     detailPage: '/column-menu/',
@@ -249,7 +250,7 @@ const columns = [
   {
     field: 'name',
     headerName: 'Feature name',
-    maxWidth: 160,
+    maxWidth: 172,
     flex: 0.2,
     minWidth: 100,
     groupable: false,
