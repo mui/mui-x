@@ -628,7 +628,7 @@ export const getSectionsBoundaries = <TDate>(
 
   return {
     year: ({ format }) => ({
-      minimum: 1,
+      minimum: 0,
       maximum: utils.formatByString(today, format).length === 4 ? 9999 : 99,
     }),
     month: () => ({
