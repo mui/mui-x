@@ -185,7 +185,8 @@ export const featuresSet: Row[] = [
   {
     id: 17,
     name: 'Cell Range Selection',
-    description: 'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
+    description:
+      'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
     detailPage: '/cell-selection/',
     demo: <CellSelectionGrid />,
