@@ -379,6 +379,7 @@ export const useField = <
   // But we can't use `useEnhancedEffect` which is always called the two `onChange` calls and would cause false positives.
   React.useEffect(() => {
     if (state.tempValueStrAndroid != null && selectedSectionIndexes != null) {
+      resetCharacterQuery();
       clearActiveSection();
     }
   }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
