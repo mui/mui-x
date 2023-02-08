@@ -18,6 +18,7 @@
     "docs:size-why": "cross-env DOCS_STATS_ENABLED=true yarn docs:build",
     "docs:deploy": "yarn workspace docs deploy",
     "deduplicate": "node scripts/deduplicate.mjs",
+    "deduplicate:yarn": "yarn-deduplicate yarn.lock",
     "dataset:file-tree": "babel-node -x .ts ./scripts/treeDataFromFileTree.ts",
     "l10n": "babel-node -x .ts ./scripts/l10n.ts",
     "jsonlint": "node ./scripts/jsonlint.mjs",
