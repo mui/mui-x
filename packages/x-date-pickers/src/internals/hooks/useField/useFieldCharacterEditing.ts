@@ -83,15 +83,17 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
 
+  const resetQuery = useEventCallback(() => setQuery(null));
+
   React.useEffect(() => {
     if (query != null && sections[query.sectionIndex]?.dateSectionName !== query.dateSectionName) {
-      setQuery(null);
+      resetQuery();
     }
-  }, [sections, query]);
+  }, [sections, query, resetQuery]);
 
   React.useEffect(() => {
     if (query != null) {
-      const timeout = setTimeout(() => setQuery(null), QUERY_LIFE_DURATION_MS);
+      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
 
       return () => {
         window.clearTimeout(timeout);
@@ -99,7 +101,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     }
 
     return () => {};
-  }, [query]);
+  }, [query, resetQuery]);
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
@@ -134,7 +136,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      setQuery(null);
+      resetQuery();
       return null;
     }
 
@@ -387,7 +389,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     );
   };
 
-  return useEventCallback((params: ApplyCharacterEditingParams) => {
+  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
     const activeSection = sections[params.sectionIndex];
     const isNumericEditing = !Number.isNaN(Number(params.keyPressed));
 
@@ -453,4 +455,9 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         getNewSectionValue(params, sectionsValueBoundaries, null),
     });
   });
+
+  return {
+    applyCharacterEditing,
+    resetCharacterQuery: resetQuery,
+  };
 };

@@ -47,7 +47,7 @@ export const useField = <
     sectionOrder,
   } = useFieldState(params);
 
-  const applyCharacterEditing = useFieldCharacterEditing<TDate, TSection>({
+  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
     sections: state.sections,
     updateSectionValue,
   });
@@ -291,6 +291,7 @@ export const useField = <
         } else {
           clearActiveSection();
         }
+        resetCharacterQuery();
         break;
       }
 
