@@ -407,9 +407,38 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it('should support 2-digits year format when a value is provided', () => {
+      testChange({
+        format: 'yy', // This format is not present in any of the adapter formats
+        defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
+        keyStrokes: [
+          { value: '2', expected: '02' },
+          { value: '2', expected: '22' },
+          { value: '3', expected: '03' },
+        ],
+      });
+    });
+
     it('should support 4-digits year format', () => {
       testChange({
         format: adapterToUse.formats.year,
+        keyStrokes: [
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '2', expected: '2022' },
+          { value: '2', expected: '0002' },
+          { value: '0', expected: '0020' },
+          { value: '2', expected: '0202' },
+          { value: '3', expected: '2023' },
+        ],
+      });
+    });
+
+    it('should support 4-digits year format when a value is provided', () => {
+      testChange({
+        format: adapterToUse.formats.year,
+        defaultValue: adapterToUse.date(new Date(2022, 5, 4)),
         keyStrokes: [
           { value: '2', expected: '0002' },
           { value: '0', expected: '0020' },
