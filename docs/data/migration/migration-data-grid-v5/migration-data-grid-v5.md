@@ -25,6 +25,8 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
+If we don't take into consideration the removals of the methods and exports, which should be simple and require manual intervention, around 50% of the breaking changes are automatically handled by the `preset-safe` codemod. 🎉
+
 :::info
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
 :::
@@ -293,6 +295,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### `apiRef` methods
 
+- The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
+- ✅ The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
   ```diff
   -apiRef.current.updateColumn({ field: 'name', width: 100 });
@@ -304,12 +308,9 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +const totalWidth = gridColumnsTotalWidthSelector(apiRef);
   +const positions = gridColumnPositionsSelector(apiRef);
   ```
-- The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
-  @TODO Add example
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
 - The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
 - The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
-- ✅ The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -361,7 +362,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['operator']` is now required.
 - The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
 - ✅ The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
-- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `GridFilterModel['linkOperator']` type was renamed to `GridFilterModel['logicOperator']`.
 - ✅ The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
 - ✅ The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
 - ✅ The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
