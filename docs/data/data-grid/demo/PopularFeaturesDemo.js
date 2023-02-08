@@ -31,6 +31,7 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
+import CellSelectionGrid from '../cell-selection/CellSelectionGrid';
 
 export const featuresSet = [
   {
@@ -65,7 +66,6 @@ export const featuresSet = [
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
-    newBadge: true,
     demo: <LazyLoadingGrid />,
   },
   {
@@ -125,16 +125,14 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/row-pinning/',
     demo: <RowPinningWithPagination />,
-    newBadge: true,
   },
   {
     id: 12,
-    name: 'Aggretation and Summary rows',
+    name: 'Aggregation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
     detailPage: '/aggregation/',
     demo: <AggregationRowGrouping />,
-    newBadge: true,
   },
   {
     id: 13,
@@ -168,6 +166,15 @@ export const featuresSet = [
     plan: 'Pro',
     detailPage: '/tree-data/',
     demo: <TreeDataFullExample />,
+  },
+  {
+    id: 17,
+    name: 'Cell range Selection',
+    description: 'Allow users to select individual cells or a range of cells',
+    plan: 'Premium',
+    detailPage: '/cell-selection/',
+    demo: <CellSelectionGrid />,
+    newBadge: true,
   },
 ];
 
