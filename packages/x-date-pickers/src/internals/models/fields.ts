@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
 import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
 export interface BaseFieldProps<TValue, TError>
   extends Omit<UseFieldInternalProps<TValue, TError>, 'format'> {
   className?: string;
-  sx?: SxProps<Theme>;
   format?: string;
   disabled?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
@@ -29,9 +26,7 @@ export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProp
   inputProps?: {
     'aria-label'?: string;
   };
-  slots?: {
-    textField?: React.ElementType<TextFieldProps>;
-  };
+  slots?: {};
   slotProps?: {};
 }
 

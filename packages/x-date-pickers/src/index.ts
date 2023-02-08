@@ -8,6 +8,7 @@ export * from './DateField';
 export * from './TimeField';
 export * from './DateTimeField';
 export type { FieldSection, FieldSelectedSections } from './internals/hooks/useField';
+export type { BaseSingleInputFieldProps } from './internals/models/fields';
 
 // Calendars
 export * from './DateCalendar';
@@ -41,7 +42,6 @@ export * from './PickersActionBar';
 export * from './PickersShortcuts';
 
 export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
-export type { BaseSingleInputFieldProps } from './internals/models/fields';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './internals/hooks/validation/useDateTimeValidation';

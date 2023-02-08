@@ -22,10 +22,18 @@ type BaseMultiInputFieldSlotsComponent = {
   Separator?: React.ElementType<TypographyProps>;
 };
 
+export interface MultiInputFieldSlotTextFieldProps {
+  inputRef?: React.Ref<HTMLInputElement>;
+  disabled?: boolean;
+  id?: string;
+  label?: React.ReactNode;
+  onClick?: () => void;
+}
+
 type BaseMultiInputFieldSlotsComponentsProps = {
   root?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   textField?: SlotComponentProps<
-    typeof TextField,
+    React.ElementType<MultiInputFieldSlotTextFieldProps>,
     {},
     { position?: 'start' | 'end' } & Record<string, any>
   >;
