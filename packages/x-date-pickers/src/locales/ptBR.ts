@@ -28,7 +28,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
 
   // Toolbar titles
   datePickerDefaultToolbarTitle: 'Selecione a data',
-  dateTimePickerDefaultToolbarTitle: 'Seleciona data e hora',
+  dateTimePickerDefaultToolbarTitle: 'Selecione data e hora',
   timePickerDefaultToolbarTitle: 'Selecione a hora',
   dateRangePickerDefaultToolbarTitle: 'Selecione o intervalo entre datas',
 
