@@ -53,7 +53,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
         hidden: false,
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies MobileTimePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useMobilePicker<TDate, TimeView, typeof props>({

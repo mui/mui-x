@@ -43,7 +43,7 @@ const StaticDateRangePicker = React.forwardRef(function StaticDateRangePicker<TD
         hidden: displayStaticWrapperAs === 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies StaticDateRangePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useStaticRangePicker<TDate, 'day', typeof props>({

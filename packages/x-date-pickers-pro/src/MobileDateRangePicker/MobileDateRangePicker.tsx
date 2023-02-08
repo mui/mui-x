@@ -51,7 +51,7 @@ const MobileDateRangePicker = React.forwardRef(function MobileDateRangePicker<TD
         hidden: false,
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies MobileDateRangePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useMobileRangePicker<TDate, 'day', typeof props>({

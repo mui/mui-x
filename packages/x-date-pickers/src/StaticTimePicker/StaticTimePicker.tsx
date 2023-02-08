@@ -42,7 +42,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
         hidden: displayStaticWrapperAs === 'desktop',
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies StaticTimePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useStaticPicker<TDate, TimeView, typeof props>({

@@ -55,7 +55,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies DesktopTimePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useDesktopPicker<TDate, TimeView, typeof props>({

@@ -51,7 +51,7 @@ const DesktopDateRangePicker = React.forwardRef(function DesktopDateRangePicker<
         hidden: true,
         ...defaultizedProps.slotProps?.toolbar,
       },
-    },
+    } satisfies DesktopDateRangePickerProps<TDate>['slotProps'],
   };
 
   const { renderPicker } = useDesktopRangePicker<TDate, 'day', typeof props>({
