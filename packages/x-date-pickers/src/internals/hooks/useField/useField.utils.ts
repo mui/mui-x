@@ -620,7 +620,7 @@ export const getSectionsBoundaries = <TDate>(
 
   return {
     year: ({ format }) => ({
-      minimum: 1,
+      minimum: 0,
       maximum: isFourDigitYearFormat(utils, format) ? 9999 : 99,
     }),
     month: () => ({

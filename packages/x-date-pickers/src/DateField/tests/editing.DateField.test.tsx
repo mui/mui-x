@@ -415,9 +415,14 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: 'yy', // This format is not present in any of the adapter formats
         keyStrokes: [
+          // 1st year: 22
           { value: '2', expected: '02' },
           { value: '2', expected: '22' },
+          // 2nd year: 32
           { value: '3', expected: '03' },
+          { value: '2', expected: '32' },
+          // 3rd year: 00
+          { value: '0', expected: '00' },
         ],
       });
     });
