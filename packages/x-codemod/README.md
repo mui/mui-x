@@ -611,6 +611,11 @@ Rename selectors and events.
 -  const rowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 -  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridVisibleSortedTopLevelRowEntriesSelector);
 -  const topLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
+-  const allGridColumnsFields = useGridSelector(apiRef, allGridColumnsFieldsSelector);
+-  const allGridColumns = useGridSelector(apiRef, allGridColumnsSelector);
+-  const visibleGridColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+-  const filterableGridColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+-  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericColumnOperators);
 +  useGridApiEventHandler('rowSelectionChange', handleEvent);
 +  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
 +  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
@@ -619,6 +624,11 @@ Rename selectors and events.
 +  const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
 +  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
 +  const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
++  const allGridColumnsFields = useGridSelector(apiRef, gridColumnFieldsSelector);
++  const allGridColumns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
++  const visibleGridColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
++  const filterableGridColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
++  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericOperators);
  }
 ```
 

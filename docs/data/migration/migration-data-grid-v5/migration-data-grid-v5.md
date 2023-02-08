@@ -100,15 +100,20 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### State access
 
 - ✅ The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
+- ✅ The `allGridColumnsFieldsSelector` selector was removed. Use `gridColumnFieldsSelector` instead.
+- ✅ The `allGridColumnsSelector` selector was removed. Use `gridColumnDefinitionsSelector` instead.
+- ✅ The `visibleGridColumnsSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
+- ✅ The `filterableGridColumnsSelector` selector was removed. Use `gridFilterableColumnDefinitionsSelector` instead.
+- ✅ The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
+- ✅ The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
+- ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
+- ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
+- ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
+- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
-- The `allGridColumnsFieldsSelector` selector was removed. Use `gridColumnFieldsSelector` instead.
-- The `allGridColumnsSelector` selector was removed. Use `gridColumnDefinitionsSelector` instead.
-- The `visibleGridColumnsSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
-- The `filterableGridColumnsSelector` selector was removed. Use `gridFilterableColumnDefinitionsSelector` instead.
 - The `filterableGridColumnsIdsSelector` selector was removed. Use `gridFilterableColumnLookupSelector` instead.
 - The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
 - The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
-- The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridRowGroupingStateSelector` selector was removed.
 - The `gridFilterStateSelector` selector was removed.
@@ -120,11 +125,6 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
-- ✅ The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
-- ✅ The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
-- ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
-- ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
-- ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
 
 ### Events
 
