@@ -98,6 +98,8 @@ module.exports = function getBabelConfig(api) {
         root: ['./'],
       },
     ]);
+    // test environment is not happy about "satisfies" without this plugin in the chain
+    plugins.push(['@babel/plugin-transform-typescript', { isTSX: true }]);
   }
 
   return {
