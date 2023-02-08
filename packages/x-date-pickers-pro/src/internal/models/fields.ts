@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import {
@@ -25,9 +25,12 @@ type BaseMultiInputFieldSlotsComponent = {
 export interface MultiInputFieldSlotTextFieldProps {
   inputRef?: React.Ref<HTMLInputElement>;
   disabled?: boolean;
+  readOnly?: boolean;
   id?: string;
   label?: React.ReactNode;
-  onClick?: () => void;
+  onKeyDown?: React.KeyboardEventHandler;
+  onFocus?: React.FocusEventHandler;
+  focused?: boolean;
 }
 
 type BaseMultiInputFieldSlotsComponentsProps = {
