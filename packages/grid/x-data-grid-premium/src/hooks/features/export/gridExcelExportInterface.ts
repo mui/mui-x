@@ -35,12 +35,16 @@ export interface GridExcelExportOptions extends GridFileExportOptions {
   valueOptionsSheetName?: string;
   /**
    * Method called before adding the rows to the workbook.
+   * Not supported when `worker` is set.
+   * To use with web workers, use the option in `setupExcelExportWebWorker`.
    * @param {GridExceljsProcessInput} processInput object containing the workbook and the worksheet.
    * @returns {Promise<void>} A promise which resolves after processing the input.
    * */
   exceljsPreProcess?: (processInput: GridExceljsProcessInput) => Promise<void>;
   /**
    * Method called after adding the rows to the workbook.
+   * Not supported when `worker` is set.
+   * To use with web workers, use the option in `setupExcelExportWebWorker`.
    * @param {GridExceljsProcessInput} processInput object containing the workbook and the worksheet.
    * @returns {Promise<void>} A promise which resolves after processing the input.
    * */

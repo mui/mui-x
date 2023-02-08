@@ -334,7 +334,6 @@ apiRef.current.exportDataAsExcel({
 :::info
 If you are using Next.js or Webpack 5, use the following syntax instead.
 Make sure to pass the **relative path**, considering the current file, to the worker script.
-It is not necessary to make the script public since [Webpack](https://webpack.js.org/guides/web-workers/) will automatically handle that for you.
 
 ```tsx
 <GridToolbarExport
@@ -350,6 +349,7 @@ apiRef.current.exportDataAsExcel({
 });
 ```
 
+It is not necessary to make the script public because [Webpack](https://webpack.js.org/guides/web-workers/) will handle that automatically for you.
 :::
 
 Since the main thread is not locked while the data is exported, it is important to give feedback for users that something is in progress.
@@ -358,8 +358,30 @@ The following demo contains an example using a [Snackbar](/material-ui/react-sna
 
 {{"demo": "ExcelExportWithWebWorker.js", "bg": "inline", "defaultCodeOpen": false}}
 
-:::warning
+:::info
 When opening the demo above in CodeSandbox or StackBlitz you need to manually create the `worker.ts` script.
+:::
+
+:::warning
+If you want to use the `exceljsPreProcess` and `exceljsPostProcess` options to customize the final spreadsheet, as showed in the [Customization](/x/react-data-grid/export/#customization) setion above, you have to pass them to `setupExcelExportWebWorker` instead.
+This is necessary because [functions](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#things_that_dont_work_with_structured_clone) cannot be passed to the web worker.
+
+```tsx
+// Instead of
+<GridToolbarExport
+  excelOptions={{
+    exceljsPreProcess,
+    exceljsPostProcess,
+  }}
+/>;
+
+// Do the following
+setupExcelExportWebWorker({
+  exceljsPreProcess,
+  exceljsPostProcess,
+});
+```
+
 :::
 
 ## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)

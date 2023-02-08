@@ -100,6 +100,24 @@ export const useGridExcelExport = (
         return;
       }
 
+      if (exceljsPostProcess) {
+        console.warn(
+          [
+            `MUI: The exceljsPostProcess option is not supported when a web worker is used.`,
+            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+          ].join('\n'),
+        );
+      }
+
+      if (exceljsPreProcess) {
+        console.warn(
+          [
+            `MUI: The exceljsPreProcess option is not supported when a web worker is used.`,
+            'As alternative, pass the callback to the same option in setupExcelExportWebWorker.',
+          ].join('\n'),
+        );
+      }
+
       const worker = workerFn();
 
       apiRef.current.publishEvent('excelExportStateChange', true);
