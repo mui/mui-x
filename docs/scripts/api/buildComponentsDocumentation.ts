@@ -1,27 +1,23 @@
 import * as ttp from '@mui/monorepo/packages/typescript-to-proptypes/src/index';
 import * as fse from 'fs-extra';
 import path from 'path';
-import parseStyles, { Styles } from '@mui/monorepo/docs/src/modules/utils/parseStyles';
+import parseStyles, { Styles } from '@mui/monorepo/packages/api-docs-builder/utils/parseStyles';
 import fromPairs from 'lodash/fromPairs';
 import createDescribeableProp, {
   DescribeablePropDescriptor,
-} from '@mui/monorepo/docs/src/modules/utils/createDescribeableProp';
-import generatePropDescription from '@mui/monorepo/docs/src/modules/utils/generatePropDescription';
+} from '@mui/monorepo/packages/api-docs-builder/utils/createDescribeableProp';
+import generatePropDescription from '@mui/monorepo/packages/api-docs-builder/utils/generatePropDescription';
 import { parse as parseDoctrine } from 'doctrine';
 import generatePropTypeDescription, {
   getChained,
-} from '@mui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
-import parseTest from '@mui/monorepo/docs/src/modules/utils/parseTest';
+} from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
+import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
-import { LANGUAGES } from 'docs/src/modules/constants';
-import { findPagesMarkdownNew } from 'docs/src/modules/utils/find';
+import { LANGUAGES } from 'docs/config';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
-import {
-  renderInline as renderMarkdownInline,
-  getHeaders,
-} from '@mui/monorepo/docs/packages/markdown';
-import { getLineFeed } from '@mui/monorepo/docs/scripts/helpers';
-import generateUtilityClass from '@mui/base/generateUtilityClass';
+import { renderInline as renderMarkdownInline } from '@mui/monorepo/packages/markdown';
+import { getLineFeed } from '@mui/monorepo/packages/docs-utilities';
+import { unstable_generateUtilityClass as generateUtilityClass } from '@mui/utils';
 import { DocumentedInterfaces, getJsdocDefaultValue, linkify, writePrettifiedFile } from './utils';
 import { Project, Projects } from '../getTypeScriptProjects';
 
@@ -183,11 +179,6 @@ const buildComponentDocumentation = async (options: {
   projects: Projects;
   documentationRoot: string;
   documentedInterfaces: DocumentedInterfaces;
-  pagesMarkdown: ReadonlyArray<{
-    components: readonly string[];
-    filename: string;
-    pathname: string;
-  }>;
 }) => {
   const { filename, project, documentationRoot, documentedInterfaces, projects } = options;
 
@@ -235,7 +226,7 @@ const buildComponentDocumentation = async (options: {
   }
   reactApi.demos = demos;
 
-  reactApi.styles = await parseStyles(reactApi, project.program as any);
+  reactApi.styles = parseStyles({ project, componentName: reactApi.name });
   reactApi.styles.name = reactApi.name.startsWith('Grid')
     ? 'MuiDataGrid' // TODO: Read from @slot annotation
     : `Mui${reactApi.name.replace(/(Pro|Premium)$/, '')}`;
@@ -510,16 +501,6 @@ export default async function buildComponentsDocumentation(
 ) {
   const { documentationRoot, documentedInterfaces, projects } = options;
 
-  const pagesMarkdown = findPagesMarkdownNew()
-    .map((markdown) => {
-      const markdownSource = fse.readFileSync(markdown.filename, 'utf8');
-      return {
-        ...markdown,
-        components: getHeaders(markdownSource).components,
-      };
-    })
-    .filter((markdown) => markdown.components.length > 0);
-
   const promises = Array.from(projects.values()).flatMap((project) => {
     if (!project.getComponentsWithApiDoc) {
       return [];
@@ -533,7 +514,6 @@ export default async function buildComponentsDocumentation(
           project,
           projects,
           documentationRoot,
-          pagesMarkdown,
           documentedInterfaces,
         });
       } catch (error: any) {

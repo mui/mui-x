@@ -144,7 +144,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 12,
-    name: 'Aggretation and Summary rows',
+    name: 'Aggregation and Summary rows',
     description: 'Set summary footer rows or inline summaries with row grouping',
     plan: 'Premium',
     detailPage: '/aggregation/',
