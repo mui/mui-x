@@ -3,6 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-beta.3
+
+_Feb 9, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- ⬅️ Add right-to-left support for the data grid (#6580) @yaredtsy
+- ⚡️ Improve grid resize performance (#7864) @cherniavskii
+- ✨ New codemods for migrating to v6 @MBilalShafi
+- 📚 Documentation improvements
+- 🐞 Bug fixes
+
+### `@mui/x-data-grid@v6.0.0-beta.3` / `@mui/x-data-grid-pro@v6.0.0-beta.3` / `@mui/x-data-grid-premium@v6.0.0-beta.3`
+
+#### Changes
+
+- [DataGrid] Add `BaseIconButton` component slot (#7329) @123joshuawu
+- [DataGrid] Allow to customize the value displayed in the filter button tooltip (#6956) @ithrforu
+- [DataGrid] Improve grid resize performance (#7864) @cherniavskii
+- [DataGrid] Make `apiRef.current.getRowWithUpdatedValues` stable (#7788) @m4theushw
+- [DataGrid] Support RTL (#6580) @yaredtsy
+- [DataGrid] Improve query selectors for selecting cell element (#7354) @yaredtsy
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#7854) @ed-ateixeira
+
+### `@mui/x-date-pickers@v6.0.0-beta.3` / `@mui/x-date-pickers-pro@v6.0.0-beta.3`
+
+#### Changes
+
+- [fields] Allow to select year 2000 on 2-digit year section (#7858) @flaviendelangle
+- [fields] Fix year editing on `day.js` (#7862) @flaviendelangle
+- [fields] Fix year editing on valid date (#7834) @flaviendelangle
+- [fields] Reset query when pressing `Backspace` or `Delete` (#7855) @flaviendelangle
+- [pickers] Clean popper position on new pickers (#7445) @flaviendelangle
+- [pickers] Ditch pickers `skipLibCheck` (#7808) @LukasTy
+- [pickers] Improve JSDoc and resulting api docs pages (#7847) @LukasTy
+
+### `@mui/x-codemod@v6.0.0-beta.3`
+
+#### Changes
+
+- [codemod] Add more cases to `rename-selectors-and-events` codemod (#7856) @MBilalShafi
+- [codemod] Add warning message to the codemods and migration guide (#7813) @MBilalShafi
+- [codemod] Codemod to remove unnecessary `experimentalFeatures` flag (#7836) @MBilalShafi
+- [codemod] Rename `GridFilterItem` props (#7483) @MBilalShafi
+- [codemod] Rename `linkOperators` to `logicOperators` (#7707) @MBilalShafi
+- [codemod] Replace `onCellFocusOut` prop for Data Grid (#7786) @MBilalShafi
+
+### Docs
+
+- [docs] Add a "Whats new in v6" page linked on the sidebar (#7820) @joserodolfofreitas
+- [docs] Fix hydration crash in pickers (#7734) @oliviertassinari
+- [docs] Remove no longer relevant range shortcuts section (#7840) @LukasTy
+- [docs] Use `@next` tag in grid and pickers installation instructions (#7814) @cherniavskii
+
+### Core
+
+- [core] Remove `tslint` package leftovers (#7841) @LukasTy
+
 ## 6.0.0-beta.2
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
