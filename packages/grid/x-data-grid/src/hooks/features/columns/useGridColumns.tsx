@@ -71,8 +71,8 @@ export function useGridColumns(
     | 'columns'
     | 'columnVisibilityModel'
     | 'onColumnVisibilityModelChange'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotProps'
     | 'disableColumnSelector'
     | 'signature'
   >,

@@ -60,8 +60,8 @@ export const useGridFilter = (
     | 'onFilterModelChange'
     | 'filterMode'
     | 'disableMultipleColumnsFiltering'
-    | 'components'
-    | 'componentsProps'
+    | 'slots'
+    | 'slotProps'
     | 'disableColumnFilter'
   >,
 ): void => {

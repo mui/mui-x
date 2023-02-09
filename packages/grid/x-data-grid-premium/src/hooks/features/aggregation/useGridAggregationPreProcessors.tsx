@@ -28,8 +28,8 @@ export const useGridAggregationPreProcessors = (
     | 'aggregationFunctions'
     | 'disableAggregation'
     | 'getAggregationPosition'
-    | 'componentsProps'
-    | 'components'
+    | 'slotProps'
+    | 'slots'
   >,
 ) => {
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
