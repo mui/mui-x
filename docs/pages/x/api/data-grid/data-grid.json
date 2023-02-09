@@ -17,8 +17,16 @@
     "columnHeaderHeight": { "type": { "name": "number" }, "default": "56" },
     "columnThreshold": { "type": { "name": "number" }, "default": "3" },
     "columnVisibilityModel": { "type": { "name": "object" } },
-    "components": { "type": { "name": "object" } },
-    "componentsProps": { "type": { "name": "object" } },
+    "components": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>slots</code> instead."
+    },
+    "componentsProps": {
+      "type": { "name": "object" },
+      "deprecated": true,
+      "deprecationInfo": "Use the <code>slotProps</code> prop instead."
+    },
     "density": {
       "type": {
         "name": "enum",
@@ -144,6 +152,8 @@
     "scrollbarSize": { "type": { "name": "number" } },
     "showCellVerticalBorder": { "type": { "name": "bool" } },
     "showColumnVerticalBorder": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" } },
     "sortingMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""

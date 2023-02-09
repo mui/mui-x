@@ -92,6 +92,8 @@
     "scrollbarSize": "Override the height/width of the grid inner scrollbar.",
     "showCellVerticalBorder": "If <code>true</code>, the vertical borders of the cells are displayed.",
     "showColumnVerticalBorder": "If <code>true</code>, the right border of the column headers are displayed.",
+    "slotProps": "Overrideable components props dynamically passed to the component at rendering.",
+    "slots": "Overrideable components.",
     "sortingMode": "Sorting can be processed on the server or client-side. Set it to &#39;client&#39; if you would like to handle sorting on the client-side. Set it to &#39;server&#39; if you would like to handle sorting on the server-side.",
     "sortingOrder": "The order of the sorting sequence.",
     "sortModel": "Set the sort model of the grid.",
