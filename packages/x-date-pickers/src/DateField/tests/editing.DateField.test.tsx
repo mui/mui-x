@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import dayjs from 'dayjs';
 import { DateField, DateFieldProps } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import {
@@ -13,6 +14,12 @@ import {
 describe('<DateField /> - Editing', () => {
   const { render, clock } = createPickerRenderer({
     clock: 'fake',
+    clockConfig: new Date(2022, 5, 15),
+  });
+
+  const { render: dayjsRender } = createPickerRenderer({
+    adapterName: 'dayjs',
+    // clock: 'fake',
     clockConfig: new Date(2022, 5, 15),
   });
 
@@ -63,12 +70,14 @@ describe('<DateField /> - Editing', () => {
   const testChange = <TDate extends unknown>({
     keyStrokes,
     cursorPosition = 1,
+    render: testRender = render,
     ...props
   }: DateFieldProps<TDate> & {
     keyStrokes: { value: string; expected: string }[];
     cursorPosition?: number;
+    render?: typeof render;
   }) => {
-    render(<DateField {...props} />);
+    testRender(<DateField {...props} />);
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
 
@@ -415,9 +424,14 @@ describe('<DateField /> - Editing', () => {
       testChange({
         format: 'yy', // This format is not present in any of the adapter formats
         keyStrokes: [
+          // 1st year: 22
           { value: '2', expected: '02' },
           { value: '2', expected: '22' },
+          // 2nd year: 32
           { value: '3', expected: '03' },
+          { value: '2', expected: '32' },
+          // 3rd year: 00
+          { value: '0', expected: '00' },
         ],
       });
     });
@@ -462,6 +476,25 @@ describe('<DateField /> - Editing', () => {
           { value: '2', expected: '0002' },
           { value: '0', expected: '0020' },
           { value: '2', expected: '0202' },
+          { value: '3', expected: '2023' },
+        ],
+      });
+    });
+
+    // TODO: Remove when we can run some tests on several adapters
+    it('should support 4-digits year format when a value is provided (Day.js)', () => {
+      testChange({
+        render: dayjsRender,
+        format: 'YYYY',
+        defaultValue: dayjs(new Date(2022, 5, 4)),
+        keyStrokes: [
+          { value: '2', expected: '2' },
+          { value: '0', expected: '20' },
+          { value: '2', expected: '202' },
+          { value: '2', expected: '2022' },
+          { value: '2', expected: '2' },
+          { value: '0', expected: '20' },
+          { value: '2', expected: '202' },
           { value: '3', expected: '2023' },
         ],
       });

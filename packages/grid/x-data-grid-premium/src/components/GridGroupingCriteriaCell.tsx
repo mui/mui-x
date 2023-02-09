@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
@@ -79,7 +78,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
     <Box className={classes.root} sx={{ ml: marginLeft }}>
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
-          <IconButton
+          <rootProps.components.BaseIconButton
             size="small"
             onClick={handleClick}
             onKeyDown={handleKeyDown}
@@ -89,9 +88,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
+            {...rootProps.componentsProps?.baseIconButton}
           >
             <Icon fontSize="inherit" />
-          </IconButton>
+          </rootProps.components.BaseIconButton>
         )}
       </div>
       {cellContent}
