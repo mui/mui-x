@@ -73,8 +73,8 @@ export const serializeRow = (
   const dataValidation: SerializedRow['dataValidation'] = {};
   const mergedCells: SerializedRow['mergedCells'] = [];
 
-  // const firstCellParams = api.getCellParams(id, columns[0].field);
-  const outlineLevel = 0;
+  const firstCellParams = api.getCellParams(id, columns[0].field);
+  const outlineLevel = firstCellParams.rowNode.depth;
 
   // `colSpan` is only calculated for rendered rows, so we need to calculate it during export for every row
   api.calculateColSpan({
