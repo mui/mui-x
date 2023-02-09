@@ -31,6 +31,7 @@ import { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColu
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
 import { GridColumnGroupingModel } from '../gridColumnGrouping';
 import { GridPaginationModel } from '../gridPaginationProps';
+import { UncapitalizeObjectKeys } from '../../internals/slotsMigration';
 
 export interface GridExperimentalFeatures {
   /**
@@ -62,7 +63,7 @@ export type DataGridProps<R extends GridValidRowModel = any> = Omit<
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
   extends DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPropsWithoutDefaultValue<R> {}
+    Omit<DataGridPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 /**
  * The props of the `DataGrid` component after the pre-processing phase that the user should not be able to override.
@@ -85,7 +86,7 @@ export type DataGridForcedPropsKey =
  * The `DataGrid` options with a default value that must be merged with the value given through props.
  */
 export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
-  components: GridSlotsComponent;
+  slots: UncapitalizeObjectKeys<GridSlotsComponent>;
   localeText: GridLocaleText;
 }
 
@@ -95,8 +96,13 @@ export interface DataGridPropsWithComplexDefaultValueAfterProcessing {
 export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
   /**
    * Overrideable components.
+   * @deprecated Use `slots` instead.
    */
   components?: Partial<GridSlotsComponent>;
+  /**
+   * Overrideable components.
+   */
+  slots?: UncapitalizeObjectKeys<Partial<GridSlotsComponent>>;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui/mui-x/blob/HEAD/packages/grid/x-data-grid/src/constants/localeTextConstants.ts) in the GitHub repository.
@@ -686,6 +692,11 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
   initialState?: GridInitialStateCommunity;
   /**
    * Overrideable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridSlotsComponentsProps;
+  /**
+   * Overrideable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps?: GridSlotsComponentsProps;
   /**
