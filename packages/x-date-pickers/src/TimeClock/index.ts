@@ -16,5 +16,3 @@ export type { TimeClockClasses, TimeClockClassKey } from './timeClockClasses';
 export { clockPointerClasses } from './clockPointerClasses';
 export type { ClockPointerClasses, ClockPointerClassKey } from './clockPointerClasses';
 export type { ClockPointerProps } from './ClockPointer';
-
-export type { TimeView } from '../internals/models';

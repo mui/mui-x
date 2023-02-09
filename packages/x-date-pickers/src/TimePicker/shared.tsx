@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { DefaultizedProps } from '../internals/models/helpers';
-import { TimeView } from '../TimeClock';
+import { TimeView } from '../internals/models/views';
 import { useUtils } from '../internals/hooks/useUtils';
 import {
   TimeClockSlotsComponent,
@@ -21,6 +21,8 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { ExportedDigitalClockProps } from '../DigitalClock/DigitalClock.types';
+import { BaseClockProps } from '../internals/models/props/clock';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -36,12 +38,8 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
 
 export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
-    ExportedTimeClockProps<TDate> {
-  /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
-   */
-  ampm?: boolean;
+    ExportedTimeClockProps<TDate>,
+    ExportedDigitalClockProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -70,7 +68,12 @@ export interface BaseTimePickerProps<TDate>
    * If `undefined`, internally defined view will be the used.
    */
   viewRenderers?: Partial<
-    PickerViewRendererLookup<TDate | null, TimeView, TimeViewRendererProps<TDate, TimeView>, {}>
+    PickerViewRendererLookup<
+      TDate | null,
+      TimeView,
+      TimeViewRendererProps<TimeView, BaseClockProps<TDate>>,
+      {}
+    >
   >;
 }
 

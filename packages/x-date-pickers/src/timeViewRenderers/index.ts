@@ -1,2 +1,2 @@
-export { renderTimeViewClock } from './timeViewRenderers';
+export { renderTimeViewClock, renderTimeViewDigitalClock } from './timeViewRenderers';
 export type { TimeViewRendererProps } from './timeViewRenderers';
