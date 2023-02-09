@@ -98,11 +98,20 @@ export const useMaskedInput = <TInputDate, TDate>({
     const newParsedValue = rawValue === null ? null : utils.date(rawValue);
     const isAcceptedValue = rawValue === null || utils.isValid(newParsedValue);
 
-    const innerEqualsParsed =
-      innerInputValue === null
-        ? newParsedValue === null
-        : newParsedValue !== null &&
-          Math.abs(utils.getDiff(innerInputValue, newParsedValue, 'seconds')) === 0;
+    let innerEqualsParsed = innerInputValue === null && newParsedValue === null; // equal by being both null
+    if (innerInputValue !== null && newParsedValue !== null) {
+      const areEqual = utils.isEqual(innerInputValue, newParsedValue);
+      if (areEqual) {
+        innerEqualsParsed = true;
+      } else {
+        const diff = Math.abs(utils.getDiff(innerInputValue, newParsedValue)); // diff in ms
+
+        innerEqualsParsed =
+          diff === 0
+            ? areEqual // if no diff, use equal to test the time-zone
+            : diff < 1000; // accept a difference bellow 1s
+      }
+    }
 
     if (!localeHasChanged && !inputFormatHasChanged && (!isAcceptedValue || innerEqualsParsed)) {
       return;
