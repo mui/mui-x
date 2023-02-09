@@ -381,7 +381,7 @@ Rename toolbar related translation keys, removing `Default` part from them to be
 npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
-#### `rename-components-to-slots`
+#### `rename-components-to-slots-pickers`
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
@@ -678,6 +678,25 @@ Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
 
 ```sh
 npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
+```
+
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects data grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
