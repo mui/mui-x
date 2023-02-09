@@ -89,7 +89,9 @@ export const useGridColumnReorder = (
 
       dragColNode.current = event.currentTarget;
       dragColNode.current.classList.add(classes.columnHeaderDragging);
-
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+      }
       apiRef.current.setState((state) => ({
         ...state,
         columnReorder: { ...state.columnReorder, dragCol: params.field },
