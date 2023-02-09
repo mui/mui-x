@@ -74,6 +74,7 @@ export const useGridExcelExport = (
         exceljsPostProcess,
         exceljsPreProcess,
         columnsStyles,
+        includeHeaders,
         getRowsToExport = defaultGetRowsToExport,
         valueOptionsSheetName = 'Options',
         ...cloneableOptions

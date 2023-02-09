@@ -481,7 +481,8 @@ export function setupExcelExportWebWorker(
       addColumnGroupingHeaders(worksheet, serializedColumns, columnGroupPaths, columnGroupDetails);
     }
 
-    if (options.includeHeaders) {
+    const includeHeaders = options.includeHeaders ?? true;
+    if (includeHeaders) {
       worksheet.addRow(serializedColumns.map((column) => column.headerText));
     }
 
