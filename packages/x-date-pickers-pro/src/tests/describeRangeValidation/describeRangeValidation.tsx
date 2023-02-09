@@ -32,6 +32,6 @@ function innerDescribeRangeValidation(
  * Tests various aspects of the range picker validation.
  */
 export const describeRangeValidation = createDescribe(
-  'Validation API',
+  'Range pickers validation API',
   innerDescribeRangeValidation,
 );
