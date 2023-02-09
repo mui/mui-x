@@ -38,4 +38,4 @@ function innerDescribeValidation(
 /**
  * Tests various aspects of the picker validation.
  */
-export const describeValidation = createDescribe('Validation API', innerDescribeValidation);
+export const describeValidation = createDescribe('Pickers validation API', innerDescribeValidation);
