@@ -25,6 +25,7 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
+import { DateField, DateFieldProps } from '@mui/x-date-pickers';
 
 export type AdapterName =
   | 'date-fns'
@@ -36,7 +37,7 @@ export type AdapterName =
   // | 'js-joda'
   | 'date-fns-jalali';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
+const availableAdapters: { [key in AdapterName]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
@@ -316,9 +317,11 @@ export const expectInputValue = (
 
 export const buildFieldInteractions = ({
   clock,
+  render,
 }: {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
+  render: ReturnType<typeof createRenderer>['render'];
 }) => {
   const clickOnInput = (
     input: HTMLInputElement,
@@ -338,7 +341,67 @@ export const buildFieldInteractions = ({
     });
   };
 
-  return { clickOnInput };
+  const selectSection = (input: HTMLInputElement, activeSectionIndex: number) => {
+    const value = input.value.replace(':', '/');
+
+    // TODO: Improve this logic when we will be able to access state.sections from the outside
+    let clickPosition: number;
+    if (activeSectionIndex === 0) {
+      clickPosition = 0;
+    } else {
+      clickPosition =
+        (value.split('/', activeSectionIndex - 1).join('/').length +
+          value.split('/', activeSectionIndex).join('/').length) /
+        2;
+    }
+
+    clickOnInput(input, clickPosition);
+  };
+
+  const testFieldKeyPress = <TDate extends unknown>({
+    key,
+    expectedValue,
+    cursorPosition = 1,
+    valueToSelect,
+    ...props
+  }: DateFieldProps<TDate> & {
+    key: string;
+    expectedValue: string;
+    cursorPosition?: number;
+    valueToSelect?: string;
+  }) => {
+    render(<DateField {...props} />);
+    const input = screen.getByRole('textbox');
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
+    userEvent.keyPress(input, { key });
+    expectInputValue(input, expectedValue);
+  };
+
+  const testFieldChange = <TDate extends unknown>({
+    keyStrokes,
+    cursorPosition = 1,
+    ...props
+  }: DateFieldProps<TDate> & {
+    keyStrokes: { value: string; expected: string }[];
+    cursorPosition?: number;
+  }) => {
+    render(<DateField {...props} />);
+    const input = screen.getByRole('textbox');
+    clickOnInput(input, cursorPosition);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(input, keyStroke.expected);
+    });
+  };
+
+  return { clickOnInput, selectSection, testFieldKeyPress, testFieldChange };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {
