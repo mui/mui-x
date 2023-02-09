@@ -6,7 +6,7 @@ import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils
 describe('<DateTimeField /> - TimeZone', () => {
   describe('Value time-zone modification - Luxon', () => {
     const { render, adapter } = createPickerRenderer({ clock: 'fake', adapterName: 'luxon' });
-    it('should update the field when dayjs', () => {
+    it('should update the field when time zone changes (timestamp remains the same)', () => {
       const { setProps } = render(<DateTimeField />);
       const input = screen.getByRole('textbox');
 
