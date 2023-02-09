@@ -2131,6 +2131,40 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.23
+
+_Feb 9, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Brazilian Portuguese (pt-BR) locale
+- 🎉 Add banner and callouts to inform about MUI X v6 beta
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.23` / `@mui/x-data-grid-pro@v5.17.23` / `@mui/x-data-grid-premium@v5.17.23`
+
+#### Changes
+
+- [DataGrid] Allow to customize the value displayed in the filter button tooltip (#7816) @ithrforu
+- [DataGrid] Fix `getCellElement` method not working with pinned columns (#7844) @yaredtsy
+- [DataGrid] Fix stale rows issue in `unstable_replaceRows` (#7694) @MBilalShafi
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#7850) @ed-ateixeira
+
+### `@mui/x-date-pickers@v_5.0.18` / `@mui/x-date-pickers-pro@v_5.0.18`
+
+#### Changes
+
+- [pickers] Update pickers when new value has a distinct timezone (#7853) @alexfauquette
+
+### Docs
+
+- [docs] Add messages in v5 doc to inform people about v6 (#7838) @flaviendelangle
+- [docs] Fix 301 link @oliviertassinari
+
+### Core
+
+- [core] Upgrade monorepo (#7849) @cherniavskii
+
 ## 5.17.22
 
 _Feb 2, 2023_
