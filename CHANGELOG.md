@@ -35,9 +35,9 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - [fields] Fix year editing on `day.js` (#7862) @flaviendelangle
 - [fields] Fix year editing on valid date (#7834) @flaviendelangle
 - [fields] Reset query when pressing `Backspace` or `Delete` (#7855) @flaviendelangle
-- [pickers] Clean popper position on new pickers (#7445) @flaviendelangle
+- [pickers] Clean Popper position on new pickers (#7445) @flaviendelangle
 - [pickers] Ditch pickers `skipLibCheck` (#7808) @LukasTy
-- [pickers] Improve JSDoc and resulting api docs pages (#7847) @LukasTy
+- [pickers] Improve JSDoc and resulting API docs pages (#7847) @LukasTy
 
 ### `@mui/x-codemod@v6.0.0-beta.3`
 
@@ -45,7 +45,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 
 - [codemod] Add more cases to `rename-selectors-and-events` codemod (#7856) @MBilalShafi
 - [codemod] Add warning message to the codemods and migration guide (#7813) @MBilalShafi
-- [codemod] Codemod to remove unnecessary `experimentalFeatures` flag (#7836) @MBilalShafi
+- [codemod] Add codemod to remove unnecessary `experimentalFeatures` flag (#7836) @MBilalShafi
 - [codemod] Rename `GridFilterItem` props (#7483) @MBilalShafi
 - [codemod] Rename `linkOperators` to `logicOperators` (#7707) @MBilalShafi
 - [codemod] Replace `onCellFocusOut` prop for Data Grid (#7786) @MBilalShafi
