@@ -28,7 +28,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 export interface LocalizationProviderProps<TDate> {
   children?: React.ReactNode;
-  /** DateIO adapter class function */
+  /**
+   * Date library adapter class function.
+   * @see See the {@link https://next.mui.com/x/react-date-pickers/adapters-locale/#set-a-custom-locale available adapters page} for more details.
+   */
   dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
   /** Formats that are used for any child pickers */
   dateFormats?: Partial<DateIOFormats>;
@@ -145,7 +148,8 @@ LocalizationProvider.propTypes = {
   adapterLocale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   /**
-   * DateIO adapter class function
+   * Date library adapter class function.
+   * @see See the {@link https://next.mui.com/x/react-date-pickers/adapters-locale/#set-a-custom-locale available adapters page} for more details.
    */
   dateAdapter: PropTypes.func,
   /**
