@@ -26,7 +26,18 @@ function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   });
 }
 
+type P<TValue, C extends PickerComponentFamily> = [
+  React.ElementType,
+  () => DescribeValueOptions<C, TValue>,
+];
+
+type DescribeValue = {
+  <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
+  skip: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+  only: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+};
+
 /**
  * Tests various aspects of the picker value.
  */
-export const describeValue = createDescribe('Value API', innerDescribeValue);
+export const describeValue = createDescribe('Value API', innerDescribeValue) as DescribeValue;
