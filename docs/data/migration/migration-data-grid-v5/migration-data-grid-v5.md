@@ -25,7 +25,7 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
-If we don't take into consideration the removals of the methods and exports, which should be simple and require manual intervention, around 50% of the breaking changes are automatically handled by the `preset-safe` codemod. 🎉
+Not taking i nto consideration the removals of the methods and exports, which should be simple and require manual intervention, around 50% of the breaking changes are automatically handled by the `preset-safe` codemod. 🎉
 
 :::info
 If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
