@@ -2384,28 +2384,10 @@
     prop-types "^15.8.1"
     react-is "^18.2.0"
 
-"@mui/base@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/base":
-  version "5.0.0-alpha.115"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/base#93d2ae3eeb92589cc1ccffb4f1ef8891dadbbd21"
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@emotion/is-prop-valid" "^1.2.0"
-    "@mui/types" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types"
-    "@mui/utils" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils"
-    "@popperjs/core" "^2.11.6"
-    clsx "^1.2.1"
-    prop-types "^15.8.1"
-    react-is "^18.2.0"
-
-"@mui/core-downloads-tracker@^5.11.5":
-  version "5.11.5"
-  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.5.tgz#473c9b918d974f03acc07d29ce467bb91eba13c6"
-  integrity sha512-MIuWGjitOsugpRhp64CQY3ZEVMIu9M/L9ioql6QLSkz73+bGIlC9FEhfi670/GZ8pQIIGmtiGGwofYzlwEWjig==
-
-"@mui/core-downloads-tracker@^5.11.6":
-  version "5.11.6"
-  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.6.tgz#79a60c0d95a08859cccd62a8d9a5336ef477a840"
-  integrity sha512-lbD3qdafBOf2dlqKhOcVRxaPAujX+9UlPC6v8iMugMeAXe0TCgU3QbGXY3zrJsu6ex64WYDpH4y1+WOOBmWMuA==
+"@mui/core-downloads-tracker@^5.11.7":
+  version "5.11.8"
+  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.8.tgz#e1ba16686276b75f501ebe4fd5b60ce600704e3c"
+  integrity sha512-n/uJRIwZAaJaROaOA4VzycxDo27cusnrRzfycnAkAP5gBndwOJQ1CXjd1Y7hJe5eorj/ukixC7IZD+qCClMCMg==
 
 "@mui/icons-material@^5.11.0":
   version "5.11.0"
@@ -2448,35 +2430,10 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/material@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/material":
-  version "5.11.6"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/material#b5b0758e9654f17a679b45f86b16fd6f3d76d554"
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/base" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/base"
-    "@mui/core-downloads-tracker" "^5.11.6"
-    "@mui/system" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/system"
-    "@mui/types" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types"
-    "@mui/utils" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils"
-    "@types/react-transition-group" "^4.4.5"
-    clsx "^1.2.1"
-    csstype "^3.1.1"
-    prop-types "^15.8.1"
-    react-is "^18.2.0"
-    react-transition-group "^4.4.5"
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+  version "5.11.8"
+  resolved "https://github.com/mui/material-ui.git#f800c835562da9cc8fa3f7615b32a8e6cc8b31d8"
 
-"@mui/monorepo@https://github.com/m4theushw/material-ui.git#check-if-document-is-available":
-  version "5.11.6"
-  resolved "https://github.com/m4theushw/material-ui.git#521c0b7781df601fd758506a532b3f532fed7cb3"
-
-<<<<<<< HEAD
-"@mui/private-theming@^5.11.2", "@mui/private-theming@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/private-theming":
-  version "5.11.2"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/private-theming#d114cc21ec82357270fbef703706508d18d5700b"
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/utils" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils"
-=======
 "@mui/private-theming@^5.11.7":
   version "5.11.7"
   resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.11.7.tgz#e92b87d6ea68ae5a23d0f0d9d248361b889a98db"
@@ -2484,12 +2441,12 @@
   dependencies:
     "@babel/runtime" "^7.20.7"
     "@mui/utils" "^5.11.7"
->>>>>>> next
     prop-types "^15.8.1"
 
-"@mui/styled-engine@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/styled-engine":
-  version "5.11.0"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/styled-engine#b623389d64c550c7d5c08c449607abb4060431b2"
+"@mui/styled-engine@^5.11.0":
+  version "5.11.8"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.11.8.tgz#4b0c8c7985b1629f83fdb54dc0883fd07a5d28f0"
+  integrity sha512-iSpZp9AoeictsDi5xAQ4PGXu7mKtQyzMl7ZaWpHIGMFpsNnfY3NQNg+wkj/gpsAZ+Zg+IIyD+t+ig71Kr9fa0w==
   dependencies:
     "@babel/runtime" "^7.20.7"
     "@emotion/cache" "^11.10.5"
@@ -2519,17 +2476,6 @@
     jss-plugin-vendor-prefixer "^10.9.2"
     prop-types "^15.8.1"
 
-<<<<<<< HEAD
-"@mui/system@^5.11.5", "@mui/system@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/system":
-  version "5.11.5"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/system#2d5a4819f788f0547cb8bc90e81cf021ddd6a85c"
-  dependencies:
-    "@babel/runtime" "^7.20.7"
-    "@mui/private-theming" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/private-theming"
-    "@mui/styled-engine" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/styled-engine"
-    "@mui/types" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types"
-    "@mui/utils" "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils"
-=======
 "@mui/system@^5.11.7":
   version "5.11.7"
   resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.11.7.tgz#5e550c621733a18cd437678f11dcd1c3468129d0"
@@ -2540,25 +2486,18 @@
     "@mui/styled-engine" "^5.11.0"
     "@mui/types" "^7.2.3"
     "@mui/utils" "^5.11.7"
->>>>>>> next
     clsx "^1.2.1"
     csstype "^3.1.1"
     prop-types "^15.8.1"
 
-"@mui/types@^7.2.3", "@mui/types@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types":
+"@mui/types@^7.2.3":
   version "7.2.3"
   resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types#2526c52203f38222aa3dac17ebf63502adb771bd"
 
-<<<<<<< HEAD
-"@mui/utils@^5.11.2", "@mui/utils@https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils":
-  version "5.11.2"
-  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/utils#4f4052b7089197ce268ca064545feaa415bfe1e6"
-=======
 "@mui/utils@^5.11.7":
   version "5.11.7"
   resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.11.7.tgz#a343a5d375b4140c875bf4c96825c1a148994800"
   integrity sha512-8uyNDeVHZA804Ego20Erv8TpxlbqTe/EbhTI2H1UYr4/RiIbBprat8W4Qqr2UQIsC/b3DLz+0RQ6R/E5BxEcLA==
->>>>>>> next
   dependencies:
     "@babel/runtime" "^7.20.7"
     "@types/prop-types" "^15.7.5"
