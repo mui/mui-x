@@ -119,28 +119,28 @@ const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, GridToolbarF
     }
 
     return (
-      <rootProps.components.BaseTooltip
+      <rootProps.slots.baseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
         {...other}
-        {...rootProps.componentsProps?.baseTooltip}
+        {...rootProps.slotProps?.baseTooltip}
       >
-        <rootProps.components.BaseButton
+        <rootProps.slots.baseButton
           ref={ref}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
           startIcon={
             <Badge badgeContent={activeFilters.length} color="primary">
-              <rootProps.components.OpenFilterButtonIcon />
+              <rootProps.slots.openFilterButtonIcon />
             </Badge>
           }
           {...buttonProps}
           onClick={toggleFilter}
-          {...rootProps.componentsProps?.baseButton}
+          {...rootProps.slotProps?.baseButton}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
-        </rootProps.components.BaseButton>
-      </rootProps.components.BaseTooltip>
+        </rootProps.slots.baseButton>
+      </rootProps.slots.baseTooltip>
     );
   },
 );

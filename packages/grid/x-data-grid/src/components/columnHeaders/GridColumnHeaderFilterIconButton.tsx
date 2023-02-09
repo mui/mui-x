@@ -63,27 +63,27 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   }
 
   const iconButton = (
-    <rootProps.components.BaseIconButton
+    <rootProps.slots.baseIconButton
       onClick={toggleFilter}
       color="default"
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
       tabIndex={-1}
-      {...rootProps.componentsProps?.baseIconButton}
+      {...rootProps.slotProps?.baseIconButton}
     >
-      <rootProps.components.ColumnFilteredIcon className={classes.icon} fontSize="small" />
-    </rootProps.components.BaseIconButton>
+      <rootProps.slots.columnFilteredIcon className={classes.icon} fontSize="small" />
+    </rootProps.slots.baseIconButton>
   );
 
   return (
-    <rootProps.components.BaseTooltip
+    <rootProps.slots.baseTooltip
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement
       }
       enterDelay={1000}
-      {...rootProps.componentsProps?.baseTooltip}
+      {...rootProps.slotProps?.baseTooltip}
     >
       <GridIconButtonContainer>
         {counter > 1 && (
@@ -94,7 +94,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
 
         {counter === 1 && iconButton}
       </GridIconButtonContainer>
-    </rootProps.components.BaseTooltip>
+    </rootProps.slots.baseTooltip>
   );
 }
 

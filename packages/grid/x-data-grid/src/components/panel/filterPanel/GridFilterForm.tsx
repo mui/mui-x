@@ -234,9 +234,9 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
 
     const hasLogicOperatorColumn: boolean = hasMultipleFilters && logicOperators.length > 0;
 
-    const baseFormControlProps = rootProps.componentsProps?.baseFormControl || {};
+    const baseFormControlProps = rootProps.slotProps?.baseFormControl || {};
 
-    const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+    const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
@@ -374,7 +374,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
       <GridFilterFormRoot ref={ref} className={classes.root} data-id={item.id} {...other}>
         <FilterFormDeleteIcon
           variant="standard"
-          as={rootProps.components.BaseFormControl}
+          as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...deleteIconProps}
           className={clsx(
@@ -383,19 +383,19 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             deleteIconProps.className,
           )}
         >
-          <rootProps.components.BaseIconButton
+          <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             title={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
             onClick={handleDeleteFilter}
             size="small"
-            {...rootProps.componentsProps?.baseIconButton}
+            {...rootProps.slotProps?.baseIconButton}
           >
-            <rootProps.components.FilterPanelDeleteIcon fontSize="small" />
-          </rootProps.components.BaseIconButton>
+            <rootProps.slots.filterPanelDeleteIcon fontSize="small" />
+          </rootProps.slots.baseIconButton>
         </FilterFormDeleteIcon>
         <FilterFormLogicOperatorInput
           variant="standard"
-          as={rootProps.components.BaseFormControl}
+          as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...logicOperatorInputProps}
           sx={{
@@ -410,7 +410,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             logicOperatorInputProps.className,
           )}
         >
-          <rootProps.components.BaseSelect
+          <rootProps.slots.baseSelect
             inputProps={{
               'aria-label': apiRef.current.getLocaleText('filterPanelLogicOperator'),
             }}
@@ -418,18 +418,18 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             onChange={changeLogicOperator}
             disabled={!!disableMultiFilterOperator || logicOperators.length === 1}
             native={isBaseSelectNative}
-            {...rootProps.componentsProps?.baseSelect}
+            {...rootProps.slotProps?.baseSelect}
           >
             {logicOperators.map((logicOperator) => (
               <OptionComponent key={logicOperator.toString()} value={logicOperator.toString()}>
                 {apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))}
               </OptionComponent>
             ))}
-          </rootProps.components.BaseSelect>
+          </rootProps.slots.baseSelect>
         </FilterFormLogicOperatorInput>
         <FilterFormColumnInput
           variant="standard"
-          as={rootProps.components.BaseFormControl}
+          as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...columnInputProps}
           className={clsx(
@@ -441,25 +441,25 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
             {apiRef.current.getLocaleText('filterPanelColumns')}
           </InputLabel>
-          <rootProps.components.BaseSelect
+          <rootProps.slots.baseSelect
             labelId={columnSelectLabelId}
             id={columnSelectId}
             label={apiRef.current.getLocaleText('filterPanelColumns')}
             value={item.field || ''}
             onChange={changeColumn}
             native={isBaseSelectNative}
-            {...rootProps.componentsProps?.baseSelect}
+            {...rootProps.slotProps?.baseSelect}
           >
             {sortedFilteredColumns.map((col) => (
               <OptionComponent key={col.field} value={col.field}>
                 {getColumnLabel(col)}
               </OptionComponent>
             ))}
-          </rootProps.components.BaseSelect>
+          </rootProps.slots.baseSelect>
         </FilterFormColumnInput>
         <FilterFormOperatorInput
           variant="standard"
-          as={rootProps.components.BaseFormControl}
+          as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...operatorInputProps}
           className={clsx(
@@ -471,7 +471,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
             {apiRef.current.getLocaleText('filterPanelOperator')}
           </InputLabel>
-          <rootProps.components.BaseSelect
+          <rootProps.slots.baseSelect
             labelId={operatorSelectLabelId}
             label={apiRef.current.getLocaleText('filterPanelOperator')}
             id={operatorSelectId}
@@ -479,7 +479,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
             onChange={changeOperator}
             native={isBaseSelectNative}
             inputRef={filterSelectorRef}
-            {...rootProps.componentsProps?.baseSelect}
+            {...rootProps.slotProps?.baseSelect}
           >
             {currentColumn?.filterOperators?.map((operator) => (
               <OptionComponent key={operator.value} value={operator.value}>
@@ -489,11 +489,11 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
                   )}
               </OptionComponent>
             ))}
-          </rootProps.components.BaseSelect>
+          </rootProps.slots.baseSelect>
         </FilterFormOperatorInput>
         <FilterFormValueInput
           variant="standard"
-          as={rootProps.components.BaseFormControl}
+          as={rootProps.slots.baseFormControl}
           {...baseFormControlProps}
           {...valueInputPropsOther}
           className={clsx(

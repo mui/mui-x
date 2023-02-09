@@ -124,7 +124,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
 
   return (
     <GridToolbarQuickFilterRoot
-      as={rootProps.components.BaseTextField}
+      as={rootProps.slots.baseTextField}
       variant="standard"
       value={searchValue}
       onChange={handleSearchValueChange}
@@ -132,21 +132,21 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       aria-label={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
       type="search"
       InputProps={{
-        startAdornment: <rootProps.components.QuickFilterIcon fontSize="small" />,
+        startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
         endAdornment: (
-          <rootProps.components.BaseIconButton
+          <rootProps.slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
             sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={handleSearchReset}
-            {...rootProps.componentsProps?.baseIconButton}
+            {...rootProps.slotProps?.baseIconButton}
           >
-            <rootProps.components.QuickFilterClearIcon fontSize="small" />
-          </rootProps.components.BaseIconButton>
+            <rootProps.slots.quickFilterClearIcon fontSize="small" />
+          </rootProps.slots.baseIconButton>
         ),
       }}
       {...other}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     />
   );
 }
