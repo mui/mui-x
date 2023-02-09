@@ -13,7 +13,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 - ⚡️ Improve grid resize performance (#7864) @cherniavskii
 - ✨ New codemods for migrating to v6 @MBilalShafi
 - 📚 Documentation improvements
-- 🐞 Bug fixes
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v6.0.0-beta.3` / `@mui/x-data-grid-pro@v6.0.0-beta.3` / `@mui/x-data-grid-premium@v6.0.0-beta.3`
 
