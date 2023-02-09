@@ -399,6 +399,19 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  {
+    pathname: '/x/react-charts-group',
+    title: 'Charts 🚧',
+    icon: 'ChartIcon',
+    children: [
+      { pathname: '/x/react-charts', title: '🚧 Overview' },
+      { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
+      { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+      { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
+      { pathname: '/x/react-charts/pie', title: '🚧 Pie' },
+    ],
+  },
+  
 ];
 
 export default pages;
