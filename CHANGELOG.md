@@ -60,6 +60,7 @@ We'd like to offer a big thanks to the 11 contributors who made this release pos
 ### Core
 
 - [core] Remove `tslint` package leftovers (#7841) @LukasTy
+- [test] Use `createDescribes` for `describeValue` and `describeValidation` (#7866) @flaviendelangle
 
 ## 6.0.0-beta.2
 
