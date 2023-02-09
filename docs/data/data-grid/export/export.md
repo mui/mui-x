@@ -304,6 +304,11 @@ In the following demo, both methods are used to set a custom header and a custom
 
 ### Using a web worker
 
+:::warning
+This feature only works with `@mui/styled-engine` v5.11.8 or newer.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+:::
+
 Instead of generating the Excel file locally, you can delegate the task to a web worker.
 This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
 To start using web workers for the Excel export, first you need to create a file with the content below.
