@@ -18,7 +18,7 @@ import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
-import { clamp, isDeepEqual } from '../../../utils/utils';
+import { clamp } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
@@ -76,6 +76,15 @@ export const getRenderableIndexes = ({
     clamp(firstIndex - buffer, minFirstIndex, maxLastIndex),
     clamp(lastIndex + buffer, minFirstIndex, maxLastIndex),
   ];
+};
+
+const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
+  if (context1 === context2) {
+    return true;
+  }
+  return (Object.keys(context1) as Array<keyof GridRenderContext>).every(
+    (key) => context1[key] === context2[key],
+  );
 };
 
 interface UseGridVirtualScrollerProps {
@@ -293,7 +302,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
-      if (isDeepEqual(prevRenderContext.current, nextRenderContext)) {
+      if (
+        prevRenderContext.current &&
+        areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
+      ) {
         return;
       }
       setRenderContext(nextRenderContext);
