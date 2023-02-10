@@ -5,7 +5,7 @@ title: Charts - Bars
 
 # Charts - Bars
 
-<p class="description">Bar charts express quantities through a bar’s length, using a common baseline.</p>
+<p class="description">Bar charts express quantities through a bar's length, using a common baseline.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
