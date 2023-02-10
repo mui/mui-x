@@ -4,7 +4,7 @@
   paginationModel={paginationModel}
   onPaginationModelChange={setPaginationModel}
   hideFooter
-  components={{
-    Toolbar,
+  slots={{
+    toolbar: Toolbar,
   }}
 />

@@ -94,8 +94,8 @@ export default function CustomRatingOperator() {
       <DataGrid
         {...data}
         columns={columns}
-        components={{
-          Toolbar: GridToolbarFilterButton,
+        slots={{
+          toolbar: GridToolbarFilterButton,
         }}
         initialState={{
           ...data.initialState,

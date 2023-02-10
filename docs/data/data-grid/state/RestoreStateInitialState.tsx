@@ -63,8 +63,8 @@ export default function RestoreStateInitialState() {
         <DataGridPro
           {...data}
           loading={loading}
-          components={{ Toolbar: GridCustomToolbar }}
-          componentsProps={{ toolbar: { syncState } }}
+          slots={{ toolbar: GridCustomToolbar }}
+          slotProps={{ toolbar: { syncState } }}
         />
       </Box>
       <Box sx={{ height: 300 }}>

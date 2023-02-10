@@ -75,7 +75,7 @@ export default function CsvGetRowsToExport() {
       <DataGrid
         {...data}
         loading={loading}
-        components={{ Toolbar: CustomToolbar }}
+        slots={{ toolbar: CustomToolbar }}
         pageSizeOptions={[10]}
         initialState={{
           ...data.initialState,

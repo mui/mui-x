@@ -1,7 +1,7 @@
 <DataGrid
   {...data}
-  components={{
-    Toolbar: CustomToolbar,
+  slots={{
+    toolbar: CustomToolbar,
   }}
   initialState={{
     ...data.initialState,

@@ -51,7 +51,7 @@ export default function DataGridPremiumDemo() {
         loading={loading}
         disableRowSelectionOnClick
         initialState={initialState}
-        components={{ Toolbar: GridToolbar }}
+        slots={{ toolbar: GridToolbar }}
       />
     </Box>
   );

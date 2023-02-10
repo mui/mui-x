@@ -89,7 +89,7 @@ export default function RowContextMenu() {
       <DataGrid
         columns={columns}
         rows={rows}
-        componentsProps={{
+        slotProps={{
           row: {
             onContextMenu: handleContextMenu,
             style: { cursor: 'context-menu' },

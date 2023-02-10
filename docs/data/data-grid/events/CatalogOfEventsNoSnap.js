@@ -141,8 +141,8 @@ export default function CatalogOfEventsNoSnap() {
       getRowHeight={() => 'auto'}
       disableRowSelection
       hideFooter
-      components={{
-        Toolbar,
+      slots={{
+        toolbar: Toolbar,
       }}
       sx={{
         '&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell': { py: '8px' },
