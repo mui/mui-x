@@ -38,12 +38,9 @@ The component is available in four variants:
 
 - The `DesktopDateTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
-
 - The `MobileDateTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
-
 - The `DateTimePicker` component which renders `DesktopDateTimePicker` or `MobileDateTimePicker` depending on the device it runs on.
-
 - The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}

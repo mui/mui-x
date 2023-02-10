@@ -37,12 +37,9 @@ The component is available in four variants:
 
 - The `DesktopDateRangePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
-
 - The `MobileDateRangePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
-
 - The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
-
 - The `StaticDateRangePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateRangePickers.js"}}

@@ -37,12 +37,9 @@ The component is available in four variants:
 
 - The `DesktopTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
-
 - The `MobileTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
-
 - The `TimePicker` component which renders `DesktopTimePicker` or `MobileTimePicker` depending on the device it runs on.
-
 - The `StaticTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveTimePickers.js"}}
