@@ -264,6 +264,7 @@ GridColumnsPanel.propTypes = {
   // ----------------------------------------------------------------------
   autoFocusSearchField: PropTypes.bool,
   searchPredicate: PropTypes.func,
+  slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 
