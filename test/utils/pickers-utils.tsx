@@ -314,19 +314,44 @@ export const expectInputValue = (
   return expect(value).to.equal(expectedValue);
 };
 
-export const buildFieldInteractions = <P extends {}>({
-  clock,
-  render,
-                                         FieldComponent,
-}: {
+interface BuildFieldInteractionsParams<P extends {}> {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
   render: ReturnType<typeof createRenderer>['render'];
-  FieldComponent: React.FunctionComponent<P>;
-}) => {
-  const clickOnInput = (
+  Component: React.FunctionComponent<P>;
+}
+
+export interface BuildFieldInteractionsResponse<P extends {}> {
+  clickOnInput: (
     input: HTMLInputElement,
     cursorStartPosition: number,
+    cursorEndPosition?: number,
+  ) => void;
+  selectSection: (input: HTMLInputElement, activeSectionIndex: number) => void;
+  testFieldKeyPress: (
+    params: P & {
+      key: string;
+      expectedValue: string;
+      cursorPosition?: number;
+      valueToSelect?: string;
+    },
+  ) => void;
+  testFieldChange: (
+    params: P & {
+      keyStrokes: { value: string; expected: string }[];
+      cursorPosition?: number;
+    },
+  ) => void;
+}
+
+export const buildFieldInteractions = <P extends {}>({
+  clock,
+  render,
+  Component,
+}: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
+  const clickOnInput: BuildFieldInteractionsResponse<P>['clickOnInput'] = (
+    input,
+    cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
     act(() => {
@@ -342,7 +367,10 @@ export const buildFieldInteractions = <P extends {}>({
     });
   };
 
-  const selectSection = (input: HTMLInputElement, activeSectionIndex: number) => {
+  const selectSection: BuildFieldInteractionsResponse<P>['selectSection'] = (
+    input,
+    activeSectionIndex,
+  ) => {
     const value = input.value.replace(':', '/');
 
     // TODO: Improve this logic when we will be able to access state.sections from the outside
@@ -359,19 +387,14 @@ export const buildFieldInteractions = <P extends {}>({
     clickOnInput(input, clickPosition);
   };
 
-  const testFieldKeyPress = ({
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
     key,
     expectedValue,
     cursorPosition = 1,
     valueToSelect,
     ...props
-  }: P & {
-    key: string;
-    expectedValue: string;
-    cursorPosition?: number;
-    valueToSelect?: string;
   }) => {
-    render(<FieldComponent {...props as any as P} />);
+    render(<Component {...(props as any as P)} />);
     const input = screen.getByRole('textbox');
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
@@ -384,15 +407,12 @@ export const buildFieldInteractions = <P extends {}>({
     expectInputValue(input, expectedValue);
   };
 
-  const testFieldChange = ({
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
     keyStrokes,
     cursorPosition = 1,
     ...props
-  }: P & {
-    keyStrokes: { value: string; expected: string }[];
-    cursorPosition?: number;
   }) => {
-    render(<FieldComponent {...props as any as P} />);
+    render(<Component {...(props as any as P)} />);
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
 

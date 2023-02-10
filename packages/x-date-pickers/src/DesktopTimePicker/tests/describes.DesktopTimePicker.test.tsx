@@ -14,7 +14,7 @@ import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 describe('<DesktopTimePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopTimePicker });
 
   describeValidation(DesktopTimePicker, () => ({
     render,

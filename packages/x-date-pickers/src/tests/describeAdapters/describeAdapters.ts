@@ -1,21 +1,24 @@
-import * as React from 'react'
+import * as React from 'react';
 import moment from 'moment';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import {
   AdapterName,
   buildFieldInteractions,
+  BuildFieldInteractionsResponse,
   createPickerRenderer,
 } from 'test/utils/pickers-utils';
 
-type AdapterTestRunner = (
+type AdapterTestRunner<P extends {}> = (
   params: ReturnType<typeof createPickerRenderer> &
-    ReturnType<typeof buildFieldInteractions> & { adapterName: AdapterName },
+    BuildFieldInteractionsResponse<P> & { adapterName: AdapterName },
 ) => void;
 
 const ADAPTERS: AdapterName[] = ['dayjs', 'date-fns', 'luxon', 'moment'];
 
 function innerDescribeAdapters<P extends {}>(
-  title: string, FieldComponent: React.FunctionComponent<P>, testRunner: AdapterTestRunner,
+  title: string,
+  FieldComponent: React.FunctionComponent<P>,
+  testRunner: AdapterTestRunner<P>,
 ) {
   ADAPTERS.forEach((adapterName) => {
     describe(`${title} - adapter: ${adapterName}`, () => {
@@ -32,7 +35,7 @@ function innerDescribeAdapters<P extends {}>(
       const fieldInteractions = buildFieldInteractions<P>({
         clock: pickerRendererResponse.clock,
         render: pickerRendererResponse.render,
-        FieldComponent,
+        Component: FieldComponent,
       });
 
       testRunner({ adapterName, ...pickerRendererResponse, ...fieldInteractions });
@@ -40,4 +43,15 @@ function innerDescribeAdapters<P extends {}>(
   });
 }
 
-export const describeAdapters = createDescribe('Adapter specific tests', innerDescribeAdapters);
+type Params<P extends {}> = [string, React.FunctionComponent<P>, AdapterTestRunner<P>];
+
+type DescribeAdapters = {
+  <P extends {}>(...args: Params<P>): void;
+  skip: <P extends {}>(...args: Params<P>) => void;
+  only: <P extends {}>(...args: Params<P>) => void;
+};
+
+export const describeAdapters = createDescribe(
+  'Adapter specific tests',
+  innerDescribeAdapters,
+) as DescribeAdapters;

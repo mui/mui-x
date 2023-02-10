@@ -307,7 +307,7 @@ export const getSectionVisibleValue = (
     willBeRenderedInInput &&
     section.contentType === 'digit' &&
     !section.hasTrailingZeroes &&
-    section.value.length === 1
+    value.length === 1
   ) {
     return `\u2068${value}\u200e\u2069`;
   }
