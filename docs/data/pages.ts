@@ -407,11 +407,14 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts', title: '🚧 Overview' },
       { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
       { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+      { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
       { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
-      { pathname: '/x/react-charts/pie', title: '🚧 Pie' },
+      { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
+      { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+      { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
+      { pathname: '/x/react-charts/tree-map', title: '🚧 TreeMap' },
     ],
   },
-  
 ];
 
 export default pages;
