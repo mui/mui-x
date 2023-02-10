@@ -264,7 +264,17 @@ GridColumnsPanel.propTypes = {
   // ----------------------------------------------------------------------
   autoFocusSearchField: PropTypes.bool,
   searchPredicate: PropTypes.func,
-  slotProps: PropTypes.object,
+  slotProps: PropTypes.shape({
+    TrapFocus: PropTypes.shape({
+      children: PropTypes.element.isRequired,
+      disableAutoFocus: PropTypes.bool,
+      disableEnforceFocus: PropTypes.bool,
+      disableRestoreFocus: PropTypes.bool,
+      getTabbable: PropTypes.func,
+      isEnabled: PropTypes.func,
+      open: PropTypes.bool.isRequired,
+    }),
+  }),
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 
