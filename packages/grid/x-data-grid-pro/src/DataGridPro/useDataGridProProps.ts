@@ -56,12 +56,11 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     }
 
     type GridSlot = keyof UncapitalizedGridProSlotsComponent;
-
     return Object.entries(uncapitalizedDefaultSlots).reduce((acc, [key, defaultComponent]) => {
-      const overrideComponent = overrides[key as GridSlot];
-      acc[key as GridSlot] = overrideComponent === undefined ? defaultComponent : overrideComponent;
-      return acc;
-    }, {} as any);
+      const override = overrides[key as GridSlot];
+      const component = override !== undefined ? override : defaultComponent;
+      return { ...acc, [key as GridSlot]: component };
+    }, {} as UncapitalizedGridProSlotsComponent);
   }, [themedProps.components, themedProps.slots]);
 
   return React.useMemo<DataGridProProcessedProps<R>>(

@@ -50,12 +50,11 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     }
 
     type GridSlot = keyof UncapitalizedGridPremiumSlotsComponent;
-
     return Object.entries(uncapitalizedDefaultSlots).reduce((acc, [key, defaultComponent]) => {
-      const overrideComponent = overrides[key as GridSlot];
-      acc[key as GridSlot] = overrideComponent === undefined ? defaultComponent : overrideComponent;
-      return acc;
-    }, {} as any);
+      const override = overrides[key as GridSlot];
+      const component = override !== undefined ? override : defaultComponent;
+      return { ...acc, [key as GridSlot]: component };
+    }, {} as UncapitalizedGridPremiumSlotsComponent);
   }, [themedProps.components, themedProps.slots]);
 
   return React.useMemo<DataGridPremiumProcessedProps>(
