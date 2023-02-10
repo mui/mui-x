@@ -242,6 +242,7 @@ export const useFieldState = <
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
+      tempValueStrAndroid: null,
       ...newValue,
     }));
   };

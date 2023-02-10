@@ -8,6 +8,11 @@ import {
   gridExpandedRowCountSelector,
   gridFilteredSortedTopLevelRowEntriesSelector,
   gridFilteredTopLevelRowCountSelector,
+  gridColumnFieldsSelector,
+  gridColumnDefinitionsSelector,
+  gridVisibleColumnDefinitionsSelector,
+  gridFilterableColumnDefinitionsSelector,
+  getGridNumericOperators,
 } from '@mui/x-data-grid';
 
 const useGridSelector = (apiRef, selector) => {};
@@ -22,6 +27,11 @@ function App () {
   const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
   const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
+  const allGridColumnsFields = useGridSelector(apiRef, gridColumnFieldsSelector);
+  const allGridColumns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
+  const visibleGridColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
+  const filterableGridColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
+  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericOperators);
   return <DataGrid />;
 }
 
