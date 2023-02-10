@@ -921,17 +921,21 @@ describe('<DateField /> - Editing', () => {
 
       clickOnInput(input, sectionStart, sectionStart + 1);
 
-      // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+      act(() => {
+        // Remove the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
 
-      // // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '2') } });
+        // // Set the key pressed in the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('16', '2') } });
+      });
 
-      // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+      act(() => {
+        // Remove the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
 
-      // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '1') } });
+        // Set the key pressed in the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('16', '1') } });
+      });
 
       expectInputValue(input, '05 / 21 / 2022');
     });
@@ -950,17 +954,21 @@ describe('<DateField /> - Editing', () => {
 
       clickOnInput(input, sectionStart, sectionStart + 1);
 
-      // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+      act(() => {
+        // Remove the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
 
-      // // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'J') } });
+        // // Set the key pressed in the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'J') } });
+      });
 
-      // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
+      act(() => {
+        // Remove the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('May', '') } });
 
-      // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'u') } });
+        // Set the key pressed in the selected section
+        fireEvent.change(input, { target: { value: initialValueStr.replace('May', 'u') } });
+      });
 
       expectInputValue(input, 'June 2022');
     });
