@@ -16,7 +16,6 @@ Using `next` ensures that it will always use the latest v6 alpha release, but yo
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
-It should be only applied **once per folder.**
 
 ```sh
 // Data Grid specific
@@ -25,13 +24,15 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
-Not taking into consideration the removals of the methods and exports, as they should be simple and require manual intervention, around 50% of the breaking changes are automatically handled by the `preset-safe` codemod. 🎉
-
-:::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::success
+Not taking into consideration the removals of the methods and exports, as they should be simple and require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod. 🎉
 :::
 
-Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
+:::info
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::
+
+Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
 If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
