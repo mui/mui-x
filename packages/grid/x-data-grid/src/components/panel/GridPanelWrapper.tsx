@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import TrapFocus, { TrapFocusProps } from '@mui/material/Unstable_TrapFocus';
 import { styled, Theme } from '@mui/material/styles';
@@ -36,14 +37,16 @@ const GridPanelWrapperRoot = styled('div', {
 const isEnabled = () => true;
 
 export interface GridPanelWrapperProps
-  extends React.PropsWithChildren<
-      React.HTMLAttributes<HTMLDivElement> & { slotProps:any }
-    >,
-    MUIStyledCommonProps<Theme> {}
+  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
+    MUIStyledCommonProps<Theme> {
+  slotProps?: {
+    TrapFocus?: TrapFocusProps;
+  };
+}
 
 const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
-    const { className, slotProps, ...other } = props;
+    const { className, slotProps = {}, ...other } = props;
     const rootProps = useGridRootProps();
     const ownerState = { classes: rootProps.classes };
     const classes = useUtilityClasses(ownerState);
@@ -60,5 +63,13 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
     );
   },
 );
+
+GridPanelWrapper.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  slotProps: PropTypes.object,
+} as any;
 
 export { GridPanelWrapper };
