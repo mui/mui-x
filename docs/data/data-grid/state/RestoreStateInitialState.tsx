@@ -27,9 +27,9 @@ function GridCustomToolbar({
       <GridToolbarDensitySelector />
       <Button
         size="small"
-        startIcon={<rootProps.components.ColumnSelectorIcon />}
+        startIcon={<rootProps.slots.columnSelectorIcon />}
         onClick={() => syncState(apiRef.current.exportState())}
-        {...rootProps.componentsProps?.baseButton}
+        {...rootProps.slotProps?.baseButton}
       >
         Recreate the 2nd grid
       </Button>

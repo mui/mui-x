@@ -108,7 +108,7 @@ export default function RowContextMenu() {
             ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
             : undefined
         }
-        componentsProps={{
+        slotProps={{
           root: {
             onContextMenu: (e) => {
               e.preventDefault();
