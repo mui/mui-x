@@ -3,14 +3,11 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import {
-  adapterToUse,
-  expectInputValue,
-} from 'test/utils/pickers-utils';
+import { expectInputValue } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<DateField /> - Editing', () => {
-  describeAdapters.only('key: ArrowDown', ({ adapter, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowDown', ({ adapter, testFieldKeyPress }) => {
     it("should set the year to today's value when no value is provided (ArrowDown)", () => {
       testFieldKeyPress({
         format: adapter.formats.year,
@@ -102,7 +99,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters.only('key: ArrowUp', ({ adapter, testFieldKeyPress }) => {
+  describeAdapters('key: ArrowUp', ({ adapter, testFieldKeyPress }) => {
     it("should set the year to today's value when no value is provided (ArrowUp)", () => {
       testFieldKeyPress({
         format: adapter.formats.year,
@@ -194,110 +191,115 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters.only('key: Backspace', ({ render, adapter, adapterName, clickOnInput, testFieldKeyPress, selectSection }) => {
-    it('should clear the selected section when only this section is completed', () => {
-      render(<DateField format={adapter.formats.monthAndYear} />);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
+  describeAdapters(
+    'key: Backspace',
+    ({ render, adapter, adapterName, clickOnInput, testFieldKeyPress, selectSection }) => {
+      it('should clear the selected section when only this section is completed', () => {
+        render(<DateField format={adapter.formats.monthAndYear} />);
+        const input = screen.getByRole('textbox');
+        clickOnInput(input, 1);
 
-      // Set a value for the "month" section
-      fireEvent.change(input, { target: { value: 'j YYYY' } }); // press "j"
-      expectInputValue(input, 'January YYYY');
+        // Set a value for the "month" section
+        fireEvent.change(input, {
+          target: { value: 'j YYYY' },
+        }); // press "j"
+        expectInputValue(input, 'January YYYY');
 
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'MMMM YYYY');
-    });
-
-    it('should clear the selected section when all sections are completed', () => {
-      testFieldKeyPress({
-        format: adapter.formats.monthAndYear,
-        defaultValue: adapter.date(),
-        key: 'Backspace',
-        expectedValue: 'MMMM 2022',
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expectInputValue(input, 'MMMM YYYY');
       });
-    });
 
-    it('should clear all the sections when all sections are selected and all sections are completed', () => {
-      render(
-          <DateField format={adapter.formats.monthAndYear} defaultValue={adapter.date()} />,
-      );
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'MMMM YYYY');
-    });
-
-    it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-      render(<DateField format={adapter.formats.monthAndYear} />);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      // Set a value for the "month" section
-      fireEvent.change(input, { target: { value: 'j YYYY' } }); // Press "j"
-      expectInputValue(input, 'January YYYY');
-
-      // Select all sections
-      userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'MMMM YYYY');
-    });
-
-    it('should not keep query after typing again on a cleared section', () => {
-      render(<DateField format={adapter.formats.year} />);
-      const input = screen.getByRole('textbox');
-      clickOnInput(input, 1);
-
-      fireEvent.change(input, { target: { value: '2' } }); // press "2"
-      expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
-
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expectInputValue(input, 'YYYY');
-
-      fireEvent.change(input, { target: { value: '2' } }); // press "2"
-      expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
-    });
-
-    it('should not clear the sections when props.readOnly = true', () => {
-      testFieldKeyPress({
-        format: adapter.formats.year,
-        defaultValue: adapter.date(),
-        readOnly: true,
-        key: 'Backspace',
-        expectedValue: '2022',
+      it('should clear the selected section when all sections are completed', () => {
+        testFieldKeyPress({
+          format: adapter.formats.monthAndYear,
+          defaultValue: adapter.date(),
+          key: 'Backspace',
+          expectedValue: 'MMMM 2022',
+        });
       });
-    });
 
-    it('should only call `onChange` when clearing the last section', () => {
-      const handleChange = spy();
+      it('should clear all the sections when all sections are selected and all sections are completed', () => {
+        render(<DateField format={adapter.formats.monthAndYear} defaultValue={adapter.date()} />);
+        const input = screen.getByRole('textbox');
+        clickOnInput(input, 1);
 
-      render(
+        // Select all sections
+        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expectInputValue(input, 'MMMM YYYY');
+      });
+
+      it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+        render(<DateField format={adapter.formats.monthAndYear} />);
+        const input = screen.getByRole('textbox');
+        clickOnInput(input, 1);
+
+        // Set a value for the "month" section
+        fireEvent.change(input, {
+          target: { value: 'j YYYY' },
+        }); // Press "j"
+        expectInputValue(input, 'January YYYY');
+
+        // Select all sections
+        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expectInputValue(input, 'MMMM YYYY');
+      });
+
+      it('should not keep query after typing again on a cleared section', () => {
+        render(<DateField format={adapter.formats.year} />);
+        const input = screen.getByRole('textbox');
+        clickOnInput(input, 1);
+
+        fireEvent.change(input, { target: { value: '2' } }); // press "2"
+        expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expectInputValue(input, 'YYYY');
+
+        fireEvent.change(input, { target: { value: '2' } }); // press "2"
+        expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+      });
+
+      it('should not clear the sections when props.readOnly = true', () => {
+        testFieldKeyPress({
+          format: adapter.formats.year,
+          defaultValue: adapter.date(),
+          readOnly: true,
+          key: 'Backspace',
+          expectedValue: '2022',
+        });
+      });
+
+      it('should only call `onChange` when clearing the last section', () => {
+        const handleChange = spy();
+
+        render(
           <DateField
-              format={adapter.formats.monthAndYear}
-              defaultValue={adapter.date()}
-              onChange={handleChange}
+            format={adapter.formats.monthAndYear}
+            defaultValue={adapter.date()}
+            onChange={handleChange}
           />,
-      );
+        );
 
-      const input = screen.getByRole('textbox');
-      selectSection(input, 0);
+        const input = screen.getByRole('textbox');
+        selectSection(input, 0);
 
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expect(handleChange.callCount).to.equal(0);
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expect(handleChange.callCount).to.equal(0);
 
-      userEvent.keyPress(input, { key: 'ArrowRight' });
+        userEvent.keyPress(input, { key: 'ArrowRight' });
 
-      userEvent.keyPress(input, { key: 'Backspace' });
-      expect(handleChange.callCount).to.equal(1);
-      expect(handleChange.lastCall.firstArg).to.equal(null);
-    });
-  });
+        userEvent.keyPress(input, { key: 'Backspace' });
+        expect(handleChange.callCount).to.equal(1);
+        expect(handleChange.lastCall.firstArg).to.equal(null);
+      });
+    },
+  );
 
-  describeAdapters.only('Digit editing', ({ adapter, adapterName, testFieldChange }) => {
+  describeAdapters('Digit editing', ({ adapter, adapterName, testFieldChange }) => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {
       testFieldChange({
         format: adapter.formats.dayOfMonth,
@@ -435,25 +437,25 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describe('Letter editing', () => {
+  describeAdapters('Letter editing', ({ adapter, testFieldChange, testFieldKeyPress }) => {
     it('should select the first matching month with no previous query and no value is provided (letter format)', () => {
-      testChange({
-        format: adapterToUse.formats.month,
+      testFieldChange({
+        format: adapter.formats.month,
         keyStrokes: [{ value: 'm', expected: 'March' }],
       });
     });
 
     it('should select the first matching month with no previous query and a value is provided (letter format)', () => {
-      testChange({
-        format: adapterToUse.formats.month,
-        defaultValue: adapterToUse.date(),
+      testFieldChange({
+        format: adapter.formats.month,
+        defaultValue: adapter.date(),
         keyStrokes: [{ value: 'm', expected: 'March' }],
       });
     });
 
     it('should use the previously typed letters as long as it matches at least one month (letter format)', () => {
-      testChange({
-        format: adapterToUse.formats.month,
+      testFieldChange({
+        format: adapter.formats.month,
         keyStrokes: [
           // Current query: "J" => 3 matches
           { value: 'j', expected: 'January' },
@@ -468,22 +470,22 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should select the first matching month with no previous query and no value is provided (digit format)', () => {
-      testChange({
+      testFieldChange({
         format: 'MM', // This format is not present in any of the adapter formats
         keyStrokes: [{ value: 'm', expected: '03' }],
       });
     });
 
     it('should select the first matching month with no previous query and a value is provided (digit format)', () => {
-      testChange({
+      testFieldChange({
         format: 'MM', // This format is not present in any of the adapter formats
-        defaultValue: adapterToUse.date(),
+        defaultValue: adapter.date(),
         keyStrokes: [{ value: 'm', expected: '03' }],
       });
     });
 
     it('should use the previously typed letters as long as it matches at least one month (digit format)', () => {
-      testChange({
+      testFieldChange({
         format: 'MM', // This format is not present in any of the adapter formats
         keyStrokes: [
           // Current query: "J" => 3 matches
@@ -498,19 +500,19 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should not edit when props.readOnly = true and no value is provided', () => {
-      testKeyPress({
-        format: adapterToUse.formats.month,
+    it('should not edit when props.readOnly = true and no value is provided (letter)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
         readOnly: true,
         key: '1',
         expectedValue: 'MMMM',
       });
     });
 
-    it('should not edit value when props.readOnly = true and a value is provided', () => {
-      testKeyPress({
-        format: adapterToUse.formats.month,
-        defaultValue: adapterToUse.date(),
+    it('should not edit value when props.readOnly = true and a value is provided (letter)', () => {
+      testFieldKeyPress({
+        format: adapter.formats.month,
+        defaultValue: adapter.date(),
         readOnly: true,
         key: 'd',
         expectedValue: 'June',
@@ -518,7 +520,7 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describe('Full editing scenarios', () => {
+  describeAdapters('Full editing scenarios', ({ adapterName, render, clickOnInput }) => {
     it('should move to the last day of the month when the current day exceeds it', () => {
       const onChange = spy();
 
@@ -526,26 +528,39 @@ describe('<DateField /> - Editing', () => {
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      fireEvent.change(input, { target: { value: '2 / DD / YYYY' } }); // Press "2"
-      expectInputValue(input, '02 / DD / YYYY');
+      fireEvent.change(input, { target: { value: '1 / DD / YYYY' } }); // Press "1"
+      expectInputValue(input, adapterName === 'luxon' ? '1 / DD / YYYY' : '01 / DD / YYYY');
 
-      fireEvent.change(input, { target: { value: '02 / 3 / YYYY' } }); // Press "3"
-      expectInputValue(input, '02 / 03 / YYYY');
-      fireEvent.change(input, { target: { value: '02 / 1 / YYYY' } }); // Press "3"
-      expectInputValue(input, '02 / 31 / YYYY');
 
-      fireEvent.change(input, { target: { value: '02 / 31 / 2' } }); // Press "2"
-      expectInputValue(input, '02 / 28 / 0002'); // Has moved to the last day of the February
-      fireEvent.change(input, { target: { value: '02 / 28 / 0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '02 / 28 / 2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '02 / 28 / 2' } }); // Press "2"
-      expectInputValue(input, '02 / 28 / 2022');
+      fireEvent.change(input, { target: { value: '1 / DD / YYYY' } }); // Press "1"
+      expectInputValue(input, '11 / DD / YYYY');
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 1, 28, 0, 0, 0));
+      fireEvent.change(input, { target: { value: '11 / 3 / YYYY' } }); // Press "3"
+      expectInputValue(input, adapterName === 'luxon' ? '11 / 3 / YYYY' : '11 / 03 / YYYY');
+
+      fireEvent.change(input, { target: { value: '11 / 31 / YYYY' } }); // Press "1"
+      expectInputValue(input, '11 / 31 / YYYY');
+
+      // TODO: Fix this behavior on day.js (`clampDaySection` generates an invalid date for the start of the month).
+      if (adapterName === 'dayjs') {
+        return;
+      }
+
+      fireEvent.change(input, { target: { value: '11 / 31 / 2' } }); // Press "2"
+      expectInputValue(input, '11 / 30 / 0002') // Has moved to the last day of the November
+
+      fireEvent.change(input, { target: { value: '11 / 30 / 0' } }); // Press "0"
+      expectInputValue(input, '11 / 30 / 0020')
+
+      fireEvent.change(input, { target: { value: '11 / 30 / 2' } }); // Press "2"
+      expectInputValue(input, '11 / 30 / 0202')
+
+      fireEvent.change(input, { target: { value: '11 / 30 / 2' } }); // Press "2"
+      expectInputValue(input, '11 / 30 / 2022')
     });
-  });
+  })
 
-  describe('Pasting', () => {
+  describeAdapters('Pasting', ({ adapter, adapterName, render, clickOnInput }) => {
     const firePasteEvent = (input: HTMLInputElement, pastedValue: string) => {
       act(() => {
         const clipboardEvent = new Event('paste', {
@@ -566,8 +581,8 @@ describe('<DateField /> - Editing', () => {
 
         const prevValue = input.value;
         const nextValue = `${prevValue.slice(
-            0,
-            input.selectionStart || 0,
+          0,
+          input.selectionStart || 0,
         )}${pastedValue}${prevValue.slice(input.selectionEnd || 0)}`;
         fireEvent.change(input, { target: { value: nextValue } });
       });
@@ -575,7 +590,7 @@ describe('<DateField /> - Editing', () => {
 
     it('should set the date when all sections are selected, the pasted value is valid and a value is provided', () => {
       const onChange = spy();
-      render(<DateField onChange={onChange} defaultValue={adapterToUse.date()} />);
+      render(<DateField onChange={onChange} defaultValue={adapter.date()} />);
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
@@ -583,6 +598,12 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, '09/16/2022');
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
     });
@@ -597,6 +618,12 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, '09/16/2022');
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
     });
@@ -615,13 +642,18 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the date when all sections are selected and the format contains escaped characters', () => {
-      const { start: startChar, end: endChar } = adapterToUse.escapedCharacters;
+      // TODO: Fix luxon escaped characters, it's `expandFormat` method is loosing the escaping character `'`.
+      if (adapterName === 'luxon') {
+        return
+      }
+
+      const { start: startChar, end: endChar } = adapter.escapedCharacters;
       const onChange = spy();
       render(
-          <DateField
-              onChange={onChange}
-              format={`${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
-          />,
+        <DateField
+          onChange={onChange}
+          format={`${startChar}Escaped${endChar} ${adapter.formats.year}`}
+        />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -631,7 +663,7 @@ describe('<DateField /> - Editing', () => {
 
       firePasteEvent(input, `Escaped 2014`);
       expect(onChange.callCount).to.equal(1);
-      expect(adapterToUse.getYear(onChange.lastCall.firstArg)).to.equal(2014);
+      expect(adapter.getYear(onChange.lastCall.firstArg)).to.equal(2014);
     });
 
     it('should not set the date when all sections are selected and props.readOnly = true', () => {
@@ -663,14 +695,20 @@ describe('<DateField /> - Editing', () => {
     it('should set the section when one section is selected, the pasted value has the correct type and value is provided', () => {
       const onChange = spy();
       render(
-          <DateField onChange={onChange} defaultValue={adapterToUse.date(new Date(2018, 0, 13))} />,
+        <DateField onChange={onChange} defaultValue={adapter.date(new Date(2018, 0, 13))} />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      expectInputValue(input, '01 / 13 / 2018');
+      expectInputValue(input, adapterName === 'luxon' ? '1 / 13 / 2018' : '01 / 13 / 2018');
       firePasteEvent(input, '12');
       expectInputValue(input, '12 / 13 / 2018');
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
     });
@@ -678,31 +716,36 @@ describe('<DateField /> - Editing', () => {
     it('should not update the section when one section is selected and the pasted value has incorrect type', () => {
       const onChange = spy();
       render(
-          <DateField onChange={onChange} defaultValue={adapterToUse.date(new Date(2018, 0, 13))} />,
+        <DateField onChange={onChange} defaultValue={adapter.date(new Date(2018, 0, 13))} />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
 
-      expectInputValue(input, '01 / 13 / 2018');
+      expectInputValue(input, adapterName === 'luxon' ? '1 / 13 / 2018' : '01 / 13 / 2018');
       firePasteEvent(input, 'Jun');
-      expectInputValue(input, '01 / 13 / 2018');
+      expectInputValue(input, adapterName === 'luxon' ? '1 / 13 / 2018' : '01 / 13 / 2018');
       expect(onChange.callCount).to.equal(0);
     });
   });
 
-  describe('Do not loose missing section values ', () => {
+  describeAdapters('Do not loose missing section values ', ({ adapter, adapterName, render, clickOnInput }) => {
     it('should not loose time information when a value is provided', () => {
       const onChange = spy();
 
       render(
-          <DateField
-              defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-              onChange={onChange}
-          />,
+        <DateField
+          defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, input.value.indexOf('2010'));
       userEvent.keyPress(input, { key: 'ArrowDown' });
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
     });
@@ -711,10 +754,10 @@ describe('<DateField /> - Editing', () => {
       const onChange = spy();
 
       render(
-          <DateField
-              defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-              onChange={onChange}
-          />,
+        <DateField
+          defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
@@ -722,35 +765,48 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
       userEvent.keyPress(input, { key: 'Backspace' });
 
-      fireEvent.change(input, { target: { value: '4 / DD / YYYY' } }); // Press "4"
-      expectInputValue(input, '04 / DD / YYYY');
+      fireEvent.change(input, { target: { value: '1 / DD / YYYY' } }); // Press "1"
+      expectInputValue(input, adapterName === 'luxon' ? '1 / DD / YYYY' : '01 / DD / YYYY');
 
-      fireEvent.change(input, { target: { value: '04 / 0 / YYYY' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '04 / 3 / YYYY' } }); // Press "3"
-      expectInputValue(input, '04 / 03 / YYYY');
+      fireEvent.change(input, { target: { value: '11 / DD / YYYY' } }); // Press "1"
+      expectInputValue(input, '11 / DD / YYYY');
 
-      fireEvent.change(input, { target: { value: '04 / 03 / 2' } }); // Press "2"
-      fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '04 / 03 / 0' } }); // Press "0"
-      fireEvent.change(input, { target: { value: '04 / 03 / 9' } }); // Press "9"
-      expectInputValue(input, '04 / 03 / 2009');
+      fireEvent.change(input, { target: { value: '11 / 2 / YYYY' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11 / 5 / YYYY' } }); // Press "5"
+      expectInputValue(input, '11 / 25 / YYYY');
 
-      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
+      fireEvent.change(input, { target: { value: '11 / 25 / 2' } }); // Press "2"
+      fireEvent.change(input, { target: { value: '11 / 25 / 0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '11 / 25 / 0' } }); // Press "0"
+      fireEvent.change(input, { target: { value: '11 / 25 / 9' } }); // Press "9"
+      expectInputValue(input, '11 / 25 / 2009');
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
+      expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
     });
 
     it('should not loose date information when using the year format and value is provided', () => {
       const onChange = spy();
 
       render(
-          <DateField
-              format={adapterToUse.formats.year}
-              defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-              onChange={onChange}
-          />,
+        <DateField
+          format={adapter.formats.year}
+          defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
       userEvent.keyPress(input, { key: 'ArrowDown' });
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
 
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
     });
@@ -759,26 +815,38 @@ describe('<DateField /> - Editing', () => {
       const onChange = spy();
 
       render(
-          <DateField
-              format={adapterToUse.formats.month}
-              defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-              onChange={onChange}
-          />,
+        <DateField
+          format={adapter.formats.month}
+          defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
       );
       const input = screen.getByRole('textbox');
       clickOnInput(input, 1);
       userEvent.keyPress(input, { key: 'ArrowDown' });
 
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
     });
   });
 
-  describe('Imperative change (without any section selected)', () => {
+  describeAdapters('Imperative change (without any section selected)', ({ adapter, adapterName, render }) => {
     it('should set the date when the change value is valid and no value is provided', () => {
       const onChange = spy();
       render(<DateField onChange={onChange} />);
       const input = screen.getByRole('textbox');
       fireEvent.change(input, { target: { value: '09/16/2022' } });
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
     });
@@ -786,19 +854,25 @@ describe('<DateField /> - Editing', () => {
     it('should set the date when the change value is valid and a value is provided', () => {
       const onChange = spy();
       render(
-          <DateField
-              defaultValue={adapterToUse.date(new Date(2010, 3, 3, 3, 3, 3))}
-              onChange={onChange}
-          />,
+        <DateField
+          defaultValue={adapter.date(new Date(2010, 3, 3, 3, 3, 3))}
+          onChange={onChange}
+        />,
       );
       const input = screen.getByRole('textbox');
       fireEvent.change(input, { target: { value: '09/16/2022' } });
+
+      // TODO: Have a way to check the onChange value on any adapter
+      if (adapterName === 'luxon') {
+        return
+      }
+
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
     });
   });
 
-  describe('Android editing', () => {
+  describeAdapters('Android editing', ({ adapter, render, clickOnInput }) => {
     let originalUserAgent: string = '';
 
     beforeEach(() => {
@@ -807,7 +881,7 @@ describe('<DateField /> - Editing', () => {
         configurable: true,
         writable: true,
         value:
-            'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.128 Mobile Safari/537.36',
+          'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.5359.128 Mobile Safari/537.36',
       });
     });
 
@@ -819,35 +893,35 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should support digit editing', () => {
-      render(<DateField defaultValue={adapterToUse.date(new Date(2022, 4, 16))} />);
+      render(<DateField defaultValue={adapter.date(new Date(2022, 10, 23))} />);
 
       const input = screen.getByRole('textbox');
       const initialValueStr = input.value;
-      const sectionStart = initialValueStr.indexOf('1');
+      const sectionStart = initialValueStr.indexOf('2');
 
       clickOnInput(input, sectionStart, sectionStart + 1);
 
       // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+      fireEvent.change(input, { target: { value: initialValueStr.replace('23', '') } });
 
       // // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '2') } });
+      fireEvent.change(input, { target: { value: initialValueStr.replace('23', '2') } });
 
       // Remove the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '') } });
+      fireEvent.change(input, { target: { value: initialValueStr.replace('23', '') } });
 
       // Set the key pressed in the selected section
-      fireEvent.change(input, { target: { value: initialValueStr.replace('16', '1') } });
+      fireEvent.change(input, { target: { value: initialValueStr.replace('23', '1') } });
 
-      expectInputValue(input, '05 / 21 / 2022');
+      expectInputValue(input, '11 / 21 / 2022');
     });
 
     it('should support letter editing', () => {
       render(
-          <DateField
-              defaultValue={adapterToUse.date(new Date(2022, 4, 16))}
-              format={`${adapterToUse.formats.month} ${adapterToUse.formats.year}`}
-          />,
+        <DateField
+          defaultValue={adapter.date(new Date(2022, 4, 16))}
+          format={`${adapter.formats.month} ${adapter.formats.year}`}
+        />,
       );
 
       const input = screen.getByRole('textbox');

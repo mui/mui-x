@@ -25,7 +25,6 @@ import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
 import { MuiPickersAdapter } from '@mui/x-date-pickers/internals/models';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { CLOCK_WIDTH } from '@mui/x-date-pickers/TimeClock/shared';
-import { DateField, DateFieldProps } from '@mui/x-date-pickers';
 
 export type AdapterName =
   | 'date-fns'
@@ -315,13 +314,15 @@ export const expectInputValue = (
   return expect(value).to.equal(expectedValue);
 };
 
-export const buildFieldInteractions = ({
+export const buildFieldInteractions = <P extends {}>({
   clock,
   render,
+                                         FieldComponent,
 }: {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
   render: ReturnType<typeof createRenderer>['render'];
+  FieldComponent: React.FunctionComponent<P>;
 }) => {
   const clickOnInput = (
     input: HTMLInputElement,
@@ -358,19 +359,19 @@ export const buildFieldInteractions = ({
     clickOnInput(input, clickPosition);
   };
 
-  const testFieldKeyPress = <TDate extends unknown>({
+  const testFieldKeyPress = ({
     key,
     expectedValue,
     cursorPosition = 1,
     valueToSelect,
     ...props
-  }: DateFieldProps<TDate> & {
+  }: P & {
     key: string;
     expectedValue: string;
     cursorPosition?: number;
     valueToSelect?: string;
   }) => {
-    render(<DateField {...props} />);
+    render(<FieldComponent {...props as any as P} />);
     const input = screen.getByRole('textbox');
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
@@ -383,15 +384,15 @@ export const buildFieldInteractions = ({
     expectInputValue(input, expectedValue);
   };
 
-  const testFieldChange = <TDate extends unknown>({
+  const testFieldChange = ({
     keyStrokes,
     cursorPosition = 1,
     ...props
-  }: DateFieldProps<TDate> & {
+  }: P & {
     keyStrokes: { value: string; expected: string }[];
     cursorPosition?: number;
   }) => {
-    render(<DateField {...props} />);
+    render(<FieldComponent {...props as any as P} />);
     const input = screen.getByRole('textbox');
     clickOnInput(input, cursorPosition);
 
