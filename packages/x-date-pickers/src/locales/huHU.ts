@@ -20,7 +20,10 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'az évválasztó már nyitva, váltson a naptárnézetre'
       : 'a naptárnézet már nyitva, váltson az évválasztóra',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+    isKeyboardInputOpen
+      ? `szöveges beviteli nézet aktív, váltás ${viewType} nézetre`
+      : `${viewType} beviteli nézet aktív, váltás szöveges beviteli nézetre`,
 
   // DateRange placeholders
   start: 'Kezdő dátum',
