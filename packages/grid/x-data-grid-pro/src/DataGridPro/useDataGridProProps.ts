@@ -32,7 +32,7 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
 };
 
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
-  const { componentsProps, ...themedProps } = useThemeProps({
+  const { components, componentsProps, ...themedProps } = useThemeProps({
     props: inProps,
     name: 'MuiDataGrid',
   });
@@ -46,9 +46,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     const uncapitalizedDefaultSlots = uncapitalizeObjectKeys(
       DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
     )!;
-    const overrides =
-      themedProps.slots ??
-      (themedProps.components ? uncapitalizeObjectKeys(themedProps.components) : null);
+    const overrides = themedProps.slots ?? (components ? uncapitalizeObjectKeys(components) : null);
 
     if (!overrides) {
       return { ...uncapitalizedDefaultSlots };
@@ -60,7 +58,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       const component = override !== undefined ? override : defaultComponent;
       return { ...acc, [key as GridSlot]: component };
     }, {} as UncapitalizedGridProSlotsComponent);
-  }, [themedProps.components, themedProps.slots]);
+  }, [components, themedProps.slots]);
 
   return React.useMemo<DataGridProProcessedProps<R>>(
     () => ({

@@ -26,7 +26,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
 };
 
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
-  const { componentsProps, ...themedProps } = useThemeProps({
+  const { components, componentsProps, ...themedProps } = useThemeProps({
     props: inProps,
     name: 'MuiDataGrid',
   });
@@ -40,9 +40,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     const uncapitalizedDefaultSlots = uncapitalizeObjectKeys(
       DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS,
     )!;
-    const overrides =
-      themedProps.slots ??
-      (themedProps.components ? uncapitalizeObjectKeys(themedProps.components) : null);
+    const overrides = themedProps.slots ?? (components ? uncapitalizeObjectKeys(components) : null);
 
     if (!overrides) {
       return { ...uncapitalizedDefaultSlots };
@@ -54,7 +52,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
       const component = override !== undefined ? override : defaultComponent;
       return { ...acc, [key as GridSlot]: component };
     }, {} as UncapitalizedGridPremiumSlotsComponent);
-  }, [themedProps.components, themedProps.slots]);
+  }, [components, themedProps.slots]);
 
   return React.useMemo<DataGridPremiumProcessedProps>(
     () => ({
