@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 import * as React from 'react';
+import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import { testDayViewValidation } from './testDayViewValidation';
 import { testMonthViewValidation } from './testMonthViewValidation';
 import { testTextFieldValidation } from './testTextFieldValidation';
@@ -13,28 +14,28 @@ const TEST_SUITES = [
   testTextFieldValidation,
 ];
 
-/**
- * Tests various aspects of the picker validation.
- */
-export function describeValidation(
+function innerDescribeValidation(
   ElementToTest: React.ElementType,
   getOptions: () => DescribeValidationInputOptions,
 ) {
-  describe('Pickers validation API', () => {
-    const { after: runAfterHook = () => {}, views } = getOptions();
+  const { after: runAfterHook = () => {}, views } = getOptions();
 
-    after(runAfterHook);
+  after(runAfterHook);
 
-    function getTestOptions() {
-      return {
-        ...getOptions(),
-        withDate: views.includes('year') || views.includes('month') || views.includes('day'),
-        withTime: views.includes('hours') || views.includes('minutes') || views.includes('seconds'),
-      };
-    }
+  function getTestOptions() {
+    return {
+      ...getOptions(),
+      withDate: views.includes('year') || views.includes('month') || views.includes('day'),
+      withTime: views.includes('hours') || views.includes('minutes') || views.includes('seconds'),
+    };
+  }
 
-    TEST_SUITES.forEach((testSuite) => {
-      testSuite(ElementToTest, getTestOptions);
-    });
+  TEST_SUITES.forEach((testSuite) => {
+    testSuite(ElementToTest, getTestOptions);
   });
 }
+
+/**
+ * Tests various aspects of the picker validation.
+ */
+export const describeValidation = createDescribe('Pickers validation API', innerDescribeValidation);

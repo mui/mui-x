@@ -11,6 +11,7 @@ import { ValueOptions } from '../../models/colDef/gridColDef';
 import {
   getLabelFromValueOption,
   getValueFromValueOptions,
+  isSingleSelectColDef,
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
@@ -73,11 +74,25 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
-  let valueOptions: Array<ValueOptions>;
-  if (typeof colDef.valueOptions === 'function') {
-    valueOptions = colDef.valueOptions!({ id, row, field });
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current?.focus();
+    }
+  }, [hasFocus]);
+
+  if (!isSingleSelectColDef(colDef)) {
+    return null;
+  }
+
+  let valueOptions: Array<ValueOptions> | undefined;
+  if (typeof colDef?.valueOptions === 'function') {
+    valueOptions = colDef?.valueOptions({ id, row, field });
   } else {
-    valueOptions = colDef.valueOptions!;
+    valueOptions = colDef?.valueOptions;
+  }
+
+  if (!valueOptions) {
+    return null;
   }
 
   const handleChange: SelectProps['onChange'] = async (event) => {
@@ -109,12 +124,6 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     }
     setOpen(true);
   };
-
-  useEnhancedEffect(() => {
-    if (hasFocus) {
-      inputRef.current.focus();
-    }
-  }, [hasFocus]);
 
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
 

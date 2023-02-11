@@ -12,6 +12,7 @@ import {
   getDateSectionConfigFromFormatToken,
   getDateSectionGetterAndSetter,
   getDaysInWeekStr,
+  isFourDigitYearFormat,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
@@ -436,6 +437,25 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
         if (activeSection.contentType === 'digit' && activeSection.dateSectionName === 'day') {
           newSectionValue = Number(response.sectionValue);
+        }
+        // Day.js (and maybe other adapters) do not support correctly the parsing of standalone years.
+        // To get the proper value
+        // - if the format is a 4-digit year, we just use the section value.
+        // - if the format is a 2-digit year, we add a trailing zero if needed and then parse the date.
+        else if (
+          activeSection.contentType === 'digit' &&
+          activeSection.dateSectionName === 'year'
+        ) {
+          if (isFourDigitYearFormat(utils, activeSection.formatValue)) {
+            newSectionValue = Number(response.sectionValue);
+          } else {
+            const cleanValue =
+              response.sectionValue.length === 1
+                ? `0${response.sectionValue}`
+                : response.sectionValue;
+            const sectionDate = utils.parse(cleanValue, activeSection.formatValue)!;
+            newSectionValue = getter(sectionDate);
+          }
         } else {
           // The month is stored as 0-indexed in the date (0 = January, 1 = February, ...).
           // But it is often rendered as 1-indexed in the input (1 = January, 2 = February, ...).

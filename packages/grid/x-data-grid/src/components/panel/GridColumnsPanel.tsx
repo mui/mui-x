@@ -276,6 +276,7 @@ GridColumnsPanel.propTypes = {
   disableHideAllButton: PropTypes.bool,
   disableShowAllButton: PropTypes.bool,
   searchPredicate: PropTypes.func,
+  slotProps: PropTypes.object,
   sort: PropTypes.oneOf(['asc', 'desc']),
 } as any;
 
