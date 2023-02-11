@@ -32,6 +32,7 @@ The `components/componentsProps` API is deprecated and `slots/slotProps` API is 
 <DataGrid components={{ ColumnMenu: GridColumnMenu }} /> // Deprecated
 <DataGrid slots={{ columnMenu: GridColumnMenu }} />
 ```
+
 :::
 
 ### Interacting with the grid
