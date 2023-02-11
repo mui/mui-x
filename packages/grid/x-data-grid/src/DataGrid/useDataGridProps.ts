@@ -87,9 +87,8 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
   const slots = React.useMemo<UncapitalizedGridSlotsComponent>(() => {
     const uncapitalizedDefaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
     const overrides =
-      themedProps.slots ?? themedProps.components
-        ? uncapitalizeObjectKeys(themedProps.components)
-        : null;
+      themedProps.slots ??
+      (themedProps.components ? uncapitalizeObjectKeys(themedProps.components) : null);
 
     if (!overrides) {
       return { ...uncapitalizedDefaultSlots };

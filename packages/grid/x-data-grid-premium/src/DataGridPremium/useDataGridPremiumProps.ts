@@ -41,9 +41,8 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
       DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS,
     )!;
     const overrides =
-      themedProps.slots ?? themedProps.components
-        ? uncapitalizeObjectKeys(themedProps.components)
-        : null;
+      themedProps.slots ??
+      (themedProps.components ? uncapitalizeObjectKeys(themedProps.components) : null);
 
     if (!overrides) {
       return { ...uncapitalizedDefaultSlots };

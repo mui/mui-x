@@ -47,9 +47,8 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
       DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
     )!;
     const overrides =
-      themedProps.slots ?? themedProps.components
-        ? uncapitalizeObjectKeys(themedProps.components)
-        : null;
+      themedProps.slots ??
+      (themedProps.components ? uncapitalizeObjectKeys(themedProps.components) : null);
 
     if (!overrides) {
       return { ...uncapitalizedDefaultSlots };
