@@ -174,8 +174,6 @@ async function main() {
         link.click();
       });
 
-      await sleep(1000);
-
       // Click the export button in the toolbar.
       await page.$eval(`button[aria-label="Export"]`, (exportButton) => {
         exportButton.click();
