@@ -158,6 +158,17 @@ export const useGridClipboard = (
     [apiRef],
   );
 
+  const getCellSelectionModel = React.useCallback(() => {
+    // @ts-ignore only available in Premium
+    if (typeof apiRef.current.unstable_getCellSelectionModel === 'function') {
+      const cellSelectionModel: { [key: GridRowId]: { [key: string]: boolean } } =
+        // @ts-ignore only available in Premium
+        apiRef.current.unstable_getCellSelectionModel();
+      return cellSelectionModel;
+    }
+    return null;
+  }, [apiRef]);
+
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey;
@@ -174,29 +185,23 @@ export const useGridClipboard = (
 
       const selectedRows = apiRef.current.getSelectedRows();
 
-      // @ts-ignore only available in Premium
-      if (typeof apiRef.current.unstable_getCellSelectionModel === 'function') {
-        const cellSelectionModel: { [key: GridRowId]: { [key: string]: boolean } } =
-          // @ts-ignore only available in Premium
-          apiRef.current.unstable_getCellSelectionModel();
-
-        if (Object.keys(cellSelectionModel).length !== 0) {
-          const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
-            const fieldsMap = cellSelectionModel[rowId];
-            const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
-              let cellData: string;
-              if (fieldsMap[field]) {
-                cellData = stringifyCellForClipboard(rowId, field);
-              } else {
-                cellData = '';
-              }
-              return acc2 ? [acc2, cellData].join('\t') : cellData;
-            }, '');
-            return acc ? [acc, rowString].join('\n') : rowString;
+      const cellSelectionModel = getCellSelectionModel();
+      if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
+        const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+          const fieldsMap = cellSelectionModel[rowId];
+          const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+            let cellData: string;
+            if (fieldsMap[field]) {
+              cellData = stringifyCellForClipboard(rowId, field);
+            } else {
+              cellData = '';
+            }
+            return acc2 ? [acc2, cellData].join('\t') : cellData;
           }, '');
-          copyToClipboard(copyData);
-          return;
-        }
+          return acc ? [acc, rowString].join('\n') : rowString;
+        }, '');
+        copyToClipboard(copyData);
+        return;
       }
 
       if (selectedRows.size > 1) {
@@ -209,18 +214,13 @@ export const useGridClipboard = (
         }
       }
     },
-    [apiRef, stringifyCellForClipboard],
+    [apiRef, stringifyCellForClipboard, getCellSelectionModel],
   );
 
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
       if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
-        return;
-      }
-
-      const selectedCell = gridFocusCellSelector(apiRef);
-      if (!selectedCell || !selectedCell.id || !selectedCell.field) {
         return;
       }
 
@@ -234,6 +234,39 @@ export const useGridClipboard = (
       if (rowsData.length > 1 && props.signature === GridSignature.DataGrid) {
         // limit paste to a single row in DataGrid
         rowsData = [rowsData[0]];
+      }
+
+      const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
+
+      const cellSelectionModel = getCellSelectionModel();
+
+      if (isSingleValuePasted) {
+        if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
+          // Single values are pasted to all selected cells in the range.
+        } else {
+          // Single values are pasted to the focused cell
+        }
+        // return;
+      }
+
+      if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
+        // Multiple values are pasted starting from the first and top-most cell in the selection.
+      }
+
+      const selectedRows = apiRef.current.getSelectedRows();
+
+      if (selectedRows.size === 1) {
+        // Multiple values are pasted starting from the focused cell
+        // return;
+      }
+
+      if (selectedRows.size > 1) {
+        // Multiple values are pasted starting from the first and top-most cell
+      }
+
+      const selectedCell = gridFocusCellSelector(apiRef);
+      if (!selectedCell || !selectedCell.id || !selectedCell.field) {
+        return;
       }
 
       const selectedRowId = selectedCell.id;
@@ -271,7 +304,7 @@ export const useGridClipboard = (
 
       apiRef.current.updateRows(rowsToUpdate);
     },
-    [apiRef, props.pagination, props.paginationMode, props.signature],
+    [apiRef, props.pagination, props.paginationMode, props.signature, getCellSelectionModel],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handleCopy);
