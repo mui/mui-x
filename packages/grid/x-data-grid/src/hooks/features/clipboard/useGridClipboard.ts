@@ -7,7 +7,7 @@ import { gridVisibleColumnFieldsSelector } from '../columns/gridColumnsSelector'
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridColDef, GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 
 const stringToBoolean = (value: string) => {
   switch (value.toLowerCase().trim()) {
@@ -29,9 +29,7 @@ const stringToBoolean = (value: string) => {
 };
 
 const parseCellStringValue = (value: string, colDef: GridColDef) => {
-  const columnType = colDef.type;
-
-  switch (columnType) {
+  switch (colDef.type) {
     case 'number': {
       return Number(value);
     }
@@ -39,10 +37,11 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
       return stringToBoolean(value);
     }
     case 'singleSelect': {
+      const colDefValueOptions = (colDef as GridSingleSelectColDef).valueOptions;
       const valueOptions =
-        typeof colDef.valueOptions === 'function'
-          ? colDef.valueOptions({ field: colDef.field })
-          : colDef.valueOptions || [];
+        typeof colDefValueOptions === 'function'
+          ? colDefValueOptions({ field: colDef.field })
+          : colDefValueOptions || [];
       const valueOption = valueOptions.find((option) => {
         if (option === value) {
           return true;
@@ -148,9 +147,9 @@ export const useGridClipboard = (
       let data: string;
       const columnType = cellParams.colDef.type;
       if (columnType === 'number') {
-      data = String(cellParams.value);
-    } else if (columnType === 'date' || columnType === 'dateTime') {
-      data = (cellParams.value as Date)?.toString();
+        data = String(cellParams.value);
+      } else if (columnType === 'date' || columnType === 'dateTime') {
+        data = (cellParams.value as Date)?.toString();
       } else {
         data = cellParams.formattedValue as any;
       }
