@@ -47,7 +47,7 @@ export const useField = <
     sectionOrder,
   } = useFieldState(params);
 
-  const applyCharacterEditing = useFieldCharacterEditing<TDate, TSection>({
+  const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
     sections: state.sections,
     updateSectionValue,
   });
@@ -281,6 +281,7 @@ export const useField = <
         } else {
           clearActiveSection();
         }
+        resetCharacterQuery();
         break;
       }
 
@@ -371,6 +372,17 @@ export const useField = <
 
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // If `state.tempValueStrAndroid` is still defined when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && selectedSectionIndexes != null) {
+      resetCharacterQuery();
+      clearActiveSection();
+    }
+  }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
     () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),

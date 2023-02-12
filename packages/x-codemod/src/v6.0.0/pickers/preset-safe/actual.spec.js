@@ -11,7 +11,13 @@ const theme = createTheme({});
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={DayjsUtils} locale="fr">
+      <LocalizationProvider
+        dateAdapter={DayjsUtils}
+        locale="fr"
+        localeText={{
+          datePickerDefaultToolbarTitle: 'Pick a Date',
+        }}
+      >
         <CalendarPicker
           date={null}
           onChange={() => {}}
@@ -26,6 +32,7 @@ function App() {
           TransitionComponent={Fade}
           DialogProps={{ backgroundColor: 'red' }}
           shouldDisableTime={(timeValue, view) => view === 'hours' && timeValue < 12}
+          inputFormat="YYYY-MM-DD HH:mm"
         />
         <DateRangePicker
           ToolbarComponent={CustomToolbarComponent}

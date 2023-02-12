@@ -20,6 +20,15 @@ const formatTokenMap: MuiFormatTokenMap = {
   d: 'day',
   dd: 'day',
 
+  c: 'weekDay',
+  ccc: { sectionName: 'weekDay', contentType: 'letter' },
+  cccc: { sectionName: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionName: 'weekDay', contentType: 'letter' },
+  E: 'weekDay',
+  EEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionName: 'weekDay', contentType: 'letter' },
+
   L: 'month',
   LL: 'month',
   LLL: { sectionName: 'month', contentType: 'letter' },

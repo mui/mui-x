@@ -115,10 +115,6 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   type?: GridColType;
   /**
-   * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
-   */
-  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
-  /**
    * Allows to align the column values in cells.
    */
   align?: GridAlignment;
@@ -249,6 +245,9 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
   colSpan?: number | ((params: GridCellParams<R, V, F>) => number | undefined);
 }
 
+/**
+ * Column Definition interface used for columns with the `actions` type.
+ */
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
   /**
@@ -265,11 +264,28 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
 }
 
 /**
+ * Column Definition interface used for columns with the `singleSelect` type.
+ */
+export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridBaseColDef<R, V, F> {
+  /**
+   * Type allows to merge this object with a default definition [[GridColDef]].
+   * @default 'singleSelect'
+   */
+  type: 'singleSelect';
+  /**
+   * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
+   */
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
+}
+
+/**
  * Column Definition interface.
  */
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
-  | GridActionsColDef<R, V, F>;
+  | GridActionsColDef<R, V, F>
+  | GridSingleSelectColDef<R, V, F>;
 
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;

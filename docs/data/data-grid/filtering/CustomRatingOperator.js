@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function RatingInputValue(props) {
@@ -88,6 +88,7 @@ const ratingOnlyOperators = [
     },
     InputComponent: RatingInputValue,
     InputComponentProps: { type: 'number' },
+    getValueAsString: (value) => `${value} Stars`,
   },
 ];
 
@@ -118,6 +119,9 @@ export default function CustomRatingOperator() {
       <DataGrid
         {...data}
         columns={columns}
+        components={{
+          Toolbar: GridToolbarFilterButton,
+        }}
         initialState={{
           ...data.initialState,
           filter: {
