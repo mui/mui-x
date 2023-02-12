@@ -100,7 +100,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.19",
     "@types/prettier": "^2.7.2",
-    "@types/react": "^18.0.27",
+    "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
     "@types/requestidlecallback": "^0.3.5",
     "@types/sinon": "^10.0.13",
