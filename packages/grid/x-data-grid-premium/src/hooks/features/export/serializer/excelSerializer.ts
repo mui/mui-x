@@ -8,7 +8,13 @@ import {
   GRID_DATE_COL_DEF,
   GRID_DATETIME_COL_DEF,
 } from '@mui/x-data-grid-pro';
-import { buildWarning, GridStateColDef, isObject } from '@mui/x-data-grid/internals';
+import {
+  buildWarning,
+  GridStateColDef,
+  GridSingleSelectColDef,
+  isObject,
+  isSingleSelectColDef,
+} from '@mui/x-data-grid/internals';
 import { GridExceljsProcessInput, ColumnsStylesInterface } from '../gridExcelExportInterface';
 import { GridPrivateApiPremium } from '../../../../models/gridApiPremium';
 
@@ -23,7 +29,7 @@ const warnInvalidFormattedValue = buildWarning([
 ]);
 
 const getFormattedValueOptions = (
-  colDef: GridColDef,
+  colDef: GridSingleSelectColDef,
   valueOptions: ValueOptions[],
   api: GridApi,
 ) => {
@@ -84,16 +90,17 @@ const serializeRow = (
 
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
-        if (typeof cellParams.colDef.valueOptions === 'function') {
+        const castColumn = cellParams.colDef as GridSingleSelectColDef;
+        if (typeof castColumn.valueOptions === 'function') {
           // If value option depends on the row, set specific options to the cell
           // This dataValidation is buggy with LibreOffice and does not allow to have coma
-          const valueOptions = cellParams.colDef.valueOptions({ id, row, field: cellParams.field });
-          const formattedValueOptions = getFormattedValueOptions(
-            cellParams.colDef,
-            valueOptions,
-            api,
-          );
-          dataValidation[column.field] = {
+          const valueOptions = castColumn.valueOptions({
+            id,
+            row,
+            field: cellParams.field,
+          });
+          const formattedValueOptions = getFormattedValueOptions(castColumn, valueOptions, api);
+          dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
             formulae: [
@@ -104,23 +111,23 @@ const serializeRow = (
           };
         } else {
           // If value option is defined for the column, refer to another sheet
-          dataValidation[column.field] = {
+          dataValidation[castColumn.field] = {
             type: 'list',
             allowBlank: true,
-            formulae: [defaultValueOptionsFormulae[column.field]],
+            formulae: [defaultValueOptionsFormulae[castColumn.field]],
           };
         }
 
-        const formattedValue = api.getCellParams(id, column.field).formattedValue;
+        const formattedValue = api.getCellParams(id, castColumn.field).formattedValue;
         if (process.env.NODE_ENV !== 'production') {
           if (String(cellParams.formattedValue) === '[object Object]') {
             warnInvalidFormattedValue();
           }
         }
         if (isObject<{ label: any }>(formattedValue)) {
-          row[column.field] = formattedValue?.label;
+          row[castColumn.field] = formattedValue?.label;
         } else {
-          row[column.field] = formattedValue as any;
+          row[castColumn.field] = formattedValue as any;
         }
         break;
       }
@@ -296,10 +303,10 @@ export async function buildExcel(
 
   const columnsWithArrayValueOptions = columns.filter(
     (column) =>
-      column.type === 'singleSelect' &&
+      isSingleSelectColDef(column) &&
       column.valueOptions &&
       typeof column.valueOptions !== 'function',
-  );
+  ) as GridSingleSelectColDef[];
   const defaultValueOptionsFormulae: { [field: string]: string } = {};
 
   if (columnsWithArrayValueOptions.length) {

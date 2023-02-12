@@ -418,6 +418,9 @@ export const changeSectionValueFormat = <TDate>(
   return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
 };
 
+export const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
+  utils.formatByString(utils.date()!, format).length === 4;
+
 export const doesSectionHaveTrailingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   contentType: 'digit' | 'letter',
@@ -434,24 +437,13 @@ export const doesSectionHaveTrailingZeros = <TDate>(
 
   // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
   if (dateSectionName === 'year') {
+    if (isFourDigitYearFormat(utils, format)) {
+      const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
+      return formatted0001 === '0001';
+    }
+
     const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
-    // It's a 2-digit year format with trailing zeroes
-    if (formatted2001 === '1') {
-      return false;
-    }
-    // It's a 2-digit year format without trailing zeroes
-    if (formatted2001 === '01') {
-      return true;
-    }
-
-    const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
-    // It's a 4-digit year format without trailing zeroes
-    if (formatted0001 === '1') {
-      return false;
-    }
-
-    // It's a 2-digit year format with trailing zeroes
-    return true;
+    return formatted2001 === '01';
   }
 
   return changeSectionValueFormat(utils, '1', format, format).length > 1;
@@ -628,8 +620,8 @@ export const getSectionsBoundaries = <TDate>(
 
   return {
     year: ({ format }) => ({
-      minimum: 1,
-      maximum: utils.formatByString(today, format).length === 4 ? 9999 : 99,
+      minimum: 0,
+      maximum: isFourDigitYearFormat(utils, format) ? 9999 : 99,
     }),
     month: () => ({
       minimum: 1,

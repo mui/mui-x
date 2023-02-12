@@ -169,6 +169,7 @@
     "BaseButton": { "default": "Button", "type": { "name": "elementType" } },
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "BaseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
+    "BaseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "BasePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "BaseSelect": { "default": "Select", "type": { "name": "elementType" } },
     "BaseSwitch": { "default": "Switch", "type": { "name": "elementType" } },
