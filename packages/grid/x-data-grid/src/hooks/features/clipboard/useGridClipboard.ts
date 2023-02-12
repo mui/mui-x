@@ -158,18 +158,6 @@ export const useGridClipboard = (
     [apiRef],
   );
 
-  const copyFocusedCellToClipboard = React.useCallback<
-    GridClipboardApi['unstable_copyFocusedCellToClipboard']
-  >(() => {
-    const focusedCell = gridFocusCellSelector(apiRef);
-    if (!focusedCell) {
-      return;
-    }
-
-    const data = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
-    copyToClipboard(data);
-  }, [apiRef, stringifyCellForClipboard]);
-
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey;
@@ -214,7 +202,11 @@ export const useGridClipboard = (
       if (selectedRows.size > 1) {
         apiRef.current.unstable_copySelectedRowsToClipboard();
       } else {
-        apiRef.current.unstable_copyFocusedCellToClipboard();
+        const focusedCell = gridFocusCellSelector(apiRef);
+        if (focusedCell) {
+          const data = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
+          copyToClipboard(data);
+        }
       }
     },
     [apiRef, stringifyCellForClipboard],
@@ -287,7 +279,6 @@ export const useGridClipboard = (
 
   const clipboardApi: GridClipboardApi = {
     unstable_copySelectedRowsToClipboard: copySelectedRowsToClipboard,
-    unstable_copyFocusedCellToClipboard: copyFocusedCellToClipboard,
   };
 
   useGridApiMethod(apiRef, clipboardApi, 'public');
