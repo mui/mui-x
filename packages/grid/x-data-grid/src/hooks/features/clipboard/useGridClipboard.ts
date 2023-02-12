@@ -6,7 +6,7 @@ import { gridFocusCellSelector } from '../focus/gridFocusStateSelector';
 import { gridVisibleColumnFieldsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridValidRowModel } from '../../../models/gridRows';
+import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 
 const stringToBoolean = (value: string) => {
@@ -142,6 +142,23 @@ export const useGridClipboard = (
     copyToClipboard(data);
   }, [apiRef]);
 
+  const stringifyCellForClipboard = React.useCallback(
+    (rowId: GridRowId, field: string) => {
+      const cellParams = apiRef.current.getCellParams(rowId, field);
+      let data: string;
+      const columnType = cellParams.colDef.type;
+      if (columnType === 'number') {
+      data = String(cellParams.value);
+    } else if (columnType === 'date' || columnType === 'dateTime') {
+      data = (cellParams.value as Date)?.toString();
+      } else {
+        data = cellParams.formattedValue as any;
+      }
+      return data;
+    },
+    [apiRef],
+  );
+
   const copyFocusedCellToClipboard = React.useCallback<
     GridClipboardApi['unstable_copyFocusedCellToClipboard']
   >(() => {
@@ -150,18 +167,9 @@ export const useGridClipboard = (
       return;
     }
 
-    const cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
-    let data: string;
-    const columnType = cellParams.colDef.type;
-    if (columnType === 'number') {
-      data = String(cellParams.value);
-    } else if (columnType === 'date' || columnType === 'dateTime') {
-      data = (cellParams.value as Date)?.toString();
-    } else {
-      data = cellParams.formattedValue as any;
-    }
+    const data = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
     copyToClipboard(data);
-  }, [apiRef]);
+  }, [apiRef, stringifyCellForClipboard]);
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
@@ -179,13 +187,38 @@ export const useGridClipboard = (
 
       const selectedRows = apiRef.current.getSelectedRows();
 
+      // @ts-ignore only available in Premium
+      if (typeof apiRef.current.unstable_getCellSelectionModel === 'function') {
+        const cellSelectionModel: { [key: GridRowId]: { [key: string]: boolean } } =
+          // @ts-ignore only available in Premium
+          apiRef.current.unstable_getCellSelectionModel();
+
+        if (Object.keys(cellSelectionModel).length !== 0) {
+          const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+            const fieldsMap = cellSelectionModel[rowId];
+            const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+              let cellData: string;
+              if (fieldsMap[field]) {
+                cellData = stringifyCellForClipboard(rowId, field);
+              } else {
+                cellData = '';
+              }
+              return acc2 ? [acc2, cellData].join('\t') : cellData;
+            }, '');
+            return acc ? [acc, rowString].join('\n') : rowString;
+          }, '');
+          copyToClipboard(copyData);
+          return;
+        }
+      }
+
       if (selectedRows.size > 1) {
         apiRef.current.unstable_copySelectedRowsToClipboard();
       } else {
         apiRef.current.unstable_copyFocusedCellToClipboard();
       }
     },
-    [apiRef],
+    [apiRef, stringifyCellForClipboard],
   );
 
   const handlePaste = React.useCallback(
