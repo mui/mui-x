@@ -242,7 +242,7 @@ However, some types require additional properties to be set to make them work co
   // With getOptionValue and getOptionLabel
   {
     getOptionValue: (value: ValueOptions) => value.code,
-    getOptionLabel: (value: ValueOptions) => value.label,
+    getOptionLabel: (value: ValueOptions) => value.name,
     valueOptions: [
       { code: 'BR', name: 'Brazil' }
       { code: 'FR', name: 'France' }
