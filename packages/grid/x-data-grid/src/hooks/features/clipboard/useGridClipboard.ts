@@ -74,6 +74,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
     copyToClipboard(data);
   }, [apiRef]);
 
+  // TODO: move this to the GridColDef to make if configurable?
   const stringifyCellForClipboard = React.useCallback(
     (rowId: GridRowId, field: string) => {
       const cellParams = apiRef.current.getCellParams(rowId, field);
@@ -105,35 +106,26 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
         return;
       }
 
-      const selectedRows = apiRef.current.getSelectedRows();
+      let textToCopy = apiRef.current.unstable_applyPipeProcessors('clipboardCopy', '');
 
-      // const cellSelectionModel = getCellSelectionModel();
-      // if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
-      //   const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
-      //     const fieldsMap = cellSelectionModel[rowId];
-      //     const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
-      //       let cellData: string;
-      //       if (fieldsMap[field]) {
-      //         cellData = stringifyCellForClipboard(rowId, field);
-      //       } else {
-      //         cellData = '';
-      //       }
-      //       return acc2 ? [acc2, cellData].join('\t') : cellData;
-      //     }, '');
-      //     return acc ? [acc, rowString].join('\n') : rowString;
-      //   }, '');
-      //   copyToClipboard(copyData);
-      //   return;
-      // }
-
-      if (selectedRows.size > 1) {
-        apiRef.current.unstable_copySelectedRowsToClipboard();
-      } else {
-        const focusedCell = gridFocusCellSelector(apiRef);
-        if (focusedCell) {
-          const data = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
-          copyToClipboard(data);
+      if (!textToCopy) {
+        const selectedRows = apiRef.current.getSelectedRows();
+        if (selectedRows.size > 1) {
+          textToCopy = apiRef.current.getDataAsCsv({
+            includeHeaders: false,
+            // TODO: make it configurable
+            delimiter: '\t',
+          });
+        } else {
+          const focusedCell = gridFocusCellSelector(apiRef);
+          if (focusedCell) {
+            textToCopy = stringifyCellForClipboard(focusedCell.id, focusedCell.field);
+          }
         }
+      }
+
+      if (textToCopy) {
+        copyToClipboard(textToCopy);
       }
     },
     [apiRef, stringifyCellForClipboard],

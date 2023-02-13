@@ -52,6 +52,7 @@ export interface GridPipeProcessingLookup {
     value: boolean;
     context: { event: MouseEvent | React.KeyboardEvent; cell: GridCellParams | null };
   };
+  clipboardCopy: { value: string };
 }
 
 export type GridPipeProcessor<P extends GridPipeProcessorGroup> = (
