@@ -15,7 +15,7 @@ import {
 describe('<DateField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateField });
 
   describeConformance(<DateField />, () => ({
     classes: {},

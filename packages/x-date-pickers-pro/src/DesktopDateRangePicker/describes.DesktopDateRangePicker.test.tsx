@@ -15,7 +15,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
   });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({
+    clock,
+    render,
+    Component: DesktopDateRangePicker,
+  });
 
   describeRangeValidation(DesktopDateRangePicker, () => ({
     render,
