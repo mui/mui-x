@@ -76,10 +76,6 @@ const rows = [
 export default function RenderCellGrid() {
   const apiRef = useGridApiRef();
 
-  React.useEffect(() => {
-    window.apiRef = apiRef;
-  }, []);
-
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid apiRef={apiRef} rows={rows} columns={columns} />
