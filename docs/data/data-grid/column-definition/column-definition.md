@@ -227,7 +227,29 @@ However, some types require additional properties to be set to make them work co
   ```
 
   :::warning
-  When using objects values for `valueOptions` you need to provide `value` and `label` fields for each option: `{ value: string, label: string }`
+  When using objects values for `valueOptions` you need to provide the `value` and `label` attributes for each option.
+  However, you can customize which attribute is used as value and label by using `getOptionValue` and `getOptionLabel`, respectively.
+
+  ```tsx
+  // Without getOptionValue and getOptionLabel
+  {
+    valueOptions: [
+      { value: 'BR', label: 'Brazil' }
+      { value: 'FR', label: 'France' }
+    ]
+  }
+
+  // With getOptionValue and getOptionLabel
+  {
+    getOptionValue: (value: ValueOptions) => value.code,
+    getOptionLabel: (value: ValueOptions) => value.label,
+    valueOptions: [
+      { code: 'BR', name: 'Brazil' }
+      { code: 'FR', name: 'France' }
+    ]
+  }
+  ```
+
   :::
 
 - If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
