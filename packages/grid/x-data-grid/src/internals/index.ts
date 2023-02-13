@@ -94,7 +94,7 @@ export {
   getRenderableIndexes,
 } from '../hooks/features/virtualization/useGridVirtualScroller';
 
-export { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
+export { useGridVisibleRows, getVisibleRows } from '../hooks/utils/useGridVisibleRows';
 export { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState';
 

@@ -94,7 +94,7 @@ export const useDataGridComponent = (
   useGridColumnMenu(privateApiRef);
   useGridCsvExport(privateApiRef);
   useGridPrintExport(privateApiRef, props);
-  useGridClipboard(privateApiRef, props);
+  useGridClipboard(privateApiRef);
   useGridDimensions(privateApiRef, props);
   useGridEvents(privateApiRef, props);
   useGridStatePersistence(privateApiRef);
