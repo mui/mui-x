@@ -25,16 +25,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipHide: 'Скрыть фильтры',
   toolbarFiltersTooltipShow: 'Показать фильтры',
   toolbarFiltersTooltipActive: (count) => {
-    let pluralForm = 'активных фильтров';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'активных фильтра';
-    } else if (lastDigit === 1) {
-      pluralForm = 'активный фильтр';
+	function declOfNum(number, words) {
+        return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
     }
-
-    return `${count} ${pluralForm}`;
+    return `${count} ${declOfNum(count, ['активный фильтр', 'активных фильтра', 'активных фильтров'])}`;
   },
 
   // Quick filter toolbar field
@@ -100,32 +94,20 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
-    let pluralForm = 'активных фильтров';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'активных фильтра';
-    } else if (lastDigit === 1) {
-      pluralForm = 'активный фильтр';
+	function declOfNum(number, words) {
+        return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
     }
-
-    return `${count} ${pluralForm}`;
+    return `${count} ${declOfNum(count, ['активный фильтр', 'активных фильтра', 'активных фильтров'])}`;
   },
   columnHeaderFiltersLabel: 'Показать фильтры',
   columnHeaderSortIconLabel: 'Сортировать',
 
   // Rows selected footer text
   footerRowSelected: (count) => {
-    let pluralForm = 'строк выбрано';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'строки выбраны';
-    } else if (lastDigit === 1) {
-      pluralForm = 'строка выбрана';
+	function declOfNum(number, words) {
+        return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
     }
-
-    return `${count} ${pluralForm}`;
+    return `${count} ${declOfNum(count, ['строка выбрана', 'строки выбрано', 'строк выбрано'])}`;
   },
 
   // Total row amount footer text
