@@ -1,4 +1,12 @@
-import type { ValueOptions } from '../../../models/colDef/gridColDef';
+import type {
+  GridColDef,
+  GridSingleSelectColDef,
+  ValueOptions,
+} from '../../../models/colDef/gridColDef';
+
+export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridSingleSelectColDef {
+  return colDef?.type === 'singleSelect';
+}
 
 export function getValueFromOption(option: any | undefined) {
   if (typeof option === 'object' && option !== null) {
