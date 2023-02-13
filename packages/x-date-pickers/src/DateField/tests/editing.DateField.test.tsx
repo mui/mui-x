@@ -636,11 +636,6 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should set the date when all sections are selected and the format contains escaped characters', () => {
-      // TODO: Fix luxon escaped characters, it's `expandFormat` method is loosing the escaping character `'`.
-      if (adapterName === 'luxon') {
-        return;
-      }
-
       const { start: startChar, end: endChar } = adapter.escapedCharacters;
       const onChange = spy();
       render(
