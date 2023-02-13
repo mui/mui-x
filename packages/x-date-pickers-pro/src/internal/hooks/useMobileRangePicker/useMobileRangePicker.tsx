@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -21,7 +21,7 @@ import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
-import { useRangePickerInputProps } from '../useRangePickerInputProps';
+import { useRangePickerFieldSlotProps } from '../useRangePickerFieldSlotProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -80,18 +80,6 @@ export const useMobileRangePicker = <
     },
   });
 
-  const fieldSlotProps = useRangePickerInputProps({
-    wrapperVariant: 'mobile',
-    open,
-    actions,
-    readOnly,
-    disabled,
-    disableOpenPicker,
-    localeText,
-    rangePosition,
-    onRangePositionChange,
-  });
-
   const Field = slots.field;
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
@@ -116,28 +104,23 @@ export const useMobileRangePicker = <
   };
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
+  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
-    separator: any;
-  } = {
-    ...fieldProps.slotProps,
-    textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
-      return {
-        ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
-        ...externalInputProps,
-        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
-      };
-    },
-    root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(innerSlotProps?.fieldRoot, ownerState);
-      return {
-        ...externalRootProps,
-        ...fieldSlotProps.root,
-      };
-    },
-    separator: innerSlotProps?.fieldSeparator,
-  };
+  const slotPropsForField = useRangePickerFieldSlotProps({
+    wrapperVariant: 'mobile',
+    fieldType,
+    open,
+    actions,
+    readOnly,
+    disabled,
+    labelId,
+    disableOpenPicker,
+    localeText,
+    rangePosition,
+    onRangePositionChange,
+    pickerSlotProps: innerSlotProps,
+    fieldSlotProps: fieldProps.slotProps,
+  });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...innerSlotProps,
@@ -158,12 +141,19 @@ export const useMobileRangePicker = <
   let labelledById = labelId;
   if (isToolbarHidden) {
     const labels: string[] = [];
-    if (finalLocaleText.start) {
-      labels.push(`${labelId}-start-label`);
+    if (fieldType === 'multi-input') {
+      if (finalLocaleText.start) {
+        labels.push(`${labelId}-start-label`);
+      }
+      if (finalLocaleText.end) {
+        labels.push(`${labelId}-end-label`);
+      }
     }
-    if (finalLocaleText.end) {
-      labels.push(`${labelId}-end-label`);
+    // TODO: Check for props.label
+    else if (false) {
+      labels.push('');
     }
+
     labelledById = labels.length > 0 ? labels.join(' ') : undefined;
   }
   const slotProps = {

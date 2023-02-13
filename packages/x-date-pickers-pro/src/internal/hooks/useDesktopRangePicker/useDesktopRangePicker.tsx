@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { resolveComponentProps, useSlotProps } from '@mui/base/utils';
+import { useSlotProps } from '@mui/base/utils';
 import { useLicenseVerifier } from '@mui/x-license-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -21,7 +21,7 @@ import {
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import { useRangePickerInputProps } from '../useRangePickerInputProps';
+import { useRangePickerFieldSlotProps } from '../useRangePickerFieldSlotProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
@@ -96,19 +96,6 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const fieldSlotProps = useRangePickerInputProps({
-    wrapperVariant: 'desktop',
-    open,
-    actions,
-    readOnly,
-    disabled,
-    disableOpenPicker,
-    localeText,
-    onBlur: handleBlur,
-    rangePosition,
-    onRangePositionChange,
-  });
-
   const Field = slots.field;
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
@@ -129,32 +116,29 @@ export const useDesktopRangePicker = <
     ownerState: props,
   });
 
+  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
+
+  const slotPropsForField = useRangePickerFieldSlotProps({
+    wrapperVariant: 'desktop',
+    fieldType,
+    open,
+    actions,
+    readOnly,
+    disabled,
+    disableOpenPicker,
+    localeText,
+    onBlur: handleBlur,
+    rangePosition,
+    onRangePositionChange,
+    pickerSlotProps: slotProps,
+    fieldSlotProps: fieldProps.slotProps,
+  });
+
   const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
     ...fieldProps.slots,
-  };
-
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
-    separator: any;
-  } = {
-    ...fieldProps.slotProps,
-    textField: (ownerState) => {
-      const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
-      return {
-        ...externalInputProps,
-        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
-      };
-    },
-    root: (ownerState) => {
-      const externalRootProps = resolveComponentProps(slotProps?.fieldRoot, ownerState);
-      return {
-        ...externalRootProps,
-        ...fieldSlotProps.root,
-      };
-    },
-    separator: slotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
