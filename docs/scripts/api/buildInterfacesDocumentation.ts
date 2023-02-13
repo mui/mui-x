@@ -66,6 +66,8 @@ const OTHER_GRID_INTERFACES_WITH_DEDICATED_PAGES = [
 
   // Others
   'GridColDef',
+  'GridSingleSelectColDef',
+  'GridActionsColDef',
   'GridCsvExportOptions',
   'GridPrintExportOptions',
   'GridExcelExportOptions',
