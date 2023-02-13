@@ -411,8 +411,9 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
       { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
       { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+      { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
       { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
-      { pathname: '/x/react-charts/tree-map', title: '🚧 TreeMap' },
+      { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
     ],
   },
 ];
