@@ -5,7 +5,7 @@ title: Charts - Tree map
 
 # Charts - Tree map
 
-<p class='description'>Tree map allows to display data with a hierarchical structure.</p>
+<p class="description">Tree map allows to display data with a hierarchical structure.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

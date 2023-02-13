@@ -5,7 +5,7 @@ title: Charts - Sankey
 
 # Charts - Sankey
 
-<p class='description'>Chart lines can express flows between different entities.</p>
+<p class="description">Chart lines can express flows between different entities.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

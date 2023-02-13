@@ -5,7 +5,7 @@ title: Charts - Heat map
 
 # Charts - Heat map
 
-<p class='description'>Heat map charts allows to highlight correlation between categories.</p>
+<p class="description">Heat map charts allows to highlight correlation between categories.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

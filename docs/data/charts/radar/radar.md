@@ -5,7 +5,7 @@ title: Charts - Radar
 
 # Charts - Radar
 
-<p class='description'>Radar allows to compare multivariate data in a 2D chart.</p>
+<p class="description">Radar allows to compare multivariate data in a 2D chart.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

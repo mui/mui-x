@@ -5,7 +5,7 @@ title: Charts - Areas
 
 # Charts - Areas
 
-<p class='description'>Chart areas can express qualities about data, such as highlights, and comparisons.</p>
+<p class="description">Chart areas can express qualities about data, such as highlights, and comparisons.</p>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
