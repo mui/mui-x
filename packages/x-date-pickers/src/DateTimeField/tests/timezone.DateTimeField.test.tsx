@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { screen } from '@mui/monorepo/test/utils';
 import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
 
 describe('<DateTimeField /> - TimeZone', () => {
