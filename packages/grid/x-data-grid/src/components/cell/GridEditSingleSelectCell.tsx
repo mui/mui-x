@@ -69,20 +69,29 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (isSingleSelectColDef(colDef)) {
-    resolvedColumn = colDef;
+  useEnhancedEffect(() => {
+    if (hasFocus) {
+      inputRef.current?.focus();
+    }
+  }, [hasFocus]);
+
+  if (!isSingleSelectColDef(colDef)) {
+    return null;
   }
 
-  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
-
-  let valueOptions: Array<ValueOptions> | null = null;
-  if (typeof resolvedColumn?.valueOptions === 'function') {
-    valueOptions = resolvedColumn?.valueOptions!({ id, row, field });
+  let valueOptions: Array<ValueOptions> | undefined;
+  if (typeof colDef?.valueOptions === 'function') {
+    valueOptions = colDef?.valueOptions({ id, row, field });
   } else {
-    valueOptions = resolvedColumn?.valueOptions!;
+    valueOptions = colDef?.valueOptions;
   }
+
+  if (!valueOptions) {
+    return null;
+  }
+
+  const getOptionValue = getOptionValueProp || colDef.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || colDef.getOptionLabel!;
 
   const handleChange: SelectProps['onChange'] = async (event) => {
     if (!isSingleSelectColDef(colDef) || !valueOptions) {
@@ -122,15 +131,9 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     setOpen(true);
   };
 
-  useEnhancedEffect(() => {
-    if (hasFocus) {
-      inputRef.current.focus();
-    }
-  }, [hasFocus]);
-
   const OptionComponent = isSelectNative ? 'option' : MenuItem;
 
-  if (!valueOptions || !resolvedColumn) {
+  if (!valueOptions || !colDef) {
     return null;
   }
 

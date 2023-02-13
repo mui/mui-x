@@ -37,6 +37,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseButton: React.JSXElementConstructor<any>;
   /**
+   * The custom IconButton component used in the grid.
+   * @default IconButton
+   */
+  BaseIconButton: React.JSXElementConstructor<any>;
+  /**
    * The custom Tooltip component used in the grid.
    * @default Tooltip
    */

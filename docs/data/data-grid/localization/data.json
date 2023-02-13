@@ -8,6 +8,14 @@
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/arSD.ts/"
   },
   {
+    "languageTag": "be-BY",
+    "importName": "beBY",
+    "localeName": "Belarusian",
+    "missingKeysCount": 0,
+    "totalKeysCount": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/beBY.ts/"
+  },
+  {
     "languageTag": "bg-BG",
     "importName": "bgBG",
     "localeName": "Bulgarian",
@@ -115,7 +123,7 @@
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 13,
+    "missingKeysCount": 0,
     "totalKeysCount": 93,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/jaJP.ts/"
   },
@@ -179,7 +187,7 @@
     "languageTag": "sk-SK",
     "importName": "skSK",
     "localeName": "Slovak",
-    "missingKeysCount": 7,
+    "missingKeysCount": 1,
     "totalKeysCount": 93,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/skSK.ts/"
   },
@@ -187,7 +195,7 @@
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 13,
+    "missingKeysCount": 1,
     "totalKeysCount": 93,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/esES.ts/"
   },
@@ -216,10 +224,18 @@
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/ukUA.ts/"
   },
   {
+    "languageTag": "ur-PK",
+    "importName": "urPK",
+    "localeName": "Urdu (Pakistan)",
+    "missingKeysCount": 0,
+    "totalKeysCount": 93,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/urPK.ts/"
+  },
+  {
     "languageTag": "vi-VN",
     "importName": "viVN",
     "localeName": "Vietnamese",
-    "missingKeysCount": 24,
+    "missingKeysCount": 8,
     "totalKeysCount": 93,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/locales/viVN.ts/"
   }

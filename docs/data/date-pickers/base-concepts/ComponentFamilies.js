@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 function ProLabel({ children }) {
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
         <a href="/x/introduction/licensing/#pro-plan">
           <span className="plan-pro" />
@@ -33,7 +33,16 @@ ProLabel.propTypes = {
 export default function ComponentFamilies() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer
+        components={[
+          'DateField',
+          'TimeField',
+          'DateTimeField',
+          'MultiInputDateRangeField',
+          'MultiInputTimeRangeField',
+          'MultiInputDateTimeRangeField',
+        ]}
+      >
         <DemoItem label="Date">
           <DateField defaultValue={dayjs('2022-04-07')} />
         </DemoItem>
@@ -43,17 +52,26 @@ export default function ComponentFamilies() {
         <DemoItem label="Date Time">
           <DateTimeField defaultValue={dayjs('2022-04-07T15:30')} />
         </DemoItem>
-        <DemoItem label={<ProLabel>Date Range</ProLabel>}>
+        <DemoItem
+          label={<ProLabel>Date Range</ProLabel>}
+          component="MultiInputDateRangeField"
+        >
           <MultiInputDateRangeField
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
           />
         </DemoItem>
-        <DemoItem label={<ProLabel>Time Range</ProLabel>}>
+        <DemoItem
+          label={<ProLabel>Time Range</ProLabel>}
+          component="MultiInputTimeRangeField"
+        >
           <MultiInputTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
           />
         </DemoItem>
-        <DemoItem label={<ProLabel>Date Time Range</ProLabel>}>
+        <DemoItem
+          label={<ProLabel>Date Time Range</ProLabel>}
+          component="MultiInputDateTimeRangeField"
+        >
           <MultiInputDateTimeRangeField
             defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-10T18:30')]}
           />

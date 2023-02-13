@@ -4,7 +4,7 @@ title: Date and Time Picker - Base concepts
 packageName: '@mui/x-date-pickers'
 githubLabel: 'component: pickers'
 materialDesign: https://m2.material.io/components/date-pickers
-waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
 ---
 
 # Date and Time Pickers - Base concepts
@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-d
 
 {{"component": "modules/components/ComponentLinkHeader.js"}}
 
-## Basic usage
+## Controlled value
 
 All the components have a `value` / `onChange` API to set and control the values:
 
@@ -56,7 +56,7 @@ For example, the `DatePicker` is the combination of the `DateField` and the `Dat
 The _Calendar / Clock_ components are rendered inside a _Popover_ on desktop and inside a _Modal_ on mobile.
 :::
 
-### Date or time editing ?
+### Date or time editing?
 
 The Date and Time Pickers are divided into six families of components.
 The demo below shows each one of them using their field component:
@@ -81,7 +81,20 @@ Each _Picker_ is available in a responsive, desktop and mobile variant:
 
 There are many components available, each fitting specific use cases. Use the form below to find the component you need:
 
-{{"demo": "ComponentExplorerNoSnap.js", "hideToolbar": true}}
+{{"demo": "ComponentExplorerNoSnap.tsx", "hideToolbar": true}}
+
+## Accessibility
+
+Both `Desktop` and `Mobile` Date and Time Pickers are using `role="dialog"` to display their interactive view parts and thus they should follow [Modal accessibility guidelines](/material-ui/react-modal/#accessibility).
+This behavior is automated as much as possible, ensuring that the Date and Time Pickers are accessible in most cases.
+A correct `aria-labelledby` value is assigned to the dialog component based on the following rules:
+
+- Use `toolbar` id if the toolbar is visible;
+- Use the id of the input label if the toolbar is hidden;
+
+:::info
+Make sure to provide an `aria-labelledby` prop to `popper` and/or `mobilePaper` `slotProps` in case you are using Date and Time Pickers component with **hidden toolbar** and **without a label**.
+:::
 
 ## TypeScript
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
 import { styled } from '@mui/material/styles';
 import { unstable_debounce as debounce } from '@mui/utils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -135,14 +134,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
       InputProps={{
         startAdornment: <rootProps.components.QuickFilterIcon fontSize="small" />,
         endAdornment: (
-          <IconButton
+          <rootProps.components.BaseIconButton
             aria-label={apiRef.current.getLocaleText('toolbarQuickFilterDeleteIconLabel')}
             size="small"
             sx={{ visibility: searchValue ? 'visible' : 'hidden' }}
             onClick={handleSearchReset}
+            {...rootProps.componentsProps?.baseIconButton}
           >
             <rootProps.components.QuickFilterClearIcon fontSize="small" />
-          </IconButton>
+          </rootProps.components.BaseIconButton>
         ),
       }}
       {...other}

@@ -111,6 +111,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     return null;
   }
 
+  if (!isSingleSelectColDef(resolvedColumn)) {
+    return null;
+  }
+
   return (
     <rootProps.components.BaseTextField
       id={id}

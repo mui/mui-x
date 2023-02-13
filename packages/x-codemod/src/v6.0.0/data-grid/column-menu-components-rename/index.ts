@@ -9,9 +9,10 @@ const VARIABLES = {
   SortGridMenuItems: 'GridColumnMenuSortItem',
   GridColumnPinningMenuItems: 'GridColumnMenuPinningItem',
   GridAggregationColumnMenuItem: 'GridColumnMenuAggregationItem',
+  GridFilterItemProps: 'GridColumnMenuItemProps',
 };
 
-const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)(\/(.*)|)/;
+const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
 
 const matchImport = (path: ASTPath<ImportDeclaration>) =>
   (path.node.source.value?.toString() ?? '').match(PACKAGE_REGEXP);

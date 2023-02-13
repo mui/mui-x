@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/utils';
+import { isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
-import { isSingleSelectColDef } from './filterPanelUtils';
 
 export interface GridFilterInputMultipleSingleSelectProps
   extends Omit<

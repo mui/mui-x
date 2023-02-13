@@ -4,6 +4,7 @@ import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
+import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
@@ -90,6 +91,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseSelect: MUISelect,
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
+  BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   Cell: GridCell,

@@ -649,6 +649,11 @@ export const useGridRowEditing = (
     (id) => {
       const editingState = gridEditRowsStateSelector(apiRef.current.state);
       const row = apiRef.current.getRow(id);
+
+      if (!editingState[id]) {
+        return apiRef.current.getRow(id)!;
+      }
+
       let rowUpdate = { ...row };
 
       Object.entries(editingState[id]).forEach(([field, fieldProps]) => {

@@ -18,6 +18,7 @@ function updatedDate<TDate>(
     case 'month':
       return adapter.addMonths(date, diff);
     case 'day':
+    case 'weekDay':
       return adapter.addDays(date, diff);
     case 'hours':
       return adapter.addHours(date, diff);
