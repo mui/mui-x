@@ -393,7 +393,7 @@ describe('<TimeField /> - Editing', () => {
   describeAdapters(
     'Do not loose missing section values ',
     TimeField,
-    ({ adapter, adapterName, render, clickOnInput }) => {
+    ({ adapter, render, clickOnInput }) => {
       it('should not loose date information when a value is provided', () => {
         const onChange = spy();
 
@@ -406,11 +406,6 @@ describe('<TimeField /> - Editing', () => {
         const input = screen.getByRole('textbox');
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });
@@ -437,12 +432,6 @@ describe('<TimeField /> - Editing', () => {
         userEvent.keyPress(input, { key: 'ArrowRight' });
         fireEvent.change(input, { target: { value: '03:4' } }); // Press "3"
         expectInputValue(input, '03:04');
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
-
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 3, 4, 3));
       });
 
@@ -459,11 +448,6 @@ describe('<TimeField /> - Editing', () => {
         const input = screen.getByRole('textbox');
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 3, 3, 2, 3, 3));
       });

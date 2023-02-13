@@ -603,11 +603,6 @@ describe('<DateField /> - Editing', () => {
 
       firePasteEvent(input, '09/16/2022');
 
-      // TODO: Have a way to check the onChange value on any adapter
-      if (adapterName === 'luxon') {
-        return;
-      }
-
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
     });
@@ -622,11 +617,6 @@ describe('<DateField /> - Editing', () => {
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
       firePasteEvent(input, '09/16/2022');
-
-      // TODO: Have a way to check the onChange value on any adapter
-      if (adapterName === 'luxon') {
-        return;
-      }
 
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -705,12 +695,6 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, adapterName === 'luxon' ? '1 / 13 / 2018' : '01 / 13 / 2018');
       firePasteEvent(input, '12');
       expectInputValue(input, '12 / 13 / 2018');
-
-      // TODO: Have a way to check the onChange value on any adapter
-      if (adapterName === 'luxon') {
-        return;
-      }
-
       expect(onChange.callCount).to.equal(1);
       expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2018, 11, 13));
     });
@@ -745,11 +729,6 @@ describe('<DateField /> - Editing', () => {
         clickOnInput(input, input.value.indexOf('2010'));
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
-
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
 
@@ -783,12 +762,6 @@ describe('<DateField /> - Editing', () => {
         fireEvent.change(input, { target: { value: '11 / 25 / 0' } }); // Press "0"
         fireEvent.change(input, { target: { value: '11 / 25 / 9' } }); // Press "9"
         expectInputValue(input, '11 / 25 / 2009');
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
-
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 10, 25, 3, 3, 3));
       });
 
@@ -805,11 +778,6 @@ describe('<DateField /> - Editing', () => {
         const input = screen.getByRole('textbox');
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
 
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2009, 3, 3, 3, 3, 3));
       });
@@ -828,11 +796,6 @@ describe('<DateField /> - Editing', () => {
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
-
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2010, 2, 3, 3, 3, 3));
       });
     },
@@ -841,17 +804,12 @@ describe('<DateField /> - Editing', () => {
   describeAdapters(
     'Imperative change (without any section selected)',
     DateField,
-    ({ adapter, adapterName, render }) => {
+    ({ adapter, render }) => {
       it('should set the date when the change value is valid and no value is provided', () => {
         const onChange = spy();
         render(<DateField onChange={onChange} />);
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '09/16/2022' } });
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
 
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16));
@@ -867,11 +825,6 @@ describe('<DateField /> - Editing', () => {
         );
         const input = screen.getByRole('textbox');
         fireEvent.change(input, { target: { value: '09/16/2022' } });
-
-        // TODO: Have a way to check the onChange value on any adapter
-        if (adapterName === 'luxon') {
-          return;
-        }
 
         expect(onChange.callCount).to.equal(1);
         expect(onChange.lastCall.firstArg).toEqualDateTime(new Date(2022, 8, 16, 3, 3, 3));
