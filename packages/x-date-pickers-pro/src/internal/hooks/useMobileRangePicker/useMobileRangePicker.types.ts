@@ -1,8 +1,3 @@
-import * as React from 'react';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import Stack, { StackProps } from '@mui/material/Stack';
-import Typography, { TypographyProps } from '@mui/material/Typography';
-import { SlotComponentProps } from '@mui/base/utils';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
@@ -21,34 +16,21 @@ import {
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models';
-import { BaseMultiInputFieldProps } from '../../models/fields';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
+import {
+  UseRangePickerFieldSlotsComponent,
+  UseRangePickerFieldSlotsComponentsProps,
+} from '../useRangePickerMultiInputFieldSlotProps';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {
-  Field: React.ElementType;
-  FieldRoot?: React.ElementType<StackProps>;
-  FieldSeparator?: React.ElementType<TypographyProps>;
-  /**
-   * Form control with an input to render a date or time inside the default field.
-   * Receives the same props as `@mui/material/TextField`.
-   * @default TextField from '@mui/material'
-   */
-  TextField?: React.ElementType<TextFieldProps>;
-}
+    ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
+    UseRangePickerFieldSlotsComponent {}
 
 export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponentsProps,
-    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
-  field?: SlotComponentProps<
-    React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, unknown>>,
-    {},
-    unknown
-  >;
-  fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
-  fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+    ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
+    UseRangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
