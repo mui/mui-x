@@ -1,11 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  useGridApiRef,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { TouchRippleActions } from '@mui/material/ButtonBase/TouchRipple';
 
 function RenderDate(props: GridRenderCellParams<any, Date>) {
@@ -74,11 +69,9 @@ const rows = [
 ];
 
 export default function RenderCellGrid() {
-  const apiRef = useGridApiRef();
-
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid apiRef={apiRef} rows={rows} columns={columns} />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }
