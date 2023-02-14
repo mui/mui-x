@@ -166,10 +166,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       apiRef.current.upsertFilterItems([...items, newFilter]);
     };
 
-    const removeAllFilters = () => {
-      apiRef.current.setFilterModel({ ...filterModel, items: [] });
-    };
-
     const deleteFilter = React.useCallback(
       (item: GridFilterItem) => {
         const shouldCloseFilterPanel = items.length === 1;
@@ -180,6 +176,14 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       },
       [apiRef, items.length],
     );
+
+    const handleRemoveAll = () => {
+      if (items.length === 1 && items[0].value === undefined) {
+        apiRef.current.deleteFilterItem(items[0]);
+        apiRef.current.hideFilterPanel();
+      }
+      apiRef.current.setFilterModel({ ...filterModel, items: [] });
+    };
 
     React.useEffect(() => {
       if (
@@ -236,8 +240,7 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
 
             {!disableRemoveAllButton ? (
               <rootProps.components.BaseButton
-                disabled={items.length < 2}
-                onClick={removeAllFilters}
+                onClick={handleRemoveAll}
                 startIcon={<rootProps.components.FilterPanelRemoveAllIcon />}
                 {...rootProps.componentsProps?.baseButton}
               >
