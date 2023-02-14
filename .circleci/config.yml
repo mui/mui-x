@@ -60,7 +60,7 @@ commands:
           command: |
             node --version
             yarn --version
-            docker info
+            swapon -s
       - restore_cache:
           name: Restore yarn cache
           keys:
