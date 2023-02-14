@@ -60,7 +60,6 @@ commands:
           command: |
             node --version
             yarn --version
-            swapon -s
       - restore_cache:
           name: Restore yarn cache
           keys:
