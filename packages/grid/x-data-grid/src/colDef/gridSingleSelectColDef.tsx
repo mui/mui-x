@@ -8,12 +8,16 @@ const isArrayOfObjects = (options: any): options is Array<{ value: any; label: s
   return typeof options[0] === 'object';
 };
 
-const defaultGetOptionValue = (value: ValueOptions) => {
-  return typeof value === 'object' ? value.value : value;
+function isObject(value: unknown): value is Record<string, any> {
+  return typeof value === 'object' && value !== null;
+}
+
+const defaultGetOptionValue = (value: unknown) => {
+  return isObject(value) ? value.value : value;
 };
 
-const defaultGetOptionLabel = (value: ValueOptions) => {
-  return typeof value === 'object' ? value.label : String(value);
+const defaultGetOptionLabel = (value: unknown) => {
+  return isObject(value) ? value.label : String(value);
 };
 
 export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> = {
@@ -48,7 +52,7 @@ export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> =
       return colDef.getOptionLabel!(value);
     }
 
-    const valueOption = valueOptions.find((option) => option.value === value);
+    const valueOption = valueOptions.find((option) => colDef.getOptionValue!(option) === value);
     return valueOption ? colDef.getOptionLabel!(valueOption) : '';
   },
   renderEditCell: renderEditSingleSelectCell,
