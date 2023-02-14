@@ -7,7 +7,7 @@ import { DateTimeValidationError } from '../internals/hooks/validation/useDateTi
 import { ValidationProps } from '../internals/hooks/validation/useValidation';
 import { BasePickerProps } from '../internals/models/props/basePickerProps';
 import { ExportedDateInputProps } from '../internals/components/PureDateInput';
-import { CalendarOrClockPickerView } from '../internals/models';
+import { CalendarOrClockPickerView, ViewType } from '../internals/models';
 import { PickerStateValueManager } from '../internals/hooks/usePickerState';
 import { parsePickerInputValue, parseNonNullablePickerDate } from '../internals/utils/date-utils';
 import { BaseToolbarProps } from '../internals/models/props/baseToolbarProps';
@@ -145,4 +145,15 @@ export const dateTimePickerValueManager: PickerStateValueManager<any, any, any> 
   getTodayValue: (utils) => utils.date()!,
   parseInput: parsePickerInputValue,
   areValuesEqual: (utils, a, b) => utils.isEqual(a, b),
+};
+
+export const resolveViewTypeFromView = (view: CalendarOrClockPickerView): ViewType => {
+  switch (view) {
+    case 'year':
+    case 'month':
+    case 'day':
+      return 'calendar';
+    default:
+      return 'clock';
+  }
 };

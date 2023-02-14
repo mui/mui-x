@@ -1,4 +1,9 @@
-import { CalendarPickerView, ClockPickerView, MuiPickersAdapter } from '../../internals/models';
+import {
+  CalendarPickerView,
+  ClockPickerView,
+  MuiPickersAdapter,
+  ViewType,
+} from '../../internals/models';
 /**
  * Set the types of the texts in the grid.
  */
@@ -14,10 +19,7 @@ export interface PickersLocaleText<TDate> {
   start: string;
   end: string;
   calendarViewSwitchingButtonAriaLabel: (currentView: CalendarPickerView) => string;
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
-  ) => string;
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: ViewType) => string;
   clockLabelText: (
     view: ClockPickerView,
     time: TDate | null,

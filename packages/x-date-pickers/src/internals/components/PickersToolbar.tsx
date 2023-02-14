@@ -13,6 +13,7 @@ import {
   pickersToolbarClasses,
   PickersToolbarClasses,
 } from './pickersToolbarClasses';
+import { ViewType } from '../models';
 
 export interface PickersToolbarProps<TDate, TValue>
   extends Pick<
@@ -20,7 +21,7 @@ export interface PickersToolbarProps<TDate, TValue>
     'getMobileKeyboardInputViewButtonText' | 'isMobileKeyboardViewOpen' | 'toggleMobileKeyboardView'
   > {
   className?: string;
-  viewType?: 'calendar' | 'clock';
+  viewType?: ViewType;
   isLandscape: boolean;
   landscapeDirection?: 'row' | 'column';
   toolbarTitle: React.ReactNode;
@@ -83,7 +84,7 @@ const PickersToolbarPenIconButton = styled(IconButton, {
   ownerState: PickersToolbarProps<any, any>;
 }>({});
 
-const getViewTypeIcon = (viewType: 'calendar' | 'clock') =>
+const getViewTypeIcon = (viewType: ViewType) =>
   viewType === 'clock' ? <Clock color="inherit" /> : <Calendar color="inherit" />;
 
 type PickersToolbarComponent = (<TDate, TValue>(
