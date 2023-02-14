@@ -3,6 +3,7 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import {
   unstable_useDateTimeField as useDateTimeField,
   UseDateTimeFieldComponentProps,
+  UseDateTimeFieldProps,
 } from '@mui/x-date-pickers/DateTimeField';
 import {
   applyDefaultDate,
@@ -58,10 +59,9 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
   endTextFieldProps: inEndTextFieldProps,
   startInputRef,
   endInputRef,
-}: UseMultiInputDateTimeRangeFieldParams<
-  TDate,
-  TChildProps
->): UseMultiInputRangeFieldResponse<TChildProps> => {
+}: UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps>): UseMultiInputRangeFieldResponse<
+  Omit<TChildProps, keyof UseDateTimeFieldProps<TDate>>
+> => {
   const sharedProps = useDefaultizedDateTimeRangeFieldProps<TDate, TChildProps>(inSharedProps);
   const adapter = useLocalizationContext<TDate>();
 
