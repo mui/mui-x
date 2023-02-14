@@ -25,9 +25,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipHide: 'Скрыть фильтры',
   toolbarFiltersTooltipShow: 'Показать фильтры',
   toolbarFiltersTooltipActive: (count) => {
-	function declOfNum(number, words) {
+	const declOfNum = (number, words) => {
         return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
-    }
+    };
     return `${count} ${declOfNum(count, ['активный фильтр', 'активных фильтра', 'активных фильтров'])}`;
   },
 
@@ -94,9 +94,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
-	function declOfNum(number, words) {
+	const declOfNum = (number, words) => {
         return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
-    }
+    };
     return `${count} ${declOfNum(count, ['активный фильтр', 'активных фильтра', 'активных фильтров'])}`;
   },
   columnHeaderFiltersLabel: 'Показать фильтры',
@@ -104,9 +104,9 @@ const ruRUGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) => {
-	function declOfNum(number, words) {
+	const declOfNum = (number, words) => {
         return words[(number % 100 > 4 && number % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(number % 10 < 5) ? Math.abs(number) % 10 : 5]];
-    }
+    };
     return `${count} ${declOfNum(count, ['строка выбрана', 'строки выбрано', 'строк выбрано'])}`;
   },
 
