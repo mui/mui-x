@@ -22,7 +22,7 @@ interface GridBodyProps {
     }
   >;
 
-  ColumnHeadersFilterComponent: React.JSXElementConstructor<
+  ColumnHeadersFilterComponent?: React.JSXElementConstructor<
     React.HTMLAttributes<HTMLDivElement> & {
       ref: React.Ref<HTMLDivElement>;
       innerRef: React.Ref<HTMLDivElement>;
@@ -86,10 +86,12 @@ function GridBody(props: GridBodyProps) {
   return (
     <GridMainContainer>
       <ColumnHeadersComponent ref={columnsContainerRef} innerRef={columnHeadersRef} />
-      <ColumnHeadersFilterComponent
-        ref={columnHeadersFilterRef}
-        innerRef={columnsContainerFilterRef}
-      />
+      {ColumnHeadersFilterComponent ? (
+        <ColumnHeadersFilterComponent
+          ref={columnHeadersFilterRef}
+          innerRef={columnsContainerFilterRef}
+        />
+      ) : null}
       <GridAutoSizer
         nonce={rootProps.nonce}
         disableHeight={rootProps.autoHeight}

@@ -8,7 +8,6 @@ import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
 import { DataGridVirtualScroller } from '../components/DataGridVirtualScroller';
 import { DataGridColumnHeaders } from '../components/DataGridColumnHeaders';
-import { DataGridColumnHeadersFilter } from '../components/DataGridColumnHeadersFilter';
 import { GridValidRowModel } from '../models/gridRows';
 
 const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowModel>(
@@ -24,7 +23,6 @@ const DataGridRaw = React.forwardRef(function DataGrid<R extends GridValidRowMod
         <GridHeader />
         <GridBody
           ColumnHeadersComponent={DataGridColumnHeaders}
-          ColumnHeadersFilterComponent={DataGridColumnHeadersFilter}
           VirtualScrollerComponent={DataGridVirtualScroller}
         />
         <GridFooterPlaceholder />
