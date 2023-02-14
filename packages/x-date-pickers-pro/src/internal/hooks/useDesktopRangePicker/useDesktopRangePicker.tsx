@@ -15,7 +15,6 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import {
   DesktopRangePickerAdditionalViewProps,
@@ -24,8 +23,9 @@ import {
 } from './useDesktopRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -41,11 +41,10 @@ export const useDesktopRangePicker = <
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    slots: innerSlots,
-    slotProps: innerslotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     className,
+    sx,
     format,
     readOnly,
     disabled,
@@ -53,12 +52,11 @@ export const useDesktopRangePicker = <
     disableOpenPicker,
     localeText,
   } = props;
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const {
     open,
@@ -81,7 +79,7 @@ export const useDesktopRangePicker = <
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
   });
 
@@ -98,7 +96,7 @@ export const useDesktopRangePicker = <
     });
   };
 
-  const fieldslotProps = useRangePickerInputProps({
+  const fieldSlotProps = useRangePickerInputProps({
     wrapperVariant: 'desktop',
     open,
     actions,
@@ -108,7 +106,7 @@ export const useDesktopRangePicker = <
     localeText,
     onBlur: handleBlur,
     rangePosition,
-    onRangePositionChange: setRangePosition,
+    onRangePositionChange,
   });
 
   const Field = slots.field;
@@ -123,6 +121,7 @@ export const useDesktopRangePicker = <
       readOnly,
       disabled,
       className,
+      sx,
       format,
       autoFocus: autoFocus && !props.open,
       ref: fieldRef,
@@ -134,63 +133,36 @@ export const useDesktopRangePicker = <
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
-    ...(fieldProps.slots ?? uncapitalizeObjectKeys(fieldProps?.components)),
+    ...fieldProps.slots,
   };
 
-  const slotPropsFromFieldProps = fieldProps.slotProps ?? fieldProps.componentsProps;
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
-    ...slotPropsFromFieldProps,
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
+    ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldslotProps.startInput : fieldslotProps.endInput;
-
       return {
         ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
+        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
       };
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(slotProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.root,
-        ownerState,
-      );
       return {
         ...externalRootProps,
-        ...rootPropsPassedByField,
-        ...fieldslotProps.root,
+        ...fieldSlotProps.root,
       };
     },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(slotProps?.fieldSeparator, ownerState);
-      const separatorPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.separator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
-        ...fieldslotProps.root,
-      };
-    },
+    separator: slotProps?.fieldSeparator,
   };
 
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
   const Layout = slots?.layout ?? PickersLayout;

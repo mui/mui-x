@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import { getDataGridUtilityClass, useGridSelector, GridRenderCellParams } from '@mui/x-data-grid';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -36,7 +35,7 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
     : rootProps.components.DetailPanelExpandIcon;
 
   return (
-    <IconButton
+    <rootProps.components.BaseIconButton
       size="small"
       tabIndex={-1}
       disabled={!hasContent}
@@ -46,9 +45,10 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
           ? apiRef.current.getLocaleText('collapseDetailPanel')
           : apiRef.current.getLocaleText('expandDetailPanel')
       }
+      {...rootProps.componentsProps?.baseIconButton}
     >
       <Icon fontSize="inherit" />
-    </IconButton>
+    </rootProps.components.BaseIconButton>
   );
 }
 

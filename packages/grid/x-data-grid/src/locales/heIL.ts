@@ -6,7 +6,6 @@ const heILGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'אין שורות',
   noResultsOverlayLabel: 'לא נמצאו תוצאות.',
-  errorOverlayDefaultLabel: 'אירעה שגיאה.',
 
   // Density selector toolbar button text
   toolbarDensity: 'צפיפות',

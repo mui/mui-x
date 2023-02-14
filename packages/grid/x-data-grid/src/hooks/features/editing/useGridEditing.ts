@@ -147,7 +147,7 @@ export const useGridEditing = (
   );
 
   const getRowWithUpdatedValues = React.useCallback<
-    GridEditingSharedApi['unstable_getRowWithUpdatedValues']
+    GridEditingSharedApi['getRowWithUpdatedValues']
   >(
     (id, field) => {
       return props.editMode === GridEditModes.Cell
@@ -169,7 +169,7 @@ export const useGridEditing = (
   const editingSharedApi: GridEditingSharedApi = {
     isCellEditable,
     setEditCellValue,
-    unstable_getRowWithUpdatedValues: getRowWithUpdatedValues,
+    getRowWithUpdatedValues,
     unstable_getEditCellMeta: getEditCellMeta,
   };
 

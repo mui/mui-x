@@ -1,7 +1,7 @@
 import {
   UseMobilePickerSlotsComponent,
-  UseMobilePickerSlotsComponentsProps,
   MobileOnlyPickerProps,
+  ExportedUseMobilePickerSlotsComponentsProps,
 } from '../internals/hooks/useMobilePicker';
 import {
   BaseDatePickerProps,
@@ -9,7 +9,6 @@ import {
   BaseDatePickerSlotsComponentsProps,
 } from '../DatePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { DateView } from '../internals/models/views';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -19,12 +18,11 @@ export interface MobileDatePickerSlotsComponent<TDate>
 
 export interface MobileDatePickerSlotsComponentsProps<TDate>
   extends BaseDatePickerSlotsComponentsProps<TDate>,
-    UseMobilePickerSlotsComponentsProps<TDate, DateView> {}
+    ExportedUseMobilePickerSlotsComponentsProps<TDate, DateView> {}
 
 export interface MobileDatePickerProps<TDate>
   extends BaseDatePickerProps<TDate>,
-    MobileOnlyPickerProps<TDate>,
-    BaseNonStaticPickerExternalProps {
+    MobileOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

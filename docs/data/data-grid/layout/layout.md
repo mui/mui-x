@@ -1,6 +1,6 @@
 # Data Grid - Layout
 
-<p class="description">The data grid offers multiple layout mode.</p>
+<p class="description">The data grid offers multiple layout modes.</p>
 
 :::error
 By default, the grid has **no intrinsic dimensions**. It occupies the space its parent leaves.

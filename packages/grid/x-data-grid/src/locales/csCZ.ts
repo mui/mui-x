@@ -6,7 +6,6 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepředvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',

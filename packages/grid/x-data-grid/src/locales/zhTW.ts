@@ -6,7 +6,6 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '沒有資料',
   noResultsOverlayLabel: '沒有結果',
-  errorOverlayDefaultLabel: '發生錯誤',
 
   // Density selector toolbar button text
   toolbarDensity: '表格密度',

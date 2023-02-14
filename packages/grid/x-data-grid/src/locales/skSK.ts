@@ -6,7 +6,6 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
-  errorOverlayDefaultLabel: 'Stala sa nepredvídaná chyba.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Hustota',
@@ -171,12 +170,12 @@ const skSKGrid: Partial<GridLocaleText> = {
   rowReorderingHeaderName: 'Preusporiadávanie riadkov',
 
   // Aggregation
-  // aggregationMenuItemHeader: 'Aggregation',
-  // aggregationFunctionLabelSum: 'sum',
-  // aggregationFunctionLabelAvg: 'avg',
-  // aggregationFunctionLabelMin: 'min',
-  // aggregationFunctionLabelMax: 'max',
-  // aggregationFunctionLabelSize: 'size',
+  aggregationMenuItemHeader: 'Agregácia',
+  aggregationFunctionLabelSum: 'suma',
+  aggregationFunctionLabelAvg: 'priemer',
+  aggregationFunctionLabelMin: 'min',
+  aggregationFunctionLabelMax: 'max',
+  aggregationFunctionLabelSize: 'počet',
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid, skSKCore);

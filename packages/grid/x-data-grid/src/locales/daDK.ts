@@ -6,7 +6,6 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
-  errorOverlayDefaultLabel: 'Der skete en fejl.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tæthed',

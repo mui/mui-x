@@ -7,7 +7,10 @@ import { wrapPickerMount, createPickerRenderer, adapterToUse } from 'test/utils/
 import { describeRangeValidation } from '@mui/x-date-pickers-pro/tests/describeRangeValidation';
 
 describe('<StaticDateRangePicker />', () => {
-  const { render, clock } = createPickerRenderer({ clock: 'fake' });
+  const { render, clock } = createPickerRenderer({
+    clock: 'fake',
+    clockConfig: new Date(2018, 0, 1, 0, 0, 0, 0),
+  });
 
   describeConformance(<StaticDateRangePicker />, () => ({
     classes: {},
@@ -65,7 +68,7 @@ describe('<StaticDateRangePicker />', () => {
       />,
     );
 
-    // It should follow https://www.w3.org/WAI/ARIA/apg/example-index/dialog-modal/datepicker-dialog.html
+    // It should follow https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/
     expect(
       document.querySelector(
         '[role="grid"] [role="rowgroup"] > [role="row"] button[role="gridcell"]',

@@ -12,7 +12,7 @@ import { MakeOptional, TimeView, UncapitalizeObjectKeys } from '../internals';
 
 export interface StaticTimePickerSlotsComponent<TDate>
   extends BaseTimePickerSlotsComponent<TDate>,
-    UseStaticPickerSlotsComponent<TDate | null, TimeView> {}
+    UseStaticPickerSlotsComponent<TDate, TimeView> {}
 
 export interface StaticTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,

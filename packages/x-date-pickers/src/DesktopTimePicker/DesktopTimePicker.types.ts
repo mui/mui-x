@@ -1,6 +1,6 @@
 import {
   UseDesktopPickerSlotsComponent,
-  UseDesktopPickerSlotsComponentsProps,
+  ExportedUseDesktopPickerSlotsComponentsProps,
   DesktopOnlyPickerProps,
 } from '../internals/hooks/useDesktopPicker';
 import {
@@ -9,7 +9,6 @@ import {
   BaseTimePickerSlotsComponentsProps,
 } from '../TimePicker/shared';
 import { MakeOptional } from '../internals/models/helpers';
-import { BaseNonStaticPickerExternalProps } from '../internals/models/props/basePickerProps';
 import { TimeView } from '../internals/models/views';
 import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 
@@ -19,12 +18,11 @@ export interface DesktopTimePickerSlotsComponent<TDate>
 
 export interface DesktopTimePickerSlotsComponentsProps<TDate>
   extends BaseTimePickerSlotsComponentsProps,
-    UseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
+    ExportedUseDesktopPickerSlotsComponentsProps<TDate, TimeView> {}
 
 export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
-    DesktopOnlyPickerProps<TDate>,
-    BaseNonStaticPickerExternalProps {
+    DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}

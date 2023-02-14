@@ -2,6 +2,11 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
+    pathname: '/x/whats-new',
+    title: "✨ What's new in v6? ✨",
+    icon: 'VisibilityIcon',
+  },
+  {
     pathname: '/x/introduction-group',
     title: 'Introduction',
     icon: 'DescriptionIcon',
@@ -104,6 +109,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          {
+            pathname: '/x/api/data-grid/grid-single-select-col-def',
+            title: 'GridSingleSelectColDef',
+          },
+          { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
           { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
           { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },
@@ -134,11 +144,13 @@ const pages: MuiPage[] = [
     ],
   },
   {
-    pathname: '/x/react-date-pickers',
+    pathname: '/x/react-date-pickers-group',
     title: 'Date and Time Pickers',
     icon: 'DatePickerIcon',
     children: [
+      { pathname: '/x/react-date-pickers', title: 'Overview' },
       { pathname: '/x/react-date-pickers/getting-started' },
+      { pathname: '/x/react-date-pickers/base-concepts' },
       {
         pathname: '/x/react-date-pickers/date-pickers',
         title: 'Date components',
@@ -233,8 +245,15 @@ const pages: MuiPage[] = [
         ],
       },
       { pathname: '/x/react-date-pickers/fields', title: 'Field components', newFeature: true },
-      { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
-      { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+      {
+        pathname: '/x/react-date-pickers/visual-customization',
+        title: 'Visual customization',
+        children: [
+          { pathname: '/x/react-date-pickers/custom-components', title: 'Custom subcomponents' },
+          { pathname: '/x/react-date-pickers/custom-layout', title: 'Custom layout' },
+          { pathname: '/x/react-date-pickers/shortcuts', title: 'Shortcuts' },
+        ],
+      },
       {
         pathname: '/x/api/date-pickers-group',
         title: 'API Reference',
@@ -297,7 +316,7 @@ const pages: MuiPage[] = [
             pathname: '/x/api/date-pickers/mobile-date-time-picker',
             title: 'MobileDateTimePicker',
           },
-          { pathname: '/x/api/date-pickers/mobile-picker', title: 'MobileTimePicker' },
+          { pathname: '/x/api/date-pickers/mobile-time-picker', title: 'MobileTimePicker' },
           { pathname: '/x/api/date-pickers/month-calendar', title: 'MonthCalendar' },
           {
             pathname: '/x/api/date-pickers/multi-input-date-range-field',
@@ -317,6 +336,7 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/date-pickers/pickers-action-bar', title: 'PickersActionBar' },
           { pathname: '/x/api/date-pickers/pickers-day', title: 'PickersDay' },
           { pathname: '/x/api/date-pickers/pickers-layout', title: 'PickersLayout' },
+          { pathname: '/x/api/date-pickers/pickers-shortcuts', title: 'PickersShortcuts' },
           {
             pathname: '/x/api/date-pickers/single-input-date-range-field',
             title: 'SingleInputDateRangeField',

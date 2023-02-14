@@ -6,7 +6,6 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rader',
   noResultsOverlayLabel: 'Fant ingen resultat.',
-  errorOverlayDefaultLabel: 'Det skjedde en feil.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Tetthet',

@@ -55,10 +55,10 @@ export interface BaseNonStaticPickerProps {
 }
 
 /**
- * Props common to all non-static pickers.
- * These props are handled by each component, not by the headless wrappers.
+ * Props common to all non-static pickers with a single input.
+ * These props are handled by the headless wrappers.
  */
-export interface BaseNonStaticPickerExternalProps {
+export interface BaseSingleInputNonStaticPickerProps {
   /**
    * The label content.
    */

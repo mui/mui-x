@@ -4,6 +4,7 @@ import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
+import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import { GridIconSlotsComponent, GridSlotsComponent } from '../models';
@@ -48,7 +49,6 @@ import {
 } from '../components';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
-import { GridErrorOverlay } from '../components/GridErrorOverlay';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
@@ -95,13 +95,13 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseSelect: MUISelect,
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
+  BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   Cell: GridCell,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
-  ErrorOverlay: GridErrorOverlay,
   Footer: GridFooter,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,

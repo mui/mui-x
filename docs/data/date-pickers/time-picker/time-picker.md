@@ -11,6 +11,12 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 <p class="description">The Time Picker component let the user select a time.</p>
 
+:::info
+The component by default currently does not ship with **time** picker view experience on **desktop**.
+It was a conscious decision and a first step towards having a more user friendly desktop experience [discussed in #4483](https://github.com/mui/mui-x/issues/4483).
+If a desktop view experience is essential, you can revert to it by following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
+:::
+
 ## Basic usage
 
 {{"demo": "BasicTimePicker.js"}}
@@ -52,7 +58,7 @@ This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
-Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
 ## Form props

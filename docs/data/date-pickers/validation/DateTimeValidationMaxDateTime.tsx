@@ -11,7 +11,7 @@ const todayAt9AM = dayjs().set('hour', 9).startOf('hour');
 export default function DateTimeValidationMaxDateTime() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer>
+      <DemoContainer components={['DateTimePicker']}>
         <DemoItem label="DateTimePicker">
           <DateTimePicker defaultValue={todayAtNoon} maxDateTime={todayAt9AM} />
         </DemoItem>

@@ -6,7 +6,6 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: '행이 없습니다.',
   noResultsOverlayLabel: '결과값이 없습니다.',
-  errorOverlayDefaultLabel: '오류가 발생했습니다.',
 
   // Density selector toolbar button text
   toolbarDensity: '행 간격',

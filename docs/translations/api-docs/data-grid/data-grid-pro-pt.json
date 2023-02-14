@@ -681,6 +681,7 @@
     "BaseSelect": "The custom Select component used in the grid.",
     "BaseSwitch": "The custom Switch component used in the grid.",
     "BaseButton": "The custom Button component used in the grid.",
+    "BaseIconButton": "The custom IconButton component used in the grid.",
     "BaseTooltip": "The custom Tooltip component used in the grid.",
     "BasePopper": "The custom Popper component used in the grid.",
     "Cell": "Component rendered for each cell.",

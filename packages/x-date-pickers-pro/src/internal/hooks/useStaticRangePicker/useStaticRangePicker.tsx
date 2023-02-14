@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {
@@ -16,7 +17,8 @@ import {
   UseStaticRangePickerParams,
   UseStaticRangePickerProps,
 } from './useStaticRangePicker.types';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
+import { useRangePosition } from '../useRangePosition';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -38,9 +40,9 @@ export const useStaticRangePicker = <
   validator,
   ref,
 }: UseStaticRangePickerParams<TDate, TView, TExternalProps>) => {
-  const { localeText, slots, slotProps, displayStaticWrapperAs, autoFocus } = props;
+  const { localeText, slots, slotProps, className, sx, displayStaticWrapperAs, autoFocus } = props;
 
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
 
   const { layoutProps, renderCurrentView } = usePicker<
     DateRange<TDate>,
@@ -55,18 +57,18 @@ export const useStaticRangePicker = <
     autoFocusView: autoFocus ?? false,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
     wrapperVariant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
-  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> = {
+  const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
     toolbar: {
       ...slotProps?.toolbar,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
 
@@ -78,6 +80,8 @@ export const useStaticRangePicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotPropsForLayout}
+          sx={sx}
+          className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
           {renderCurrentView()}

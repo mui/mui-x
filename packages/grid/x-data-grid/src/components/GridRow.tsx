@@ -303,11 +303,7 @@ const GridRow = React.forwardRef<
       }
 
       if (editCellState != null && column.renderEditCell) {
-        let updatedRow = row;
-        if (apiRef.current.unstable_getRowWithUpdatedValues) {
-          // Only the new editing API has this method
-          updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
-        }
+        const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
         const { changeReason, ...editCellStateRest } = editCellState;
 
@@ -376,7 +372,6 @@ const GridRow = React.forwardRef<
       editRowsState,
       cellFocus,
       rootProps,
-      row,
       rowHeight,
       rowId,
       treeDepth,

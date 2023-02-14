@@ -6,7 +6,6 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Satır yok',
   noResultsOverlayLabel: 'Sonuç bulunamadı.',
-  errorOverlayDefaultLabel: 'Bir hata oluştu.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Yoğunluk',
