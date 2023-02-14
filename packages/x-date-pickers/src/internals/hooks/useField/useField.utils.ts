@@ -454,17 +454,14 @@ export const doesSectionHaveTrailingZeros = <TDate>(
   return changeSectionValueFormat(utils, '1', format, format).length > 1;
 };
 
-const getEscapedPartsFromExpandedFormat = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  expandedFormat: string,
-) => {
+const getEscapedPartsFromFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) => {
   const escapedParts: { start: number; end: number }[] = [];
   const { start: startChar, end: endChar } = utils.escapedCharacters;
   const regExp = new RegExp(`(\\${startChar}[^\\${endChar}]*\\${endChar})+`, 'g');
 
   let match: RegExpExecArray | null = null;
   // eslint-disable-next-line no-cond-assign
-  while ((match = regExp.exec(expandedFormat))) {
+  while ((match = regExp.exec(format))) {
     escapedParts.push({ start: match.index, end: regExp.lastIndex - 1 });
   }
 
@@ -477,71 +474,87 @@ export const splitFormatIntoSections = <TDate>(
   format: string,
   date: TDate | null,
 ) => {
-  const expandedFormat = utils.expandFormat(format);
-  const escapedParts = getEscapedPartsFromExpandedFormat(utils, expandedFormat);
-  let currentTokenValue = '';
   let startSeparator: string = '';
   const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
 
-  const commitCurrentToken = () => {
-    if (currentTokenValue === '') {
-      return;
+  const commitToken = (token: string) => {
+    if (token === '') {
+      return null;
     }
 
-    const sectionConfig = getDateSectionConfigFromFormatToken(utils, currentTokenValue);
-    const sectionValue = date == null ? '' : utils.formatByString(date, currentTokenValue);
+    const expandedToken = utils.expandFormat(token);
+    if (expandedToken !== token) {
+      return expandedToken;
+    }
+
+    const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
+    const sectionValue = date == null ? '' : utils.formatByString(date, token);
 
     const hasTrailingZeroes = doesSectionHaveTrailingZeros(
       utils,
       sectionConfig.contentType,
       sectionConfig.dateSectionName,
-      currentTokenValue,
+      token,
     );
 
     sections.push({
       ...sectionConfig,
-      formatValue: currentTokenValue,
+      formatValue: token,
       value: sectionValue,
-      placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, currentTokenValue),
+      placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
       hasTrailingZeroes,
       startSeparator: sections.length === 0 ? startSeparator : '',
       endSeparator: '',
       edited: false,
     });
 
-    currentTokenValue = '';
+    return null;
   };
 
-  for (let i = 0; i < expandedFormat.length; i += 1) {
-    const escapedPartOfCurrentChar = escapedParts.find(
-      (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
-    );
+  const splitFormat = (token: string) => {
+    const escapedParts = getEscapedPartsFromFormat(utils, token);
+    let currentTokenValue = '';
 
-    const char = expandedFormat[i];
+    for (let i = 0; i < token.length; i += 1) {
+      const escapedPartOfCurrentChar = escapedParts.find(
+        (escapeIndex) => escapeIndex.start <= i && escapeIndex.end >= i,
+      );
 
-    const isEscapedChar = escapedPartOfCurrentChar != null;
+      const char = token[i];
+      const isEscapedChar = escapedPartOfCurrentChar != null;
 
-    if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
-      currentTokenValue += char;
-    } else {
-      // If we are on the opening or closing character of an escaped part of the format,
-      // Then we ignore this character.
-      const isEscapeBoundary =
-        (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
-        escapedPartOfCurrentChar?.end === i;
+      if (!isEscapedChar && char.match(/([A-Za-z]+)/)) {
+        currentTokenValue += char;
+      } else {
+        // If we are on the opening or closing character of an escaped part of the format,
+        // Then we ignore this character.
+        const isEscapeBoundary =
+          (isEscapedChar && escapedPartOfCurrentChar?.start === i) ||
+          escapedPartOfCurrentChar?.end === i;
 
-      if (!isEscapeBoundary) {
-        commitCurrentToken();
-        if (sections.length === 0) {
-          startSeparator += char;
-        } else {
-          sections[sections.length - 1].endSeparator += char;
+        if (!isEscapeBoundary) {
+          const expandedToken = commitToken(currentTokenValue);
+          if (expandedToken != null) {
+            splitFormat(expandedToken);
+          }
+
+          currentTokenValue = '';
+          if (sections.length === 0) {
+            startSeparator += char;
+          } else {
+            sections[sections.length - 1].endSeparator += char;
+          }
         }
       }
     }
-  }
 
-  commitCurrentToken();
+    const expandedToken = commitToken(currentTokenValue);
+    if (expandedToken != null) {
+      splitFormat(expandedToken);
+    }
+  };
+
+  splitFormat(format);
 
   const cleanSections = sections.map((section) => {
     const cleanSeparator = (separator: string) => {
