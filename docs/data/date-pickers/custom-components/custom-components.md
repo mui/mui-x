@@ -69,7 +69,7 @@ In the example below, the action bar contains only one button, which resets the 
 The built-in `ActionBar` component supports four different actions:
 
 | Action   | Behavior                                                               |
-| -------- | ---------------------------------------------------------------------- |
+| :------- | :--------------------------------------------------------------------- |
 | `accept` | Accept the current value and close the picker view                     |
 | `cancel` | Reset to the last accepted date and close the picker view              |
 | `clear`  | Reset to the empty value and close the picker view                     |
