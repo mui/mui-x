@@ -4,19 +4,19 @@ import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSel
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 
-const isArrayOfObjects = (options: any): options is Array<{ value: any; label: string }> => {
+const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';
 };
 
-function isObject(value: unknown): value is Record<string, any> {
+function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object' && value !== null;
 }
 
-const defaultGetOptionValue = (value: unknown) => {
+const defaultGetOptionValue = (value: ValueOptions) => {
   return isObject(value) ? value.value : value;
 };
 
-const defaultGetOptionLabel = (value: unknown) => {
+const defaultGetOptionLabel = (value: ValueOptions) => {
   return isObject(value) ? value.label : String(value);
 };
 

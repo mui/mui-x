@@ -272,16 +272,16 @@ export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = a
   valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
   /**
    * Used to determine the label displayed for a given value option.
-   * @param {unknown} value The current value option.
+   * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
    */
-  getOptionLabel?: (value: unknown) => string;
+  getOptionLabel?: (value: ValueOptions) => string;
   /**
    * Used to determine the value used for a value option.
-   * @param {unknown} value The current value option.
+   * @param {ValueOptions} value The current value option.
    * @returns {string} The value to be used.
    */
-  getOptionValue?: (value: unknown) => any;
+  getOptionValue?: (value: ValueOptions) => any;
 }
 
 /**
