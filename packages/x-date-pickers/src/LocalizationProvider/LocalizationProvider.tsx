@@ -149,7 +149,7 @@ LocalizationProvider.propTypes = {
   children: PropTypes.node,
   /**
    * Date library adapter class function.
-   * @see See the {@link https://next.mui.com/x/react-date-pickers/adapters-locale/#set-a-custom-locale available adapters page} for more details.
+   * @see See the localization provider {@link https://next.mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**
