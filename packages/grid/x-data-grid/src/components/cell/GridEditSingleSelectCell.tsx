@@ -195,13 +195,13 @@ GridEditSingleSelectCell.propTypes = {
   formattedValue: PropTypes.any,
   /**
    * Used to determine the label displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
+   * @param {unknown} value The current value option.
    * @returns {string} The text to be displayed.
    */
   getOptionLabel: PropTypes.func,
   /**
    * Used to determine the value used for a value option.
-   * @param {ValueOptions} value The current value option.
+   * @param {unknown} value The current value option.
    * @returns {string} The value to be used.
    */
   getOptionValue: PropTypes.func,
