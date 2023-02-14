@@ -501,7 +501,6 @@ describe('<DataGridPro /> - Export', () => {
                 { field: 'id' },
                 {
                   field: 'country',
-                  type: 'singleSelect',
                   valueOptions: COUNTRY_ISO_OPTIONS,
                 },
               ]}

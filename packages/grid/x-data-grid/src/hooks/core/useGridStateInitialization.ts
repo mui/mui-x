@@ -50,8 +50,8 @@ export const useGridStateInitialization = <PrivateApi extends GridPrivateApiComm
           apiRef.current.state,
           apiRef.current.instanceId,
         );
-        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
 
+        const newSubState = controlState.stateSelector(newState, apiRef.current.instanceId);
         if (newSubState === oldSubState) {
           return;
         }

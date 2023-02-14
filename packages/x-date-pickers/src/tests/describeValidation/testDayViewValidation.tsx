@@ -181,44 +181,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
     });
 
-    it('should apply minTime', function test() {
-      if (['picker', 'field'].includes(componentFamily) && !withTime) {
-        return;
-      }
-
-      render(
-        <ElementToTest
-          {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          minTime={adapterToUse.date(new Date(2019, 5, 4))}
-        />,
-      );
-      expect(screen.getByText('1')).not.to.have.attribute('disabled');
-      expect(screen.getByText('3')).not.to.have.attribute('disabled');
-      expect(screen.getByText('4')).not.to.have.attribute('disabled');
-      expect(screen.getByText('5')).not.to.have.attribute('disabled');
-      expect(screen.getByText('30')).not.to.have.attribute('disabled');
-    });
-
-    it('should apply maxTime', function test() {
-      if (['picker', 'field'].includes(componentFamily) && !withTime) {
-        return;
-      }
-
-      render(
-        <ElementToTest
-          {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          maxTime={adapterToUse.date(new Date(2019, 5, 4))}
-        />,
-      );
-      expect(screen.getByText('1')).not.to.have.attribute('disabled');
-      expect(screen.getByText('3')).not.to.have.attribute('disabled');
-      expect(screen.getByText('4')).not.to.have.attribute('disabled');
-      expect(screen.getByText('5')).not.to.have.attribute('disabled');
-      expect(screen.getByText('30')).not.to.have.attribute('disabled');
-    });
-
     it('should apply maxDateTime', function test() {
       if (!withDate || !withTime) {
         // prop only available on DateTime pickers

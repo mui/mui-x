@@ -134,7 +134,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
     displayWeekNumber,
     yearsPerRow,
     monthsPerRow,
-    sx,
+    ...other
   } = props;
 
   const [value, setValue] = useControlled({
@@ -295,7 +295,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar<TDate>(
       ref={ref}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
-      sx={sx}
+      {...other}
     >
       <PickersCalendarHeader
         views={views}
@@ -493,10 +493,9 @@ DateCalendar.propTypes = {
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -506,7 +505,7 @@ DateCalendar.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */

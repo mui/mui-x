@@ -1,8 +1,6 @@
 import * as React from 'react';
-import {
-  BaseNextPickerInputProps,
-  UsePickerValueNonStaticProps,
-} from '@mui/x-date-pickers/internals';
+import createDescribe from '@mui/monorepo/test/utils/createDescribe';
+import { BasePickerInputProps, UsePickerValueNonStaticProps } from '@mui/x-date-pickers/internals';
 import { PickerComponentFamily } from '../describe.types';
 import { DescribeValueOptions } from './describeValue.types';
 import { testControlledUnControlled } from './testControlledUnControlled';
@@ -11,24 +9,35 @@ import { testPickerActionBar } from './testPickerActionBar';
 
 const TEST_SUITES = [testControlledUnControlled, testPickerOpenCloseLifeCycle, testPickerActionBar];
 
-/**
- * Tests various aspects of the picker value.
- */
-export function describeValue<TValue, C extends PickerComponentFamily>(
+function innerDescribeValue<TValue, C extends PickerComponentFamily>(
   ElementToTest: React.ElementType,
   getOptions: () => DescribeValueOptions<C, TValue>,
 ) {
   const { defaultProps } = getOptions();
 
   function WrappedElementToTest(
-    props: BaseNextPickerInputProps<TValue, any, any, any> & UsePickerValueNonStaticProps<TValue>,
+    props: BasePickerInputProps<TValue, any, any, any> & UsePickerValueNonStaticProps<TValue>,
   ) {
     return <ElementToTest {...defaultProps} {...props} />;
   }
 
-  describe('Value API', () => {
-    TEST_SUITES.forEach((testSuite) => {
-      testSuite(WrappedElementToTest, getOptions);
-    });
+  TEST_SUITES.forEach((testSuite) => {
+    testSuite(WrappedElementToTest, getOptions);
   });
 }
+
+type P<TValue, C extends PickerComponentFamily> = [
+  React.ElementType,
+  () => DescribeValueOptions<C, TValue>,
+];
+
+type DescribeValue = {
+  <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>): void;
+  skip: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+  only: <TValue, C extends PickerComponentFamily>(...args: P<TValue, C>) => void;
+};
+
+/**
+ * Tests various aspects of the picker value.
+ */
+export const describeValue = createDescribe('Value API', innerDescribeValue) as DescribeValue;

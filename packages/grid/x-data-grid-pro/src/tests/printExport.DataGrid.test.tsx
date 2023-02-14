@@ -22,7 +22,7 @@ describe('<DataGridPro /> - Print export', () => {
   const baselineProps = {
     ...defaultData,
     // A hack to remove the warning on print
-    rowsPerPageOptions: [NB_ROWS, 100],
+    pageSizeOptions: [NB_ROWS, 100],
   };
 
   function Test(props: Partial<DataGridProProps>) {

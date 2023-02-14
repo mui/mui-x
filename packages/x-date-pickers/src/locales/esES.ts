@@ -26,15 +26,15 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
-  clearButtonLabel: 'Limpia',
+  clearButtonLabel: 'Limpiar',
   okButtonLabel: 'OK',
   todayButtonLabel: 'Hoy',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Seleccionar fecha',
+  dateTimePickerToolbarTitle: 'Seleccionar fecha & hora',
+  timePickerToolbarTitle: 'Seleccionar hora',
+  dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -71,6 +71,7 @@ const esESPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

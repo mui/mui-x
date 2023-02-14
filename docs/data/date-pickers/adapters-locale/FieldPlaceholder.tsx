@@ -9,7 +9,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 const germanLocale = deDE.components.MuiLocalizationProvider.defaultProps.localeText;
 export default function FieldPlaceholder() {
   return (
-    <DemoContainer>
+    <DemoContainer components={['DateField', 'DateField']}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateField label="English locale (default)" />
       </LocalizationProvider>

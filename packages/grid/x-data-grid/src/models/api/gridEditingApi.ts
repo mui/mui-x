@@ -44,9 +44,9 @@ export interface GridEditingSharedApi {
    * In row editing, `field` is ignored and all fields are considered.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
-   * @ignore - do not document.
+   * @returns {GridRowModel} The row with edited values.
    */
-  unstable_getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
+  getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
   /**
    * Gets the meta information for the edit cell.
    * @param {GridRowId} id The row id being edited.

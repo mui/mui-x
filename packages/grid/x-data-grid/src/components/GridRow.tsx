@@ -155,7 +155,7 @@ const GridRow = React.forwardRef<
   React.useLayoutEffect(() => {
     if (currentPage.range) {
       // The index prop is relative to the rows from all pages. As example, the index prop of the
-      // first row is 5 if pageSize=5 and page=1. However, the index used by the virtualization
+      // first row is 5 if `paginationModel.pageSize=5` and `paginationModel.page=1`. However, the index used by the virtualization
       // doesn't care about pagination and considers the rows from the current page only, so the
       // first row always has index=0. We need to subtract the index of the first row to make it
       // compatible with the index used by the virtualization.
@@ -303,11 +303,7 @@ const GridRow = React.forwardRef<
       }
 
       if (editCellState != null && column.renderEditCell) {
-        let updatedRow = row;
-        if (apiRef.current.unstable_getRowWithUpdatedValues) {
-          // Only the new editing API has this method
-          updatedRow = apiRef.current.unstable_getRowWithUpdatedValues(rowId, column.field);
-        }
+        const updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column.field);
 
         const { changeReason, ...editCellStateRest } = editCellState;
 
@@ -376,7 +372,6 @@ const GridRow = React.forwardRef<
       editRowsState,
       cellFocus,
       rootProps,
-      row,
       rowHeight,
       rowId,
       treeDepth,

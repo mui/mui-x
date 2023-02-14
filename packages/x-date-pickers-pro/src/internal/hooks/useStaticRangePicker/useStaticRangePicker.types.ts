@@ -5,30 +5,31 @@ import {
 } from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
 import {
   DateOrTimeView,
-  BaseNextPickerProps,
+  BasePickerProps,
   UsePickerParams,
   ExportedBaseToolbarProps,
   StaticOnlyPickerProps,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
+import { UseRangePositionProps } from '../useRangePosition';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TView> {}
+  extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
 
 export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TView> {
+  extends ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
+export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
 
 export interface UseStaticRangePickerProps<
   TDate,
   TView extends DateOrTimeView,
   TError,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
-> extends BaseNextPickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
+> extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
    * Overrideable components.

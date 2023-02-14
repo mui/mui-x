@@ -6,7 +6,6 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
-  errorOverlayDefaultLabel: 'Ein unerwarteter Fehler ist aufgetreten.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',

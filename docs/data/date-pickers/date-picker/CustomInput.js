@@ -4,18 +4,18 @@ import Box from '@mui/material/Box';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { Unstable_NextDatePicker as NextDatePicker } from '@mui/x-date-pickers/NextDatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-function BrowserInput(props) {
+const BrowserInput = function BrowserInput(props) {
   const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }} ref={InputProps?.ref}>
       <input ref={inputRef} {...inputProps} {...other} />
       {InputProps?.endAdornment}
     </Box>
   );
-}
+};
 
 BrowserInput.propTypes = {
   /**
@@ -49,7 +49,7 @@ BrowserInput.propTypes = {
 export default function CustomInput() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <NextDatePicker
+      <DatePicker
         label="Custom input"
         slots={{
           textField: BrowserInput,
