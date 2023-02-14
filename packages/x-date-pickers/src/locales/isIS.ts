@@ -1,8 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
-const isISPickers: Partial<PickersLocaleText<any>> = {
+const isISPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Fyrri mánuður',
   nextMonth: 'Næsti mánuður',
@@ -10,14 +9,11 @@ const isISPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'opna fyrri skoðun',
   openNextView: 'opna næstu skoðun',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'ársskoðun er opin, skipta yfir í dagatalsskoðun'
       : 'dagatalsskoðun er opin, skipta yfir í ársskoðun',
-  inputModeToggleButtonAriaLabel: (
-    isKeyboardInputOpen: boolean,
-    viewType: 'calendar' | 'clock',
-  ) => {
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => {
     const viewTypeTranslated = viewType === 'calendar' ? 'dagatals' : 'klukku';
     return isKeyboardInputOpen
       ? `textainnsláttur er opinn, fara í ${viewTypeTranslated}skoðun`

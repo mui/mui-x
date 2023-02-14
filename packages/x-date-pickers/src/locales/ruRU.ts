@@ -26,7 +26,7 @@ const ruRUPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'открыт годовой вид, переключить на календарный вид'
       : 'открыт календарный вид, переключить на годовой вид',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `Открыт текстовый вид, перейти на ${viewTypes[viewType]} вид`
       : `Открыт ${viewTypes[viewType]} вид, перейти на текстовый вид`,

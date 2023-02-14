@@ -26,7 +26,7 @@ const csCZPickers: PickersLocaleText<any> = {
     view === 'year'
       ? 'roční zobrazení otevřeno, přepněte do zobrazení kalendáře'
       : 'zobrazení kalendáře otevřeno, přepněte do zobrazení roku',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `Zobrazení pro zadávání textu je otevřené, přepněte do zobrazení ${pickerViews[viewType]}`
       : `Zobrazení ${pickerViews[viewType]} je otevřené, přepněte do zobrazení textového pole`,

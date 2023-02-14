@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 // maps ClockPickerView to its translation
 const clockViews = {
@@ -15,7 +14,7 @@ const pickerViews = {
   clock: 'Uhransicht',
 };
 
-const deDEPickers: Partial<PickersLocaleText<any>> = {
+const deDEPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Letzter Monat',
   nextMonth: 'Nächster Monat',
@@ -23,11 +22,11 @@ const deDEPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Letzte Ansicht öffnen',
   openNextView: 'Nächste Ansicht öffnen',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'Jahresansicht ist geöffnet, zur Kalenderansicht wechseln'
       : 'Kalenderansicht ist geöffnet, zur Jahresansicht wechseln',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `Texteingabeansicht ist geöffnet, zur ${pickerViews[viewType]} wechseln`
       : `${pickerViews[viewType]} ist geöffnet, zur Texteingabeansicht wechseln`,
