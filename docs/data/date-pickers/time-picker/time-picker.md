@@ -12,9 +12,9 @@ materialDesign: https://m2.material.io/components/time-pickers
 <p class="description">The Time Picker component let the user select a time.</p>
 
 :::info
-The component by default currently does not ship with time picker view experience on **desktop**.
+The component by default currently does not ship with **time** picker view experience on **desktop**.
 It was a conscious decision and a first step towards having a more user friendly desktop experience [discussed in #4483](https://github.com/mui/mui-x/issues/4483).
-If a desktop view experience is essential, it can be reverted to following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
+If a desktop view experience is essential, it can be reverted by following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
 :::
 
 ## Basic usage
