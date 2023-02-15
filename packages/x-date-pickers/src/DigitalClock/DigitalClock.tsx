@@ -11,7 +11,6 @@ import MenuList from '@mui/material/MenuList';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { TimeView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
 import { DigitalClockProps } from './DigitalClock.types';
@@ -100,62 +99,58 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   );
 
   const isTimeDisabled = React.useCallback(
-    (valueToCheck: TDate, viewType: TimeView) => {
+    (valueToCheck: TDate) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
-      const shouldCheckPastEnd =
-        viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
 
-      const containsValidTime = ({ start, end }: { start: TDate; end: TDate }) => {
-        if (minTime && isAfter(minTime, end)) {
+      const containsValidTime = () => {
+        if (minTime && isAfter(minTime, valueToCheck)) {
           return false;
         }
 
-        if (maxTime && isAfter(start, maxTime)) {
+        if (maxTime && isAfter(valueToCheck, maxTime)) {
           return false;
         }
 
-        if (disableFuture && isAfter(start, now)) {
+        if (disableFuture && isAfter(valueToCheck, now)) {
           return false;
         }
 
-        if (disablePast && isAfter(now, shouldCheckPastEnd ? end : start)) {
+        if (disablePast && isAfter(now, valueToCheck)) {
           return false;
         }
 
         return true;
       };
 
-      const isValidValue = (timeValue: number, step = 1) => {
-        if (timeValue % step !== 0) {
+      const isValidValue = () => {
+        if (utils.getMinutes(valueToCheck) % minutesStep !== 0) {
           return false;
         }
 
-        if (shouldDisableClock?.(timeValue, viewType)) {
+        if (shouldDisableClock?.(utils.toJsDate(valueToCheck).getTime(), 'digital')) {
           return false;
         }
 
         if (shouldDisableTime) {
-          return !shouldDisableTime(valueToCheck, viewType);
+          return !shouldDisableTime(valueToCheck, 'digital');
         }
 
         return true;
       };
 
-      const start = utils.setSeconds(utils.setMinutes(valueToCheck, 0), 0);
-      const end = utils.setSeconds(utils.setMinutes(valueToCheck, 59), 59);
-      return !containsValidTime({ start, end }) || !isValidValue(valueToCheck);
+      return !containsValidTime() || !isValidValue();
     },
     [
       disableIgnoringDatePartForTimeValidation,
-      maxTime,
+      utils,
       minTime,
+      maxTime,
+      disableFuture,
+      now,
+      disablePast,
+      minutesStep,
       shouldDisableClock,
       shouldDisableTime,
-      utils,
-      disableFuture,
-      disablePast,
-      now,
-      views,
     ],
   );
 
@@ -188,6 +183,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
             key={utils.toISO(option)}
             onClick={() => handleValueChange(option, 'finish')}
             selected={utils.isEqual(option, value)}
+            disabled={disabled || isTimeDisabled(option)}
           >
             {utils.format(option, 'fullTime')}
           </MenuItem>
@@ -198,7 +194,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
         selectedId={selectedId}
-        disabled={disabled}
         readOnly={readOnly}
         {...viewProps}
       /> */}
