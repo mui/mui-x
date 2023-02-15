@@ -148,6 +148,29 @@ function ColumnPropTest() {
   );
 }
 
+function SingleSelectColDef() {
+  return (
+    <div>
+      <DataGrid<{ country: string }>
+        rows={[]}
+        columns={[
+          {
+            field: 'country',
+            type: 'string',
+            // @ts-expect-error
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
 function ApiRefPrivateMethods() {
   const apiRef = useGridApiRef();
 

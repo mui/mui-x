@@ -5,30 +5,35 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { SlotComponentProps } from '@mui/base/utils';
 import { DateOrTimeView, MuiPickersAdapter } from '../../models';
 import {
-  BaseNextNonStaticPickerProps,
-  BaseNextPickerProps,
+  BaseNonStaticPickerProps,
+  BasePickerProps,
+  BaseSingleInputNonStaticPickerProps,
 } from '../../models/props/basePickerProps';
 import {
   PickersPopperSlotsComponent,
   PickersPopperSlotsComponentsProps,
 } from '../../components/PickersPopper';
 import { UsePickerParams, UsePickerProps } from '../usePicker';
-import { BaseFieldProps } from '../../models/fields';
+import { BaseSingleInputFieldProps } from '../../models/fields';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
+  PickersLayoutSlotsComponentsProps,
 } from '../../../PickersLayout/PickersLayout.types';
 import { UsePickerValueNonStaticProps } from '../usePicker/usePickerValue';
 import { UsePickerViewsNonStaticProps, UsePickerViewsProps } from '../usePicker/usePickerViews';
 import { UncapitalizeObjectKeys } from '../../utils/slots-migration';
 
 export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeView>
-  extends PickersPopperSlotsComponent,
-    ExportedPickersLayoutSlotsComponent<TDate | null, TView> {
+  extends Pick<
+      PickersPopperSlotsComponent,
+      'DesktopPaper' | 'DesktopTransition' | 'DesktopTrapFocus' | 'Popper'
+    >,
+    ExportedPickersLayoutSlotsComponent<TDate | null, TDate, TView> {
   /**
    * Component used to enter the date with the keyboard.
    */
-  Field: React.ElementType<BaseFieldProps<TDate | null, any>>;
+  Field: React.ElementType<BaseSingleInputFieldProps<TDate | null, any>>;
   /**
    * Form control with an input to render the value inside the default field.
    * Receives the same props as `@mui/material/TextField`.
@@ -52,14 +57,14 @@ export interface UseDesktopPickerSlotsComponent<TDate, TView extends DateOrTimeV
 }
 
 export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
-  // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
-  extends Pick<
-      PickersPopperSlotsComponentsProps,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
-    >,
-    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TView> {
+  extends ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView>,
+    Pick<PickersLayoutSlotsComponentsProps<TDate | null, TDate, TView>, 'toolbar'> {}
+
+export interface ExportedUseDesktopPickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
+  extends PickersPopperSlotsComponentsProps,
+    ExportedPickersLayoutSlotsComponentsProps<TDate | null, TDate, TView> {
   field?: SlotComponentProps<
-    React.ElementType<BaseFieldProps<TDate | null, unknown>>,
+    React.ElementType<BaseSingleInputFieldProps<TDate | null, unknown>>,
     {},
     UsePickerProps<TDate | null, any, any, any, any>
   >;
@@ -74,7 +79,8 @@ export interface UseDesktopPickerSlotsComponentsProps<TDate, TView extends DateO
 }
 
 export interface DesktopOnlyPickerProps<TDate>
-  extends BaseNextNonStaticPickerProps,
+  extends BaseNonStaticPickerProps,
+    BaseSingleInputNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
     UsePickerViewsNonStaticProps {
   /**
@@ -88,7 +94,7 @@ export interface UseDesktopPickerProps<
   TView extends DateOrTimeView,
   TError,
   TExternalProps extends UsePickerViewsProps<any, TView, any, any>,
-> extends BaseNextPickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
+> extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     DesktopOnlyPickerProps<TDate> {
   /**
    * Overrideable component slots.

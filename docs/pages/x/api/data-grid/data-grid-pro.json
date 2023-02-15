@@ -55,7 +55,6 @@
       "type": { "name": "enum", "description": "'cell'<br>&#124;&nbsp;'row'" },
       "default": "\"cell\""
     },
-    "error": { "type": { "name": "any" } },
     "experimentalFeatures": {
       "type": {
         "name": "shape",
@@ -129,13 +128,11 @@
     "onColumnVisibilityModelChange": { "type": { "name": "func" } },
     "onColumnWidthChange": { "type": { "name": "func" } },
     "onDetailPanelExpandedRowIdsChange": { "type": { "name": "func" } },
-    "onError": { "type": { "name": "func" } },
     "onFetchRows": { "type": { "name": "func" } },
     "onFilterModelChange": { "type": { "name": "func" } },
     "onMenuClose": { "type": { "name": "func" } },
     "onMenuOpen": { "type": { "name": "func" } },
-    "onPageChange": { "type": { "name": "func" } },
-    "onPageSizeChange": { "type": { "name": "func" } },
+    "onPaginationModelChange": { "type": { "name": "func" } },
     "onPinnedColumnsChange": { "type": { "name": "func" } },
     "onPreferencePanelClose": { "type": { "name": "func" } },
     "onPreferencePanelOpen": { "type": { "name": "func" } },
@@ -151,12 +148,17 @@
     "onRowSelectionModelChange": { "type": { "name": "func" } },
     "onRowsScrollEnd": { "type": { "name": "func" } },
     "onSortModelChange": { "type": { "name": "func" } },
-    "page": { "type": { "name": "number" }, "default": "0" },
-    "pageSize": { "type": { "name": "number" }, "default": "100" },
+    "pageSizeOptions": {
+      "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
+      "default": "[25, 50, 100]"
+    },
     "pagination": { "type": { "name": "bool" } },
     "paginationMode": {
       "type": { "name": "enum", "description": "'client'<br>&#124;&nbsp;'server'" },
       "default": "\"client\""
+    },
+    "paginationModel": {
+      "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": {
       "type": {
@@ -190,10 +192,6 @@
       "type": { "name": "enum", "description": "'border'<br>&#124;&nbsp;'margin'" },
       "default": "\"margin\""
     },
-    "rowsPerPageOptions": {
-      "type": { "name": "arrayOf", "description": "Array&lt;number&gt;" },
-      "default": "[25, 50, 100]"
-    },
     "rowThreshold": { "type": { "name": "number" }, "default": "3" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
@@ -226,6 +224,7 @@
     "BaseButton": { "default": "Button", "type": { "name": "elementType" } },
     "BaseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "BaseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
+    "BaseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "BasePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "BaseSelect": { "default": "Select", "type": { "name": "elementType" } },
     "BaseSwitch": { "default": "Switch", "type": { "name": "elementType" } },
@@ -290,7 +289,6 @@
     "DensityStandardIcon": { "default": "GridTableRowsIcon", "type": { "name": "elementType" } },
     "DetailPanelCollapseIcon": { "default": "GridRemoveIcon", "type": { "name": "elementType" } },
     "DetailPanelExpandIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
-    "ErrorOverlay": { "default": "GridErrorOverlay", "type": { "name": "elementType" } },
     "ExportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "FilterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
     "FilterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },

@@ -82,7 +82,7 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     ['readOnly', 'disabled'].forEach((prop) => {
       it(`should apply ${prop}="true" prop`, () => {
-        if (!['field', 'new-picker'].includes(componentFamily)) {
+        if (!['field', 'picker'].includes(componentFamily)) {
           return;
         }
         const handleChange = spy();
@@ -97,8 +97,8 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
 
     it('should not allow editing with keyboard in mobile pickers', () => {
       if (
-        componentFamily !== 'new-picker' ||
-        (pickerParams as DescribeValueOptions<'new-picker', any>).variant !== 'mobile'
+        componentFamily !== 'picker' ||
+        (pickerParams as DescribeValueOptions<'picker', any>).variant !== 'mobile'
       ) {
         return;
       }
@@ -113,6 +113,86 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
       userEvent.keyPress(input, { key: 'ArrowUp' });
       clock.runToLast();
       expect(handleChange.callCount).to.equal(0);
+    });
+
+    it('should have correct labelledby relationship when toolbar is shown', () => {
+      const params = pickerParams as DescribeValueOptions<'picker', any>;
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+      ) {
+        return;
+      }
+
+      render(
+        <ElementToTest
+          open
+          slotProps={{ toolbar: { hidden: false } }}
+          localeText={{ toolbarTitle: 'Test toolbar' }}
+        />,
+      );
+      expect(screen.getByLabelText('Test toolbar')).to.have.attribute('role', 'dialog');
+    });
+
+    it('should have correct labelledby relationship with provided label when toolbar is hidden', () => {
+      const params = pickerParams as DescribeValueOptions<'picker', any>;
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+      ) {
+        return;
+      }
+
+      render(
+        <ElementToTest
+          open
+          {...(params.type === 'date-range'
+            ? {
+                localeText: {
+                  start: 'test',
+                  end: 'relationship',
+                },
+              }
+            : { label: 'test relationship' })}
+          slotProps={{ toolbar: { hidden: true } }}
+        />,
+      );
+      expect(screen.getByLabelText('test relationship', { selector: 'div' })).to.have.attribute(
+        'role',
+        'dialog',
+      );
+    });
+
+    it('should have correct labelledby relationship without label and hidden toolbar but external props', () => {
+      const params = pickerParams as DescribeValueOptions<'picker', any>;
+      if (
+        componentFamily !== 'picker' ||
+        (params.variant === 'desktop' && (params.type === 'time' || params.type === 'date-range'))
+      ) {
+        return;
+      }
+
+      render(
+        <div>
+          <div id="label-id">external label</div>
+          <ElementToTest
+            open
+            {...(params.type === 'date-range' && {
+              localeText: {
+                start: '',
+                end: '',
+              },
+            })}
+            slotProps={{
+              toolbar: { hidden: true },
+              [params.variant === 'desktop' ? 'popper' : 'mobilePaper']: {
+                'aria-labelledby': 'label-id',
+              },
+            }}
+          />
+        </div>,
+      );
+      expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
     });
   });
 };

@@ -157,7 +157,7 @@ Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
 | Column type    | Function                         |
-| -------------- | -------------------------------- |
+| :------------- | :------------------------------- |
 | `string`       | `getGridStringOperators()`       |
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |
@@ -201,6 +201,10 @@ The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is
 
 :::info
 If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
+:::
+
+:::info
+The filter button displays a tooltip on hover if there are active filters. Pass [`getValueAsString`](/x/api/data-grid/grid-filter-operator/) in the filter operator to customize or convert the value to a more human-readable form.
 :::
 
 In the demo below, you can see how to create a completely new operator for the Rating column.
@@ -354,9 +358,8 @@ initialState={{
 
 With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
 
-- For `'string'` columns, the cell must **contain** the value
-- For `'number'` columns, the cell must **equal** the value
-- For `'singleSelect'` columns, the cell must **start with** the value
+- For `'string'` and `'singleSelect'` columns, the cell's formatted value must **contain** the value
+- For `'number'` columns, the cell's formatted value must **equal** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.
 This function is quite similar to `getApplyFilterFn`.

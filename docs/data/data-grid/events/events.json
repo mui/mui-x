@@ -172,14 +172,6 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "componentError",
-    "description": "Fired when an exception is thrown in the grid.",
-    "params": "any",
-    "event": "MuiEvent<{}>",
-    "componentProp": "onError"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "debouncedResize",
     "description": "Fired when the grid is resized with a debounced time of 60ms.",
     "params": "ElementSize",
@@ -226,16 +218,9 @@
   },
   {
     "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageChange",
-    "description": "Fired when the page changes.",
-    "params": "number",
-    "event": "MuiEvent<{}>"
-  },
-  {
-    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
-    "name": "pageSizeChange",
-    "description": "Fired when the page size changes.",
-    "params": "number",
+    "name": "paginationModelChange",
+    "description": "Fired when the pagination model changes.",
+    "params": "GridPaginationModel",
     "event": "MuiEvent<{}>"
   },
   {

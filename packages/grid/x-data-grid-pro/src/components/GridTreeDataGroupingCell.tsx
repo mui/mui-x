@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import {
   useGridSelector,
@@ -64,7 +63,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
     <Box className={classes.root} sx={{ ml: rowNode.depth * offsetMultiplier }}>
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
-          <IconButton
+          <rootProps.components.BaseIconButton
             size="small"
             onClick={handleClick}
             tabIndex={-1}
@@ -73,9 +72,10 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
+            {...rootProps?.componentsProps?.baseIconButton}
           >
             <Icon fontSize="inherit" />
-          </IconButton>
+          </rootProps.components.BaseIconButton>
         )}
       </div>
       <span>

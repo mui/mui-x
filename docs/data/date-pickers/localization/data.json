@@ -3,7 +3,7 @@
     "languageTag": "be-BY",
     "importName": "beBY",
     "localeName": "Belarusian",
-    "missingKeysCount": 0,
+    "missingKeysCount": 1,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/beBY.ts/"
   },
@@ -14,6 +14,14 @@
     "missingKeysCount": 16,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/zhCN.ts/"
+  },
+  {
+    "languageTag": "cs-CZ",
+    "importName": "csCZ",
+    "localeName": "Czech",
+    "missingKeysCount": 1,
+    "totalKeysCount": 35,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/csCZ.ts/"
   },
   {
     "languageTag": "nl-NL",
@@ -27,7 +35,7 @@
     "languageTag": "fi-FI",
     "importName": "fiFI",
     "localeName": "Finnish",
-    "missingKeysCount": 11,
+    "missingKeysCount": 12,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/fiFI.ts/"
   },
@@ -35,7 +43,7 @@
     "languageTag": "fr-FR",
     "importName": "frFR",
     "localeName": "French",
-    "missingKeysCount": 15,
+    "missingKeysCount": 16,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/frFR.ts/"
   },
@@ -43,15 +51,23 @@
     "languageTag": "de-DE",
     "importName": "deDE",
     "localeName": "German",
-    "missingKeysCount": 4,
+    "missingKeysCount": 5,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/deDE.ts/"
+  },
+  {
+    "languageTag": "hu-HU",
+    "importName": "huHU",
+    "localeName": "Hungarian",
+    "missingKeysCount": 1,
+    "totalKeysCount": 35,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/huHU.ts/"
   },
   {
     "languageTag": "is-IS",
     "importName": "isIS",
     "localeName": "Icelandic",
-    "missingKeysCount": 11,
+    "missingKeysCount": 12,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/isIS.ts/"
   },
@@ -59,7 +75,7 @@
     "languageTag": "it-IT",
     "importName": "itIT",
     "localeName": "Italian",
-    "missingKeysCount": 16,
+    "missingKeysCount": 1,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/itIT.ts/"
   },
@@ -67,7 +83,7 @@
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 11,
+    "missingKeysCount": 1,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/jaJP.ts/"
   },
@@ -75,7 +91,7 @@
     "languageTag": "ko-KR",
     "importName": "koKR",
     "localeName": "Korean",
-    "missingKeysCount": 0,
+    "missingKeysCount": 1,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/koKR.ts/"
   },
@@ -91,7 +107,7 @@
     "languageTag": "fa-IR",
     "importName": "faIR",
     "localeName": "Persian",
-    "missingKeysCount": 11,
+    "missingKeysCount": 12,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/faIR.ts/"
   },
@@ -107,15 +123,23 @@
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 16,
+    "missingKeysCount": 12,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ptBR.ts/"
+  },
+  {
+    "languageTag": "ru-RU",
+    "importName": "ruRU",
+    "localeName": "Russian",
+    "missingKeysCount": 1,
+    "totalKeysCount": 35,
+    "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ruRU.ts/"
   },
   {
     "languageTag": "es-ES",
     "importName": "esES",
     "localeName": "Spanish",
-    "missingKeysCount": 16,
+    "missingKeysCount": 12,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/esES.ts/"
   },
@@ -131,7 +155,7 @@
     "languageTag": "tr-TR",
     "importName": "trTR",
     "localeName": "Turkish",
-    "missingKeysCount": 4,
+    "missingKeysCount": 5,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/trTR.ts/"
   },
@@ -139,7 +163,7 @@
     "languageTag": "uk-UA",
     "importName": "ukUA",
     "localeName": "Ukrainian",
-    "missingKeysCount": 0,
+    "missingKeysCount": 1,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/ukUA.ts/"
   },
@@ -147,7 +171,7 @@
     "languageTag": "ur-PK",
     "importName": "urPK",
     "localeName": "Urdu (Pakistan)",
-    "missingKeysCount": 7,
+    "missingKeysCount": 8,
     "totalKeysCount": 35,
     "githubLink": "https://github.com/mui/mui-x/blob/next/packages/x-date-pickers/src/locales/urPK.ts/"
   }

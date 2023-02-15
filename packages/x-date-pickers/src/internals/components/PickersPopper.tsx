@@ -17,15 +17,12 @@ import {
 } from '@mui/utils';
 import { styled, useThemeProps } from '@mui/material/styles';
 import { TransitionProps as MuiTransitionProps } from '@mui/material/transitions';
-import { PickersActionBar } from '../../PickersActionBar';
-import { PickerStateWrapperProps } from '../hooks/usePickerState';
 import { getPickersPopperUtilityClass, PickersPopperClasses } from './pickersPopperClasses';
-import { PickersSlotsComponent, PickersSlotsComponentsProps } from './wrappers/WrapperProps';
 import { getActiveElement } from '../utils/utils';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../utils/slots-migration';
+import { UsePickerValueActions } from '../hooks/usePicker/usePickerValue';
 
-export interface PickersPopperSlotsComponent
-  extends Pick<PickersSlotsComponent, 'ActionBar' | 'PaperContent'> {
+export interface PickersPopperSlotsComponent {
   /**
    * Custom component for the paper rendered inside the desktop picker's Popper.
    * @default PickersPopperPaper
@@ -48,8 +45,7 @@ export interface PickersPopperSlotsComponent
   Popper?: React.ElementType<MuiPopperProps>;
 }
 
-export interface PickersPopperSlotsComponentsProps
-  extends Pick<PickersSlotsComponentsProps, 'actionBar' | 'paperContent'> {
+export interface PickersPopperSlotsComponentsProps {
   /**
    * Props passed down to the desktop [Paper](https://mui.com/material-ui/api/paper/) component.
    */
@@ -72,10 +68,11 @@ export interface PickersPopperSlotsComponentsProps
   popper?: SlotComponentProps<typeof MuiPopper, {}, PickerPopperProps>;
 }
 
-export interface PickerPopperProps extends PickerStateWrapperProps {
+export interface PickerPopperProps extends UsePickerValueActions {
   role: 'tooltip' | 'dialog';
   anchorEl: MuiPopperProps['anchorEl'];
   open: MuiPopperProps['open'];
+  placement?: MuiPopperProps['placement'];
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
@@ -273,23 +270,20 @@ export function PickersPopper(inProps: PickerPopperProps) {
     shouldRestoreFocus,
     onBlur,
     onDismiss,
-    onClear,
-    onAccept,
-    onCancel,
-    onSetToday,
     open,
     role,
+    placement,
     components,
     componentsProps,
     slots: innerSlots,
-    slotProps: innerslotProps,
+    slotProps: innerSlotProps,
   } = props;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerslotProps ?? componentsProps;
+  const slotProps = innerSlotProps ?? componentsProps;
 
   React.useEffect(() => {
     function handleKeyDown(nativeEvent: KeyboardEvent) {
-      // IE11, Edge (prior to using Bink?) use 'Esc'
+      // IE11, Edge (prior to using Blink?) use 'Esc'
       if (open && (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc')) {
         onDismiss();
       }
@@ -343,21 +337,6 @@ export function PickersPopper(inProps: PickerPopperProps) {
     }
   };
 
-  const ActionBar = slots?.actionBar ?? PickersActionBar;
-  const actionBarProps = useSlotProps({
-    elementType: ActionBar,
-    externalSlotProps: slotProps?.actionBar,
-    additionalProps: {
-      onAccept,
-      onClear,
-      onCancel,
-      onSetToday,
-      actions: [],
-    },
-    ownerState: { wrapperVariant: 'desktop' },
-  });
-
-  const PaperContent = slots?.paperContent ?? React.Fragment;
   const Transition = slots?.desktopTransition ?? Grow;
   const TrapFocus = slots?.desktopTrapFocus ?? MuiTrapFocus;
 
@@ -383,6 +362,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
       role,
       open,
       anchorEl,
+      placement,
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
@@ -391,7 +371,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   return (
     <Popper {...popperProps}>
-      {({ TransitionProps, placement }) => (
+      {({ TransitionProps, placement: popperPlacement }) => (
         <TrapFocus
           open={open}
           disableAutoFocus
@@ -414,12 +394,9 @@ export function PickersPopper(inProps: PickerPopperProps) {
                 onPaperTouchStart(event);
                 paperProps.onTouchStart?.(event);
               }}
-              ownerState={{ ...ownerState, placement }}
+              ownerState={{ ...ownerState, placement: popperPlacement }}
             >
-              <PaperContent {...slotProps?.paperContent}>
-                {children}
-                <ActionBar {...actionBarProps} />
-              </PaperContent>
+              {children}
             </Paper>
           </Transition>
         </TrapFocus>

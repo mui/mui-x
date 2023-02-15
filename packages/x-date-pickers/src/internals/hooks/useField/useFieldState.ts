@@ -40,7 +40,7 @@ export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> 
    */
   setSectionValueOnDate: (
     activeDate: TDate,
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   ) => { date: TDate; shouldGoToNextSection: boolean } | null;
   /**
    * Function called if the current date is not valid.
@@ -51,7 +51,7 @@ export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> 
    * @returns {{ sectionValue: string; shouldGoToNextSection: boolean } | null} The new value of the active section and a boolean indicating if the focus should move to the next section.
    */
   setSectionValueOnSections: (
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate, TSection>,
+    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
   ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 }
 
@@ -89,10 +89,7 @@ export const useFieldState = <
   const firstDefaultValue = React.useRef(defaultValue);
   const valueFromTheOutside = valueProp ?? firstDefaultValue.current ?? valueManager.emptyValue;
 
-  const sectionsValueBoundaries = React.useMemo(
-    () => getSectionsBoundaries<TDate, TSection>(utils),
-    [utils],
-  );
+  const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
 
   const [sectionOrder, setSectionOrder] = React.useState(() =>
     fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
@@ -168,14 +165,14 @@ export const useFieldState = <
     return selectedSections;
   }, [selectedSections, state.sections]);
 
-  const publishValue = ({
-    value,
-    referenceValue,
-  }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>) => {
+  const publishValue = (
+    { value, referenceValue }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>,
+    sections = state.sections,
+  ) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
-      state.sections,
+      sections,
       value,
       format,
     );
@@ -222,13 +219,31 @@ export const useFieldState = <
 
     const activeSection = state.sections[selectedSectionIndexes.startIndex];
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
+    const activeDateSections = fieldValueManager.getActiveDateSections(
+      state.sections,
+      activeSection,
+    );
+
+    const isTheOnlyNonEmptySection = activeDateSections.every((section) => {
+      if (section.startInInput === activeSection.startInInput) {
+        return true;
+      }
+
+      return section.value === '';
+    });
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
+    const newValue = activeDateManager.getNewValueFromNewActiveDate(null);
+
+    if (isTheOnlyNonEmptySection) {
+      return publishValue(newValue, newSections);
+    }
 
     return setState((prevState) => ({
       ...prevState,
       sections: newSections,
-      ...activeDateManager.getNewValueFromNewActiveDate(null),
+      tempValueStrAndroid: null,
+      ...newValue,
     }));
   };
 
@@ -338,7 +353,9 @@ export const useFieldState = <
     // We can try to set the day to the maximum boundary.
     if (
       !utils.isValid(newDate) &&
-      activeDateSections.every((section) => section.value !== '') &&
+      activeDateSections.every(
+        (section) => section.dateSectionName === 'weekDay' || section.value !== '',
+      ) &&
       activeDateSections.some((section) => section.dateSectionName === 'day')
     ) {
       const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);

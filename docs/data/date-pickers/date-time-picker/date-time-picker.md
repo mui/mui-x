@@ -1,7 +1,7 @@
 ---
 product: date-pickers
 title: React Date Time Picker component
-components: NextDateTimePicker, DesktopNextDateTimePicker, MobileNextDateTimePicker, StaticNextDateTimePicker
+components: DateTimePicker, DesktopDateTimePicker, MobileDateTimePicker, StaticDateTimePicker
 githubLabel: 'component: DateTimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/date-pickers
@@ -11,12 +11,10 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 <p class="description">The Date Time Picker component let the user select a date and time.</p>
 
-:::warning
-The new Date Time Pickers are unstable.
-They might receive breaking changes on their props to have the best component possible by the time of the stable release.
-
-They will be renamed at the end of the v6 beta phase to have the same name as the current legacy pickers
-(`NextDateTimePicker` will become `DateTimePicker`, ...)
+:::info
+The component by default currently does not ship with **time** picker view experience on **desktop**.
+It was a conscious decision and a first step towards having a more user friendly desktop experience [discussed in #4483](https://github.com/mui/mui-x/issues/4483).
+If a desktop view experience is essential, you can revert to it by following the suggestion [in the migration guide](/x/migration/migration-pickers-v5/#stop-rendering-a-clock-on-desktop).
 :::
 
 ## Basic usage
@@ -44,24 +42,24 @@ The component can be uncontrolled or controlled
 
 The component is available in four variants:
 
-- The `DesktopNextDateTimePicker` component which works best for mouse devices and large screens.
+- The `DesktopDateTimePicker` component which works best for mouse devices and large screens.
   It renders the views inside a popover and allows editing values directly inside the field.
 
-- The `MobileNextDateTimePicker` component which works best for touch devices and small screens.
+- The `MobileDateTimePicker` component which works best for touch devices and small screens.
   It renders the view inside a modal and does not allow editing values directly inside the field.
 
-- The `NextDateTimePicker` component which renders `DesktopNextDateTimePicker` or `MobileNextDateTimePicker` depending on the device it runs on.
+- The `DateTimePicker` component which renders `DesktopDateTimePicker` or `MobileDateTimePicker` depending on the device it runs on.
 
 - The `StaticDateTimePicker` component which renders without the popover/modal and field.
 
 {{"demo": "ResponsiveDateTimePickers.js"}}
 
-By default, the `NextDateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DateTimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning
 Responsive components can suffer some inconsistencies between testing environments if media query is not supported.
-Please refer to [this section](/x/react-date-pickers/getting-started/#testing-caveats) for solutions.
+Please refer to [this section](/x/react-date-pickers/base-concepts/#testing-caveats) for solutions.
 :::
 
 ## Form props

@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import * as React from 'react';
 import { screen } from '@mui/monorepo/test/utils';
-import TextField from '@mui/material/TextField';
 import { adapterToUse } from 'test/utils/pickers-utils';
 import { DescribeValidationTestSuite } from './describeValidation.types';
 
@@ -15,11 +14,14 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
   describe('day view:', () => {
     const defaultProps = {
       onChange: () => {},
-      renderInput: (params) => <TextField {...params} />,
       open: true,
       view: 'day',
       reduceAnimations: true,
-      showToolbar: false,
+      ...(componentFamily.includes('legacy-')
+        ? {
+            componentsProps: { toolbar: { hidden: true } },
+          }
+        : { slotProps: { toolbar: { hidden: true } } }),
     };
 
     it('should apply shouldDisableDate', function test() {
@@ -177,44 +179,6 @@ export const testDayViewValidation: DescribeValidationTestSuite = (ElementToTest
       expect(screen.getByText('30')).to.have.attribute('disabled');
       expect(screen.getByLabelText('Previous month')).not.to.have.attribute('disabled');
       expect(screen.getByLabelText('Next month')).to.have.attribute('disabled');
-    });
-
-    it('should apply minTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
-        return;
-      }
-
-      render(
-        <ElementToTest
-          {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          minTime={adapterToUse.date(new Date(2019, 5, 4))}
-        />,
-      );
-      expect(screen.getByText('1')).not.to.have.attribute('disabled');
-      expect(screen.getByText('3')).not.to.have.attribute('disabled');
-      expect(screen.getByText('4')).not.to.have.attribute('disabled');
-      expect(screen.getByText('5')).not.to.have.attribute('disabled');
-      expect(screen.getByText('30')).not.to.have.attribute('disabled');
-    });
-
-    it('should apply maxTime', function test() {
-      if (['new-picker', 'field'].includes(componentFamily) && !withTime) {
-        return;
-      }
-
-      render(
-        <ElementToTest
-          {...defaultProps}
-          value={adapterToUse.date(new Date(2019, 5, 15))}
-          maxTime={adapterToUse.date(new Date(2019, 5, 4))}
-        />,
-      );
-      expect(screen.getByText('1')).not.to.have.attribute('disabled');
-      expect(screen.getByText('3')).not.to.have.attribute('disabled');
-      expect(screen.getByText('4')).not.to.have.attribute('disabled');
-      expect(screen.getByText('5')).not.to.have.attribute('disabled');
-      expect(screen.getByText('30')).not.to.have.attribute('disabled');
     });
 
     it('should apply maxDateTime', function test() {

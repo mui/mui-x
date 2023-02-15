@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
-import { PickerStateValueManager } from '../usePickerState';
+import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
@@ -14,7 +14,7 @@ export interface UseFieldParams<
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
   internalProps: TInternalProps;
-  valueManager: PickerStateValueManager<TValue, TDate, InferError<TInternalProps>>;
+  valueManager: PickerValueManager<TValue, TDate, InferError<TInternalProps>>;
   fieldValueManager: FieldValueManager<TValue, TDate, TSection, InferError<TInternalProps>>;
   validator: Validator<
     TValue,
@@ -37,14 +37,16 @@ export interface UseFieldInternalProps<TValue, TError> {
   defaultValue?: TValue;
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: FieldChangeHandler<TValue, TError>;
   /**
    * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error.
    * @param {TValue} value The value associated to the error.
    */
@@ -79,6 +81,7 @@ export interface UseFieldInternalProps<TValue, TError> {
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
@@ -137,9 +140,12 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
-export type FieldSectionsValueBoundaries<TDate, TSection extends FieldSection> = Record<
+export type FieldSectionsValueBoundaries<TDate> = Record<
   MuiDateSectionName,
-  (currentDate: TDate | null, section: TSection) => { minimum: number; maximum: number }
+  (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
+    minimum: number;
+    maximum: number;
+  }
 >;
 
 export type FieldChangeHandler<TValue, TError> = (

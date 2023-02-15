@@ -1,5 +1,4 @@
 import * as React from 'react';
-import TextField from '@mui/material/TextField';
 import { TransitionProps } from '@mui/material/transitions';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -40,8 +39,6 @@ export default function UncontrolledDateTimePicker() {
         // Simulating what would happen if the media query matches/not matches
         // Simpler to implement than mocking window.matchMedia
         desktopModeMediaQuery={mode === 'desktop' ? desktopMediaQuery : `not(${desktopMediaQuery})`}
-        onChange={() => {}}
-        renderInput={(params) => <TextField {...params} />}
         components={{
           DesktopTransition: NoTransition,
         }}

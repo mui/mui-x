@@ -14,7 +14,6 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'jaarweergave is geopend, schakel over naar kalenderweergave'
       : 'kalenderweergave is geopend, switch naar jaarweergave',
-  // inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) => isKeyboardInputOpen ? `text input view is open, go to ${viewType} view` : `${viewType} view is open, go to text input view`,
 
   // DateRange placeholders
   start: 'Start',
@@ -67,6 +66,7 @@ const nlNLPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

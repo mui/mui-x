@@ -24,6 +24,7 @@ import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
 import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
 import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import { GridPaginationModel } from '../gridPaginationProps';
 
 export interface GridRowEventLookup {
   /**
@@ -287,13 +288,9 @@ export interface GridCellEventLookup {
 
 export interface GridControlledStateEventLookup {
   /**
-   * Fired when the page size changes.
+   * Fired when the pagination model changes.
    */
-  pageSizeChange: { params: number };
-  /**
-   * Fired when the page changes.
-   */
-  pageChange: { params: number };
+  paginationModelChange: { params: GridPaginationModel };
   /**
    * Fired when the filter model changes.
    */
@@ -319,6 +316,7 @@ export interface GridControlledStateReasonLookup {
     | 'deleteFilterItem'
     | 'changeLogicOperator'
     | 'restoreState';
+  pagination: 'setPaginationModel' | 'stateRestorePreProcessing';
 }
 
 export interface GridEventLookup
@@ -331,10 +329,6 @@ export interface GridEventLookup
    * Fired when the grid is unmounted.
    */
   unmount: {};
-  /**
-   * Fired when an exception is thrown in the grid.
-   */
-  componentError: { params: any };
   /**
    * Fired when the state of the grid is updated.
    */
