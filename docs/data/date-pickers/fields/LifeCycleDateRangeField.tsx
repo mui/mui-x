@@ -19,7 +19,7 @@ export default function LifeCycleDateRangeField() {
         <SingleInputDateRangeField
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          sx={{ width: 400 }}
+          sx={{ width: 300 }}
         />
       </LocalizationProvider>
       <Typography>

@@ -105,7 +105,9 @@ export function DemoContainer(props: DemoGridProps) {
 
   let direction: StackProps['direction'];
   let spacing: StackProps['spacing'];
-  let sx: StackProps['sx'];
+  let sx: StackProps['sx'] = {
+    overflow: 'auto',
+  };
 
   if (
     childrenCount > 2 ||
@@ -124,13 +126,13 @@ export function DemoContainer(props: DemoGridProps) {
   }
 
   if (childrenTypes.has('UI-view')) {
-    sx = null;
+    // noop
   } else if (childrenTypes.has('single-input-range-field')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 400 } };
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 256 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 256 } };
   } else {
-    sx = { [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
   }
 
   return (
