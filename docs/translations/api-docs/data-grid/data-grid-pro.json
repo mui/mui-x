@@ -685,6 +685,7 @@
     "Cell": "Component rendered for each cell.",
     "ColumnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "ColumnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
+    "ColumnHeaders": "Component responsible for rendering the column headers.",
     "ColumnMenu": "Column menu component rendered by clicking on the 3 dots &quot;kebab&quot; icon in column headers.",
     "ColumnMenuClearIcon": "Icon displayed in column menu for clearing values",
     "ColumnMenuFilterIcon": "Icon displayed in column menu for filter",

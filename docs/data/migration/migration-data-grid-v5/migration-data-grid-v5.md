@@ -390,13 +390,13 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 
-<!--
-### Virtualization
-
-TBD
--->
-
 ### Removals from the public API
 
 - The `getGridSingleSelectQuickFilterFn` function was removed.
   You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
+
+### Misc
+
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot.
+  You can use the new `focusedCell` and `tabbableCell` props instead.
+  For the editing state, use the API methods.

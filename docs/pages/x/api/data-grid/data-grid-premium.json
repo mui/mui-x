@@ -263,6 +263,7 @@
       "default": "GridColumnHeaderFilterIconButton",
       "type": { "name": "elementType" }
     },
+    "ColumnHeaders": { "default": "DataGridColumnHeaders", "type": { "name": "elementType" } },
     "ColumnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "ColumnMenuAggregationIcon": {
       "default": "GridFunctionsIcon",

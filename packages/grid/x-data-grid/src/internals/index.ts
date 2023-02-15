@@ -21,6 +21,7 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export type { UseGridColumnHeadersProps } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,

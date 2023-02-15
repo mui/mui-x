@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   unstable_composeClasses as composeClasses,
   unstable_useEventCallback as useEventCallback,
@@ -7,24 +8,19 @@ import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
   getDataGridUtilityClass,
   gridClasses,
-  useGridSelector,
   useGridApiEventHandler,
-  gridVisibleColumnFieldsSelector,
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
   GridColumnHeaders,
   GridColumnHeadersInner,
   useGridColumnHeaders,
+  UseGridColumnHeadersProps,
 } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import {
-  gridPinnedColumnsSelector,
-  GridPinnedPosition,
-  GridPinnedColumns,
-} from '../hooks/features/columnPinning';
+import { GridPinnedPosition, GridPinnedColumns } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
 
 type OwnerState = {
@@ -105,148 +101,253 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     }),
 }));
 
-interface DataGridProColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
+GridColumnHeadersPinnedColumnHeaders.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  ownerState: PropTypes.shape({
+    showCellVerticalBorder: PropTypes.bool.isRequired,
+    side: PropTypes.oneOf(['left', 'right']).isRequired,
+  }).isRequired,
+} as any;
+
+interface DataGridProColumnHeadersProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
+  pinnedColumns: GridPinnedColumns;
 }
 
-export const DataGridProColumnHeaders = React.forwardRef<
-  HTMLDivElement,
-  DataGridProColumnHeadersProps
->(function DataGridProColumnHeaders(props, ref) {
-  const { style, className, innerRef, ...other } = props;
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
-  const visibleColumnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
-  const [scrollbarSize, setScrollbarSize] = React.useState(0);
-  const theme = useTheme();
+const DataGridProColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
+  function DataGridProColumnHeaders(props, ref) {
+    const {
+      style,
+      className,
+      innerRef,
+      visibleColumns,
+      sortColumnLookup,
+      filterColumnLookup,
+      columnPositions,
+      columnHeaderTabIndexState,
+      columnGroupHeaderTabIndexState,
+      columnHeaderFocus,
+      columnGroupHeaderFocus,
+      densityFactor,
+      headerGroupingMaxDepth,
+      columnMenuState,
+      columnVisibility,
+      columnGroupsHeaderStructure,
+      hasOtherElementInTabSequence,
+      pinnedColumns,
+      ...other
+    } = props;
+    const rootProps = useGridRootProps();
+    const apiRef = useGridApiContext();
+    const [scrollbarSize, setScrollbarSize] = React.useState(0);
+    const theme = useTheme();
 
-  const handleContentSizeChange = useEventCallback(() => {
-    const rootDimensions = apiRef.current.getRootDimensions();
-    if (!rootDimensions) {
-      return;
-    }
+    const handleContentSizeChange = useEventCallback(() => {
+      const rootDimensions = apiRef.current.getRootDimensions();
+      if (!rootDimensions) {
+        return;
+      }
 
-    const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
-    if (scrollbarSize !== newScrollbarSize) {
-      setScrollbarSize(newScrollbarSize);
-    }
-  });
+      const newScrollbarSize = rootDimensions.hasScrollY ? rootDimensions.scrollBarSize : 0;
+      if (scrollbarSize !== newScrollbarSize) {
+        setScrollbarSize(newScrollbarSize);
+      }
+    });
 
-  useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
+    useGridApiEventHandler(apiRef, 'virtualScrollerContentSizeChange', handleContentSizeChange);
 
-  const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
-    pinnedColumns,
-    visibleColumnFields,
-    theme.direction === 'rtl',
-  );
+    const visibleColumnFields = React.useMemo(
+      () => visibleColumns.map(({ field }) => field),
+      [visibleColumns],
+    );
 
-  const {
-    isDragging,
-    renderContext,
-    getRootProps,
-    getInnerProps,
-    getColumnHeaders,
-    getColumnGroupHeaders,
-  } = useGridColumnHeaders({
-    innerRef,
-    minColumnIndex: leftPinnedColumns.length,
-  });
+    const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
+      pinnedColumns,
+      visibleColumnFields,
+      theme.direction === 'rtl',
+    );
 
-  const ownerState = {
-    leftPinnedColumns,
-    rightPinnedColumns,
-    classes: rootProps.classes,
-  };
-  const classes = useUtilityClasses(ownerState);
+    const {
+      isDragging,
+      renderContext,
+      getRootProps,
+      getInnerProps,
+      getColumnHeaders,
+      getColumnGroupHeaders,
+    } = useGridColumnHeaders({
+      innerRef,
+      visibleColumns,
+      sortColumnLookup,
+      filterColumnLookup,
+      columnPositions,
+      columnHeaderTabIndexState,
+      hasOtherElementInTabSequence,
+      columnGroupHeaderTabIndexState,
+      columnHeaderFocus,
+      columnGroupHeaderFocus,
+      densityFactor,
+      headerGroupingMaxDepth,
+      columnMenuState,
+      columnVisibility,
+      columnGroupsHeaderStructure,
+      minColumnIndex: leftPinnedColumns.length,
+    });
 
-  const leftRenderContext =
-    renderContext && leftPinnedColumns.length
-      ? {
-          ...renderContext,
-          firstColumnIndex: 0,
-          lastColumnIndex: leftPinnedColumns.length,
-        }
-      : null;
+    const ownerState = {
+      leftPinnedColumns,
+      rightPinnedColumns,
+      classes: rootProps.classes,
+    };
+    const classes = useUtilityClasses(ownerState);
 
-  const rightRenderContext =
-    renderContext && rightPinnedColumns.length
-      ? {
-          ...renderContext,
-          firstColumnIndex: visibleColumnFields.length - rightPinnedColumns.length,
-          lastColumnIndex: visibleColumnFields.length,
-        }
-      : null;
+    const leftRenderContext =
+      renderContext && leftPinnedColumns.length
+        ? {
+            ...renderContext,
+            firstColumnIndex: 0,
+            lastColumnIndex: leftPinnedColumns.length,
+          }
+        : null;
 
-  const innerProps = getInnerProps();
+    const rightRenderContext =
+      renderContext && rightPinnedColumns.length
+        ? {
+            ...renderContext,
+            firstColumnIndex: visibleColumns.length - rightPinnedColumns.length,
+            lastColumnIndex: visibleColumns.length,
+          }
+        : null;
 
-  const pinnedColumnHeadersProps = {
-    role: innerProps.role,
-  };
+    const innerProps = getInnerProps();
 
-  return (
-    <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
-      {leftRenderContext && (
-        <GridColumnHeadersPinnedColumnHeaders
-          className={classes.leftPinnedColumns}
-          ownerState={{
-            side: GridPinnedPosition.left,
-            showCellVerticalBorder: rootProps.showCellVerticalBorder,
-          }}
-          {...pinnedColumnHeadersProps}
-        >
-          {getColumnGroupHeaders({
-            renderContext: leftRenderContext,
-            minFirstColumn: leftRenderContext.firstColumnIndex,
-            maxLastColumn: leftRenderContext.lastColumnIndex,
-          })}
-          {getColumnHeaders(
-            {
+    const pinnedColumnHeadersProps = {
+      role: innerProps.role,
+    };
+
+    return (
+      <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
+        {leftRenderContext && (
+          <GridColumnHeadersPinnedColumnHeaders
+            className={classes.leftPinnedColumns}
+            ownerState={{
+              side: GridPinnedPosition.left,
+              showCellVerticalBorder: rootProps.showCellVerticalBorder,
+            }}
+            {...pinnedColumnHeadersProps}
+          >
+            {getColumnGroupHeaders({
               renderContext: leftRenderContext,
               minFirstColumn: leftRenderContext.firstColumnIndex,
               maxLastColumn: leftRenderContext.lastColumnIndex,
-            },
-            { disableReorder: true },
-          )}
-        </GridColumnHeadersPinnedColumnHeaders>
-      )}
-      <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
-        {getColumnGroupHeaders({
-          renderContext,
-          minFirstColumn: leftPinnedColumns.length,
-          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
-        })}
-        {getColumnHeaders({
-          renderContext,
-          minFirstColumn: leftPinnedColumns.length,
-          maxLastColumn: visibleColumnFields.length - rightPinnedColumns.length,
-        })}
-      </GridColumnHeadersInner>
-      {rightRenderContext && (
-        <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{
-            side: GridPinnedPosition.right,
-            showCellVerticalBorder: rootProps.showCellVerticalBorder,
-          }}
-          className={classes.rightPinnedColumns}
-          style={{ paddingRight: scrollbarSize }}
-          {...pinnedColumnHeadersProps}
-        >
+            })}
+            {getColumnHeaders(
+              {
+                renderContext: leftRenderContext,
+                minFirstColumn: leftRenderContext.firstColumnIndex,
+                maxLastColumn: leftRenderContext.lastColumnIndex,
+              },
+              { disableReorder: true },
+            )}
+          </GridColumnHeadersPinnedColumnHeaders>
+        )}
+
+        <GridColumnHeadersInner isDragging={isDragging} {...innerProps}>
           {getColumnGroupHeaders({
-            renderContext: rightRenderContext,
-            minFirstColumn: rightRenderContext.firstColumnIndex,
-            maxLastColumn: rightRenderContext.lastColumnIndex,
+            renderContext,
+            minFirstColumn: leftPinnedColumns.length,
+            maxLastColumn: visibleColumns.length - rightPinnedColumns.length,
           })}
-          {getColumnHeaders(
-            {
+          {getColumnHeaders({
+            renderContext,
+            minFirstColumn: leftPinnedColumns.length,
+            maxLastColumn: visibleColumns.length - rightPinnedColumns.length,
+          })}
+        </GridColumnHeadersInner>
+        {rightRenderContext && (
+          <GridColumnHeadersPinnedColumnHeaders
+            ownerState={{
+              side: GridPinnedPosition.right,
+              showCellVerticalBorder: rootProps.showCellVerticalBorder,
+            }}
+            className={classes.rightPinnedColumns}
+            style={{ paddingRight: scrollbarSize }}
+            {...pinnedColumnHeadersProps}
+          >
+            {getColumnGroupHeaders({
               renderContext: rightRenderContext,
               minFirstColumn: rightRenderContext.firstColumnIndex,
               maxLastColumn: rightRenderContext.lastColumnIndex,
-            },
-            { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
-          )}
-        </GridColumnHeadersPinnedColumnHeaders>
-      )}
-    </GridColumnHeaders>
-  );
-});
+            })}
+            {getColumnHeaders(
+              {
+                renderContext: rightRenderContext,
+                minFirstColumn: rightRenderContext.firstColumnIndex,
+                maxLastColumn: rightRenderContext.lastColumnIndex,
+              },
+              { disableReorder: true, separatorSide: GridColumnHeaderSeparatorSides.Left },
+            )}
+          </GridColumnHeadersPinnedColumnHeaders>
+        )}
+      </GridColumnHeaders>
+    );
+  },
+);
+
+DataGridProColumnHeaders.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "yarn proptypes"  |
+  // ----------------------------------------------------------------------
+  columnGroupHeaderFocus: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    field: PropTypes.string.isRequired,
+  }),
+  columnGroupHeaderTabIndexState: PropTypes.shape({
+    depth: PropTypes.number.isRequired,
+    field: PropTypes.string.isRequired,
+  }),
+  columnGroupsHeaderStructure: PropTypes.arrayOf(
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        columnFields: PropTypes.arrayOf(PropTypes.string).isRequired,
+        groupId: PropTypes.string,
+      }),
+    ),
+  ).isRequired,
+  columnHeaderFocus: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+  }),
+  columnHeaderTabIndexState: PropTypes.shape({
+    field: PropTypes.string.isRequired,
+  }),
+  columnMenuState: PropTypes.shape({
+    field: PropTypes.string,
+    open: PropTypes.bool.isRequired,
+  }).isRequired,
+  columnPositions: PropTypes.arrayOf(PropTypes.number).isRequired,
+  columnVisibility: PropTypes.object.isRequired,
+  densityFactor: PropTypes.number.isRequired,
+  filterColumnLookup: PropTypes.object.isRequired,
+  hasOtherElementInTabSequence: PropTypes.bool.isRequired,
+  headerGroupingMaxDepth: PropTypes.number.isRequired,
+  innerRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.object,
+    }),
+  ]),
+  minColumnIndex: PropTypes.number,
+  pinnedColumns: PropTypes.shape({
+    left: PropTypes.arrayOf(PropTypes.string),
+    right: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
+  sortColumnLookup: PropTypes.object.isRequired,
+  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+} as any;
+
+export { DataGridProColumnHeaders };

@@ -233,13 +233,16 @@ const DataGridProVirtualScroller = React.forwardRef<
     [],
   );
 
-  const getRowProps = (id: GridRowId) => {
-    if (!expandedRowIds.includes(id)) {
-      return null;
-    }
-    const height = detailPanelsHeights[id];
-    return { style: { marginBottom: height } };
-  };
+  const getRowProps = React.useCallback(
+    (id: GridRowId) => {
+      if (!expandedRowIds.includes(id)) {
+        return null;
+      }
+      const height = detailPanelsHeights[id];
+      return { style: { marginBottom: height } };
+    },
+    [detailPanelsHeights, expandedRowIds],
+  );
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
   const [leftPinnedColumns, rightPinnedColumns] = filterColumns(

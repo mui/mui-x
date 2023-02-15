@@ -71,6 +71,7 @@ const pages: MuiPage[] = [
       { pathname: '/x/react-data-grid/scrolling' },
       { pathname: '/x/react-data-grid/virtualization' },
       { pathname: '/x/react-data-grid/accessibility' },
+      { pathname: '/x/react-data-grid/performance' },
       {
         pathname: '/x/react-data-grid-group-pivot',
         title: 'Group & Pivot',

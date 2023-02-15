@@ -14,17 +14,19 @@ import {
   gridColumnPositionsSelector,
 } from '../columns/gridColumnsSelector';
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
-import { gridEditRowsStateSelector } from '../editing/gridEditingSelectors';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
+import { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry } from '../../../models';
 import { selectedIdsLookupSelector } from '../rowSelection/gridRowSelectionSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
+import { GridRowProps } from '../../../components/GridRow';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -124,7 +126,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
   const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowsMeta = useGridSelector(apiRef, gridRowsMetaSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const selectedRowsLookup = useGridSelector(apiRef, selectedIdsLookupSelector);
   const currentPage = useGridVisibleRows(apiRef, rootProps);
   const renderZoneRef = React.useRef<HTMLDivElement>(null);
@@ -138,6 +139,15 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     height: null,
   });
   const prevTotalWidth = React.useRef(columnsTotalWidth);
+
+  const rowStyleCache = React.useRef<Record<GridRowId, any>>({});
+  const prevGetRowProps = React.useRef<UseGridVirtualScrollerProps['getRowProps']>();
+  const prevRootRowStyle = React.useRef<GridSlotsComponentsProps['row']>();
+
+  const cachedRenderedColumns = React.useRef<GridStateColDef[]>();
+  const prevFirstColumnToRender = React.useRef<number>();
+  const prevLastColumnToRender = React.useRef<number>();
+  const prevVisibleColumns = React.useRef<GridStateColDef[]>();
 
   const getNearestIndexToRender = React.useCallback(
     (offset: number) => {
@@ -506,7 +516,28 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       visibleRows: currentPage.rows,
     });
 
-    const renderedColumns = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+    const invalidatesCachedRenderedColumns =
+      firstColumnToRender !== prevFirstColumnToRender.current ||
+      lastColumnToRender !== prevLastColumnToRender.current ||
+      visibleColumns !== prevVisibleColumns.current;
+
+    if (invalidatesCachedRenderedColumns) {
+      cachedRenderedColumns.current = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
+      prevFirstColumnToRender.current = firstColumnToRender;
+      prevLastColumnToRender.current = lastColumnToRender;
+      prevVisibleColumns.current = visibleColumns;
+    }
+
+    const renderedColumns = cachedRenderedColumns.current;
+
+    const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+
+    const invalidatesCachedRowStyle =
+      prevGetRowProps.current !== getRowProps || prevRootRowStyle.current !== rootRowStyle;
+
+    if (invalidatesCachedRowStyle) {
+      rowStyleCache.current = {};
+    }
 
     const rows: JSX.Element[] = [];
 
@@ -524,9 +555,24 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = apiRef.current.isRowSelectable(id);
       }
 
-      const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+      const focusedCell = cellFocus !== null && cellFocus.id === id ? cellFocus.field : null;
+
+      let tabbableCell: GridRowProps['tabbableCell'] = null;
+      if (cellTabIndex !== null && cellTabIndex.id === id) {
+        const cellParams = apiRef.current.getCellParams(id, cellTabIndex.field);
+        tabbableCell = cellParams.cellMode === 'view' ? cellTabIndex.field : null;
+      }
+
       const { style: rowStyle, ...rowProps } =
         (typeof getRowProps === 'function' && getRowProps(id, model)) || {};
+
+      if (!rowStyleCache.current[id]) {
+        const style = {
+          ...rowStyle,
+          ...rootRowStyle,
+        };
+        rowStyleCache.current[id] = style;
+      }
 
       rows.push(
         <rootProps.components.Row
@@ -534,9 +580,8 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           row={model}
           rowId={id}
           rowHeight={baseRowHeight}
-          cellFocus={cellFocus} // TODO move to inside the row
-          cellTabIndex={cellTabIndex} // TODO move to inside the row
-          editRowsState={editRowsState} // TODO move to inside the row
+          focusedCell={focusedCell}
+          tabbableCell={tabbableCell}
           renderedColumns={renderedColumns}
           visibleColumns={visibleColumns}
           firstColumnToRender={firstColumnToRender}
@@ -548,13 +593,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
           position={position}
           {...rowProps}
           {...rootRowProps}
-          style={{
-            ...rowStyle,
-            ...rootRowStyle,
-          }}
+          style={rowStyleCache.current[id]}
         />,
       );
     }
+
+    prevGetRowProps.current = getRowProps;
+    prevRootRowStyle.current = rootRowStyle;
 
     return rows;
   };
