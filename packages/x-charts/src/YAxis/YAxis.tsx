@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DEFAULT_Y_AXIS_KEY } from '../const';
 import { CoordinateContext } from '../context/CoordinateContext';
+import useTicks from '../hooks/useTicks';
 
 export interface YAxisProps {
   /**
@@ -78,31 +79,36 @@ const YAxis = React.forwardRef(function Grid(props: YAxisProps, ref: React.Ref<S
   const [min, max] = yScale.domain();
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
+  const yTicks = useTicks({ scale: yScale });
+
+  const positionSigne = position === 'right' ? 1 : -1;
   return (
     <g transform={`translate(${position === 'right' ? left + width : left}, 0)`} ref={ref}>
       {!disableLine && (
         <line y1={yScale(min)} y2={yScale(max)} stroke={stroke} shapeRendering="crispEdges" />
       )}
-      {/* {xTicks.map(({ value, offset }, index) => (
-        <g key={index} transform={`translate(${offset}, 0)`}>
-          {!disableTicks && <line y2={tickSize} stroke={stroke} shapeRendering="crispEdges" />}
+      {yTicks.map(({ value, offset }, index) => (
+        <g key={index} transform={`translate(0, ${offset})`}>
+          {!disableTicks && (
+            <line x2={positionSigne * tickSize} stroke={stroke} shapeRendering="crispEdges" />
+          )}
           <text
             fill={fill}
-            transform={`translate(0, ${fontSize + tickSize + 2})`}
+            transform={`translate(${positionSigne * (fontSize + tickSize + 2)}, 0)`}
             textAnchor="middle"
             fontSize={fontSize}
           >
             {value}
           </text>
         </g>
-      ))} */}
+      ))}
       {label && (
         <text
           fill={fill}
           style={{}}
-          transform={`translate(${
-            position === 'right' ? fontSize + tickSize + 20 : fontSize - tickSize - 20
-          }, ${top + height / 2}) rotate(${position === 'left' ? '-' : ''}90)`}
+          transform={`translate(${positionSigne * (fontSize + tickSize + 20)}, ${
+            top + height / 2
+          }) rotate(${positionSigne * 90})`}
           fontSize={labelFontSize}
           textAnchor="middle"
         >

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../const';
 import { CoordinateContext } from '../context/CoordinateContext';
+import useTicks from '../hooks/useTicks';
 
 export interface XAxisProps {
   /**
@@ -78,29 +79,34 @@ const XAxis = React.forwardRef(function Grid(props: XAxisProps, ref: React.Ref<S
   const [min, max] = xScale.domain();
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
+  const xTicks = useTicks({ scale: xScale });
+
+  const positionSigne = position === 'bottom' ? 1 : -1;
   return (
     <g transform={`translate(0, ${position === 'bottom' ? top + height : top})`} ref={ref}>
       {!disableLine && (
         <line x1={xScale(min)} x2={xScale(max)} stroke={stroke} shapeRendering="crispEdges" />
       )}
-      {/* {xTicks.map(({ value, offset }, index) => (
+      {xTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(${offset}, 0)`}>
-          {!disableTicks && <line y2={tickSize} stroke={stroke} shapeRendering="crispEdges" />}
+          {!disableTicks && (
+            <line y2={positionSigne * tickSize} stroke={stroke} shapeRendering="crispEdges" />
+          )}
           <text
             fill={fill}
-            transform={`translate(0, ${fontSize + tickSize + 2})`}
+            transform={`translate(0, ${positionSigne * (fontSize + tickSize + 2)})`}
             textAnchor="middle"
             fontSize={fontSize}
           >
             {value}
           </text>
         </g>
-      ))} */}
+      ))}
       {label && (
         <text
           fill={fill}
           transform={`translate(${left + width / 2}, ${
-            position === 'bottom' ? fontSize + tickSize + 20 : fontSize - tickSize - 20
+            positionSigne * (fontSize + tickSize + 20)
           })`}
           fontSize={labelFontSize}
           textAnchor="middle"
