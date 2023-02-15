@@ -9,10 +9,8 @@ import useId from '@mui/utils/useId';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
-import { convertValueToMeridiem, createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
-import { useViews } from '../internals/hooks/useViews';
+import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import { TimeView } from '../internals/models';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
 import { getDigitalClockUtilityClass } from './digitalClockClasses';
@@ -55,8 +53,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   const {
     ampm = utils.is12HourCycleInCurrentLocale(),
     timeStep = 5,
-    shouldRenderAsSelect = false,
-    renderAsSelectThreshold = 24,
     autoFocus,
     components,
     componentsProps,
@@ -74,7 +70,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onChange,
     defaultValue,
     view: inView,
-    views = ['hours', 'minutes'],
+    views = ['digital'],
     openTo,
     onViewChange,
     className,
@@ -98,27 +94,13 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     },
   );
 
-  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews({
-    view: inView,
-    views,
-    openTo,
-    onViewChange,
-    onChange: handleValueChange,
-  });
-
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
     [value, now, utils],
   );
 
-  const { meridiemMode, handleMeridiemChange } = useMeridiemMode<TDate>(
-    selectedTimeOrMidnight,
-    ampm,
-    setValueAndGoToNextView,
-  );
-
   const isTimeDisabled = React.useCallback(
-    (rawValue: number, viewType: TimeView) => {
+    (valueToCheck: TDate, viewType: TimeView) => {
       const isAfter = createIsAfterIgnoreDatePart(disableIgnoringDatePartForTimeValidation, utils);
       const shouldCheckPastEnd =
         viewType === 'hours' || (viewType === 'minutes' && views.includes('seconds'));
@@ -153,67 +135,20 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
         }
 
         if (shouldDisableTime) {
-          switch (viewType) {
-            case 'hours':
-              return !shouldDisableTime(utils.setHours(selectedTimeOrMidnight, timeValue), 'hours');
-            case 'minutes':
-              return !shouldDisableTime(
-                utils.setMinutes(selectedTimeOrMidnight, timeValue),
-                'minutes',
-              );
-
-            case 'seconds':
-              return !shouldDisableTime(
-                utils.setSeconds(selectedTimeOrMidnight, timeValue),
-                'seconds',
-              );
-
-            default:
-              return false;
-          }
+          return !shouldDisableTime(valueToCheck, viewType);
         }
 
         return true;
       };
 
-      switch (viewType) {
-        case 'hours': {
-          const valueWithMeridiem = convertValueToMeridiem(rawValue, meridiemMode, ampm);
-          const dateWithNewHours = utils.setHours(selectedTimeOrMidnight, valueWithMeridiem);
-          const start = utils.setSeconds(utils.setMinutes(dateWithNewHours, 0), 0);
-          const end = utils.setSeconds(utils.setMinutes(dateWithNewHours, 59), 59);
-
-          return !containsValidTime({ start, end }) || !isValidValue(valueWithMeridiem);
-        }
-
-        case 'minutes': {
-          const dateWithNewMinutes = utils.setMinutes(selectedTimeOrMidnight, rawValue);
-          const start = utils.setSeconds(dateWithNewMinutes, 0);
-          const end = utils.setSeconds(dateWithNewMinutes, 59);
-
-          return !containsValidTime({ start, end }) || !isValidValue(rawValue, minutesStep);
-        }
-
-        case 'seconds': {
-          const dateWithNewSeconds = utils.setSeconds(selectedTimeOrMidnight, rawValue);
-          const start = dateWithNewSeconds;
-          const end = dateWithNewSeconds;
-
-          return !containsValidTime({ start, end }) || !isValidValue(rawValue);
-        }
-
-        default:
-          throw new Error('not supported');
-      }
+      const start = utils.setSeconds(utils.setMinutes(valueToCheck, 0), 0);
+      const end = utils.setSeconds(utils.setMinutes(valueToCheck, 59), 59);
+      return !containsValidTime({ start, end }) || !isValidValue(valueToCheck);
     },
     [
-      ampm,
-      selectedTimeOrMidnight,
       disableIgnoringDatePartForTimeValidation,
       maxTime,
-      meridiemMode,
       minTime,
-      minutesStep,
       shouldDisableClock,
       shouldDisableTime,
       utils,
@@ -226,100 +161,12 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   const selectedId = useId();
 
-  // const viewProps = React.useMemo<
-  //   Pick<ClockProps<TDate>, 'onChange' | 'viewValue' | 'children'>
-  // >(() => {
-  //   switch (view) {
-  //     case 'hours': {
-  //       const handleHoursChange = (hourValue: number, isFinish?: PickerSelectionState) => {
-  //         const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
-  //         setValueAndGoToNextView(
-  //           utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-  //           isFinish,
-  //         );
-  //       };
-
-  //       return {
-  //         onChange: handleHoursChange,
-  //         viewValue: utils.getHours(selectedTimeOrMidnight),
-  //         children: getHourNumbers({
-  //           value,
-  //           utils,
-  //           ampm,
-  //           onChange: handleHoursChange,
-  //           getClockNumberText: localeText.hoursClockNumberText,
-  //           isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
-  //           selectedId,
-  //         }),
-  //       };
-  //     }
-
-  //     case 'minutes': {
-  //       const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
-  //       const handleMinutesChange = (minuteValue: number, isFinish?: PickerSelectionState) => {
-  //         setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minuteValue), isFinish);
-  //       };
-
-  //       return {
-  //         viewValue: minutesValue,
-  //         onChange: handleMinutesChange,
-  //         children: getMinutesNumbers<TDate>({
-  //           utils,
-  //           value: minutesValue,
-  //           onChange: handleMinutesChange,
-  //           getClockNumberText: localeText.minutesClockNumberText,
-  //           isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
-  //           selectedId,
-  //         }),
-  //       };
-  //     }
-
-  //     case 'seconds': {
-  //       const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
-  //       const handleSecondsChange = (secondValue: number, isFinish?: PickerSelectionState) => {
-  //         setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, secondValue), isFinish);
-  //       };
-
-  //       return {
-  //         viewValue: secondsValue,
-  //         onChange: handleSecondsChange,
-  //         children: getMinutesNumbers({
-  //           utils,
-  //           value: secondsValue,
-  //           onChange: handleSecondsChange,
-  //           getClockNumberText: localeText.secondsClockNumberText,
-  //           isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
-  //           selectedId,
-  //         }),
-  //       };
-  //     }
-
-  //     default:
-  //       throw new Error('You must provide the type for ClockView');
-  //   }
-  // }, [
-  //   view,
-  //   utils,
-  //   value,
-  //   ampm,
-  //   localeText.hoursClockNumberText,
-  //   localeText.minutesClockNumberText,
-  //   localeText.secondsClockNumberText,
-  //   meridiemMode,
-  //   setValueAndGoToNextView,
-  //   selectedTimeOrMidnight,
-  //   isTimeDisabled,
-  //   selectedId,
-  //   disabled,
-  // ]);
-
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
   const timeOptions = React.useMemo(() => {
     const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
     return [
-      null,
       startOfDay,
       ...Array.from({ length: (24 * 60) / timeStep - 1 }, (_, index) =>
         utils.addMinutes(startOfDay, timeStep * (index + 1)),
@@ -335,26 +182,21 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <MenuList>
+      <MenuList autoFocus={autoFocus}>
         {timeOptions.map((option) => (
           <MenuItem
-            key={option ? utils.toISO(option) : 'null'}
+            key={utils.toISO(option)}
             onClick={() => handleValueChange(option, 'finish')}
             selected={utils.isEqual(option, value)}
           >
-            {option ? utils.format(option, 'fullTime') : '&nbsp;'}
+            {utils.format(option, 'fullTime')}
           </MenuItem>
         ))}
       </MenuList>
       {/* <Clock<TDate>
-        autoFocus={autoFocus}
-        value={value}
-        type={view}
         ampm={ampm}
         minutesStep={minutesStep}
         isTimeDisabled={isTimeDisabled}
-        meridiemMode={meridiemMode}
-        handleMeridiemChange={handleMeridiemChange}
         selectedId={selectedId}
         disabled={disabled}
         readOnly={readOnly}

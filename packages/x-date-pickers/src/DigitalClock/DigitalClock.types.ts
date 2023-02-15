@@ -9,15 +9,10 @@ export interface ExportedDigitalClockProps<TDate> extends ExportedBaseClockProps
    */
   timeStep?: number;
   /**
-   * Number at which the component starts rendering `Select` instead of digital clock.
+   * Number of possible time options at which the component uses `digital` view.
    * @default 24
    */
-  renderAsSelectThreshold?: number;
-  /**
-   * Force rendering as a `Select` component regardless of items count.
-   * @default false
-   */
-  shouldRenderAsSelect?: boolean;
+  renderAsDigitalThreshold?: number;
 }
 
 export interface DigitalClockSlotsComponent {}
@@ -25,7 +20,7 @@ export interface DigitalClockSlotsComponent {}
 export interface DigitalClockSlotsComponentsProps {}
 
 export interface DigitalClockProps<TDate>
-  extends ExportedDigitalClockProps<TDate>,
+  extends Omit<ExportedDigitalClockProps<TDate>, 'renderAsDigitalThreshold'>,
     BaseClockProps<TDate> {
   /**
    * Override or extend the styles applied to the component.

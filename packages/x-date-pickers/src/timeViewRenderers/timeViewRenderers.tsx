@@ -5,7 +5,7 @@ import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
 
 const isTimePickerView = (view: unknown): view is TimeView =>
-  view === 'hours' || view === 'minutes' || view === 'seconds';
+  view === 'hours' || view === 'minutes' || view === 'seconds' || view === 'digital';
 
 export type TimeViewRendererProps<
   TView extends DateOrTimeView,
@@ -102,8 +102,6 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
   sx,
   autoFocus,
   disableIgnoringDatePartForTimeValidation,
-  renderAsSelectThreshold,
-  shouldRenderAsSelect,
   timeStep,
 }: TimeViewRendererProps<any, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
@@ -132,8 +130,6 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
     sx={sx}
     autoFocus={autoFocus}
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
-    renderAsSelectThreshold={renderAsSelectThreshold}
-    shouldRenderAsSelect={shouldRenderAsSelect}
     timeStep={timeStep}
   />
 );

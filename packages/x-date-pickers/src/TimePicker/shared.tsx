@@ -91,6 +91,7 @@ type UseTimePickerDefaultizedProps<
 export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePickerProps<TDate>>(
   props: Props,
   name: string,
+  isDesktop?: boolean,
 ): UseTimePickerDefaultizedProps<TDate, Props> {
   const utils = useUtils<TDate>();
   const themeProps = useThemeProps({
@@ -99,6 +100,8 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const renderAsDigitalThreshold = themeProps.renderAsDigitalThreshold ?? 24;
+  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -113,6 +116,7 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
 
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
+  const shouldRenderDigital = isDesktop && (24 * 60) / timeStep <= renderAsDigitalThreshold;
   return {
     ...themeProps,
     ampm,
@@ -120,8 +124,8 @@ export function useTimePickerDefaultizedProps<TDate, Props extends BaseTimePicke
     ...applyDefaultViewProps({
       views: themeProps.views,
       openTo: themeProps.openTo,
-      defaultViews: ['hours', 'minutes'],
-      defaultOpenTo: 'hours',
+      defaultViews: shouldRenderDigital ? ['digital'] : ['hours', 'minutes'],
+      defaultOpenTo: shouldRenderDigital ? 'digital' : 'hours',
     }),
     disableFuture: themeProps.disableFuture ?? false,
     disablePast: themeProps.disablePast ?? false,

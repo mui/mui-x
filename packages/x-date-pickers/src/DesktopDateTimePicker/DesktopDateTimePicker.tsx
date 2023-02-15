@@ -35,6 +35,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     hours: null,
     minutes: null,
     seconds: null,
+    digital: null,
     ...defaultizedProps.viewRenderers,
   };
 
