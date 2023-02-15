@@ -72,6 +72,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     className,
     disabled,
     readOnly,
+    views,
     ...other
   } = props;
 

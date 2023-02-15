@@ -100,7 +100,6 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
   readOnly,
   disabled,
   sx,
-  autoFocus,
   disableIgnoringDatePartForTimeValidation,
   timeStep,
 }: TimeViewRendererProps<any, DigitalClockProps<TDate>>) => (
@@ -128,7 +127,7 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
     readOnly={readOnly}
     disabled={disabled}
     sx={sx}
-    autoFocus={autoFocus}
+    autoFocus
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeStep={timeStep}
   />
