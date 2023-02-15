@@ -48,6 +48,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
   describe('copy', () => {
     let writeText: SinonStub;
+    const originalClipboard = navigator.clipboard;
 
     beforeEach(function beforeEachHook() {
       writeText = stub().resolves();
@@ -59,7 +60,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
 
     afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: undefined });
+      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
@@ -85,7 +86,23 @@ describe('<DataGridPremium /> - Clipboard', () => {
     });
   });
 
-  describe.only('paste', () => {
+  describe('paste', () => {
+    let readText: SinonStub;
+    const originalClipboard = navigator.clipboard;
+
+    beforeEach(function beforeEachHook() {
+      readText = stub().resolves();
+
+      Object.defineProperty(navigator, 'clipboard', {
+        value: { readText },
+        writable: true,
+      });
+    });
+
+    afterEach(function afterEachHook() {
+      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
+    });
+
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should not enter cell edit mode when ${key} + V is pressed`, () => {
         render(<Test />);

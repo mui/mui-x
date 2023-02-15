@@ -50,6 +50,7 @@ describe('<DataGridPro /> - Clipboard', () => {
 
   describe('copySelectedRowsToClipboard', () => {
     let writeText: SinonStub;
+    const originalClipboard = navigator.clipboard;
 
     beforeEach(function beforeEachHook() {
       writeText = stub().resolves();
@@ -61,7 +62,7 @@ describe('<DataGridPro /> - Clipboard', () => {
     });
 
     afterEach(function afterEachHook() {
-      Object.defineProperty(navigator, 'clipboard', { value: undefined });
+      Object.defineProperty(navigator, 'clipboard', { value: originalClipboard });
     });
 
     it('should copy the selected rows to the clipboard', () => {
