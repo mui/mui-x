@@ -81,14 +81,6 @@ export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode' | 'signature'>,
 ): void => {
-  const getCellSelectionModel = React.useCallback(() => {
-    if (typeof apiRef.current.unstable_getCellSelectionModel === 'function') {
-      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-      return cellSelectionModel;
-    }
-    return null;
-  }, [apiRef]);
-
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
       const isModifierKeyPressed = event.ctrlKey || event.metaKey || event.altKey;
@@ -110,15 +102,25 @@ export const useGridClipboardImport = (
 
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 
-      const cellSelectionModel = getCellSelectionModel();
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
 
       if (isSingleValuePasted) {
-        if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
-          // Single values are pasted to all selected cells in the range.
-        } else {
-          // Single values are pasted to the focused cell
+        const cellSelectionModelKeys = Object.keys(cellSelectionModel);
+
+        if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
+          const rowUpdates: GridValidRowModel[] = [];
+          cellSelectionModelKeys.forEach((rowId) => {
+            const row: GridValidRowModel = { id: rowId };
+            Object.keys(cellSelectionModel[rowId]).forEach((field) => {
+              const colDef = apiRef.current.getColumn(field);
+              const parsedValue = parseCellStringValue(rowsData[0], colDef);
+              row[field] = parsedValue;
+            });
+            rowUpdates.push(row);
+          });
+          apiRef.current.updateRows(rowUpdates);
+          return;
         }
-        // return;
       }
 
       if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
@@ -176,7 +178,7 @@ export const useGridClipboardImport = (
 
       apiRef.current.updateRows(rowsToUpdate);
     },
-    [apiRef, props.pagination, props.paginationMode, props.signature, getCellSelectionModel],
+    [apiRef, props.pagination, props.paginationMode, props.signature],
   );
 
   // TODO: move this to the GridColDef to make if configurable?
@@ -199,7 +201,7 @@ export const useGridClipboardImport = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      const cellSelectionModel = getCellSelectionModel();
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
       if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
         const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
           const fieldsMap = cellSelectionModel[rowId];
@@ -219,7 +221,7 @@ export const useGridClipboardImport = (
 
       return value;
     },
-    [stringifyCellForClipboard, getCellSelectionModel],
+    [apiRef, stringifyCellForClipboard],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
