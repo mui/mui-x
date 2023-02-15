@@ -423,8 +423,10 @@ const GridRow = React.forwardRef<
       minHeight,
     };
     if (isNotVisible) {
-      rowStyle.opacity = 0;
-      rowStyle.width = 0;
+      return {
+        opacity: 0,
+        width: 0,
+      };
     }
 
     if (sizes?.spacingTop) {

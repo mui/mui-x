@@ -187,11 +187,9 @@ function GridCell(props: GridCellProps) {
 
     if (isNotVisible) {
       return {
-        ...cellStyle,
         padding: 0,
         opacity: 0,
-        minWidth: 0,
-        maxWidth: 0,
+        width: 0,
       };
     }
     return cellStyle;
