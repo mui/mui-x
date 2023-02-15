@@ -2,6 +2,11 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
+    pathname: '/x/whats-new',
+    title: "✨ What's new in v6? ✨",
+    icon: 'VisibilityIcon',
+  },
+  {
     pathname: '/x/introduction-group',
     title: 'Introduction',
     icon: 'DescriptionIcon',
@@ -104,6 +109,11 @@ const pages: MuiPage[] = [
           { pathname: '/x/api/data-grid/grid-api', title: 'GridApi' },
           { pathname: '/x/api/data-grid/grid-cell-params', title: 'GridCellParams' },
           { pathname: '/x/api/data-grid/grid-col-def', title: 'GridColDef' },
+          {
+            pathname: '/x/api/data-grid/grid-single-select-col-def',
+            title: 'GridSingleSelectColDef',
+          },
+          { pathname: '/x/api/data-grid/grid-actions-col-def', title: 'GridActionsColDef' },
           { pathname: '/x/api/data-grid/grid-export-state-params', title: 'GridExportStateParams' },
           { pathname: '/x/api/data-grid/grid-filter-form', title: 'GridFilterForm' },
           { pathname: '/x/api/data-grid/grid-filter-item', title: 'GridFilterItem' },

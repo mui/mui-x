@@ -9,16 +9,16 @@ type BrowserInputProps = TextFieldProps & {
   ownerState?: any;
 };
 
-function BrowserInput(props: BrowserInputProps) {
+const BrowserInput = function BrowserInput(props: BrowserInputProps) {
   const { inputProps, InputProps, ownerState, inputRef, error, ...other } = props;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center' }} ref={InputProps?.ref}>
       <input ref={inputRef} {...inputProps} {...(other as any)} />
       {InputProps?.endAdornment}
     </Box>
   );
-}
+};
 
 export default function CustomInput() {
   return (

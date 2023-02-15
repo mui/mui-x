@@ -458,6 +458,11 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
     },
   } as DayCalendarSlotsComponentsProps<TDate>;
 
+  const calendarMonths = React.useMemo(
+    () => Array.from({ length: calendars }).map((_, index) => index),
+    [calendars],
+  );
+
   const visibleMonths = React.useMemo(
     () =>
       Array.from({ length: calendars }).map((_, index) =>
@@ -499,11 +504,8 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
       {...other}
     >
       <Watermark packageName="x-date-pickers-pro" releaseInfo={releaseInfo} />
-      {visibleMonths.map((month, index) => (
-        <DateRangeCalendarMonthContainer
-          key={(month as any).toString()}
-          className={classes.monthContainer}
-        >
+      {calendarMonths.map((month, index) => (
+        <DateRangeCalendarMonthContainer key={month} className={classes.monthContainer}>
           {calendars === 1 ? (
             <PickersCalendarHeader
               views={['day']}
@@ -532,7 +534,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
               slots={slots}
               slotProps={slotProps}
             >
-              {utils.format(month, 'monthAndYear')}
+              {utils.format(visibleMonths[month], 'monthAndYear')}
             </DateRangeCalendarArrowSwitcher>
           )}
 
@@ -547,7 +549,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar<TDate>(
             reduceAnimations={reduceAnimations}
             selectedDays={value}
             onSelectedDaysChange={handleSelectedDayChange}
-            currentMonth={month}
+            currentMonth={visibleMonths[month]}
             TransitionProps={CalendarTransitionProps}
             shouldDisableDate={wrappedShouldDisableDate}
             showDaysOutsideCurrentMonth={calendars === 1 && showDaysOutsideCurrentMonth}
@@ -681,10 +683,9 @@ DateRangeCalendar.propTypes = {
    */
   onChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -714,7 +715,7 @@ DateRangeCalendar.propTypes = {
    */
   renderLoading: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

@@ -8,6 +8,7 @@ export * from './DateField';
 export * from './TimeField';
 export * from './DateTimeField';
 export type { FieldSection, FieldSelectedSections } from './internals/hooks/useField';
+export type { BaseSingleInputFieldProps } from './internals/models/fields';
 
 // Calendars
 export * from './DateCalendar';
