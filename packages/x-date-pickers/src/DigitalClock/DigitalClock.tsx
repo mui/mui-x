@@ -179,7 +179,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
             selected={utils.isEqual(option, value)}
             disabled={disabled || isTimeDisabled(option)}
           >
-            {utils.format(option, 'fullTime')}
+            {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
           </MenuItem>
         ))}
       </MenuList>
