@@ -214,7 +214,7 @@ export const useGridClipboardImport = (
             }
             return acc2 ? [acc2, cellData].join('\t') : cellData;
           }, '');
-          return acc ? [acc, rowString].join('\n') : rowString;
+          return acc ? [acc, rowString].join('\r\n') : rowString;
         }, '');
         return copyData;
       }
