@@ -12,7 +12,7 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 describe('<DateTimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
   describeValidation(DateTimeField, () => ({
     render,

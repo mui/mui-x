@@ -64,7 +64,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
 
   | Old name                   | New name                      |
-  | -------------------------- | ----------------------------- |
+  | :------------------------- | :---------------------------- |
   | `selectionModel`           | `rowSelectionModel`           |
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
@@ -202,7 +202,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
 
   | Old name                                                            | New name                        |
-  | ------------------------------------------------------------------- | ------------------------------- |
+  | :------------------------------------------------------------------ | :------------------------------ |
   | `GridFilterMenuItem`                                                | `GridColumnMenuFilterItem`      |
   | `HideGridColMenuItem`                                               | `GridColumnMenuHideItem`        |
   | `GridColumnsMenuItem`                                               | `GridColumnMenuColumnsItem`     |
@@ -271,7 +271,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
     <summary markdown="span">List of removed undocumented methods and properties</summary>
 
   |                                                   |
-  | ------------------------------------------------- |
+  | :------------------------------------------------ |
   | `getLogger`                                       |
   | `windowRef`                                       |
   | `footerRef`                                       |
@@ -386,7 +386,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
-  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
 

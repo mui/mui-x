@@ -56,7 +56,15 @@ export const useField = <
     inputRef: inputRefProp,
     internalProps,
     internalProps: { readOnly = false },
-    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
+    forwardedProps: {
+      onClick,
+      onKeyDown,
+      onFocus,
+      onBlur,
+      onMouseUp,
+      onPaste,
+      ...otherForwardedProps
+    },
     fieldValueManager,
     valueManager,
     validator,
@@ -122,6 +130,8 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
+    onPaste?.(event);
+
     if (readOnly) {
       event.preventDefault();
       return;
