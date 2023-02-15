@@ -87,6 +87,16 @@ export const useGridClipboardImport = (
       if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
         return;
       }
+
+      const focusedCell = gridFocusCellSelector(apiRef);
+      if (focusedCell !== null) {
+        const cellMode = apiRef.current.getCellMode(focusedCell.id, focusedCell.field);
+        if (cellMode === 'edit') {
+          // Do not paste data when the cell is in edit mode
+          return;
+        }
+      }
+
       // Do not enter cell edit mode on paste
       event.stopPropagation();
 
