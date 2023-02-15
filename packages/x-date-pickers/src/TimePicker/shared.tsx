@@ -75,6 +75,12 @@ export interface BaseTimePickerProps<TDate>
       {}
     >
   >;
+  /**
+   * Number of possible time options at which the component uses `digital` view.
+   * Used only in `desktop` mode.
+   * @default 24
+   */
+  renderAsDigitalThreshold?: number;
 }
 
 type UseTimePickerDefaultizedProps<
