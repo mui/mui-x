@@ -82,8 +82,11 @@ const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRende
   if (context1 === context2) {
     return true;
   }
-  return (Object.keys(context1) as Array<keyof GridRenderContext>).every(
-    (key) => context1[key] === context2[key],
+  return (
+    context1.firstRowIndex === context2.firstRowIndex &&
+    context1.lastRowIndex === context2.lastRowIndex &&
+    context1.firstColumnIndex === context2.firstColumnIndex &&
+    context1.lastColumnIndex === context2.lastColumnIndex
   );
 };
 
