@@ -5,10 +5,9 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import useControlled from '@mui/utils/useControlled';
-import useId from '@mui/utils/useId';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-import { useUtils, useNow, useLocaleText } from '../internals/hooks/useUtils';
+import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
 import { PickerViewRoot } from '../internals/components/PickerViewRoot';
@@ -40,7 +39,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
   inProps: DigitalClockProps<TDate>,
   ref: React.Ref<HTMLDivElement>,
 ) {
-  const localeText = useLocaleText<TDate>();
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
 
@@ -69,13 +67,11 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     onChange,
     defaultValue,
     view: inView,
-    views = ['digital'],
     openTo,
     onViewChange,
     className,
     disabled,
     readOnly,
-    label,
     ...other
   } = props;
 
@@ -154,8 +150,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ],
   );
 
-  const selectedId = useId();
-
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
 
@@ -191,9 +185,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       </MenuList>
       {/* <Clock<TDate>
         ampm={ampm}
-        minutesStep={minutesStep}
-        isTimeDisabled={isTimeDisabled}
-        selectedId={selectedId}
         readOnly={readOnly}
         {...viewProps}
       /> */}
