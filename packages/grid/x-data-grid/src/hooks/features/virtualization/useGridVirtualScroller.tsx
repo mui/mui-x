@@ -74,6 +74,18 @@ export const getRenderableIndexes = ({
   ];
 };
 
+const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
+  if (context1 === context2) {
+    return true;
+  }
+  return (
+    context1.firstRowIndex === context2.firstRowIndex &&
+    context1.lastRowIndex === context2.lastRowIndex &&
+    context1.firstColumnIndex === context2.firstColumnIndex &&
+    context1.lastColumnIndex === context2.lastColumnIndex
+  );
+};
+
 interface UseGridVirtualScrollerProps {
   ref: React.Ref<HTMLDivElement>;
   disableVirtualization?: boolean;
@@ -287,6 +299,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
+      if (
+        prevRenderContext.current &&
+        areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
+      ) {
+        return;
+      }
       setRenderContext(nextRenderContext);
 
       updateRenderZonePosition(nextRenderContext);
