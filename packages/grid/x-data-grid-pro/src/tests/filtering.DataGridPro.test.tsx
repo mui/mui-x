@@ -327,14 +327,16 @@ describe('<DataGridPro /> - Filter', () => {
     );
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
-    const clearButton = screen.getByRole('button', { name: /Remove all/i });
-    expect(clearButton).to.have.attribute('disabled');
+    const removeButton = screen.getByRole('button', { name: /Remove all/i });
     fireEvent.click(addButton);
-    expect(apiRef.current.state.filter.filterModel.items).to.have.length(2);
-    expect(clearButton).not.to.have.attribute('disabled');
-    fireEvent.click(clearButton);
+    fireEvent.click(addButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(3);
+    fireEvent.click(removeButton);
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
-    expect(clearButton).to.have.attribute('disabled');
+    // clicking on `remove all` should close the panel when no filters
+    fireEvent.click(removeButton);
+    clock.tick(100);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
   });
 
   it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
