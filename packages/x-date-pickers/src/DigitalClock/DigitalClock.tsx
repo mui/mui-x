@@ -174,20 +174,17 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       <MenuList autoFocus={autoFocus}>
         {timeOptions.map((option) => (
           <MenuItem
+            aria-readonly={readOnly}
             key={utils.toISO(option)}
-            onClick={() => handleValueChange(option, 'finish')}
+            onClick={() => !readOnly && handleValueChange(option, 'finish')}
             selected={utils.isEqual(option, value)}
             disabled={disabled || isTimeDisabled(option)}
+            disableRipple={readOnly}
           >
             {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
           </MenuItem>
         ))}
       </MenuList>
-      {/* <Clock<TDate>
-        ampm={ampm}
-        readOnly={readOnly}
-        {...viewProps}
-      /> */}
     </DigitalClockRoot>
   );
 }) as DigitalClockComponent;
