@@ -24,9 +24,17 @@ import {
   RangePosition,
 } from '../models';
 
-export interface UseRangePickerFieldSlotsComponent {
+export interface RangePickerFieldSlotsComponent {
   Field: React.ElementType;
+  /**
+   * Element rendered at the root.
+   * Ignored if the field has only one input.
+   */
   FieldRoot?: React.ElementType<StackProps>;
+  /**
+   * Element rendered between the two inputs.
+   * Ignored if the field has only one input.
+   */
   FieldSeparator?: React.ElementType<TypographyProps>;
   /**
    * Form control with an input to render a date or time inside the default field.
@@ -37,7 +45,7 @@ export interface UseRangePickerFieldSlotsComponent {
   TextField?: React.ElementType<TextFieldProps>;
 }
 
-export interface UseRangePickerFieldSlotsComponentsProps<TDate> {
+export interface RangePickerFieldSlotsComponentsProps<TDate> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, unknown>>,
     {},
@@ -48,7 +56,7 @@ export interface UseRangePickerFieldSlotsComponentsProps<TDate> {
   textField?: SlotComponentProps<typeof TextField, {}, unknown>;
 }
 
-export interface UseRangePickerFieldSlotPropsParams<
+export interface UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView extends DateOrTimeView,
   TError,
@@ -68,11 +76,12 @@ export interface UseRangePickerFieldSlotPropsParams<
   disableOpenPicker?: boolean;
   onBlur?: () => void;
   inputRef?: React.Ref<HTMLInputElement>;
+  label?: React.ReactNode;
   rangePosition: RangePosition;
   onRangePositionChange: (newPosition: RangePosition) => void;
   localeText: PickersInputLocaleText<TDate> | undefined;
-  pickerSlotProps: UseRangePickerFieldSlotsComponentsProps<TDate> | undefined;
-  pickerSlots: UncapitalizeObjectKeys<UseRangePickerFieldSlotsComponent> | undefined;
+  pickerSlotProps: RangePickerFieldSlotsComponentsProps<TDate> | undefined;
+  pickerSlots: UncapitalizeObjectKeys<RangePickerFieldSlotsComponent> | undefined;
   fieldProps: FieldProps;
 }
 
@@ -90,7 +99,7 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
   pickerSlotProps,
   pickerSlots,
   fieldProps,
-}: UseRangePickerFieldSlotPropsParams<
+}: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
   TError,
@@ -215,13 +224,14 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   inputRef: inInputRef,
   labelId,
   disableOpenPicker,
+  label,
   onBlur,
   rangePosition,
   onRangePositionChange,
   pickerSlots,
   pickerSlotProps,
   fieldProps,
-}: UseRangePickerFieldSlotPropsParams<
+}: UseEnrichedRangePickerFieldPropsParams<
   TDate,
   TView,
   TError,
@@ -279,6 +289,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
     ...fieldProps,
     slots,
     slotProps,
+    label,
     fieldRef: handleFieldRef,
     inputRef: handleInputRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
@@ -293,7 +304,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
 };
 
 export const useEnrichedRangePickerFieldProps = <TDate, TView extends DateOrTimeView, TError>(
-  params: UseRangePickerFieldSlotPropsParams<TDate, TView, TError>,
+  params: UseEnrichedRangePickerFieldPropsParams<TDate, TView, TError>,
 ) => {
   if (params.fieldType === 'multi-input') {
     // eslint-disable-next-line react-hooks/rules-of-hooks

@@ -119,7 +119,7 @@ export const useDesktopRangePicker = <
       format,
       autoFocus: autoFocus && !props.open,
       ref: fieldContainerRef,
-      ...(fieldType === 'single-input' && { inputRef, label }),
+      ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
   });
@@ -135,6 +135,7 @@ export const useDesktopRangePicker = <
     actions,
     readOnly,
     disableOpenPicker,
+    label,
     localeText,
     onBlur: handleBlur,
     rangePosition,

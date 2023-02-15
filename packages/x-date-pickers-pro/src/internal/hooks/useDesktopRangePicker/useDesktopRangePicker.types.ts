@@ -19,19 +19,19 @@ import {
 import { DateRange, RangeFieldSection } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  UseRangePickerFieldSlotsComponent,
-  UseRangePickerFieldSlotsComponentsProps,
+  RangePickerFieldSlotsComponent,
+  RangePickerFieldSlotsComponentsProps,
 } from '../useEnrichedRangePickerFieldProps';
 
 export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
     ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    UseRangePickerFieldSlotsComponent {}
+    RangePickerFieldSlotsComponent {}
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    UseRangePickerFieldSlotsComponentsProps<TDate> {
+    RangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 

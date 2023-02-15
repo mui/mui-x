@@ -100,7 +100,7 @@ export const useMobileRangePicker = <
       className,
       sx,
       format,
-      ...(fieldType === 'single-input' && { inputRef, label }),
+      ...(fieldType === 'single-input' && { inputRef }),
     },
     ownerState: props,
   });
@@ -119,6 +119,7 @@ export const useMobileRangePicker = <
     readOnly,
     labelId,
     disableOpenPicker,
+    label,
     localeText,
     rangePosition,
     onRangePositionChange,
