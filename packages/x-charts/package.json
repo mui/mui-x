@@ -42,6 +42,8 @@
     "@mui/utils": "^5.11.2",
     "@mui/x-license-pro": "6.0.0-beta.0",
     "clsx": "^1.2.1",
+    "d3-array": "^3.2.2",
+    "d3-scale": "^4.0.2",
     "prop-types": "^15.8.1"
   },
   "peerDependencies": {

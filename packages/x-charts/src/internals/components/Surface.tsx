@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface SurfaceProps {
+export interface SurfaceProps {
   width: number;
   height: number;
   viewBox?: {
@@ -15,7 +15,7 @@ interface SurfaceProps {
   children?: React.ReactNode;
 }
 
-export function Surface(props: SurfaceProps) {
+export default function Surface(props: SurfaceProps) {
   const { children, width, height, viewBox, className, ...other } = props;
   const svgView = viewBox || { width, height, x: 0, y: 0 };
 
