@@ -107,6 +107,8 @@ export function DemoContainer(props: DemoGridProps) {
   let spacing: StackProps['spacing'];
   let sx: StackProps['sx'] = {
     overflow: 'auto',
+    // Add padding as overflow can hide the outline text field label.
+    pt: 1,
   };
 
   if (
