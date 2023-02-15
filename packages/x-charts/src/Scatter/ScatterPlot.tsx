@@ -4,6 +4,8 @@ import { CoordinateContext } from '../context/CoordinateContext';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
 import ChartContainer, { ChartContainerProps } from '../ChartContainer';
+import XAxis from '../XAxis/XAxis';
+import YAxis from '../YAxis/YAxis';
 
 export interface ScatterPlotProps {
   series: ScatterSeriesType[];
@@ -12,15 +14,15 @@ export interface ScatterPlotProps {
 function InnerScatterPlot(props: ScatterPlotProps) {
   const { series } = props;
 
-  const { xDataToSvg, yDataToSvg } = React.useContext(CoordinateContext);
+  const { xAxis, yAxis } = React.useContext(CoordinateContext);
 
   return (
     <React.Fragment>
       {series.map(({ id, xAxisKey, yAxisKey, markerSize, data }) => (
         <Scatter
           key={id}
-          xDataToSvg={xDataToSvg[xAxisKey ?? DEFAULT_X_AXIS_KEY]}
-          yDataToSvg={yDataToSvg[yAxisKey ?? DEFAULT_Y_AXIS_KEY]}
+          xDataToSvg={xAxis[xAxisKey ?? DEFAULT_X_AXIS_KEY].scale}
+          yDataToSvg={yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale}
           markerSize={markerSize ?? 2}
           data={data}
         />
@@ -42,6 +44,10 @@ function ScatterPlot(props: Omit<ChartContainerProps, 'children'> & ScatterPlotP
       {...other}
     >
       <InnerScatterPlot series={series} />
+      <XAxis label="Bottom X axis" position="bottom" />
+      <XAxis label="Top X axis" position="top" />
+      <YAxis label="Left Y axis" position="left" />
+      <YAxis label="Right Y axis" position="right" />
     </ChartContainer>
   );
 }

@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { ScaleLinear } from 'd3-scale';
 import { ScatterSeriesType } from '../models/seriesType/scatter';
 
 export interface ScatterProps {
   data: ScatterSeriesType['data'];
-  xDataToSvg?: (value: any) => number;
-  yDataToSvg?: (value: any) => number;
+  xDataToSvg?: ScaleLinear<unknown, unknown>;
+  yDataToSvg?: ScaleLinear<unknown, unknown>;
   markerSize: number;
 }
 

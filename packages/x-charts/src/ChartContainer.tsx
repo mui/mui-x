@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { extent } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
+import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
 import Surface from './internals/components/Surface';
 import { AxisConfig } from './models/axis';
 import { LayoutConfig } from './models/layout';
@@ -76,10 +76,7 @@ function ChartContainer(props: ChartContainerProps) {
   const { xAxis, yAxis, series, width, height, margin, children } = props;
 
   const defaultizedMargin = {
-    top: 10,
-    bottom: 10,
-    left: 10,
-    right: 10,
+    ...DEFAULT_MARGINS,
     ...margin,
   };
   const drawingArea = React.useMemo(
@@ -109,24 +106,30 @@ function ChartContainer(props: ChartContainerProps) {
   );
 
   const coordinateContext = React.useMemo(() => {
-    const xDataToSvg = {};
-    const yDataToSvg = {};
+    const xAxisParams = {};
+    const yAxisParams = {};
 
     Object.entries(xAxisDomain).forEach(([axisKey, { min, max }]) => {
-      xDataToSvg[axisKey] = scaleLinear()
-        .domain([min, max])
-        .range([drawingArea.left, drawingArea.left + drawingArea.width]);
+      xAxisParams[axisKey] = {
+        scale: scaleLinear()
+          .domain([min, max])
+          .nice()
+          .range([drawingArea.left, drawingArea.left + drawingArea.width]),
+      };
     });
     Object.entries(yAxisDomain).forEach(([axisKey, { min, max }]) => {
-      yDataToSvg[axisKey] = scaleLinear()
-        .domain([min, max])
-        .range([drawingArea.top, drawingArea.top + drawingArea.height]);
+      yAxisParams[axisKey] = {
+        scale: scaleLinear()
+          .domain([min, max])
+          .nice()
+          .range([drawingArea.top, drawingArea.top + drawingArea.height]),
+      };
     });
 
     return {
       drawingArea,
-      xDataToSvg,
-      yDataToSvg,
+      xAxis: xAxisParams,
+      yAxis: yAxisParams,
     };
   }, [drawingArea, xAxisDomain, yAxisDomain]);
   return (

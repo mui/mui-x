@@ -1,17 +1,20 @@
 import * as React from 'react';
-
-/**
- * @param {unknown} value The data value. Can be any type (string, number, date, ...)
- * @returns {number} The position in the plot
- */
-type ScaleFunctionType = (value: unknown) => number;
+import { ScaleLinear } from 'd3-scale';
 
 export type DataParameters = {
   /**
    * Mapping from axis key to scalling function
    */
-  xDataToSvg: { [axisKey: string]: ScaleFunctionType };
-  yDataToSvg: { [axisKey: string]: ScaleFunctionType };
+  xAxis: {
+    [axisKey: string]: {
+      scale: ScaleLinear<unknown, unknown>;
+    };
+  };
+  yAxis: {
+    [axisKey: string]: {
+      scale: ScaleLinear<unknown, unknown>;
+    };
+  };
   /**
    * Defines the area in which it is possible to draw the charts
    */
@@ -24,8 +27,8 @@ export type DataParameters = {
 };
 
 export const CoordinateContext = React.createContext<DataParameters>({
-  xDataToSvg: {},
-  yDataToSvg: {},
+  xAxis: {},
+  yAxis: {},
   drawingArea: {
     left: 0,
     top: 0,
