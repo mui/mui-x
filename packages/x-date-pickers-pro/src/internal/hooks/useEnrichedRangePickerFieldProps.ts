@@ -4,7 +4,7 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import { resolveComponentProps, SlotComponentProps } from '@mui/base/utils';
 import useForkRef from '@mui/utils/useForkRef';
-import { BaseSingleInputFieldProps, PickersInputLocaleText } from '@mui/x-date-pickers';
+import { BaseSingleInputFieldProps, PickersInputLocaleText, FieldRef } from '@mui/x-date-pickers';
 import {
   BaseFieldProps,
   DateOrTimeView,
@@ -12,8 +12,8 @@ import {
   useLocaleText,
   UsePickerResponse,
   WrapperVariant,
-  FieldRef,
   UncapitalizeObjectKeys,
+  UsePickerProps,
 } from '@mui/x-date-pickers/internals';
 import {
   BaseMultiInputFieldProps,
@@ -22,6 +22,7 @@ import {
   MultiInputFieldSlotTextFieldProps,
   RangeFieldSection,
   RangePosition,
+  UseDateRangeFieldProps,
 } from '../models';
 
 export interface RangePickerFieldSlotsComponent {
@@ -49,11 +50,15 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
   field?: SlotComponentProps<
     React.ElementType<BaseMultiInputFieldProps<DateRange<TDate>, RangeFieldSection, unknown>>,
     {},
-    unknown
+    UsePickerProps<DateRange<TDate>, any, RangeFieldSection, any, any, any>
   >;
-  fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
-  fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+  fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
+  fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    UseDateRangeFieldProps<TDate> & { position?: RangePosition }
+  >;
 }
 
 export interface UseEnrichedRangePickerFieldPropsParams<
@@ -243,7 +248,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
   const handleInputRef = useForkRef(inInputRef, inputRef);
 
   const fieldRef = React.useRef<FieldRef<RangeFieldSection>>();
-  const handleFieldRef = useForkRef(fieldProps.fieldRef, fieldRef);
+  const handleFieldRef = useForkRef(fieldProps.unstableFieldRef, fieldRef);
 
   React.useEffect(() => {
     if (!open) {
@@ -290,7 +295,7 @@ const useSingleInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TErro
     slots,
     slotProps,
     label,
-    fieldRef: handleFieldRef,
+    unstableFieldRef: handleFieldRef,
     inputRef: handleInputRef,
     onKeyDown: onSpaceOrEnter(openPicker, fieldProps.onKeyDown),
     onBlur,

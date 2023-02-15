@@ -69,11 +69,10 @@ export type {
   FieldSection,
   FieldChangeHandler,
   FieldChangeHandlerContext,
-  FieldRef,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
-export type { UsePickerResponse, UsePickerParams } from './hooks/usePicker';
+export type { UsePickerResponse, UsePickerParams, UsePickerProps } from './hooks/usePicker';
 export type {
   UsePickerValueNonStaticProps,
   PickerValueManager,

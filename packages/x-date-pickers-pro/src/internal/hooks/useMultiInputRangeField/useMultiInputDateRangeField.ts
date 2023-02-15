@@ -11,6 +11,7 @@ import {
   useValidation,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
@@ -23,19 +24,32 @@ import {
 import { rangeValueManager } from '../../utils/valueManagers';
 import type { UseMultiInputRangeFieldResponse } from './useMultiInputRangeField.types';
 
-export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
+export const useMultiInputDateRangeField = <TDate, TTextFieldProps extends {}>({
   sharedProps: inSharedProps,
-  startTextFieldProps: inStartTextFieldProps,
-  endTextFieldProps: inEndTextFieldProps,
+  startTextFieldProps,
   startInputRef,
+  unstableStartFieldRef,
+  endTextFieldProps,
   endInputRef,
-}: UseMultiInputDateRangeFieldParams<TDate, TChildProps>): UseMultiInputRangeFieldResponse<
-  Omit<TChildProps, keyof UseDateFieldProps<TDate>>
+  unstableEndFieldRef,
+}: UseMultiInputDateRangeFieldParams<TDate, TTextFieldProps>): UseMultiInputRangeFieldResponse<
+  TTextFieldProps & UseDateFieldProps<TDate>
 > => {
-  const sharedProps = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(inSharedProps);
+  const sharedProps = useDefaultizedDateRangeFieldProps<TDate, UseDateFieldProps<TDate>>(
+    inSharedProps,
+  );
   const adapter = useLocalizationContext<TDate>();
 
-  const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
+  const {
+    value: valueProp,
+    defaultValue,
+    format,
+    onChange,
+    disabled,
+    readOnly,
+    selectedSections,
+    onSelectedSectionsChange,
+  } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
 
@@ -58,7 +72,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
         validationError: validateDateRange({
           adapter,
           value: newDateRange,
-          props: { ...sharedProps, value: newDateRange },
+          props: sharedProps,
         }),
       };
 
@@ -69,34 +83,41 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
-  const startInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
-    ...inStartTextFieldProps,
+  const startFieldProps: UseDateFieldComponentProps<TDate, TTextFieldProps> = {
+    ...startTextFieldProps,
     disabled,
     readOnly,
     format,
+    unstableFieldRef: unstableStartFieldRef,
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
-  const endInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
-    ...inEndTextFieldProps,
+  const endFieldProps: UseDateFieldComponentProps<TDate, TTextFieldProps> = {
+    ...endTextFieldProps,
     format,
     disabled,
     readOnly,
+    unstableFieldRef: unstableEndFieldRef,
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    selectedSections,
+    onSelectedSectionsChange,
   };
 
-  const rawStartDateResponse = useDateField<TDate, TChildProps>({
-    props: startInputProps,
+  const rawStartDateResponse = useDateField({
+    props: startFieldProps,
     inputRef: startInputRef,
-  });
-  const rawEndDateResponse = useDateField<TDate, TChildProps>({
-    props: endInputProps,
+  }) as UseFieldResponse<TTextFieldProps>;
+
+  const rawEndDateResponse = useDateField({
+    props: endFieldProps,
     inputRef: endInputRef,
-  });
+  }) as UseFieldResponse<TTextFieldProps>;
 
   const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 

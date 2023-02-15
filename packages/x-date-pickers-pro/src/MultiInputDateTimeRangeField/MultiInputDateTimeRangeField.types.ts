@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FieldRef } from '@mui/x-date-pickers';
 import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
@@ -9,18 +10,19 @@ import {
   UseDateTimeRangeFieldProps,
 } from '../internal/models/dateTimeRange';
 import { RangePosition } from '../internal/models/range';
+import { RangeFieldSection } from '../internal/models/fields';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
 
-export interface UseMultiInputDateTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputDateTimeRangeFieldProps<TDate>> &
-    UseMultiInputDateTimeRangeFieldProps<TDate>;
-  startTextFieldProps: TChildProps;
-  endTextFieldProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
-}
+export type UseMultiInputDateTimeRangeFieldParams<
+  TDate,
+  TTextFieldProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputDateTimeRangeFieldProps<TDate>, TTextFieldProps>;
 
 export interface UseMultiInputDateTimeRangeFieldProps<TDate>
-  extends UseDateTimeRangeFieldProps<TDate> {}
+  extends Omit<UseDateTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+}
 
 export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -30,6 +32,10 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
 
 export interface MultiInputDateTimeRangeFieldProps<TDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  /**
+   * If `true`, the start `input` element is focused during the first mount.
+   */
+  autoFocus?: boolean;
   /**
    * Overrideable components.
    * @default {}

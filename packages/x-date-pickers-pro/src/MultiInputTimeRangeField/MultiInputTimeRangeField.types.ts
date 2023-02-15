@@ -3,23 +3,26 @@ import { SlotComponentProps } from '@mui/base/utils';
 import Typography from '@mui/material/Typography';
 import Stack, { StackProps } from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { FieldRef } from '@mui/x-date-pickers';
 import { UncapitalizeObjectKeys } from '@mui/x-date-pickers/internals';
 import {
   UseTimeRangeFieldDefaultizedProps,
   UseTimeRangeFieldProps,
 } from '../internal/models/timeRange';
 import { RangePosition } from '../internal/models/range';
+import { UseMultiInputRangeFieldParams } from '../internal/hooks/useMultiInputRangeField/useMultiInputRangeField.types';
+import { RangeFieldSection } from '../internal/models/fields';
 
-export interface UseMultiInputTimeRangeFieldParams<TDate, TChildProps extends {}> {
-  sharedProps: Omit<TChildProps, keyof UseMultiInputTimeRangeFieldProps<TDate>> &
-    UseMultiInputTimeRangeFieldProps<TDate>;
-  startTextFieldProps: TChildProps;
-  endTextFieldProps: TChildProps;
-  startInputRef?: React.Ref<HTMLInputElement>;
-  endInputRef?: React.Ref<HTMLInputElement>;
+export type UseMultiInputTimeRangeFieldParams<
+  TDate,
+  TTextFieldProps extends {},
+> = UseMultiInputRangeFieldParams<UseMultiInputTimeRangeFieldProps<TDate>, TTextFieldProps>;
+
+export interface UseMultiInputTimeRangeFieldProps<TDate>
+  extends Omit<UseTimeRangeFieldProps<TDate>, 'unstableFieldRef'> {
+  unstableStartFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
+  unstableEndFieldRef?: React.Ref<FieldRef<RangeFieldSection>>;
 }
-
-export interface UseMultiInputTimeRangeFieldProps<TDate> extends UseTimeRangeFieldProps<TDate> {}
 
 export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends {}> = Omit<
   TChildProps,
@@ -29,6 +32,10 @@ export type UseMultiInputTimeRangeFieldComponentProps<TDate, TChildProps extends
 
 export interface MultiInputTimeRangeFieldProps<TDate>
   extends UseMultiInputTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
+  /**
+   * If `true`, the start `input` element is focused during the first mount.
+   */
+  autoFocus?: boolean;
   /**
    * Overrideable components.
    * @default {}

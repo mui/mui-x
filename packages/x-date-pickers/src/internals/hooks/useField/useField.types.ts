@@ -76,7 +76,7 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
-  fieldRef?: React.Ref<FieldRef<TSection>>;
+  unstableFieldRef?: React.Ref<FieldRef<TSection>>;
 }
 
 export interface FieldRef<TSection extends FieldSection> {

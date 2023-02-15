@@ -83,6 +83,7 @@
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },
   { "name": "faIR", "kind": "Variable" },
+  { "name": "FieldRef", "kind": "Interface" },
   { "name": "FieldSection", "kind": "Interface" },
   { "name": "FieldSelectedSections", "kind": "TypeAlias" },
   { "name": "fiFI", "kind": "Variable" },

@@ -61,7 +61,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
-    fieldRef,
     autoFocus,
     ...other
   } = themeProps;
@@ -132,11 +131,10 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      fieldRef,
     },
     startTextFieldProps,
-    endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
+    endTextFieldProps,
     endInputRef: endTextFieldProps.inputRef,
   });
 
@@ -174,6 +172,9 @@ MultiInputDateRangeField.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * If `true`, the start `input` element is focused during the first mount.
+   */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
@@ -221,7 +222,7 @@ MultiInputDateRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  fieldRef: PropTypes.oneOfType([
+  unstableEndFieldRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.shape({
@@ -324,6 +325,15 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  unstableStartFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -332,6 +342,15 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
+  ]),
+  unstableFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
   ]),
   /**
    * The selected value.

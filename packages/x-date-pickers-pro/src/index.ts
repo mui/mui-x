@@ -29,5 +29,5 @@ export * from './StaticDateRangePicker';
 export * from './dateRangeViewRenderers';
 
 export type { DateRangeValidationError } from './internal/hooks/validation/useDateRangeValidation';
-export type { DateRange } from './internal/models/range';
+export type { DateRange, RangePosition } from './internal/models/range';
 export type { UseDateRangeFieldProps } from './internal/models/dateRange';

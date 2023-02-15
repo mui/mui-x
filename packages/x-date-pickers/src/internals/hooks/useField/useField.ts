@@ -55,7 +55,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false, fieldRef },
+    internalProps: { readOnly = false, unstableFieldRef },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -411,7 +411,7 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
-  React.useImperativeHandle(fieldRef, () => ({
+  React.useImperativeHandle(unstableFieldRef, () => ({
     getSections: () => state.sections,
     getActiveSectionIndex: () => {
       const browserStartIndex = inputRef.current!.selectionStart ?? 0;

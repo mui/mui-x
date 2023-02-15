@@ -68,7 +68,9 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
-    fieldRef,
+    unstableStartFieldRef,
+    unstableEndFieldRef,
+    autoFocus,
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -91,6 +93,7 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
   const startTextFieldProps: FieldsTextFieldProps = useSlotProps({
     elementType: TextField,
     externalSlotProps: slotProps?.textField,
+    additionalProps: { autoFocus },
     ownerState: { ...ownerState, position: 'start' },
   });
   const endTextFieldProps: FieldsTextFieldProps = useSlotProps({
@@ -144,12 +147,13 @@ const MultiInputDateTimeRangeField = React.forwardRef(function MultiInputDateTim
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      fieldRef,
     },
     startTextFieldProps,
-    endTextFieldProps,
     startInputRef: startTextFieldProps.inputRef,
+    unstableStartFieldRef,
+    endTextFieldProps,
     endInputRef: endTextFieldProps.inputRef,
+    unstableEndFieldRef,
   });
 
   return (
@@ -191,6 +195,10 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
+  /**
+   * If `true`, the start `input` element is focused during the first mount.
+   */
+  autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
    * Overrideable components.
@@ -242,7 +250,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  fieldRef: PropTypes.oneOfType([
+  unstableEndFieldRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.shape({
@@ -383,6 +391,15 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
+  unstableStartFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -391,6 +408,15 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,
     PropTypes.object,
+  ]),
+  unstableFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
   ]),
   /**
    * The selected value.

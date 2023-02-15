@@ -26,19 +26,19 @@ export default function ControlledSelectedSections() {
             variant="outlined"
             onClick={() => setSelectedDateSectionName('month')}
           >
-            Pick month
+            Month
           </Button>
           <Button
             variant="outlined"
             onClick={() => setSelectedDateSectionName('day')}
           >
-            Pick day
+            Day
           </Button>
           <Button
             variant="outlined"
             onClick={() => setSelectedDateSectionName('year')}
           >
-            Pick year
+            Year
           </Button>
         </Stack>
         <DateField
