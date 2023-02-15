@@ -87,6 +87,8 @@ export const useGridClipboardImport = (
       if (String.fromCharCode(event.keyCode) !== 'V' || !isModifierKeyPressed) {
         return;
       }
+      // Do not enter cell edit mode on paste
+      event.stopPropagation();
 
       const text = await navigator.clipboard.readText();
       if (!text) {
