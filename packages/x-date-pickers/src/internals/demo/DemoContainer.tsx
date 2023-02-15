@@ -64,7 +64,7 @@ export function DemoItem(props: DemoItemProps) {
   let sx: StackProps['sx'];
 
   if (component && getChildTypeFromChildName(component) === 'multi-input-range-field') {
-    spacing = 2;
+    spacing = 1.5;
     sx = {
       [`& .${textFieldClasses.root}`]: {
         flexGrow: 1,
@@ -76,7 +76,13 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
+    <Stack
+      direction="column"
+      alignItems="stretch"
+      spacing={spacing}
+      sx={sx}
+      className={textFieldClasses.root}
+    >
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>
@@ -115,13 +121,12 @@ export function DemoContainer(props: DemoGridProps) {
     childrenCount > 2 ||
     childrenTypes.has('multi-input-range-field') ||
     childrenTypes.has('single-input-range-field') ||
-    childrenTypes.has('multi-panel-UI-view')
+    childrenTypes.has('multi-panel-UI-view') ||
+    childrenTypes.has('UI-view') ||
+    childrenSupportedSections.has('date-time')
   ) {
     direction = 'column';
     spacing = getSpacing('column');
-  } else if (childrenTypes.has('UI-view')) {
-    direction = { xs: 'column', xl: 'row' };
-    spacing = { xs: getSpacing('column'), xl: getSpacing('row') };
   } else {
     direction = { xs: 'column', lg: 'row' };
     spacing = { xs: getSpacing('column'), lg: getSpacing('row') };
@@ -137,7 +142,7 @@ export function DemoContainer(props: DemoGridProps) {
       },
     };
   } else if (childrenSupportedSections.has('date-time')) {
-    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 256 } };
+    sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 270 } };
   } else {
     sx = { ...sx, [`& > .${textFieldClasses.root}`]: { minWidth: 200 } };
   }

@@ -1,9 +1,10 @@
 <LocalizationProvider dateAdapter={AdapterDayjs}>
-  <SingleInputDateRangeField
-    value={value}
-    onChange={(newValue) => setValue(newValue)}
-    sx={{ width: 300 }}
-  />
+  <DemoContainer components={['SingleInputDateRangeField']}>
+    <SingleInputDateRangeField
+      value={value}
+      onChange={(newValue) => setValue(newValue)}
+    />
+  </DemoContainer>
 </LocalizationProvider>
 <Typography>
   Value:{' '}

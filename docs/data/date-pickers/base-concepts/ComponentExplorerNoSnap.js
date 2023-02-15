@@ -3,6 +3,7 @@ import * as React from 'react';
 import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -134,14 +135,13 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
   return (
     <Stack spacing={3} sx={{ width: '100%', py: 2 }}>
       <Stack direction="row" spacing={2}>
-        <FormControl>
+        <FormControl sx={{ width: 192 }}>
           <InputLabel id="component-explorer-value-type-label">
             Value type
           </InputLabel>
           <Select
             label="Value type"
             labelId="component-explorer-value-type-label"
-            sx={{ minWidth: 192 }}
             value={state.valueType}
             onChange={(event) =>
               setState((prev) => ({
@@ -164,12 +164,11 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
             </MenuItem>
           </Select>
         </FormControl>
-        <FormControl>
+        <FormControl sx={{ width: 164 }}>
           <InputLabel id="component-explorer-family-label">Family</InputLabel>
           <Select
             label="Family"
             labelId="component-explorer-family-label"
-            sx={{ minWidth: 164 }}
             value={state.family}
             onChange={(event) =>
               setState((prev) => ({
@@ -197,14 +196,20 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
           </div>
           <Stack>
             <Typography>Import code:</Typography>
-            <HighlightedCode code={importCode} language="tsx" />
+            <HighlightedCode
+              code={importCode}
+              language="tsx"
+              sx={{ '& pre': { mt: 1, mb: 0 } }}
+            />
           </Stack>
-          <Stack spacing={2}>
-            <Typography>Live example:</Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={exportedNames}>{content}</DemoContainer>
-            </LocalizationProvider>
-          </Stack>
+          <div>
+            <Typography sx={{ mb: 1 }}>Live example:</Typography>
+            <Box sx={{ display: 'flex' }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={exportedNames}>{content}</DemoContainer>
+              </LocalizationProvider>
+            </Box>
+          </div>
         </React.Fragment>
       ) : (
         <Typography>This component is not available yet</Typography>
