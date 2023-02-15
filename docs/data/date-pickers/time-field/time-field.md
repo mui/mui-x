@@ -16,7 +16,7 @@ packageName: '@mui/x-date-pickers'
 
 ## Uncontrolled vs. Controlled
 
-The component can be uncontrolled or controlled
+The component can be uncontrolled or controlled.
 
 {{"demo": "TimeFieldValue.js"}}
 
