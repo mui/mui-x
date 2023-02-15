@@ -426,6 +426,7 @@ const GridRow = React.forwardRef<
       return {
         opacity: 0,
         width: 0,
+        height: 0,
       };
     }
 
