@@ -77,6 +77,8 @@
   { "name": "DesktopTimePickerSlotsComponentsProps", "kind": "Interface" },
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
+  { "name": "ExportedPickersLayoutSlotsComponent", "kind": "Interface" },
+  { "name": "ExportedPickersLayoutSlotsComponentsProps", "kind": "Interface" },
   { "name": "ExportedPickersMonthProps", "kind": "Interface" },
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },

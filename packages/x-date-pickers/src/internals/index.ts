@@ -69,6 +69,7 @@ export type {
   FieldSection,
   FieldChangeHandler,
   FieldChangeHandlerContext,
+  FieldRef,
 } from './hooks/useField';
 export type { MobileOnlyPickerProps } from './hooks/useMobilePicker';
 export { usePicker } from './hooks/usePicker';
@@ -125,6 +126,7 @@ export type {
   BasePickerProps,
   BasePickerInputProps,
   BaseNonStaticPickerProps,
+  BaseSingleInputNonStaticPickerProps,
 } from './models/props/basePickerProps';
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';

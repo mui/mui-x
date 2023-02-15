@@ -112,6 +112,15 @@ SingleInputTimeRangeField.propTypes = {
    * @default false
    */
   disablePast: PropTypes.bool,
+  fieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * If `true`, the component is displayed in focused state.
    */

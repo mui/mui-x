@@ -46,6 +46,7 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    fieldRef,
     ...other
   } = useDefaultizedDateRangeFieldProps<TDate, TChildProps>(props);
 
@@ -66,6 +67,7 @@ export const useSingleInputDateRangeField = <TDate, TChildProps extends {}>({
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      fieldRef,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,

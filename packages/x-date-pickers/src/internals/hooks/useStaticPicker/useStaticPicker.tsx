@@ -8,6 +8,7 @@ import { LocalizationProvider } from '../../../LocalizationProvider';
 import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { PickersLayout } from '../../../PickersLayout';
 import { DIALOG_WIDTH } from '../../constants/dimensions';
+import { FieldSection } from '../useField';
 
 const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
   overflow: 'hidden',
@@ -37,6 +38,7 @@ export const useStaticPicker = <
     TDate | null,
     TDate,
     TView,
+    FieldSection,
     TExternalProps,
     {}
   >({

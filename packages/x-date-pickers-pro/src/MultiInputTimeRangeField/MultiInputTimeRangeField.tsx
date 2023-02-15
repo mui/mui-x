@@ -63,6 +63,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
+    fieldRef,
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -134,6 +135,7 @@ const MultiInputTimeRangeField = React.forwardRef(function MultiInputTimeRangeFi
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
+      fieldRef,
     },
     startTextFieldProps,
     endTextFieldProps,
@@ -231,6 +233,15 @@ MultiInputTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
+  fieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * Format of the date when rendered in the input(s).
    */

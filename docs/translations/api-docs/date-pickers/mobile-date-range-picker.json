@@ -21,6 +21,8 @@
     "displayWeekNumber": "If <code>true</code>, the week number will be display in the calendar.",
     "fixedWeekNumber": "Calendar will show more weeks in order to match this value. Put it to 6 for having fix number of week in Gregorian calendars",
     "format": "Format of the date when rendered in the input(s). Defaults to localized format based on the used <code>views</code>.",
+    "inputRef": "Pass a ref to the <code>input</code> element. Will be ignored on multi input range pickers.",
+    "label": "The label content. Will be ignored on multi input range pickers.",
     "loading": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar.",
     "localeText": "Locale for components texts. Allows overriding texts coming from <code>LocalizationProvider</code> and <code>theme</code>.",
     "maxDate": "Maximal selectable date.",
@@ -64,7 +66,7 @@
     "Shortcuts": "Custom component for the shortcuts.",
     "SwitchViewButton": "Button displayed to switch between different calendar views.",
     "SwitchViewIcon": "Icon displayed in the SwitchViewButton. Rotated by 180° when the open view is &#39;year&#39;.",
-    "TextField": "Form control with an input to render a date or time inside the default field.\nReceives the same props as <code>@mui/material/TextField</code>.",
+    "TextField": "Form control with an input to render a date or time inside the default field.\nIt is rendered twice: once for the start element and once for the end element.\nReceives the same props as <code>@mui/material/TextField</code>.",
     "Toolbar": "Custom component for the toolbar rendered above the views."
   }
 }

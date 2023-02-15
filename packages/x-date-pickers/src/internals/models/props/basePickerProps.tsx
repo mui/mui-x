@@ -61,10 +61,12 @@ export interface BaseNonStaticPickerProps {
 export interface BaseSingleInputNonStaticPickerProps {
   /**
    * The label content.
+   * Will be ignored on multi input range pickers.
    */
   label?: React.ReactNode;
   /**
    * Pass a ref to the `input` element.
+   * Will be ignored on multi input range pickers.
    */
   inputRef?: React.Ref<HTMLInputElement>;
 }

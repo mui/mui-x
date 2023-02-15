@@ -21,10 +21,10 @@ import {
   UseMobileRangePickerParams,
   UseMobileRangePickerProps,
 } from './useMobileRangePicker.types';
-import { useRangePickerFieldSlotProps } from '../useRangePickerFieldSlotProps';
+import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { BaseMultiInputFieldProps } from '../../models/fields';
+import { BaseMultiInputFieldProps, RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -46,6 +46,8 @@ export const useMobileRangePicker = <
     className,
     sx,
     format,
+    label,
+    inputRef,
     readOnly,
     disabled,
     disableOpenPicker,
@@ -66,6 +68,7 @@ export const useMobileRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     MobileRangePickerAdditionalViewProps
   >({
@@ -81,8 +84,11 @@ export const useMobileRangePicker = <
   });
 
   const Field = slots.field;
+  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
+
   const fieldProps: BaseMultiInputFieldProps<
     DateRange<TDate>,
+    RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -94,32 +100,31 @@ export const useMobileRangePicker = <
       className,
       sx,
       format,
+      ...(fieldType === 'single-input' && { inputRef, label }),
     },
     ownerState: props,
   });
 
-  const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
-    textField: slots.textField,
-    ...fieldProps.slots,
-  };
-
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
-  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
 
-  const slotPropsForField = useRangePickerFieldSlotProps({
+  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+    TDate,
+    TView,
+    InferError<TExternalProps>
+  >({
     wrapperVariant: 'mobile',
     fieldType,
     open,
     actions,
     readOnly,
-    disabled,
     labelId,
     disableOpenPicker,
     localeText,
     rangePosition,
     onRangePositionChange,
+    pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
-    fieldSlotProps: fieldProps.slotProps,
+    fieldProps,
   });
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -148,10 +153,8 @@ export const useMobileRangePicker = <
       if (finalLocaleText.end) {
         labels.push(`${labelId}-end-label`);
       }
-    }
-    // TODO: Check for props.label
-    else if (false) {
-      labels.push('');
+    } else if (label != null) {
+      labels.push(`${labelId}-label`);
     }
 
     labelledById = labels.length > 0 ? labels.join(' ') : undefined;
@@ -167,7 +170,7 @@ export const useMobileRangePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="mobile">
-        <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
+        <Field {...enrichedFieldProps} />
         <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
           <Layout
             {...layoutProps}

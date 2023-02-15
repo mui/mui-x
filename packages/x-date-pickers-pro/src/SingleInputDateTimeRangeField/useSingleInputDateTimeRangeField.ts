@@ -61,6 +61,7 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
     disableIgnoringDatePartForTimeValidation,
     selectedSections,
     onSelectedSectionsChange,
+    fieldRef,
     ...other
   } = useDefaultizedTimeRangeFieldProps<TDate, TChildProps>(props);
 
@@ -86,6 +87,7 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
       disableIgnoringDatePartForTimeValidation,
       selectedSections,
       onSelectedSectionsChange,
+      fieldRef,
     },
     valueManager: rangeValueManager,
     fieldValueManager: rangeFieldValueManager,

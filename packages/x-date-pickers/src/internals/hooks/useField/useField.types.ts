@@ -9,7 +9,7 @@ export interface UseFieldParams<
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 > {
   inputRef?: React.Ref<HTMLInputElement>;
   forwardedProps: TForwardedProps;
@@ -25,7 +25,7 @@ export interface UseFieldParams<
   valueType: FieldValueType;
 }
 
-export interface UseFieldInternalProps<TValue, TError> {
+export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.
@@ -76,6 +76,12 @@ export interface UseFieldInternalProps<TValue, TError> {
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
+  fieldRef?: React.Ref<FieldRef<TSection>>;
+}
+
+export interface FieldRef<TSection extends FieldSection> {
+  getSections: () => TSection[];
+  getActiveSectionIndex: () => number | null;
 }
 
 export interface UseFieldForwardedProps {

@@ -26,7 +26,7 @@ export const useField = <
   TDate,
   TSection extends FieldSection,
   TForwardedProps extends UseFieldForwardedProps,
-  TInternalProps extends UseFieldInternalProps<any, any>,
+  TInternalProps extends UseFieldInternalProps<any, any, any>,
 >(
   params: UseFieldParams<TValue, TDate, TSection, TForwardedProps, TInternalProps>,
 ): UseFieldResponse<TForwardedProps> => {
@@ -55,7 +55,7 @@ export const useField = <
   const {
     inputRef: inputRefProp,
     internalProps,
-    internalProps: { readOnly = false },
+    internalProps: { readOnly = false, fieldRef },
     forwardedProps: {
       onClick,
       onKeyDown,
@@ -410,6 +410,25 @@ export const useField = <
 
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
+
+  React.useImperativeHandle(fieldRef, () => ({
+    getSections: () => state.sections,
+    getActiveSectionIndex: () => {
+      const browserStartIndex = inputRef.current!.selectionStart ?? 0;
+      const browserEndIndex = inputRef.current!.selectionEnd ?? 0;
+      if (browserStartIndex === 0 && browserEndIndex === 0) {
+        return null;
+      }
+
+      const nextSectionIndex =
+        browserStartIndex <= state.sections[0].startInInput
+          ? 1 // Special case if browser index is in invisible characters at the beginning.
+          : state.sections.findIndex(
+              (section) => section.startInInput - section.startSeparator.length > browserStartIndex,
+            );
+      return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
+    },
+  }));
 
   return {
     ...otherForwardedProps,

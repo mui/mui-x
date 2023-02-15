@@ -1,8 +1,4 @@
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
-import {
   DateOrTimeView,
   UsePickerParams,
   BasePickerProps,
@@ -14,30 +10,36 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  BaseSingleInputNonStaticPickerProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import { DateRange, RangeFieldSection } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  UseMultiInputFieldSlotsComponent,
-  UseMultiInputFieldSlotsComponentsProps,
-} from '../useRangePickerFieldSlotProps';
+  UseRangePickerFieldSlotsComponent,
+  UseRangePickerFieldSlotsComponentsProps,
+} from '../useEnrichedRangePickerFieldProps';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
     ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    UseMultiInputFieldSlotsComponent {}
+    UseRangePickerFieldSlotsComponent {}
 
 export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    UseMultiInputFieldSlotsComponentsProps<TDate> {
+    UseRangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface MobileRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
+    BaseSingleInputNonStaticPickerProps,
     UseRangePositionProps {}
 
 export interface UseMobileRangePickerProps<
@@ -77,6 +79,7 @@ export interface UseMobileRangePickerParams<
       DateRange<TDate>,
       TDate,
       TView,
+      RangeFieldSection,
       TExternalProps,
       MobileRangePickerAdditionalViewProps
     >,

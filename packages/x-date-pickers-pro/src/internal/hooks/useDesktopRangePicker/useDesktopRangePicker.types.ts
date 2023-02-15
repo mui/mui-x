@@ -1,8 +1,4 @@
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
-import {
   DateOrTimeView,
   UsePickerParams,
   BasePickerProps,
@@ -14,30 +10,36 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
+  BaseSingleInputNonStaticPickerProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange } from '../../models';
+import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
+import { DateRange, RangeFieldSection } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
-  UseMultiInputFieldSlotsComponent,
-  UseMultiInputFieldSlotsComponentsProps,
-} from '../useRangePickerFieldSlotProps';
+  UseRangePickerFieldSlotsComponent,
+  UseRangePickerFieldSlotsComponentsProps,
+} from '../useEnrichedRangePickerFieldProps';
 
 export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponent,
     ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView>,
-    UseMultiInputFieldSlotsComponent {}
+    UseRangePickerFieldSlotsComponent {}
 
 export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends DateOrTimeView>
   extends PickersPopperSlotsComponentsProps,
     ExportedPickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView>,
-    UseMultiInputFieldSlotsComponentsProps<TDate> {
+    UseRangePickerFieldSlotsComponentsProps<TDate> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
 export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
-    UsePickerValueNonStaticProps<TDate | null>,
+    UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
+    BaseSingleInputNonStaticPickerProps,
     UseRangePositionProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
@@ -82,6 +84,7 @@ export interface UseDesktopRangePickerParams<
       DateRange<TDate>,
       TDate,
       TView,
+      RangeFieldSection,
       TExternalProps,
       DesktopRangePickerAdditionalViewProps
     >,

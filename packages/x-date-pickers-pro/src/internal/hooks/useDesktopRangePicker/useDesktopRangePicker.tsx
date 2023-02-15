@@ -15,16 +15,17 @@ import {
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
+  BaseFieldProps,
 } from '@mui/x-date-pickers/internals';
 import {
   DesktopRangePickerAdditionalViewProps,
   UseDesktopRangePickerParams,
   UseDesktopRangePickerProps,
 } from './useDesktopRangePicker.types';
-import { useRangePickerFieldSlotProps } from '../useRangePickerFieldSlotProps';
+import { useEnrichedRangePickerFieldProps } from '../useEnrichedRangePickerFieldProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
 import { DateRange } from '../../models/range';
-import { BaseMultiInputFieldProps } from '../../models/fields';
+import { RangeFieldSection } from '../../models/fields';
 import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
@@ -46,6 +47,8 @@ export const useDesktopRangePicker = <
     className,
     sx,
     format,
+    label,
+    inputRef,
     readOnly,
     disabled,
     autoFocus,
@@ -53,7 +56,7 @@ export const useDesktopRangePicker = <
     localeText,
   } = props;
 
-  const fieldRef = React.useRef<HTMLDivElement>(null);
+  const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
   const { rangePosition, onRangePositionChange } = useRangePosition(props);
@@ -69,6 +72,7 @@ export const useDesktopRangePicker = <
     DateRange<TDate>,
     TDate,
     TView,
+    RangeFieldSection,
     TExternalProps,
     DesktopRangePickerAdditionalViewProps
   >({
@@ -86,7 +90,7 @@ export const useDesktopRangePicker = <
   const handleBlur = () => {
     executeInTheNextEventLoopTick(() => {
       if (
-        fieldRef.current?.contains(getActiveElement(document)) ||
+        fieldContainerRef.current?.contains(getActiveElement(document)) ||
         popperRef.current?.contains(getActiveElement(document))
       ) {
         return;
@@ -97,8 +101,11 @@ export const useDesktopRangePicker = <
   };
 
   const Field = slots.field;
-  const fieldProps: BaseMultiInputFieldProps<
+  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
+
+  const fieldProps: BaseFieldProps<
     DateRange<TDate>,
+    RangeFieldSection,
     InferError<TExternalProps>
   > = useSlotProps({
     elementType: Field,
@@ -111,35 +118,31 @@ export const useDesktopRangePicker = <
       sx,
       format,
       autoFocus: autoFocus && !props.open,
-      ref: fieldRef,
+      ref: fieldContainerRef,
+      ...(fieldType === 'single-input' && { inputRef, label }),
     },
     ownerState: props,
   });
 
-  const fieldType = (Field as any).isSingleInput ? 'single-input' : 'multi-input';
-
-  const slotPropsForField = useRangePickerFieldSlotProps({
+  const enrichedFieldProps = useEnrichedRangePickerFieldProps<
+    TDate,
+    TView,
+    InferError<TExternalProps>
+  >({
     wrapperVariant: 'desktop',
     fieldType,
     open,
     actions,
     readOnly,
-    disabled,
     disableOpenPicker,
     localeText,
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange,
     pickerSlotProps: slotProps,
-    fieldSlotProps: fieldProps.slotProps,
+    pickerSlots: slots,
+    fieldProps,
   });
-
-  const slotsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slots'] = {
-    textField: slots.textField,
-    root: slots.fieldRoot,
-    separator: slots.fieldSeparator,
-    ...fieldProps.slots,
-  };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
     ...slotProps,
@@ -154,11 +157,11 @@ export const useDesktopRangePicker = <
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
       <WrapperVariantContext.Provider value="desktop">
-        <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
+        <Field {...enrichedFieldProps} />
         <PickersPopper
           role="tooltip"
           containerRef={popperRef}
-          anchorEl={fieldRef.current}
+          anchorEl={fieldContainerRef.current}
           onBlur={handleBlur}
           {...actions}
           open={open}

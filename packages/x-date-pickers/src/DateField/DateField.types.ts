@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SlotComponentProps } from '@mui/base/utils';
 import TextField from '@mui/material/TextField';
-import { UseFieldInternalProps } from '../internals/hooks/useField';
+import { FieldSection, UseFieldInternalProps } from '../internals/hooks/useField';
 import { DateValidationError } from '../internals/hooks/validation/useDateValidation';
 import { DefaultizedProps, MakeOptional } from '../internals/models/helpers';
 import {
@@ -19,7 +19,10 @@ export interface UseDateFieldParams<TDate, TChildProps extends {}> {
 }
 
 export interface UseDateFieldProps<TDate>
-  extends MakeOptional<UseFieldInternalProps<TDate | null, DateValidationError>, 'format'>,
+  extends MakeOptional<
+      UseFieldInternalProps<TDate | null, FieldSection, DateValidationError>,
+      'format'
+    >,
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,

@@ -107,6 +107,8 @@
   { "name": "enUS", "kind": "Variable" },
   { "name": "esES", "kind": "Variable" },
   { "name": "ExportedDateRangeCalendarProps", "kind": "Interface" },
+  { "name": "ExportedPickersLayoutSlotsComponent", "kind": "Interface" },
+  { "name": "ExportedPickersLayoutSlotsComponentsProps", "kind": "Interface" },
   { "name": "ExportedPickersMonthProps", "kind": "Interface" },
   { "name": "ExportedPickersYearProps", "kind": "Interface" },
   { "name": "ExportedSlideTransitionProps", "kind": "Interface" },

@@ -1,9 +1,5 @@
 import * as React from 'react';
 import {
-  ExportedPickersLayoutSlotsComponent,
-  ExportedPickersLayoutSlotsComponentsProps,
-} from '@mui/x-date-pickers/PickersLayout/PickersLayout.types';
-import {
   DateOrTimeView,
   BasePickerProps,
   UsePickerParams,
@@ -11,8 +7,13 @@ import {
   StaticOnlyPickerProps,
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
+import {
+  ExportedPickersLayoutSlotsComponent,
+  ExportedPickersLayoutSlotsComponentsProps,
+} from '@mui/x-date-pickers/PickersLayout';
 import { DateRange } from '../../models/range';
 import { UseRangePositionProps } from '../useRangePosition';
+import { RangeFieldSection } from '../../models/fields';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
@@ -48,7 +49,7 @@ export interface UseStaticRangePickerParams<
   TView extends DateOrTimeView,
   TExternalProps extends UseStaticRangePickerProps<TDate, TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParams<DateRange<TDate>, TDate, TView, TExternalProps, {}>,
+    UsePickerParams<DateRange<TDate>, TDate, TView, RangeFieldSection, TExternalProps, {}>,
     'valueManager' | 'validator'
   > {
   props: TExternalProps;
