@@ -11,5 +11,5 @@ title: Charts - Tree map
 >
 > 👍 Upvote [issue #7924(https://github.com/mui/mui-x/issues/7924 if you want to see it land faster.
 >
-> 💬 To have a solution that solves your needs, leave a comments on the [same issue](https://github.com/mui/mui-x/issues/7924.
+> 💬 To have a solution that meets your needs, leave a comment on the [same issue](https://github.com/mui/mui-x/issues/7924.
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.

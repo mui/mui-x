@@ -11,5 +11,5 @@ title: Charts - Heat map
 >
 > 👍 Upvote [issue #7926](https://github.com/mui/mui-x/issues/7926) if you want to see it land faster.
 >
-> 💬 To have a solution that solves your needs, leave a comments on the [same issue](https://github.com/mui/mui-x/issues/7926).
+> 💬 To have a solution that meets your needs, leave a comment on the [same issue](https://github.com/mui/mui-x/issues/7926).
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.
