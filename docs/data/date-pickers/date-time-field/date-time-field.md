@@ -27,7 +27,6 @@ The component can be uncontrolled or controlled
 ## Localization
 
 Use the `LocalizationProvider` to change the date-library locale used in the date time field.
-
 See the [localization documentation page](/x/react-date-pickers/localization/) for more details.
 
 ## Validation
