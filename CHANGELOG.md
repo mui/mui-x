@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.24
+
+_Feb 16, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Hungarian (hu-HU) locale
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.24` / `@mui/x-data-grid-pro@v5.17.24` / `@mui/x-data-grid-premium@v5.17.24`
+
+#### Changes
+
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7897) @Vivek-Prajapatii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7945) @cherniavskii
+- [DataGridPro] Change cursor when dragging a column (#7878) @sai6855
+- [DataGridPremium] Fix `leafField` to have correct focus value (#7959) @MBilalShafi
+
+### `@mui/x-date-pickers@v5.0.19` / `@mui/x-date-pickers-pro@v5.0.19`
+
+#### Changes
+
+- [l10n] Add Hungarian (hu-HU) locale (#7796) @noherczeg
+
 ## 5.17.23
 
 _Feb 9, 2023_
