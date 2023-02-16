@@ -3,14 +3,11 @@ import { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDe
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
+import { isObject } from '../utils/utils';
 
 const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';
 };
-
-function isObject(value: any): value is Record<string, any> {
-  return typeof value === 'object' && value !== null;
-}
 
 const defaultGetOptionValue = (value: ValueOptions) => {
   return isObject(value) ? value.value : value;
