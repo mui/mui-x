@@ -26,6 +26,7 @@ import {
   PickersToolbarClassKey,
   PickersToolbarTextClassKey,
 } from '../internals';
+import { DigitalClockClassKey } from '../DigitalClock';
 
 // prettier-ignore
 export interface PickersComponentNameToClassKey {
@@ -39,6 +40,7 @@ export interface PickersComponentNameToClassKey {
   MuiDateTimePickerToolbar: DateTimePickerToolbarClassKey;
   MuiDayCalendar: DayCalendarClassKey;
   MuiDayCalendarSkeleton: DayCalendarSkeletonClassKey;
+  MuiDigitalClock: DigitalClockClassKey;
   MuiLocalizationProvider: never;
   MuiMonthCalendar: MonthCalendarClassKey;
   MuiPickersArrowSwitcher: PickersArrowSwitcherClassKey;

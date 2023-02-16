@@ -41,6 +41,10 @@ export interface PickerComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiDayCalendarSkeleton'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiDayCalendarSkeleton'];
   };
+  MuiDigitalClock?: {
+    defaultProps?: ComponentsProps['MuiDigitalClock'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiDigitalClock'];
+  };
   MuiLocalizationProvider?: {
     defaultProps?: ComponentsProps['MuiLocalizationProvider'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiLocalizationProvider'];

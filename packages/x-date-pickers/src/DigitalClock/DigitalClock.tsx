@@ -32,6 +32,18 @@ const DigitalClockRoot = styled(PickerViewRoot, {
   overflowY: 'auto',
 });
 
+const DigitalClockList = styled(MenuList, {
+  name: 'MuiDigitalClock',
+  slot: 'List',
+  overridesResolver: (props, styles) => styles.list,
+})({});
+
+const DigitalClockItem = styled(MenuItem, {
+  name: 'MuiDigitalClock',
+  slot: 'Item',
+  overridesResolver: (props, styles) => styles.item,
+})({});
+
 type DigitalClockComponent = (<TDate>(
   props: DigitalClockProps<TDate> & React.RefAttributes<HTMLDivElement>,
 ) => JSX.Element) & { propTypes?: any };
@@ -202,9 +214,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       ownerState={ownerState}
       {...other}
     >
-      <MenuList autoFocus={autoFocus}>
+      <DigitalClockList autoFocus={autoFocus}>
         {timeOptions.map((option) => (
-          <MenuItem
+          <DigitalClockItem
             aria-readonly={readOnly}
             key={utils.toISO(option)}
             onClick={() => !readOnly && handleValueChange(option, 'finish')}
@@ -213,9 +225,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
             disableRipple={readOnly}
           >
             {utils.format(option, ampm ? 'fullTime12h' : 'fullTime24h')}
-          </MenuItem>
+          </DigitalClockItem>
         ))}
-      </MenuList>
+      </DigitalClockList>
     </DigitalClockRoot>
   );
 }) as DigitalClockComponent;

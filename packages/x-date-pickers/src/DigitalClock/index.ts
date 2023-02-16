@@ -3,6 +3,7 @@ export type {
   DigitalClockProps,
   DigitalClockSlotsComponent,
   DigitalClockSlotsComponentsProps,
+  ExportedDigitalClockProps,
 } from './DigitalClock.types';
 
 export { digitalClockClasses, getDigitalClockUtilityClass } from './digitalClockClasses';

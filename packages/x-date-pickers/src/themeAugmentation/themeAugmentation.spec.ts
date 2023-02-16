@@ -22,6 +22,7 @@ import {
 import { pickersDayClasses } from '../PickersDay';
 import { timePickerToolbarClasses } from '../TimePicker';
 import { pickersMonthClasses } from '../MonthCalendar';
+import { digitalClockClasses } from '../DigitalClock';
 
 createTheme({
   components: {
@@ -58,6 +59,25 @@ createTheme({
           },
         },
         // @ts-expect-error invalid MuiDayCalendarSkeleton class key
+        content: {
+          backgroundColor: 'blue',
+        },
+      },
+    },
+    MuiDigitalClock: {
+      defaultProps: {
+        timeStep: 42,
+        // @ts-expect-error invalid MuiDigitalClock prop
+        someRandomProp: true,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: 'red',
+          [`.${digitalClockClasses.item}`]: {
+            backgroundColor: 'green',
+          },
+        },
+        // @ts-expect-error invalid MuiDigitalClock class key
         content: {
           backgroundColor: 'blue',
         },

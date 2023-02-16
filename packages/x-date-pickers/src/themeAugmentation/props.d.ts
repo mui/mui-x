@@ -40,6 +40,7 @@ import { TimePickerProps, TimePickerToolbarProps } from '../TimePicker';
 import { DesktopTimePickerProps } from '../DesktopTimePicker';
 import { MobileTimePickerProps } from '../MobileTimePicker';
 import { StaticTimePickerProps } from '../StaticTimePicker';
+import { ExportedDigitalClockProps } from '../DigitalClock';
 
 export interface PickersComponentsPropsList {
   MuiClock: ClockProps<unknown>;
@@ -52,6 +53,7 @@ export interface PickersComponentsPropsList {
   MuiDateTimePickerToolbar: DateTimePickerToolbarProps<unknown>;
   MuiDayCalendar: DayCalendarProps<unknown>;
   MuiDayCalendarSkeleton: DayCalendarSkeletonProps;
+  MuiDigitalClock: ExportedDigitalClockProps<unknown>;
   MuiLocalizationProvider: LocalizationProviderProps<unknown>;
   MuiMonthCalendar: MonthCalendarProps<unknown>;
   MuiPickersArrowSwitcher: ExportedPickersArrowSwitcherProps;
