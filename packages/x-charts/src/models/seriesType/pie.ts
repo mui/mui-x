@@ -1,5 +1,6 @@
-import { CartesianSeriesType, CommonSeriesType } from "./common";
+import { CartesianSeriesType, CommonSeriesType } from './common';
 
-export interface PieSeriesType extends CommonSeriesType , CartesianSeriesType {
+export interface PieSeriesType extends CommonSeriesType, CartesianSeriesType {
   type: 'pie';
+  data: number[];
 }

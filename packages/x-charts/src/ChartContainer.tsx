@@ -1,35 +1,69 @@
 import * as React from 'react';
 import { extent } from 'd3-array';
-import { scaleLinear } from 'd3-scale';
+
 import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
 import Surface from './internals/components/Surface';
-import { AxisConfig } from './models/axis';
+import { AxisConfig, Scales } from './models/axis';
 import { LayoutConfig } from './models/layout';
 import { AllSeriesType, CartesianSeriesType, ScatterSeriesType } from './models/seriesType';
 import { CoordinateContext } from './context/CoordinateContext';
 import { SeriesContext } from './context/SeriesContext';
+import { getScale } from './hooks/useScale';
 
 const getXSeriesDomain = (series: CartesianSeriesType[]) => {
   // Work only for scatter plot now
 
-  const values = (series as ScatterSeriesType[]).flatMap(({ data }) => data.map(({ x }) => x));
+  const values = series.flatMap(({ data, type }) => {
+    switch (type) {
+      case 'scatter':
+        return data.map(({ x }) => x);
+
+      case 'bar':
+      case 'line':
+        return [];
+      default:
+        return [];
+        break;
+    }
+  });
+  if (values.length === 0) {
+    return {};
+  }
+
   const [min, max] = extent(values);
   return { min, max };
 };
 
 const getYSeriesDomain = (series: CartesianSeriesType[]) => {
   // Work only for scatter plot now
-  const values = (series as ScatterSeriesType[]).flatMap(({ data }) => data.map(({ y }) => y));
+  const values = series.flatMap(({ data, type }) => {
+    switch (type) {
+      case 'scatter':
+        return data.map(({ y }) => y);
+
+      case 'bar':
+      case 'line':
+        return [0, ...data];
+      default:
+        return [];
+        break;
+    }
+  });
+  if (values.length === 0) {
+    return {};
+  }
+
   const [min, max] = extent(values);
   return { min, max };
 };
 
-type AxisDomain = { [key: string]: { min: number; max: number } };
-const getAxisDomains = (
+type AxisParams = { [key: string]: { min: number; max: number; scale: Scales | undefined } };
+
+const getAxisParams = (
   axis: AxisConfig[],
   series: CartesianSeriesType[],
   coordinate: 'x' | 'y' = 'x',
-): AxisDomain => {
+): AxisParams => {
   // Map series and axis
   const axisToSeries: { [key: string]: number[] } = {};
 
@@ -46,24 +80,29 @@ const getAxisDomains = (
   );
 
   // Initialized with user data
-  const axisDomain = {};
-  axis.forEach(({ id, min, max }) => {
-    axisDomain[id] = { min, max };
+  const axisParameters = {};
+  axis.forEach(({ id, min, max, scale, data }) => {
+    let minData;
+    let maxData;
+    if (data && (min === undefined || max === undefined)) {
+      [minData, maxData] = extent(data);
+    }
+    axisParameters[id] = { min: min ?? minData, max: max ?? maxData, scale, data };
   });
 
   // Complete with series data if needed
   const getSeriesDomain = coordinate === 'x' ? getXSeriesDomain : getYSeriesDomain;
 
   Object.entries(axisToSeries).forEach(([axisKey, assocaitedSeriesIndexes]) => {
-    if (axisDomain[axisKey]?.min === undefined || axisDomain[axisKey]?.max === undefined) {
-      axisDomain[axisKey] = {
+    if (axisParameters[axisKey]?.min === undefined || axisParameters[axisKey]?.max === undefined) {
+      axisParameters[axisKey] = {
         ...getSeriesDomain(assocaitedSeriesIndexes.map((index) => series[index])),
-        ...axisDomain[axisKey],
+        ...axisParameters[axisKey],
       };
     }
   });
 
-  return axisDomain;
+  return axisParameters;
 };
 
 export interface ChartContainerProps extends LayoutConfig {
@@ -97,42 +136,39 @@ function ChartContainer(props: ChartContainerProps) {
     ],
   );
 
-  const xAxisDomain = React.useMemo(
-    () => getAxisDomains(xAxis ?? [], series, 'x'),
-    [xAxis, series],
-  );
-  const yAxisDomain = React.useMemo(
-    () => getAxisDomains(yAxis ?? [], series, 'y'),
-    [yAxis, series],
-  );
+  const xAxisParams = React.useMemo(() => getAxisParams(xAxis ?? [], series, 'x'), [xAxis, series]);
+  const yAxisParams = React.useMemo(() => getAxisParams(yAxis ?? [], series, 'y'), [yAxis, series]);
 
   const coordinateContext = React.useMemo(() => {
-    const xAxisParams = {};
-    const yAxisParams = {};
+    const xAxisContext = {};
+    const yAxisContext = {};
 
-    Object.entries(xAxisDomain).forEach(([axisKey, { min, max }]) => {
-      xAxisParams[axisKey] = {
-        scale: scaleLinear()
-          .domain([min, max])
-          .nice()
+    Object.entries(xAxisParams).forEach(([axisKey, { min, max, scale, data }]) => {
+      xAxisContext[axisKey] = {
+        scale: getScale(scale)
+          .domain(scale === 'band' ? data : [min, max])
+          // .nice()
           .range([drawingArea.left, drawingArea.left + drawingArea.width]),
+        data,
       };
     });
-    Object.entries(yAxisDomain).forEach(([axisKey, { min, max }]) => {
-      yAxisParams[axisKey] = {
-        scale: scaleLinear()
-          .domain([min, max])
-          .nice()
-          .range([drawingArea.top, drawingArea.top + drawingArea.height]),
+    Object.entries(yAxisParams).forEach(([axisKey, { min, max, scale, data }]) => {
+      yAxisContext[axisKey] = {
+        scale: getScale(scale)
+          .domain(scale === 'band' ? data : [min, max])
+          // .nice()
+          .range([drawingArea.top + drawingArea.height, drawingArea.top]),
+        data,
       };
     });
 
     return {
       drawingArea,
-      xAxis: xAxisParams,
-      yAxis: yAxisParams,
+      xAxis: xAxisContext,
+      yAxis: yAxisContext,
     };
-  }, [drawingArea, xAxisDomain, yAxisDomain]);
+  }, [drawingArea, xAxisParams, yAxisParams]);
+
   return (
     <SeriesContext.Provider value={series}>
       <CoordinateContext.Provider value={coordinateContext}>

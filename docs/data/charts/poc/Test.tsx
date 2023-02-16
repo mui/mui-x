@@ -189,7 +189,7 @@ export default function Test() {
           },
         ]}
       />
-      <ScatterChart
+      {/* <ScatterChart
         width={600}
         height={400}
         margin={{ top: 50, left: 30 }}
@@ -264,6 +264,7 @@ export default function Test() {
             id: 'leftAxis',
             min: -10,
             max: 3.5,
+            scale: 'sqrt',
           },
         ]}
         series={[
@@ -301,7 +302,7 @@ export default function Test() {
         <XAxis label="Top X axis" position="top" />
         <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
         <YAxis label="Right Y axis" position="right" />
-      </ChartContainer>
+      </ChartContainer> */}
     </Stack>
   );
 }

@@ -8,11 +8,13 @@ export type CoordinateParameters = {
   xAxis: {
     [axisKey: string]: {
       scale: ScaleLinear<unknown, unknown>;
+      data?: number[];
     };
   };
   yAxis: {
     [axisKey: string]: {
       scale: ScaleLinear<unknown, unknown>;
+      data?: number[];
     };
   };
   /**
