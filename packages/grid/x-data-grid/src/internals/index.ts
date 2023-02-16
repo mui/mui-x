@@ -119,4 +119,4 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
 
-export * from './slotsMigration';
+export * from './utils';

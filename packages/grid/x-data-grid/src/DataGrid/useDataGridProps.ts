@@ -8,8 +8,8 @@ import {
 } from '../models/props/DataGridProps';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
-import { GridEditModes, UncapitalizedGridSlotsComponent, GridValidRowModel } from '../models';
-import { uncapitalizeObjectKeys } from '../internals/slotsMigration';
+import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
+import { computeSlots, UncapitalizeObjectKeys } from '../internals/utils';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -84,21 +84,15 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.localeText],
   );
 
-  const slots = React.useMemo<UncapitalizedGridSlotsComponent>(() => {
-    const uncapitalizedDefaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
-    const overrides = themedProps.slots ?? (components ? uncapitalizeObjectKeys(components) : null);
-
-    if (!overrides) {
-      return { ...uncapitalizedDefaultSlots };
-    }
-
-    type GridSlot = keyof UncapitalizedGridSlotsComponent;
-    return Object.entries(uncapitalizedDefaultSlots).reduce((acc, [key, defaultComponent]) => {
-      const override = overrides[key as GridSlot];
-      const component = override !== undefined ? override : defaultComponent;
-      return { ...acc, [key as GridSlot]: component };
-    }, {} as UncapitalizedGridSlotsComponent);
-  }, [components, themedProps.slots]);
+  const slots = React.useMemo<UncapitalizeObjectKeys<GridSlotsComponent>>(
+    () =>
+      computeSlots<GridSlotsComponent>({
+        defaultComponents: DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
+        slots: themedProps.slots,
+        components,
+      }),
+    [components, themedProps.slots],
+  );
 
   return React.useMemo<DataGridProcessedProps<R>>(
     () => ({

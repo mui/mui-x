@@ -27,7 +27,8 @@ As an example, you could override the column menu and pass additional props as b
 
 :::warning
 The `components/componentsProps` API is deprecated and `slots/slotProps` API is preferred.
-Note that the `components` prop used *PascalCase* for the slot names, while the `slots` prop uses *camelCase*.
+
+Note that the `components` prop used _PascalCase_ for the slot names, while the `slots` prop uses _camelCase_.
 
 ```tsx
 <DataGrid components={{ ColumnMenu: GridColumnMenu }} /> // Deprecated

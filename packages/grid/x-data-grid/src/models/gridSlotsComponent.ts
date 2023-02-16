@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UncapitalizeObjectKeys } from '../internals/slotsMigration';
+import { UncapitalizeObjectKeys } from '../internals/utils';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
