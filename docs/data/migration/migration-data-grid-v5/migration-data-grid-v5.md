@@ -310,7 +310,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +const positions = gridColumnPositionsSelector(apiRef);
   ```
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
-- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridExpandedSortedRowEntriesSelector` selector instead.
 - The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
