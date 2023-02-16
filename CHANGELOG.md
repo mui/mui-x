@@ -18,7 +18,6 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
-- [DataGrid] Add unit test for column pinning regression (#7954) @cherniavskii
 - [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @Vivek-Prajapatii
 - [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
 - [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
