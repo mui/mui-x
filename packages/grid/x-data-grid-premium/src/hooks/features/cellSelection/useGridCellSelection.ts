@@ -407,7 +407,51 @@ export const useGridCellSelection = (
     [apiRef, props.unstable_cellSelection, hasClickedValidCellForRangeSelection],
   );
 
+  // TODO: move this to the GridColDef to make if configurable?
+  const stringifyCellForClipboard = React.useCallback(
+    (rowId: GridRowId, field: string) => {
+      const cellParams = apiRef.current.getCellParams(rowId, field);
+      let data: string;
+      const columnType = cellParams.colDef.type;
+      if (columnType === 'number') {
+        data = String(cellParams.value);
+      } else if (columnType === 'date' || columnType === 'dateTime') {
+        data = (cellParams.value as Date)?.toString();
+      } else {
+        data = cellParams.formattedValue as any;
+      }
+      return data;
+    },
+    [apiRef],
+  );
+
+  const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
+    (value) => {
+      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
+        const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
+          const fieldsMap = cellSelectionModel[rowId];
+          const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
+            let cellData: string;
+            if (fieldsMap[field]) {
+              cellData = stringifyCellForClipboard(rowId, field);
+            } else {
+              cellData = '';
+            }
+            return acc2 ? [acc2, cellData].join('\t') : cellData;
+          }, '');
+          return acc ? [acc, rowString].join('\r\n') : rowString;
+        }, '');
+        return copyData;
+      }
+
+      return value;
+    },
+    [apiRef, stringifyCellForClipboard],
+  );
+
   useGridRegisterPipeProcessor(apiRef, 'isCellSelected', checkIfCellIsSelected);
   useGridRegisterPipeProcessor(apiRef, 'cellClassName', addClassesToCells);
   useGridRegisterPipeProcessor(apiRef, 'canUpdateFocus', canUpdateFocus);
+  useGridRegisterPipeProcessor(apiRef, 'clipboardCopy', handleClipboardCopy);
 };
