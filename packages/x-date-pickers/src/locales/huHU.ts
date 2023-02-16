@@ -8,7 +8,13 @@ const timeViews = {
   seconds: 'Másodperc',
 };
 
-const huHUPickers: Partial<PickersLocaleText<any>> = {
+// maps PickersToolbar["viewType"] to its translation
+const pickerViews = {
+  calendar: 'naptár',
+  clock: 'óra',
+};
+
+const huHUPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Előző hónap',
   nextMonth: 'Következő hónap',
@@ -20,10 +26,10 @@ const huHUPickers: Partial<PickersLocaleText<any>> = {
     view === 'year'
       ? 'az évválasztó már nyitva, váltson a naptárnézetre'
       : 'a naptárnézet már nyitva, váltson az évválasztóra',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
-      ? `szöveges beviteli nézet aktív, váltás ${viewType} nézetre`
-      : `${viewType} beviteli nézet aktív, váltás szöveges beviteli nézetre`,
+      ? `szöveges beviteli nézet aktív, váltás ${pickerViews[viewType]} nézetre`
+      : `${pickerViews[viewType]} beviteli nézet aktív, váltás szöveges beviteli nézetre`,
 
   // DateRange placeholders
   start: 'Kezdő dátum',
