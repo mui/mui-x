@@ -25,7 +25,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::success
-Not taking into consideration the removals of the methods and exports, as they should be simple and require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod. 🎉
+Apart from the removed methods and exports that require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod 🎉.
 :::
 
 :::info
