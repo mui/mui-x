@@ -7,6 +7,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import useControlled from '@mui/utils/useControlled';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
+import useForkRef from '@mui/utils/useForkRef';
 import { useUtils, useNow } from '../internals/hooks/useUtils';
 import { createIsAfterIgnoreDatePart } from '../internals/utils/time-utils';
 import type { PickerSelectionState } from '../internals/hooks/usePicker';
@@ -41,6 +42,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 ) {
   const now = useNow<TDate>();
   const utils = useUtils<TDate>();
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(ref, containerRef);
 
   const props = useThemeProps({
     props: inProps,
@@ -76,6 +79,9 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ...other
   } = props;
 
+  const ownerState = props;
+  const classes = useUtilityClasses(ownerState);
+
   const [value, setValue] = useControlled({
     name: 'DigitalClock',
     state: 'value',
@@ -89,6 +95,31 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
       onChange?.(newValue, selectionState);
     },
   );
+
+  React.useEffect(() => {
+    if (containerRef.current === null) {
+      return;
+    }
+    const selectedItem = containerRef.current.querySelector<HTMLElement>('ul [tabindex="0"]');
+    if (!selectedItem) {
+      return;
+    }
+    // Taken from useScroll in x-data-grid, but vertically centered
+    const offsetHeight = selectedItem.offsetHeight;
+    const offsetTop = selectedItem.offsetTop;
+
+    const clientHeight = containerRef.current.clientHeight;
+    const scrollTop = containerRef.current.scrollTop;
+
+    const elementBottom = offsetTop + offsetHeight;
+
+    if (offsetHeight > clientHeight || offsetTop < scrollTop) {
+      // item already visible
+      return;
+    }
+
+    containerRef.current.scrollTop = elementBottom - clientHeight / 2 - offsetHeight / 2;
+  }, [ref]);
 
   const selectedTimeOrMidnight = React.useMemo(
     () => value || utils.setSeconds(utils.setMinutes(utils.setHours(now, 0), 0), 0),
@@ -151,9 +182,6 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     ],
   );
 
-  const ownerState = props;
-  const classes = useUtilityClasses(ownerState);
-
   const timeOptions = React.useMemo(() => {
     const startOfDay = utils.startOfDay(selectedTimeOrMidnight);
     return [
@@ -167,7 +195,7 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
 
   return (
     <DigitalClockRoot
-      ref={ref}
+      ref={handleRef}
       className={clsx(classes.root, className)}
       ownerState={ownerState}
       {...other}
