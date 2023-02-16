@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ScaleLinear } from 'd3-scale';
 
-export type DataParameters = {
+export type CoordinateParameters = {
   /**
    * Mapping from axis key to scalling function
    */
@@ -26,7 +26,7 @@ export type DataParameters = {
   };
 };
 
-export const CoordinateContext = React.createContext<DataParameters>({
+export const CoordinateContext = React.createContext<CoordinateParameters>({
   xAxis: {},
   yAxis: {},
   drawingArea: {

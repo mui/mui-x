@@ -1,16 +1,11 @@
 import * as React from 'react';
 import Scatter from './Scatter';
 import { CoordinateContext } from '../context/CoordinateContext';
-import { ScatterSeriesType } from '../models/seriesType/scatter';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
+import { SeriesContext } from '../context/SeriesContext';
 
-export interface ScatterPlotProps {
-  series: ScatterSeriesType[];
-}
-
-function ScatterPlot(props: ScatterPlotProps) {
-  const { series } = props;
-
+function ScatterPlot() {
+  const series = React.useContext(SeriesContext);
   const { xAxis, yAxis } = React.useContext(CoordinateContext);
 
   return (

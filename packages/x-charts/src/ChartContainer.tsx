@@ -7,6 +7,7 @@ import { AxisConfig } from './models/axis';
 import { LayoutConfig } from './models/layout';
 import { AllSeriesType, CartesianSeriesType, ScatterSeriesType } from './models/seriesType';
 import { CoordinateContext } from './context/CoordinateContext';
+import { SeriesContext } from './context/SeriesContext';
 
 const getXSeriesDomain = (series: CartesianSeriesType[]) => {
   // Work only for scatter plot now
@@ -133,11 +134,13 @@ function ChartContainer(props: ChartContainerProps) {
     };
   }, [drawingArea, xAxisDomain, yAxisDomain]);
   return (
-    <CoordinateContext.Provider value={coordinateContext}>
-      <Surface width={width} height={height}>
-        {children}
-      </Surface>
-    </CoordinateContext.Provider>
+    <SeriesContext.Provider value={series}>
+      <CoordinateContext.Provider value={coordinateContext}>
+        <Surface width={width} height={height}>
+          {children}
+        </Surface>
+      </CoordinateContext.Provider>
+    </SeriesContext.Provider>
   );
 }
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ScatterPlot, { ScatterPlotProps } from './ScatterPlot';
+import ScatterPlot from './ScatterPlot';
 import ChartContainer, { ChartContainerProps } from '../ChartContainer';
 import XAxis from '../XAxis/XAxis';
 import YAxis from '../YAxis/YAxis';
 
-function ScatterChart(props: Omit<ChartContainerProps, 'children'> & ScatterPlotProps) {
+function ScatterChart(props: Omit<ChartContainerProps, 'children'>) {
   const { xAxis, yAxis, series, width, height, margin, ...other } = props;
 
   return (
@@ -17,7 +17,7 @@ function ScatterChart(props: Omit<ChartContainerProps, 'children'> & ScatterPlot
       margin={margin}
       {...other}
     >
-      <ScatterPlot series={series} />
+      <ScatterPlot />
       <XAxis label="Bottom X axis" position="bottom" />
       <XAxis label="Top X axis" position="top" />
       <YAxis label="Left Y axis" position="left" />
