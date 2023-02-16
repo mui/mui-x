@@ -178,6 +178,7 @@ export const createGroupingColDefForOneGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);
@@ -299,6 +300,7 @@ export const createGroupingColDefForAllGroupingCriteria = ({
           const leafParams: GridRenderCellParams = {
             ...params.api.getCellParams(params.id, leafField!),
             api: params.api,
+            hasFocus: params.hasFocus,
           };
           if (leafColDef.renderCell) {
             return leafColDef.renderCell(leafParams);
