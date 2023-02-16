@@ -25,6 +25,8 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   getAggregationPosition: (groupNode) => (groupNode.depth === -1 ? 'footer' : 'inline'),
 };
 
+const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS)!;
+
 export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
   const { components, componentsProps, ...themedProps } = useThemeProps({
     props: inProps,
@@ -36,11 +38,6 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
     [themedProps.localeText],
   );
 
-  const defaultSlots = React.useMemo(
-    () => uncapitalizeObjectKeys(DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS),
-    [],
-  )!;
-
   const slots = React.useMemo<UncapitalizedGridPremiumSlotsComponent>(
     () =>
       computeSlots<GridPremiumSlotsComponent>({
@@ -48,7 +45,7 @@ export const useDataGridPremiumProps = (inProps: DataGridPremiumProps) => {
         components,
         slots: themedProps.slots,
       }),
-    [components, defaultSlots, themedProps.slots],
+    [components, themedProps.slots],
   );
 
   return React.useMemo<DataGridPremiumProcessedProps>(

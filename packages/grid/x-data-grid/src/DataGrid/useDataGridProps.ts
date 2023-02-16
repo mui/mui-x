@@ -73,6 +73,8 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   keepColumnPositionIfDraggedOutside: false,
 };
 
+const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
+
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
   const { components, componentsProps, ...themedProps } = useThemeProps({
     props: inProps,
@@ -84,11 +86,6 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.localeText],
   );
 
-  const defaultSlots = React.useMemo(
-    () => uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS),
-    [],
-  )!;
-
   const slots = React.useMemo<UncapitalizeObjectKeys<GridSlotsComponent>>(
     () =>
       computeSlots<GridSlotsComponent>({
@@ -96,7 +93,7 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
         slots: themedProps.slots,
         components,
       }),
-    [components, defaultSlots, themedProps.slots],
+    [components, themedProps.slots],
   );
 
   return React.useMemo<DataGridProcessedProps<R>>(

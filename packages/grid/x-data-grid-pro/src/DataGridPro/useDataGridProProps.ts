@@ -31,6 +31,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   getDetailPanelHeight: () => 500,
 };
 
+const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS)!;
+
 export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGridProProps<R>) => {
   const { components, componentsProps, ...themedProps } = useThemeProps({
     props: inProps,
@@ -42,11 +44,6 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
     [themedProps.localeText],
   );
 
-  const defaultSlots = React.useMemo(
-    () => uncapitalizeObjectKeys(DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS),
-    [],
-  )!;
-
   const slots = React.useMemo<UncapitalizedGridProSlotsComponent>(
     () =>
       computeSlots<GridProSlotsComponent>({
@@ -54,7 +51,7 @@ export const useDataGridProProps = <R extends GridValidRowModel>(inProps: DataGr
         slots: themedProps.slots,
         components,
       }),
-    [components, defaultSlots, themedProps.slots],
+    [components, themedProps.slots],
   );
 
   return React.useMemo<DataGridProProcessedProps<R>>(
