@@ -427,8 +427,8 @@ export const useGridCellSelection = (
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(
     (value) => {
-      const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
-      if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
+      if (apiRef.current.unstable_getSelectedCellsAsArray().length > 1) {
+        const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
         const copyData = Object.keys(cellSelectionModel).reduce((acc, rowId) => {
           const fieldsMap = cellSelectionModel[rowId];
           const rowString = Object.keys(fieldsMap).reduce((acc2, field) => {
