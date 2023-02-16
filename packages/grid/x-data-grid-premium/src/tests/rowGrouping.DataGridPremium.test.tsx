@@ -816,6 +816,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         ]);
       });
 
+      // See https://github.com/mui/mui-x/issues/7949
       it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
         const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
 
