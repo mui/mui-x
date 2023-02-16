@@ -8,6 +8,7 @@ export * from './faIR';
 export * from './fiFI';
 export * from './csCZ';
 export * from './frFR';
+export * from './huHU';
 export * from './enUS';
 export * from './nbNO';
 export * from './svSE';
