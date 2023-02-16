@@ -303,6 +303,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         prevRenderContext.current &&
         areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
       ) {
+        updateRenderZonePosition(nextRenderContext);
         return;
       }
       setRenderContext(nextRenderContext);
