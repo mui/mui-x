@@ -9,7 +9,7 @@ import {
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
-import { computeSlots, UncapitalizeObjectKeys } from '../internals/utils';
+import { computeSlots, uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils';
 
 const DATA_GRID_FORCED_PROPS: { [key in DataGridForcedPropsKey]?: DataGridProcessedProps[key] } = {
   disableMultipleColumnsFiltering: true,
@@ -84,14 +84,19 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
     [themedProps.localeText],
   );
 
+  const defaultSlots = React.useMemo(
+    () => uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS),
+    [],
+  )!;
+
   const slots = React.useMemo<UncapitalizeObjectKeys<GridSlotsComponent>>(
     () =>
       computeSlots<GridSlotsComponent>({
-        defaultComponents: DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
+        defaultSlots,
         slots: themedProps.slots,
         components,
       }),
-    [components, themedProps.slots],
+    [components, defaultSlots, themedProps.slots],
   );
 
   return React.useMemo<DataGridProcessedProps<R>>(
