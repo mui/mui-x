@@ -110,7 +110,7 @@ export const useGridClipboard = (apiRef: React.MutableRefObject<GridPrivateApiCo
 
       if (!textToCopy) {
         const selectedRows = apiRef.current.getSelectedRows();
-        if (selectedRows.size > 1) {
+        if (selectedRows.size > 0) {
           textToCopy = apiRef.current.getDataAsCsv({
             includeHeaders: false,
             // TODO: make it configurable
