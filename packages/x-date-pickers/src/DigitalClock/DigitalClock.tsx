@@ -104,6 +104,8 @@ export const DigitalClock = React.forwardRef(function DigitalClock<TDate extends
     if (!selectedItem) {
       return;
     }
+    // make sure the selected item is focused (possibly instead of the wrapper - MenuList)
+    selectedItem.focus();
     // Taken from useScroll in x-data-grid, but vertically centered
     const offsetHeight = selectedItem.offsetHeight;
     const offsetTop = selectedItem.offsetTop;
