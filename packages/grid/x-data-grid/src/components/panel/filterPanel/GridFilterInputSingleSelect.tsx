@@ -4,15 +4,15 @@ import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
-import { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
+import { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions, isSingleSelectColDef } from './filterPanelUtils';
 
 const renderSingleSelectOptions = (
   { valueOptions, field }: GridSingleSelectColDef,
   OptionComponent: React.ElementType,
-  getOptionLabel: (value: ValueOptions) => string,
-  getOptionValue: (value: ValueOptions) => any,
+  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']>,
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>,
 ) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'

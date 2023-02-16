@@ -11,7 +11,7 @@ export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridS
 export function getValueFromValueOptions(
   value: string,
   valueOptions: any[] | undefined,
-  getOptionValue: (value: ValueOptions) => any,
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>,
 ) {
   if (valueOptions === undefined) {
     return undefined;
