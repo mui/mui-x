@@ -32,7 +32,10 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isDeepEqual } from '../../../utils/utils';
+
+type OwnerState = DataGridProcessedProps;
 
 // TODO: add the possibility to switch this value if needed for customization
 const MERGE_EMPTY_CELLS = true;
@@ -41,7 +44,7 @@ const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
   overridesResolver: (props, styles) => styles.columnHeaderRow,
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
 }));
 
@@ -316,7 +319,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+      <GridColumnHeaderRow
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+        ownerState={rootProps}
+      >
         {columns}
       </GridColumnHeaderRow>
     );
@@ -474,6 +481,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           key={depthIndex}
           role="row"
           aria-rowindex={depthIndex + 1}
+          ownerState={rootProps}
         >
           {depthInfo.elements.map(({ groupId, width, fields, colIndex }, groupIndex) => {
             return (

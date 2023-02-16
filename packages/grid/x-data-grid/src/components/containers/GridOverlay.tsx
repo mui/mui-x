@@ -12,7 +12,7 @@ export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -28,7 +28,7 @@ const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
   overridesResolver: (props, styles) => styles.overlay,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   position: 'absolute',
   top: 0,
   zIndex: 4, // should be above pinned columns, pinned rows and detail panel
@@ -48,10 +48,16 @@ const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function 
 ) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
-  return <GridOverlayRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
+  return (
+    <GridOverlayRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 });
 
 GridOverlay.propTypes = {

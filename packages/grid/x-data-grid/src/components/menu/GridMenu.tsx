@@ -28,7 +28,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -44,7 +44,7 @@ const GridMenuRoot = styled(Popper, {
   name: 'MuiDataGrid',
   slot: 'Menu',
   overridesResolver: (props, styles) => styles.menu,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: theme.zIndex.modal,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
@@ -71,8 +71,7 @@ const GridMenu = (props: GridMenuProps) => {
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   React.useEffect(() => {
     if (prevOpen.current && prevTarget.current) {
@@ -101,6 +100,7 @@ const GridMenu = (props: GridMenuProps) => {
     <GridMenuRoot
       as={rootProps.components.BasePopper}
       className={clsx(className, classes.root)}
+      ownerState={rootProps}
       open={open}
       anchorEl={target as any}
       transition

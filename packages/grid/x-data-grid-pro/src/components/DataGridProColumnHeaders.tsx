@@ -25,8 +25,7 @@ import {
 } from '../hooks/features/columnPinning';
 import { filterColumns } from './DataGridProVirtualScroller';
 
-type OwnerState = {
-  classes?: DataGridProProcessedProps['classes'];
+type OwnerState = DataGridProProcessedProps & {
   leftPinnedColumns: GridPinnedColumns['left'];
   rightPinnedColumns: GridPinnedColumns['right'];
 };
@@ -71,24 +70,26 @@ const GridColumnHeadersPinnedColumnHeaders = styled('div', {
     { [`&.${gridClasses['pinnedColumnHeaders--right']}`]: styles['pinnedColumnHeaders--right'] },
     styles.pinnedColumnHeaders,
   ],
-})<{ ownerState: GridColumnHeadersPinnedColumnHeadersProps }>(({ theme, ownerState }) => ({
-  position: 'absolute',
-  overflow: 'hidden',
-  height: '100%',
-  zIndex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  boxShadow: theme.shadows[2],
-  backgroundColor: theme.palette.background.default,
-  ...(theme.palette.mode === 'dark' && {
-    backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
-      '#fff',
-      getOverlayAlpha(2),
-    )})`,
+})<{ ownerState: OwnerState & GridColumnHeadersPinnedColumnHeadersProps }>(
+  ({ theme, ownerState }) => ({
+    position: 'absolute',
+    overflow: 'hidden',
+    height: '100%',
+    zIndex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    boxShadow: theme.shadows[2],
+    backgroundColor: theme.palette.background.default,
+    ...(theme.palette.mode === 'dark' && {
+      backgroundImage: `linear-gradient(${alpha('#fff', getOverlayAlpha(2))}, ${alpha(
+        '#fff',
+        getOverlayAlpha(2),
+      )})`,
+    }),
+    ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
+    ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
   }),
-  ...(ownerState.side === GridPinnedPosition.left && { left: 0 }),
-  ...(ownerState.side === GridPinnedPosition.right && { right: 0 }),
-}));
+);
 
 interface DataGridProColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
   innerRef?: React.Ref<HTMLDivElement>;
@@ -133,7 +134,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
     minColumnIndex: leftPinnedColumns.length,
   });
 
-  const ownerState = { leftPinnedColumns, rightPinnedColumns, classes: rootProps.classes };
+  const ownerState = { ...rootProps, leftPinnedColumns, rightPinnedColumns };
   const classes = useUtilityClasses(ownerState);
 
   const leftRenderContext =
@@ -165,7 +166,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       {leftRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
           className={classes.leftPinnedColumns}
-          ownerState={{ side: GridPinnedPosition.left }}
+          ownerState={{ ...ownerState, side: GridPinnedPosition.left }}
           {...pinnedColumnHeadersProps}
         >
           {getColumnGroupHeaders({
@@ -197,7 +198,7 @@ export const DataGridProColumnHeaders = React.forwardRef<
       </GridColumnHeadersInner>
       {rightRenderContext && (
         <GridColumnHeadersPinnedColumnHeaders
-          ownerState={{ side: GridPinnedPosition.right }}
+          ownerState={{ ...ownerState, side: GridPinnedPosition.right }}
           className={classes.rightPinnedColumns}
           style={{ paddingRight: scrollbarSize }}
           {...pinnedColumnHeadersProps}
