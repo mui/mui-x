@@ -84,6 +84,20 @@ describe('<DataGridPremium /> - Clipboard', () => {
         );
       });
     });
+
+    it(`should copy cells range selected in one row`, () => {
+      render(<Test />);
+
+      const cell = getCell(0, 0);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(0, 2), { shiftKey: true });
+
+      fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
+      expect(writeText.firstCall.args[0]).to.equal([['0', 'USDGBP', '1'].join('\t')].join('\r\n'));
+    });
   });
 
   describe('paste', () => {
