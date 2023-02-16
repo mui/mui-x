@@ -1,10 +1,11 @@
 import * as React from 'react';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
+  getCell,
 } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -825,6 +826,33 @@ describe('<DataGridPremium /> - Row Grouping', () => {
           'Custom leaf',
           'Custom leaf',
         ]);
+      });
+
+      // See https://github.com/mui/mui-x/issues/7949
+      it('should correctly pass `hasFocus` to `renderCell` defined on the leafColDef', () => {
+        const renderIdCell = spy((params) => `Focused: ${params.hasFocus}`);
+
+        render(
+          <Test
+            columns={[
+              {
+                field: 'id',
+                type: 'number',
+                renderCell: renderIdCell,
+              },
+              {
+                field: 'category1',
+              },
+            ]}
+            initialState={{ rowGrouping: { model: ['category1'] } }}
+            groupingColDef={{ leafField: 'id' }}
+            defaultGroupingExpansionDepth={-1}
+          />,
+        );
+
+        userEvent.mousePress(getCell(1, 0));
+        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(getCell(1, 0)).to.have.text('Focused: true');
       });
     });
 
