@@ -2,6 +2,8 @@ import { SxProps, Theme } from '@mui/material/styles';
 import { BaseTimeValidationProps, TimeValidationProps } from '../../hooks/validation/models';
 import { PickerSelectionState } from '../../hooks/usePicker/usePickerValue';
 import { TimeView } from '../views';
+import type { ExportedTimeClockProps } from '../../../TimeClock/TimeClock.types';
+import type { ExportedDigitalClockProps } from '../../../DigitalClock/DigitalClock.types';
 
 export interface ExportedBaseClockProps<TDate>
   extends TimeValidationProps<TDate>,
@@ -69,4 +71,15 @@ export interface BaseClockProps<TDate> {
    * @default false
    */
   readOnly?: boolean;
+}
+
+export interface BaseCommonTimePickerProps<TDate>
+  extends ExportedTimeClockProps<TDate>,
+    ExportedDigitalClockProps<TDate> {
+  /**
+   * Number of possible time options at which the component uses `digital` view.
+   * Used only in `desktop` mode.
+   * @default 24
+   */
+  renderAsDigitalThreshold?: number;
 }

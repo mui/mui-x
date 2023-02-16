@@ -11,7 +11,6 @@ import {
 import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
-  ExportedTimeClockProps,
 } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { applyDefaultDate } from '../internals/utils/date-utils';
@@ -36,6 +35,7 @@ import { DateViewRendererProps } from '../dateViewRenderers';
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
+import { BaseClockProps, BaseCommonTimePickerProps } from '../internals/models/props/clock';
 
 export interface BaseDateTimePickerSlotsComponent<TDate>
   extends DateCalendarSlotsComponent<TDate>,
@@ -68,7 +68,7 @@ export interface BaseDateTimePickerSlotsComponentsProps<TDate>
 export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
-    ExportedTimeClockProps<TDate> {
+    BaseCommonTimePickerProps<TDate> {
   /**
    * 12h/24h view for hour selection clock.
    * @default `utils.is12HourCycleInCurrentLocale()`
@@ -113,7 +113,8 @@ export interface BaseDateTimePickerProps<TDate>
     PickerViewRendererLookup<
       TDate | null,
       DateOrTimeView,
-      DateViewRendererProps<TDate, DateOrTimeView> & TimeViewRendererProps<TDate, DateOrTimeView>,
+      DateViewRendererProps<TDate, DateOrTimeView> &
+        TimeViewRendererProps<DateOrTimeView, BaseClockProps<TDate>>,
       {}
     >
   >;
@@ -142,6 +143,7 @@ export function useDateTimePickerDefaultizedProps<
 >(
   props: Props,
   name: string,
+  isDesktop?: boolean,
 ): Omit<UseDateTimePickerDefaultizedProps<TDate, Props>, 'components' | 'componentsProps'> {
   const utils = useUtils<TDate>();
   const defaultDates = useDefaultDates<TDate>();
@@ -151,6 +153,8 @@ export function useDateTimePickerDefaultizedProps<
   });
 
   const ampm = themeProps.ampm ?? utils.is12HourCycleInCurrentLocale();
+  const renderAsDigitalThreshold = themeProps.renderAsDigitalThreshold ?? 24;
+  const timeStep = themeProps.timeStep ?? 5;
 
   const localeText = React.useMemo<PickersInputLocaleText<TDate> | undefined>(() => {
     if (themeProps.localeText?.toolbarTitle == null) {
@@ -165,12 +169,15 @@ export function useDateTimePickerDefaultizedProps<
 
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
+  const shouldRenderDigital = isDesktop && (24 * 60) / timeStep <= renderAsDigitalThreshold;
   return {
     ...themeProps,
     ...applyDefaultViewProps({
       views: themeProps.views,
       openTo: themeProps.openTo,
-      defaultViews: ['year', 'day', 'hours', 'minutes'],
+      defaultViews: shouldRenderDigital
+        ? ['year', 'day', 'digital']
+        : ['year', 'day', 'hours', 'minutes'],
       defaultOpenTo: 'day',
     }),
     ampm,

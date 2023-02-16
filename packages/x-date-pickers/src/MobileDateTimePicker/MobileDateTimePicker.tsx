@@ -39,6 +39,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
     hours: renderTimeViewClock,
     minutes: renderTimeViewClock,
     seconds: renderTimeViewClock,
+    digital: null,
     ...defaultizedProps.viewRenderers,
   };
 

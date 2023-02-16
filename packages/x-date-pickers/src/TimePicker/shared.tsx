@@ -6,7 +6,6 @@ import { useUtils } from '../internals/hooks/useUtils';
 import {
   TimeClockSlotsComponent,
   TimeClockSlotsComponentsProps,
-  ExportedTimeClockProps,
 } from '../TimeClock/TimeClock.types';
 import { BasePickerInputProps } from '../internals/models/props/basePickerProps';
 import { BaseTimeValidationProps } from '../internals/hooks/validation/models';
@@ -21,8 +20,7 @@ import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePicker
 import { TimeViewRendererProps } from '../timeViewRenderers';
 import { applyDefaultViewProps } from '../internals/utils/views';
 import { uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
-import { ExportedDigitalClockProps } from '../DigitalClock/DigitalClock.types';
-import { BaseClockProps } from '../internals/models/props/clock';
+import { BaseClockProps, BaseCommonTimePickerProps } from '../internals/models/props/clock';
 
 export interface BaseTimePickerSlotsComponent<TDate> extends TimeClockSlotsComponent {
   /**
@@ -38,8 +36,7 @@ export interface BaseTimePickerSlotsComponentsProps extends TimeClockSlotsCompon
 
 export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
-    ExportedTimeClockProps<TDate>,
-    ExportedDigitalClockProps<TDate> {
+    BaseCommonTimePickerProps<TDate> {
   /**
    * Overrideable components.
    * @default {}
@@ -75,12 +72,6 @@ export interface BaseTimePickerProps<TDate>
       {}
     >
   >;
-  /**
-   * Number of possible time options at which the component uses `digital` view.
-   * Used only in `desktop` mode.
-   * @default 24
-   */
-  renderAsDigitalThreshold?: number;
 }
 
 type UseTimePickerDefaultizedProps<

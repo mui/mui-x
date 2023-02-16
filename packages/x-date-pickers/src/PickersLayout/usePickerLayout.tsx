@@ -118,7 +118,9 @@ const usePickerLayout = <TValue, TDate, TView extends DateOrTimeView>(
 
   const Tabs = slots?.tabs;
   const tabs =
-    view && Tabs ? <Tabs view={view} onViewChange={onViewChange} {...slotProps?.tabs} /> : null;
+    view && Tabs ? (
+      <Tabs view={view} views={views} onViewChange={onViewChange} {...slotProps?.tabs} />
+    ) : null;
 
   // Shortcuts
 
