@@ -1,4 +1,4 @@
-import renameCSSClasses from 'packages/x-codemod/src/util/renameCSSClasses';
+import renameCSSClasses from '../../../util/renameCSSClasses';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import renameIdentifiers, { PreRequisiteUsage, matchImport } from '../../../util/renameIdentifiers';
 
