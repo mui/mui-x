@@ -99,33 +99,40 @@ export const useGridClipboardImport = (
         return;
       }
 
-      const rowsData = text.split('\n');
+      const rowsData = text.split('\r\n');
 
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 
       const cellSelectionModel = apiRef.current.unstable_getCellSelectionModel();
+      const cellSelectionModelKeys = Object.keys(cellSelectionModel);
 
-      if (isSingleValuePasted) {
-        const cellSelectionModelKeys = Object.keys(cellSelectionModel);
-
-        if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
-          const rowUpdates: GridValidRowModel[] = [];
-          cellSelectionModelKeys.forEach((rowId) => {
-            const row: GridValidRowModel = { id: rowId };
-            Object.keys(cellSelectionModel[rowId]).forEach((field) => {
-              const colDef = apiRef.current.getColumn(field);
-              const parsedValue = parseCellStringValue(rowsData[0], colDef);
+      if (cellSelectionModel && cellSelectionModelKeys.length > 0) {
+        const rowUpdates: GridValidRowModel[] = [];
+        cellSelectionModelKeys.forEach((rowId, rowIndex) => {
+          const row: GridValidRowModel = { id: rowId };
+          const rowDataString = rowsData[isSingleValuePasted ? 0 : rowIndex];
+          const hasRowData = isSingleValuePasted ? true : rowDataString !== undefined;
+          if (!hasRowData) {
+            return;
+          }
+          const rowData = rowDataString.split('\t');
+          Object.keys(cellSelectionModel[rowId]).forEach((field, colIndex) => {
+            const colDef = apiRef.current.getColumn(field);
+            let cellValue: string;
+            if (isSingleValuePasted) {
+              cellValue = rowsData[0];
+            } else {
+              cellValue = rowData[colIndex];
+            }
+            const parsedValue = parseCellStringValue(cellValue, colDef);
+            if (parsedValue !== undefined) {
               row[field] = parsedValue;
-            });
-            rowUpdates.push(row);
+            }
           });
-          apiRef.current.updateRows(rowUpdates);
-          return;
-        }
-      }
-
-      if (cellSelectionModel && Object.keys(cellSelectionModel).length > 1) {
-        // Multiple values are pasted starting from the first and top-most cell in the selection.
+          rowUpdates.push(row);
+        });
+        apiRef.current.updateRows(rowUpdates);
+        return;
       }
 
       const selectedRows = apiRef.current.getSelectedRows();

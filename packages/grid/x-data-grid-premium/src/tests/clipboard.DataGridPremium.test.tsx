@@ -158,5 +158,80 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getCell(2, 1)).to.have.text(clipboardData);
       expect(getCell(2, 2)).to.have.text(clipboardData);
     });
+
+    it('should not paste values outside of the selected cells range', async () => {
+      render(<Test rowLength={5} colLength={5} />);
+
+      const clipboardData = [
+        ['01', '02', '03'],
+        ['11', '12', '13'],
+        ['21', '22', '23'],
+        ['31', '32', '33'],
+        ['41', '42', '43'],
+        ['51', '52', '53'],
+      ];
+      readText.returns(clipboardData.map((row) => row.join('\t')).join('\r\n'));
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await act(() => Promise.resolve());
+
+      // selected cells should be updated
+      expect(getCell(0, 1)).to.have.text('01');
+      expect(getCell(0, 2)).to.have.text('02');
+      expect(getCell(1, 1)).to.have.text('11');
+      expect(getCell(1, 2)).to.have.text('12');
+      expect(getCell(2, 1)).to.have.text('21');
+      expect(getCell(2, 2)).to.have.text('22');
+
+      // cells out of selection range should not be updated
+      expect(getCell(0, 3)).not.to.have.text('03');
+      expect(getCell(3, 1)).not.to.have.text('31');
+    });
+
+    it('should not paste empty values into cells withing selected range when there are no corresponding values in the clipboard', async () => {
+      render(<Test rowLength={5} colLength={5} />);
+
+      const clipboardData = [
+        ['01'], // first row
+        ['11'], // second row
+        ['21'], // third row
+      ];
+      readText.returns(clipboardData.map((row) => row.join('\t')).join('\r\n'));
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await act(() => Promise.resolve());
+
+      const secondColumnValuesBeforePaste = [
+        getCell(0, 2).textContent!,
+        getCell(1, 2).textContent!,
+        getCell(2, 2).textContent!,
+      ];
+
+      // selected cells should be updated if there's data in the clipboard
+      expect(getCell(0, 1)).to.have.text('01');
+      expect(getCell(1, 1)).to.have.text('11');
+      expect(getCell(2, 1)).to.have.text('21');
+
+      // selected cells should be updated if there's no data for them in the clipboard
+      expect(getCell(0, 2)).to.have.text(secondColumnValuesBeforePaste[0]);
+      expect(getCell(1, 2)).to.have.text(secondColumnValuesBeforePaste[1]);
+      expect(getCell(2, 2)).to.have.text(secondColumnValuesBeforePaste[2]);
+    });
   });
 });
