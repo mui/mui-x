@@ -6,7 +6,7 @@ import {
   DataGridPremiumProps,
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, userEvent, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { stub, SinonStub, spy } from 'sinon';
 import { getCell } from 'test/utils/helperFn';
@@ -128,6 +128,31 @@ describe('<DataGridPremium /> - Clipboard', () => {
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
         expect(listener.callCount).to.equal(0);
       });
+    });
+
+    it('should paste into each cell of the range when single value is pasted', async () => {
+      render(<Test />);
+
+      const clipboardData = '12';
+      readText.returns(clipboardData);
+
+      const cell = getCell(0, 1);
+      cell.focus();
+      userEvent.mousePress(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+
+      await act(() => Promise.resolve());
+
+      expect(getCell(0, 1)).to.have.text(clipboardData);
+      expect(getCell(0, 2)).to.have.text(clipboardData);
+      expect(getCell(1, 1)).to.have.text(clipboardData);
+      expect(getCell(1, 2)).to.have.text(clipboardData);
+      expect(getCell(2, 1)).to.have.text(clipboardData);
+      expect(getCell(2, 2)).to.have.text(clipboardData);
     });
   });
 });
