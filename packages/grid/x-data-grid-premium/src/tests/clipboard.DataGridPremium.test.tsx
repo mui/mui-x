@@ -19,18 +19,22 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
   function Test({
     rowLength = 4,
+    colLength = 3,
     ...other
   }: Omit<DataGridPremiumProps, 'rows' | 'columns' | 'apiRef'> &
-    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & { rowLength?: number }) {
+    Partial<Pick<DataGridPremiumProps, 'rows' | 'columns'>> & {
+      rowLength?: number;
+      colLength?: number;
+    }) {
     apiRef = useGridApiRef();
 
     const data = React.useMemo(() => {
-      const basicData = getBasicGridData(rowLength, 3);
+      const basicData = getBasicGridData(rowLength, colLength);
       return {
         ...basicData,
-        columns: basicData.columns.map((column) => ({ ...column, editable: true })),
+        columns: basicData.columns.map((column) => ({ ...column, type: 'string', editable: true })),
       };
-    }, [rowLength]);
+    }, [rowLength, colLength]);
 
     return (
       <div style={{ width: 300, height: 300 }}>

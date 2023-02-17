@@ -438,9 +438,9 @@ export const useGridCellSelection = (
             } else {
               cellData = '';
             }
-            return acc2 ? [acc2, cellData].join('\t') : cellData;
+            return acc2 === '' ? cellData : [acc2, cellData].join('\t');
           }, '');
-          return acc ? [acc, rowString].join('\r\n') : rowString;
+          return acc === '' ? rowString : [acc, rowString].join('\r\n');
         }, '');
         return copyData;
       }
