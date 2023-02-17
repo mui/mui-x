@@ -117,52 +117,26 @@ export const useMobileRangePicker = <
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
-
       return {
         ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
         ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
+        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
       };
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(innerSlotProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotProps?.root, ownerState);
       return {
         ...externalRootProps,
-        ...rootPropsPassedByField,
         ...fieldSlotProps.root,
       };
     },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(
-        innerSlotProps?.fieldSeparator,
-        ownerState,
-      );
-      const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.separator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
-        ...fieldSlotProps.root,
-      };
-    },
+    separator: innerSlotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {

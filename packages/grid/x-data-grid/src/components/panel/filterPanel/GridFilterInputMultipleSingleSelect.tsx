@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import Autocomplete, { AutocompleteProps, createFilterOptions } from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
 import { unstable_useId as useId } from '@mui/utils';
-import {
-  getLabelFromValueOption,
-  getValueFromOption,
-  isSingleSelectColDef,
-} from './filterPanelUtils';
+import { isSingleSelectColDef } from './filterPanelUtils';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import type { GridSingleSelectColDef, ValueOptions } from '../../../models/colDef/gridColDef';
@@ -26,23 +22,10 @@ export interface GridFilterInputMultipleSingleSelectProps
       | 'color'
       | 'getOptionLabel'
     >,
+    Pick<GridSingleSelectColDef, 'getOptionLabel' | 'getOptionValue'>,
     GridFilterInputValueProps {
   type?: 'singleSelect';
-  /**
-   * Used to determine the text displayed for a given value option.
-   * @param {ValueOptions} value The current value option.
-   * @returns {string} The text to be displayed.
-   */
-  getOptionLabel?: (value: ValueOptions) => string;
 }
-
-const isOptionEqualToValue: AutocompleteProps<
-  ValueOptions,
-  true,
-  false,
-  true
->['isOptionEqualToValue'] = (option, value) =>
-  getValueFromOption(option) === getValueFromOption(value);
 
 const filter = createFilterOptions<any>();
 
@@ -58,7 +41,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     helperText,
     size,
     variant = 'standard',
-    getOptionLabel = getLabelFromValueOption,
+    getOptionLabel: getOptionLabelProp,
+    getOptionValue: getOptionValueProp,
     ...other
   } = props;
   const TextFieldProps = {
@@ -80,6 +64,14 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
   }
 
+  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+
+  const isOptionEqualToValue = React.useCallback(
+    (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
+    [getOptionValue],
+  );
+
   const resolvedValueOptions = React.useMemo(() => {
     if (!resolvedColumn?.valueOptions) {
       return [];
@@ -93,8 +85,8 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   }, [resolvedColumn]);
 
   const resolvedFormattedValueOptions = React.useMemo(() => {
-    return resolvedValueOptions?.map(getValueFromOption);
-  }, [resolvedValueOptions]);
+    return resolvedValueOptions?.map(getOptionValue);
+  }, [resolvedValueOptions, getOptionValue]);
 
   // The value is computed from the item.value and used directly
   // If it was done by a useEffect/useState, the Autocomplete could receive incoherent value and options
@@ -104,14 +96,10 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     }
     if (resolvedValueOptions !== undefined) {
       const itemValueIndexes = item.value.map((element) => {
-        // get the index matching between values and valueOptions
-        const formattedElement = getValueFromOption(element);
-        const index =
-          resolvedFormattedValueOptions?.findIndex(
-            (formatedOption) => formatedOption === formattedElement,
-          ) || 0;
-
-        return index;
+        // Gets the index matching between values and valueOptions
+        return resolvedFormattedValueOptions?.findIndex(
+          (formatedOption) => formatedOption === element,
+        );
       });
 
       return itemValueIndexes
@@ -124,17 +112,17 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   React.useEffect(() => {
     if (!Array.isArray(item.value) || filteredValues.length !== item.value.length) {
       // Updates the state if the filter value has been cleaned by the component
-      applyValue({ ...item, value: filteredValues.map(getValueFromOption) });
+      applyValue({ ...item, value: filteredValues.map(getOptionValue) });
     }
-  }, [item, filteredValues, applyValue]);
+  }, [item, filteredValues, applyValue, getOptionValue]);
 
   const handleChange = React.useCallback<
     NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
   >(
     (event, value) => {
-      applyValue({ ...item, value: [...value.map(getValueFromOption)] });
+      applyValue({ ...item, value: value.map(getOptionValue) });
     },
-    [applyValue, item],
+    [applyValue, item, getOptionValue],
   );
 
   return (
@@ -191,11 +179,17 @@ GridFilterInputMultipleSingleSelect.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * Used to determine the text displayed for a given value option.
+   * Used to determine the label displayed for a given value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
    */
   getOptionLabel: PropTypes.func,
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue: PropTypes.func,
   item: PropTypes.shape({
     field: PropTypes.string.isRequired,
     id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

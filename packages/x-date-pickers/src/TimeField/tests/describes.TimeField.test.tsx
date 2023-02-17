@@ -12,7 +12,7 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: TimeField });
 
   describeValidation(TimeField, () => ({
     render,

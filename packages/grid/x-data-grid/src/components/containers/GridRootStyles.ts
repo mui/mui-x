@@ -1,6 +1,9 @@
 import { CSSInterpolation } from '@mui/system';
 import { alpha, styled, darken, lighten, Theme } from '@mui/material/styles';
 import { gridClasses } from '../../constants/gridClasses';
+import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+
+export type OwnerState = DataGridProcessedProps;
 
 function getBorderColor(theme: Theme) {
   if (theme.vars) {
@@ -90,7 +93,7 @@ export const GridRootStyles = styled('div', {
     },
     styles.root,
   ],
-})(({ theme }) => {
+})<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor = getBorderColor(theme);
 
   const gridStyle: CSSInterpolation = {

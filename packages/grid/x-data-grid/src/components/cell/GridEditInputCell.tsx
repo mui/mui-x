@@ -13,7 +13,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridLoadIcon } from '../icons/index';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,7 +29,7 @@ const GridEditInputCellRoot = styled(InputBase, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
   overridesResolver: (props, styles) => styles.editInputCell,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   ...theme.typography.body2,
   padding: '1px 0',
   '& input': {
@@ -81,8 +81,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
     const apiRef = useGridApiContext();
     const inputRef = React.useRef<HTMLInputElement>();
     const [valueState, setValueState] = React.useState(value);
-    const ownerState = { classes: rootProps.classes };
-    const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(rootProps);
 
     const handleChange = React.useCallback(
       async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,6 +128,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
         ref={ref}
         inputRef={inputRef}
         className={classes.root}
+        ownerState={rootProps}
         fullWidth
         type={colDef.type === 'number' ? colDef.type : 'text'}
         value={valueState ?? ''}

@@ -157,7 +157,7 @@ Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
 | Column type    | Function                         |
-| -------------- | -------------------------------- |
+| :------------- | :------------------------------- |
 | `string`       | `getGridStringOperators()`       |
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |

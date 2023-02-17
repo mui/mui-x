@@ -603,7 +603,7 @@ Rename selectors and events.
 
 ```diff
  function App() {
--  useGridApiEventHandler('selectionChange', handleEvent);
+-  useGridApiEventHandler(apiRef, 'selectionChange', handleEvent);
 -  apiRef.current.subscribeEvent('selectionChange', handleEvent);
 -  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 -  const sortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
@@ -616,7 +616,7 @@ Rename selectors and events.
 -  const visibleGridColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 -  const filterableGridColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
 -  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericColumnOperators);
-+  useGridApiEventHandler('rowSelectionChange', handleEvent);
++  useGridApiEventHandler(apiRef, 'rowSelectionChange', handleEvent);
 +  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
 +  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
 +  const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);

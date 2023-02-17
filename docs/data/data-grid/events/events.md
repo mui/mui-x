@@ -44,7 +44,7 @@ The following demo shows how to subscribe to the `rowClick` event using the `onR
 ### With `useGridApiEventHandler`
 
 ```tsx
-useGridApiEventHandler('rowClick', handleEvent);
+useGridApiEventHandler(apiRef, 'rowClick', handleEvent);
 ```
 
 :::warning

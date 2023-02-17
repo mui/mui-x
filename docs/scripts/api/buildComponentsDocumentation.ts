@@ -337,6 +337,14 @@ const buildComponentDocumentation = async (options: {
         description +=
           ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
       }
+      // Parse and generate `@see` doc with a {@link}
+      const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
+      if (seeTag && seeTag.description) {
+        description += ` ${seeTag.description.replace(
+          /{@link ([^|| ]*)[|| ]([^}]*)}/,
+          '<a href="$1">$2</a>',
+        )}`;
+      }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 
       const jsdocDefaultValue = getJsdocDefaultValue(
