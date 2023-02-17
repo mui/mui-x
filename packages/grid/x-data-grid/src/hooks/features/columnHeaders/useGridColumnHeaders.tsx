@@ -35,12 +35,15 @@ import {
   gridColumnGroupsHeaderMaxDepthSelector,
   gridColumnGroupsHeaderStructureSelector,
 } from '../columnGrouping/gridColumnGroupsSelector';
+import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+
+type OwnerState = DataGridProcessedProps;
 
 const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
   overridesResolver: (props, styles) => styles.columnHeaderRow,
-})(() => ({
+})<{ ownerState: OwnerState }>(() => ({
   display: 'flex',
 }));
 
@@ -336,7 +339,11 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
     }
 
     return (
-      <GridColumnHeaderRow role="row" aria-rowindex={headerGroupingMaxDepth + 1}>
+      <GridColumnHeaderRow
+        role="row"
+        aria-rowindex={headerGroupingMaxDepth + 1}
+        ownerState={rootProps}
+      >
         {columns}
       </GridColumnHeaderRow>
     );
@@ -437,6 +444,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           key={depthIndex}
           role="row"
           aria-rowindex={depthIndex + 1}
+          ownerState={rootProps}
         >
           {depthInfo.elements.map(
             ({ groupId, width, fields, colIndex, hasFocus, tabIndex }, groupIndex) => {
