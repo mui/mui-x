@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GridColDef,
   gridFocusCellSelector,
-  GridSignature,
   GridSingleSelectColDef,
   GridValidRowModel,
   gridVisibleColumnFieldsSelector,
@@ -74,7 +73,7 @@ const parseCellStringValue = (value: string, colDef: GridColDef) => {
 
 export const useGridClipboardImport = (
   apiRef: React.MutableRefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode' | 'signature'>,
+  props: Pick<DataGridPremiumProcessedProps, 'pagination' | 'paginationMode'>,
 ): void => {
   const handlePaste = React.useCallback(
     async (event: KeyboardEvent) => {
@@ -100,12 +99,7 @@ export const useGridClipboardImport = (
         return;
       }
 
-      let rowsData = text.split('\n');
-
-      if (rowsData.length > 1 && props.signature === GridSignature.DataGrid) {
-        // limit paste to a single row in DataGrid
-        rowsData = [rowsData[0]];
-      }
+      const rowsData = text.split('\n');
 
       const isSingleValuePasted = rowsData.length === 1 && rowsData[0].indexOf('\t') === -1;
 
@@ -185,7 +179,7 @@ export const useGridClipboardImport = (
 
       apiRef.current.updateRows(rowsToUpdate);
     },
-    [apiRef, props.pagination, props.paginationMode, props.signature],
+    [apiRef, props.pagination, props.paginationMode],
   );
 
   useGridNativeEventListener(apiRef, apiRef.current.rootElementRef!, 'keydown', handlePaste);
