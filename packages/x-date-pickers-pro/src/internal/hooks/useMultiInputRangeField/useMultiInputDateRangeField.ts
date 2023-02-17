@@ -114,12 +114,12 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
 
   const startDateResponse = {
     ...rawStartDateResponse,
-    error: !!validationError[0],
+    error: rawStartDateResponse.error ?? !!validationError[0],
   };
 
   const endDateResponse = {
     ...rawEndDateResponse,
-    error: !!validationError[1],
+    error: rawEndDateResponse.error ?? !!validationError[1],
   };
 
   return { startDate: startDateResponse, endDate: endDateResponse };
