@@ -9,8 +9,10 @@ import Popper from '@mui/material/Popper';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { gridClasses } from '../../constants/gridClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+
+type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -18,8 +20,6 @@ export interface GridPanelClasses {
   /** Styles applied to the paper element. */
   paper: string;
 }
-
-type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelProps extends Partial<React.ComponentProps<typeof GridPanelRoot>> {
   children?: React.ReactNode;

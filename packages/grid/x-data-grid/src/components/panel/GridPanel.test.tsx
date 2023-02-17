@@ -16,7 +16,7 @@ describe('<GridPanel />', () => {
 
   function Wrapper(props: { children: React.ReactNode }) {
     // mock rootProps
-    const rootProps = React.useMemo(() => {}, []);
+    const rootProps = React.useMemo(() => ({}), []);
     const apiRef = useGridApiRef();
     apiRef.current.rootElementRef = {
       // @ts-ignore
