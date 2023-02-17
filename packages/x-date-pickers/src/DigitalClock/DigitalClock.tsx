@@ -19,6 +19,8 @@ const useUtilityClasses = (ownerState: DigitalClockProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
+    list: ['list'],
+    item: ['item'],
   };
 
   return composeClasses(slots, getDigitalClockUtilityClass, classes);
