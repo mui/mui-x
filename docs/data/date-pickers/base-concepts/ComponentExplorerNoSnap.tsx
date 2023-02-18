@@ -223,7 +223,7 @@ import { ${exportedName} } from '@mui/x-date-pickers-pro';`;
           </Stack>
           <div>
             <Typography sx={{ mb: 1 }}>Live example:</Typography>
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={exportedNames}>{content}</DemoContainer>
               </LocalizationProvider>
