@@ -265,6 +265,7 @@ const DataGridProVirtualScroller = React.forwardRef<
     getContentProps,
     getRenderZoneProps,
     updateRenderZonePosition,
+    getRenderedRowsIds,
   } = useGridVirtualScroller({
     ref,
     renderZoneMinColumnIndex: leftPinnedColumns.length,
@@ -302,6 +303,10 @@ const DataGridProVirtualScroller = React.forwardRef<
         }
       : null;
 
+  const renderedRowIds = getRenderedRowsIds({
+    renderContext,
+  });
+
   const getDetailPanels = () => {
     const panels: React.ReactNode[] = [];
 
@@ -314,13 +319,14 @@ const DataGridProVirtualScroller = React.forwardRef<
 
     for (let i = 0; i < uniqueExpandedRowIds.length; i += 1) {
       const id = uniqueExpandedRowIds[i];
+
       const content = detailPanelsContent[id];
 
       // Check if the id exists in the current page
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
       const exists = rowIndex !== undefined;
 
-      if (React.isValidElement(content) && exists) {
+      if (React.isValidElement(content) && exists && renderedRowIds.includes(id)) {
         const hasAutoHeight = apiRef.current.detailPanelHasAutoHeight(id);
         const height = hasAutoHeight ? 'auto' : detailPanelsHeights[id];
 

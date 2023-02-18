@@ -426,6 +426,48 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const handleTouchMove = (event: React.TouchEvent) => {
     apiRef.current.publishEvent('virtualScrollerTouchMove', {}, event);
   };
+  const getRenderedRowsIds = (
+    params: {
+      renderContext: GridRenderContext | null;
+
+      availableSpace?: number | null;
+      rows?: GridRowEntry[];
+    } = { renderContext },
+  ) => {
+    const { renderContext: nextRenderContext, availableSpace = containerDimensions.width } = params;
+
+    if (!nextRenderContext || availableSpace == null) {
+      return [];
+    }
+
+    const rowBuffer = !disableVirtualization ? rootProps.rowBuffer : 0;
+
+    const [firstRowToRender, lastRowToRender] = getRenderableIndexes({
+      firstIndex: nextRenderContext.firstRowIndex,
+      lastIndex: nextRenderContext.lastRowIndex,
+      minFirstIndex: 0,
+      maxLastIndex: currentPage.rows.length,
+      buffer: rowBuffer,
+    });
+
+    const renderedRowsIds: GridRowId[] = [];
+
+    if (params.rows) {
+      params.rows.forEach((row) => {
+        renderedRowsIds.push(row.id);
+      });
+    } else {
+      if (!currentPage.range) {
+        return [];
+      }
+
+      for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
+        const row = currentPage.rows[i];
+        renderedRowsIds.push(row.id);
+      }
+    }
+    return renderedRowsIds;
+  };
 
   const getRows = (
     params: {
@@ -619,5 +661,6 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     }),
     getContentProps: ({ style = {} } = {}) => ({ style: { ...style, ...contentSize } }),
     getRenderZoneProps: () => ({ ref: renderZoneRef }),
+    getRenderedRowsIds,
   };
 };
