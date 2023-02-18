@@ -92,7 +92,6 @@ export function DemoItem(props: DemoItemProps) {
 export function DemoContainer(props: DemoGridProps) {
   const { children, components } = props;
 
-  const childrenCount = components.length;
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
 
@@ -118,7 +117,7 @@ export function DemoContainer(props: DemoGridProps) {
   };
 
   if (
-    childrenCount > 2 ||
+    components.length > 2 ||
     childrenTypes.has('multi-input-range-field') ||
     childrenTypes.has('single-input-range-field') ||
     childrenTypes.has('multi-panel-UI-view') ||
