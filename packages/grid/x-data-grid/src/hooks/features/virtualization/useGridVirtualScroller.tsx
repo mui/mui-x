@@ -450,11 +450,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       buffer: rowBuffer,
     });
 
-    const renderedRowsIds: GridRowId[] = [];
+    const renderedRowIds: GridRowId[] = [];
 
     if (params.rows) {
       params.rows.forEach((row) => {
-        renderedRowsIds.push(row.id);
+        renderedRowIds.push(row.id);
       });
     } else {
       if (!currentPage.range) {
@@ -463,10 +463,10 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
       for (let i = firstRowToRender; i < lastRowToRender; i += 1) {
         const row = currentPage.rows[i];
-        renderedRowsIds.push(row.id);
+        renderedRowIds.push(row.id);
       }
     }
-    return renderedRowsIds;
+    return renderedRowIds;
   };
 
   const getRows = (
