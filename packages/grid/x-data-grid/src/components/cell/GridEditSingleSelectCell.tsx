@@ -66,7 +66,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const inputRef = React.useRef<any>();
   const [open, setOpen] = React.useState(initialOpen);
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
   useEnhancedEffect(() => {
@@ -138,7 +138,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   }
 
   return (
-    <rootProps.components.BaseSelect
+    <rootProps.slots.baseSelect
       ref={ref}
       inputRef={inputRef}
       value={valueProp}
@@ -152,7 +152,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       native={isSelectNative}
       fullWidth
       {...other}
-      {...rootProps.componentsProps?.baseSelect}
+      {...rootProps.slotProps?.baseSelect}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);
@@ -163,7 +163,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
           </OptionComponent>
         );
       })}
-    </rootProps.components.BaseSelect>
+    </rootProps.slots.baseSelect>
   );
 }
 

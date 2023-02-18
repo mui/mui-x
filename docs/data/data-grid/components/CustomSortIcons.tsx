@@ -36,9 +36,9 @@ export default function CustomSortIcons() {
         columns={columns}
         rows={rows}
         sortModel={[{ field: 'name', sort: 'asc' }]}
-        components={{
-          ColumnSortedDescendingIcon: SortedDescendingIcon,
-          ColumnSortedAscendingIcon: SortedAscendingIcon,
+        slots={{
+          columnSortedDescendingIcon: SortedDescendingIcon,
+          columnSortedAscendingIcon: SortedAscendingIcon,
         }}
       />
     </div>
