@@ -1,11 +1,13 @@
 import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { SxProps, Theme } from '@mui/material/styles';
 import { textFieldClasses } from '@mui/material/TextField';
 
 interface DemoGridProps {
   children: React.ReactNode;
   components: string[];
+  sx?: SxProps<Theme>;
 }
 
 type PickersGridChildComponentType =
@@ -90,7 +92,7 @@ export function DemoItem(props: DemoItemProps) {
 }
 
 export function DemoContainer(props: DemoGridProps) {
-  const { children, components } = props;
+  const { children, components, sx: sxProp } = props;
 
   const childrenTypes = new Set<PickersGridChildComponentType>();
   const childrenSupportedSections = new Set<PickersSupportedSections>();
@@ -114,6 +116,7 @@ export function DemoContainer(props: DemoGridProps) {
     overflow: 'auto',
     // Add padding as overflow can hide the outline text field label.
     pt: 1,
+    ...sxProp,
   };
 
   if (
