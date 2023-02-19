@@ -78,13 +78,7 @@ export function DemoItem(props: DemoItemProps) {
   }
 
   return (
-    <Stack
-      direction="column"
-      alignItems="stretch"
-      spacing={spacing}
-      sx={sx}
-      className={textFieldClasses.root}
-    >
+    <Stack direction="column" alignItems="stretch" spacing={spacing} sx={sx}>
       {label && <Typography variant="body2">{label}</Typography>}
       {children}
     </Stack>
