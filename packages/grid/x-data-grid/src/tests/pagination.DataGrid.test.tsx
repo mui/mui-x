@@ -5,7 +5,7 @@ import {
   createRenderer,
   fireEvent,
   screen,
-  waitFor,
+  act,
   // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import {
@@ -494,11 +494,10 @@ describe('<DataGrid /> - Pagination', () => {
       expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
 
       setProps({ height: heightAfter });
+      await act(() => Promise.resolve());
 
-      await waitFor(() =>
-        expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
-          `1–${expectedViewportRowsLengthAfter} of ${nbRows}`, // "–" is not a hyphen, it's an "en dash"
-        ),
+      expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
+        `1–${expectedViewportRowsLengthAfter} of ${nbRows}`, // "–" is not a hyphen, it's an "en dash"
       );
 
       rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
