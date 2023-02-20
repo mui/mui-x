@@ -14,11 +14,11 @@ export default function BasicDateRangeField() {
         <MultiInputDateRangeField
           slotProps={{
             textField: ({ position }) => ({
-              label: position === 'start' ? 'Check-in' : 'Check-out',
+              label: position === 'start' ? 'Departure' : 'Return',
             }),
           }}
         />
-        <SingleInputDateRangeField label="Check-in - Check-out" />
+        <SingleInputDateRangeField label="Departure - Return" />
       </DemoContainer>
     </LocalizationProvider>
   );
