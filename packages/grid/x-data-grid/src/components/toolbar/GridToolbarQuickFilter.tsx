@@ -8,10 +8,12 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridQuickFilterValuesSelector } from '../../hooks/features/filter';
 import { GridFilterModel } from '../../models/gridFilterModel';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { GridClasses } from '../../constants/gridClasses';
 import { isDeepEqual } from '../../utils/utils';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = {
+  classes?: Partial<GridClasses>;
+};
 
 const GridToolbarQuickFilterRoot = styled(TextField, {
   name: 'MuiDataGrid',

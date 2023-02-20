@@ -5,6 +5,12 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid } from '@mui/x-data-grid';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
+declare module '@mui/x-data-grid' {
+  interface FooterPropsOverrides {
+    status: 'connected' | 'disconnected';
+  }
+}
+
 export function CustomFooterStatusComponent(props: {
   status: 'connected' | 'disconnected';
 }) {

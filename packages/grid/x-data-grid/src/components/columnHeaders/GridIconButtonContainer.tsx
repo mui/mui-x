@@ -2,13 +2,14 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled } from '@mui/material/styles';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = {
+  classes?: Partial<GridClasses>;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

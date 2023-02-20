@@ -5,9 +5,8 @@ import Badge from '@mui/material/Badge';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderParams';
 
@@ -18,7 +17,7 @@ export interface ColumnHeaderFilterIconButtonProps {
 }
 
 type OwnerState = ColumnHeaderFilterIconButtonProps & {
-  classes?: DataGridProcessedProps['classes'];
+  classes?: Partial<GridClasses>;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

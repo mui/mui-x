@@ -7,49 +7,13 @@ import {
   unstable_ownerDocument as ownerDocument,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import {
-  GridCellEventLookup,
-  GridEvents,
-  GridCellMode,
-  GridCellModes,
-  GridRowId,
-} from '../../models';
-import { GridAlignment } from '../../models/colDef/gridColDef';
+import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
+import { GridCellEventLookup, GridEvents, GridCellModes } from '../../models';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { FocusElement } from '../../models/params/gridCellParams';
-
-export interface GridCellProps<V = any, F = V> {
-  align: GridAlignment;
-  className?: string;
-  colIndex: number;
-  field: string;
-  rowId: GridRowId;
-  formattedValue?: F;
-  hasFocus?: boolean;
-  height: number | 'auto';
-  isEditable?: boolean;
-  isSelected?: boolean;
-  showRightBorder?: boolean;
-  value?: V;
-  width: number;
-  cellMode?: GridCellMode;
-  children: React.ReactNode;
-  tabIndex: 0 | -1;
-  colSpan?: number;
-  disableDragEvents?: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
-  onMouseDown?: React.MouseEventHandler<HTMLDivElement>;
-  onMouseUp?: React.MouseEventHandler<HTMLDivElement>;
-  onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
-  onDragEnter?: React.DragEventHandler<HTMLDivElement>;
-  onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO it should not accept unspecified props
-}
+import { GridCellProps } from './GridCellProps';
 
 // Based on https://stackoverflow.com/a/59518678
 let cachedSupportsPreventScroll: boolean;
@@ -66,7 +30,7 @@ function doesSupportPreventScroll(): boolean {
 }
 
 type OwnerState = Pick<GridCellProps, 'align' | 'showRightBorder' | 'isEditable' | 'isSelected'> & {
-  classes?: DataGridProcessedProps['classes'];
+  classes?: Partial<GridClasses>;
 };
 
 const useUtilityClasses = (ownerState: OwnerState) => {

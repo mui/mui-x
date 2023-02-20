@@ -17,8 +17,7 @@ import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { getDataGridUtilityClass } from '../../../constants/gridClasses';
+import { getDataGridUtilityClass, GridClasses } from '../../../constants/gridClasses';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
 export interface FilterColumnsArgs {
@@ -116,7 +115,9 @@ export interface GridFilterFormProps {
   children?: React.ReactNode;
 }
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = {
+  classes?: Partial<GridClasses>;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
