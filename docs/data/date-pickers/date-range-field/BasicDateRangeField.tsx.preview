@@ -1,8 +1,8 @@
 <MultiInputDateRangeField
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
+  slotProps={{
+    textField: ({ position }) => ({
+      label: position === 'start' ? 'Check-in' : 'Check-out',
+    }),
+  }}
 />
-<SingleInputDateRangeField
-  value={value}
-  onChange={(newValue) => setValue(newValue)}
-/>
+<SingleInputDateRangeField label="Check-in - Check-out" />

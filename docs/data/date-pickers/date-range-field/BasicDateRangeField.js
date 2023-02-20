@@ -6,20 +6,19 @@ import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDate
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 
 export default function BasicDateRangeField() {
-  const [value, setValue] = React.useState([null, null]);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={['MultiInputDateRangeField', 'SingleInputDateRangeField']}
       >
         <MultiInputDateRangeField
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
+          slotProps={{
+            textField: ({ position }) => ({
+              label: position === 'start' ? 'Check-in' : 'Check-out',
+            }),
+          }}
         />
-        <SingleInputDateRangeField
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-        />
+        <SingleInputDateRangeField label="Check-in - Check-out" />
       </DemoContainer>
     </LocalizationProvider>
   );
