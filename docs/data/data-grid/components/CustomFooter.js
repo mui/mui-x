@@ -29,6 +29,7 @@ export { CustomFooterStatusComponent };
 
 export default function CustomFooter() {
   const [status, setStatus] = React.useState('connected');
+
   const { data } = useDemoData({
     dataSet: 'Employee',
     rowLength: 4,

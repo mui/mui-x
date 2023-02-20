@@ -21,29 +21,29 @@ import { GridRowProps } from '../components/GridRowProps';
 import { GridCellProps } from '../components/cell/GridCellProps';
 
 // Overrides for module augmentation
-interface BaseCheckboxPropsOverrides {}
-interface BaseTextFieldPropsOverrides {}
-interface BaseFormControlPropsOverrides {}
-interface BaseSelectPropsOverrides {}
-interface BaseSwitchPropsOverrides {}
-interface BaseButtonPropsOverrides {}
-interface BaseIconButtonPropsOverrides {}
-interface BaseTooltipPropsOverrides {}
-interface BasePopperPropsOverrides {}
-interface CellPropsOverrides {}
-interface ToolbarPropsOverrides {}
-interface ColumnHeaderFilterIconButtonPropsOverrides {}
-interface ColumnMenuPropsOverrides {}
-interface ColumnsPanelPropsOverrides {}
-interface FilterPanelPropsOverrides {}
-interface FooterPropsOverrides {}
-interface PaginationPropsOverrides {}
-interface LoadingOverlayPropsOverrides {}
-interface NoResultsOverlayPropsOverrides {}
-interface NoRowsOverlayPropsOverrides {}
-interface PanelPropsOverrides {}
-interface PreferencesPanelPropsOverrides {}
-interface RowPropsOverrides {}
+export interface BaseCheckboxPropsOverrides {}
+export interface BaseTextFieldPropsOverrides {}
+export interface BaseFormControlPropsOverrides {}
+export interface BaseSelectPropsOverrides {}
+export interface BaseSwitchPropsOverrides {}
+export interface BaseButtonPropsOverrides {}
+export interface BaseIconButtonPropsOverrides {}
+export interface BaseTooltipPropsOverrides {}
+export interface BasePopperPropsOverrides {}
+export interface CellPropsOverrides {}
+export interface ToolbarPropsOverrides {}
+export interface ColumnHeaderFilterIconButtonPropsOverrides {}
+export interface ColumnMenuPropsOverrides {}
+export interface ColumnsPanelPropsOverrides {}
+export interface FilterPanelPropsOverrides {}
+export interface FooterPropsOverrides {}
+export interface PaginationPropsOverrides {}
+export interface LoadingOverlayPropsOverrides {}
+export interface NoResultsOverlayPropsOverrides {}
+export interface NoRowsOverlayPropsOverrides {}
+export interface PanelPropsOverrides {}
+export interface PreferencesPanelPropsOverrides {}
+export interface RowPropsOverrides {}
 
 type SlotProps<Props, Overrides> = Partial<Props> & Overrides;
 
