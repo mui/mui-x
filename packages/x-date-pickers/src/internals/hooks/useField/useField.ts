@@ -63,6 +63,7 @@ export const useField = <
       onBlur,
       onMouseUp,
       onPaste,
+      error,
       ...otherForwardedProps
     },
     fieldValueManager,
@@ -369,10 +370,15 @@ export const useField = <
     valueManager.defaultErrorState,
   );
 
-  const inputError = React.useMemo(
-    () => fieldValueManager.hasError(validationError),
-    [fieldValueManager, validationError],
-  );
+  const inputError = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (error !== undefined) {
+      return error;
+    }
+
+    return fieldValueManager.hasError(validationError);
+  }, [fieldValueManager, validationError, error]);
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
@@ -411,8 +417,8 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
-  const response = {
-    error: undefined,
+  return {
+    error: inputError,
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
@@ -425,12 +431,5 @@ export const useField = <
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
     ref: handleRef,
-  };
-
-  return {
-    ...response,
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined
-    error: response.error ?? inputError,
   };
 };
