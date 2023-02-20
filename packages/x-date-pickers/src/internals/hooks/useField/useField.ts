@@ -399,7 +399,7 @@ export const useField = <
     [state.sections, fieldValueManager, state.tempValueStrAndroid],
   );
 
-  const inputMode = React.useMemo(() => {
+  const inputMode: React.HTMLAttributes<HTMLInputElement>['inputMode'] = React.useMemo(() => {
     if (selectedSectionIndexes == null) {
       return 'text';
     }
@@ -411,8 +411,8 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
-  return {
-    error: inputError,
+  const response = {
+    error: undefined,
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
@@ -425,5 +425,12 @@ export const useField = <
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
     ref: handleRef,
+  };
+
+  return {
+    ...response,
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined
+    error: response.error ?? inputError,
   };
 };
