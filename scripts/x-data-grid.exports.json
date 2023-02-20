@@ -494,6 +494,7 @@
   { "name": "svSE", "kind": "Variable" },
   { "name": "trTR", "kind": "Variable" },
   { "name": "ukUA", "kind": "Variable" },
+  { "name": "UncapitalizedGridSlotsComponent", "kind": "Interface" },
   { "name": "unstable_gridFocusColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_gridTabIndexColumnGroupHeaderSelector", "kind": "Variable" },
   { "name": "unstable_resetCleanupTracking", "kind": "Variable" },

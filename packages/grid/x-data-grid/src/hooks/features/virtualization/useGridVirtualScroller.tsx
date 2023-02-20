@@ -309,6 +309,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         prevRenderContext.current &&
         areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
       ) {
+        updateRenderZonePosition(nextRenderContext);
         return;
       }
       setRenderContext(nextRenderContext);
@@ -524,12 +525,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = apiRef.current.isRowSelectable(id);
       }
 
-      const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+      const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
       const { style: rowStyle, ...rowProps } =
         (typeof getRowProps === 'function' && getRowProps(id, model)) || {};
 
       rows.push(
-        <rootProps.components.Row
+        <rootProps.slots.row
           key={id}
           row={model}
           rowId={id}

@@ -1,4 +1,5 @@
-import { GridSlotsComponent } from '@mui/x-data-grid';
+import { GridSlotsComponent, UncapitalizedGridSlotsComponent } from '@mui/x-data-grid';
+import { UncapitalizeObjectKeys } from '@mui/x-data-grid/internals';
 import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
 
 /**
@@ -6,3 +7,8 @@ import { GridProIconSlotsComponent } from './gridProIconSlotsComponent';
  * for Pro package
  */
 export interface GridProSlotsComponent extends GridSlotsComponent, GridProIconSlotsComponent {}
+
+// TODO: remove in v7
+export interface UncapitalizedGridProSlotsComponent
+  extends UncapitalizedGridSlotsComponent,
+    UncapitalizeObjectKeys<GridProIconSlotsComponent> {}
