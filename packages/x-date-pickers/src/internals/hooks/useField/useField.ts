@@ -418,7 +418,6 @@ export const useField = <
   }, [selectedSectionIndexes, state.sections]);
 
   return {
-    error: inputError,
     ...otherForwardedProps,
     value: valueStr,
     inputMode,
@@ -430,6 +429,7 @@ export const useField = <
     onChange: handleInputChange,
     onKeyDown: handleInputKeyDown,
     onMouseUp: handleInputMouseUp,
+    error: inputError,
     ref: handleRef,
   };
 };
