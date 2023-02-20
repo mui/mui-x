@@ -289,6 +289,8 @@ const GridCell = React.forwardRef<HTMLDivElement, GridCellProps>((props, ref) =>
   );
 });
 
+const MemoizedCell = React.memo(GridCell);
+
 GridCell.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
@@ -321,4 +323,4 @@ GridCell.propTypes = {
   width: PropTypes.number,
 } as any;
 
-export { GridCell };
+export { MemoizedCell as GridCell };

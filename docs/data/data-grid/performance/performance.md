@@ -15,19 +15,16 @@ To start using memoization, import the inner components, then pass their memoize
 ```tsx
 import {
   GridRow,
-  GridCell,
   DataGrid, // or DataGridPro, DataGridPremium
   DataGridColumnHeaders, // or DataGridProColumnHeaders, DataGridPremiumColumnHeaders
 } from '@mui/x-data-grid';
 
 const MemoizedRow = React.memo(GridRow);
-const MemoizedCell = React.memo(GridCell);
 const MemoizedColumnHeaders = React.memo(DataGridColumnHeaders);
 
 <DataGrid
   components={{
     Row: MemoizedRow,
-    Cell: MemoizedCell,
     ColumnHeaders: MemoizedColumnHeaders,
   }}
 />;
@@ -39,30 +36,8 @@ It also contains additional logic to highlight the components when they re-rende
 {{"demo": "GridWithReactMemo.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::warning
-We do not ship the components above already wrapped with `React.memo` because if you have cells that display custom content whose source is not the received props, these cells may display outdated information.
-For instance, if you define a column with a custom cell renderer where content comes from a [selector](/x/react-data-grid/state/#catalog-of-selectors) that changes more often then the props passed to `GridCell` and `GridRow`, the row and column should not be memoized.
-You can choose whether to memoize or not a component by passing a 2nd argument to `React.memo`:
-
-```tsx
-function shallowCompare(prevProps, nextProps) {
-  const aKeys = Object.keys(prevProps);
-  const bKeys = Object.keys(nextProps);
-
-  if (aKeys.length !== bKeys.length) {
-    return false;
-  }
-
-  return aKeys.every(
-    (key) => nextProps.hasOwnProperty(key) && nextProps[key] === prevProps[key],
-  );
-}
-
-const MemoizedCell = React.memo(GridCell, (prevProps, nextProps) => {
-  // Prevent memoizing the cells from the "total" column
-  return nextProps.field !== 'total' && shallowCompare(prevProps, nextProps);
-});
-```
-
+We do not ship the components above already wrapped with `React.memo` because if you have rows whose cells display custom content not derived from the received props, e.g. selectors, these cells may display outdated information.
+If you define a column with a custom cell renderer where content comes from a [selector](/x/react-data-grid/state/#catalog-of-selectors) that changes more often then the props passed to `GridRow`, the row component should not be memoized.
 :::
 
 ## API
