@@ -27,8 +27,8 @@ export default function UseGridApiContext() {
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
         initialState={{
           ...data.initialState,

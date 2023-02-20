@@ -227,25 +227,25 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         !disableRemoveAllButton ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
-              <rootProps.components.BaseButton
+              <rootProps.slots.baseButton
                 onClick={addNewFilter}
-                startIcon={<rootProps.components.FilterPanelAddIcon />}
-                {...rootProps.componentsProps?.baseButton}
+                startIcon={<rootProps.slots.filterPanelAddIcon />}
+                {...rootProps.slotProps?.baseButton}
               >
                 {apiRef.current.getLocaleText('filterPanelAddFilter')}
-              </rootProps.components.BaseButton>
+              </rootProps.slots.baseButton>
             ) : (
               <span />
             )}
 
             {!disableRemoveAllButton ? (
-              <rootProps.components.BaseButton
+              <rootProps.slots.baseButton
                 onClick={handleRemoveAll}
-                startIcon={<rootProps.components.FilterPanelRemoveAllIcon />}
-                {...rootProps.componentsProps?.baseButton}
+                startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}
+                {...rootProps.slotProps?.baseButton}
               >
                 {apiRef.current.getLocaleText('filterPanelRemoveAll')}
-              </rootProps.components.BaseButton>
+              </rootProps.slots.baseButton>
             ) : null}
           </GridPanelFooter>
         ) : null}

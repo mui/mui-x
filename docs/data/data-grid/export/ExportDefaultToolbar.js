@@ -11,7 +11,7 @@ export default function ExportDefaultToolbar() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} loading={loading} components={{ Toolbar: GridToolbar }} />
+      <DataGrid {...data} loading={loading} slots={{ toolbar: GridToolbar }} />
     </div>
   );
 }

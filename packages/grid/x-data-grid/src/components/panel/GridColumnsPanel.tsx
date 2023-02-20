@@ -22,7 +22,7 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -39,15 +39,15 @@ const GridColumnsPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanel',
   overridesResolver: (props, styles) => styles.columnsPanel,
-})(() => ({
+})<{ ownerState: OwnerState }>({
   padding: '8px 0px 8px 8px',
-}));
+});
 
 const GridColumnsPanelRowRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnsPanelRow',
   overridesResolver: (props, styles) => styles.columnsPanelRow,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: '1px 8px 1px 7px',
@@ -102,8 +102,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
   const rootProps = useGridRootProps();
   const [searchValue, setSearchValue] = React.useState('');
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   const {
     sort,
@@ -194,7 +193,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
   return (
     <GridPanelWrapper {...other}>
       <GridPanelHeader>
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           label={apiRef.current.getLocaleText('columnsPanelTextFieldLabel')}
           placeholder={apiRef.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
           inputRef={searchInputRef}
@@ -202,23 +201,27 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
           onChange={handleSearchValueChange}
           variant="standard"
           fullWidth
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       </GridPanelHeader>
       <GridPanelContent>
-        <GridColumnsPanelRoot className={classes.root}>
+        <GridColumnsPanelRoot className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
-            <GridColumnsPanelRowRoot className={classes.columnsPanelRow} key={column.field}>
+            <GridColumnsPanelRowRoot
+              className={classes.columnsPanelRow}
+              ownerState={rootProps}
+              key={column.field}
+            >
               <FormControlLabel
                 control={
-                  <rootProps.components.BaseSwitch
+                  <rootProps.slots.baseSwitch
                     disabled={column.hideable === false}
                     checked={columnVisibilityModel[column.field] !== false}
                     onClick={toggleColumn}
                     name={column.field}
                     size="small"
                     inputRef={isFirstHideableColumn(column) ? firstSwitchRef : undefined}
-                    {...rootProps.componentsProps?.baseSwitch}
+                    {...rootProps.slotProps?.baseSwitch}
                   />
                 }
                 label={column.headerName || column.field}
@@ -241,25 +244,25 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
       {disableShowAllButton && disableHideAllButton ? null : (
         <GridPanelFooter>
           {!disableHideAllButton ? (
-            <rootProps.components.BaseButton
+            <rootProps.slots.baseButton
               onClick={() => toggleAllColumns(false)}
-              {...rootProps.componentsProps?.baseButton}
+              {...rootProps.slotProps?.baseButton}
               disabled={disableHideAllButton}
             >
               {apiRef.current.getLocaleText('columnsPanelHideAllButton')}
-            </rootProps.components.BaseButton>
+            </rootProps.slots.baseButton>
           ) : (
             <span />
           )}
 
           {!disableShowAllButton ? (
-            <rootProps.components.BaseButton
+            <rootProps.slots.baseButton
               onClick={() => toggleAllColumns(true)}
-              {...rootProps.componentsProps?.baseButton}
+              {...rootProps.slotProps?.baseButton}
               disabled={disableShowAllButton}
             >
               {apiRef.current.getLocaleText('columnsPanelShowAllButton')}
-            </rootProps.components.BaseButton>
+            </rootProps.slots.baseButton>
           ) : null}
         </GridPanelFooter>
       )}

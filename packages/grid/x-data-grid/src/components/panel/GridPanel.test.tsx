@@ -8,19 +8,26 @@ import {
   GridApiContext,
   gridClasses,
 } from '@mui/x-data-grid';
+import { GridRootPropsContext } from '@mui/x-data-grid/context/GridRootPropsContext';
 import Popper from '@mui/material/Popper';
 
 describe('<GridPanel />', () => {
   const { render } = createRenderer();
 
   function Wrapper(props: { children: React.ReactNode }) {
+    // mock rootProps
+    const rootProps = React.useMemo(() => ({}), []);
     const apiRef = useGridApiRef();
     apiRef.current.rootElementRef = {
       // @ts-ignore
       current: document.body,
     };
 
-    return <GridApiContext.Provider value={apiRef} {...props} />;
+    return (
+      <GridRootPropsContext.Provider value={rootProps}>
+        <GridApiContext.Provider value={apiRef} {...props} />
+      </GridRootPropsContext.Provider>
+    );
   }
 
   describeConformance(<GridPanel disablePortal open />, () => ({

@@ -99,35 +99,6 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
 
-  const startInputProps: UseDateTimeFieldComponentProps<TDate, TChildProps> = {
-    ...inStartTextFieldProps,
-    format,
-    disabled,
-    readOnly,
-    value: valueProp === undefined ? undefined : valueProp[0],
-    defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
-    onChange: handleStartDateChange,
-  };
-
-  const endInputProps: UseDateTimeFieldComponentProps<TDate, TChildProps> = {
-    ...inEndTextFieldProps,
-    format,
-    disabled,
-    readOnly,
-    value: valueProp === undefined ? undefined : valueProp[1],
-    defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
-    onChange: handleEndDateChange,
-  };
-
-  const rawStartDateResponse = useDateTimeField<TDate, TChildProps>({
-    props: startInputProps,
-    inputRef: startInputRef,
-  });
-  const rawEndDateResponse = useDateTimeField<TDate, TChildProps>({
-    props: endInputProps,
-    inputRef: endInputRef,
-  });
-
   const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 
   const validationError = useValidation<
@@ -142,15 +113,36 @@ export const useMultiInputDateTimeRangeField = <TDate, TChildProps extends {}>({
     rangeValueManager.defaultErrorState,
   );
 
-  const startDateResponse = {
-    ...rawStartDateResponse,
+  const startInputProps: UseDateTimeFieldComponentProps<TDate, TChildProps> = {
     error: !!validationError[0],
+    ...inStartTextFieldProps,
+    format,
+    disabled,
+    readOnly,
+    value: valueProp === undefined ? undefined : valueProp[0],
+    defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
+    onChange: handleStartDateChange,
   };
 
-  const endDateResponse = {
-    ...rawEndDateResponse,
+  const endInputProps: UseDateTimeFieldComponentProps<TDate, TChildProps> = {
     error: !!validationError[1],
+    ...inEndTextFieldProps,
+    format,
+    disabled,
+    readOnly,
+    value: valueProp === undefined ? undefined : valueProp[1],
+    defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
+    onChange: handleEndDateChange,
   };
+
+  const startDateResponse = useDateTimeField<TDate, TChildProps>({
+    props: startInputProps,
+    inputRef: startInputRef,
+  });
+  const endDateResponse = useDateTimeField<TDate, TChildProps>({
+    props: endInputProps,
+    inputRef: endInputRef,
+  });
 
   return { startDate: startDateResponse, endDate: endDateResponse };
 };

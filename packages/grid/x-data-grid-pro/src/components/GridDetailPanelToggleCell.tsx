@@ -31,11 +31,11 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const hasContent = React.isValidElement(contentCache[id]);
 
   const Icon = isExpanded
-    ? rootProps.components.DetailPanelCollapseIcon
-    : rootProps.components.DetailPanelExpandIcon;
+    ? rootProps.slots.detailPanelCollapseIcon
+    : rootProps.slots.detailPanelExpandIcon;
 
   return (
-    <rootProps.components.BaseIconButton
+    <rootProps.slots.baseIconButton
       size="small"
       tabIndex={-1}
       disabled={!hasContent}
@@ -45,10 +45,10 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
           ? apiRef.current.getLocaleText('collapseDetailPanel')
           : apiRef.current.getLocaleText('expandDetailPanel')
       }
-      {...rootProps.componentsProps?.baseIconButton}
+      {...rootProps.slotProps?.baseIconButton}
     >
       <Icon fontSize="inherit" />
-    </rootProps.components.BaseIconButton>
+    </rootProps.slots.baseIconButton>
   );
 }
 
