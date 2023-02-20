@@ -66,7 +66,7 @@ export default function QuickFilteringCustomLogic() {
       <DataGrid
         {...data}
         columns={columns}
-        components={{ Toolbar: QuickSearchToolbar }}
+        slots={{ toolbar: QuickSearchToolbar }}
       />
     </Box>
   );

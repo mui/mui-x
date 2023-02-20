@@ -137,10 +137,12 @@ DataGridProRaw.propTypes = {
   columnVisibilityModel: PropTypes.object,
   /**
    * Overrideable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components: PropTypes.object,
   /**
    * Overrideable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
   /**
@@ -805,6 +807,14 @@ DataGridProRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * Overrideable components props dynamically passed to the component at rendering.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable components.
+   */
+  slots: PropTypes.object,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

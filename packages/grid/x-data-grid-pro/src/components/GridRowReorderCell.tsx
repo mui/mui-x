@@ -95,7 +95,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
 
   return (
     <div className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
-      <rootProps.components.RowReorderIcon />
+      <rootProps.slots.rowReorderIcon />
       <div className={classes.placeholder}>{cellValue}</div>
     </div>
   );

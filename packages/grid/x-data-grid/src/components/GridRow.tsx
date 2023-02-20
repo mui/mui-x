@@ -259,8 +259,8 @@ const GridRow = React.forwardRef<
   );
 
   const {
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     classes: rootClasses,
     disableColumnReorder,
     getCellClassName,
@@ -344,7 +344,7 @@ const GridRow = React.forwardRef<
       });
 
       return (
-        <components.Cell
+        <slots.cell
           key={column.field}
           value={cellParams.value}
           field={column.field}
@@ -363,10 +363,10 @@ const GridRow = React.forwardRef<
           className={clsx(classNames)}
           colSpan={cellProps.colSpan}
           disableDragEvents={disableDragEvents}
-          {...componentsProps?.cell}
+          {...slotProps?.cell}
         >
           {content}
-        </components.Cell>
+        </slots.cell>
       );
     },
     [
@@ -380,9 +380,9 @@ const GridRow = React.forwardRef<
       getCellClassName,
       focusedCell,
       tabbableCell,
-      components,
+      slots,
       rowHeight,
-      componentsProps?.cell,
+      slotProps?.cell,
       rootClasses,
     ],
   );
@@ -473,7 +473,7 @@ const GridRow = React.forwardRef<
         const contentWidth = Math.round(randomNumber());
 
         cells.push(
-          <rootProps.components.SkeletonCell
+          <rootProps.slots.skeletonCell
             key={column.field}
             width={width}
             contentWidth={contentWidth}

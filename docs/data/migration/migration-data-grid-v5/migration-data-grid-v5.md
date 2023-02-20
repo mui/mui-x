@@ -310,7 +310,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +const positions = gridColumnPositionsSelector(apiRef);
   ```
 - The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
-- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridExpandedSortedRowEntriesSelector` selector instead.
 - The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
@@ -444,6 +444,20 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 - The `getGridSingleSelectQuickFilterFn` function was removed.
   You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
+
+## Rename `components` to `slots` (optional)
+
+The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
+This is a slow and ongoing effort between the different MUI libraries.
+To smooth the transition, data grid support both the `components` props which are deprecated, and the new `slots` props.
+
+If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+```
+
+Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
 
 ### Misc
 

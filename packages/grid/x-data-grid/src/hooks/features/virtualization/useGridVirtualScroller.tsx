@@ -531,7 +531,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
     const renderedColumns = cachedRenderedColumns.current;
 
-    const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+    const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
 
     const invalidatesCachedRowStyle =
       prevGetRowProps.current !== getRowProps || prevRootRowStyle.current !== rootRowStyle;
@@ -576,7 +576,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       }
 
       rows.push(
-        <rootProps.components.Row
+        <rootProps.slots.row
           key={id}
           row={model}
           rowId={id}

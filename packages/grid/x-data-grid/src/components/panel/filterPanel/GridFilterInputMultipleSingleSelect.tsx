@@ -146,7 +146,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
         ))
       }
       renderInput={(params) => (
-        <rootProps.components.BaseTextField
+        <rootProps.slots.baseTextField
           {...params}
           label={apiRef.current.getLocaleText('filterPanelInputLabel')}
           placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -157,7 +157,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
           inputRef={focusElementRef}
           type="singleSelect"
           {...TextFieldProps}
-          {...rootProps.componentsProps?.baseTextField}
+          {...rootProps.slotProps?.baseTextField}
         />
       )}
       {...other}

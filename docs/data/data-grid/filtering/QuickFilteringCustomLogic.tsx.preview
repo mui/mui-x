@@ -1,5 +1,5 @@
 <DataGrid
   {...data}
   columns={columns}
-  components={{ Toolbar: QuickSearchToolbar }}
+  slots={{ toolbar: QuickSearchToolbar }}
 />

@@ -23,9 +23,9 @@ const MemoizedRow = React.memo(GridRow);
 const MemoizedColumnHeaders = React.memo(DataGridColumnHeaders);
 
 <DataGrid
-  components={{
-    Row: MemoizedRow,
-    ColumnHeaders: MemoizedColumnHeaders,
+  slots={{
+    row: MemoizedRow,
+    columnHeaders: MemoizedColumnHeaders,
   }}
 />;
 ```

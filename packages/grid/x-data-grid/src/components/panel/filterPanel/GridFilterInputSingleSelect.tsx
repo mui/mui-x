@@ -52,7 +52,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const id = useId();
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.componentsProps?.baseSelect || {};
+  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
 
   let resolvedColumn: GridSingleSelectColDef | null = null;
@@ -116,7 +116,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }
 
   return (
-    <rootProps.components.BaseTextField
+    <rootProps.slots.baseTextField
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -131,10 +131,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
       select
       SelectProps={{
         native: isSelectNative,
-        ...rootProps.componentsProps?.baseSelect,
+        ...rootProps.slotProps?.baseSelect,
       }}
       {...others}
-      {...rootProps.componentsProps?.baseTextField}
+      {...rootProps.slotProps?.baseTextField}
     >
       {renderSingleSelectOptions(
         resolvedColumn,
@@ -142,7 +142,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         getOptionLabel,
         getOptionValue,
       )}
-    </rootProps.components.BaseTextField>
+    </rootProps.slots.baseTextField>
   );
 }
 

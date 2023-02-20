@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import Badge from '@mui/material/Badge';
-import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
+import { UncapitalizedGridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -31,7 +31,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 function getIcon(
-  icons: GridIconSlotsComponent,
+  icons: UncapitalizedGridSlotsComponent,
   direction: GridSortDirection,
   className: string,
   sortingOrder: GridSortDirection[],
@@ -39,11 +39,11 @@ function getIcon(
   let Icon;
   const iconProps: any = {};
   if (direction === 'asc') {
-    Icon = icons.ColumnSortedAscendingIcon;
+    Icon = icons.columnSortedAscendingIcon;
   } else if (direction === 'desc') {
-    Icon = icons.ColumnSortedDescendingIcon;
+    Icon = icons.columnSortedDescendingIcon;
   } else {
-    Icon = icons.ColumnUnsortedIcon;
+    Icon = icons.columnUnsortedIcon;
     iconProps.sortingOrder = sortingOrder;
   }
   return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;
@@ -56,21 +56,21 @@ function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
   const ownerState = { ...props, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.components, direction, classes.icon, sortingOrder);
+  const iconElement = getIcon(rootProps.slots, direction, classes.icon, sortingOrder);
   if (!iconElement) {
     return null;
   }
 
   const iconButton = (
-    <rootProps.components.BaseIconButton
+    <rootProps.slots.baseIconButton
       tabIndex={-1}
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
-      {...rootProps.componentsProps?.baseIconButton}
+      {...rootProps.slotProps?.baseIconButton}
     >
       {iconElement}
-    </rootProps.components.BaseIconButton>
+    </rootProps.slots.baseIconButton>
   );
 
   return (

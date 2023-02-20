@@ -120,7 +120,7 @@ function GridBody(props: GridBodyProps) {
 
   return (
     <GridMainContainer>
-      <rootProps.components.ColumnHeaders
+      <rootProps.slots.columnHeaders
         ref={columnsContainerRef}
         innerRef={columnHeadersRef}
         visibleColumns={visibleColumns}

@@ -196,7 +196,7 @@ function GridActionsCell(props: GridActionsCellProps) {
       )}
 
       {menuButtons.length > 0 && buttonId && (
-        <rootProps.components.BaseIconButton
+        <rootProps.slots.baseIconButton
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
@@ -208,10 +208,10 @@ function GridActionsCell(props: GridActionsCellProps) {
           onClick={showMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
-          {...rootProps.componentsProps?.baseIconButton}
+          {...rootProps.slotProps?.baseIconButton}
         >
-          <rootProps.components.MoreActionsIcon fontSize="small" />
-        </rootProps.components.BaseIconButton>
+          <rootProps.slots.moreActionsIcon fontSize="small" />
+        </rootProps.slots.baseIconButton>
       )}
 
       {menuButtons.length > 0 && (

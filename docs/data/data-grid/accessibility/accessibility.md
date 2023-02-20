@@ -21,7 +21,7 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `Toolbar` property in the Data Grid's `components` prop.
+To enable the density selector, create a toolbar containing the `GridToolbarDensitySelector` component and apply it using the `toolbar` property in the Data Grid's `slots` prop.
 The user can then change the density of the Data Grid by using the density selector from the toolbar, as the following demo illustrates:
 
 {{"demo": "DensitySelectorGrid.js", "bg": "inline"}}

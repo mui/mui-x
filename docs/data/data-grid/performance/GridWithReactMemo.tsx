@@ -4,7 +4,6 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import {
   DataGridPro,
   GridRow,
-  GridCell,
   DataGridProColumnHeaders,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
@@ -31,16 +30,11 @@ const RowWithTracer = React.forwardRef((props, ref) => {
   return <TraceUpdates ref={ref} Component={GridRow} {...props} />;
 });
 
-const CellWithTracer = React.forwardRef((props, ref) => {
-  return <TraceUpdates ref={ref} Component={GridCell} {...props} />;
-});
-
 const ColumnHeadersWithTracer = React.forwardRef((props, ref) => {
   return <TraceUpdates ref={ref} Component={DataGridProColumnHeaders} {...props} />;
 });
 
 const MemoizedRow = React.memo(RowWithTracer);
-const MemoizedCell = React.memo(CellWithTracer);
 const MemoizedColumnHeaders = React.memo(ColumnHeadersWithTracer);
 
 export default function GridWithReactMemo() {
@@ -70,10 +64,9 @@ export default function GridWithReactMemo() {
         rowHeight={38}
         checkboxSelection
         disableRowSelectionOnClick
-        components={{
-          Row: MemoizedRow,
-          Cell: MemoizedCell,
-          ColumnHeaders: MemoizedColumnHeaders,
+        slots={{
+          row: MemoizedRow,
+          columnHeaders: MemoizedColumnHeaders,
         }}
       />
     </Box>

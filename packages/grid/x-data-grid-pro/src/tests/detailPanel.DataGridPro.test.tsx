@@ -15,7 +15,6 @@ import {
   createRenderer,
   fireEvent,
   screen,
-  waitFor,
   act,
   userEvent,
   // @ts-ignore Remove once the test utils are typed
@@ -101,10 +100,9 @@ describe('<DataGridPro /> - Detail panel', () => {
       />,
     );
     fireEvent.click(screen.getAllByRole('button', { name: 'Expand' })[0]);
+    await act(() => Promise.resolve());
 
-    await waitFor(() => {
-      expect(getRow(0)).toHaveComputedStyle({ marginBottom: `${detailPanelHeight}px` });
-    });
+    expect(getRow(0)).toHaveComputedStyle({ marginBottom: `${detailPanelHeight}px` });
 
     const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
     expect(virtualScrollerContent).toHaveInlineStyle({
@@ -144,10 +142,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     const virtualScrollerContent = document.querySelector('.MuiDataGrid-virtualScrollerContent')!;
     fireEvent.click(screen.getByRole('button', { name: 'Expand' }));
+    await act(() => Promise.resolve());
 
-    await waitFor(() => {
-      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '100px' });
-    });
+    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '100px' });
 
     expect(virtualScrollerContent).toHaveInlineStyle({
       width: 'auto',
@@ -161,10 +158,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'Increase' }));
+    await act(() => Promise.resolve());
 
-    await waitFor(() => {
-      expect(getRow(0)).toHaveComputedStyle({ marginBottom: '200px' });
-    });
+    expect(getRow(0)).toHaveComputedStyle({ marginBottom: '200px' });
 
     expect(virtualScrollerContent).toHaveInlineStyle({
       width: 'auto',

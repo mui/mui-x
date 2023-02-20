@@ -85,6 +85,7 @@ export interface UseFieldForwardedProps {
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  error?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
