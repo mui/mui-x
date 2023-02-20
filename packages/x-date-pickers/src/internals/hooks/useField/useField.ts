@@ -399,7 +399,7 @@ export const useField = <
     [state.sections, fieldValueManager, state.tempValueStrAndroid],
   );
 
-  const inputMode: React.HTMLAttributes<HTMLInputElement>['inputMode'] = React.useMemo(() => {
+  const inputMode = React.useMemo(() => {
     if (selectedSectionIndexes == null) {
       return 'text';
     }
