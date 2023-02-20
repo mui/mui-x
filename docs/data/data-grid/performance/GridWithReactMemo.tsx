@@ -51,7 +51,7 @@ export default function GridWithReactMemo() {
       sx={{
         height: 400,
         width: '100%',
-        '&& .updating': (theme) => ({
+        '&&& .updating': (theme) => ({
           background: teal[theme.palette.mode === 'dark' ? 900 : 100],
           transition: theme.transitions.create('background', {
             duration: theme.transitions.duration.standard,
