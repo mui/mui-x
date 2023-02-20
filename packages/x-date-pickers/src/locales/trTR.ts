@@ -1,8 +1,7 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
-const trTRPickers: Partial<PickersLocaleText<any>> = {
+const trTRPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Önceki ay',
   nextMonth: 'Sonraki ay',
@@ -10,11 +9,11 @@ const trTRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'sonraki görünüm',
   openNextView: 'önceki görünüm',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'yıl görünümü açık, takvim görünümüne geç'
       : 'takvim görünümü açık, yıl görünümüne geç',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `metin girişi görünümü açık, şuraya gidin: ${viewType} görünümü`
       : `${viewType} görünüm açık, metin girişi görünümüne gidin`,

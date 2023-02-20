@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 // maps ClockPickerView to its translation
 const clockViews = {
@@ -15,7 +14,7 @@ const pickerViews = {
   clock: '時計表示',
 };
 
-const jaJPPickers: Partial<PickersLocaleText<any>> = {
+const jaJPPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: '先月',
   nextMonth: '来月',
@@ -23,11 +22,11 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: '前の表示を開く',
   openNextView: '次の表示を開く',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? '年選択表示からカレンダー表示に切り替える'
       : 'カレンダー表示から年選択表示に切り替える',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `テキスト入力表示から${pickerViews[viewType]}に切り替える`
       : `${pickerViews[viewType]}からテキスト入力表示に切り替える`,

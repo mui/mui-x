@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 const views = {
   hours: 'tunnit',
@@ -13,7 +12,7 @@ const viewTranslation = {
   clock: 'kello',
 };
 
-const fiFIPickers: Partial<PickersLocaleText<any>> = {
+const fiFIPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Edellinen kuukausi',
   nextMonth: 'Seuraava kuukausi',
@@ -21,11 +20,11 @@ const fiFIPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'avaa edellinen kuukausi',
   openNextView: 'avaa seuraava kuukausi',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'vuosinäkymä on auki, vaihda kalenterinäkymään'
       : 'kalenterinäkymä on auki, vaihda vuosinäkymään',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `tekstikenttä on auki, mene ${viewTranslation[viewType]}näkymään`
       : `${viewTranslation[viewType]}näkymä on auki, mene tekstikenttään`,

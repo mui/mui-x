@@ -11,6 +11,7 @@ import {
   DateTimePickerToolbarClasses,
   getDateTimePickerToolbarUtilityClass,
 } from './dateTimePickerToolbarClasses';
+import { resolveViewTypeFromView } from './shared';
 
 export interface DateTimePickerToolbarProps<TDate> extends BaseToolbarProps<TDate, TDate | null> {
   classes?: Partial<DateTimePickerToolbarClasses>;
@@ -122,6 +123,7 @@ export function DateTimePickerToolbar<TDate extends unknown>(
       isMobileKeyboardViewOpen={isMobileKeyboardViewOpen}
       toggleMobileKeyboardView={toggleMobileKeyboardView}
       className={classes.root}
+      viewType={resolveViewTypeFromView(openView)}
       {...other}
       isLandscape={false}
       ownerState={ownerState}

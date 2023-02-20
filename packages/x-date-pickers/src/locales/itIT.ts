@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 const views = {
   hours: 'le ore',
@@ -8,7 +7,7 @@ const views = {
   seconds: 'i secondi',
 };
 
-const itITPickers: Partial<PickersLocaleText<any>> = {
+const itITPickers: PickersLocaleText<any> = {
   // Calendar navigation
   previousMonth: 'Mese precedente',
   nextMonth: 'Mese successivo',
@@ -16,11 +15,11 @@ const itITPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'apri la vista precedente',
   openNextView: 'apri la vista successiva',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? "la vista dell'anno è aperta, passare alla vista del calendario"
       : "la vista dell'calendario è aperta, passare alla vista dell'anno",
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `la vista del campo di testo è aperta, passare alla vista ${viewType}`
       : `la vista aperta è: ${viewType}, vai alla vista del campo di testo`,

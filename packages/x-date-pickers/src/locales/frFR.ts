@@ -1,6 +1,5 @@
 import { PickersLocaleText } from './utils/pickersLocaleTextApi';
 import { getPickersLocalization } from './utils/getPickersLocalization';
-import { CalendarPickerView } from '../internals/models';
 
 const views = {
   hours: 'heures',
@@ -21,11 +20,11 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // View navigation
   openPreviousView: 'Ouvrir la vue précédente',
   openNextView: 'Ouvrir la vue suivante',
-  calendarViewSwitchingButtonAriaLabel: (view: CalendarPickerView) =>
+  calendarViewSwitchingButtonAriaLabel: (view) =>
     view === 'year'
       ? 'La vue année est ouverte, ouvrir la vue calendrier'
       : 'La vue calendrier est ouverte, ouvrir la vue année',
-  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen: boolean, viewType: 'calendar' | 'clock') =>
+  inputModeToggleButtonAriaLabel: (isKeyboardInputOpen, viewType) =>
     isKeyboardInputOpen
       ? `passer du champ text au ${viewTranslation[viewType]}`
       : `passer du ${viewTranslation[viewType]} au champ text`,
