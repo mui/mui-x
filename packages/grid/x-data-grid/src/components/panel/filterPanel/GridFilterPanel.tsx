@@ -42,6 +42,7 @@ export interface GridFilterPanelProps
     | 'operatorInputProps'
     | 'columnInputProps'
     | 'valueInputProps'
+    | 'filterColumns'
   >;
 
   /**
@@ -239,6 +240,7 @@ GridFilterPanel.propTypes = {
     columnInputProps: PropTypes.any,
     columnsSort: PropTypes.oneOf(['asc', 'desc']),
     deleteIconProps: PropTypes.any,
+    filterColumns: PropTypes.func,
     logicOperatorInputProps: PropTypes.any,
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,

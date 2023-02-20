@@ -4,9 +4,7 @@ import { GridCellCoordinates } from '../models/gridCell';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditingState } from '../models/gridEditRowModel';
 
-export interface GridRowProps
-  extends React.AllHTMLAttributes<HTMLDivElement>,
-    React.DOMAttributes<HTMLDivElement> {
+export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
   selected: boolean;
   /**

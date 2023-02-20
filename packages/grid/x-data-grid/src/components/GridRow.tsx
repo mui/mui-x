@@ -480,23 +480,27 @@ GridRow.propTypes = {
   // ----------------------------------------------------------------------
   cellFocus: PropTypes.object,
   cellTabIndex: PropTypes.object,
-  containerWidth: PropTypes.number.isRequired,
-  editRowsState: PropTypes.object.isRequired,
-  firstColumnToRender: PropTypes.number.isRequired,
+  containerWidth: PropTypes.number,
+  editRowsState: PropTypes.object,
+  firstColumnToRender: PropTypes.number,
   /**
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
-  index: PropTypes.number.isRequired,
+  index: PropTypes.number,
   isLastVisible: PropTypes.bool,
-  lastColumnToRender: PropTypes.number.isRequired,
-  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  lastColumnToRender: PropTypes.number,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  position: PropTypes.oneOf(['center', 'left', 'right']),
+  renderedColumns: PropTypes.arrayOf(PropTypes.object),
   row: PropTypes.object,
-  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  selected: PropTypes.bool.isRequired,
-  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  selected: PropTypes.bool,
+  visibleColumns: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
 export { GridRow };
