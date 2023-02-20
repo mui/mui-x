@@ -22,10 +22,10 @@ const SingleInputDateTimeRangeField = React.forwardRef(function SingleInputDateT
 
   const ownerState = themeProps;
 
-  const Input = slots?.input ?? components?.Input ?? TextField;
+  const Input = slots?.textField ?? components?.TextField ?? TextField;
   const inputProps: SingleInputDateTimeRangeFieldProps<TDate> = useSlotProps({
     elementType: Input,
-    externalSlotProps: componentsProps?.input,
+    externalSlotProps: slotProps?.textField ?? componentsProps?.textField,
     externalForwardedProps: other,
     ownerState,
   });
