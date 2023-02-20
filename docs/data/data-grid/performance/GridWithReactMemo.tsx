@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { teal } from '@mui/material/colors';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import {
   DataGridPro,
@@ -50,13 +51,12 @@ export default function GridWithReactMemo() {
       sx={{
         height: 400,
         width: '100%',
-        '& .updating': {
-          background: '#b2dfdb',
-          transition: (theme) =>
-            theme.transitions.create('background', {
-              duration: theme.transitions.duration.standard,
-            }),
-        },
+        '&& .updating': (theme) => ({
+          background: teal[theme.palette.mode === 'dark' ? 900 : 100],
+          transition: theme.transitions.create('background', {
+            duration: theme.transitions.duration.standard,
+          }),
+        }),
       }}
     >
       <DataGridPro
