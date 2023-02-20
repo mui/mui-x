@@ -68,84 +68,7 @@ export const getDaysInWeekStr = <TDate>(utils: MuiPickersAdapter<TDate>, format:
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
-export const adjustDateSectionValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  dateSectionName: MuiDateSectionName,
-  keyCode: AvailableAdjustKeyCode,
-): TDate => {
-  const delta = getDeltaFromKeyCode(keyCode);
-  const isStart = keyCode === 'Home';
-  const isEnd = keyCode === 'End';
-
-  switch (dateSectionName) {
-    case 'day': {
-      if (isStart) {
-        return utils.startOfMonth(date);
-      }
-      if (isEnd) {
-        return utils.endOfMonth(date);
-      }
-      return utils.addDays(date, delta);
-    }
-    case 'weekDay': {
-      if (isStart) {
-        return utils.startOfWeek(date);
-      }
-      if (isEnd) {
-        return utils.endOfWeek(date);
-      }
-      return utils.addDays(date, delta);
-    }
-    case 'month': {
-      if (isStart) {
-        return utils.startOfYear(date);
-      }
-      if (isEnd) {
-        return utils.endOfYear(date);
-      }
-      return utils.addMonths(date, delta);
-    }
-    case 'year': {
-      return utils.addYears(date, delta);
-    }
-    case 'meridiem': {
-      return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
-    }
-    case 'hours': {
-      if (isStart) {
-        return utils.startOfDay(date);
-      }
-      if (isEnd) {
-        return utils.endOfDay(date);
-      }
-      return utils.addHours(date, delta);
-    }
-    case 'minutes': {
-      if (isStart) {
-        return utils.setMinutes(date, 0);
-      }
-      if (isEnd) {
-        return utils.setMinutes(date, 59);
-      }
-      return utils.addMinutes(date, delta);
-    }
-    case 'seconds': {
-      if (isStart) {
-        return utils.setSeconds(date, 0);
-      }
-      if (isEnd) {
-        return utils.setSeconds(date, 59);
-      }
-      return utils.addSeconds(date, delta);
-    }
-    default: {
-      return date;
-    }
-  }
-};
-
-export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
+export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
@@ -423,7 +346,7 @@ export const changeSectionValueFormat = <TDate>(
   return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
 };
 
-export const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
+const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
   utils.formatByString(utils.date()!, format).length === 4;
 
 export const doesSectionHaveTrailingZeros = <TDate>(
@@ -697,91 +620,6 @@ export const getSectionsBoundaries = <TDate>(
   };
 };
 
-/**
- * @template TDate
- * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
- * @param {TDate} date The date on which the meridiem must be applied.
- * @param {string} sectionValue The new value of the meridiem section.
- * @returns {TDate} The date with the new meridiem.
- */
-export const applyMeridiemChange = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sectionValue: string,
-) => {
-  const isAM = sectionValue.toLowerCase() === 'am';
-  const hours = utils.getHours(date);
-
-  if (isAM && hours >= 12) {
-    return utils.addHours(date, -12);
-  }
-  if (!isAM && hours < 12) {
-    return utils.addHours(date, 12);
-  }
-
-  return date;
-};
-
-/**
- * @template TDate
- * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
- * @param {TDate} date The date on which the week day must be applied.
- * @param {string} sectionFormat The format of the week day section.
- * @param {string} sectionValue The new value of the week day section.
- * @returns {TDate} The date with the new week day.
- */
-export const applyWeekDayChange = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sectionFormat: string,
-  sectionValue: string,
-) => {
-  const formattedDaysInWeek = getDaysInWeekStr(utils, sectionFormat);
-  const dayInWeekStrOfActiveDate = utils.formatByString(date, sectionFormat);
-  const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
-  const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(sectionValue);
-
-  const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-
-  return utils.addDays(date, diff);
-};
-
-export const getDateSectionGetterAndSetter = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateSectionName: Exclude<MuiDateSectionName, 'weekDay' | 'meridiem'>,
-) => {
-  const adapterMethods: Record<
-    typeof dateSectionName,
-    { getter: (date: TDate) => number; setter: (date: TDate, value: number) => TDate }
-  > = {
-    seconds: {
-      getter: utils.getSeconds,
-      setter: utils.setSeconds,
-    },
-    minutes: {
-      getter: utils.getMinutes,
-      setter: utils.setMinutes,
-    },
-    hours: {
-      getter: utils.getHours,
-      setter: utils.setHours,
-    },
-    day: {
-      getter: utils.getDate,
-      setter: utils.setDate,
-    },
-    month: {
-      getter: utils.getMonth,
-      setter: utils.setMonth,
-    },
-    year: {
-      getter: utils.getYear,
-      setter: utils.setYear,
-    },
-  };
-
-  return adapterMethods[dateSectionName];
-};
 export const cleanTrailingZeroInNumericSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   format: string,
@@ -846,17 +684,64 @@ export const mergeDateIntoReferenceDate = <
 
   sections.forEach((section) => {
     if (!shouldLimitToEditedSections || section.edited) {
-      if (section.dateSectionName === 'meridiem') {
-        mergedDate = applyMeridiemChange(
-          utils,
-          mergedDate,
-          utils.getHours(date) < 12 ? 'AM' : 'PM',
-        );
-      } else if (section.dateSectionName === 'weekDay') {
-        mergedDate = applyWeekDayChange(utils, mergedDate, section.formatValue, section.value);
-      } else {
-        const { getter, setter } = getDateSectionGetterAndSetter(utils, section.dateSectionName);
-        mergedDate = setter(mergedDate, getter(date));
+      switch (section.dateSectionName) {
+        case 'meridiem': {
+          const isAM = utils.getHours(date) < 12;
+          const mergedDateHours = utils.getHours(mergedDate);
+
+          if (isAM && mergedDateHours >= 12) {
+            mergedDate = utils.addHours(mergedDate, -12);
+          } else if (!isAM && mergedDateHours < 12) {
+            mergedDate = utils.addHours(mergedDate, 12);
+          }
+          break;
+        }
+
+        case 'weekDay': {
+          const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
+          const dayInWeekStrOfActiveDate = utils.formatByString(date, section.formatValue);
+          const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
+          const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
+          const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
+
+          mergedDate = utils.addDays(date, diff);
+          break;
+        }
+
+        default: {
+          const adapterMethods: Record<
+            typeof section.dateSectionName,
+            { getter: (date: TDate) => number; setter: (date: TDate, value: number) => TDate }
+          > = {
+            seconds: {
+              getter: utils.getSeconds,
+              setter: utils.setSeconds,
+            },
+            minutes: {
+              getter: utils.getMinutes,
+              setter: utils.setMinutes,
+            },
+            hours: {
+              getter: utils.getHours,
+              setter: utils.setHours,
+            },
+            day: {
+              getter: utils.getDate,
+              setter: utils.setDate,
+            },
+            month: {
+              getter: utils.getMonth,
+              setter: utils.setMonth,
+            },
+            year: {
+              getter: utils.getYear,
+              setter: utils.setYear,
+            },
+          };
+
+          const { getter, setter } = adapterMethods[section.dateSectionName];
+          mergedDate = setter(mergedDate, getter(date));
+        }
       }
     }
   });

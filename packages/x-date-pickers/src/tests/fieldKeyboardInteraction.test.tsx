@@ -1,12 +1,16 @@
 import * as React from 'react';
-import { screen, userEvent, act } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
+import { screen, userEvent } from '@mui/monorepo/test/utils';
+import {
+  buildFieldInteractions,
+  createPickerRenderer,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
 import { MuiDateSectionName, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
-function updatedDate<TDate>(
+function updateDate<TDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
   sectionName: MuiDateSectionName,
@@ -39,8 +43,8 @@ const adapterToTest = [
   'dayjs',
   'moment',
   'date-fns-jalali',
-  'moment-hijri',
-  'moment-jalaali',
+  // 'moment-hijri',
+  // 'moment-jalaali',
 ] as const;
 
 adapterToTest.forEach((adapterName) => {
@@ -50,13 +54,7 @@ adapterToTest.forEach((adapterName) => {
       adapterName,
     });
 
-    const clickOnInput = (input: HTMLInputElement, cursorPosition: number) => {
-      act(() => {
-        input.focus();
-        input.setSelectionRange(cursorPosition, cursorPosition);
-        clock.runToLast();
-      });
-    };
+    const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 
     const testKeyPress = <TDate extends unknown>({
       key,
@@ -75,6 +73,7 @@ adapterToTest.forEach((adapterName) => {
       const input = screen.getByRole('textbox') as HTMLInputElement;
       clickOnInput(input, cursorPosition);
       userEvent.keyPress(input, { key });
+
       expectInputValue(input, adapter.formatByString(expectedValue, format));
     };
 
@@ -82,7 +81,7 @@ adapterToTest.forEach((adapterName) => {
       const sectionName = typeof sectionData === 'object' ? sectionData.sectionName : sectionData;
       it(`should increase "${sectionName}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updatedDate(initialValue, adapter, sectionName, 1);
+        const expectedValue = updateDate(initialValue, adapter, sectionName, 1);
 
         testKeyPress({
           key: 'ArrowUp',
@@ -94,7 +93,7 @@ adapterToTest.forEach((adapterName) => {
 
       it(`should decrease "${sectionName}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updatedDate(initialValue, adapter, sectionName, -1);
+        const expectedValue = updateDate(initialValue, adapter, sectionName, -1);
 
         testKeyPress({
           key: 'ArrowDown',

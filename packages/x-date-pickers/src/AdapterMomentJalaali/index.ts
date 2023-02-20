@@ -20,7 +20,6 @@ const formatTokenMap: MuiFormatTokenMap = {
   jDD: 'day',
 
   // Year
-  jY: 'year',
   jYY: 'year',
   jYYYY: 'year',
   jYYYYYY: 'year',
@@ -104,6 +103,10 @@ export class AdapterMomentJalaali
     return count < 0
       ? date.clone().subtract(Math.abs(count), 'jMonth')
       : date.clone().add(count, 'jMonth');
+  };
+
+  public setMonth = (date: Moment, month: number) => {
+    return date.clone().jMonth(month);
   };
 
   public isValid = (value: any) => {
