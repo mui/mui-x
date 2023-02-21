@@ -4,8 +4,13 @@ import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import { testDayViewRangeValidation } from './testDayViewRangeValidation';
 import { testTextFieldRangeValidation } from './testTextFieldRangeValidation';
 import { DescribeRangeValidationInputOptions } from './describeRangeValidation.types';
+import { testTextFieldKeyboardRangeValidation } from './testTextFieldKeyboardRangeValidation';
 
-const TEST_SUITES = [testDayViewRangeValidation, testTextFieldRangeValidation];
+const TEST_SUITES = [
+  testDayViewRangeValidation,
+  testTextFieldRangeValidation,
+  testTextFieldKeyboardRangeValidation,
+];
 
 function innerDescribeRangeValidation(
   ElementToTest: React.ElementType,
