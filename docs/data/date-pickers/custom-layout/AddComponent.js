@@ -72,6 +72,7 @@ function CustomLayout(props) {
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,

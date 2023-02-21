@@ -14,8 +14,14 @@ export default function BasicDateTimeRangeField() {
           'SingleInputDateTimeRangeField',
         ]}
       >
-        <MultiInputDateTimeRangeField />
-        <SingleInputDateTimeRangeField />
+        <MultiInputDateTimeRangeField
+          slotProps={{
+            textField: ({ position }) => ({
+              label: position === 'start' ? 'Check-in' : 'Check-out',
+            }),
+          }}
+        />
+        <SingleInputDateTimeRangeField label="Check-in - Check-out" />
       </DemoContainer>
     </LocalizationProvider>
   );
