@@ -170,7 +170,7 @@
     "util": "^0.12.5",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "yargs": "^17.6.2",
+    "yargs": "^17.7.1",
     "yarn-deduplicate": "^6.0.1"
   },
   "setupFiles": [
