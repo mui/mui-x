@@ -370,7 +370,7 @@ Works exactly the same way for `PickersMonth`
 The props used to set the text displayed in the pickers have been replaced by keys inside the `localeText` prop:
 
 | Removed prop                 | Property in the new `localText` prop                                              |
-| ---------------------------- | --------------------------------------------------------------------------------- |
+| :--------------------------- | :-------------------------------------------------------------------------------- |
 | `endText`                    | `end`                                                                             |
 | `getClockLabelText`          | `clockLabelText`                                                                  |
 | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -714,7 +714,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
   +import { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
 
-   function MyCustomLayout (props) {
+   function MyCustomLayout(props) {
   -  const { children } = props;
   -
   -  return (

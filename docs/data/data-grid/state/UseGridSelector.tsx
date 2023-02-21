@@ -45,8 +45,8 @@ export default function UseGridSelector() {
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
         hideFooter
-        components={{
-          Toolbar,
+        slots={{
+          toolbar: Toolbar,
         }}
       />
     </div>

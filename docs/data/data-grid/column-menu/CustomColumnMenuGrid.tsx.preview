@@ -1,6 +1,6 @@
 <DataGrid
   {...data}
-  components={{
-    ColumnMenu: CustomColumnMenu,
+  slots={{
+    columnMenu: CustomColumnMenu,
   }}
 />

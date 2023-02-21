@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "6.0.0-beta.3",
+  "version": "6.0.0-beta.4",
   "private": true,
   "author": "MUI Team",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/joy": "^5.0.0-alpha.65",
     "@mui/material": "^5.11.7",
-    "@mui/styles": "^5.11.7",
+    "@mui/styles": "^5.11.9",
     "@mui/utils": "^5.11.7",
     "@trendmicro/react-interpolate": "^0.5.5",
     "@types/lodash": "^4.14.191",

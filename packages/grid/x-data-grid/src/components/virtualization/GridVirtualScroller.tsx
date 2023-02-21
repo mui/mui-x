@@ -6,7 +6,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -22,7 +22,7 @@ const VirtualScrollerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'VirtualScroller',
   overridesResolver: (props, styles) => styles.virtualScroller,
-})({
+})<{ ownerState: OwnerState }>({
   overflow: 'auto',
   height: '100%',
   // See https://github.com/mui/mui-x/issues/4360
@@ -38,10 +38,16 @@ const GridVirtualScroller = React.forwardRef<
 >(function GridVirtualScroller(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
-  return <VirtualScrollerRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
+  return (
+    <VirtualScrollerRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 });
 
 export { GridVirtualScroller };

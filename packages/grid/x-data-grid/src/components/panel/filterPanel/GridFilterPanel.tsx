@@ -204,13 +204,13 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         </GridPanelContent>
         {!rootProps.disableMultipleColumnsFiltering && (
           <GridPanelFooter>
-            <rootProps.components.BaseButton
+            <rootProps.slots.baseButton
               onClick={addNewFilter}
               startIcon={<GridAddIcon />}
-              {...rootProps.componentsProps?.baseButton}
+              {...rootProps.slotProps?.baseButton}
             >
               {apiRef.current.getLocaleText('filterPanelAddFilter')}
-            </rootProps.components.BaseButton>
+            </rootProps.slots.baseButton>
           </GridPanelFooter>
         )}
       </GridPanelWrapper>

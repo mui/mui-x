@@ -38,7 +38,7 @@ By default, the export menu displays all the available export formats, according
 You can customize their respective behavior by passing an options object either to the `GridToolbar` or to the `GridToolbarExport` as a prop.
 
 ```tsx
-<DataGrid componentsProps={{ toolbar: { csvOptions } }} />
+<DataGrid slotProps={{ toolbar: { csvOptions } }} />
 
 // same as
 
@@ -57,7 +57,7 @@ In the following example, the print export is disabled.
 
 ```jsx
 <DataGrid
-  componentsProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
+  slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
 />
 ```
 
@@ -77,15 +77,13 @@ There are a few ways to include or hide other columns.
 - Set `allColumns` in export option to `true` to also include hidden columns. Those with `disableExport=true` will not be exported.
 
 ```jsx
-<DataGrid componentsProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
+<DataGrid slotProps={{ toolbar: { csvOptions: { allColumns: true } } }} />
 ```
 
 - Set the exact columns to be exported in the export option. Setting `fields` overrides the other properties. Such that the exported columns are exactly those in `fields` in the same order.
 
 ```jsx
-<DataGrid
-  componentsProps={{ toolbar: { csvOptions: { fields: ['name', 'brand'] } } }}
-/>
+<DataGrid slotProps={{ toolbar: { csvOptions: { fields: ['name', 'brand'] } } }} />
 ```
 
 ## Exported rows
@@ -102,7 +100,7 @@ Alternatively, you can set the `getRowsToExport` function and export any rows yo
 The grid exports a few [selectors](/x/react-data-grid/state/#access-the-state) that can help you get the rows for the most common use-cases:
 
 | Selector                                       | Behavior                                                                                                                                                                                                                   |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| :--------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `gridRowIdsSelector`                           | The rows in their original order.                                                                                                                                                                                          |
 | `gridSortedRowIdsSelector`                     | The rows after applying the sorting rules.                                                                                                                                                                                 |
 | `gridFilteredSortedRowIdsSelector`             | The rows after applying the sorting rules, and the filtering rules.                                                                                                                                                        |
@@ -175,7 +173,7 @@ With `pageStyle` option, you can override the main content color with a [more sp
 
 ```jsx
 <DataGrid
-  componentsProps={{
+  slotProps={{
     toolbar: {
       printOptions:{
         pageStyle: '.MuiDataGrid-root .MuiDataGrid-main { color: rgba(0, 0, 0, 0.87); }',
