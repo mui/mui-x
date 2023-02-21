@@ -39,8 +39,8 @@ export const testTextFieldKeyboardRangeValidation: DescribeRangeValidationTestSu
       expect(onErrorMock.callCount).to.equal(0);
       act(() => {
         dateParser([
-          [2018, 0, 2],
-          [2018, 0, 1],
+          [2018, 0, 2, 12, 0, 0],
+          [2018, 0, 1, 11, 0, 0],
         ]).forEach((date, index) => {
           inputValue(date, { setEndDate: index === 1 });
         });
