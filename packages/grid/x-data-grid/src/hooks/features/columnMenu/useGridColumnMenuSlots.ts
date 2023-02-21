@@ -4,63 +4,57 @@ import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 
-interface UseGridColumnMenuComponentsProps extends GridColumnMenuRootProps {
+interface UseGridColumnMenuSlotsProps extends GridColumnMenuRootProps {
   colDef: GridColDef;
   hideMenu: (event: React.SyntheticEvent) => void;
   addDividers?: boolean;
 }
 
-type UseGridColumnMenuComponentsResponse = Array<
+type UseGridColumnMenuSlotsResponse = Array<
   [React.JSXElementConstructor<any>, { [key: string]: any }]
 >;
 
-const camelize = (pascalCase: string) => {
-  const camelCase = pascalCase.split('');
-  camelCase[0] = camelCase[0].toLowerCase();
-  return camelCase.join('');
-};
-
-const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) => {
+const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
   const apiRef = useGridPrivateApiContext();
   const {
-    defaultComponents,
-    defaultComponentsProps,
-    components = {},
-    componentsProps = {},
+    defaultSlots,
+    defaultSlotProps,
+    slots = {},
+    slotProps = {},
     hideMenu,
     colDef,
     addDividers = true,
   } = props;
 
   const processedComponents = React.useMemo(
-    () => ({ ...defaultComponents, ...components }),
-    [defaultComponents, components],
+    () => ({ ...defaultSlots, ...slots }),
+    [defaultSlots, slots],
   );
 
-  const processedComponentsProps = React.useMemo(() => {
-    if (!componentsProps || Object.keys(componentsProps).length === 0) {
-      return defaultComponentsProps;
+  const processedSlotProps = React.useMemo(() => {
+    if (!slotProps || Object.keys(slotProps).length === 0) {
+      return defaultSlotProps;
     }
-    const mergedProps = { ...componentsProps } as typeof defaultComponentsProps;
-    Object.entries(defaultComponentsProps).forEach(([key, currentComponentProps]) => {
-      mergedProps[key] = { ...currentComponentProps, ...(componentsProps[key] || {}) };
+    const mergedProps = { ...slotProps } as typeof defaultSlotProps;
+    Object.entries(defaultSlotProps).forEach(([key, currentSlotProps]) => {
+      mergedProps[key] = { ...currentSlotProps, ...(slotProps[key] || {}) };
     });
     return mergedProps;
-  }, [defaultComponentsProps, componentsProps]);
+  }, [defaultSlotProps, slotProps]);
 
   const defaultItems = apiRef.current.unstable_applyPipeProcessors('columnMenu', [], props.colDef);
 
   const userItems = React.useMemo(() => {
-    const defaultComponentKeys = Object.keys(defaultComponents);
-    return Object.keys(components).filter((key) => !defaultComponentKeys.includes(key));
-  }, [components, defaultComponents]);
+    const defaultComponentKeys = Object.keys(defaultSlots);
+    return Object.keys(slots).filter((key) => !defaultComponentKeys.includes(key));
+  }, [slots, defaultSlots]);
 
   return React.useMemo(() => {
     const uniqueItems = Array.from(new Set<string>([...defaultItems, ...userItems]));
     const cleansedItems = uniqueItems.filter((key) => processedComponents[key] != null);
     const sorted = cleansedItems.sort((a, b) => {
-      const leftItemProps = processedComponentsProps[camelize(a)];
-      const rightItemProps = processedComponentsProps[camelize(b)];
+      const leftItemProps = processedSlotProps[a];
+      const rightItemProps = processedSlotProps[b];
       const leftDisplayOrder = Number.isFinite(leftItemProps?.displayOrder)
         ? leftItemProps.displayOrder
         : 100;
@@ -69,9 +63,9 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
         : 100;
       return leftDisplayOrder! - rightDisplayOrder!;
     });
-    return sorted.reduce<UseGridColumnMenuComponentsResponse>((acc, key, index) => {
+    return sorted.reduce<UseGridColumnMenuSlotsResponse>((acc, key, index) => {
       let itemProps = { colDef, onClick: hideMenu };
-      const processedComponentProps = processedComponentsProps[camelize(key)];
+      const processedComponentProps = processedSlotProps[key];
       if (processedComponentProps) {
         const { displayOrder, ...customProps } = processedComponentProps;
         itemProps = { ...itemProps, ...customProps };
@@ -86,9 +80,9 @@ const useGridColumnMenuComponents = (props: UseGridColumnMenuComponentsProps) =>
     defaultItems,
     hideMenu,
     processedComponents,
-    processedComponentsProps,
+    processedSlotProps,
     userItems,
   ]);
 };
 
-export { useGridColumnMenuComponents };
+export { useGridColumnMenuSlots };

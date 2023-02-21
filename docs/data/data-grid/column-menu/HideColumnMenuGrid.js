@@ -6,9 +6,9 @@ function CustomColumnMenu(props) {
   return (
     <GridColumnMenu
       {...props}
-      components={{
-        // Hide `ColumnMenuColumnsItem`
-        ColumnMenuColumnsItem: null,
+      slots={{
+        // Hide `columnMenuColumnsItem`
+        columnMenuColumnsItem: null,
       }}
     />
   );

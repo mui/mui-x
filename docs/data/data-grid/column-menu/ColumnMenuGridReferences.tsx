@@ -69,7 +69,7 @@ function ComponentTag(props: { value?: string; plan?: string }) {
 const columns = [
   {
     field: 'slot',
-    headerName: 'Component',
+    headerName: 'Slot',
     width: 240,
     renderCell: (params: GridRenderCellParams<any, string>) => (
       <ComponentTag value={params.value} plan={params.row.plan} />
@@ -89,42 +89,42 @@ const columns = [
 const rows = [
   {
     id: 1,
-    slot: 'ColumnMenuSortItem',
+    slot: 'columnMenuSortItem',
     defaultComponent: 'GridColumnMenuSortItem',
     displayOrder: 10,
     plan: 'Community',
   },
   {
     id: 3,
-    slot: 'ColumnMenuFilterItem',
+    slot: 'columnMenuFilterItem',
     defaultComponent: 'GridColumnMenuFilterItem',
     displayOrder: 20,
     plan: 'Community',
   },
   {
     id: 7,
-    slot: 'ColumnMenuColumnsItem',
+    slot: 'columnMenuColumnsItem',
     defaultComponent: 'GridColumnMenuColumnsItem',
     displayOrder: 30,
     plan: 'Community',
   },
   {
     id: 9,
-    slot: 'ColumnMenuPinningItem',
+    slot: 'columnMenuPinningItem',
     defaultComponent: 'GridColumnMenuPinningItem',
     displayOrder: 15,
     plan: 'Pro',
   },
   {
     id: 11,
-    slot: 'ColumnMenuAggregationItem',
+    slot: 'columnMenuAggregationItem',
     defaultComponent: 'GridColumnMenuAggregationItem',
     displayOrder: 23,
     plan: 'Premium',
   },
   {
     id: 13,
-    slot: 'ColumnMenuGroupingItem',
+    slot: 'columnMenuGroupingItem',
     defaultComponent: 'GridColumnMenuGroupingItem',
     displayOrder: 27,
     plan: 'Premium',

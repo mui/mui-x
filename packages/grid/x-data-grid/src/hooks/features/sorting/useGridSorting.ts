@@ -125,7 +125,7 @@ export const useGridSorting = (
       const sortingOrder = colDef.sortingOrder || props.sortingOrder;
 
       if (sortingOrder.some((item) => !!item)) {
-        return [...columnMenuItems, 'ColumnMenuSortItem'];
+        return [...columnMenuItems, 'columnMenuSortItem'];
       }
 
       return columnMenuItems;

@@ -366,7 +366,7 @@ export function useGridColumns(
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuColumnsItem'];
+      return [...columnMenuItems, 'columnMenuColumnsItem'];
     },
     [props.disableColumnSelector],
   );

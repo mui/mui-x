@@ -158,7 +158,7 @@ export const useGridRowGrouping = (
         return columnMenuItems;
       }
       if (isGroupingColumn(colDef.field) || colDef.groupable) {
-        return [...columnMenuItems, 'ColumnMenuGroupingItem'];
+        return [...columnMenuItems, 'columnMenuGroupingItem'];
       }
       return columnMenuItems;
     },

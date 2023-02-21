@@ -120,7 +120,7 @@ export const useGridAggregationPreProcessors = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuAggregationItem'];
+      return [...columnMenuItems, 'columnMenuAggregationItem'];
     },
     [props.aggregationFunctions, props.disableAggregation],
   );

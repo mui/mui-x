@@ -6,7 +6,7 @@ function CustomColumnMenu(props: GridColumnMenuProps) {
   return (
     <GridColumnMenu
       {...props}
-      componentsProps={{
+      slotProps={{
         // Swap positions of filter and sort items
         columnMenuFilterItem: {
           displayOrder: 0, // Previously `10`

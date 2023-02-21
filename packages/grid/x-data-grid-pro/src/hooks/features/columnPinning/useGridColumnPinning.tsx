@@ -188,7 +188,7 @@ export const useGridColumnPinning = (
         return columnMenuItems;
       }
 
-      return [...columnMenuItems, 'ColumnMenuPinningItem'];
+      return [...columnMenuItems, 'columnMenuPinningItem'];
     },
     [props.disableColumnPinning],
   );
