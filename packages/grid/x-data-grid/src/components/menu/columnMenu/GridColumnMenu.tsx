@@ -61,16 +61,6 @@ GridColumnMenu.propTypes = {
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
   colDef: PropTypes.object.isRequired,
-  /**
-   * Initial `slotProps` - it is internal, to be overrriden by Pro or Premium packages
-   * @ignore - do not document.
-   */
-  defaultSlotProps: PropTypes.object.isRequired,
-  /**
-   * Initial `slots` - it is internal, to be overrriden by Pro or Premium packages
-   * @ignore - do not document.
-   */
-  defaultSlots: PropTypes.object.isRequired,
   hideMenu: PropTypes.func.isRequired,
   id: PropTypes.string,
   labelledby: PropTypes.string,
