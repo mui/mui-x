@@ -5,9 +5,11 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { DataGrid } from '@mui/x-data-grid';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
+type FooterStatus = 'connected' | 'disconnected';
+
 declare module '@mui/x-data-grid' {
   interface FooterPropsOverrides {
-    status: 'connected' | 'disconnected';
+    status: FooterStatus;
   }
 }
 
@@ -29,7 +31,7 @@ export function CustomFooterStatusComponent(props: {
 }
 
 export default function CustomFooter() {
-  const [status, setStatus] = React.useState<'connected' | 'disconnected'>(
+  const [status, setStatus] = React.useState<FooterStatus>(
     'connected',
   );
   const { data } = useDemoData({
