@@ -167,7 +167,7 @@ export const useFieldState = <
 
   const publishValue = (
     { value, referenceValue }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>,
-    sections = state.sections,
+    sections: TSection[] | null = state.sections,
   ) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
@@ -207,10 +207,13 @@ export const useFieldState = <
   };
 
   const clearValue = () =>
-    publishValue({
-      value: valueManager.emptyValue,
-      referenceValue: state.referenceValue,
-    });
+    publishValue(
+      {
+        value: valueManager.emptyValue,
+        referenceValue: state.referenceValue,
+      },
+      null,
+    );
 
   const clearActiveSection = () => {
     if (selectedSectionIndexes == null) {
