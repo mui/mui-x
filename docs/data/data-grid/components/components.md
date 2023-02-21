@@ -62,7 +62,7 @@ function CustomPagination() {
 }
 ```
 
-## Components
+## Component slots
 
 The full list of overridable components slots can be found on the [`GridSlotsComponent`](/x/api/data-grid/data-grid/#slots) API page.
 
@@ -71,25 +71,6 @@ The full list of overridable components slots can be found on the [`GridSlotsCom
 As mentioned above, the column menu is a component slot that can be recomposed easily and customized on each column as in the demo below.
 
 {{"demo": "CustomColumnMenu.js", "bg": "inline"}}
-
-Below is the default `GridColumnMenu`.
-
-```tsx
-export const GridColumnMenu = React.forwardRef<
-  HTMLUListElement,
-  GridColumnMenuProps
->(function GridColumnMenu(props: GridColumnMenuProps, ref) {
-  const { hideMenu, colDef } = props;
-
-  return (
-    <GridColumnMenuContainer ref={ref} {...props}>
-      <GridColumnMenuSortItem onClick={hideMenu} colDef={colDef} />
-      <GridColumnMenuFilterItem onClick={hideMenu} colDef={colDef} />
-      <GridColumnMenuColumnsItem onClick={hideMenu} colDef={colDef} />
-    </GridColumnMenuContainer>
-  );
-});
-```
 
 ### Toolbar
 
@@ -173,6 +154,57 @@ Try it by hovering a cell with the mouse and it should display the number of cha
 As any component slot, every icon can be customized. However, it is not yet possible to use the `slotProps` with icons.
 
 {{"demo": "CustomSortIcons.js", "bg": "inline"}}
+
+## Slot props
+
+To override default props or pass custom props to slot components, use `slotProps` prop.
+
+```tsx
+<DataGrid
+  slotProps={{
+    toolbar: {
+      // override default props
+      disableDensitySelector: true,
+    }
+  }}
+>
+```
+
+### Custom slot props with Typescript
+
+If the custom component requires additional props to work properly, typescript may throw type error. To prevent, use [typescript module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to augment props interface.
+
+<!-- TODO: Fix this URL on stable release -->
+
+This [file](https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
+
+```tsx
+// augment the props for `toolbar` slot
+declare module '@mui/x-data-grid' {
+  interface ToolbarPropsOverride {
+    someCustomString: string;
+    someCustomNumber: number;
+  }
+}
+
+<DataGrid
+  slots={{
+    // custom component passed to the `toolbar` slot
+    toolbar: CustomGridToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      // props required by `CustomGridToolbar`
+      someCustomString: 'Hello',
+      someCustomNumber: 42,
+    },
+  }}
+>
+```
+
+This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to `footer` slot.
+
+{{"demo": "CustomFooter.js", "bg": "inline"}}
 
 ## API
 
