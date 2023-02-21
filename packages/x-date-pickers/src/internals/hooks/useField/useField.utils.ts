@@ -670,84 +670,85 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
-export const mergeDateIntoReferenceDate = <
-  TDate,
-  TSection extends Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
->(
+const transferDateSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sections: TSection[],
+  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
+  dateToTransferFrom: TDate,
+  dateToTransferTo: TDate,
+) => {
+  switch (section.dateSectionName) {
+    case 'year': {
+      return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
+    }
+
+    case 'month': {
+      return utils.setMonth(dateToTransferTo, utils.getMonth(dateToTransferFrom));
+    }
+
+    case 'weekDay': {
+      const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
+      const dayInWeekStrOfActiveDate = utils.formatByString(
+        dateToTransferFrom,
+        section.formatValue,
+      );
+      const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
+      const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
+      const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
+
+      return utils.addDays(dateToTransferFrom, diff);
+    }
+
+    case 'day': {
+      return utils.setDate(dateToTransferTo, utils.getDate(dateToTransferFrom));
+    }
+
+    case 'meridiem': {
+      const isAM = utils.getHours(dateToTransferFrom) < 12;
+      const mergedDateHours = utils.getHours(dateToTransferTo);
+
+      if (isAM && mergedDateHours >= 12) {
+        return utils.addHours(dateToTransferTo, -12);
+      }
+
+      if (!isAM && mergedDateHours < 12) {
+        return utils.addHours(dateToTransferTo, 12);
+      }
+
+      return dateToTransferTo;
+    }
+
+    case 'hours': {
+      return utils.setHours(dateToTransferTo, utils.getHours(dateToTransferFrom));
+    }
+
+    case 'minutes': {
+      return utils.setMinutes(dateToTransferTo, utils.getMinutes(dateToTransferFrom));
+    }
+
+    case 'seconds': {
+      return utils.setSeconds(dateToTransferTo, utils.getSeconds(dateToTransferFrom));
+    }
+
+    default: {
+      return dateToTransferTo;
+    }
+  }
+};
+
+export const mergeDateIntoReferenceDate = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateToTransferFrom: TDate,
+  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
   referenceDate: TDate,
   shouldLimitToEditedSections: boolean,
-) => {
-  let mergedDate = referenceDate;
-
-  sections.forEach((section) => {
+) =>
+  sections.reduce((mergedDate, section) => {
     if (!shouldLimitToEditedSections || section.edited) {
-      switch (section.dateSectionName) {
-        case 'meridiem': {
-          const isAM = utils.getHours(date) < 12;
-          const mergedDateHours = utils.getHours(mergedDate);
-
-          if (isAM && mergedDateHours >= 12) {
-            mergedDate = utils.addHours(mergedDate, -12);
-          } else if (!isAM && mergedDateHours < 12) {
-            mergedDate = utils.addHours(mergedDate, 12);
-          }
-          break;
-        }
-
-        case 'weekDay': {
-          const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
-          const dayInWeekStrOfActiveDate = utils.formatByString(date, section.formatValue);
-          const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
-          const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
-          const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-
-          mergedDate = utils.addDays(date, diff);
-          break;
-        }
-
-        default: {
-          const adapterMethods: Record<
-            typeof section.dateSectionName,
-            { getter: (date: TDate) => number; setter: (date: TDate, value: number) => TDate }
-          > = {
-            seconds: {
-              getter: utils.getSeconds,
-              setter: utils.setSeconds,
-            },
-            minutes: {
-              getter: utils.getMinutes,
-              setter: utils.setMinutes,
-            },
-            hours: {
-              getter: utils.getHours,
-              setter: utils.setHours,
-            },
-            day: {
-              getter: utils.getDate,
-              setter: utils.setDate,
-            },
-            month: {
-              getter: utils.getMonth,
-              setter: utils.setMonth,
-            },
-            year: {
-              getter: utils.getYear,
-              setter: utils.setYear,
-            },
-          };
-
-          const { getter, setter } = adapterMethods[section.dateSectionName];
-          mergedDate = setter(mergedDate, getter(date));
-        }
-      }
+      return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
     }
-  });
 
-  return mergedDate;
-};
+    return mergedDate;
+  }, referenceDate);
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
