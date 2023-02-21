@@ -1,4 +1,13 @@
-import type { GridIconSlotsComponent, GridSlotsComponent } from '../models';
+import MUICheckbox from '@mui/material/Checkbox';
+import MUITextField from '@mui/material/TextField';
+import MUIFormControl from '@mui/material/FormControl';
+import MUISelect from '@mui/material/Select';
+import MUISwitch from '@mui/material/Switch';
+import MUIButton from '@mui/material/Button';
+import MUIIconButton from '@mui/material/IconButton';
+import MUITooltip from '@mui/material/Tooltip';
+import MUIPopper from '@mui/material/Popper';
+import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
@@ -25,16 +34,7 @@ import {
   GridClearIcon,
   GridLoadIcon,
 } from './icons';
-import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
-import MUICheckbox from '@mui/material/Checkbox';
-import MUITextField from '@mui/material/TextField';
-import MUIFormControl from '@mui/material/FormControl';
-import MUISelect from '@mui/material/Select';
-import MUISwitch from '@mui/material/Switch';
-import MUIButton from '@mui/material/Button';
-import MUIIconButton from '@mui/material/IconButton';
-import MUITooltip from '@mui/material/Tooltip';
-import MUIPopper from '@mui/material/Popper';
+import type { GridIconSlotsComponent } from '../models';
 
 const iconSlots: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
