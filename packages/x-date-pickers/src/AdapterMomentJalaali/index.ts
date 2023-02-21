@@ -16,13 +16,11 @@ const formatTokenMap: MuiFormatTokenMap = {
 
   // Day of Month
   jD: 'day',
-  jDo: 'day',
   jDD: 'day',
 
   // Year
   jYY: 'year',
   jYYYY: 'year',
-  jYYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',

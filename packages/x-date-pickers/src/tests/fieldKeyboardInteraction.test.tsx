@@ -1,4 +1,5 @@
 import * as React from 'react';
+import moment from 'moment/moment';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import {
   buildFieldInteractions,
@@ -53,6 +54,10 @@ adapterToTest.forEach((adapterName) => {
       clock: 'fake',
       adapterName,
     });
+
+    if (adapterName === 'moment') {
+      moment.locale('en');
+    }
 
     const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 

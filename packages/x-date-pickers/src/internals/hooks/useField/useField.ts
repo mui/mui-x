@@ -301,10 +301,18 @@ export const useField = <
         }
 
         const activeSection = state.sections[selectedSectionIndexes.startIndex];
+        const activeDateManager = fieldValueManager.getActiveDateManager(
+          utils,
+          state,
+          activeSection,
+        );
+
         const newSectionValue = adjustSectionValue(
           utils,
           activeSection,
           event.key as AvailableAdjustKeyCode,
+          sectionsValueBoundaries,
+          activeDateManager.activeDate,
         );
 
         updateSectionValue({

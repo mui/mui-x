@@ -13,7 +13,6 @@ const formatTokenMap: MuiFormatTokenMap = {
 
   // Day of the month
   D: 'day',
-  Do: 'day',
   DD: 'day',
 
   // Day of the week
@@ -28,7 +27,6 @@ const formatTokenMap: MuiFormatTokenMap = {
   Y: 'year',
   YY: 'year',
   YYYY: 'year',
-  YYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',

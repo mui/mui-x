@@ -28,7 +28,13 @@ export interface UpdateSectionValueParams<TSection extends FieldSection> {
    * The section on which we want to apply the new value.
    */
   activeSection: TSection;
+  /**
+   * Value to apply to the active section.
+   */
   newSectionValue: string;
+  /**
+   * If `true`, the focus will move to the next section.
+   */
   shouldGoToNextSection: boolean;
 }
 

@@ -9,6 +9,7 @@ import {
   doesSectionHaveTrailingZeros,
   getDateSectionConfigFromFormatToken,
   getDaysInWeekStr,
+  getLetterEditingOptions,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
@@ -175,10 +176,12 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     const testQueryOnFormatAndFallbackFormat = (
       queryValue: string,
       activeSection: TSection,
-      getOptions: (format: string) => string[],
       fallbackFormat?: string,
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
+      const getOptions = (format: string) =>
+        getLetterEditingOptions(utils, activeSection.dateSectionName, format);
+
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
           activeSection.formatValue,
@@ -216,9 +219,6 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     ) => {
       switch (activeSection.dateSectionName) {
         case 'month': {
-          const getOptions = (format: string) =>
-            utils.getMonthArray(utils.date()!).map((month) => utils.formatByString(month, format!));
-
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
               utils,
@@ -230,36 +230,25 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            getOptions,
             utils.formats.month,
             formatFallbackValue,
           );
         }
 
         case 'weekDay': {
-          const getOptions = (format: string) => getDaysInWeekStr(utils, format);
-
           const formatFallbackValue = (fallbackValue: string, fallbackOptions: string[]) =>
             fallbackOptions.indexOf(fallbackValue).toString();
 
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            getOptions,
             utils.formats.weekday,
             formatFallbackValue,
           );
         }
 
         case 'meridiem': {
-          const getOptions = (format: string) => {
-            const now = utils.date()!;
-            return [utils.endOfDay(now), utils.startOfDay(now)].map((date) =>
-              utils.formatByString(date, format),
-            );
-          };
-
-          return testQueryOnFormatAndFallbackFormat(queryValue, activeSection, getOptions);
+          return testQueryOnFormatAndFallbackFormat(queryValue, activeSection);
         }
 
         default: {

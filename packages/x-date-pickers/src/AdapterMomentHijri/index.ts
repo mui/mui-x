@@ -15,14 +15,12 @@ const formatTokenMap: MuiFormatTokenMap = {
 
   // Day of Month
   iD: 'day',
-  iDo: 'day',
   iDD: 'day',
 
   // Year
   iY: 'year',
   iYY: 'year',
   iYYYY: 'year',
-  iYYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',

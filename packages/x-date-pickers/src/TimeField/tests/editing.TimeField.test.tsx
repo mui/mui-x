@@ -68,7 +68,7 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.hours12h,
           key: 'ArrowDown',
-          expectedValue: '11',
+          expectedValue: '12',
         });
       });
 

@@ -68,149 +68,134 @@ export const getDaysInWeekStr = <TDate>(utils: MuiPickersAdapter<TDate>, format:
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
+export const cleanTrailingZeroInNumericSectionValue = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  format: string,
+  value: string,
+) => {
+  const size = utils.formatByString(utils.date()!, format).length;
+  let cleanValue = value;
+
+  // We remove the trailing zeros
+  cleanValue = Number(cleanValue).toString();
+
+  // We add enough trailing zeros to fill the section
+  while (cleanValue.length < size) {
+    cleanValue = `0${cleanValue}`;
+  }
+
+  return cleanValue;
+};
+
+export const getLetterEditingOptions = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateSectionName: MuiDateSectionName,
+  format: string,
+) => {
+  switch (dateSectionName) {
+    case 'month': {
+      return utils
+        .getMonthArray(utils.date()!)
+        .map((month) => utils.formatByString(month, format!));
+    }
+
+    case 'weekDay': {
+      return getDaysInWeekStr(utils, format);
+    }
+
+    case 'meridiem': {
+      const now = utils.date()!;
+      return [utils.startOfDay(now), utils.endOfDay(now)].map((date) =>
+        utils.formatByString(date, format),
+      );
+    }
+
+    default: {
+      return [];
+    }
+  }
+};
+
 export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
+  activeDate: TDate | null,
 ): string => {
-  const today = utils.date()!;
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
+
   const shouldSetAbsolute = section.value === '' || isStart || isEnd;
 
-  switch (section.dateSectionName) {
-    case 'year': {
-      if (section.value === '') {
-        return utils.formatByString(today, section.formatValue);
-      }
-
-      return utils.formatByString(
-        utils.setYear(today, Number(section.value) + delta),
-        section.formatValue,
-      );
+  const cleanDigitSectionValue = (value: number) => {
+    const valueStr = value.toString();
+    if (section.hasTrailingZeroes) {
+      return cleanTrailingZeroInNumericSectionValue(utils, section.formatValue, valueStr);
     }
 
-    case 'month': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfYear(today);
-        } else {
-          newDate = utils.endOfYear(today);
-        }
-      } else {
-        newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
+    return valueStr;
+  };
+
+  const adjustDigitSection = () => {
+    const sectionBoundaries = sectionsValueBoundaries[section.dateSectionName]({
+      currentDate: activeDate,
+      format: section.formatValue,
+      contentType: section.contentType,
+    });
+
+    if (shouldSetAbsolute) {
+      if (section.dateSectionName === 'year' && !isEnd && !isStart) {
+        return utils.formatByString(utils.date()!, section.formatValue);
       }
 
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'day': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfMonth(today);
-        } else {
-          newDate = utils.endOfMonth(today);
-        }
-      } else {
-        newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
-        if (!utils.isSameMonth(newDate, today)) {
-          if (delta > 0) {
-            newDate = utils.startOfMonth(today);
-          } else {
-            newDate = utils.endOfMonth(today);
-          }
-        }
+      if (delta > 0 || isStart) {
+        return cleanDigitSectionValue(sectionBoundaries.minimum);
       }
 
-      return utils.formatByString(newDate, section.formatValue);
+      return cleanDigitSectionValue(sectionBoundaries.maximum);
     }
 
-    case 'weekDay': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfWeek(today);
-        } else {
-          newDate = utils.endOfWeek(today);
-        }
+    const currentSectionValue = Number(section.value);
+    const newSectionValueNumber = currentSectionValue + delta;
 
-        return utils.formatByString(newDate, section.formatValue);
+    if (newSectionValueNumber > sectionBoundaries.maximum) {
+      return cleanDigitSectionValue(sectionBoundaries.minimum);
+    }
+
+    if (newSectionValueNumber < sectionBoundaries.minimum) {
+      return cleanDigitSectionValue(sectionBoundaries.maximum);
+    }
+
+    return cleanDigitSectionValue(newSectionValueNumber);
+  };
+
+  const adjustLetterSection = () => {
+    const options = getLetterEditingOptions(utils, section.dateSectionName, section.formatValue);
+    if (options.length === 0) {
+      return section.value;
+    }
+
+    if (shouldSetAbsolute) {
+      if (delta > 0 || isStart) {
+        return options[0];
       }
 
-      const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
-      const currentDayInWeek = formattedDaysInWeek.indexOf(section.value);
-      const newDayInWeek =
-        (currentDayInWeek + formattedDaysInWeek.length + delta) % formattedDaysInWeek.length;
-
-      return formattedDaysInWeek[newDayInWeek];
+      return options[options.length - 1];
     }
 
-    case 'meridiem': {
-      const am = utils.formatByString(utils.startOfDay(today), section.formatValue);
-      const pm = utils.formatByString(utils.endOfDay(today), section.formatValue);
+    const currentOptionIndex = options.indexOf(section.value);
+    const newOptionIndex = (currentOptionIndex + options.length + delta) % options.length;
 
-      if (section.value === '') {
-        if (delta > 0 || isEnd) {
-          return am;
-        }
-        return pm;
-      }
+    return options[newOptionIndex];
+  };
 
-      if (section.value === am) {
-        return pm;
-      }
-
-      return am;
-    }
-
-    case 'hours': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfDay(today);
-        } else {
-          newDate = utils.endOfDay(today);
-        }
-      } else {
-        newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'minutes': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
-        newDate = utils.setMinutes(today, newNumericValue);
-      } else {
-        newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'seconds': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
-        newDate = utils.setSeconds(today, newNumericValue);
-      } else {
-        newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    default: {
-      throw new Error(`Invalid date section name`);
-    }
+  if (section.contentType === 'digit') {
+    return adjustDigitSection();
   }
+
+  return adjustLetterSection();
 };
 
 export const getSectionVisibleValue = (
@@ -591,16 +576,20 @@ export const getSectionsBoundaries = <TDate>(
       };
     },
     hours: ({ format }) => {
-      const hoursInDay = utils.getHours(endOfYear);
+      const lastHourInDay = utils.getHours(endOfYear);
       const hasMeridiem =
-        utils.formatByString(utils.endOfDay(today), format) !== hoursInDay.toString();
+        utils.formatByString(utils.endOfDay(today), format) !== lastHourInDay.toString();
+
+      if (hasMeridiem) {
+        return {
+          minimum: 1,
+          maximum: Number(utils.formatByString(utils.startOfDay(today), format)),
+        };
+      }
 
       return {
         minimum: 0,
-        // Assumption: All days have the same amount of hours
-        maximum: hasMeridiem
-          ? Number(utils.formatByString(utils.startOfDay(today), format))
-          : hoursInDay,
+        maximum: lastHourInDay,
       };
     },
     minutes: () => ({
@@ -618,25 +607,6 @@ export const getSectionsBoundaries = <TDate>(
       maximum: 0,
     }),
   };
-};
-
-export const cleanTrailingZeroInNumericSectionValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  format: string,
-  value: string,
-) => {
-  const size = utils.formatByString(utils.date()!, format).length;
-  let cleanValue = value;
-
-  // We remove the trailing zeros
-  cleanValue = Number(cleanValue).toString();
-
-  // We add enough trailing zeros to fill the section
-  while (cleanValue.length < size) {
-    cleanValue = `0${cleanValue}`;
-  }
-
-  return cleanValue;
 };
 
 let warnedOnceInvalidSection = false;
