@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
-import { GridLoadIcon } from '../../icons';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -46,7 +45,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldPr
     setFilterValueState(String(itemValue));
   }, [item.value]);
 
-  const InputProps = applying ? { endAdornment: <GridLoadIcon /> } : others.InputProps;
+  const InputProps = applying ? { endAdornment: <rootProps.slots.loadIcon /> } : others.InputProps;
 
   return (
     <rootProps.slots.baseTextField

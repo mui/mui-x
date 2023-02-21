@@ -11,7 +11,6 @@ import {
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridDragIcon } from '../icons';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
@@ -234,7 +233,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                   size="small"
                   disabled
                 >
-                  <GridDragIcon />
+                  <rootProps.slots.columnReorderIcon />
                 </GridIconButtonRoot>
               )}
             </GridColumnsPanelRowRoot>

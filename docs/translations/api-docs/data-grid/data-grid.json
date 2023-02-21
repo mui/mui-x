@@ -641,6 +641,7 @@
     }
   },
   "slotDescriptions": {
+    "addFilterIcon": "Icon displayed on the button that adds new filter.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseFormControl": "The custom FormControl component used in the grid.",
@@ -663,6 +664,7 @@
     "columnMenuManageColumnsIcon": "Icon displayed in column menu for showing all columns",
     "columnMenuSortAscendingIcon": "Icon displayed in column menu for ascending sort",
     "columnMenuSortDescendingIcon": "Icon displayed in column menu for descending sort",
+    "columnReorderIcon": "Icon displayed on the column reorder button.",
     "columnResizeIcon": "Icon displayed in between two column headers that allows to resize the column header.",
     "columnSelectorIcon": "Icon displayed on the column menu selector tab.",
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
@@ -680,6 +682,7 @@
     "footer": "Footer component rendered at the bottom of the grid viewport.",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
+    "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noResultsOverlay": "No results overlay component rendered when the grid has no results after filtering.",

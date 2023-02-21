@@ -256,6 +256,7 @@
     "unstable_onCellSelectionModelChange": { "type": { "name": "func" } }
   },
   "slots": {
+    "addFilterIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
     "baseButton": { "default": "Button", "type": { "name": "elementType" } },
     "baseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
@@ -307,6 +308,7 @@
       "type": { "name": "elementType" }
     },
     "columnMenuUngroupIcon": { "default": "GridWorkspacesIcon", "type": { "name": "elementType" } },
+    "columnReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "columnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
     "columnSelectorIcon": { "default": "GridColumnIcon", "type": { "name": "elementType" } },
     "columnSortedAscendingIcon": {
@@ -342,6 +344,7 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
+    "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "moreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "noResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
