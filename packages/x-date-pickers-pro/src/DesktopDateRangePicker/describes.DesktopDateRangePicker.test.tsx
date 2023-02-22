@@ -8,6 +8,7 @@ import {
   createPickerRenderer,
   expectInputValue,
 } from 'test/utils/pickers-utils';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
 
 describe('<DesktopDateRangePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({
@@ -47,7 +48,6 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
-        // TODO: Support single range input
         expectInputValue(textBoxes[index], expectedValueStr, true);
       });
     },
@@ -69,6 +69,58 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
         );
       } else {
         const input = screen.getAllByRole('textbox')[0];
+        clickOnInput(input, 9, 11); // Update the day
+        userEvent.keyPress(input, { key: 'ArrowUp' });
+      }
+
+      return newValue;
+    },
+  }));
+
+  // With single input field
+  describeValue.only(DesktopDateRangePicker, () => ({
+    render,
+    componentFamily: 'picker',
+    type: 'date-range',
+    variant: 'desktop',
+    initialFocus: 'start',
+    isSingleInput: true,
+    defaultProps: {
+      slots: { field: SingleInputDateRangeField },
+    },
+    clock,
+    values: [
+      // initial start and end dates
+      [adapterToUse.date(new Date(2018, 0, 1)), adapterToUse.date(new Date(2018, 0, 4))],
+      // start and end dates after `setNewValue`
+      [adapterToUse.date(new Date(2018, 0, 2)), adapterToUse.date(new Date(2018, 0, 5))],
+    ],
+    emptyValue: [null, null],
+    assertRenderedValue: (expectedValues: any[]) => {
+      const input = screen.getByRole('textbox');
+      const expectedValueStr = expectedValues
+        .map((value) => (value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate')))
+        .join(' – ');
+      expectInputValue(input, expectedValueStr, true);
+    },
+    setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
+      let newValue: any[];
+      if (applySameValue) {
+        newValue = value;
+      } else if (setEndDate) {
+        newValue = [value[0], adapterToUse.addDays(value[1], 1)];
+      } else {
+        newValue = [adapterToUse.addDays(value[0], 1), value[1]];
+      }
+
+      if (isOpened) {
+        userEvent.mousePress(
+          screen.getAllByRole('gridcell', {
+            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]),
+          })[0],
+        );
+      } else {
+        const input = screen.getByRole('textbox');
         clickOnInput(input, 9, 11); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

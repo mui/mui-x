@@ -25,12 +25,6 @@ All fields to edit a range are available in a single input version and in a mult
 
 {{"demo": "DateRangeFieldExamples.js", "defaultCodeOpen": false}}
 
-:::warning
-The single input range fields are not supported on the range pickers yet (you can't use `SingleInputDateRangeField` in `DateRangePicker`). It's coming.
-
-👍 Upvote [issue #7606](https://github.com/mui/mui-x/issues/7606) if you want to see it land faster.
-:::
-
 ## Advanced
 
 ### When is `onChange` called?

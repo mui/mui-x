@@ -79,6 +79,17 @@ To simplify range selection, you can add [shortcuts](/x/react-date-pickers/short
 
 {{"demo": "BasicRangeShortcuts.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Use with the single input field
+
+You can pass the `SingleInputDateRangeField` component to the Date Range Picker to use it for keyboard editing.
+
+{{"demo": "SingleInputDateRangePicker.js"}}
+
+If you want to create a wrapper around the field, make sure to add the `isSingleInput` property to it.
+Otherwise, the picker won't know your field is a single input one and will pass the multi input event listener to it:
+
+{{"demo": "WrappedSingleInputDateRangePicker.js", "defaultCodeOpen": false}}
+
 ### Custom input component
 
 You can customize the rendering of the input with the `TextField` component slot.
