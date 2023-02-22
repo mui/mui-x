@@ -88,7 +88,7 @@ export const useGridExcelExport = (
       };
 
       if (!workerFn) {
-        apiRef.current.publishEvent('excelExportStateChange', true);
+        apiRef.current.publishEvent('excelExportStateChange', 'pending');
 
         const workbook = await getDataAsExcel(options);
         if (workbook === null) {
@@ -96,7 +96,7 @@ export const useGridExcelExport = (
         }
 
         const content = await workbook.xlsx.writeBuffer();
-        apiRef.current.publishEvent('excelExportStateChange', false);
+        apiRef.current.publishEvent('excelExportStateChange', 'finished');
         sendExcelToUser(content);
         return;
       }
@@ -121,11 +121,11 @@ export const useGridExcelExport = (
 
       const worker = workerFn();
 
-      apiRef.current.publishEvent('excelExportStateChange', true);
+      apiRef.current.publishEvent('excelExportStateChange', 'pending');
 
       worker.onmessage = async (event) => {
         sendExcelToUser(event.data);
-        apiRef.current.publishEvent('excelExportStateChange', false);
+        apiRef.current.publishEvent('excelExportStateChange', 'finished');
         worker.terminate();
       };
 

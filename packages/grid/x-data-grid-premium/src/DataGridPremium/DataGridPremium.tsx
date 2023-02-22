@@ -587,7 +587,7 @@ DataGridPremiumRaw.propTypes = {
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
    * Callback fired when the state of the Excel export changes.
-   * @param {boolean} inProgress Indicates if the task is in progress.
+   * @param {string} inProgress Indicates if the task is in progress.
    */
   onExcelExportStateChange: PropTypes.func,
   /**

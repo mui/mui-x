@@ -379,7 +379,7 @@ This is necessary because [functions](https://developer.mozilla.org/en-US/docs/W
   }}
 />;
 
-// Do the following
+// Do the following in file ./worker.js
 setupExcelExportWebWorker({
   exceljsPreProcess,
   exceljsPostProcess,

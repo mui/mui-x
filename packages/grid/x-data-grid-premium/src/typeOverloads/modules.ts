@@ -30,7 +30,7 @@ export interface GridControlledStateEventLookupPremium {
   /**
    * Fired when the state of the Excel export task changes
    */
-  excelExportStateChange: { params: boolean };
+  excelExportStateChange: { params: 'pending' | 'finished' };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

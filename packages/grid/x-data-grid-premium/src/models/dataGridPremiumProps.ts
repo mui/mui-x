@@ -163,7 +163,7 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
   ) => void;
   /**
    * Callback fired when the state of the Excel export changes.
-   * @param {boolean} inProgress Indicates if the task is in progress.
+   * @param {string} inProgress Indicates if the task is in progress.
    */
-  onExcelExportStateChange?: (inProgress: boolean) => void;
+  onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
 }
