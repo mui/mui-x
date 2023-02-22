@@ -12,12 +12,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import {
-  adjustDateSectionValue,
-  adjustInvalidDateSectionValue,
-  isAndroid,
-  cleanString,
-} from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 
@@ -45,11 +40,14 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionOrder,
+    sectionsValueBoundaries,
   } = useFieldState(params);
 
   const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
     sections: state.sections,
     updateSectionValue,
+    sectionsValueBoundaries,
+    setTempAndroidValueStr,
   });
 
   const {
@@ -69,7 +67,6 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
-    valueType,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -305,35 +302,24 @@ export const useField = <
         }
 
         const activeSection = state.sections[selectedSectionIndexes.startIndex];
+        const activeDateManager = fieldValueManager.getActiveDateManager(
+          utils,
+          state,
+          activeSection,
+        );
+
+        const newSectionValue = adjustSectionValue(
+          utils,
+          activeSection,
+          event.key as AvailableAdjustKeyCode,
+          sectionsValueBoundaries,
+          activeDateManager.activeDate,
+        );
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) => {
-            let date = adjustDateSectionValue(
-              utils,
-              activeDate,
-              activeSection.dateSectionName,
-              event.key as AvailableAdjustKeyCode,
-            );
-
-            // If the field only supports time editing, then we should never go to the previous / next day.
-            if (valueType === 'time') {
-              date = utils.mergeDateAndTime(activeDate, date);
-            }
-
-            return {
-              date,
-              shouldGoToNextSection: false,
-            };
-          },
-          setSectionValueOnSections: () => ({
-            sectionValue: adjustInvalidDateSectionValue(
-              utils,
-              activeSection,
-              event.key as AvailableAdjustKeyCode,
-            ),
-            shouldGoToNextSection: false,
-          }),
+          newSectionValue,
+          shouldGoToNextSection: false,
         });
         break;
       }

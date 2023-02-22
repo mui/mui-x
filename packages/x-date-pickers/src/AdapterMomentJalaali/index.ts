@@ -9,21 +9,17 @@ type Moment = defaultMoment.Moment;
 const formatTokenMap: MuiFormatTokenMap = {
   // Month
   jM: 'month',
-  jMo: 'month',
   jMM: 'month',
   jMMM: { sectionName: 'month', contentType: 'letter' },
   jMMMM: { sectionName: 'month', contentType: 'letter' },
 
   // Day of Month
   jD: 'day',
-  jDo: 'day',
   jDD: 'day',
 
   // Year
-  jY: 'year',
   jYY: 'year',
   jYYYY: 'year',
-  jYYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',
@@ -104,6 +100,10 @@ export class AdapterMomentJalaali
     return count < 0
       ? date.clone().subtract(Math.abs(count), 'jMonth')
       : date.clone().add(count, 'jMonth');
+  };
+
+  public setMonth = (date: Moment, month: number) => {
+    return date.clone().jMonth(month);
   };
 
   public isValid = (value: any) => {
