@@ -313,7 +313,7 @@ To start using web workers for the Excel export, first you need to create a file
 This file will be later used as the worker script, so it must be accessible by a direct URL.
 
 ```tsx
-// in file ./worker.js
+// in file ./worker.ts
 import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
 
 setupExcelExportWebWorker();
@@ -379,7 +379,7 @@ This is necessary because [functions](https://developer.mozilla.org/en-US/docs/W
   }}
 />;
 
-// Do the following in file ./worker.js
+// Do the following in the ./worker.ts file
 setupExcelExportWebWorker({
   exceljsPreProcess,
   exceljsPostProcess,
