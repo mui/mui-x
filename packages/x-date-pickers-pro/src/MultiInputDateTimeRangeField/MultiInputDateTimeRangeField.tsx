@@ -250,15 +250,6 @@ MultiInputDateTimeRangeField.propTypes = {
    * Add an element between each child.
    */
   divider: PropTypes.node,
-  unstableEndFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * Format of the date when rendered in the input(s).
    */
@@ -391,15 +382,6 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.object,
     PropTypes.string,
   ]),
-  unstableStartFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   style: PropTypes.object,
   /**
    * The system prop, which allows defining system overrides as well as additional CSS styles.
@@ -409,7 +391,16 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  unstableFieldRef: PropTypes.oneOfType([
+  unstableEndFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
+  unstableStartFieldRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({
       current: PropTypes.shape({
