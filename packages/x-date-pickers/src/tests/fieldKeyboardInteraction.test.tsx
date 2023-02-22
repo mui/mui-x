@@ -1,5 +1,6 @@
 import * as React from 'react';
 import moment from 'moment/moment';
+import jMoment from 'moment-jalaali';
 import { screen, userEvent } from '@mui/monorepo/test/utils';
 import {
   buildFieldInteractions,
@@ -45,10 +46,13 @@ const adapterToTest = [
   'moment',
   'date-fns-jalali',
   // 'moment-hijri',
-  // 'moment-jalaali',
+  'moment-jalaali',
 ] as const;
 
 adapterToTest.forEach((adapterName) => {
+  if (adapterName === 'moment-jalaali') {
+    jMoment.loadPersian();
+  }
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
     const { render, clock, adapter } = createPickerRenderer({
       clock: 'fake',

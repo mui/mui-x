@@ -9,7 +9,6 @@ type Moment = defaultMoment.Moment;
 const formatTokenMap: MuiFormatTokenMap = {
   // Month
   jM: 'month',
-  jMo: 'month',
   jMM: 'month',
   jMMM: { sectionName: 'month', contentType: 'letter' },
   jMMMM: { sectionName: 'month', contentType: 'letter' },
