@@ -68,226 +68,134 @@ export const getDaysInWeekStr = <TDate>(utils: MuiPickersAdapter<TDate>, format:
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
-export const adjustDateSectionValue = <TDate>(
+export const cleanTrailingZeroInNumericSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  dateSectionName: MuiDateSectionName,
-  keyCode: AvailableAdjustKeyCode,
-): TDate => {
-  const delta = getDeltaFromKeyCode(keyCode);
-  const isStart = keyCode === 'Home';
-  const isEnd = keyCode === 'End';
+  format: string,
+  value: string,
+) => {
+  const size = utils.formatByString(utils.date()!, format).length;
+  let cleanValue = value;
 
+  // We remove the trailing zeros
+  cleanValue = Number(cleanValue).toString();
+
+  // We add enough trailing zeros to fill the section
+  while (cleanValue.length < size) {
+    cleanValue = `0${cleanValue}`;
+  }
+
+  return cleanValue;
+};
+
+export const getLetterEditingOptions = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateSectionName: MuiDateSectionName,
+  format: string,
+) => {
   switch (dateSectionName) {
-    case 'day': {
-      if (isStart) {
-        return utils.startOfMonth(date);
-      }
-      if (isEnd) {
-        return utils.endOfMonth(date);
-      }
-      return utils.addDays(date, delta);
-    }
-    case 'weekDay': {
-      if (isStart) {
-        return utils.startOfWeek(date);
-      }
-      if (isEnd) {
-        return utils.endOfWeek(date);
-      }
-      return utils.addDays(date, delta);
-    }
     case 'month': {
-      if (isStart) {
-        return utils.startOfYear(date);
-      }
-      if (isEnd) {
-        return utils.endOfYear(date);
-      }
-      return utils.addMonths(date, delta);
+      return utils
+        .getMonthArray(utils.date()!)
+        .map((month) => utils.formatByString(month, format!));
     }
-    case 'year': {
-      return utils.addYears(date, delta);
+
+    case 'weekDay': {
+      return getDaysInWeekStr(utils, format);
     }
+
     case 'meridiem': {
-      return utils.addHours(date, (delta > 0 ? 1 : -1) * 12);
+      const now = utils.date()!;
+      return [utils.startOfDay(now), utils.endOfDay(now)].map((date) =>
+        utils.formatByString(date, format),
+      );
     }
-    case 'hours': {
-      if (isStart) {
-        return utils.startOfDay(date);
-      }
-      if (isEnd) {
-        return utils.endOfDay(date);
-      }
-      return utils.addHours(date, delta);
-    }
-    case 'minutes': {
-      if (isStart) {
-        return utils.setMinutes(date, 0);
-      }
-      if (isEnd) {
-        return utils.setMinutes(date, 59);
-      }
-      return utils.addMinutes(date, delta);
-    }
-    case 'seconds': {
-      if (isStart) {
-        return utils.setSeconds(date, 0);
-      }
-      if (isEnd) {
-        return utils.setSeconds(date, 59);
-      }
-      return utils.addSeconds(date, delta);
-    }
+
     default: {
-      return date;
+      return [];
     }
   }
 };
 
-export const adjustInvalidDateSectionValue = <TDate, TSection extends FieldSection>(
+export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   section: TSection,
   keyCode: AvailableAdjustKeyCode,
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
+  activeDate: TDate | null,
 ): string => {
-  const today = utils.date()!;
   const delta = getDeltaFromKeyCode(keyCode);
   const isStart = keyCode === 'Home';
   const isEnd = keyCode === 'End';
+
   const shouldSetAbsolute = section.value === '' || isStart || isEnd;
 
-  switch (section.dateSectionName) {
-    case 'year': {
-      if (section.value === '') {
-        return utils.formatByString(today, section.formatValue);
-      }
-
-      return utils.formatByString(
-        utils.setYear(today, Number(section.value) + delta),
-        section.formatValue,
-      );
+  const cleanDigitSectionValue = (value: number) => {
+    const valueStr = value.toString();
+    if (section.hasTrailingZeroes) {
+      return cleanTrailingZeroInNumericSectionValue(utils, section.formatValue, valueStr);
     }
 
-    case 'month': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfYear(today);
-        } else {
-          newDate = utils.endOfYear(today);
-        }
-      } else {
-        newDate = utils.addMonths(utils.parse(section.value, section.formatValue)!, delta);
+    return valueStr;
+  };
+
+  const adjustDigitSection = () => {
+    const sectionBoundaries = sectionsValueBoundaries[section.dateSectionName]({
+      currentDate: activeDate,
+      format: section.formatValue,
+      contentType: section.contentType,
+    });
+
+    if (shouldSetAbsolute) {
+      if (section.dateSectionName === 'year' && !isEnd && !isStart) {
+        return utils.formatByString(utils.date()!, section.formatValue);
       }
 
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'day': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfMonth(today);
-        } else {
-          newDate = utils.endOfMonth(today);
-        }
-      } else {
-        newDate = utils.addDays(utils.parse(section.value, section.formatValue)!, delta);
-        if (!utils.isSameMonth(newDate, today)) {
-          if (delta > 0) {
-            newDate = utils.startOfMonth(today);
-          } else {
-            newDate = utils.endOfMonth(today);
-          }
-        }
+      if (delta > 0 || isStart) {
+        return cleanDigitSectionValue(sectionBoundaries.minimum);
       }
 
-      return utils.formatByString(newDate, section.formatValue);
+      return cleanDigitSectionValue(sectionBoundaries.maximum);
     }
 
-    case 'weekDay': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfWeek(today);
-        } else {
-          newDate = utils.endOfWeek(today);
-        }
+    const currentSectionValue = Number(section.value);
+    const newSectionValueNumber = currentSectionValue + delta;
 
-        return utils.formatByString(newDate, section.formatValue);
+    if (newSectionValueNumber > sectionBoundaries.maximum) {
+      return cleanDigitSectionValue(sectionBoundaries.minimum);
+    }
+
+    if (newSectionValueNumber < sectionBoundaries.minimum) {
+      return cleanDigitSectionValue(sectionBoundaries.maximum);
+    }
+
+    return cleanDigitSectionValue(newSectionValueNumber);
+  };
+
+  const adjustLetterSection = () => {
+    const options = getLetterEditingOptions(utils, section.dateSectionName, section.formatValue);
+    if (options.length === 0) {
+      return section.value;
+    }
+
+    if (shouldSetAbsolute) {
+      if (delta > 0 || isStart) {
+        return options[0];
       }
 
-      const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
-      const currentDayInWeek = formattedDaysInWeek.indexOf(section.value);
-      const newDayInWeek =
-        (currentDayInWeek + formattedDaysInWeek.length + delta) % formattedDaysInWeek.length;
-
-      return formattedDaysInWeek[newDayInWeek];
+      return options[options.length - 1];
     }
 
-    case 'meridiem': {
-      const am = utils.formatByString(utils.startOfDay(today), section.formatValue);
-      const pm = utils.formatByString(utils.endOfDay(today), section.formatValue);
+    const currentOptionIndex = options.indexOf(section.value);
+    const newOptionIndex = (currentOptionIndex + options.length + delta) % options.length;
 
-      if (section.value === '') {
-        if (delta > 0 || isEnd) {
-          return am;
-        }
-        return pm;
-      }
+    return options[newOptionIndex];
+  };
 
-      if (section.value === am) {
-        return pm;
-      }
-
-      return am;
-    }
-
-    case 'hours': {
-      let newDate: TDate;
-      if (shouldSetAbsolute) {
-        if (delta > 0 || isEnd) {
-          newDate = utils.startOfDay(today);
-        } else {
-          newDate = utils.endOfDay(today);
-        }
-      } else {
-        newDate = utils.addHours(utils.setHours(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'minutes': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfHour and endOfHours to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
-        newDate = utils.setMinutes(today, newNumericValue);
-      } else {
-        newDate = utils.addMinutes(utils.setMinutes(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    case 'seconds': {
-      let newDate: TDate;
-      if (section.value === '') {
-        // TODO: Add startOfMinute and endOfMinute to adapters to avoid hard-coding those values
-        const newNumericValue = delta > 0 || isEnd ? 0 : 59;
-        newDate = utils.setSeconds(today, newNumericValue);
-      } else {
-        newDate = utils.addSeconds(utils.setSeconds(today, Number(section.value)), delta);
-      }
-
-      return utils.formatByString(newDate, section.formatValue);
-    }
-
-    default: {
-      throw new Error(`Invalid date section name`);
-    }
+  if (section.contentType === 'digit') {
+    return adjustDigitSection();
   }
+
+  return adjustLetterSection();
 };
 
 export const getSectionVisibleValue = (
@@ -423,7 +331,7 @@ export const changeSectionValueFormat = <TDate>(
   return utils.formatByString(utils.parse(valueStr, currentFormat)!, newFormat);
 };
 
-export const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
+const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
   utils.formatByString(utils.date()!, format).length === 4;
 
 export const doesSectionHaveTrailingZeros = <TDate>(
@@ -436,22 +344,46 @@ export const doesSectionHaveTrailingZeros = <TDate>(
     return false;
   }
 
-  if (dateSectionName === 'weekDay') {
-    return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
-  }
+  switch (dateSectionName) {
+    // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
+    case 'year': {
+      if (isFourDigitYearFormat(utils, format)) {
+        const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
+        return formatted0001 === '0001';
+      }
 
-  // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
-  if (dateSectionName === 'year') {
-    if (isFourDigitYearFormat(utils, format)) {
-      const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
-      return formatted0001 === '0001';
+      const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
+      return formatted2001 === '01';
     }
 
-    const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
-    return formatted2001 === '01';
-  }
+    case 'month': {
+      return utils.formatByString(utils.startOfYear(utils.date()!), format).length > 1;
+    }
 
-  return changeSectionValueFormat(utils, '1', format, format).length > 1;
+    case 'day': {
+      return utils.formatByString(utils.startOfMonth(utils.date()!), format).length > 1;
+    }
+
+    case 'weekDay': {
+      return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
+    }
+
+    case 'hours': {
+      return utils.formatByString(utils.setHours(utils.date()!, 1), format).length > 1;
+    }
+
+    case 'minutes': {
+      return utils.formatByString(utils.setMinutes(utils.date()!, 1), format).length > 1;
+    }
+
+    case 'seconds': {
+      return utils.formatByString(utils.setMinutes(utils.date()!, 1), format).length > 1;
+    }
+
+    default: {
+      throw new Error('Invalid dateSectionName');
+    }
+  }
 };
 
 const getEscapedPartsFromFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) => {
@@ -666,16 +598,20 @@ export const getSectionsBoundaries = <TDate>(
       };
     },
     hours: ({ format }) => {
-      const hoursInDay = utils.getHours(endOfYear);
+      const lastHourInDay = utils.getHours(endOfYear);
       const hasMeridiem =
-        utils.formatByString(utils.endOfDay(today), format) !== hoursInDay.toString();
+        utils.formatByString(utils.endOfDay(today), format) !== lastHourInDay.toString();
+
+      if (hasMeridiem) {
+        return {
+          minimum: 1,
+          maximum: Number(utils.formatByString(utils.startOfDay(today), format)),
+        };
+      }
 
       return {
         minimum: 0,
-        // Assumption: All days have the same amount of hours
-        maximum: hasMeridiem
-          ? Number(utils.formatByString(utils.startOfDay(today), format))
-          : hoursInDay,
+        maximum: lastHourInDay,
       };
     },
     minutes: () => ({
@@ -693,110 +629,6 @@ export const getSectionsBoundaries = <TDate>(
       maximum: 0,
     }),
   };
-};
-
-/**
- * @template TDate
- * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
- * @param {TDate} date The date on which the meridiem must be applied.
- * @param {string} sectionValue The new value of the meridiem section.
- * @returns {TDate} The date with the new meridiem.
- */
-export const applyMeridiemChange = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sectionValue: string,
-) => {
-  const isAM = sectionValue.toLowerCase() === 'am';
-  const hours = utils.getHours(date);
-
-  if (isAM && hours >= 12) {
-    return utils.addHours(date, -12);
-  }
-  if (!isAM && hours < 12) {
-    return utils.addHours(date, 12);
-  }
-
-  return date;
-};
-
-/**
- * @template TDate
- * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.*
- * @param {TDate} date The date on which the week day must be applied.
- * @param {string} sectionFormat The format of the week day section.
- * @param {string} sectionValue The new value of the week day section.
- * @returns {TDate} The date with the new week day.
- */
-export const applyWeekDayChange = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sectionFormat: string,
-  sectionValue: string,
-) => {
-  const formattedDaysInWeek = getDaysInWeekStr(utils, sectionFormat);
-  const dayInWeekStrOfActiveDate = utils.formatByString(date, sectionFormat);
-  const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
-  const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(sectionValue);
-
-  const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
-
-  return utils.addDays(date, diff);
-};
-
-export const getDateSectionGetterAndSetter = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  dateSectionName: Exclude<MuiDateSectionName, 'weekDay' | 'meridiem'>,
-) => {
-  const adapterMethods: Record<
-    typeof dateSectionName,
-    { getter: (date: TDate) => number; setter: (date: TDate, value: number) => TDate }
-  > = {
-    seconds: {
-      getter: utils.getSeconds,
-      setter: utils.setSeconds,
-    },
-    minutes: {
-      getter: utils.getMinutes,
-      setter: utils.setMinutes,
-    },
-    hours: {
-      getter: utils.getHours,
-      setter: utils.setHours,
-    },
-    day: {
-      getter: utils.getDate,
-      setter: utils.setDate,
-    },
-    month: {
-      getter: utils.getMonth,
-      setter: utils.setMonth,
-    },
-    year: {
-      getter: utils.getYear,
-      setter: utils.setYear,
-    },
-  };
-
-  return adapterMethods[dateSectionName];
-};
-export const cleanTrailingZeroInNumericSectionValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  format: string,
-  value: string,
-) => {
-  const size = utils.formatByString(utils.date()!, format).length;
-  let cleanValue = value;
-
-  // We remove the trailing zeros
-  cleanValue = Number(cleanValue).toString();
-
-  // We add enough trailing zeros to fill the section
-  while (cleanValue.length < size) {
-    cleanValue = `0${cleanValue}`;
-  }
-
-  return cleanValue;
 };
 
 let warnedOnceInvalidSection = false;
@@ -830,37 +662,85 @@ export const validateSections = <TSection extends FieldSection>(
   }
 };
 
-export const mergeDateIntoReferenceDate = <
-  TDate,
-  TSection extends Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
->(
+const transferDateSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  date: TDate,
-  sections: TSection[],
+  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
+  dateToTransferFrom: TDate,
+  dateToTransferTo: TDate,
+) => {
+  switch (section.dateSectionName) {
+    case 'year': {
+      return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
+    }
+
+    case 'month': {
+      return utils.setMonth(dateToTransferTo, utils.getMonth(dateToTransferFrom));
+    }
+
+    case 'weekDay': {
+      const formattedDaysInWeek = getDaysInWeekStr(utils, section.formatValue);
+      const dayInWeekStrOfActiveDate = utils.formatByString(
+        dateToTransferFrom,
+        section.formatValue,
+      );
+      const dayInWeekOfActiveDate = formattedDaysInWeek.indexOf(dayInWeekStrOfActiveDate);
+      const dayInWeekOfNewSectionValue = formattedDaysInWeek.indexOf(section.value);
+      const diff = dayInWeekOfNewSectionValue - dayInWeekOfActiveDate;
+
+      return utils.addDays(dateToTransferFrom, diff);
+    }
+
+    case 'day': {
+      return utils.setDate(dateToTransferTo, utils.getDate(dateToTransferFrom));
+    }
+
+    case 'meridiem': {
+      const isAM = utils.getHours(dateToTransferFrom) < 12;
+      const mergedDateHours = utils.getHours(dateToTransferTo);
+
+      if (isAM && mergedDateHours >= 12) {
+        return utils.addHours(dateToTransferTo, -12);
+      }
+
+      if (!isAM && mergedDateHours < 12) {
+        return utils.addHours(dateToTransferTo, 12);
+      }
+
+      return dateToTransferTo;
+    }
+
+    case 'hours': {
+      return utils.setHours(dateToTransferTo, utils.getHours(dateToTransferFrom));
+    }
+
+    case 'minutes': {
+      return utils.setMinutes(dateToTransferTo, utils.getMinutes(dateToTransferFrom));
+    }
+
+    case 'seconds': {
+      return utils.setSeconds(dateToTransferTo, utils.getSeconds(dateToTransferFrom));
+    }
+
+    default: {
+      return dateToTransferTo;
+    }
+  }
+};
+
+export const mergeDateIntoReferenceDate = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  dateToTransferFrom: TDate,
+  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
   referenceDate: TDate,
   shouldLimitToEditedSections: boolean,
-) => {
-  let mergedDate = referenceDate;
-
-  sections.forEach((section) => {
+) =>
+  sections.reduce((mergedDate, section) => {
     if (!shouldLimitToEditedSections || section.edited) {
-      if (section.dateSectionName === 'meridiem') {
-        mergedDate = applyMeridiemChange(
-          utils,
-          mergedDate,
-          utils.getHours(date) < 12 ? 'AM' : 'PM',
-        );
-      } else if (section.dateSectionName === 'weekDay') {
-        mergedDate = applyWeekDayChange(utils, mergedDate, section.formatValue, section.value);
-      } else {
-        const { getter, setter } = getDateSectionGetterAndSetter(utils, section.dateSectionName);
-        mergedDate = setter(mergedDate, getter(date));
-      }
+      return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
     }
-  });
 
-  return mergedDate;
-};
+    return mergedDate;
+  }, referenceDate);
 
 export const isAndroid = () => navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
