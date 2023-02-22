@@ -307,10 +307,10 @@ This feature only works with `@mui/styled-engine` v5.11.8 or newer.
 Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
 :::
 
-Instead of generating the Excel file locally, you can delegate the task to a web worker.
+Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
 This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
 To start using web workers for the Excel export, first you need to create a file with the content below.
-This file will be later used as the worker script, then it's important that it's accessible by a direct URL.
+This file will be later used as the worker script, so it must be accessible by a direct URL.
 
 ```tsx
 // in file ./worker.js
@@ -367,7 +367,7 @@ When opening the demo above in CodeSandbox or StackBlitz you need to manually cr
 :::
 
 :::warning
-If you want to use the `exceljsPreProcess` and `exceljsPostProcess` options to customize the final spreadsheet, as showed in the [Customization](/x/react-data-grid/export/#customization) setion above, you have to pass them to `setupExcelExportWebWorker` instead.
+If you want to use the `exceljsPreProcess` and `exceljsPostProcess` options to customize the final spreadsheet, as shown in the [Customization](/x/react-data-grid/export/#customization) section above, you have to pass them to `setupExcelExportWebWorker` instead.
 This is necessary because [functions](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#things_that_dont_work_with_structured_clone) cannot be passed to the web worker.
 
 ```tsx

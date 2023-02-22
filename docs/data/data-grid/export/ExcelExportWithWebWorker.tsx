@@ -16,7 +16,8 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridToolbarExport
         excelOptions={{
-          worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+          worker: () =>
+            new Worker(new URL('./excelExportWorker.ts', import.meta.url)),
         }}
       />
     </GridToolbarContainer>
