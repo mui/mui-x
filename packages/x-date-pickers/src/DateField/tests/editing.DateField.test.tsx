@@ -42,12 +42,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last month of the previous year when a value in January is provided', () => {
+    it('should go to the last month of the current year when a value in January is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndYear,
         defaultValue: adapter.date(new Date(2022, 0, 15)),
         key: 'ArrowDown',
-        expectedValue: 'December 2021',
+        expectedValue: 'December 2022',
       });
     });
 
@@ -68,12 +68,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last day of the previous month when a value in the first day of the month is provided', () => {
+    it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndDate,
         defaultValue: adapter.date(new Date(2022, 5, 1)),
         key: 'ArrowDown',
-        expectedValue: 'May 31',
+        expectedValue: 'June 30',
         // To select the date and not the month
         valueToSelect: '1',
       });
@@ -134,12 +134,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should decrement go to the first month of the next year when when a value in December is provided', () => {
+    it('should go to the first month of the current year when a value in December is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndYear,
         defaultValue: adapter.date(new Date(2022, 11, 15)),
         key: 'ArrowUp',
-        expectedValue: 'January 2023',
+        expectedValue: 'January 2022',
       });
     });
 
@@ -160,12 +160,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the first day of the next month when a value in the last day of the month is provided', () => {
+    it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndDate,
         defaultValue: adapter.date(new Date(2022, 5, 30)),
         key: 'ArrowUp',
-        expectedValue: 'July 1',
+        expectedValue: 'June 1',
         // To select the date and not the month
         valueToSelect: '30',
       });

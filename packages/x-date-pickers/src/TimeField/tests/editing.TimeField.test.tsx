@@ -52,12 +52,12 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the last minute of the previous hour when a value with 0 minutes is provided', () => {
+      it('should go to the last minute of the current hour when a value with 0 minutes is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 0, 25)),
           key: 'ArrowDown',
-          expectedValue: '13:59',
+          expectedValue: '14:59',
           valueToSelect: '00',
         });
       });
@@ -68,16 +68,16 @@ describe('<TimeField /> - Editing', () => {
         testFieldKeyPress({
           format: adapter.formats.hours12h,
           key: 'ArrowDown',
-          expectedValue: '11',
+          expectedValue: '12',
         });
       });
 
-      it('should go to the last hour of the previous day when a value in the first hour is provided', () => {
+      it('should go to the last hour of the current morning when a value in the first hour is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime12h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 0, 12, 25)),
           key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:12 pm' : '11:12 PM',
+          expectedValue: adapterName === 'date-fns' ? '11:12 am' : '11:12 AM',
         });
       });
 
@@ -109,26 +109,6 @@ describe('<TimeField /> - Editing', () => {
           valueToSelect: adapterName === 'date-fns' ? 'pm' : 'PM',
         });
       });
-
-      it('should go from AM to PM when the current value is 00:00 AM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 0, 0, 25)),
-          key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:59 pm' : '11:59 PM',
-          valueToSelect: '00',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 00:00 PM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 12, 0, 25)),
-          key: 'ArrowDown',
-          expectedValue: adapterName === 'date-fns' ? '11:59 am' : '11:59 AM',
-          valueToSelect: '00',
-        });
-      });
     });
   });
 
@@ -151,7 +131,7 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first hour of the next day when a value in the last hour is provided', () => {
+      it('should go to the first hour of the current day when a value in the last hour is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 23, 12, 25)),
@@ -177,12 +157,12 @@ describe('<TimeField /> - Editing', () => {
         });
       });
 
-      it('should go to the first minute of the next hour when a value with 59 minutes is provided', () => {
+      it('should go to the first minute of the current hour when a value with 59 minutes is provided', () => {
         testFieldKeyPress({
           format: adapter.formats.fullTime24h,
           defaultValue: adapter.date(new Date(2022, 5, 15, 14, 59, 25)),
           key: 'ArrowUp',
-          expectedValue: '15:00',
+          expectedValue: '14:00',
           valueToSelect: '59',
         });
       });
@@ -215,26 +195,6 @@ describe('<TimeField /> - Editing', () => {
           key: 'ArrowUp',
           expectedValue: adapterName === 'date-fns' ? '02:12 am' : '02:12 AM',
           cursorPosition: 14,
-        });
-      });
-
-      it('should go from AM to PM when the current value is 11:59 AM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 11, 59, 25)),
-          key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '12:00 pm' : '12:00 PM',
-          valueToSelect: '59',
-        });
-      });
-
-      it('should go from PM to AM when the current value is 11:59 PM', () => {
-        testFieldKeyPress({
-          format: adapter.formats.fullTime12h,
-          defaultValue: adapter.date(new Date(2022, 5, 15, 23, 59, 25)),
-          key: 'ArrowUp',
-          expectedValue: adapterName === 'date-fns' ? '12:00 am' : '12:00 AM',
-          valueToSelect: '59',
         });
       });
     });
