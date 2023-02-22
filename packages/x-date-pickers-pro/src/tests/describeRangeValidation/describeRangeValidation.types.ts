@@ -4,12 +4,25 @@ import {
   DescribeValidationOptions,
 } from '@mui/x-date-pickers/tests/describeValidation';
 
-export interface DescribeRangeValidationInputOptions extends DescribeValidationInputOptions {
+interface DescribeRangeValidationKeyboardOptions {
+  inputValue?: (
+    value: any,
+    context?: {
+      setEndDate?: boolean;
+    },
+  ) => void;
+}
+
+export interface DescribeRangeValidationInputOptions
+  extends DescribeValidationInputOptions,
+    DescribeRangeValidationKeyboardOptions {
   isSingleInput?: boolean;
   variant?: 'mobile' | 'desktop';
 }
 
-export interface DescribeRangeValidationOptions extends DescribeValidationOptions {
+export interface DescribeRangeValidationOptions
+  extends DescribeValidationOptions,
+    DescribeRangeValidationKeyboardOptions {
   isSingleInput?: boolean;
 }
 
