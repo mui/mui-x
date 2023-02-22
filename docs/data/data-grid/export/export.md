@@ -313,6 +313,7 @@ To start using web workers for the Excel export, first you need to create a file
 This file will be later used as the worker script, then it's important that it's accessible by a direct URL.
 
 ```tsx
+// in file ./worker.js
 import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
 
 setupExcelExportWebWorker();
@@ -323,14 +324,14 @@ The final step is to pass the path to the file created to `GridToolbarExport` or
 ```tsx
 <GridToolbarExport
   excelOptions={{
-    worker: () => new Worker('/worker.js'),
+    worker: () => new Worker('/worker.ts'),
   }}
 />;
 
 // or
 
 apiRef.current.exportDataAsExcel({
-  worker: () => new Worker('/worker.js'),
+  worker: () => new Worker('/worker.ts'),
 });
 ```
 
