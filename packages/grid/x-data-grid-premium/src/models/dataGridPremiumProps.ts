@@ -13,7 +13,10 @@ import type {
   GridAggregationFunction,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import {
+  GridPremiumSlotsComponent,
+  UncapitalizedGridPremiumSlotsComponent,
+} from './gridPremiumSlotsComponent';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
@@ -24,8 +27,13 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
    * Overrideable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components?: Partial<GridPremiumSlotsComponent>;
+  /**
+   * Overrideable components.
+   */
+  slots?: Partial<UncapitalizedGridPremiumSlotsComponent>;
 }
 
 /**
@@ -47,7 +55,7 @@ export interface DataGridPremiumProps<R extends GridValidRowModel = any>
 
 export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
   extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
-  components: GridPremiumSlotsComponent;
+  slots: UncapitalizedGridPremiumSlotsComponent;
 }
 
 /**
@@ -56,7 +64,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridPremiumProcessedProps
   extends DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
-    DataGridPremiumPropsWithoutDefaultValue {}
+    Omit<DataGridPremiumPropsWithoutDefaultValue, 'componentsProps'> {}
 
 export type DataGridPremiumForcedPropsKey = 'signature';
 

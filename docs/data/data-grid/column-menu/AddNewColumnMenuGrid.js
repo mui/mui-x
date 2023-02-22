@@ -48,7 +48,7 @@ export default function AddNewColumnMenuGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} components={{ ColumnMenu: CustomColumnMenu }} />
+      <DataGrid {...data} slots={{ columnMenu: CustomColumnMenu }} />
     </div>
   );
 }

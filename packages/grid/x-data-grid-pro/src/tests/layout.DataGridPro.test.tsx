@@ -178,4 +178,29 @@ describe('<DataGridPro /> - Layout', () => {
       color: 'rgb(0, 0, 255)',
     });
   });
+
+  it('should have ownerState in the theme style overrides', () => {
+    expect(() =>
+      render(
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiDataGrid: {
+                styleOverrides: {
+                  root: ({ ownerState }) => ({
+                    // test that ownerState is not undefined
+                    ...(ownerState.columns && {}),
+                  }),
+                },
+              },
+            },
+          })}
+        >
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPro {...baselineProps} />
+          </div>
+        </ThemeProvider>,
+      ),
+    ).not.to.throw();
+  });
 });

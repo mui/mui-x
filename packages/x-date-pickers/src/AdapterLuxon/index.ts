@@ -33,12 +33,10 @@ const formatTokenMap: MuiFormatTokenMap = {
   LL: 'month',
   LLL: { sectionName: 'month', contentType: 'letter' },
   LLLL: { sectionName: 'month', contentType: 'letter' },
-  LLLLL: { sectionName: 'month', contentType: 'letter' },
   M: 'month',
   MM: 'month',
   MMM: { sectionName: 'month', contentType: 'letter' },
   MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMMMM: { sectionName: 'month', contentType: 'letter' },
 
   y: 'year',
   yy: 'year',

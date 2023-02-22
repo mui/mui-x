@@ -686,13 +686,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(6);
+    expect(renderCell.callCount).to.equal(4);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {

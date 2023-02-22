@@ -3,6 +3,112 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-beta.4
+
+_Feb 16, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Improve grid performance by reducing rerenders (#7857) @cherniavskii
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-beta.4` / `@mui/x-data-grid-pro@v6.0.0-beta.4` / `@mui/x-data-grid-premium@v6.0.0-beta.4`
+
+#### Changes
+
+- [DataGrid] Add interface for `singleSelect` column (#7685) @m4theushw
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7733) @Vivek-Prajapatii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7857) @cherniavskii
+- [DataGridPro] Change cursor when dragging a column (#7725) @sai6855
+- [DataGridPremium] Fix `leafField` to have correct focus value (#7950) @MBilalShafi
+
+### `@mui/x-date-pickers@v6.0.0-beta.4` / `@mui/x-date-pickers-pro@v6.0.0-beta.4`
+
+#### Changes
+
+- [DateRangePicker] Fix slide transition by avoiding useless component re-rendering (#7874) @LukasTy
+- [fields] Support Backspace key on `Android` (#7842) @flaviendelangle
+- [fields] Support escaped characters on `Luxon` (#7888) @flaviendelangle
+- [pickers] Prepare new pickers for custom fields (#7806) @flaviendelangle
+
+### `@mui/x-codemod@v6.0.0-beta.4`
+
+#### Changes
+
+- [codemod] Fix import path (#7952) @LukasTy
+
+### Docs
+
+- [docs] Add an info callout specifying the current state of desktop time view (#7933) @LukasTy
+- [docs] Add missing param in `useGridApiEventHandler` examples (#7939) @flaviendelangle
+- [docs] Fix markdown table alignments (#7898) @oliviertassinari
+- [docs] Improve `DataGrid` migration guide (#7861) @MBilalShafi
+- [docs] Update `LocalizationProvider` `dateAdapter` with a link to the doc (#7872) @LukasTy
+
+### Core
+
+- [core] Run editing field tests on all major adapters (#7868) @flaviendelangle
+
+## 6.0.0-beta.3
+
+_Feb 9, 2023_
+
+We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- ⬅️ Add right-to-left support for the data grid (#6580) @yaredtsy
+- ⚡️ Improve grid resize performance (#7864) @cherniavskii
+- ✨ New codemods for migrating to v6 @MBilalShafi
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-beta.3` / `@mui/x-data-grid-pro@v6.0.0-beta.3` / `@mui/x-data-grid-premium@v6.0.0-beta.3`
+
+#### Changes
+
+- [DataGrid] Add `BaseIconButton` component slot (#7329) @123joshuawu
+- [DataGrid] Allow to customize the value displayed in the filter button tooltip (#6956) @ithrforu
+- [DataGrid] Improve grid resize performance (#7864) @cherniavskii
+- [DataGrid] Make `apiRef.current.getRowWithUpdatedValues` stable (#7788) @m4theushw
+- [DataGrid] Support RTL (#6580) @yaredtsy
+- [DataGrid] Improve query selectors for selecting cell element (#7354) @yaredtsy
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#7854) @ed-ateixeira
+
+### `@mui/x-date-pickers@v6.0.0-beta.3` / `@mui/x-date-pickers-pro@v6.0.0-beta.3`
+
+#### Changes
+
+- [fields] Allow to select year 2000 on 2-digit year section (#7858) @flaviendelangle
+- [fields] Fix year editing on `day.js` (#7862) @flaviendelangle
+- [fields] Fix year editing on valid date (#7834) @flaviendelangle
+- [fields] Reset query when pressing `Backspace` or `Delete` (#7855) @flaviendelangle
+- [pickers] Clean Popper position on new pickers (#7445) @flaviendelangle
+- [pickers] Ditch pickers `skipLibCheck` (#7808) @LukasTy
+- [pickers] Improve JSDoc and resulting API docs pages (#7847) @LukasTy
+
+### `@mui/x-codemod@v6.0.0-beta.3`
+
+#### Changes
+
+- [codemod] Add more cases to `rename-selectors-and-events` codemod (#7856) @MBilalShafi
+- [codemod] Add warning message to the codemods and migration guide (#7813) @MBilalShafi
+- [codemod] Add codemod to remove unnecessary `experimentalFeatures` flag (#7836) @MBilalShafi
+- [codemod] Rename `GridFilterItem` props (#7483) @MBilalShafi
+- [codemod] Rename `linkOperators` to `logicOperators` (#7707) @MBilalShafi
+- [codemod] Replace `onCellFocusOut` prop for Data Grid (#7786) @MBilalShafi
+
+### Docs
+
+- [docs] Add a "Whats new in v6" page linked on the sidebar (#7820) @joserodolfofreitas
+- [docs] Fix hydration crash in pickers (#7734) @oliviertassinari
+- [docs] Remove no longer relevant range shortcuts section (#7840) @LukasTy
+- [docs] Use `@next` tag in grid and pickers installation instructions (#7814) @cherniavskii
+
+### Core
+
+- [core] Remove `tslint` package leftovers (#7841) @LukasTy
+- [test] Use `createDescribes` for `describeValue` and `describeValidation` (#7866) @flaviendelangle
+
 ## 6.0.0-beta.2
 
 We'd like to offer a big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
@@ -2072,6 +2178,64 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## 5.17.24
+
+_Feb 16, 2023_
+
+We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Add Hungarian (hu-HU) locale
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.24` / `@mui/x-data-grid-pro@v5.17.24` / `@mui/x-data-grid-premium@v5.17.24`
+
+#### Changes
+
+- [DataGrid] Allow to pass props to the `TrapFocus` inside the panel wrapper (#7897) @Vivek-Prajapatii
+- [DataGrid] Avoid unnecessary rerenders after `updateRows` (#7945) @cherniavskii
+- [DataGridPro] Change cursor when dragging a column (#7878) @sai6855
+- [DataGridPremium] Fix `leafField` to have correct focus value (#7959) @MBilalShafi
+
+### `@mui/x-date-pickers@v5.0.19` / `@mui/x-date-pickers-pro@v5.0.19`
+
+#### Changes
+
+- [l10n] Add Hungarian (hu-HU) locale (#7796) @noherczeg
+
+## 5.17.23
+
+_Feb 9, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Brazilian Portuguese (pt-BR) locale
+- 🎉 Add banner and callouts to inform about MUI X v6 beta
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.23` / `@mui/x-data-grid-pro@v5.17.23` / `@mui/x-data-grid-premium@v5.17.23`
+
+#### Changes
+
+- [DataGrid] Allow to customize the value displayed in the filter button tooltip (#7816) @ithrforu
+- [DataGrid] Fix `getCellElement` method not working with pinned columns (#7844) @yaredtsy
+- [DataGrid] Fix stale rows issue in `unstable_replaceRows` (#7694) @MBilalShafi
+- [l10n] Improve Brazilian Portuguese (pt-BR) locale (#7850) @ed-ateixeira
+
+### `@mui/x-date-pickers@v_5.0.18` / `@mui/x-date-pickers-pro@v_5.0.18`
+
+#### Changes
+
+- [pickers] Update pickers when new value has a distinct timezone (#7853) @alexfauquette
+
+### Docs
+
+- [docs] Add messages in v5 doc to inform people about v6 (#7838) @flaviendelangle
+- [docs] Fix 301 link @oliviertassinari
+
+### Core
+
+- [core] Upgrade monorepo (#7849) @cherniavskii
 
 ## 5.17.22
 

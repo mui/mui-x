@@ -1,1 +1,1 @@
-<DataGrid {...data} components={{ Toolbar: GridToolbar }} />
+<DataGrid {...data} slots={{ toolbar: GridToolbar }} />

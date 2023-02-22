@@ -148,6 +148,49 @@ function ColumnPropTest() {
   );
 }
 
+function SingleSelectColDef() {
+  return (
+    <div>
+      <DataGrid<{ country: string }>
+        rows={[]}
+        columns={[
+          {
+            field: 'country',
+            type: 'string',
+            // @ts-expect-error
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: ['United Kingdom', 'Spain', 'Brazil'],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            valueOptions: [
+              { value: 'UK', label: 'United Kingdom' },
+              { value: 'ES', label: 'Spain' },
+              { value: 'BR', label: 'Brazil' },
+            ],
+          },
+          {
+            field: 'country',
+            type: 'singleSelect',
+            getOptionValue: (value: any) => value.code,
+            getOptionLabel: (value: any) => value.label,
+            valueOptions: [
+              { code: 'UK', name: 'United Kingdom' },
+              { code: 'ES', name: 'Spain' },
+              { code: 'BR', name: 'Brazil' },
+            ],
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
 function ApiRefPrivateMethods() {
   const apiRef = useGridApiRef();
 

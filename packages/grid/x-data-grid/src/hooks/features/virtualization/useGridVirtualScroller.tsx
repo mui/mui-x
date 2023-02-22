@@ -78,6 +78,18 @@ export const getRenderableIndexes = ({
   ];
 };
 
+const areRenderContextsEqual = (context1: GridRenderContext, context2: GridRenderContext) => {
+  if (context1 === context2) {
+    return true;
+  }
+  return (
+    context1.firstRowIndex === context2.firstRowIndex &&
+    context1.lastRowIndex === context2.lastRowIndex &&
+    context1.firstColumnIndex === context2.firstColumnIndex &&
+    context1.lastColumnIndex === context2.lastColumnIndex
+  );
+};
+
 interface UseGridVirtualScrollerProps {
   ref: React.Ref<HTMLDivElement>;
   disableVirtualization?: boolean;
@@ -235,14 +247,14 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
     });
   }, [rowsMeta.currentPageTotalHeight]);
 
-  const handleResize = React.useCallback<GridEventListener<'resize'>>((params) => {
+  const handleResize = React.useCallback<GridEventListener<'debouncedResize'>>((params) => {
     setContainerDimensions({
       width: params.width,
       height: params.height,
     });
   }, []);
 
-  useGridApiEventHandler(apiRef, 'resize', handleResize);
+  useGridApiEventHandler(apiRef, 'debouncedResize', handleResize);
 
   const updateRenderZonePosition = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
@@ -293,6 +305,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const updateRenderContext = React.useCallback(
     (nextRenderContext: GridRenderContext) => {
+      if (
+        prevRenderContext.current &&
+        areRenderContextsEqual(nextRenderContext, prevRenderContext.current)
+      ) {
+        updateRenderZonePosition(nextRenderContext);
+        return;
+      }
       setRenderContext(nextRenderContext);
 
       updateRenderZonePosition(nextRenderContext);
@@ -506,12 +525,12 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
         isSelected = apiRef.current.isRowSelectable(id);
       }
 
-      const { style: rootRowStyle, ...rootRowProps } = rootProps.componentsProps?.row || {};
+      const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
       const { style: rowStyle, ...rowProps } =
         (typeof getRowProps === 'function' && getRowProps(id, model)) || {};
 
       rows.push(
-        <rootProps.components.Row
+        <rootProps.slots.row
           key={id}
           row={model}
           rowId={id}

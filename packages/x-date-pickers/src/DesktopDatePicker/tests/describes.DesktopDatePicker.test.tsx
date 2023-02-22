@@ -12,7 +12,7 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 describe('<DesktopDatePicker /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DesktopDatePicker });
 
   describeValidation(DesktopDatePicker, () => ({
     render,

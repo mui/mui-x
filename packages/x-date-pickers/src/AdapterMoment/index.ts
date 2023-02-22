@@ -7,14 +7,12 @@ import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 const formatTokenMap: MuiFormatTokenMap = {
   // Month
   M: 'month',
-  Mo: 'month',
   MM: 'month',
   MMM: { sectionName: 'month', contentType: 'letter' },
   MMMM: { sectionName: 'month', contentType: 'letter' },
 
   // Day of the month
   D: 'day',
-  Do: 'day',
   DD: 'day',
 
   // Day of the week
@@ -29,7 +27,6 @@ const formatTokenMap: MuiFormatTokenMap = {
   Y: 'year',
   YY: 'year',
   YYYY: 'year',
-  YYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',

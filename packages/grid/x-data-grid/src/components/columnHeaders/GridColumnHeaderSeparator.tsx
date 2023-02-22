@@ -65,7 +65,7 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
       {...other}
       onClick={stopClick}
     >
-      <rootProps.components.ColumnResizeIcon className={classes.icon} />
+      <rootProps.slots.columnResizeIcon className={classes.icon} />
     </div>
   );
 }

@@ -12,12 +12,7 @@ import {
   UseFieldInternalProps,
   AvailableAdjustKeyCode,
 } from './useField.types';
-import {
-  adjustDateSectionValue,
-  adjustInvalidDateSectionValue,
-  isAndroid,
-  cleanString,
-} from './useField.utils';
+import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
 
@@ -45,22 +40,33 @@ export const useField = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionOrder,
+    sectionsValueBoundaries,
   } = useFieldState(params);
 
   const { applyCharacterEditing, resetCharacterQuery } = useFieldCharacterEditing<TDate, TSection>({
     sections: state.sections,
     updateSectionValue,
+    sectionsValueBoundaries,
+    setTempAndroidValueStr,
   });
 
   const {
     inputRef: inputRefProp,
     internalProps,
     internalProps: { readOnly = false },
-    forwardedProps: { onClick, onKeyDown, onFocus, onBlur, onMouseUp, ...otherForwardedProps },
+    forwardedProps: {
+      onClick,
+      onKeyDown,
+      onFocus,
+      onBlur,
+      onMouseUp,
+      onPaste,
+      error,
+      ...otherForwardedProps
+    },
     fieldValueManager,
     valueManager,
     validator,
-    valueType,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -122,6 +128,8 @@ export const useField = <
   });
 
   const handleInputPaste = useEventCallback((event: React.ClipboardEvent<HTMLInputElement>) => {
+    onPaste?.(event);
+
     if (readOnly) {
       event.preventDefault();
       return;
@@ -294,35 +302,24 @@ export const useField = <
         }
 
         const activeSection = state.sections[selectedSectionIndexes.startIndex];
+        const activeDateManager = fieldValueManager.getActiveDateManager(
+          utils,
+          state,
+          activeSection,
+        );
+
+        const newSectionValue = adjustSectionValue(
+          utils,
+          activeSection,
+          event.key as AvailableAdjustKeyCode,
+          sectionsValueBoundaries,
+          activeDateManager.activeDate,
+        );
 
         updateSectionValue({
           activeSection,
-          setSectionValueOnDate: (activeDate) => {
-            let date = adjustDateSectionValue(
-              utils,
-              activeDate,
-              activeSection.dateSectionName,
-              event.key as AvailableAdjustKeyCode,
-            );
-
-            // If the field only supports time editing, then we should never go to the previous / next day.
-            if (valueType === 'time') {
-              date = utils.mergeDateAndTime(activeDate, date);
-            }
-
-            return {
-              date,
-              shouldGoToNextSection: false,
-            };
-          },
-          setSectionValueOnSections: () => ({
-            sectionValue: adjustInvalidDateSectionValue(
-              utils,
-              activeSection,
-              event.key as AvailableAdjustKeyCode,
-            ),
-            shouldGoToNextSection: false,
-          }),
+          newSectionValue,
+          shouldGoToNextSection: false,
         });
         break;
       }
@@ -359,10 +356,15 @@ export const useField = <
     valueManager.defaultErrorState,
   );
 
-  const inputError = React.useMemo(
-    () => fieldValueManager.hasError(validationError),
-    [fieldValueManager, validationError],
-  );
+  const inputError = React.useMemo(() => {
+    // only override when `error` is undefined.
+    // in case of multi input fields, the `error` value is provided externally and will always be defined.
+    if (error !== undefined) {
+      return error;
+    }
+
+    return fieldValueManager.hasError(validationError);
+  }, [fieldValueManager, validationError, error]);
 
   React.useEffect(() => {
     // Select the right section when focused on mount (`autoFocus = true` on the input)
@@ -372,6 +374,17 @@ export const useField = <
 
     return () => window.clearTimeout(focusTimeoutRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // If `state.tempValueStrAndroid` is still defined when running `useEffect`,
+  // Then `onChange` has only been called once, which means the user pressed `Backspace` to reset the section.
+  // This causes a small flickering on Android,
+  // But we can't use `useEnhancedEffect` which is always called before the second `onChange` call and then would cause false positives.
+  React.useEffect(() => {
+    if (state.tempValueStrAndroid != null && selectedSectionIndexes != null) {
+      resetCharacterQuery();
+      clearActiveSection();
+    }
+  }, [state.tempValueStrAndroid]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const valueStr = React.useMemo(
     () => state.tempValueStrAndroid ?? fieldValueManager.getValueStrFromSections(state.sections),

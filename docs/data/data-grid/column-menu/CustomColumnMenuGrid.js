@@ -62,8 +62,8 @@ export default function CustomColumnMenuGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          ColumnMenu: CustomColumnMenu,
+        slots={{
+          columnMenu: CustomColumnMenu,
         }}
       />
     </div>

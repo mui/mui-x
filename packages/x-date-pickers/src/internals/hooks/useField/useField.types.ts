@@ -81,9 +81,11 @@ export interface UseFieldInternalProps<TValue, TError> {
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  error?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<

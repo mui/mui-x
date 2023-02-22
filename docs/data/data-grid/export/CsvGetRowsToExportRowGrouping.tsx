@@ -69,7 +69,7 @@ export default function CsvGetRowsToExportRowGrouping() {
       <DataGridPremium
         {...data}
         loading={loading}
-        components={{ Toolbar: CustomToolbar }}
+        slots={{ toolbar: CustomToolbar }}
         initialState={{
           ...data.initialState,
           rowGrouping: {

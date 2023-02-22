@@ -183,8 +183,8 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       field={colDef.field}
       open={columnMenuOpen}
       target={iconButtonRef.current}
-      ContentComponent={rootProps.components.ColumnMenu}
-      contentComponentProps={rootProps.componentsProps?.columnMenu}
+      ContentComponent={rootProps.slots.columnMenu}
+      contentComponentProps={rootProps.slotProps?.columnMenu}
       onExited={handleExited}
     />
   );
@@ -194,10 +194,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const columnTitleIconButtons = (
     <React.Fragment>
       {!rootProps.disableColumnFilter && (
-        <rootProps.components.ColumnHeaderFilterIconButton
+        <rootProps.slots.columnHeaderFilterIconButton
           field={colDef.field}
           counter={filterItemsCounter}
-          {...rootProps.componentsProps?.columnHeaderFilterIconButton}
+          {...rootProps.slotProps?.columnHeaderFilterIconButton}
         />
       )}
 
