@@ -7,8 +7,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   MuiDateSectionName,
   FieldSelectedSections,
-  FieldRef,
-  RangeFieldSection,
   RangePosition,
 } from '@mui/x-date-pickers-pro';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';

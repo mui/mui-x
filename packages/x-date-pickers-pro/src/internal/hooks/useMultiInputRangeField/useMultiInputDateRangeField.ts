@@ -13,6 +13,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import useControlled from '@mui/utils/useControlled';
 import { useDefaultizedDateRangeFieldProps } from '../../../SingleInputDateRangeField/useSingleInputDateRangeField';
 import { UseMultiInputDateRangeFieldParams } from '../../../MultiInputDateRangeField/MultiInputDateRangeField.types';
 import { DateRange } from '../../models/range';
@@ -52,20 +53,22 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldProps extends {}>({
   } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const [value, setValue] = useControlled<DateRange<TDate>>({
+    name: 'useMultiInputDateRangeField',
+    state: 'value',
+    controlled: valueProp,
+    default: firstDefaultValue.current ?? rangeValueManager.emptyValue,
+  });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
   ): FieldChangeHandler<TDate | null, DateValidationError> => {
-    if (!onChange) {
-      return () => {};
-    }
-
     return (newDate, rawContext) => {
-      const currentDateRange =
-        valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
       const newDateRange: DateRange<TDate> =
-        index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
+        index === 0 ? [newDate, value[1]] : [value[0], newDate];
+
+      setValue(newDateRange);
 
       const context: FieldChangeHandlerContext<DateRangeValidationError> = {
         ...rawContext,
@@ -76,14 +79,12 @@ export const useMultiInputDateRangeField = <TDate, TTextFieldProps extends {}>({
         }),
       };
 
-      onChange(newDateRange, context);
+      onChange?.(newDateRange, context);
     };
   };
 
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
-
-  const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 
   const validationError = useValidation<
     DateRange<TDate>,

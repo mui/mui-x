@@ -14,6 +14,7 @@ import {
   FieldChangeHandlerContext,
   UseFieldResponse,
 } from '@mui/x-date-pickers/internals';
+import useControlled from '@mui/utils/useControlled';
 import { DateRange } from '../../models/range';
 import {
   TimeRangeValidationError,
@@ -63,20 +64,22 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldProps extends {}>({
   const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
+  const [value, setValue] = useControlled<DateRange<TDate>>({
+    name: 'useMultiInputTimeRangeField',
+    state: 'value',
+    controlled: valueProp,
+    default: firstDefaultValue.current ?? rangeValueManager.emptyValue,
+  });
 
   // TODO: Maybe export utility from `useField` instead of copy/pasting the logic
   const buildChangeHandler = (
     index: 0 | 1,
   ): FieldChangeHandler<TDate | null, TimeValidationError> => {
-    if (!onChange) {
-      return () => {};
-    }
-
     return (newDate, rawContext) => {
-      const currentDateRange =
-        valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
       const newDateRange: DateRange<TDate> =
-        index === 0 ? [newDate, currentDateRange[1]] : [currentDateRange[0], newDate];
+        index === 0 ? [newDate, value[1]] : [value[0], newDate];
+
+      setValue(newDateRange);
 
       const context: FieldChangeHandlerContext<TimeRangeValidationError> = {
         ...rawContext,
@@ -87,14 +90,12 @@ export const useMultiInputTimeRangeField = <TDate, TTextFieldProps extends {}>({
         }),
       };
 
-      onChange(newDateRange, context);
+      onChange?.(newDateRange, context);
     };
   };
 
   const handleStartDateChange = useEventCallback(buildChangeHandler(0));
   const handleEndDateChange = useEventCallback(buildChangeHandler(1));
-
-  const value = valueProp ?? firstDefaultValue.current ?? rangeValueManager.emptyValue;
 
   const validationError = useValidation<
     DateRange<TDate>,
