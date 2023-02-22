@@ -1775,7 +1775,7 @@
 
 "@mui/monorepo@https://github.com/LukasTy/material-ui.git#fix-alternate-calendar-adapters-deps-resolving":
   version "5.11.10"
-  resolved "https://github.com/LukasTy/material-ui.git#c5bbae90f3a97ac0211f1ec9e93a176dce02d5fd"
+  resolved "https://github.com/LukasTy/material-ui.git#3f3ccc0964a209fcdadb481fbba3b447872f6b86"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
@@ -2957,6 +2957,13 @@
   integrity sha512-HzOyJb+wFmyEhyfp4D4NYrumi+LQgQL/68HvJO+q6XtuHSDvw6Aqov7sCAhjbNq3bUPgPqbdvjXC5HeB2oEAPg==
   dependencies:
     "@types/history" "*"
+    "@types/react" "*"
+
+"@types/react-test-renderer@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-18.0.0.tgz#7b7f69ca98821ea5501b21ba24ea7b6139da2243"
+  integrity sha512-C7/5FBJ3g3sqUahguGi03O79b8afNeSD6T8/GU50oQrJCU0bVCCGQHaGKUbg2Ce8VQEEqTw8/HiS6lXHHdgkdQ==
+  dependencies:
     "@types/react" "*"
 
 "@types/react-transition-group@^4.2.0", "@types/react-transition-group@^4.4.5":
