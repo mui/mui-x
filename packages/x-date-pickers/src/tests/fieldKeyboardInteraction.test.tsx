@@ -50,9 +50,6 @@ const adapterToTest = [
 ] as const;
 
 adapterToTest.forEach((adapterName) => {
-  if (adapterName === 'moment-jalaali') {
-    jMoment.loadPersian();
-  }
   describe(`test keyboard interaction with ${adapterName} adapter`, () => {
     const { render, clock, adapter } = createPickerRenderer({
       clock: 'fake',
@@ -61,6 +58,9 @@ adapterToTest.forEach((adapterName) => {
 
     if (adapterName === 'moment') {
       moment.locale('en');
+    }
+    if (adapterName === 'moment-jalaali') {
+      jMoment.loadPersian();
     }
 
     const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
