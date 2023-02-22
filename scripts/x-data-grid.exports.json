@@ -178,6 +178,8 @@
   { "name": "gridDateComparator", "kind": "Variable" },
   { "name": "gridDateFormatter", "kind": "Function" },
   { "name": "gridDateTimeFormatter", "kind": "Function" },
+  { "name": "GridDeleteForeverIcon", "kind": "Variable" },
+  { "name": "GridDeleteIcon", "kind": "Variable" },
   { "name": "GridDensity", "kind": "TypeAlias" },
   { "name": "GridDensityApi", "kind": "Interface" },
   { "name": "gridDensityFactorSelector", "kind": "Variable" },
