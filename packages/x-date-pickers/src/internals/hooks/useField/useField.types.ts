@@ -141,6 +141,11 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
+export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
+  TSection,
+  'start' | 'end' | 'startInInput' | 'endInInput'
+>;
+
 export type FieldSectionsValueBoundaries<TDate> = Record<
   MuiDateSectionName,
   (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {

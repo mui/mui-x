@@ -5,6 +5,7 @@ import {
   SectionNeighbors,
   SectionOrdering,
   FieldValueType,
+  FieldSectionWithoutPosition,
 } from './useField.types';
 import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -199,7 +200,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 };
 
 export const getSectionVisibleValue = (
-  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
+  section: FieldSectionWithoutPosition,
   willBeRenderedInInput: boolean,
 ) => {
   const value = section.value || section.placeholder;
@@ -230,7 +231,7 @@ export const cleanString = (dirtyString: string) =>
   dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
-  sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
+  sections: FieldSectionWithoutPosition<TSection>[],
 ): TSection[] => {
   let position = 0;
   let positionInInput = 1;
@@ -407,7 +408,7 @@ export const splitFormatIntoSections = <TDate>(
   date: TDate | null,
 ) => {
   let startSeparator: string = '';
-  const sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[] = [];
+  const sections: FieldSectionWithoutPosition[] = [];
 
   const commitToken = (token: string) => {
     if (token === '') {
@@ -664,7 +665,7 @@ export const validateSections = <TSection extends FieldSection>(
 
 const transferDateSectionValue = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  section: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>,
+  section: FieldSectionWithoutPosition,
   dateToTransferFrom: TDate,
   dateToTransferTo: TDate,
 ) => {
@@ -730,7 +731,7 @@ const transferDateSectionValue = <TDate>(
 export const mergeDateIntoReferenceDate = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   dateToTransferFrom: TDate,
-  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
+  sections: FieldSectionWithoutPosition[],
   referenceDate: TDate,
   shouldLimitToEditedSections: boolean,
 ) =>
@@ -803,7 +804,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
 };
 
 export const getSectionOrder = (
-  sections: Omit<FieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
+  sections: FieldSectionWithoutPosition[],
   isRTL: boolean,
 ): SectionOrdering => {
   const neighbors: SectionNeighbors = {};
