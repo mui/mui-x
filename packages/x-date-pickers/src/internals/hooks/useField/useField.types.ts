@@ -289,7 +289,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   hasError: (error: TError) => boolean;
   /**
-   * Return a description of sections display order. This description is usefull in RTL mode.
+   * Return a description of sections display order. This description is useful in RTL mode.
    * @template TDate
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The translation object.
