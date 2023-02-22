@@ -13,9 +13,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function CustomFooterStatusComponent(props: {
-  status: 'connected' | 'disconnected';
-}) {
+export function CustomFooterStatusComponent(props: { status: FooterStatus }) {
   return (
     <Box sx={{ p: 1, display: 'flex' }}>
       <FiberManualRecordIcon
