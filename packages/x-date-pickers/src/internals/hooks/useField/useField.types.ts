@@ -103,6 +103,44 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
 
 export interface FieldSection {
   /**
+   * Value of the section, as rendered inside the input.
+   * For example, in the date `May 25, 1995`, the value of the month section is "May".
+   */
+  value: string;
+  /**
+   * Format token used to format generate the value of this section from the date object.
+   * For example, in the format `MMMM D, YYYY`, the format of the month section is "MMMM".
+   */
+  format: string;
+  /**
+   * Placeholder rendered when the value of this section is empty.
+   */
+  placeholder: string;
+  /**
+   * Name of the section.
+   */
+  name: MuiDateSectionName;
+  /**
+   * Type of content of the section.
+   * Will determine if we should apply a digit-based editing or a letter-based editing.
+   */
+  contentType: 'digit' | 'letter';
+  /**
+   * If `true`, the value of this section is supposed to have leading zeroes.
+   * For example, if the value `1` is rendered "01` instead of "1".
+   */
+  hasLeadingZeros: boolean;
+  /**
+   * If `true`, the section value has been modified since the last time the sections were generated from a valid date.
+   * When we can generate a valid date from the section, we don't directly pass it to `onChange`,
+   * Otherwise, we would lose all the information contained in the original date, things like:
+   * - time if the format does not contain it
+   * - timezone / UTC
+   *
+   * To avoid loosing those information, we transfer the values of the edited sections from the newly generated date to the original date.
+   */
+  edited: boolean;
+  /**
    * Start index of the section in the format
    */
   start: number;
@@ -120,8 +158,6 @@ export interface FieldSection {
    * Takes into account invisible unicode characters such as \u2069 but does not include them
    */
   endInInput: number;
-  value: string;
-  placeholder: string;
   /**
    * Separator displayed before the value of the section in the input.
    * If it contains escaped characters, then it must not have the escaping characters.
@@ -134,11 +170,6 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
-  dateSectionName: MuiDateSectionName;
-  contentType: 'digit' | 'letter';
-  formatValue: string;
-  edited: boolean;
-  hasTrailingZeroes: boolean;
 }
 
 export type FieldSectionsValueBoundaries<TDate> = Record<

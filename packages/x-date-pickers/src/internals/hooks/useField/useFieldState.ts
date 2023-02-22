@@ -139,7 +139,7 @@ export const useFieldState = <
 
     if (typeof selectedSections === 'string') {
       const selectedSectionIndex = state.sections.findIndex(
-        (section) => section.dateSectionName === selectedSections,
+        (section) => section.name === selectedSections,
       );
 
       return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
@@ -303,10 +303,8 @@ export const useFieldState = <
     // We can try to set the day to the maximum boundary.
     if (
       !utils.isValid(newDate) &&
-      activeDateSections.every(
-        (section) => section.dateSectionName === 'weekDay' || section.value !== '',
-      ) &&
-      activeDateSections.some((section) => section.dateSectionName === 'day')
+      activeDateSections.every((section) => section.name === 'weekDay' || section.value !== '') &&
+      activeDateSections.some((section) => section.name === 'day')
     ) {
       const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);
       if (cleanSections != null) {

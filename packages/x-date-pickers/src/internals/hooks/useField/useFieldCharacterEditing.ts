@@ -5,7 +5,7 @@ import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
 import {
   changeSectionValueFormat,
-  cleanTrailingZeroInNumericSectionValue,
+  cleanLeadingZerosInNumericSectionValue,
   doesSectionHaveTrailingZeros,
   getDateSectionConfigFromFormatToken,
   getDaysInWeekStr,
@@ -86,7 +86,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const resetQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.dateSectionName !== query.dateSectionName) {
+    if (query != null && sections[query.sectionIndex]?.name !== query.dateSectionName) {
       resetQuery();
     }
   }, [sections, query, resetQuery]);
@@ -128,7 +128,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         setQuery({
           sectionIndex,
           value: concatenatedQueryValue,
-          dateSectionName: activeSection.dateSectionName,
+          dateSectionName: activeSection.name,
         });
         return queryResponse;
       }
@@ -143,7 +143,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     setQuery({
       sectionIndex,
       value: cleanKeyPressed,
-      dateSectionName: activeSection.dateSectionName,
+      dateSectionName: activeSection.name,
     });
 
     if (isQueryResponseWithoutValue(queryResponse)) {
@@ -180,12 +180,12 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
       const getOptions = (format: string) =>
-        getLetterEditingOptions(utils, activeSection.dateSectionName, format);
+        getLetterEditingOptions(utils, activeSection.name, format);
 
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
-          activeSection.formatValue,
-          getOptions(activeSection.formatValue),
+          activeSection.format,
+          getOptions(activeSection.format),
           queryValue,
         );
       }
@@ -217,14 +217,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       queryValue,
       activeSection,
     ) => {
-      switch (activeSection.dateSectionName) {
+      switch (activeSection.name) {
         case 'month': {
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
               utils,
               fallbackValue,
               utils.formats.month,
-              activeSection.formatValue,
+              activeSection.format,
             );
 
           return testQueryOnFormatAndFallbackFormat(
@@ -290,10 +290,10 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         Number(`${queryValue}0`) > sectionBoundaries.maximum ||
         queryValue.length === sectionBoundaries.maximum.toString().length;
 
-      // queryValue without trailing `0` (`01` => `1`)
+      // queryValue without leading `0` (`01` => `1`)
       let newSectionValue = queryValueNumber.toString();
       if (hasTrailingZeroes) {
-        newSectionValue = cleanTrailingZeroInNumericSectionValue(utils, format, newSectionValue);
+        newSectionValue = cleanLeadingZerosInNumericSectionValue(utils, format, newSectionValue);
       }
 
       return { sectionValue: newSectionValue, shouldGoToNextSection };
@@ -306,19 +306,19 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       if (activeSection.contentType === 'digit') {
         return getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
-          activeSection.formatValue,
-          activeSection.hasTrailingZeroes,
+          activeSection.name,
+          activeSection.format,
+          activeSection.hasLeadingZeros,
           activeSection.contentType,
         );
       }
 
       // When editing a letter-format month and the user presses a digit,
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
-      if (activeSection.dateSectionName === 'month') {
+      if (activeSection.name === 'month') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
+          activeSection.name,
           'MM',
           doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
           'digit',
@@ -332,7 +332,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           utils,
           response.sectionValue,
           'MM',
-          activeSection.formatValue,
+          activeSection.format,
         );
         return {
           ...response,
@@ -342,19 +342,19 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       // When editing a letter-format weekDay and the user presses a digit,
       // We can support the numeric editing by returning the nth day in the week day array.
-      if (activeSection.dateSectionName === 'weekDay') {
+      if (activeSection.name === 'weekDay') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
-          activeSection.formatValue,
-          activeSection.hasTrailingZeroes,
+          activeSection.name,
+          activeSection.format,
+          activeSection.hasLeadingZeros,
           activeSection.contentType,
         );
         if (isQueryResponseWithoutValue(response)) {
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, activeSection.formatValue)[
+        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {
