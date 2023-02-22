@@ -8,7 +8,6 @@ import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 const formatTokenMap: MuiFormatTokenMap = {
   // Month
   iM: 'month',
-  iMo: 'month',
   iMM: 'month',
   iMMM: { sectionName: 'month', contentType: 'letter' },
   iMMMM: { sectionName: 'month', contentType: 'letter' },
