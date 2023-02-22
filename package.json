@@ -24,6 +24,7 @@
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx --max-warnings 0",
     "markdownlint": "markdownlint-cli2 \"**/*.md\"",
+    "metrics": "babel-node ./scripts/metrics.js",
     "postinstall": "patch-package",
     "prettier": "pretty-quick --branch master --ignore-path .eslintignore",
     "prettier:all": "prettier --write . --ignore-path .eslintignore",
