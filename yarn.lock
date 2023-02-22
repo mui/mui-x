@@ -2316,10 +2316,10 @@
     "@octokit/types" "^9.0.0"
     deprecation "^2.3.1"
 
-"@octokit/plugin-retry@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-4.1.1.tgz#2a96e97219f6506d636b4de696cf368da44a8e20"
-  integrity sha512-iR7rg5KRSl6L6RELTQQ3CYeNgeBJyuAmP95odzcQ/zyefnRT/Peo8rWeky4z7V/+/oPWqOL4I5Z+V8KtjpHCJw==
+"@octokit/plugin-retry@^4.1.2":
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-retry/-/plugin-retry-4.1.2.tgz#4a8be9cdd75c0b650a5547b1b527a1498391242f"
+  integrity sha512-hscf7p/6DIQ8xbfDrMl9IflxugED6sFQvAUbSi75R6h/6hcNQgrb2vpfPTmyYKkdAEeTkUsEpzpQFdTAhSITOw==
   dependencies:
     "@octokit/types" "^9.0.0"
     bottleneck "^2.15.3"
