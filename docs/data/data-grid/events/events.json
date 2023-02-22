@@ -182,7 +182,7 @@
     "projects": ["x-data-grid-premium"],
     "name": "excelExportStateChange",
     "description": "Fired when the state of the Excel export task changes",
-    "params": "boolean",
+    "params": "'pending' | 'finished'",
     "event": "MuiEvent<{}>"
   },
   {

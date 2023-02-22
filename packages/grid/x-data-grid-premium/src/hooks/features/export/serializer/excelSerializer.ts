@@ -446,11 +446,7 @@ export interface ExcelExportInitEvent {
   valueOptionsData: ValueOptionsData;
   options: Omit<
     GridExcelExportOptions,
-    | 'workerUrl'
-    | 'exceljsPreProcess'
-    | 'exceljsPostProcess'
-    | 'columnsStyles'
-    | 'valueOptionsSheetName'
+    'exceljsPreProcess' | 'exceljsPostProcess' | 'columnsStyles' | 'valueOptionsSheetName'
   >;
 }
 
