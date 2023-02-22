@@ -319,7 +319,7 @@ export const getSectionVisibleValue = (
 };
 
 export const cleanString = (dirtyString: string) =>
-  dirtyString.replace(/\u2066|\u2067|\u2068|\u2069/g, '');
+  dirtyString.replace(/[\u2066\u2067\u2068\u2069]/g, '');
 
 export const addPositionPropertiesToSections = <TSection extends FieldSection>(
   sections: Omit<TSection, 'start' | 'end' | 'startInInput' | 'endInInput'>[],
@@ -556,7 +556,7 @@ export const splitFormatIntoSections = <TDate>(
 
   splitFormat(format);
 
-  const cleanSections = sections.map((section) => {
+  return sections.map((section) => {
     const cleanSeparator = (separator: string) => {
       let cleanedSeparator = separator;
       if (cleanedSeparator !== null && cleanedSeparator.includes(' ')) {
@@ -575,8 +575,6 @@ export const splitFormatIntoSections = <TDate>(
 
     return section;
   });
-
-  return cleanSections;
 };
 
 /**
@@ -807,16 +805,16 @@ export const validateSections = <TSection extends FieldSection>(
   sections: TSection[],
   valueType: FieldValueType,
 ) => {
-  const supportedSections: MuiDateSectionName[] = [];
-  if (['date', 'date-time'].includes(valueType)) {
-    supportedSections.push('weekDay', 'day', 'month', 'year');
-  }
-  if (['time', 'date-time'].includes(valueType)) {
-    supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
-  }
-
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
+      const supportedSections: MuiDateSectionName[] = [];
+      if (['date', 'date-time'].includes(valueType)) {
+        supportedSections.push('weekDay', 'day', 'month', 'year');
+      }
+      if (['time', 'date-time'].includes(valueType)) {
+        supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
+      }
+
       const invalidSection = sections.find(
         (section) => !supportedSections.includes(section.dateSectionName),
       );
@@ -938,9 +936,9 @@ export const getSectionOrder = (
     return { neighbors, startIndex: 0, endIndex: sections.length - 1 };
   }
 
-  type PotisionMapping = { [from: number]: number };
-  const rtl2ltr: PotisionMapping = {};
-  const ltr2rtl: PotisionMapping = {};
+  type PositionMapping = { [from: number]: number };
+  const rtl2ltr: PositionMapping = {};
+  const ltr2rtl: PositionMapping = {};
 
   let groupedSectionsStart = 0;
   let groupedSectionsEnd = 0;
