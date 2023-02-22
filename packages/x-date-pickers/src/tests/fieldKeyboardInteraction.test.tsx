@@ -56,12 +56,19 @@ adapterToTest.forEach((adapterName) => {
       adapterName,
     });
 
-    if (adapterName === 'moment') {
-      moment.locale('en');
-    }
-    if (adapterName === 'moment-jalaali') {
-      jMoment.loadPersian();
-    }
+    before(() => {
+      if (adapterName === 'moment-jalaali') {
+        jMoment.loadPersian();
+      } else if (adapterName === 'moment') {
+        moment.locale('en');
+      }
+    });
+
+    after(() => {
+      if (adapterName === 'moment-jalaali') {
+        moment.locale('en');
+      }
+    });
 
     const { clickOnInput } = buildFieldInteractions({ clock, render, Component: DateTimeField });
 

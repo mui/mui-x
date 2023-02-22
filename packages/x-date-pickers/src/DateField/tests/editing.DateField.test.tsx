@@ -134,7 +134,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the first month of the current year when when a value in December is provided', () => {
+    it('should go to the first month of the current year when a value in December is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndYear,
         defaultValue: adapter.date(new Date(2022, 11, 15)),

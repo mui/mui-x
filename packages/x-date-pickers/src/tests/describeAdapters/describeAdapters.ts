@@ -1,5 +1,4 @@
 import * as React from 'react';
-import moment from 'moment';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import {
   AdapterName,
@@ -22,10 +21,6 @@ function innerDescribeAdapters<P extends {}>(
 ) {
   ADAPTERS.forEach((adapterName) => {
     describe(`${title} - adapter: ${adapterName}`, () => {
-      if (adapterName === 'moment') {
-        moment.locale('en');
-      }
-
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
         clock: 'fake',

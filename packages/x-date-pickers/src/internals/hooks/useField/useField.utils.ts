@@ -344,22 +344,46 @@ export const doesSectionHaveTrailingZeros = <TDate>(
     return false;
   }
 
-  if (dateSectionName === 'weekDay') {
-    return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
-  }
+  switch (dateSectionName) {
+    // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
+    case 'year': {
+      if (isFourDigitYearFormat(utils, format)) {
+        const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
+        return formatted0001 === '0001';
+      }
 
-  // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
-  if (dateSectionName === 'year') {
-    if (isFourDigitYearFormat(utils, format)) {
-      const formatted0001 = utils.formatByString(utils.setYear(utils.date()!, 1), format);
-      return formatted0001 === '0001';
+      const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
+      return formatted2001 === '01';
     }
 
-    const formatted2001 = utils.formatByString(utils.setYear(utils.date()!, 2001), format);
-    return formatted2001 === '01';
-  }
+    case 'month': {
+      return utils.formatByString(utils.startOfYear(utils.date()!), format).length > 1;
+    }
 
-  return changeSectionValueFormat(utils, '1', format, format).length > 1;
+    case 'day': {
+      return utils.formatByString(utils.startOfMonth(utils.date()!), format).length > 1;
+    }
+
+    case 'weekDay': {
+      return utils.formatByString(utils.startOfWeek(utils.date()!), format).length > 1;
+    }
+
+    case 'hours': {
+      return utils.formatByString(utils.setHours(utils.date()!, 1), format).length > 1;
+    }
+
+    case 'minutes': {
+      return utils.formatByString(utils.setMinutes(utils.date()!, 1), format).length > 1;
+    }
+
+    case 'seconds': {
+      return utils.formatByString(utils.setMinutes(utils.date()!, 1), format).length > 1;
+    }
+
+    default: {
+      throw new Error('Invalid dateSectionName');
+    }
+  }
 };
 
 const getEscapedPartsFromFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) => {
