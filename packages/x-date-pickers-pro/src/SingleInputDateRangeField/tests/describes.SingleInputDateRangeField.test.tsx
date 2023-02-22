@@ -9,7 +9,7 @@ describe('<SingleInputDateRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<SingleInputDateRangeField />, () => ({
-    classes: {},
+    classes: {} as any,
     inheritComponent: TextField,
     render,
     muiName: 'MuiSingleInputDateRangeField',

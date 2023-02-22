@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  ErrorBoundary,
-  fireEvent,
-  screen,
-  // @ts-ignore Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+import { createRenderer, ErrorBoundary, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { DataGrid, GridOverlay } from '@mui/x-data-grid';
@@ -100,7 +94,7 @@ describe('<DataGrid /> - Components', () => {
         </div>,
       );
       expect(onClick.callCount).to.equal(0);
-      const button = screen.queryByRole('button', { name: /show filters/i });
+      const button = screen.getByRole('button', { name: /show filters/i });
       fireEvent.click(button);
       expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
       expect(onClick.lastCall.args[1]).to.have.property('target', button);

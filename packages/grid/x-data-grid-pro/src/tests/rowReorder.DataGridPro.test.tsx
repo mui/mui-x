@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, createEvent } from '@mui/monorepo/test/utils';
 import { getCell, getRowsFieldContent } from 'test/utils/helperFn';
 import { useGridApiRef, DataGridPro, gridClasses, GridApi } from '@mui/x-data-grid-pro';

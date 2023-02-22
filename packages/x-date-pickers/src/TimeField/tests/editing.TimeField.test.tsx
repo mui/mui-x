@@ -2,8 +2,8 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
-import { screen, userEvent, fireEvent } from '@mui/monorepo/test/utils';
-import { expectInputValue, getCleanedSelectedContent } from 'test/utils/pickers-utils';
+import { userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { expectInputValue, getCleanedSelectedContent, getTextbox } from 'test/utils/pickers-utils';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
 describe('<TimeField /> - Editing', () => {
@@ -293,7 +293,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `2` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "2"
@@ -305,7 +305,7 @@ describe('<TimeField /> - Editing', () => {
       it('should go to the next section when pressing `1` then `3` in a 12-hours format', () => {
         render(<TimeField format={adapter.formats.fullTime12h} />);
 
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 0);
 
         // Press "1"
@@ -403,7 +403,7 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 
@@ -420,7 +420,7 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
 
         userEvent.keyPress(input, { key: 'a', ctrlKey: true });
@@ -445,7 +445,7 @@ describe('<TimeField /> - Editing', () => {
             onChange={onChange}
           />,
         );
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 1);
         userEvent.keyPress(input, { key: 'ArrowDown' });
 

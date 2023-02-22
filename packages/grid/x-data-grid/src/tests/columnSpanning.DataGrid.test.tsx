@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, within, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
@@ -228,7 +227,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       fireEvent.keyDown(getCell(1, 3), { key: 'Enter' });
 
       // commit
-      fireEvent.keyDown(getCell(1, 3).querySelector('input'), { key: 'Enter' });
+      fireEvent.keyDown(getCell(1, 3).querySelector('input')!, { key: 'Enter' });
       expect(getActiveCell()).to.equal('2-2');
     });
 
@@ -246,7 +245,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       // start editing
       fireEvent.keyDown(getCell(1, 1), { key: 'Enter' });
 
-      fireEvent.keyDown(getCell(1, 1).querySelector('input'), { key: 'Tab' });
+      fireEvent.keyDown(getCell(1, 1).querySelector('input')!, { key: 'Tab' });
       expect(getActiveCell()).to.equal('1-3');
     });
 
@@ -264,7 +263,7 @@ describe('<DataGrid /> - Column Spanning', () => {
       // start editing
       fireEvent.keyDown(getCell(0, 2), { key: 'Enter' });
 
-      fireEvent.keyDown(getCell(0, 2).querySelector('input'), { key: 'Tab', shiftKey: true });
+      fireEvent.keyDown(getCell(0, 2).querySelector('input')!, { key: 'Tab', shiftKey: true });
       expect(getActiveCell()).to.equal('0-0');
     });
 

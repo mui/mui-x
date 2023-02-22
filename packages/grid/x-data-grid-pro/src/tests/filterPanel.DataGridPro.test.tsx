@@ -7,7 +7,6 @@ import {
   GridApi,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

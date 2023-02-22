@@ -13,7 +13,8 @@ describe('<StaticDateRangePicker />', () => {
   });
 
   describeConformance(<StaticDateRangePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiStaticDateRangePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: undefined,

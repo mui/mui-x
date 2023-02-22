@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowsProp, GridColDef } from '@mui/x-data-grid';
 import {

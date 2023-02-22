@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { expect } from 'chai';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, ErrorBoundary, screen } from '@mui/monorepo/test/utils';
 import { DataGrid, DataGridProps, GridRowModel, GridColDef } from '@mui/x-data-grid';
 
@@ -293,6 +292,7 @@ describe('<DataGrid /> - Column grouping', () => {
   describe.skip('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
       return (
+        // @ts-ignore TODO: check this
         <ErrorBoundary logger={console}>
           <TestDataGrid {...props} />
         </ErrorBoundary>

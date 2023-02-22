@@ -1,10 +1,10 @@
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, act, GridApiPro } from '@mui/monorepo/test/utils';
+import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
+import { GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render, clock } = createRenderer({ clock: 'fake' });

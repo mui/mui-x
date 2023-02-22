@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { screen } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, expectInputValue, adapterToUse } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  expectInputValue,
+  adapterToUse,
+  getTextbox,
+} from 'test/utils/pickers-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 describe('<DateField /> - Format', () => {
@@ -12,7 +16,7 @@ describe('<DateField /> - Format', () => {
     const { setProps } = render(
       <DateField format={`${startChar}Escaped${endChar} ${adapterToUse.formats.year}`} />,
     );
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     expectInputValue(input, 'Escaped YYYY');
 
     setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });
@@ -27,7 +31,7 @@ describe('<DateField /> - Format', () => {
         format={`${adapterToUse.formats.month} ${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     expectInputValue(input, 'MMMM Escaped YYYY');
 
     setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });
@@ -48,7 +52,7 @@ describe('<DateField /> - Format', () => {
         format={`${adapterToUse.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapterToUse.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     expectInputValue(input, 'MMMM Escaped [ YYYY');
 
     setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });
@@ -64,7 +68,7 @@ describe('<DateField /> - Format', () => {
         format={`${startChar}Escaped${endChar} ${adapterToUse.formats.month} ${startChar}Escaped${endChar} ${adapterToUse.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     expectInputValue(input, 'Escaped MMMM Escaped YYYY');
 
     setProps({ value: adapterToUse.date(new Date(2019, 0, 1)) });

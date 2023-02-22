@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, ErrorBoundary, waitFor } from '@mui/monorepo/test/utils';
 import { stub, spy } from 'sinon';
 import { expect } from 'chai';
@@ -94,13 +93,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
 
       const { container, setProps } = render(<TestCase width={300} />);
       let rect;
-      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+      rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
 
       await waitFor(() => {
-        rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+        rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
     });
@@ -115,7 +114,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-        expect(ref.current).to.equal(container.firstChild.firstChild);
+        expect(ref.current).to.equal(container.firstChild?.firstChild);
       });
 
       describe('`classes` prop', () => {
@@ -130,7 +129,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
             </div>,
           );
 
-          expect(container.firstChild.firstChild).to.have.class(classes.root);
+          expect(container.firstChild?.firstChild).to.have.class(classes.root);
         });
 
         it('should support class names with underscores', () => {
@@ -156,7 +155,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
+        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild?.firstChild);
       });
 
       it('should support columns.valueGetter using direct row access', () => {
@@ -605,6 +604,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }
 
         const { setProps } = render(<Test />);
+        // @ts-ignore TODO check validity of this
         setProps();
 
         const firstColumn = getColumnHeaderCell(0);
@@ -846,7 +846,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         },
       ];
 
-      const errorRef = React.createRef();
+      const errorRef = React.createRef<any>();
       expect(() => {
         render(
           <ErrorBoundary ref={errorRef}>

@@ -43,7 +43,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     ],
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
-      const textBoxes = screen.getAllByRole('textbox');
+      const textBoxes: HTMLInputElement[] = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
@@ -64,11 +64,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
       if (isOpened) {
         userEvent.mousePress(
           screen.getAllByRole('gridcell', {
-            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]),
+            name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
           })[0],
         );
       } else {
-        const input = screen.getAllByRole('textbox')[0];
+        const input = (screen.getAllByRole('textbox') as HTMLInputElement[])[0];
         clickOnInput(input, 9, 11); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

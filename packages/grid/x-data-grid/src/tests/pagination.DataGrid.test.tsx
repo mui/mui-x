@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  // @ts-ignore Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
@@ -106,7 +100,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should apply the new pageSize when clicking on a page size option and onPaginationModelChange is not defined and paginationModel is not controlled', () => {
       render(<BaselineTestCase pageSizeOptions={[1, 2, 3, 100]} />);
-      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      fireEvent.mouseDown(screen.getByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -122,7 +116,7 @@ describe('<DataGrid /> - Pagination', () => {
           pageSizeOptions={[1, 2, 3, 100]}
         />,
       );
-      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      fireEvent.mouseDown(screen.getByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -297,7 +291,7 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
 
-      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      fireEvent.mouseDown(screen.getByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -310,7 +304,7 @@ describe('<DataGrid /> - Pagination', () => {
         <BaselineTestCase paginationModel={{ pageSize: 1, page: 0 }} pageSizeOptions={[1, 2, 3]} />,
       );
 
-      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      fireEvent.mouseDown(screen.getByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
@@ -655,7 +649,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
 
-      fireEvent.mouseDown(screen.queryByLabelText('Rows per page:'));
+      fireEvent.mouseDown(screen.getByLabelText('Rows per page:'));
       expect(screen.queryAllByRole('option').length).to.equal(2);
       fireEvent.click(screen.queryAllByRole('option')[1]);
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4']);

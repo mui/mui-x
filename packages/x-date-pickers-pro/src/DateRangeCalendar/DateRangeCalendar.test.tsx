@@ -25,7 +25,7 @@ import { DateRangePickerDay } from '@mui/x-date-pickers-pro/DateRangePickerDay';
 import { DateRangePosition } from './DateRangeCalendar.types';
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 const dynamicShouldDisableDate = (date, position: DateRangePosition) => {
   if (position === 'end') {
@@ -149,23 +149,20 @@ describe('<DateRangeCalendar />', () => {
 
       const fireTouchEvent = (
         type: 'touchstart' | 'touchmove' | 'touchend',
-        target: ChildNode,
+        target: Element,
         touch: TouchTarget,
       ) => {
         fireTouchChangedEvent(target, type, { changedTouches: [touch] });
       };
 
-      const executeDateTouchDragWithoutEnd = (
-        target: ChildNode,
-        ...touchTargets: TouchTarget[]
-      ) => {
+      const executeDateTouchDragWithoutEnd = (target: Element, ...touchTargets: TouchTarget[]) => {
         fireTouchEvent('touchstart', target, touchTargets[0]);
         touchTargets.slice(0, touchTargets.length - 1).forEach((touch) => {
           fireTouchEvent('touchmove', target, touch);
         });
       };
 
-      const executeDateTouchDrag = (target: ChildNode, ...touchTargets: TouchTarget[]) => {
+      const executeDateTouchDrag = (target: Element, ...touchTargets: TouchTarget[]) => {
         const endTouchTarget = touchTargets[touchTargets.length - 1];
         executeDateTouchDragWithoutEnd(target, ...touchTargets);
         fireTouchEvent('touchend', target, endTouchTarget);
@@ -408,7 +405,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateDragWithoutDrop(
           screen.getByRole('gridcell', { name: '1' }),
@@ -417,7 +416,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
 
       it('should dynamically update "shouldDisableDate" when flip touch dragging', function test() {
@@ -437,7 +438,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(6);
+        expect(
+          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+        ).to.have.lengthOf(6);
         // flip date range
         executeDateTouchDragWithoutEnd(
           screen.getByRole('gridcell', { name: '1' }),
@@ -447,7 +450,9 @@ describe('<DateRangeCalendar />', () => {
         );
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
-        expect(screen.getAllByRole('gridcell').filter((c) => c.disabled)).to.have.lengthOf(10);
+        expect(
+          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+        ).to.have.lengthOf(10);
       });
     });
   });

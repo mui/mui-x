@@ -11,6 +11,7 @@ import {
   adapterToUse,
   openPicker,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 
 describe('<DesktopDatePicker />', () => {
@@ -66,7 +67,7 @@ describe('<DesktopDatePicker />', () => {
     const handleChange = spy();
 
     render(<DesktopDatePicker onChange={handleChange} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
 
     fireEvent.change(input, {
       target: {

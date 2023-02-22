@@ -38,7 +38,9 @@ describe('<MobileDatePicker /> - Describes', () => {
       }
 
       const newValue = applySameValue ? value : adapterToUse.addDays(value, 1);
-      userEvent.mousePress(screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }));
+      userEvent.mousePress(
+        screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
+      );
 
       // Close the picker to return to the initial state
       if (!isOpened) {

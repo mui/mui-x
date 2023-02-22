@@ -6,6 +6,7 @@ import {
   buildFieldInteractions,
   createPickerRenderer,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 
@@ -43,7 +44,7 @@ describe('<DateTimeField /> - Describes', () => {
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 10); // Update the day
       userEvent.keyPress(input, { key: 'ArrowUp' });
       return newValue;

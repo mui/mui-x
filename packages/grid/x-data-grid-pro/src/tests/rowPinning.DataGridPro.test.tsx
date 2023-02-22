@@ -9,14 +9,7 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  userEvent,
-  // @ts-expect-error Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getActiveCell,
   getActiveColumnHeader,

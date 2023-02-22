@@ -23,7 +23,8 @@ describe('<StaticTimePicker />', () => {
   }));
 
   describeConformance(<StaticTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiStaticTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: undefined,

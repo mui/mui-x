@@ -9,7 +9,6 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
 
 describe('<DataGridPro /> - Print export', () => {
@@ -59,7 +58,7 @@ describe('<DataGridPro /> - Print export', () => {
 
     it('should display print button by default', () => {
       render(<Test components={{ Toolbar: GridToolbar }} />);
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).not.to.equal(null);
     });
@@ -71,7 +70,7 @@ describe('<DataGridPro /> - Print export', () => {
           componentsProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
         />,
       );
-      fireEvent.click(screen.queryByRole('button', { name: 'Export' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Print' })).to.equal(null);
     });

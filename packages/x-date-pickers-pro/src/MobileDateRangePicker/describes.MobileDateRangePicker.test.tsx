@@ -39,7 +39,10 @@ describe('<MobileDateRangePicker /> - Describes', () => {
     emptyValue: [null, null],
     assertRenderedValue: (expectedValues: any[]) => {
       // `getAllByRole('textbox')` does not work here, because inputs are `readonly`
-      const textBoxes = [screen.getByLabelText('Start'), screen.getByLabelText('End')];
+      const textBoxes: HTMLInputElement[] = [
+        screen.getByLabelText('Start'),
+        screen.getByLabelText('End'),
+      ];
       expectedValues.forEach((value, index) => {
         const expectedValueStr =
           value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
@@ -63,7 +66,7 @@ describe('<MobileDateRangePicker /> - Describes', () => {
 
       userEvent.mousePress(
         screen.getAllByRole('gridcell', {
-          name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]),
+          name: adapterToUse.getDate(newValue[setEndDate ? 1 : 0]).toString(),
         })[0],
       );
 

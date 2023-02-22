@@ -6,7 +6,6 @@ import {
   act,
   userEvent,
   ErrorBoundary,
-  // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
@@ -116,9 +115,9 @@ describe('<DataGrid /> - Rows', () => {
         />
       </div>,
     );
-    fireEvent.click(document.querySelector('input[name="portal-input"]'));
+    fireEvent.click(document.querySelector('input[name="portal-input"]')!);
     expect(handleRowClick.callCount).to.equal(0);
-    fireEvent.click(document.querySelector('input[name="input"]'));
+    fireEvent.click(document.querySelector('input[name="input"]')!);
     expect(handleRowClick.callCount).to.equal(1);
   });
 
@@ -251,7 +250,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
       expect(screen.queryByText('print')).not.to.equal(null);
-      fireEvent.click(screen.queryByText('print'));
+      fireEvent.click(screen.getByText('print'));
       expect(getRow(0)).not.to.have.class('Mui-selected');
     });
 
@@ -293,7 +292,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
-      const printButton = screen.queryByRole('menuitem', { name: 'print' });
+      const printButton = screen.getByRole('menuitem', { name: 'print' });
       expect(printButton).toHaveFocus();
 
       fireEvent.keyDown(printButton, { key: 'ArrowLeft' });
