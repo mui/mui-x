@@ -1775,7 +1775,7 @@
 
 "@mui/monorepo@https://github.com/LukasTy/material-ui.git#fix-alternate-calendar-adapters-deps-resolving":
   version "5.11.10"
-  resolved "https://github.com/LukasTy/material-ui.git#3f3ccc0964a209fcdadb481fbba3b447872f6b86"
+  resolved "https://github.com/LukasTy/material-ui.git#0f819b3ad8d1a33e1229d8400e5f5cecde2f6d69"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
