@@ -141,6 +141,11 @@ export interface FieldSection {
   hasTrailingZeroes: boolean;
 }
 
+export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
+  TSection,
+  'start' | 'end' | 'startInInput' | 'endInInput'
+>;
+
 export type FieldSectionsValueBoundaries<TDate> = Record<
   MuiDateSectionName,
   (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
@@ -284,7 +289,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   hasError: (error: TError) => boolean;
   /**
-   * Return a description of sections display order. This description is usefull in RTL mode.
+   * Return a description of sections display order. This description is useful in RTL mode.
    * @template TDate
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The translation object.
