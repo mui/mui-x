@@ -10,6 +10,7 @@ import {
 } from '@mui/x-data-grid-premium';
 // @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
+import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';
 
@@ -351,6 +352,57 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(worksheet.getCell('A3').type).to.equal(Excel.ValueType.String);
       expect(worksheet.getCell('B3').type).to.equal(Excel.ValueType.String);
       expect(worksheet.getCell('C3').type).to.equal(Excel.ValueType.String);
+    });
+  });
+
+  describe('web worker', () => {
+    let workerMock: { postMessage: SinonSpy };
+
+    beforeEach(() => {
+      workerMock = {
+        postMessage: spy(),
+      };
+    });
+
+    it('should not call getDataAsExcel', async () => {
+      render(<TestCaseExcelExport />);
+      const getDataAsExcelSpy = spy(apiRef.current, 'getDataAsExcel');
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(getDataAsExcelSpy.calledOnce).to.equal(false);
+    });
+
+    it('should post a message to the web worker with the serialized columns', async () => {
+      render(<TestCaseExcelExport />);
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(workerMock.postMessage.lastCall.args[0].serializedColumns).to.deep.equal([
+        { key: 'id', headerText: 'id', style: {}, width: 100 / 7.5 },
+        { key: 'brand', headerText: 'Brand', style: {}, width: 100 / 7.5 },
+      ]);
+    });
+
+    it('should post a message to the web worker with the serialized rows', async () => {
+      render(<TestCaseExcelExport />);
+      await act(() => apiRef.current.exportDataAsExcel({ worker: () => workerMock as any }));
+      expect(workerMock.postMessage.lastCall.args[0].serializedRows).to.deep.equal([
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[0],
+        },
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[1],
+        },
+        {
+          dataValidation: {},
+          mergedCells: [],
+          outlineLevel: 0,
+          row: baselineProps.rows[2],
+        },
+      ]);
     });
   });
 });

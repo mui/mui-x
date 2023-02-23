@@ -1735,9 +1735,9 @@
     react-is "^18.2.0"
 
 "@mui/core-downloads-tracker@^5.11.7":
-  version "5.11.7"
-  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.7.tgz#b3a3aad64c6b69f6165d7a00c0d9cfeacbe357a2"
-  integrity sha512-lZgX7XQTk0zVcpwEa80r+T4y09dosnUxWvFPSikU/2Hh5wnyNOek8WfJwGCNsaRiXJHMi5eHY+z8oku4u5lgNw==
+  version "5.11.8"
+  resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.8.tgz#e1ba16686276b75f501ebe4fd5b60ce600704e3c"
+  integrity sha512-n/uJRIwZAaJaROaOA4VzycxDo27cusnrRzfycnAkAP5gBndwOJQ1CXjd1Y7hJe5eorj/ukixC7IZD+qCClMCMg==
 
 "@mui/icons-material@^5.11.0":
   version "5.11.0"
@@ -1781,8 +1781,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.11.6"
-  resolved "https://github.com/mui/material-ui.git#a722357b47d5572301334bb716c985e770046ced"
+  version "5.11.8"
+  resolved "https://github.com/mui/material-ui.git#f800c835562da9cc8fa3f7615b32a8e6cc8b31d8"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
@@ -1794,11 +1794,11 @@
     prop-types "^15.8.1"
 
 "@mui/styled-engine@^5.11.0":
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.11.0.tgz#79afb30c612c7807c4b77602cf258526d3997c7b"
-  integrity sha512-AF06K60Zc58qf0f7X+Y/QjaHaZq16znliLnGc9iVrV/+s8Ln/FCoeNuFvhlCbZZQ5WQcJvcy59zp0nXrklGGPQ==
+  version "5.11.8"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.11.8.tgz#4b0c8c7985b1629f83fdb54dc0883fd07a5d28f0"
+  integrity sha512-iSpZp9AoeictsDi5xAQ4PGXu7mKtQyzMl7ZaWpHIGMFpsNnfY3NQNg+wkj/gpsAZ+Zg+IIyD+t+ig71Kr9fa0w==
   dependencies:
-    "@babel/runtime" "^7.20.6"
+    "@babel/runtime" "^7.20.7"
     "@emotion/cache" "^11.10.5"
     csstype "^3.1.1"
     prop-types "^15.8.1"
@@ -1842,8 +1842,7 @@
 
 "@mui/types@^7.2.3":
   version "7.2.3"
-  resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.2.3.tgz#06faae1c0e2f3a31c86af6f28b3a4a42143670b9"
-  integrity sha512-tZ+CQggbe9Ol7e/Fs5RcKwg/woU+o8DCtOnccX6KmbBc7YrfqMYEYuaIcXHuhpT880QwNkZZ3wQwvtlDFA2yOw==
+  resolved "https://pkg.csb.dev/mui/material-ui/commit/521c0b77/@mui/types#2526c52203f38222aa3dac17ebf63502adb771bd"
 
 "@mui/utils@^5.11.7", "@mui/utils@^5.11.9":
   version "5.11.9"
