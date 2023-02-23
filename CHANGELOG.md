@@ -33,6 +33,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 - [fields] Fix single input time range fields slot props (#7988) @LukasTy
 - [fields] Make the `ArrowUp` / `ArrowDown` edition only impact the active section (#7993) @flaviendelangle
 - [fields] Fix single input range fields clearing (#7995) @flaviendelangle
+- [fields] Clean the section object (#8009) @flaviendelangle
 - [pickers] Fix `textField` slot `error` prop propagation (#7987) @LukasTy
 
 ### `@mui/x-codemod@v6.0.0-beta.5`
