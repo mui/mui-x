@@ -54,6 +54,8 @@ export interface GridCsvGetRowsToExportParams<Api extends GridApiCommon = GridAp
 
 /**
  * The options to apply on the CSV export.
+ * @demos
+ *   - [CSV export](/x/react-data-grid/export/#csv-export)
  */
 export interface GridCsvExportOptions extends GridFileExportOptions {
   /**
@@ -87,6 +89,8 @@ export interface GridCsvExportOptions extends GridFileExportOptions {
 
 /**
  * The options to apply on the Print export.
+ * @demos
+ *   - [Print export](/x/react-data-grid/export/#print-export)
  */
 export interface GridPrintExportOptions extends GridExportOptions {
   /**
