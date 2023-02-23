@@ -206,7 +206,7 @@ const getSectionVisibleValue = (
   const value = section.value || section.placeholder;
 
   // In the input, we add an empty character at the end of each section without leading zeros.
-  // This make sure that `onChange` will always be fired.
+  // This makes sure that `onChange` will always be fired.
   // Otherwise, when your input value equals `1/dd/yyyy` (format `M/DD/YYYY` on DayJs),
   // If you press `1`, on the first section, the new value is also `1/dd/yyyy`,
   // So the browser will not fire the input `onChange`.
@@ -438,7 +438,7 @@ export const splitFormatIntoSections = <TDate>(
       hasLeadingZeros: hasTrailingZeroes,
       startSeparator: sections.length === 0 ? startSeparator : '',
       endSeparator: '',
-      edited: false,
+      modified: false,
     });
 
     return null;
@@ -731,7 +731,7 @@ export const mergeDateIntoReferenceDate = <TDate>(
   shouldLimitToEditedSections: boolean,
 ) =>
   sections.reduce((mergedDate, section) => {
-    if (!shouldLimitToEditedSections || section.edited) {
+    if (!shouldLimitToEditedSections || section.modified) {
       return transferDateSectionValue(utils, section, dateToTransferFrom, mergedDate);
     }
 

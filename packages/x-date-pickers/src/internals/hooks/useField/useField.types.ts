@@ -108,7 +108,7 @@ export interface FieldSection {
    */
   value: string;
   /**
-   * Format token used to format generate the value of this section from the date object.
+   * Format token used to parse the value of this section from the date object.
    * For example, in the format `MMMM D, YYYY`, the format of the month section is "MMMM".
    */
   format: string;
@@ -127,7 +127,7 @@ export interface FieldSection {
   contentType: 'digit' | 'letter';
   /**
    * If `true`, the value of this section is supposed to have leading zeroes.
-   * For example, if the value `1` is rendered "01` instead of "1".
+   * For example, the value `1` should be rendered as "01" instead of "1".
    */
   hasLeadingZeros: boolean;
   /**
@@ -137,9 +137,9 @@ export interface FieldSection {
    * - time if the format does not contain it
    * - timezone / UTC
    *
-   * To avoid loosing those information, we transfer the values of the edited sections from the newly generated date to the original date.
+   * To avoid losing those information, we transfer the values of the modified sections from the newly generated date to the original date.
    */
-  edited: boolean;
+  modified: boolean;
   /**
    * Start index of the section in the format
    */

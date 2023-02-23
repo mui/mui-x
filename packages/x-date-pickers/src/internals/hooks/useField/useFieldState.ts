@@ -183,7 +183,7 @@ export const useFieldState = <
     newSections[sectionIndex] = {
       ...newSections[sectionIndex],
       value: newSectionValue,
-      edited: true,
+      modified: true,
     };
 
     return addPositionPropertiesToSections<TSection>(newSections);
