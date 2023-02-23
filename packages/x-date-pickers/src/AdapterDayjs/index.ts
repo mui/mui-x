@@ -3,7 +3,7 @@ import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -13,7 +13,7 @@ const localeNotFoundWarning = buildWarning([
   'fallback on English locale',
 ]);
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   YY: 'year',
   YYYY: 'year',
   M: 'month',

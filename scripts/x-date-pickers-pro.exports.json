@@ -155,7 +155,7 @@
   { "name": "MonthCalendarClasses", "kind": "Interface" },
   { "name": "MonthCalendarClassKey", "kind": "TypeAlias" },
   { "name": "MonthCalendarProps", "kind": "Interface" },
-  { "name": "MuiDateSectionName", "kind": "TypeAlias" },
+  { "name": "FieldSectionType", "kind": "TypeAlias" },
   { "name": "MuiPickersAdapterContext", "kind": "Variable" },
   { "name": "MultiInputDateRangeField", "kind": "Variable" },
   { "name": "MultiInputDateRangeFieldProps", "kind": "Interface" },

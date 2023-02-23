@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
+import { FieldSectionType, MuiPickersAdapter } from '../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -66,7 +66,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -119,7 +119,7 @@ export interface FieldSection {
   /**
    * Name of the section.
    */
-  name: MuiDateSectionName;
+  type: FieldSectionType;
   /**
    * Type of content of the section.
    * Will determine if we should apply a digit-based editing or a letter-based editing.
@@ -178,7 +178,7 @@ export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSec
 >;
 
 export type FieldSectionsValueBoundaries<TDate> = Record<
-  MuiDateSectionName,
+  FieldSectionType,
   (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
     minimum: number;
     maximum: number;
@@ -230,7 +230,7 @@ export type FieldSelectedSectionsIndexes = {
 
 export type FieldSelectedSections =
   | number
-  | MuiDateSectionName
+  | FieldSectionType
   | null
   | 'all'
   | { startIndex: number; endIndex: number };

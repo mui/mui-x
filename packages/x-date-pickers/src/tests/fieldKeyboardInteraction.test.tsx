@@ -8,14 +8,14 @@ import {
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { MuiDateSectionName, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { FieldSectionType, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
 function updateDate<TDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
-  sectionName: MuiDateSectionName,
+  sectionName: FieldSectionType,
   diff: number,
 ) {
   switch (sectionName) {

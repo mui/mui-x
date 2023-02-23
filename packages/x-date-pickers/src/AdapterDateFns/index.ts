@@ -3,9 +3,9 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import getWeek from 'date-fns/getWeek';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   y: 'year',
   yy: 'year',
   yyy: 'year',

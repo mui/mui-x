@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   s: 'seconds',
   ss: 'seconds',
 

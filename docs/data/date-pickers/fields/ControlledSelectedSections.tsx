@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { MuiDateSectionName, FieldSelectedSections } from '@mui/x-date-pickers';
+import { FieldSectionType, FieldSelectedSections } from '@mui/x-date-pickers';
 import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function ControlledSelectedSections() {
@@ -11,9 +11,7 @@ export default function ControlledSelectedSections() {
     React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const setSelectedDateSectionName = (
-    selectedDateSectionName: MuiDateSectionName,
-  ) => {
+  const setSelectedDateSectionName = (selectedDateSectionName: FieldSectionType) => {
     inputRef.current?.focus();
     setSelectedSections(selectedDateSectionName);
   };

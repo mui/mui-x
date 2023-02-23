@@ -1,10 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   // Month
   M: 'month',
   MM: 'month',

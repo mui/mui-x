@@ -1,6 +1,6 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiDateSectionName } from '../../models/muiPickersAdapter';
+import { FieldSectionType } from '../../models/muiPickersAdapter';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
 import {
@@ -16,7 +16,7 @@ import { UpdateSectionValueParams } from './useFieldState';
 interface CharacterEditingQuery {
   value: string;
   sectionIndex: number;
-  dateSectionName: MuiDateSectionName;
+  dateSectionName: FieldSectionType;
 }
 
 interface ApplyCharacterEditingParams {
@@ -86,7 +86,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const resetQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.name !== query.dateSectionName) {
+    if (query != null && sections[query.sectionIndex]?.type !== query.dateSectionName) {
       resetQuery();
     }
   }, [sections, query, resetQuery]);
@@ -128,7 +128,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         setQuery({
           sectionIndex,
           value: concatenatedQueryValue,
-          dateSectionName: activeSection.name,
+          dateSectionName: activeSection.type,
         });
         return queryResponse;
       }
@@ -143,7 +143,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     setQuery({
       sectionIndex,
       value: cleanKeyPressed,
-      dateSectionName: activeSection.name,
+      dateSectionName: activeSection.type,
     });
 
     if (isQueryResponseWithoutValue(queryResponse)) {
@@ -180,7 +180,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
       const getOptions = (format: string) =>
-        getLetterEditingOptions(utils, activeSection.name, format);
+        getLetterEditingOptions(utils, activeSection.type, format);
 
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
@@ -217,7 +217,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       queryValue,
       activeSection,
     ) => {
-      switch (activeSection.name) {
+      switch (activeSection.type) {
         case 'month': {
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
@@ -263,7 +263,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const applyNumericEditing: CharacterEditingApplier = (params) => {
     const getNewSectionValue = (
       queryValue: string,
-      dateSectionName: MuiDateSectionName,
+      dateSectionName: FieldSectionType,
       format: string,
       hasTrailingZeroes: boolean,
       contentType: 'digit' | 'letter',
@@ -306,7 +306,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       if (activeSection.contentType === 'digit') {
         return getNewSectionValue(
           queryValue,
-          activeSection.name,
+          activeSection.type,
           activeSection.format,
           activeSection.hasLeadingZeros,
           activeSection.contentType,
@@ -315,10 +315,10 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       // When editing a letter-format month and the user presses a digit,
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
-      if (activeSection.name === 'month') {
+      if (activeSection.type === 'month') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.name,
+          activeSection.type,
           'MM',
           doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
           'digit',
@@ -342,10 +342,10 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       // When editing a letter-format weekDay and the user presses a digit,
       // We can support the numeric editing by returning the nth day in the week day array.
-      if (activeSection.name === 'weekDay') {
+      if (activeSection.type === 'weekDay') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.name,
+          activeSection.type,
           activeSection.format,
           activeSection.hasLeadingZeros,
           activeSection.contentType,

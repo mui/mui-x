@@ -7,13 +7,13 @@ import {
   FieldValueType,
   FieldSectionWithoutPosition,
 } from './useField.types';
-import { MuiPickersAdapter, MuiDateSectionName } from '../../models';
+import { MuiPickersAdapter, FieldSectionType } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
 
 export const getDateSectionConfigFromFormatToken = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   formatToken: string,
-): Pick<FieldSection, 'name' | 'contentType'> => {
+): Pick<FieldSection, 'type' | 'contentType'> => {
   const config = utils.formatTokenMap[formatToken];
 
   if (config == null) {
@@ -27,13 +27,13 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
 
   if (typeof config === 'string') {
     return {
-      name: config,
+      type: config,
       contentType: config === 'meridiem' ? 'letter' : 'digit',
     };
   }
 
   return {
-    name: config.sectionName,
+    type: config.sectionName,
     contentType: config.contentType,
   };
 };
@@ -90,7 +90,7 @@ export const cleanLeadingZerosInNumericSectionValue = <TDate>(
 
 export const getLetterEditingOptions = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  dateSectionName: MuiDateSectionName,
+  dateSectionName: FieldSectionType,
   format: string,
 ) => {
   switch (dateSectionName) {
@@ -140,14 +140,14 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   };
 
   const adjustDigitSection = () => {
-    const sectionBoundaries = sectionsValueBoundaries[section.name]({
+    const sectionBoundaries = sectionsValueBoundaries[section.type]({
       currentDate: activeDate,
       format: section.format,
       contentType: section.contentType,
     });
 
     if (shouldSetAbsolute) {
-      if (section.name === 'year' && !isEnd && !isStart) {
+      if (section.type === 'year' && !isEnd && !isStart) {
         return utils.formatByString(utils.date()!, section.format);
       }
 
@@ -173,7 +173,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   };
 
   const adjustLetterSection = () => {
-    const options = getLetterEditingOptions(utils, section.name, section.format);
+    const options = getLetterEditingOptions(utils, section.type, section.format);
     if (options.length === 0) {
       return section.value;
     }
@@ -269,10 +269,10 @@ export const addPositionPropertiesToSections = <TSection extends FieldSection>(
 const getSectionPlaceholder = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   localeText: PickersLocaleText<TDate>,
-  sectionConfig: Pick<FieldSection, 'name' | 'contentType'>,
+  sectionConfig: Pick<FieldSection, 'type' | 'contentType'>,
   currentTokenValue: string,
 ) => {
-  switch (sectionConfig.name) {
+  switch (sectionConfig.type) {
     case 'year': {
       return localeText.fieldYearPlaceholder({
         digitAmount: utils.formatByString(utils.date()!, currentTokenValue).length,
@@ -324,7 +324,7 @@ export const changeSectionValueFormat = <TDate>(
   newFormat: string,
 ) => {
   if (process.env.NODE_ENV !== 'production') {
-    if (getDateSectionConfigFromFormatToken(utils, currentFormat).name === 'weekDay') {
+    if (getDateSectionConfigFromFormatToken(utils, currentFormat).type === 'weekDay') {
       throw new Error("changeSectionValueFormat doesn't support week day formats");
     }
   }
@@ -338,7 +338,7 @@ const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: s
 export const doesSectionHaveTrailingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   contentType: 'digit' | 'letter',
-  dateSectionName: MuiDateSectionName,
+  dateSectionName: FieldSectionType,
   format: string,
 ) => {
   if (contentType !== 'digit') {
@@ -426,7 +426,7 @@ export const splitFormatIntoSections = <TDate>(
     const hasTrailingZeroes = doesSectionHaveTrailingZeros(
       utils,
       sectionConfig.contentType,
-      sectionConfig.name,
+      sectionConfig.type,
       token,
     );
 
@@ -521,14 +521,14 @@ export const getDateFromDateSections = <TDate>(
   // If we have both a day and a weekDay section,
   // Then we skip the weekDay in the parsing because libraries like dayjs can't parse complicated formats containing a weekDay.
   // dayjs(dayjs().format('dddd MMMM D YYYY'), 'dddd MMMM D YYYY')) // returns `Invalid Date` even if the format is valid.
-  const shouldSkipWeekDays = sections.some((section) => section.name === 'day');
+  const shouldSkipWeekDays = sections.some((section) => section.type === 'day');
 
   const sectionFormats: string[] = [];
   const sectionValues: string[] = [];
   for (let i = 0; i < sections.length; i += 1) {
     const section = sections[i];
 
-    const shouldSkip = shouldSkipWeekDays && section.name === 'weekDay';
+    const shouldSkip = shouldSkipWeekDays && section.type === 'weekDay';
     if (!shouldSkip) {
       sectionFormats.push(section.format);
       sectionValues.push(getSectionVisibleValue(section, false));
@@ -640,7 +640,7 @@ export const validateSections = <TSection extends FieldSection>(
 ) => {
   if (process.env.NODE_ENV !== 'production') {
     if (!warnedOnceInvalidSection) {
-      const supportedSections: MuiDateSectionName[] = [];
+      const supportedSections: FieldSectionType[] = [];
       if (['date', 'date-time'].includes(valueType)) {
         supportedSections.push('weekDay', 'day', 'month', 'year');
       }
@@ -648,11 +648,11 @@ export const validateSections = <TSection extends FieldSection>(
         supportedSections.push('hours', 'minutes', 'seconds', 'meridiem');
       }
 
-      const invalidSection = sections.find((section) => !supportedSections.includes(section.name));
+      const invalidSection = sections.find((section) => !supportedSections.includes(section.type));
 
       if (invalidSection) {
         console.warn(
-          `MUI: The field component you are using is not compatible with the "${invalidSection.name} date section.`,
+          `MUI: The field component you are using is not compatible with the "${invalidSection.type} date section.`,
           `The supported date sections are ["${supportedSections.join('", "')}"]\`.`,
         );
         warnedOnceInvalidSection = true;
@@ -667,7 +667,7 @@ const transferDateSectionValue = <TDate>(
   dateToTransferFrom: TDate,
   dateToTransferTo: TDate,
 ) => {
-  switch (section.name) {
+  switch (section.type) {
     case 'year': {
       return utils.setYear(dateToTransferTo, utils.getYear(dateToTransferFrom));
     }
@@ -747,7 +747,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
 ) => {
   // We try to generate a valid date representing the start of the month of the invalid date typed by the user.
   const sectionsForStartOfMonth = sections.map((section) => {
-    if (section.name !== 'day') {
+    if (section.type !== 'day') {
       return section;
     }
 
@@ -778,7 +778,7 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
 
   // The only invalid section was the day of the month, we replace its value with the maximum boundary for the correct month.
   return sections.map((section) => {
-    if (section.name !== 'day') {
+    if (section.type !== 'day') {
       return section;
     }
 
