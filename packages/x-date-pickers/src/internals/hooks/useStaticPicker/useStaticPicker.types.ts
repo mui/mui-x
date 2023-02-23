@@ -25,6 +25,12 @@ export interface StaticOnlyPickerProps {
    * If `true`, the view is focused during the first mount.
    */
   autoFocus?: boolean;
+  /**
+   * Callback fired when component requests to be closed.
+   * Can be fired when selecting (by default on `desktop` mode) or clearing a value.
+   * @deprecated Please avoid using as it will be removed in next major version.
+   */
+  onClose?: () => void;
 }
 
 export interface UseStaticPickerProps<
