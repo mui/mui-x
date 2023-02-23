@@ -7,7 +7,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Feb 23, 2023_
 
-We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️ Add web worker support for Excel export (#7770) @m4theushw
 - 🎁 Add `Remove All` button in the data grid filter panel (#7326) @MBilalShafi
@@ -20,7 +20,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Allow to customize label and value for `singleSelect` (#7684) @m4theushw
-- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7964) @m4theushw
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7964) @lolaignatova
 - [DataGrid] Introduce `slots` and deprecate `components` (#7882) @MBilalShafi
 - [DataGridPro] Add `Remove All` option in filter panel (#7326) @MBilalShafi
 - [DataGridPremium] Add web worker support for Excel export (#7770) @m4theushw
@@ -32,7 +32,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [fields] Fix multi input range fields validation when uncontrolled (#8002) @LukasTy
 - [fields] Fix single input time range fields slot props (#7988) @LukasTy
 - [fields] Make the `ArrowUp` / `ArrowDown` edition only impact the active section (#7993) @flaviendelangle
-- [fields] Single input range fields can't be cleaned using Backspace (#7995) @flaviendelangle
+- [fields] Fix single input range fields clearing (#7995) @flaviendelangle
 - [pickers] Fix `textField` slot `error` prop propagation (#7987) @LukasTy
 
 ### `@mui/x-codemod@v6.0.0-beta.5`
