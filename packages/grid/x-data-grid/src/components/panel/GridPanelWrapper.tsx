@@ -9,7 +9,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -25,7 +25,7 @@ const GridPanelWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelWrapper',
   overridesResolver: (props, styles) => styles.panelWrapper,
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
@@ -48,8 +48,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
   function GridPanelWrapper(props, ref) {
     const { className, slotProps = {}, ...other } = props;
     const rootProps = useGridRootProps();
-    const ownerState = { classes: rootProps.classes };
-    const classes = useUtilityClasses(ownerState);
+    const classes = useUtilityClasses(rootProps);
 
     return (
       <TrapFocus open disableEnforceFocus isEnabled={isEnabled} {...slotProps.TrapFocus}>
@@ -57,6 +56,7 @@ const GridPanelWrapper = React.forwardRef<HTMLDivElement, GridPanelWrapperProps>
           ref={ref}
           tabIndex={-1}
           className={clsx(className, classes.root)}
+          ownerState={rootProps}
           {...other}
         />
       </TrapFocus>

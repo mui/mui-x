@@ -42,12 +42,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last month of the previous year when a value in January is provided', () => {
+    it('should go to the last month of the current year when a value in January is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndYear,
         defaultValue: adapter.date(new Date(2022, 0, 15)),
         key: 'ArrowDown',
-        expectedValue: 'December 2021',
+        expectedValue: 'December 2022',
       });
     });
 
@@ -68,12 +68,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the last day of the previous month when a value in the first day of the month is provided', () => {
+    it('should go to the last day of the current month when a value in the first day of the month is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndDate,
         defaultValue: adapter.date(new Date(2022, 5, 1)),
         key: 'ArrowDown',
-        expectedValue: 'May 31',
+        expectedValue: 'June 30',
         // To select the date and not the month
         valueToSelect: '1',
       });
@@ -134,12 +134,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should decrement go to the first month of the next year when when a value in December is provided', () => {
+    it('should go to the first month of the current year when a value in December is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndYear,
         defaultValue: adapter.date(new Date(2022, 11, 15)),
         key: 'ArrowUp',
-        expectedValue: 'January 2023',
+        expectedValue: 'January 2022',
       });
     });
 
@@ -160,12 +160,12 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it('should go to the first day of the next month when a value in the last day of the month is provided', () => {
+    it('should go to the first day of the current month when a value in the last day of the month is provided', () => {
       testFieldKeyPress({
         format: adapter.formats.monthAndDate,
         defaultValue: adapter.date(new Date(2022, 5, 30)),
         key: 'ArrowUp',
-        expectedValue: 'July 1',
+        expectedValue: 'June 1',
         // To select the date and not the month
         valueToSelect: '30',
       });
@@ -191,114 +191,116 @@ describe('<DateField /> - Editing', () => {
     });
   });
 
-  describeAdapters(
-    'key: Backspace',
-    DateField,
-    ({ render, adapter, adapterName, clickOnInput, testFieldKeyPress, selectSection }) => {
-      it('should clear the selected section when only this section is completed', () => {
-        render(<DateField format={adapter.formats.monthAndYear} />);
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 1);
+  ['Backspace', 'Delete'].forEach((keyToClearValue) => {
+    describeAdapters(
+      `key: ${keyToClearValue}`,
+      DateField,
+      ({ render, adapter, adapterName, clickOnInput, testFieldKeyPress, selectSection }) => {
+        it('should clear the selected section when only this section is completed', () => {
+          render(<DateField format={adapter.formats.monthAndYear} />);
+          const input = screen.getByRole('textbox');
+          clickOnInput(input, 1);
 
-        // Set a value for the "month" section
-        fireEvent.change(input, {
-          target: { value: 'j YYYY' },
-        }); // press "j"
-        expectInputValue(input, 'January YYYY');
+          // Set a value for the "month" section
+          fireEvent.change(input, {
+            target: { value: 'j YYYY' },
+          }); // press "j"
+          expectInputValue(input, 'January YYYY');
 
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expectInputValue(input, 'MMMM YYYY');
-      });
-
-      it('should clear the selected section when all sections are completed', () => {
-        testFieldKeyPress({
-          format: adapter.formats.monthAndYear,
-          defaultValue: adapter.date(),
-          key: 'Backspace',
-          expectedValue: 'MMMM 2022',
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expectInputValue(input, 'MMMM YYYY');
         });
-      });
 
-      it('should clear all the sections when all sections are selected and all sections are completed', () => {
-        render(<DateField format={adapter.formats.monthAndYear} defaultValue={adapter.date()} />);
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 1);
-
-        // Select all sections
-        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expectInputValue(input, 'MMMM YYYY');
-      });
-
-      it('should clear all the sections when all sections are selected and not all sections are completed', () => {
-        render(<DateField format={adapter.formats.monthAndYear} />);
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 1);
-
-        // Set a value for the "month" section
-        fireEvent.change(input, {
-          target: { value: 'j YYYY' },
-        }); // Press "j"
-        expectInputValue(input, 'January YYYY');
-
-        // Select all sections
-        userEvent.keyPress(input, { key: 'a', ctrlKey: true });
-
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expectInputValue(input, 'MMMM YYYY');
-      });
-
-      it('should not keep query after typing again on a cleared section', () => {
-        render(<DateField format={adapter.formats.year} />);
-        const input = screen.getByRole('textbox');
-        clickOnInput(input, 1);
-
-        fireEvent.change(input, { target: { value: '2' } }); // press "2"
-        expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
-
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expectInputValue(input, 'YYYY');
-
-        fireEvent.change(input, { target: { value: '2' } }); // press "2"
-        expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
-      });
-
-      it('should not clear the sections when props.readOnly = true', () => {
-        testFieldKeyPress({
-          format: adapter.formats.year,
-          defaultValue: adapter.date(),
-          readOnly: true,
-          key: 'Backspace',
-          expectedValue: '2022',
+        it('should clear the selected section when all sections are completed', () => {
+          testFieldKeyPress({
+            format: adapter.formats.monthAndYear,
+            defaultValue: adapter.date(),
+            key: keyToClearValue,
+            expectedValue: 'MMMM 2022',
+          });
         });
-      });
 
-      it('should only call `onChange` when clearing the last section', () => {
-        const handleChange = spy();
+        it('should clear all the sections when all sections are selected and all sections are completed', () => {
+          render(<DateField format={adapter.formats.monthAndYear} defaultValue={adapter.date()} />);
+          const input = screen.getByRole('textbox');
+          clickOnInput(input, 1);
 
-        render(
-          <DateField
-            format={adapter.formats.monthAndYear}
-            defaultValue={adapter.date()}
-            onChange={handleChange}
-          />,
-        );
+          // Select all sections
+          userEvent.keyPress(input, { key: 'a', ctrlKey: true });
 
-        const input = screen.getByRole('textbox');
-        selectSection(input, 0);
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expectInputValue(input, 'MMMM YYYY');
+        });
 
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expect(handleChange.callCount).to.equal(0);
+        it('should clear all the sections when all sections are selected and not all sections are completed', () => {
+          render(<DateField format={adapter.formats.monthAndYear} />);
+          const input = screen.getByRole('textbox');
+          clickOnInput(input, 1);
 
-        userEvent.keyPress(input, { key: 'ArrowRight' });
+          // Set a value for the "month" section
+          fireEvent.change(input, {
+            target: { value: 'j YYYY' },
+          }); // Press "j"
+          expectInputValue(input, 'January YYYY');
 
-        userEvent.keyPress(input, { key: 'Backspace' });
-        expect(handleChange.callCount).to.equal(1);
-        expect(handleChange.lastCall.firstArg).to.equal(null);
-      });
-    },
-  );
+          // Select all sections
+          userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expectInputValue(input, 'MMMM YYYY');
+        });
+
+        it('should not keep query after typing again on a cleared section', () => {
+          render(<DateField format={adapter.formats.year} />);
+          const input = screen.getByRole('textbox');
+          clickOnInput(input, 1);
+
+          fireEvent.change(input, { target: { value: '2' } }); // press "2"
+          expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expectInputValue(input, 'YYYY');
+
+          fireEvent.change(input, { target: { value: '2' } }); // press "2"
+          expectInputValue(input, adapterName === 'dayjs' ? '2' : '0002');
+        });
+
+        it('should not clear the sections when props.readOnly = true', () => {
+          testFieldKeyPress({
+            format: adapter.formats.year,
+            defaultValue: adapter.date(),
+            readOnly: true,
+            key: keyToClearValue,
+            expectedValue: '2022',
+          });
+        });
+
+        it('should only call `onChange` when clearing the last section', () => {
+          const handleChange = spy();
+
+          render(
+            <DateField
+              format={adapter.formats.monthAndYear}
+              defaultValue={adapter.date()}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = screen.getByRole('textbox');
+          selectSection(input, 0);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(0);
+
+          userEvent.keyPress(input, { key: 'ArrowRight' });
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.lastCall.firstArg).to.equal(null);
+        });
+      },
+    );
+  });
 
   describeAdapters('Digit editing', DateField, ({ adapter, adapterName, testFieldChange }) => {
     it('should set the day to the digit pressed when no digit no value is provided', () => {

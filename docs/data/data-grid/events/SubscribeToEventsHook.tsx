@@ -35,7 +35,7 @@ export default function SubscribeToEventsHook() {
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
       <Box sx={{ height: 350, width: '100%' }}>
-        <DataGrid {...data} components={{ Footer }} />
+        <DataGrid {...data} slots={{ footer: Footer }} />
       </Box>
     </Stack>
   );

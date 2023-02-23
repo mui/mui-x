@@ -65,6 +65,7 @@ function CustomLayout(props: PickersLayoutProps<Dayjs | null, Dayjs, DateView>) 
     <PickersLayoutRoot
       ownerState={props}
       sx={{
+        overflow: 'auto',
         [`.${pickersLayoutClasses.actionBar}`]: {
           gridColumn: 1,
           gridRow: 2,

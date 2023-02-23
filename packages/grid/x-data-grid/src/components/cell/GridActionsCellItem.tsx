@@ -27,17 +27,17 @@ const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellI
 
     if (!showInMenu) {
       return (
-        <rootProps.components.BaseIconButton
+        <rootProps.slots.baseIconButton
           ref={ref}
           size="small"
           role="menuitem"
           aria-label={label}
           {...(other as any)}
           onClick={handleClick}
-          {...rootProps.componentsProps?.baseIconButton}
+          {...rootProps.slotProps?.baseIconButton}
         >
           {React.cloneElement(icon!, { fontSize: 'small' })}
-        </rootProps.components.BaseIconButton>
+        </rootProps.slots.baseIconButton>
       );
     }
 

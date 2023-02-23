@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 import { DateTime } from 'luxon';
 import BaseAdapterLuxon from '@date-io/luxon';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   s: 'seconds',
   ss: 'seconds',
 
@@ -21,24 +21,22 @@ const formatTokenMap: MuiFormatTokenMap = {
   dd: 'day',
 
   c: 'weekDay',
-  ccc: { sectionName: 'weekDay', contentType: 'letter' },
-  cccc: { sectionName: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionName: 'weekDay', contentType: 'letter' },
+  ccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
   E: 'weekDay',
-  EEE: { sectionName: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionName: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionName: 'weekDay', contentType: 'letter' },
+  EEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
 
   L: 'month',
   LL: 'month',
-  LLL: { sectionName: 'month', contentType: 'letter' },
-  LLLL: { sectionName: 'month', contentType: 'letter' },
-  LLLLL: { sectionName: 'month', contentType: 'letter' },
+  LLL: { sectionType: 'month', contentType: 'letter' },
+  LLLL: { sectionType: 'month', contentType: 'letter' },
   M: 'month',
   MM: 'month',
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
 
   y: 'year',
   yy: 'year',

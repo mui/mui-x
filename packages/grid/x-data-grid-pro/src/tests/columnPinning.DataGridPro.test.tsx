@@ -180,6 +180,21 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(columnHeadersInner).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
+  it('should update the render zone offset after pinning the column', function test() {
+    render(<TestCase />);
+    const renderZone = document.querySelector<HTMLDivElement>(
+      `.${gridClasses.virtualScrollerRenderZone}`,
+    )!;
+    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(0px, 0px, 0px)' });
+
+    const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    fireEvent.click(menuIconButton);
+
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
+    expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(100px, 0px, 0px)' });
+  });
+
   it('should increase the width of right pinned columns by resizing to the left', function test() {
     if (isJSDOM) {
       // Need layouting

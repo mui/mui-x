@@ -30,7 +30,7 @@ The following demo lets you filter the rows according to several criteria at the
 
 ### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `componentsProps.filterPanel`.
+You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
 
 #### Use cases
 
@@ -40,6 +40,12 @@ You can also limit to only one filter per column while still allowing to filter 
 This demo implements a basic use case to prevent showing multiple filters for one column.
 
 {{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Disable action buttons [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` or `disableRemoveAllButton` to `componentsProps.filterPanel`.
+
+{{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Pass filters to the grid
 

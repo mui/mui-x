@@ -9,6 +9,7 @@ export default function TimePickerViews() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer
         components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}
+        sx={{ minWidth: 210 }}
       >
         <MobileTimePicker
           label={'"hours", "minutes" and "seconds"'}

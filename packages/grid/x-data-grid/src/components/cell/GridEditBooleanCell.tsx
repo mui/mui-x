@@ -98,13 +98,13 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
 
   return (
     <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
-      <rootProps.components.BaseCheckbox
+      <rootProps.slots.baseCheckbox
         id={id}
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
-        {...rootProps.componentsProps?.baseCheckbox}
+        {...rootProps.slotProps?.baseCheckbox}
       />
     </label>
   );

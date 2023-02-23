@@ -104,19 +104,15 @@ export function GridOverlays() {
   let overlay: JSX.Element | null = null;
 
   if (showNoRowsOverlay) {
-    overlay = <rootProps.components.NoRowsOverlay {...rootProps.componentsProps?.noRowsOverlay} />;
+    overlay = <rootProps.slots.noRowsOverlay {...rootProps.slotProps?.noRowsOverlay} />;
   }
 
   if (showNoResultsOverlay) {
-    overlay = (
-      <rootProps.components.NoResultsOverlay {...rootProps.componentsProps?.noResultsOverlay} />
-    );
+    overlay = <rootProps.slots.noResultsOverlay {...rootProps.slotProps?.noResultsOverlay} />;
   }
 
   if (loading) {
-    overlay = (
-      <rootProps.components.LoadingOverlay {...rootProps.componentsProps?.loadingOverlay} />
-    );
+    overlay = <rootProps.slots.loadingOverlay {...rootProps.slotProps?.loadingOverlay} />;
   }
 
   if (overlay === null) {
