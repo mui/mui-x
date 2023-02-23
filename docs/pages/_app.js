@@ -215,6 +215,11 @@ function AppWrapper(props) {
     return { activePage, activePageParents, pages };
   }, [router.pathname]);
 
+  // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
+  // Seems pretty safe to do in `mui-x` as all our pages are registered as paths.
+  // Fixes playground styles in dark mode.
+  const ThemeWrapper = pageContextValue.activePage ? ThemeProvider : React.Fragment;
+
   return (
     <React.Fragment>
       <NextHead>
@@ -226,12 +231,12 @@ function AppWrapper(props) {
         <CodeCopyProvider>
           <CodeVariantProvider>
             <PageContext.Provider value={pageContextValue}>
-              <ThemeProvider>
+              <ThemeWrapper>
                 <DocsStyledEngineProvider cacheLtr={emotionCache}>
                   {children}
                   <GoogleAnalytics />
                 </DocsStyledEngineProvider>
-              </ThemeProvider>
+              </ThemeWrapper>
             </PageContext.Provider>
           </CodeVariantProvider>
         </CodeCopyProvider>
