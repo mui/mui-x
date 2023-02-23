@@ -3,7 +3,7 @@ import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -13,19 +13,19 @@ const localeNotFoundWarning = buildWarning([
   'fallback on English locale',
 ]);
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   YY: 'year',
   YYYY: 'year',
   M: 'month',
   MM: 'month',
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
   D: 'day',
   DD: 'day',
   d: 'weekDay',
-  dd: { sectionName: 'weekDay', contentType: 'letter' },
-  ddd: { sectionName: 'weekDay', contentType: 'letter' },
-  dddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dd: { sectionType: 'weekDay', contentType: 'letter' },
+  ddd: { sectionType: 'weekDay', contentType: 'letter' },
+  dddd: { sectionType: 'weekDay', contentType: 'letter' },
   H: 'hours',
   HH: 'hours',
   h: 'hours',

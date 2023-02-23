@@ -6,7 +6,7 @@ import { IUtils } from '@date-io/core/IUtils';
 export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   isMUIAdapter: boolean;
 
-  formatTokenMap: MuiFormatTokenMap;
+  formatTokenMap: FieldFormatTokenMap;
 
   /**
    * Characters used to start and end an escaped message in the format.
@@ -18,7 +18,7 @@ export type MuiPickersAdapter<TDate> = IUtils<TDate> & {
   getWeekNumber: (date: TDate) => number;
 };
 
-export type MuiDateSectionName =
+export type FieldSectionType =
   | 'year'
   | 'month'
   | 'day'
@@ -28,8 +28,8 @@ export type MuiDateSectionName =
   | 'seconds'
   | 'meridiem';
 
-export type MuiFormatTokenMap = {
+export type FieldFormatTokenMap = {
   [formatToken: string]:
-    | MuiDateSectionName
-    | { sectionName: MuiDateSectionName; contentType: 'digit' | 'letter' };
+    | FieldSectionType
+    | { sectionType: FieldSectionType; contentType: 'digit' | 'letter' };
 };

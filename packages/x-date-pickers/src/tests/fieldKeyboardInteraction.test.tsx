@@ -8,17 +8,17 @@ import {
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
-import { MuiDateSectionName, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
+import { FieldSectionType, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 
 const testDate = new Date(2018, 4, 15, 9, 35, 10);
 
 function updateDate<TDate>(
   date: TDate,
   adapter: MuiPickersAdapter<TDate>,
-  sectionName: MuiDateSectionName,
+  sectionType: FieldSectionType,
   diff: number,
 ) {
-  switch (sectionName) {
+  switch (sectionType) {
     case 'year':
       return adapter.addYears(date, diff);
     case 'month':
@@ -93,11 +93,12 @@ adapterToTest.forEach((adapterName) => {
       expectInputValue(input, adapter.formatByString(expectedValue, format));
     };
 
-    const testKeyboardInteraction = (formatToken, sectionData) => {
-      const sectionName = typeof sectionData === 'object' ? sectionData.sectionName : sectionData;
-      it(`should increase "${sectionName}" when pressing ArrowUp on "${formatToken}" token`, () => {
+    const testKeyboardInteraction = (formatToken, sectionConfig) => {
+      const sectionType =
+        typeof sectionConfig === 'object' ? sectionConfig.sectionType : sectionConfig;
+      it(`should increase "${sectionType}" when pressing ArrowUp on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updateDate(initialValue, adapter, sectionName, 1);
+        const expectedValue = updateDate(initialValue, adapter, sectionType, 1);
 
         testKeyPress({
           key: 'ArrowUp',
@@ -107,9 +108,9 @@ adapterToTest.forEach((adapterName) => {
         });
       });
 
-      it(`should decrease "${sectionName}" when pressing ArrowDown on "${formatToken}" token`, () => {
+      it(`should decrease "${sectionType}" when pressing ArrowDown on "${formatToken}" token`, () => {
         const initialValue = adapter.date(testDate);
-        const expectedValue = updateDate(initialValue, adapter, sectionName, -1);
+        const expectedValue = updateDate(initialValue, adapter, sectionType, -1);
 
         testKeyPress({
           key: 'ArrowDown',
@@ -120,8 +121,8 @@ adapterToTest.forEach((adapterName) => {
       });
     };
 
-    Object.entries(adapter.formatTokenMap).forEach(([formatToken, sectionName]) =>
-      testKeyboardInteraction(formatToken, sectionName),
+    Object.entries(adapter.formatTokenMap).forEach(([formatToken, sectionConfig]) =>
+      testKeyboardInteraction(formatToken, sectionConfig),
     );
   });
 });
