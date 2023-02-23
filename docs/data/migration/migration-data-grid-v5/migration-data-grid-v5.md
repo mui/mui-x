@@ -296,7 +296,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### `apiRef` methods
 
-- The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
+- ✅ The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - ✅ The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
 - The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
   ```diff

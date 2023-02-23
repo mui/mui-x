@@ -1,4 +1,5 @@
 import * as React from 'react';
+import moment from 'moment';
 import createDescribe from '@mui/monorepo/test/utils/createDescribe';
 import {
   AdapterName,
@@ -20,6 +21,11 @@ function innerDescribeAdapters<P extends {}>(
   testRunner: AdapterTestRunner<P>,
 ) {
   ADAPTERS.forEach((adapterName) => {
+    // TODO: Set locale moment before the 1st test run
+    if (adapterName === 'moment') {
+      moment.locale('en');
+    }
+
     describe(`${title} - adapter: ${adapterName}`, () => {
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
