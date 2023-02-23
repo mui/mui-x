@@ -181,7 +181,7 @@ This [file](https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src
 ```tsx
 // augment the props for `toolbar` slot
 declare module '@mui/x-data-grid' {
-  interface ToolbarPropsOverride {
+  interface ToolbarPropsOverrides {
     someCustomString: string;
     someCustomNumber: number;
   }
