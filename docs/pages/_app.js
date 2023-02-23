@@ -216,9 +216,8 @@ function AppWrapper(props) {
   }, [router.pathname]);
 
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
-  // Seems pretty safe to do in `mui-x` as all our pages are registered as paths.
   // Fixes playground styles in dark mode.
-  const ThemeWrapper = pageContextValue.activePage ? ThemeProvider : React.Fragment;
+  const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
 
   return (
     <React.Fragment>
