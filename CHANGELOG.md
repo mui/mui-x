@@ -27,6 +27,10 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 ### `@mui/x-date-pickers@v6.0.0-beta.5` / `@mui/x-date-pickers-pro@v6.0.0-beta.5`
 
+#### Breaking changes
+
+- The `MuiDateSectionName` type was renamed to `FieldSectionType`
+
 #### Changes
 
 - [fields] Fix multi input range fields validation when uncontrolled (#8002) @LukasTy
