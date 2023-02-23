@@ -68,7 +68,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
           })[0],
         );
       } else {
-        const input = (screen.getAllByRole('textbox') as HTMLInputElement[])[0];
+        const input = screen.getAllByRole<HTMLInputElement>('textbox')[0];
         clickOnInput(input, 9, 11); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

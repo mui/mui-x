@@ -175,7 +175,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const columnHeader = getColumnHeaderCell(0);
-    const columnHeaderDraggableContainer = columnHeader.firstChild as HTMLElement;
+    const columnHeaderDraggableContainer = columnHeader.firstChild!;
     fireEvent.dragStart(columnHeaderDraggableContainer.firstChild!);
     expect(columnHeaderDraggableContainer).not.to.have.class(gridClasses['columnHeader--dragging']);
   });
@@ -259,7 +259,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
 
       render(<Test />);
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-      const dragCol = getColumnHeaderCell(1).firstChild! as HTMLElement;
+      const dragCol = getColumnHeaderCell(1).firstChild!;
       const targetCol = getColumnHeaderCell(0).firstChild!;
 
       fireEvent.dragStart(dragCol);

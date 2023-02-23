@@ -148,7 +148,7 @@ describe('<DataGrid /> - Filter panel', () => {
         filterModel={{ items: [{ field: 'brand', operator: 'contains' }] }}
       />,
     );
-    expect((screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement).value).to.equal('');
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('');
   });
 
   it('should keep filter operator and value if available', () => {
@@ -173,23 +173,19 @@ describe('<DataGrid /> - Filter panel', () => {
         }}
       />,
     );
-    expect((screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement).value).to.equal(
-      'Puma',
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'equals',
     );
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('equals');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('equals');
-    expect((screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement).value).to.equal(
-      'Puma',
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'equals',
     );
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Puma');
   });
 
   it('should reset value if operator is not available for the new column', () => {
@@ -214,21 +210,19 @@ describe('<DataGrid /> - Filter panel', () => {
         }}
       />,
     );
-    expect((screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement).value).to.equal(
-      'Pu',
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'contains',
     );
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     setColumnValue('slogan');
 
     expect(getColumnValues(0)).to.deep.equal([]);
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('from');
-    expect((screen.getByTestId('customInput') as HTMLInputElement).value).to.equal('');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'from',
+    );
+    expect(screen.getByTestId<HTMLInputElement>('customInput').value).to.equal('');
   });
 
   it('should reset value if the new operator has no input component', () => {
@@ -256,12 +250,10 @@ describe('<DataGrid /> - Filter panel', () => {
         onFilterModelChange={onFilterModelChange}
       />,
     );
-    expect((screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement).value).to.equal(
-      'Pu',
+    expect(screen.getByRole<HTMLInputElement>('textbox', { name: 'Value' }).value).to.equal('Pu');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'contains',
     );
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
     expect(onFilterModelChange.callCount).to.equal(0);
@@ -271,9 +263,9 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('isEmpty');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'isEmpty',
+    );
   });
 
   it('should reset filter value if not available in the new valueOptions', () => {
@@ -515,11 +507,11 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
     // check that the filter is still in the model
-    expect((screen.getByRole('combobox', { name: 'Columns' }) as HTMLSelectElement).value).to.equal(
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
       'brand',
     );
-    expect(
-      (screen.getByRole('combobox', { name: 'Operator' }) as HTMLSelectElement).value,
-    ).to.equal('isEmpty');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+      'isEmpty',
+    );
   });
 });

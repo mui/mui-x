@@ -187,7 +187,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(0px, 0px, 0px)' });
 
     const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!!;
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
     fireEvent.click(menuIconButton);
 
     fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
@@ -387,7 +387,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     );
 
     const computedStyle = window.getComputedStyle(
-      document.querySelector('.MuiDataGrid-pinnedColumns--right') as HTMLElement,
+      document.querySelector<HTMLElement>('.MuiDataGrid-pinnedColumns--right')!,
     );
     const borderLeftColor = computedStyle.getPropertyValue('border-left-color');
     const borderLeftWidth = computedStyle.getPropertyValue('border-left-width');
@@ -472,7 +472,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should not add any button to the column menu', () => {
       render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
@@ -631,7 +631,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     it('should pin the column to the left when clicking the "Pin to left" pinning button', () => {
       render(<TestCase />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
-      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!!;
+      const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Pin to left' }));
       expect(

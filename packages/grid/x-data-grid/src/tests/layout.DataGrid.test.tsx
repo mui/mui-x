@@ -604,8 +604,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }
 
         const { setProps } = render(<Test />);
-        // @ts-ignore TODO check validity of this
-        setProps();
+        setProps({});
 
         const firstColumn = getColumnHeaderCell(0);
         expect(firstColumn).toHaveInlineStyle({

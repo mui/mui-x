@@ -464,9 +464,9 @@ describe('<DataGrid /> - Column Spanning', () => {
 
       userEvent.mousePress(getCell(0, 0));
 
-      const virtualScroller = document.querySelector(
+      const virtualScroller = document.querySelector<HTMLElement>(
         `.${gridClasses.virtualScroller}`,
-      )! as HTMLElement;
+      )!;
 
       fireEvent.keyDown(getCell(0, 0), { key: 'ArrowRight' });
       virtualScroller.dispatchEvent(new Event('scroll'));

@@ -292,8 +292,7 @@ describe('<DataGrid /> - Column grouping', () => {
   describe.skip('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
       return (
-        // @ts-ignore TODO: check this
-        <ErrorBoundary logger={console}>
+        <ErrorBoundary>
           <TestDataGrid {...props} />
         </ErrorBoundary>
       );
