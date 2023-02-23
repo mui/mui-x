@@ -117,7 +117,7 @@ export interface FieldSection {
    */
   placeholder: string;
   /**
-   * Name of the section.
+   * Type of the section.
    */
   type: FieldSectionType;
   /**

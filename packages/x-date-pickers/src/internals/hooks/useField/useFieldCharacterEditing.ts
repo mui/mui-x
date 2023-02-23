@@ -16,7 +16,7 @@ import { UpdateSectionValueParams } from './useFieldState';
 interface CharacterEditingQuery {
   value: string;
   sectionIndex: number;
-  dateSectionName: FieldSectionType;
+  sectionType: FieldSectionType;
 }
 
 interface ApplyCharacterEditingParams {
@@ -86,7 +86,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const resetQuery = useEventCallback(() => setQuery(null));
 
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.type !== query.dateSectionName) {
+    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
       resetQuery();
     }
   }, [sections, query, resetQuery]);
@@ -128,7 +128,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         setQuery({
           sectionIndex,
           value: concatenatedQueryValue,
-          dateSectionName: activeSection.type,
+          sectionType: activeSection.type,
         });
         return queryResponse;
       }
@@ -143,7 +143,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     setQuery({
       sectionIndex,
       value: cleanKeyPressed,
-      dateSectionName: activeSection.type,
+      sectionType: activeSection.type,
     });
 
     if (isQueryResponseWithoutValue(queryResponse)) {
@@ -263,13 +263,13 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   const applyNumericEditing: CharacterEditingApplier = (params) => {
     const getNewSectionValue = (
       queryValue: string,
-      dateSectionName: FieldSectionType,
+      sectionType: FieldSectionType,
       format: string,
       hasTrailingZeroes: boolean,
       contentType: 'digit' | 'letter',
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
-      const sectionBoundaries = sectionsValueBoundaries[dateSectionName]({
+      const sectionBoundaries = sectionsValueBoundaries[sectionType]({
         currentDate: null,
         format,
         contentType,

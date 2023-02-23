@@ -10,8 +10,8 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Month
   jM: 'month',
   jMM: 'month',
-  jMMM: { sectionName: 'month', contentType: 'letter' },
-  jMMMM: { sectionName: 'month', contentType: 'letter' },
+  jMMM: { sectionType: 'month', contentType: 'letter' },
+  jMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of Month
   jD: 'day',

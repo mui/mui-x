@@ -31,5 +31,5 @@ export type FieldSectionType =
 export type FieldFormatTokenMap = {
   [formatToken: string]:
     | FieldSectionType
-    | { sectionName: FieldSectionType; contentType: 'digit' | 'letter' };
+    | { sectionType: FieldSectionType; contentType: 'digit' | 'letter' };
 };

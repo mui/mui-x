@@ -8,8 +8,8 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Month
   M: 'month',
   MM: 'month',
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
   D: 'day',
@@ -19,9 +19,9 @@ const formatTokenMap: FieldFormatTokenMap = {
   E: 'weekDay',
   e: 'weekDay',
   d: 'weekDay',
-  dd: { sectionName: 'weekDay', contentType: 'letter' },
-  ddd: { sectionName: 'weekDay', contentType: 'letter' },
-  dddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dd: { sectionType: 'weekDay', contentType: 'letter' },
+  ddd: { sectionType: 'weekDay', contentType: 'letter' },
+  dddd: { sectionType: 'weekDay', contentType: 'letter' },
 
   // Year
   Y: 'year',

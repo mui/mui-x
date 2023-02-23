@@ -33,7 +33,7 @@ export const getDateSectionConfigFromFormatToken = <TDate>(
   }
 
   return {
-    type: config.sectionName,
+    type: config.sectionType,
     contentType: config.contentType,
   };
 };
@@ -90,10 +90,10 @@ export const cleanLeadingZerosInNumericSectionValue = <TDate>(
 
 export const getLetterEditingOptions = <TDate>(
   utils: MuiPickersAdapter<TDate>,
-  dateSectionName: FieldSectionType,
+  sectionType: FieldSectionType,
   format: string,
 ) => {
-  switch (dateSectionName) {
+  switch (sectionType) {
     case 'month': {
       return utils
         .getMonthArray(utils.date()!)
@@ -338,14 +338,14 @@ const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: s
 export const doesSectionHaveTrailingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   contentType: 'digit' | 'letter',
-  dateSectionName: FieldSectionType,
+  sectionType: FieldSectionType,
   format: string,
 ) => {
   if (contentType !== 'digit') {
     return false;
   }
 
-  switch (dateSectionName) {
+  switch (sectionType) {
     // We can't use `changeSectionValueFormat`, because  `utils.parse('1', 'YYYY')` returns `1971` instead of `1`.
     case 'year': {
       if (isFourDigitYearFormat(utils, format)) {
@@ -382,7 +382,7 @@ export const doesSectionHaveTrailingZeros = <TDate>(
     }
 
     default: {
-      throw new Error('Invalid dateSectionName');
+      throw new Error('Invalid section type');
     }
   }
 };

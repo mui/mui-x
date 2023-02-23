@@ -9,8 +9,8 @@ const formatTokenMap: FieldFormatTokenMap = {
   // Month
   iM: 'month',
   iMM: 'month',
-  iMMM: { sectionName: 'month', contentType: 'letter' },
-  iMMMM: { sectionName: 'month', contentType: 'letter' },
+  iMMM: { sectionType: 'month', contentType: 'letter' },
+  iMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of Month
   iD: 'day',

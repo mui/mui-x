@@ -11,31 +11,22 @@ export default function ControlledSelectedSections() {
     React.useState<FieldSelectedSections>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const setSelectedDateSectionName = (selectedDateSectionName: FieldSectionType) => {
+  const setSelectedSectionType = (selectedSectionType: FieldSectionType) => {
     inputRef.current?.focus();
-    setSelectedSections(selectedDateSectionName);
+    setSelectedSections(selectedSectionType);
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('month')}
-          >
+          <Button variant="outlined" onClick={() => setSelectedSectionType('month')}>
             Pick month
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('day')}
-          >
+          <Button variant="outlined" onClick={() => setSelectedSectionType('day')}>
             Pick day
           </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setSelectedDateSectionName('year')}
-          >
+          <Button variant="outlined" onClick={() => setSelectedSectionType('year')}>
             Pick year
           </Button>
         </Stack>
