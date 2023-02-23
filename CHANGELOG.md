@@ -2228,6 +2228,26 @@ You can find more information about the new api, including how to set those tran
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
 
+## 5.17.25
+
+_Feb 23, 2023_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.25` / `@mui/x-data-grid-pro@v5.17.25` / `@mui/x-data-grid-premium@v5.17.25`
+
+#### Changes
+
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7757) @lolaignatova
+
+### `@mui/x-date-pickers@v5.0.20` / `@mui/x-date-pickers-pro@v5.0.20`
+
+#### Changes
+
+- [DateTimePicker] Ensure toolbar `viewType` is correctly updated (#7942) @LukasTy
+
 ## 5.17.24
 
 _Feb 16, 2023_
