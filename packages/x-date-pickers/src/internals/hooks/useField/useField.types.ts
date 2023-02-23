@@ -137,7 +137,7 @@ export interface FieldSection {
    * - time if the format does not contain it
    * - timezone / UTC
    *
-   * To avoid losing those information, we transfer the values of the modified sections from the newly generated date to the original date.
+   * To avoid losing that information, we transfer the values of the modified sections from the newly generated date to the original date.
    */
   modified: boolean;
   /**
