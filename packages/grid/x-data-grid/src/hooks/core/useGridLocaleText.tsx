@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
-import { useGridApiMethod } from '../utils/useGridApiMethod';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export const useGridLocaleText = (
@@ -18,9 +17,7 @@ export const useGridLocaleText = (
     [props.localeText],
   );
 
-  const localeTextApi: GridLocaleTextApi = {
+  apiRef.current.register('public', {
     getLocaleText,
-  };
-
-  useGridApiMethod(apiRef, localeTextApi, 'public');
+  });
 };
