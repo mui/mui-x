@@ -25,6 +25,8 @@ export interface GridRestoreStatePreProcessingValue {
 
 /**
  * Object passed as parameter in the `exportState()` grid API method.
+ * @demos
+ *   - [Restore state with `apiRef`](/x/react-data-grid/state/#restore-the-state-with-apiref)
  */
 export interface GridExportStateParams {
   /**

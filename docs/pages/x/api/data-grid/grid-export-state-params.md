@@ -2,6 +2,15 @@
 
 <p class="description">Object passed as parameter in the `exportState()` grid API method.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Restore state with `apiRef`](/x/react-data-grid/state/#restore-the-state-with-apiref)
+
+:::
+
 ## Import
 
 ```js
