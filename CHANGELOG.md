@@ -10,7 +10,7 @@ _Feb 23, 2023_
 We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️ Add web worker support for Excel export (#7770) @m4theushw
-- 🎁 Add `Remove All` button in the data grid filter panel (#7326) @MBilalShafi
+- 🎁 Add a button to remove all filters on the data grid filter panel (#7326) @MBilalShafi
 - ⚙️ Allow to customize options label and value in the data grid `singleSelect` column (#7684) @m4theushw
 - 📚 Documentation improvements
 - 🐞 Bugfixes
@@ -45,11 +45,11 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - [docs] Fine tune range fields demos (#7992) @LukasTy
 - [docs] Fix a few scroll issues on mobile (#7900) @oliviertassinari
-- [docs] Fix inconsistency in DataGrid migration guide (#7963) @MBilalShafi
+- [docs] Fix inconsistency in the data grid migration guide (#7963) @MBilalShafi
 
 ### Core
 
-- [core] Fix moment locale on adapter tests (#8020) @flaviendelangle
+- [core] Fix `moment` locale on adapter tests (#8020) @flaviendelangle
 - [test] Support all adapters on the field tests about the formats (#7996) @flaviendelangle
 
 ## 6.0.0-beta.4
