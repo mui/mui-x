@@ -2,15 +2,15 @@
 import BaseAdapterMomentHijri from '@date-io/hijri';
 // @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   // Month
   iM: 'month',
   iMM: 'month',
-  iMMM: { sectionName: 'month', contentType: 'letter' },
-  iMMMM: { sectionName: 'month', contentType: 'letter' },
+  iMMM: { sectionType: 'month', contentType: 'letter' },
+  iMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of Month
   iD: 'day',
