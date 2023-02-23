@@ -406,7 +406,7 @@ describe('<DateRangeCalendar />', () => {
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
         expect(
-          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
         ).to.have.lengthOf(6);
         // flip date range
         executeDateDragWithoutDrop(
@@ -417,7 +417,7 @@ describe('<DateRangeCalendar />', () => {
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
         expect(
-          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
         ).to.have.lengthOf(10);
       });
 
@@ -439,7 +439,7 @@ describe('<DateRangeCalendar />', () => {
 
         expect(screen.getByRole('gridcell', { name: '5' })).to.have.attribute('disabled');
         expect(
-          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
         ).to.have.lengthOf(6);
         // flip date range
         executeDateTouchDragWithoutEnd(
@@ -451,7 +451,7 @@ describe('<DateRangeCalendar />', () => {
 
         expect(screen.getByRole('gridcell', { name: '9' })).to.have.attribute('disabled');
         expect(
-          (screen.getAllByRole('gridcell') as HTMLButtonElement[]).filter((c) => c.disabled),
+          screen.getAllByRole<HTMLButtonElement>('gridcell').filter((c) => c.disabled),
         ).to.have.lengthOf(10);
       });
     });
