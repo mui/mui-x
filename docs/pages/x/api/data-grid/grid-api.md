@@ -2,6 +2,15 @@
 
 <p class="description">The full grid API.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [API object](/x/react-data-grid/api-object/)
+
+:::
+
 ## Import
 
 ```js

@@ -2,6 +2,15 @@
 
 <p class="description">The options to apply on the CSV export.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [CSV export](/x/react-data-grid/export/#csv-export)
+
+:::
+
 ## Import
 
 ```js

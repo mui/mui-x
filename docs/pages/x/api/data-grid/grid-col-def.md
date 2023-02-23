@@ -2,6 +2,15 @@
 
 <p class="description">Column Definition interface.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Column definition](/x/react-data-grid/column-definition/)
+
+:::
+
 ## Import
 
 ```js

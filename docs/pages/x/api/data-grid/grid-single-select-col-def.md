@@ -2,6 +2,15 @@
 
 <p class="description">Column Definition interface used for columns with the `singleSelect` type.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Special column properties](/x/react-data-grid/column-definition/#special-properties)
+
+:::
+
 ## Import
 
 ```js

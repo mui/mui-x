@@ -2,6 +2,15 @@
 
 <p class="description">Object passed as parameter in the row `getRowClassName` callback prop.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Styling rows](/x/react-data-grid/style/#styling-rows)
+
+:::
+
 ## Import
 
 ```js
