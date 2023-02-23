@@ -9,6 +9,7 @@ _Feb 23, 2023_
 
 We'd like to offer a big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
+- ⚡️ Add web worker support for Excel export (#7770) @m4theushw
 - 🎁 Add `Remove All` button in the data grid filter panel (#7326) @MBilalShafi
 - ⚙️ Allow to customize options label and value in the data grid `singleSelect` column (#7684) @m4theushw
 - 📚 Documentation improvements
@@ -22,6 +23,7 @@ We'd like to offer a big thanks to the 5 contributors who made this release poss
 - [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7964) @m4theushw
 - [DataGrid] Introduce `slots` and deprecate `components` (#7882) @MBilalShafi
 - [DataGridPro] Add `Remove All` option in filter panel (#7326) @MBilalShafi
+- [DataGridPremium] Add web worker support for Excel export (#7770) @m4theushw
 
 ### `@mui/x-date-pickers@v6.0.0-beta.5` / `@mui/x-date-pickers-pro@v6.0.0-beta.5`
 
