@@ -170,9 +170,17 @@ To override default props or pass custom props to slot components, use `slotProp
 >
 ```
 
-### Custom slot props with Typescript
+### Custom slot props with typescript
 
 If the custom component requires additional props to work properly, typescript may throw type error. To prevent, use [typescript module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to augment props interface.
+
+The naming of overridable interfaces uses a pattern like this:
+
+<pre>
+`${slotNameInPascalCase}PropsOverrides`
+</pre>
+
+For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
 
 <!-- TODO: Fix this URL on stable release -->
 
