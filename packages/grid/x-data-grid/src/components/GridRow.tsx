@@ -268,6 +268,8 @@ const GridRow = React.forwardRef<
 
   const rowReordering = (rootProps as any).rowReordering as boolean;
 
+  const CellComponent = slots.cell;
+
   const getCell = React.useCallback(
     (
       column: GridStateColDef,
@@ -345,7 +347,7 @@ const GridRow = React.forwardRef<
       });
 
       return (
-        <slots.cell
+        <CellComponent
           key={column.field}
           value={cellParams.value}
           field={column.field}
@@ -367,7 +369,7 @@ const GridRow = React.forwardRef<
           {...slotProps?.cell}
         >
           {content}
-        </slots.cell>
+        </CellComponent>
       );
     },
     [
@@ -381,7 +383,7 @@ const GridRow = React.forwardRef<
       getCellClassName,
       focusedCell,
       tabbableCell,
-      slots,
+      CellComponent,
       rowHeight,
       slotProps?.cell,
       rootClasses,
