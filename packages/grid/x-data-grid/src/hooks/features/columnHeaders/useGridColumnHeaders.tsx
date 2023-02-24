@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/system';
 import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../utils/useGridSelector';
