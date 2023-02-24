@@ -157,7 +157,7 @@ As any component slot, every icon can be customized. However, it is not yet poss
 
 ## Slot props
 
-To override default props or pass custom props to slot components, use `slotProps` prop.
+To override default props or pass custom props to slot components, use the `slotProps` prop.
 
 ```tsx
 <DataGrid
@@ -172,7 +172,7 @@ To override default props or pass custom props to slot components, use `slotProp
 
 ### Custom slot props with TypeScript
 
-If the custom component requires additional props to work properly, typescript may throw type error. To prevent, use [typescript module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to augment props interface.
+If the custom component requires additional props to work properly, TypeScript may throw type errors. To prevent, use [module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to enhance the props interface.
 
 The naming of overridable interfaces uses a pattern like this:
 
@@ -208,7 +208,7 @@ declare module '@mui/x-data-grid' {
 >
 ```
 
-This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to `footer` slot.
+This demo below shows how to use the `slotProps` prop and module augmentation to pass a new prop `status` to the `footer` slot.
 
 {{"demo": "CustomFooter.js", "bg": "inline"}}
 
