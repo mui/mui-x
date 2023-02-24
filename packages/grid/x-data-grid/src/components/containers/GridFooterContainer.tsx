@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -27,14 +27,12 @@ const GridFooterContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterContainer',
   overridesResolver: (props, styles) => styles.footerContainer,
-})<{ ownerState: OwnerState }>(() => {
-  return {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    minHeight: 52, // Match TablePagination min height
-    borderTop: '1px solid',
-  };
+})<{ ownerState: OwnerState }>({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  minHeight: 52,
+  borderTop: '1px solid',
 });
 
 const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
