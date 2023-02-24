@@ -264,8 +264,9 @@ const GridRow = React.forwardRef<
     classes: rootClasses,
     disableColumnReorder,
     getCellClassName,
-    rowReordering,
-  } = rootProps as any;
+  } = rootProps;
+
+  const rowReordering = (rootProps as any).rowReordering as boolean;
 
   const getCell = React.useCallback(
     (
