@@ -98,6 +98,7 @@ export const GridRootStyles = styled('div', {
 
   const gridStyle: CSSInterpolation = {
     '--DataGrid-radius': theme.shape.borderRadius,
+    '--DataGrid-headWeight': theme.typography.fontWeightMedium,
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
