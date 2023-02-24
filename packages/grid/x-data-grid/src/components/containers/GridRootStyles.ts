@@ -97,13 +97,14 @@ export const GridRootStyles = styled('div', {
   const borderColor = getBorderColor(theme);
 
   const gridStyle: CSSInterpolation = {
+    '--DataGrid-radius': theme.shape.borderRadius,
     flex: 1,
     boxSizing: 'border-box',
     position: 'relative',
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 'var(--DataGrid-radius)',
     color: (theme.vars || theme).palette.text.primary,
     ...theme.typography.body2,
     outline: 'none',
@@ -432,13 +433,13 @@ export const GridRootStyles = styled('div', {
     [`& .${gridClasses['columnHeader--dragging']}, & .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
     },
     [`& .${gridClasses['row--dragging']}`]: {
       background: (theme.vars || theme).palette.background.paper,
       padding: '0 12px',
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 'var(--DataGrid-radius)',
       opacity: (theme.vars || theme).palette.action.disabledOpacity,
 
       [`& .${gridClasses.rowReorderCellPlaceholder}`]: {

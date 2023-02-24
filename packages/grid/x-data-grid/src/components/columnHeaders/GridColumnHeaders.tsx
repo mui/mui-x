@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/system';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
@@ -22,17 +22,15 @@ const GridColumnHeadersRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaders',
   overridesResolver: (props, styles) => styles.columnHeaders,
-})<{ ownerState: OwnerState }>(({ theme }) => {
-  return {
-    position: 'relative',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    boxSizing: 'border-box',
-    borderBottom: '1px solid',
-    borderTopLeftRadius: theme.shape.borderRadius,
-    borderTopRightRadius: theme.shape.borderRadius,
-  };
+})<{ ownerState: OwnerState }>({
+  position: 'relative',
+  overflow: 'hidden',
+  display: 'flex',
+  alignItems: 'center',
+  boxSizing: 'border-box',
+  borderBottom: '1px solid',
+  borderTopLeftRadius: 'var(--DataGrid-radius)',
+  borderTopRightRadius: 'var(--DataGrid-radius)',
 });
 
 interface GridColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement> {
