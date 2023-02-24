@@ -19,6 +19,8 @@ export * from './hooks';
 export * from './models';
 export * from './components';
 
+export { GridColumnHeaders } from '@mui/x-data-grid-pro';
+
 export type {
   DataGridPremiumProps,
   GridExperimentalPremiumFeatures,
@@ -32,5 +34,3 @@ export {
   GRID_COLUMN_MENU_COMPONENTS,
   GRID_COLUMN_MENU_COMPONENTS_PROPS,
 } from './components/reexports';
-
-export { DataGridProColumnHeaders as DataGridPremiumColumnHeaders } from '@mui/x-data-grid-pro';

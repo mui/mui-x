@@ -12,7 +12,7 @@ import {
   GridColumnHeaderSeparatorSides,
 } from '@mui/x-data-grid';
 import {
-  GridColumnHeaders,
+  GridBaseColumnHeaders,
   GridColumnHeadersInner,
   useGridColumnHeaders,
   UseGridColumnHeadersProps,
@@ -117,8 +117,8 @@ interface DataGridProColumnHeadersProps
   pinnedColumns: GridPinnedColumns;
 }
 
-const DataGridProColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
-  function DataGridProColumnHeaders(props, ref) {
+const GridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProColumnHeadersProps>(
+  function GridColumnHeaders(props, ref) {
     const {
       style,
       className,
@@ -229,7 +229,7 @@ const DataGridProColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProCol
     };
 
     return (
-      <GridColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
+      <GridBaseColumnHeaders ref={ref} className={className} {...getRootProps(other)}>
         {leftRenderContext && (
           <GridColumnHeadersPinnedColumnHeaders
             className={classes.leftPinnedColumns}
@@ -294,12 +294,12 @@ const DataGridProColumnHeaders = React.forwardRef<HTMLDivElement, DataGridProCol
             )}
           </GridColumnHeadersPinnedColumnHeaders>
         )}
-      </GridColumnHeaders>
+      </GridBaseColumnHeaders>
     );
   },
 );
 
-DataGridProColumnHeaders.propTypes = {
+GridColumnHeaders.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -351,4 +351,4 @@ DataGridProColumnHeaders.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { DataGridProColumnHeaders };
+export { GridColumnHeaders };

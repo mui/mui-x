@@ -2,11 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { teal } from '@mui/material/colors';
 import { unstable_useForkRef as useForkRef } from '@mui/utils';
-import {
-  DataGridPro,
-  GridRow,
-  DataGridProColumnHeaders,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridRow, GridColumnHeaders } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 const TraceUpdates = React.forwardRef((props, ref) => {
@@ -32,7 +28,7 @@ const RowWithTracer = React.forwardRef((props, ref) => {
 });
 
 const ColumnHeadersWithTracer = React.forwardRef((props, ref) => {
-  return <TraceUpdates ref={ref} Component={DataGridProColumnHeaders} {...props} />;
+  return <TraceUpdates ref={ref} Component={GridColumnHeaders} {...props} />;
 });
 
 const MemoizedRow = React.memo(RowWithTracer);

@@ -5,17 +5,17 @@ import {
   UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridScrollArea } from './GridScrollArea';
-import { GridColumnHeaders } from './columnHeaders/GridColumnHeaders';
+import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 import { GridColumnHeadersInner } from './columnHeaders/GridColumnHeadersInner';
 
-interface DataGridColumnHeadersProps
+interface GridColumnHeadersProps
   extends React.HTMLAttributes<HTMLDivElement>,
     Omit<UseGridColumnHeadersProps, 'innerRef'> {
   innerRef?: React.Ref<HTMLDivElement>;
 }
 
-const DataGridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridColumnHeadersProps>(
-  function GridColumnsHeader(props, ref) {
+const GridColumnHeaders = React.forwardRef<HTMLDivElement, GridColumnHeadersProps>(
+  function GridColumnsHeaders(props, ref) {
     const {
       innerRef,
       className,
@@ -56,19 +56,19 @@ const DataGridColumnHeaders = React.forwardRef<HTMLDivElement, DataGridColumnHea
       });
 
     return (
-      <GridColumnHeaders ref={ref} {...getRootProps(other)}>
+      <GridBaseColumnHeaders ref={ref} {...getRootProps(other)}>
         <GridScrollArea scrollDirection="left" />
         <GridColumnHeadersInner isDragging={isDragging} {...getInnerProps()}>
           {getColumnGroupHeaders()}
           {getColumnHeaders()}
         </GridColumnHeadersInner>
         <GridScrollArea scrollDirection="right" />
-      </GridColumnHeaders>
+      </GridBaseColumnHeaders>
     );
   },
 );
 
-DataGridColumnHeaders.propTypes = {
+GridColumnHeaders.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
@@ -116,4 +116,4 @@ DataGridColumnHeaders.propTypes = {
   visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
 } as any;
 
-export { DataGridColumnHeaders };
+export { GridColumnHeaders };

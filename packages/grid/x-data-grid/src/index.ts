@@ -20,7 +20,7 @@ export type { DataGridProps, GridExperimentalFeatures } from './models/props/Dat
 export type { GridToolbarExportProps } from './components/toolbar/GridToolbarExport';
 export type { GridExportFormat, GridExportExtension } from './models/gridExport';
 
-export { DataGridColumnHeaders } from './components/DataGridColumnHeaders';
+export { GridColumnHeaders } from './components/GridColumnHeaders';
 
 /**
  * Reexportable components.

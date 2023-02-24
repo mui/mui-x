@@ -15,12 +15,12 @@ To start using memoization, import the inner components, then pass their memoize
 ```tsx
 import {
   GridRow,
+  GridColumnHeaders,
   DataGrid, // or DataGridPro, DataGridPremium
-  DataGridColumnHeaders, // or DataGridProColumnHeaders, DataGridPremiumColumnHeaders
 } from '@mui/x-data-grid';
 
 const MemoizedRow = React.memo(GridRow);
-const MemoizedColumnHeaders = React.memo(DataGridColumnHeaders);
+const MemoizedColumnHeaders = React.memo(GridColumnHeaders);
 
 <DataGrid
   slots={{

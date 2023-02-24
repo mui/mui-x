@@ -4,7 +4,7 @@ import {
   DataGridPro,
   GridRow,
   GridCell,
-  DataGridProColumnHeaders,
+  GridColumnHeaders,
 } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -12,7 +12,7 @@ const MemoizedRow = React.memo(GridRow);
 
 const MemoizedCell = React.memo(GridCell);
 
-const MemoizedColumnHeaders = React.memo(DataGridProColumnHeaders);
+const MemoizedColumnHeaders = React.memo(GridColumnHeaders);
 
 export default function DataGridProDemo() {
   const { data } = useDemoData({

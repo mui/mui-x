@@ -32,4 +32,4 @@ export {
   GRID_COLUMN_MENU_COMPONENTS_PROPS,
 } from './components/reexports';
 
-export { DataGridProColumnHeaders } from './components/DataGridProColumnHeaders';
+export { GridColumnHeaders } from './components/GridColumnHeaders';
