@@ -6,7 +6,6 @@
   disableRowSelectionOnClick
   components={{
     Row: MemoizedRow,
-    Cell: MemoizedCell,
     ColumnHeaders: MemoizedColumnHeaders,
   }}
 />
