@@ -1,0 +1,7 @@
+<ButtonDatePicker
+  label={`Current date: ${
+    value == null ? 'null' : value.format('MM/DD/YYYY')
+  }`}
+  value={value}
+  onChange={(newValue) => setValue(newValue)}
+/>

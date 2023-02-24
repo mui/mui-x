@@ -1,0 +1,13 @@
+<CssVarsProvider
+  theme={mergedTheme}
+  shouldSkipGeneratingVar={(keys) =>
+    muiShouldSkipGeneratingVar(keys) || joyShouldSkipGeneratingVar(keys)
+  }
+>
+  <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <Stack spacing={2} sx={{ width: 400 }}>
+      <JoyDatePicker />
+      <JoyDateRangePicker />
+    </Stack>
+  </LocalizationProvider>
+</CssVarsProvider>
