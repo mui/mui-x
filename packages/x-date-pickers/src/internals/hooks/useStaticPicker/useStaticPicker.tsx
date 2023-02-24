@@ -45,14 +45,14 @@ export const useStaticPicker = <
     validator,
     autoFocusView: autoFocus ?? false,
     additionalViewProps: {},
-    wrapperVariant: displayStaticWrapperAs!,
+    wrapperVariant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value={displayStaticWrapperAs!}>
+      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
           {...slotProps?.layout}

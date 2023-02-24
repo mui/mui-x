@@ -59,7 +59,7 @@ export const useStaticRangePicker = <
       rangePosition,
       onRangePositionChange,
     },
-    wrapperVariant: displayStaticWrapperAs!,
+    wrapperVariant: displayStaticWrapperAs,
   });
 
   const Layout = slots?.layout ?? PickerStaticLayout;
@@ -74,7 +74,7 @@ export const useStaticRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value={displayStaticWrapperAs!}>
+      <WrapperVariantContext.Provider value={displayStaticWrapperAs}>
         <Layout
           {...layoutProps}
           {...slotProps?.layout}

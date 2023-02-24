@@ -20,7 +20,7 @@ export interface StaticOnlyPickerProps {
    * Force static wrapper inner components to be rendered in mobile or desktop mode.
    * @default "mobile"
    */
-  displayStaticWrapperAs?: 'desktop' | 'mobile';
+  displayStaticWrapperAs: 'desktop' | 'mobile';
   /**
    * If `true`, the view is focused during the first mount.
    */
