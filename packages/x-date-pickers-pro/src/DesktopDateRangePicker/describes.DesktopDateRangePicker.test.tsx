@@ -78,7 +78,7 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
   }));
 
   // With single input field
-  describeValue.only(DesktopDateRangePicker, () => ({
+  describeValue(DesktopDateRangePicker, () => ({
     render,
     componentFamily: 'picker',
     type: 'date-range',

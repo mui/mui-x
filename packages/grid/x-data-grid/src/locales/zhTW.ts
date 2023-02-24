@@ -46,6 +46,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: '增加篩選器',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: '刪除',
   filterPanelLogicOperator: '邏輯運算子',
   filterPanelOperator: '運算子',
