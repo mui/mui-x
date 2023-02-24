@@ -42,7 +42,7 @@ const esESGrid: Partial<GridLocaleText> = {
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
   columnsPanelTextFieldPlaceholder: 'Título de columna',
-  columnsPanelDragIconLabel: 'Reorder columna',
+  columnsPanelDragIconLabel: 'Reordenar columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
 
