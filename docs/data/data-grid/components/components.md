@@ -170,21 +170,19 @@ To override default props or pass custom props to slot components, use `slotProp
 >
 ```
 
-### Custom slot props with typescript
+### Custom slot props with TypeScript
 
 If the custom component requires additional props to work properly, typescript may throw type error. To prevent, use [typescript module augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) to augment props interface.
 
 The naming of overridable interfaces uses a pattern like this:
 
-<pre>
+```js
 `${slotNameInPascalCase}PropsOverrides`
-</pre>
+```
 
 For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
 
-<!-- TODO: Fix this URL on stable release -->
-
-This [file](https://github.com/mui/mui-x/blob/next/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
+This [file](https://github.com/mui/mui-x/blob/-/packages/grid/x-data-grid/src/models/gridSlotsComponentsProps.ts) lists all the interfaces for each slot which could be used for augmentation.
 
 ```tsx
 // augment the props for `toolbar` slot
