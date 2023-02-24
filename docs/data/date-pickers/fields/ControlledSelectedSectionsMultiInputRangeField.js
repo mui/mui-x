@@ -12,13 +12,13 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   const startInputRef = React.useRef(null);
   const endInputRef = React.useRef(null);
 
-  const setSelectedDateSectionName = (selectedDateSectionName, position) => {
+  const setSelectedSectionType = (selectedSectionType, position) => {
     if (position === 'start') {
       startInputRef.current?.focus();
     } else {
       endInputRef.current?.focus();
     }
-    setSelectedSections(selectedDateSectionName);
+    setSelectedSections(selectedSectionType);
   };
 
   const renderDateHeader = (position) => (
@@ -29,7 +29,7 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
           <Button
             size="small"
             variant="outlined"
-            onClick={() => setSelectedDateSectionName(sectionName, position)}
+            onClick={() => setSelectedSectionType(sectionName, position)}
           >
             {sectionName}
           </Button>

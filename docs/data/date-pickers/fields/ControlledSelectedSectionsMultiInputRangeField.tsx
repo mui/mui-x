@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
-  MuiDateSectionName,
+  FieldSectionType,
   FieldSelectedSections,
   RangePosition,
 } from '@mui/x-date-pickers-pro';
@@ -17,8 +17,8 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   const startInputRef = React.useRef<HTMLInputElement>(null);
   const endInputRef = React.useRef<HTMLInputElement>(null);
 
-  const setSelectedDateSectionName = (
-    selectedDateSectionName: MuiDateSectionName,
+  const setSelectedSectionType = (
+    selectedSectionType: FieldSectionType,
     position: RangePosition,
   ) => {
     if (position === 'start') {
@@ -26,7 +26,7 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
     } else {
       endInputRef.current?.focus();
     }
-    setSelectedSections(selectedDateSectionName);
+    setSelectedSections(selectedSectionType);
   };
 
   const renderDateHeader = (position: RangePosition) => (
@@ -37,7 +37,7 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
           <Button
             size="small"
             variant="outlined"
-            onClick={() => setSelectedDateSectionName(sectionName, position)}
+            onClick={() => setSelectedSectionType(sectionName, position)}
           >
             {sectionName}
           </Button>
