@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { styled, SxProps, Theme } from '@mui/material/styles';
-import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridFooterContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = {
-  classes?: Partial<GridClasses>;
-};
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

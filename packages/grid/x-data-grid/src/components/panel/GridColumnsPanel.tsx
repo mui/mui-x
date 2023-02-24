@@ -18,12 +18,11 @@ import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
-import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-type OwnerState = {
-  classes?: Partial<GridClasses>;
-};
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

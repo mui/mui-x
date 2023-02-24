@@ -17,11 +17,10 @@ import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getDataGridUtilityClass, GridClasses } from '../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
-type OwnerState = {
-  classes?: Partial<GridClasses>;
-};
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;

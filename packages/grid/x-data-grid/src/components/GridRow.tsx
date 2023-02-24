@@ -6,12 +6,19 @@ import {
   unstable_useForkRef as useForkRef,
 } from '@mui/utils';
 import { GridRowEventLookup } from '../models/events';
-import { GridTreeNodeWithRender } from '../models/gridRows';
-import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRowModel';
+import { GridRowId, GridRowModel, GridTreeNodeWithRender } from '../models/gridRows';
+import {
+  GridEditModes,
+  GridRowModes,
+  GridEditingState,
+  GridCellModes,
+} from '../models/gridEditRowModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
+import { GridCellCoordinates } from '../models/gridCell';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
 import { GridRowClassNameParams } from '../models/params/gridRowParams';
@@ -21,19 +28,44 @@ import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelection
 import { GRID_ACTIONS_COLUMN_TYPE } from '../colDef/gridActionsColDef';
 import { GridRenderEditCellParams } from '../models/params/gridCellParams';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '../constants/gridDetailPanelToggleField';
-import { GridClasses } from '../constants';
 import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSelector';
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
-import { GridCellProps } from './cell/GridCellProps';
-import { GridRowProps } from './GridRowProps';
+import type { GridCellProps } from './cell/GridCell';
+
+export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
+  rowId: GridRowId;
+  selected: boolean;
+  /**
+   * Index of the row in the whole sorted and filtered dataset.
+   * If some rows above have expanded children, this index also take those children into account.
+   */
+  index: number;
+  rowHeight: number | 'auto';
+  containerWidth: number;
+  firstColumnToRender: number;
+  lastColumnToRender: number;
+  visibleColumns: GridStateColDef[];
+  renderedColumns: GridStateColDef[];
+  cellFocus: GridCellCoordinates | null;
+  cellTabIndex: GridCellCoordinates | null;
+  editRowsState: GridEditingState;
+  position: 'left' | 'center' | 'right';
+  row?: GridRowModel;
+  isLastVisible?: boolean;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
+  [x: string]: any; // Allow custom attributes like data-* and aria-*
+}
 
 type OwnerState = Pick<GridRowProps, 'selected'> & {
   editable: boolean;
   editing: boolean;
   isLastVisible: boolean;
-  classes?: Partial<GridClasses>;
+  classes?: DataGridProcessedProps['classes'];
   rowHeight: GridRowProps['rowHeight'];
 };
 

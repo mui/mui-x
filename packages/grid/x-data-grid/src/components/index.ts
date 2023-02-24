@@ -17,6 +17,5 @@ export * from './GridNoRowsOverlay';
 export * from './GridPagination';
 export * from './GridRowCount';
 export * from './GridRow';
-export * from './GridRowProps';
 export * from './GridSelectedRowCount';
 export * from './GridScrollArea';

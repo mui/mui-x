@@ -1,5 +1,4 @@
 export * from './GridCell';
-export * from './GridCellProps';
 export * from './GridBooleanCell';
 export * from './GridEditBooleanCell';
 export * from './GridEditDateCell';

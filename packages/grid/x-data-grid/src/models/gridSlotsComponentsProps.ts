@@ -17,8 +17,8 @@ import { GridFilterPanelProps } from '../components/panel/filterPanel/GridFilter
 import { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
 import { GridOverlayProps } from '../components/containers/GridOverlay';
 import { GridPanelProps } from '../components/panel/GridPanel';
-import { GridRowProps } from '../components/GridRowProps';
-import { GridCellProps } from '../components/cell/GridCellProps';
+import type { GridRowProps } from '../components/GridRow';
+import type { GridCellProps } from '../components/cell/GridCell';
 
 // Overrides for module augmentation
 export interface BaseCheckboxPropsOverrides {}

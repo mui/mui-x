@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridSlotsComponentsProps } from '@mui/x-data-grid';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 
 type FooterStatus = 'connected' | 'disconnected';
@@ -13,7 +13,9 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function CustomFooterStatusComponent(props: { status: FooterStatus }) {
+export function CustomFooterStatusComponent(
+  props: NonNullable<GridSlotsComponentsProps['footer']>,
+) {
   return (
     <Box sx={{ p: 1, display: 'flex' }}>
       <FiberManualRecordIcon
