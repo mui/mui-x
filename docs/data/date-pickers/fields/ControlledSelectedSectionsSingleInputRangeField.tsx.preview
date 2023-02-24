@@ -1,4 +1,4 @@
-<Stack direction="row" spacing={2}>
+<Stack direction={{ xs: 'column', l: 'row' }} spacing={2}>
   {renderDateHeader('start')}
   {renderDateHeader('end')}
 </Stack>

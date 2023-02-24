@@ -133,8 +133,8 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       onSelectedSectionsChange,
     },
     startTextFieldProps,
-    startInputRef: startTextFieldProps.inputRef,
     endTextFieldProps,
+    startInputRef: startTextFieldProps.inputRef,
     endInputRef: endTextFieldProps.inputRef,
   });
 

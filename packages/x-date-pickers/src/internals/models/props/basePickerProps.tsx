@@ -55,18 +55,16 @@ export interface BaseNonStaticPickerProps {
 }
 
 /**
- * Props common to all non-static pickers with a single input.
+ * Props common to all non-range non-static pickers.
  * These props are handled by the headless wrappers.
  */
-export interface BaseSingleInputNonStaticPickerProps {
+export interface BaseNonRangeNonStaticPickerProps {
   /**
    * The label content.
-   * Will be ignored on multi input range pickers.
    */
   label?: React.ReactNode;
   /**
    * Pass a ref to the `input` element.
-   * Will be ignored on multi input range pickers.
    */
   inputRef?: React.Ref<HTMLInputElement>;
 }

@@ -183,7 +183,6 @@ DesktopDateTimePicker.propTypes = {
   format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
-   * Will be ignored on multi input range pickers.
    */
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
@@ -193,7 +192,6 @@ DesktopDateTimePicker.propTypes = {
   ]),
   /**
    * The label content.
-   * Will be ignored on multi input range pickers.
    */
   label: PropTypes.node,
   /**

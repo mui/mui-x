@@ -46,7 +46,7 @@ export default function ControlledSelectedSectionsSingleInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
+        <Stack direction={{ xs: 'column', l: 'row' }} spacing={2}>
           {renderDateHeader('start')}
           {renderDateHeader('end')}
         </Stack>

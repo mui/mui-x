@@ -10,13 +10,12 @@ import {
   BaseNonStaticPickerProps,
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
-  BaseSingleInputNonStaticPickerProps,
 } from '@mui/x-date-pickers/internals';
 import {
   ExportedPickersLayoutSlotsComponent,
   ExportedPickersLayoutSlotsComponentsProps,
 } from '@mui/x-date-pickers/PickersLayout';
-import { DateRange, RangeFieldSection } from '../../models';
+import { DateRange, RangeFieldSection, BaseRangeNonStaticPickerProps } from '../../models';
 import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 import {
   RangePickerFieldSlotsComponent,
@@ -39,7 +38,7 @@ export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null, RangeFieldSection>,
     UsePickerViewsNonStaticProps,
-    BaseSingleInputNonStaticPickerProps,
+    BaseRangeNonStaticPickerProps,
     UseRangePositionProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.

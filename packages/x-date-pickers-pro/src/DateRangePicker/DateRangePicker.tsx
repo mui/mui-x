@@ -146,7 +146,7 @@ DateRangePicker.propTypes = {
   format: PropTypes.string,
   /**
    * Pass a ref to the `input` element.
-   * Will be ignored on multi input range pickers.
+   * Will be ignored on multi input pickers.
    */
   inputRef: PropTypes.oneOfType([
     PropTypes.func,
@@ -156,7 +156,7 @@ DateRangePicker.propTypes = {
   ]),
   /**
    * The label content.
-   * Will be ignored on multi input range pickers.
+   * Will be ignored on multi input pickers.
    */
   label: PropTypes.node,
   /**
