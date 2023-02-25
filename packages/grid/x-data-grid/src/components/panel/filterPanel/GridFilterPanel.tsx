@@ -28,9 +28,9 @@ export interface GridFilterPanelProps
   /**
    * Function that returns the next filter item to be picked as default filter.
    * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
-   * @returns {GridColDef['field']} The field to be used for the next filter or `undefined` to not add a new filter.
+   * @returns {GridColDef['field']} The field to be used for the next filter.
    */
-  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'] | undefined;
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'];
   /**
    * Props passed to each filter form.
    */
@@ -97,10 +97,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           columns: filterableColumns,
         });
 
-        if (!nextFieldName) {
-          return null;
-        }
-
         nextColumnWithOperator = filterableColumns.find(({ field }) => field === nextFieldName);
       } else {
         nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
@@ -127,10 +123,6 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         currentFilters: currentFilters as GridFilterItem[],
         columns: filterableColumns,
       });
-
-      if (!nextColumnFieldName) {
-        return null;
-      }
 
       const nextColumnWithOperator = filterableColumns.find(
         ({ field }) => field === nextColumnFieldName,
@@ -256,7 +248,7 @@ GridFilterPanel.propTypes = {
   /**
    * Function that returns the next filter item to be picked as default filter.
    * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
-   * @returns {GridColDef['field']} The field to be used for the next filter or `undefined` to not add a new filter.
+   * @returns {GridColDef['field']} The field to be used for the next filter.
    */
   getColumnForNewFilter: PropTypes.func,
   /**

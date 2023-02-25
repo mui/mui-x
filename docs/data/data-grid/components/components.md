@@ -177,7 +177,7 @@ If the custom component requires additional props to work properly, TypeScript m
 The naming of overridable interfaces uses a pattern like this:
 
 ```js
-`${slotNameInPascalCase}PropsOverrides`
+`${slotNameInPascalCase}PropsOverrides`;
 ```
 
 For example, for `columnMenu` slot, the interface name would be `ColumnMenuPropsOverrides`.
