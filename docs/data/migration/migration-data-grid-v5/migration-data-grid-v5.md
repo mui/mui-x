@@ -377,6 +377,12 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  experimentalFeatures={{ newEditingApi: true }}
    />
   ```
+- ✅ The row pinning is no longer experimental. The flag `experimentalFeatures.rowPinning` can be removed now.
+  ```diff
+   <DataGridPremium
+  -  experimentalFeatures={{ rowPinning: true }}
+   />
+  ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
 - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.

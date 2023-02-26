@@ -2,5 +2,4 @@
   columns={columns}
   pinnedRows={pinnedRows}
   rows={rows}
-  experimentalFeatures={{ rowPinning: true }}
 />
