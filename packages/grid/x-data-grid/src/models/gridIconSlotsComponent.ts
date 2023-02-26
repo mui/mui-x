@@ -111,10 +111,20 @@ export interface GridIconSlotsComponent {
    */
   DetailPanelCollapseIcon: React.JSXElementConstructor<any>;
   /**
-   * Icon displayed for deleting the filter from filter Panel.
-   * @default GridCloseIcon
+   * Icon displayed for deleting the filter from filter panel.
+   * @default GridAddIcon
+   */
+  FilterPanelAddIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed for deleting the filter from filter panel.
+   * @default GridDeleteIcon
    */
   FilterPanelDeleteIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed for deleting all the active filters from filter panel.
+   * @default GridDeleteForeverIcon
+   */
+  FilterPanelRemoveAllIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the `reorder` column type to reorder a row.
    * @default GridDragIcon
@@ -165,11 +175,6 @@ export interface GridIconSlotsComponent {
    * @default GridLoadIcon
    */
   LoadIcon: React.JSXElementConstructor<any>;
-  /**
-   * Icon displayed on the button that adds new filter.
-   * @default GridAddIcon
-   */
-  AddFilterIcon: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column reorder button.
    * @default GridDragIcon

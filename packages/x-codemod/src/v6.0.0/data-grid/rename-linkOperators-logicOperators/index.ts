@@ -8,6 +8,7 @@ const renamedIdentifiers = {
   linkOperator: 'logicOperator',
   linkOperators: 'logicOperators',
   setFilterLinkOperator: 'setFilterLogicOperator',
+  getRowIndex: 'getRowIndexRelativeToVisibleRows',
 };
 
 const PACKAGE_REGEXP = /@mui\/x-data-grid(-pro|-premium)?/;
@@ -32,6 +33,14 @@ const preRequisiteUsages: { [identifierName: string]: PreRequisiteUsage } = {
   },
   linkOperators: {
     possiblePaths: ['componentsProps.filter'],
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  setFilterLinkOperator: {
+    components: GridComponents,
+    packageRegex: PACKAGE_REGEXP,
+  },
+  getRowIndex: {
     components: GridComponents,
     packageRegex: PACKAGE_REGEXP,
   },

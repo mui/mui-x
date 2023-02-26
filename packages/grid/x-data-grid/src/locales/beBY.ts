@@ -70,6 +70,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Выдаліць',
   filterPanelLogicOperator: 'Лагічныя аператары',
   filterPanelOperator: 'Аператары',

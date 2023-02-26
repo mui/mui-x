@@ -33,6 +33,7 @@ import {
   GridViewColumnIcon,
   GridClearIcon,
   GridLoadIcon,
+  GridDeleteForeverIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 
@@ -69,7 +70,8 @@ const iconSlots: GridIconSlotsComponent = {
   ColumnMenuManageColumnsIcon: GridViewColumnIcon,
   ColumnMenuClearIcon: GridClearIcon,
   LoadIcon: GridLoadIcon,
-  AddFilterIcon: GridAddIcon,
+  FilterPanelAddIcon: GridAddIcon,
+  FilterPanelRemoveAllIcon: GridDeleteForeverIcon,
   ColumnReorderIcon: GridDragIcon,
 };
 

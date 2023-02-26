@@ -54,6 +54,7 @@ const csCZGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Přidat filtr',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Odstranit',
   // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Operátory',

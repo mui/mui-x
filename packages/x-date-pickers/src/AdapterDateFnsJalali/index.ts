@@ -3,19 +3,19 @@ import defaultLocale from 'date-fns-jalali/locale/fa-IR';
 import getWeek from 'date-fns-jalali/getWeek';
 // @ts-ignore
 import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
   M: 'month',
   MM: 'month',
-  MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  LLL: { sectionName: 'month', contentType: 'letter' },
-  LLLL: { sectionName: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  LLL: { sectionType: 'month', contentType: 'letter' },
+  LLLL: { sectionType: 'month', contentType: 'letter' },
   d: 'day',
   dd: 'day',
   H: 'hours',

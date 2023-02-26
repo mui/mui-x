@@ -1,29 +1,25 @@
 /* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 type Moment = defaultMoment.Moment;
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   // Month
   jM: 'month',
-  jMo: 'month',
   jMM: 'month',
-  jMMM: { sectionName: 'month', contentType: 'letter' },
-  jMMMM: { sectionName: 'month', contentType: 'letter' },
+  jMMM: { sectionType: 'month', contentType: 'letter' },
+  jMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of Month
   jD: 'day',
-  jDo: 'day',
   jDD: 'day',
 
   // Year
-  jY: 'year',
   jYY: 'year',
   jYYYY: 'year',
-  jYYYYYY: 'year',
 
   // AM / PM
   A: 'meridiem',
@@ -104,6 +100,10 @@ export class AdapterMomentJalaali
     return count < 0
       ? date.clone().subtract(Math.abs(count), 'jMonth')
       : date.clone().add(count, 'jMonth');
+  };
+
+  public setMonth = (date: Moment, month: number) => {
+    return date.clone().jMonth(month);
   };
 
   public isValid = (value: any) => {

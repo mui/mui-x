@@ -41,12 +41,13 @@ const esESGrid: Partial<GridLocaleText> = {
   // Columns panel text
   columnsPanelTextFieldLabel: 'Columna de búsqueda',
   columnsPanelTextFieldPlaceholder: 'Título de columna',
-  columnsPanelDragIconLabel: 'Reorder columna',
+  columnsPanelDragIconLabel: 'Reordenar columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
 
   // Filter panel text
   filterPanelAddFilter: 'Agregar filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Borrar',
   filterPanelLogicOperator: 'Operador lógico',
   filterPanelOperator: 'Operadores',

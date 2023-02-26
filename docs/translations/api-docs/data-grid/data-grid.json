@@ -641,7 +641,6 @@
     }
   },
   "slotDescriptions": {
-    "addFilterIcon": "Icon displayed on the button that adds new filter.",
     "baseButton": "The custom Button component used in the grid.",
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseFormControl": "The custom FormControl component used in the grid.",
@@ -678,7 +677,9 @@
     "detailPanelExpandIcon": "Icon displayed on the detail panel toggle column when collapsed.",
     "exportIcon": "Icon displayed on the open export button present in the toolbar by default.",
     "filterPanel": "Filter panel component rendered when clicking the filter button.",
-    "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter Panel.",
+    "filterPanelAddIcon": "Icon displayed for deleting the filter from filter panel.",
+    "filterPanelDeleteIcon": "Icon displayed for deleting the filter from filter panel.",
+    "filterPanelRemoveAllIcon": "Icon displayed for deleting all the active filters from filter panel.",
     "footer": "Footer component rendered at the bottom of the grid viewport.",
     "groupingCriteriaCollapseIcon": "Icon displayed on the grouping column when the children are expanded",
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",

@@ -231,7 +231,6 @@
     "treeData": { "type": { "name": "bool" } }
   },
   "slots": {
-    "addFilterIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
     "baseButton": { "default": "Button", "type": { "name": "elementType" } },
     "baseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
@@ -303,7 +302,12 @@
     "detailPanelExpandIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
     "exportIcon": { "default": "GridSaveAltIcon", "type": { "name": "elementType" } },
     "filterPanel": { "default": "GridFilterPanel", "type": { "name": "elementType" } },
-    "filterPanelDeleteIcon": { "default": "GridCloseIcon", "type": { "name": "elementType" } },
+    "filterPanelAddIcon": { "default": "GridAddIcon", "type": { "name": "elementType" } },
+    "filterPanelDeleteIcon": { "default": "GridDeleteIcon", "type": { "name": "elementType" } },
+    "filterPanelRemoveAllIcon": {
+      "default": "GridDeleteForeverIcon",
+      "type": { "name": "elementType" }
+    },
     "footer": { "default": "GridFooter", "type": { "name": "elementType" } },
     "groupingCriteriaCollapseIcon": {
       "default": "GridExpandMoreIcon",

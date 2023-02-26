@@ -43,6 +43,17 @@ export interface GridFilterPanelProps
     | 'valueInputProps'
   >;
 
+  /*
+   * If `true`, the `Add filter` button will not be displayed.
+   * @default false
+   */
+  disableAddFilterButton?: boolean;
+  /*
+   * If `true`, the `Remove all` button will be disabled
+   * @default false
+   */
+  disableRemoveAllButton?: boolean;
+
   /**
    * @ignore - do not document.
    */
@@ -69,6 +80,8 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       filterFormProps,
       getColumnForNewFilter,
       children,
+      disableAddFilterButton = false,
+      disableRemoveAllButton = false,
       ...other
     } = props;
 
@@ -164,6 +177,14 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
       [apiRef, items.length],
     );
 
+    const handleRemoveAll = () => {
+      if (items.length === 1 && items[0].value === undefined) {
+        apiRef.current.deleteFilterItem(items[0]);
+        apiRef.current.hideFilterPanel();
+      }
+      apiRef.current.setFilterModel({ ...filterModel, items: [] });
+    };
+
     React.useEffect(() => {
       if (
         logicOperators.length > 0 &&
@@ -201,17 +222,33 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
             />
           ))}
         </GridPanelContent>
-        {!rootProps.disableMultipleColumnsFiltering && (
+        {!rootProps.disableMultipleColumnsFiltering &&
+        !disableAddFilterButton &&
+        !disableRemoveAllButton ? (
           <GridPanelFooter>
-            <rootProps.slots.baseButton
-              onClick={addNewFilter}
-              startIcon={<rootProps.slots.addFilterIcon />}
-              {...rootProps.slotProps?.baseButton}
-            >
-              {apiRef.current.getLocaleText('filterPanelAddFilter')}
-            </rootProps.slots.baseButton>
+            {!disableAddFilterButton ? (
+              <rootProps.slots.baseButton
+                onClick={addNewFilter}
+                startIcon={<rootProps.slots.filterPanelAddIcon />}
+                {...rootProps.slotProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelAddFilter')}
+              </rootProps.slots.baseButton>
+            ) : (
+              <span />
+            )}
+
+            {!disableRemoveAllButton ? (
+              <rootProps.slots.baseButton
+                onClick={handleRemoveAll}
+                startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}
+                {...rootProps.slotProps?.baseButton}
+              >
+                {apiRef.current.getLocaleText('filterPanelRemoveAll')}
+              </rootProps.slots.baseButton>
+            ) : null}
           </GridPanelFooter>
-        )}
+        ) : null}
       </GridPanelWrapper>
     );
   },
@@ -231,6 +268,8 @@ GridFilterPanel.propTypes = {
    * If not specified, the order is derived from the `columns` prop.
    */
   columnsSort: PropTypes.oneOf(['asc', 'desc']),
+  disableAddFilterButton: PropTypes.bool,
+  disableRemoveAllButton: PropTypes.bool,
   /**
    * Props passed to each filter form.
    */
