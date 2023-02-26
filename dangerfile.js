@@ -63,7 +63,7 @@ function addDeployPreviewUrls() {
 
 Netlify deploy preview: <a href="${netlifyPreview}">${netlifyPreview}</a>
 
-### Update pages
+### Updated pages
 
 ${
   docs.length
