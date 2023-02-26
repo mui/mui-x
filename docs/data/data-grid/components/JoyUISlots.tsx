@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import joySlots from '@mui/x-data-grid/joy';
 import type {} from '@mui/material/themeCssVarsAugmentation';
@@ -33,6 +33,7 @@ export default function JoyUISlots() {
     dataSet: 'Commodity',
     rowLength: 100,
     maxColumns: 6,
+    editable: true,
   });
 
   return (
@@ -43,7 +44,22 @@ export default function JoyUISlots() {
       }
     >
       <Box sx={{ height: 400, width: '100%' }}>
-        <DataGrid pagination slots={joySlots} {...data} checkboxSelection />
+        <DataGridPro
+          pagination
+          slots={joySlots}
+          {...data}
+          checkboxSelection
+          disableRowSelectionOnClick
+          slotProps={{
+            filterPanel: {
+              sx: {
+                '& .MuiDataGrid-filterForm': {
+                  alignItems: 'flex-end',
+                },
+              },
+            },
+          }}
+        />
       </Box>
     </CssVarsProvider>
   );

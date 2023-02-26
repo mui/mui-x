@@ -1,9 +1,12 @@
 import * as React from 'react';
 import JoyCheckbox from '@mui/joy/Checkbox';
+import JoyInput from '@mui/joy/Input';
+import JoyFormControl from '@mui/joy/FormControl';
+import JoyFormLabel from '@mui/joy/FormLabel';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
 import type { GridSlotsComponent } from '../models';
 
-// @ts-ignore TODO: fix types
+// TODO: fix types
 const Checkbox = React.forwardRef<HTMLDivElement, any>(
   ({ touchRippleRef, inputProps, ...props }, ref) => {
     return (
@@ -12,9 +15,28 @@ const Checkbox = React.forwardRef<HTMLDivElement, any>(
   },
 );
 
+// TODO: fix types
+const TextField = React.forwardRef<HTMLDivElement, any>(
+  ({ onChange, label, placeholder, value, inputRef, type }, ref) => {
+    return (
+      <JoyFormControl ref={ref}>
+        <JoyFormLabel sx={{ fontSize: 12 }}>{label}</JoyFormLabel>
+        <JoyInput
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          size="sm"
+          slotProps={{ input: { ref: inputRef } }}
+        />
+      </JoyFormControl>
+    );
+  },
+);
+
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseCheckbox: Checkbox,
-  // BaseTextField: MUITextField,
+  baseTextField: TextField,
   // BaseFormControl: MUIFormControl,
   // BaseSelect: MUISelect,
   // BaseSwitch: MUISwitch,
