@@ -270,8 +270,8 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
-- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot.
-  You can use the new `focusedCell` and `tabbableCell` props instead.
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the `Row` slot anymore.
+  Use the `focusedCell` and `tabbableCell` props instead.
   For the editing state, use the API methods.
   ```diff
    const CustomRow = (props) => {

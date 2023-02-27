@@ -7,9 +7,9 @@
 The `DataGrid` component is composed of a central state object where all data is stored.
 When an API method is called, a prop changes, or the user interacts with the UI (e.g. filtering a column), this state object is updated with the changes made.
 To reflect the changes in the interface, the component must re-render.
-Since the state behaves like `React.useState`, it means that the `DataGrid` component will re-render as well as its children, which includes column headers, rows and cells.
-With smaller datasets, this is not a problem for concern, but it can become a bottleneck if the number of rows gets increased and, specially, if many columns render [custom content](/x/react-data-grid/column-definition/#rendering-cells).
-One way to overcome this issue is using `React.memo` to only re-render the children components when their props have changed.
+Since the state behaves like `React.useState`, the `DataGrid` component will re-render its children, including column headers, rows, and cells.
+With smaller datasets, this is not a problem for concern, but it can become a bottleneck if the number of rows increases, especially if many columns render [custom content](/x/react-data-grid/column-definition/#rendering-cells).
+One way to overcome this issue is using `React.memo` to only re-render the child components when their props have changed.
 To start using memoization, import the inner components, then pass their memoized version to the respective slots, as follow:
 
 ```tsx
@@ -37,7 +37,7 @@ It also contains additional logic to highlight the components when they re-rende
 
 :::warning
 We do not ship the components above already wrapped with `React.memo` because if you have rows whose cells display custom content not derived from the received props, e.g. selectors, these cells may display outdated information.
-If you define a column with a custom cell renderer where content comes from a [selector](/x/react-data-grid/state/#catalog-of-selectors) that changes more often then the props passed to `GridRow`, the row component should not be memoized.
+If you define a column with a custom cell renderer where content comes from a [selector](/x/react-data-grid/state/#catalog-of-selectors) that changes more often than the props passed to `GridRow`, the row component should not be memoized.
 :::
 
 ## API
