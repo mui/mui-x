@@ -1,3 +1,4 @@
+import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
 import MUITextField from '@mui/material/TextField';
 import MUIFormControl from '@mui/material/FormControl';
@@ -89,6 +90,7 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
 
 export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_GRID_ICON_SLOTS_COMPONENTS,
+  BaseBadge: MUIBadge,
   BaseCheckbox: MUICheckbox,
   BaseTextField: MUITextField,
   BaseFormControl: MUIFormControl,
@@ -113,4 +115,13 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnsPanel: GridColumnsPanel,
   Panel: GridPanel,
   Row: GridRow,
+};
+
+/**
+ * @internal
+ */
+export const DATA_GRID_DEFAULT_SLOT_PROPS: Partial<Record<keyof GridSlotsComponent, any>> = {
+  BaseBadge: {
+    color: 'default',
+  },
 };
