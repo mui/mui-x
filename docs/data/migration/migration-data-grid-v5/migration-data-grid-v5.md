@@ -377,10 +377,13 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  experimentalFeatures={{ newEditingApi: true }}
    />
   ```
-- ✅ The aggregation is no longer experimental. The flag `experimentalFeatures.aggregation` can be removed now.
+- ✅ The aggregation and row pinning are no longer experimental features. The flags `experimentalFeatures.aggregation` and `experimentalFeatures.rowPinning` can be removed now.
   ```diff
    <DataGridPremium
-  -  experimentalFeatures={{ aggregation: true }}
+  -  experimentalFeatures={{ 
+  -   aggregation: true,
+  -   rowPinning: true,
+  -  }}
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.

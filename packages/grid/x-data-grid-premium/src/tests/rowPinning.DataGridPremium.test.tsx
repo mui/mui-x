@@ -74,7 +74,6 @@ describe('<DataGridPremium /> - Row pinning', () => {
               top: [pinnedRow0],
               bottom: [pinnedRow1],
             }}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );
