@@ -263,6 +263,7 @@
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "basePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "baseSelect": { "default": "Select", "type": { "name": "elementType" } },
+    "baseSelectOption": { "default": "MenuItem", "type": { "name": "elementType" } },
     "baseSwitch": { "default": "Switch", "type": { "name": "elementType" } },
     "baseTextField": { "default": "TextField", "type": { "name": "elementType" } },
     "baseTooltip": { "default": "Tooltip", "type": { "name": "elementType" } },
