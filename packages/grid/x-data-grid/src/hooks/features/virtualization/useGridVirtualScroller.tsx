@@ -27,6 +27,7 @@ import { GridStateColDef } from '../../../models/colDef/gridColDef';
 import { getFirstNonSpannedColumnToRender } from '../columns/gridColumnsUtils';
 import { getMinimalContentHeight } from '../rows/gridRowsUtils';
 import { GridRowProps } from '../../../components/GridRow';
+import { defaultMemoize } from 'reselect';
 
 // Uses binary search to avoid looping through all possible positions
 export function binarySearch(
@@ -144,10 +145,13 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
   const prevGetRowProps = React.useRef<UseGridVirtualScrollerProps['getRowProps']>();
   const prevRootRowStyle = React.useRef<GridSlotsComponentsProps['row']>();
 
-  const cachedRenderedColumns = React.useRef<GridStateColDef[]>();
-  const prevFirstColumnToRender = React.useRef<number>();
-  const prevLastColumnToRender = React.useRef<number>();
-  const prevVisibleColumns = React.useRef<GridStateColDef[]>();
+  const getRenderedColumnsRef = React.useRef(
+    defaultMemoize(
+      (columns: GridStateColDef[], firstColumnToRender: number, lastColumnToRender: number) => {
+        return columns.slice(firstColumnToRender, lastColumnToRender);
+      },
+    ),
+  );
 
   const getNearestIndexToRender = React.useCallback(
     (offset: number) => {
@@ -517,19 +521,11 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
       visibleRows: currentPage.rows,
     });
 
-    const invalidatesCachedRenderedColumns =
-      firstColumnToRender !== prevFirstColumnToRender.current ||
-      lastColumnToRender !== prevLastColumnToRender.current ||
-      visibleColumns !== prevVisibleColumns.current;
-
-    if (invalidatesCachedRenderedColumns) {
-      cachedRenderedColumns.current = visibleColumns.slice(firstColumnToRender, lastColumnToRender);
-      prevFirstColumnToRender.current = firstColumnToRender;
-      prevLastColumnToRender.current = lastColumnToRender;
-      prevVisibleColumns.current = visibleColumns;
-    }
-
-    const renderedColumns = cachedRenderedColumns.current;
+    const renderedColumns = getRenderedColumnsRef.current(
+      visibleColumns,
+      firstColumnToRender,
+      lastColumnToRender,
+    );
 
     const { style: rootRowStyle, ...rootRowProps } = rootProps.slotProps?.row || {};
 
