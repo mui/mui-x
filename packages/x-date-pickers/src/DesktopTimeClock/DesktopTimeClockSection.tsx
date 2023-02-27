@@ -5,27 +5,23 @@ import composeClasses from '@mui/utils/composeClasses';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import useForkRef from '@mui/utils/useForkRef';
-import type { PickerSelectionState } from '../internals/hooks/usePicker';
-import { useMeridiemMode } from '../internals/hooks/date-helpers-hooks';
 import {
   DesktopTimeClockSectionClasses,
   getDesktopTimeClockSectionUtilityClass,
 } from './desktopTimeClockSectionClasses';
 import type { DesktopTimeClockSectionOption } from './DesktopTimeClock.types';
-import { MeridiemEnum } from '../internals/utils/time-utils';
 
-export interface DesktopTimeClockSectionProps extends ReturnType<typeof useMeridiemMode> {
-  ampm: boolean;
+export interface DesktopTimeClockSectionProps<TValue> {
   autoFocus?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
   classes?: Partial<DesktopTimeClockSectionClasses>;
-  items: DesktopTimeClockSectionOption[];
-  onChange: (value: number | MeridiemEnum, isFinish?: PickerSelectionState) => void;
+  items: DesktopTimeClockSectionOption<TValue>[];
+  onChange: (value: TValue) => void;
 }
 
-const useUtilityClasses = (ownerState: DesktopTimeClockSectionProps) => {
+const useUtilityClasses = (ownerState: DesktopTimeClockSectionProps<any>) => {
   const { classes } = ownerState;
   const slots = {
     root: ['root'],
@@ -39,7 +35,7 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   name: 'MuiDesktopTimeClockSection',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
-})<{ ownerState: DesktopTimeClockSectionProps }>({
+})<{ ownerState: DesktopTimeClockSectionProps<any> }>({
   overflow: 'auto',
 });
 
@@ -51,15 +47,15 @@ const DesktopTimeClockSectionItem = styled(MenuItem, {
   flexDirection: 'column',
 });
 
-type DesktopTimeClockSectionComponent = (
-  props: DesktopTimeClockSectionProps & React.RefAttributes<HTMLUListElement>,
+type DesktopTimeClockSectionComponent = <TValue>(
+  props: DesktopTimeClockSectionProps<TValue> & React.RefAttributes<HTMLUListElement>,
 ) => JSX.Element & { propTypes?: any };
 
 /**
  * @ignore - internal component.
  */
-export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeClockSection(
-  inProps: DesktopTimeClockSectionProps,
+export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeClockSection<TValue>(
+  inProps: DesktopTimeClockSectionProps<TValue>,
   ref: React.Ref<HTMLUListElement>,
 ) {
   const containerRef = React.useRef<HTMLUListElement>(null);
@@ -70,15 +66,7 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
     name: 'MuiDesktopTimeClockSection',
   });
 
-  const {
-    autoFocus,
-    onChange,
-    className,
-    disabled,
-    readOnly,
-    items,
-    ...other
-  } = props;
+  const { autoFocus, onChange, className, disabled, readOnly, items, ...other } = props;
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -95,9 +83,9 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
         <DesktopTimeClockSectionItem
           aria-readonly={readOnly}
           key={option.label}
-          onClick={() => !readOnly && onChange(option.value, 'finish')}
+          onClick={() => !readOnly && onChange(option.value)}
           selected={option.selected}
-          disabled={option.disabled}
+          disabled={disabled ?? option.disabled}
           disableRipple={readOnly}
         >
           {option.label}

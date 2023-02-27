@@ -13,10 +13,10 @@ export const getHourSectionOptions = <TDate>({
   utils,
   ampm,
   isDisabled,
-}: IGetHoursSectionOptions<TDate>): DesktopTimeClockSectionOption[] => {
+}: IGetHoursSectionOptions<TDate>): DesktopTimeClockSectionOption<number>[] => {
   const currentHours = value ? utils.getHours(value) : null;
 
-  const result: DesktopTimeClockSectionOption[] = [];
+  const result: DesktopTimeClockSectionOption<number>[] = [];
   const startHour = ampm ? 1 : 0;
   const endHour = ampm ? 12 : 23;
 
@@ -68,7 +68,7 @@ export const getTimeSectionOptions = ({
   isDisabled,
   timeStep,
   hasValue = true,
-}: IGetTimeSectionOptions): DesktopTimeClockSectionOption[] => {
+}: IGetTimeSectionOptions): DesktopTimeClockSectionOption<number>[] => {
   const isSelected = (timeValue: number) => {
     if (value === null) {
       return false;

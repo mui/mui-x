@@ -3,13 +3,12 @@ import { UncapitalizeObjectKeys } from '../internals/utils/slots-migration';
 import { BaseClockProps, ExportedBaseClockProps } from '../internals/models/props/clock';
 import { ClockTimeView } from '../internals/models';
 import { DesktopTimeClockSectionProps } from './DesktopTimeClockSection';
-import { MeridiemEnum } from '../internals/utils/time-utils';
 
-export interface DesktopTimeClockSectionOption {
+export interface DesktopTimeClockSectionOption<TValue> {
   disabled?: boolean;
   selected?: boolean;
   label: string;
-  value: number | MeridiemEnum;
+  value: TValue;
 }
 
 export interface ExportedDesktopTimeClockProps<TDate> extends ExportedBaseClockProps<TDate> {
@@ -20,8 +19,8 @@ export interface ExportedDesktopTimeClockProps<TDate> extends ExportedBaseClockP
   timeStep?: number;
 }
 
-export interface DesktopTimeClockSectionViewProps
-  extends Pick<DesktopTimeClockSectionProps, 'onChange' | 'items'> {}
+export interface DesktopTimeClockSectionViewProps<TValue>
+  extends Pick<DesktopTimeClockSectionProps<TValue>, 'onChange' | 'items'> {}
 
 export interface DesktopTimeClockSlotsComponent {}
 

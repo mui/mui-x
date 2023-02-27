@@ -98,10 +98,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     },
   );
 
-  const { view, setView, previousView, nextView, setValueAndGoToNextView } = useViews<
-    TDate | null,
-    ClockTimeView
-  >({
+  const { view, setValueAndGoToNextView } = useViews<TDate | null, ClockTimeView>({
     view: inView,
     views,
     openTo,
@@ -228,20 +225,17 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
   );
 
   const buildViewProps = React.useCallback(
-    (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps => {
+    (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
-          const handleHoursChange = (
-            hourValue: number | MeridiemEnum,
-            isFinish?: PickerSelectionState,
-          ) => {
+          const handleHoursChange = (hourValue: number | MeridiemEnum) => {
             if (typeof hourValue !== 'number') {
               return;
             }
             const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
             setValueAndGoToNextView(
               utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
-              isFinish,
+              'finish',
             );
           };
           return {
@@ -257,16 +251,13 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
         case 'minutes': {
           const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
-          const handleMinutesChange = (
-            minuteValue: number | MeridiemEnum,
-            isFinish?: PickerSelectionState,
-          ) => {
+          const handleMinutesChange = (minuteValue: number | MeridiemEnum) => {
             if (typeof minuteValue !== 'number') {
               return;
             }
             setValueAndGoToNextView(
               utils.setMinutes(selectedTimeOrMidnight, minuteValue),
-              isFinish,
+              'finish',
             );
           };
 
@@ -283,16 +274,13 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
         case 'seconds': {
           const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
-          const handleSecondsChange = (
-            secondValue: number | MeridiemEnum,
-            isFinish?: PickerSelectionState,
-          ) => {
+          const handleSecondsChange = (secondValue: number | MeridiemEnum) => {
             if (typeof secondValue !== 'number') {
               return;
             }
             setValueAndGoToNextView(
               utils.setSeconds(selectedTimeOrMidnight, secondValue),
-              isFinish,
+              'finish',
             );
           };
 
@@ -323,13 +311,22 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     ],
   );
 
-  const viewTimeOptions = React.useMemo<
-    Record<ClockTimeView, DesktopTimeClockSectionViewProps>
-  >(() => {
+  const viewTimeOptions = React.useMemo(() => {
     return views.reduce((result, currentView) => {
       return { ...result, [currentView]: buildViewProps(currentView) };
-    }, {} as Record<ClockTimeView, DesktopTimeClockSectionViewProps>);
+    }, {} as Record<ClockTimeView, DesktopTimeClockSectionViewProps<number>>);
   }, [views, buildViewProps]);
+
+  const meridiemOptions = React.useMemo<DesktopTimeClockSectionViewProps<MeridiemEnum>>(
+    () => ({
+      onChange: handleMeridiemChange,
+      items: [
+        { value: 'am', label: 'AM', selected: meridiemMode === 'am' },
+        { value: 'pm', label: 'PM', selected: meridiemMode === 'pm' },
+      ],
+    }),
+    [handleMeridiemChange, meridiemMode],
+  );
 
   const ownerState = props;
   const classes = useUtilityClasses(ownerState);
@@ -347,13 +344,19 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           items={viewOptions.items}
           onChange={viewOptions.onChange}
           autoFocus={autoFocus ?? view === timeView}
-          ampm={ampm}
-          meridiemMode={meridiemMode}
-          handleMeridiemChange={handleMeridiemChange}
           disabled={disabled}
           readOnly={readOnly}
         />
       ))}
+      {ampm && (
+        <DesktopTimeClockSection
+          key="meridiem"
+          items={meridiemOptions.items}
+          onChange={meridiemOptions.onChange}
+          disabled={disabled}
+          readOnly={readOnly}
+        />
+      )}
     </DesktopTimeClockRoot>
   );
 }) as DesktopTimeClockComponent;
