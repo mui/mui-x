@@ -78,6 +78,7 @@ interface UseViewsResponse<TValue, TView extends unknown> {
     value: TValue,
     currentViewSelectionState?: PickerSelectionState,
   ) => void;
+  setFinalValue: (value: TValue) => void;
 }
 
 export function useViews<TValue, TView extends unknown>({
@@ -159,6 +160,15 @@ export function useViews<TValue, TView extends unknown>({
     },
   );
 
+  const setFinalValue = useEventCallback((value: TValue) => {
+    // TODO: find a proper solution 
+    goToNextView();
+    setTimeout(() => {
+      onChange(value, 'finish');
+    }, 0);
+
+  });
+
   const handleFocusedViewChange = useEventCallback((viewToFocus: TView, hasFocus: boolean) => {
     if (hasFocus) {
       // Focus event
@@ -166,7 +176,7 @@ export function useViews<TValue, TView extends unknown>({
     } else {
       // Blur event
       setFocusedView(
-        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view swiching
+        (prevFocusedView) => (viewToFocus === prevFocusedView ? null : prevFocusedView), // If false the blur is due to view switching
       );
     }
 
@@ -183,5 +193,6 @@ export function useViews<TValue, TView extends unknown>({
     defaultView: defaultView.current,
     goToNextView,
     setValueAndGoToNextView,
+    setFinalValue,
   };
 }

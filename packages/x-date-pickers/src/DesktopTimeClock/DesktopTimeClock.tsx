@@ -98,7 +98,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     },
   );
 
-  const { view, setValueAndGoToNextView } = useViews<TDate | null, ClockTimeView>({
+  const { view, setFinalValue, setValueAndGoToNextView } = useViews<TDate | null, ClockTimeView>({
     view: inView,
     views,
     openTo,
@@ -226,6 +226,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
   const buildViewProps = React.useCallback(
     (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps<number> => {
+      const lastView = views[views.length - 1];
       switch (viewToBuild) {
         case 'hours': {
           const handleHoursChange = (hours: number | MeridiemEnum) => {
@@ -256,7 +257,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof minutes !== 'number') {
               return;
             }
-            setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
+            if (utils.isValid(value) && lastView === 'minutes') {
+              setFinalValue(utils.setMinutes(selectedTimeOrMidnight, minutes));
+            } else {
+              setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
+            }
           };
 
           return {
@@ -277,7 +282,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
             if (typeof seconds !== 'number') {
               return;
             }
-            setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
+            if (utils.isValid(value) && lastView === 'seconds') {
+              setFinalValue(utils.setSeconds(selectedTimeOrMidnight, seconds));
+            } else {
+              setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
+            }
           };
 
           return {
@@ -296,6 +305,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       }
     },
     [
+      views,
       now,
       value,
       ampm,
@@ -306,6 +316,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       disabled,
       isTimeDisabled,
       timeStep,
+      setFinalValue,
     ],
   );
 
