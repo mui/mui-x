@@ -403,9 +403,13 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
+  const inputHasFocus = inputRef.current && inputRef.current === document.activeElement;
+
   return {
     ...otherForwardedProps,
-    value: valueStr,
+    placeholder: !state.value ? valueStr : undefined,
+    value: state.value || inputHasFocus ? valueStr : '',
+    autoComplete: 'off',
     inputMode,
     readOnly,
     onClick: handleInputClick,

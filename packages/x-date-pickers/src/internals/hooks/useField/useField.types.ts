@@ -93,12 +93,13 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
+  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
     readOnly: boolean;
+    autoComplete: 'off';
   };
 
 export interface FieldSection {
