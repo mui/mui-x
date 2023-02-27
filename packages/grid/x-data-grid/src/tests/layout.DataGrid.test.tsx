@@ -892,6 +892,28 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
       expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
     });
+
+    it('should allow to change localeText on the fly', () => {
+      function TestCase(props: Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              components={{
+                Toolbar: GridToolbar,
+              }}
+              {...props}
+            />
+          </div>
+        );
+      }
+      const { setProps, getByText } = render(
+        <TestCase localeText={{ toolbarDensity: 'Density' }} />,
+      );
+      expect(getByText('Density')).not.to.equal(null);
+      setProps({ localeText: { toolbarDensity: 'Densidade' } });
+      expect(getByText('Densidade')).not.to.equal(null);
+    });
   });
 
   it('should allow style customization using the theme', function test() {

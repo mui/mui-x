@@ -30,10 +30,6 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
-  /**
-   * Enables the ability for rows to be pinned in data grid.
-   */
-  rowPinning: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing

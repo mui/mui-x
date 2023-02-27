@@ -13,6 +13,7 @@ import {
   GridRow,
   GridColumnHeaderFilterIconButton,
 } from '../components';
+import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
 import materialSlots from '../material';
@@ -23,6 +24,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
+  ColumnHeaders: GridColumnHeaders,
   Footer: GridFooter,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,

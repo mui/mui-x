@@ -4,23 +4,6 @@ import { unstable_useForkRef as useForkRef } from '@mui/utils';
 import { styled, useTheme } from '@mui/material/styles';
 import { defaultMemoize } from 'reselect';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
-import { useGridSelector } from '../../utils/useGridSelector';
-import {
-  gridVisibleColumnDefinitionsSelector,
-  gridColumnPositionsSelector,
-  gridColumnVisibilityModelSelector,
-} from '../columns/gridColumnsSelector';
-import {
-  gridTabIndexColumnHeaderSelector,
-  gridTabIndexCellSelector,
-  gridFocusColumnHeaderSelector,
-  unstable_gridFocusColumnGroupHeaderSelector,
-  unstable_gridTabIndexColumnGroupHeaderSelector,
-} from '../focus/gridFocusStateSelector';
-import { gridDensityFactorSelector } from '../density/densitySelector';
-import { gridFilterActiveItemsLookupSelector } from '../filter/gridFilterSelector';
-import { gridSortColumnLookupSelector } from '../sorting/gridSortingSelector';
-import { gridColumnMenuSelector } from '../columnMenu/columnMenuSelector';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { GridRenderContext } from '../../../models/params/gridScrollParams';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
@@ -31,10 +14,13 @@ import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { getRenderableIndexes } from '../virtualization/useGridVirtualScroller';
 import { GridColumnGroupHeader } from '../../../components/columnHeaders/GridColumnGroupHeader';
 import { GridColumnGroup } from '../../../models/gridColumnGrouping';
-import {
-  gridColumnGroupsHeaderMaxDepthSelector,
-  gridColumnGroupsHeaderStructureSelector,
-} from '../columnGrouping/gridColumnGroupsSelector';
+import { GridStateColDef } from '../../../models/colDef/gridColDef';
+import { GridSortColumnLookup } from '../sorting';
+import { GridFilterActiveItemsLookup } from '../filter';
+import { GridColumnGroupIdentifier, GridColumnIdentifier } from '../focus';
+import { GridColumnMenuState } from '../columnMenu';
+import { GridColumnVisibilityModel } from '../columns';
+import { GridGroupingStructure } from '../columnGrouping/gridColumnGroupsInterfaces';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
@@ -57,9 +43,23 @@ interface HeaderInfo {
   description?: string;
 }
 
-interface UseGridColumnHeadersProps {
+export interface UseGridColumnHeadersProps {
   innerRef?: React.Ref<HTMLDivElement>;
   minColumnIndex?: number;
+  visibleColumns: GridStateColDef[];
+  sortColumnLookup: GridSortColumnLookup;
+  filterColumnLookup: GridFilterActiveItemsLookup;
+  columnPositions: number[];
+  columnHeaderTabIndexState: GridColumnIdentifier | null;
+  columnGroupHeaderTabIndexState: GridColumnGroupIdentifier | null;
+  columnHeaderFocus: GridColumnIdentifier | null;
+  columnGroupHeaderFocus: GridColumnGroupIdentifier | null;
+  densityFactor: number;
+  headerGroupingMaxDepth: number;
+  columnMenuState: GridColumnMenuState;
+  columnVisibility: GridColumnVisibilityModel;
+  columnGroupsHeaderStructure: GridGroupingStructure[][];
+  hasOtherElementInTabSequence: boolean;
 }
 
 interface GetHeadersParams {
@@ -73,36 +73,31 @@ function isUIEvent(event: any): event is React.UIEvent {
 }
 
 export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
-  const { innerRef: innerRefProp, minColumnIndex = 0 } = props;
+  const {
+    innerRef: innerRefProp,
+    minColumnIndex = 0,
+    visibleColumns,
+    sortColumnLookup,
+    filterColumnLookup,
+    columnPositions,
+    columnHeaderTabIndexState,
+    columnGroupHeaderTabIndexState,
+    columnHeaderFocus,
+    columnGroupHeaderFocus,
+    densityFactor,
+    headerGroupingMaxDepth,
+    columnMenuState,
+    columnVisibility,
+    columnGroupsHeaderStructure,
+    hasOtherElementInTabSequence,
+  } = props;
   const theme = useTheme();
 
   const [dragCol, setDragCol] = React.useState('');
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
-  const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
-  const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-  const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
-  const columnGroupHeaderTabIndexState = useGridSelector(
-    apiRef,
-    unstable_gridTabIndexColumnGroupHeaderSelector,
-  );
-  const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
-  const columnGroupHeaderFocus = useGridSelector(
-    apiRef,
-    unstable_gridFocusColumnGroupHeaderSelector,
-  );
-  const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
-  const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
-  const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
-  const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
-  const columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector);
-  const columnVisibility = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const columnGroupsHeaderStructure = useGridSelector(
-    apiRef,
-    gridColumnGroupsHeaderStructureSelector,
-  );
+
   const rootProps = useGridRootProps();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const handleInnerRef = useForkRef(innerRefProp, innerRef);
@@ -305,14 +300,9 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
       const columnIndex = firstColumnToRender + i;
       const isFirstColumn = columnIndex === 0;
-      const hasTabbableElement = !(
-        columnGroupHeaderTabIndexState === null &&
-        columnHeaderTabIndexState === null &&
-        cellTabIndexState === null
-      );
       const tabIndex =
         (columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === colDef.field) ||
-        (isFirstColumn && !hasTabbableElement)
+        (isFirstColumn && !hasOtherElementInTabSequence)
           ? 0
           : -1;
       const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field;

@@ -66,7 +66,7 @@
     "experimentalFeatures": {
       "type": {
         "name": "shape",
-        "description": "{ columnGrouping?: bool, lazyLoading?: bool, rowPinning?: bool, warnIfFocusStateIsNotSynced?: bool }"
+        "description": "{ columnGrouping?: bool, lazyLoading?: bool, warnIfFocusStateIsNotSynced?: bool }"
       }
     },
     "filterMode": {
@@ -248,6 +248,7 @@
       "default": "GridColumnHeaderFilterIconButton",
       "type": { "name": "elementType" }
     },
+    "columnHeaders": { "default": "DataGridColumnHeaders", "type": { "name": "elementType" } },
     "columnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "columnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
     "columnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },

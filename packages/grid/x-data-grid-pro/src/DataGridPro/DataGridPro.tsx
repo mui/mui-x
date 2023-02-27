@@ -9,13 +9,14 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  useGridSelector,
 } from '@mui/x-data-grid';
 import { useDataGridProComponent } from './useDataGridProComponent';
 import { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { DataGridProVirtualScroller } from '../components/DataGridProVirtualScroller';
-import { DataGridProColumnHeaders } from '../components/DataGridProColumnHeaders';
 import { getReleaseInfo } from '../utils/releaseInfo';
+import { gridPinnedColumnsSelector } from '../hooks/features/columnPinning/gridColumnPinningSelector';
 
 const releaseInfo = getReleaseInfo();
 
@@ -27,13 +28,15 @@ const DataGridProRaw = React.forwardRef(function DataGridPro<R extends GridValid
   const privateApiRef = useDataGridProComponent(props.apiRef, props);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
+  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
         <GridBody
-          ColumnHeadersComponent={DataGridProColumnHeaders}
           VirtualScrollerComponent={DataGridProVirtualScroller}
+          ColumnHeadersProps={{ pinnedColumns }}
         >
           <Watermark packageName="x-data-grid-pro" releaseInfo={releaseInfo} />
         </GridBody>
@@ -241,7 +244,6 @@ DataGridProRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**

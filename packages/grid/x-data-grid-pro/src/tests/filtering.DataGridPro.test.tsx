@@ -90,7 +90,7 @@ describe('<DataGridPro /> - Filter', () => {
       const columnForNewFilter = columns
         .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
         .find((colDef) => colDef.filterOperators?.length);
-      return columnForNewFilter?.field;
+      return columnForNewFilter?.field ?? null;
     };
 
     render(

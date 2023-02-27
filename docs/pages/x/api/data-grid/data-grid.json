@@ -193,6 +193,7 @@
       "default": "GridColumnHeaderFilterIconButton",
       "type": { "name": "elementType" }
     },
+    "columnHeaders": { "default": "DataGridColumnHeaders", "type": { "name": "elementType" } },
     "columnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "columnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
     "columnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
