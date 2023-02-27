@@ -32,6 +32,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseSwitch: React.JSXElementConstructor<any>;
   /**
+   * The custom Badge component used in the grid.
+   * @default Badge
+   */
+  BaseBadge: React.JSXElementConstructor<any>;
+  /**
    * The custom Button component used in the grid.
    * @default Button
    */

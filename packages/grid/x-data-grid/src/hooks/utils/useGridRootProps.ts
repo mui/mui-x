@@ -11,5 +11,7 @@ export const useGridRootProps = () => {
     );
   }
 
-  return contextValue as DataGridProcessedProps;
+  return contextValue as DataGridProcessedProps & {
+    slotDefaultProps: Partial<Record<keyof DataGridProcessedProps['slots'], any>>;
+  };
 };
