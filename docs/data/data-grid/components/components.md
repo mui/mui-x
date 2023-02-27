@@ -212,6 +212,10 @@ This demo below shows how to use the `slotProps` prop and module augmentation to
 
 {{"demo": "CustomFooter.js", "bg": "inline"}}
 
+## 🚧 Using Joy UI components
+
+{{"demo": "JoyUISlots.js", "bg": "inline"}}
+
 ## API
 
 - [DataGrid](/x/api/data-grid/data-grid/)
