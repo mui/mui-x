@@ -42,6 +42,7 @@ GridExcelExportMenuItem.propTypes = {
     includeColumnGroupsHeaders: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     valueOptionsSheetName: PropTypes.string,
+    worker: PropTypes.func,
   }),
 } as any;
 

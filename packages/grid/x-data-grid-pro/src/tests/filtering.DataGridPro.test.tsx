@@ -90,7 +90,7 @@ describe('<DataGridPro /> - Filter', () => {
       const columnForNewFilter = columns
         .filter((colDef) => colDef.filterable && !filteredFields.includes(colDef.field))
         .find((colDef) => colDef.filterOperators?.length);
-      return columnForNewFilter?.field;
+      return columnForNewFilter?.field ?? null;
     };
 
     render(
@@ -138,7 +138,6 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    // TODO: Debug two calls each filter
     expect(getColumnForNewFilter.callCount).to.equal(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
@@ -313,6 +312,69 @@ describe('<DataGridPro /> - Filter', () => {
     };
     act(() => apiRef.current.setFilterModel(newModel));
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+  });
+
+  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    const addButton = screen.getByRole('button', { name: /Add Filter/i });
+    const removeButton = screen.getByRole('button', { name: /Remove all/i });
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(3);
+    fireEvent.click(removeButton);
+    expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
+    // clicking on `remove all` should close the panel when no filters
+    fireEvent.click(removeButton);
+    clock.tick(100);
+    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+  });
+
+  it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableAddFilterButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Add filter' })).to.equal(null);
+  });
+
+  it('should hide `Remove all` in filter panel when `disableRemoveAllButton` is `true`', () => {
+    render(
+      <TestCase
+        initialState={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+        componentsProps={{
+          filterPanel: {
+            disableRemoveAllButton: true,
+          },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Remove all' })).to.equal(null);
   });
 
   it('should allow multiple filter and changing the logicOperator', () => {

@@ -8,15 +8,6 @@ title: Data Grid - Row pinning
 
 Pinned (or frozen, locked, or floating) rows are those visible at all times while the user scrolls the grid vertically.
 
-:::warning
-This feature is experimental, it needs to be explicitly activated using the `rowPinning` experimental feature flag.
-
-```tsx
-<DataGridPro experimentalFeatures={{ rowPinning: true }} {...otherProps} />
-```
-
-:::
-
 You can pin rows at the top or bottom of the grid by passing pinned rows data through the `pinnedRows` prop:
 
 ```tsx

@@ -6,7 +6,10 @@ import { DataGridPremium } from '@mui/x-data-grid-premium';
 function App() {
   return (
     <React.Fragment>
-      <DataGrid experimentalFeatures={{ newEditingApi: true }} />
+      <DataGrid experimentalFeatures={{ 
+        newEditingApi: true,
+        rowPinning: true
+      }} />
       <DataGridPro experimentalFeatures={{
         newEditingApi: true,
         rowPinning: true,

@@ -10,7 +10,6 @@ import {
   UseFieldState,
   FieldSelectedSectionsIndexes,
   FieldSelectedSections,
-  FieldSectionsValueBoundaries,
   FieldChangeHandlerContext,
 } from './useField.types';
 import {
@@ -24,35 +23,19 @@ import {
 } from './useField.utils';
 import { InferError } from '../validation/useValidation';
 
-export interface UpdateSectionValueParams<TDate, TSection extends FieldSection> {
+export interface UpdateSectionValueParams<TSection extends FieldSection> {
   /**
    * The section on which we want to apply the new value.
    */
   activeSection: TSection;
   /**
-   * Function called if the current date is valid.
-   * It must return a new date with the value of the active section updated.
-   * If it returns null, the update will be ignored.
-   * @template TDate, TSection
-   * @param {TDate} activeDate The date to modify.
-   * @param {FieldSectionsValueBoundaries<TDate, TSection>} sectionsValueBoundaries The minimum and maximum value of each section.
-   * @returns {{ date: TDate; shouldGoToNextSection: boolean } | null} The modified active date and a boolean indicating if the focus should move to the next section.
+   * Value to apply to the active section.
    */
-  setSectionValueOnDate: (
-    activeDate: TDate,
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
-  ) => { date: TDate; shouldGoToNextSection: boolean } | null;
+  newSectionValue: string;
   /**
-   * Function called if the current date is not valid.
-   * It must return the new value of the active section.
-   * If it returns null, the update will be ignored.
-   * @template TDate, TSection
-   * @param {FieldSectionsValueBoundaries<TDate, TSection>} sectionsValueBoundaries The minimum and maximum value of each section.
-   * @returns {{ sectionValue: string; shouldGoToNextSection: boolean } | null} The new value of the active section and a boolean indicating if the focus should move to the next section.
+   * If `true`, the focus will move to the next section.
    */
-  setSectionValueOnSections: (
-    sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
-  ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
+  shouldGoToNextSection: boolean;
 }
 
 export const useFieldState = <
@@ -156,7 +139,7 @@ export const useFieldState = <
 
     if (typeof selectedSections === 'string') {
       const selectedSectionIndex = state.sections.findIndex(
-        (section) => section.dateSectionName === selectedSections,
+        (section) => section.type === selectedSections,
       );
 
       return { startIndex: selectedSectionIndex, endIndex: selectedSectionIndex };
@@ -167,7 +150,7 @@ export const useFieldState = <
 
   const publishValue = (
     { value, referenceValue }: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>,
-    sections = state.sections,
+    sections: TSection[] | null = state.sections,
   ) => {
     const newSections = fieldValueManager.getSectionsFromValue(
       utils,
@@ -200,17 +183,20 @@ export const useFieldState = <
     newSections[sectionIndex] = {
       ...newSections[sectionIndex],
       value: newSectionValue,
-      edited: true,
+      modified: true,
     };
 
     return addPositionPropertiesToSections<TSection>(newSections);
   };
 
   const clearValue = () =>
-    publishValue({
-      value: valueManager.emptyValue,
-      referenceValue: state.referenceValue,
-    });
+    publishValue(
+      {
+        value: valueManager.emptyValue,
+        referenceValue: state.referenceValue,
+      },
+      null,
+    );
 
   const clearActiveSection = () => {
     if (selectedSectionIndexes == null) {
@@ -274,23 +260,18 @@ export const useFieldState = <
 
   const updateSectionValue = ({
     activeSection,
-    setSectionValueOnDate,
-    setSectionValueOnSections,
-  }: UpdateSectionValueParams<TDate, TSection>) => {
-    const commit = (
-      commitParams: {
-        shouldGoToNextSection: boolean;
-        shouldPublish: boolean;
-        values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
-        sections?: TSection[];
-      } | null,
-    ) => {
-      if (commitParams === null) {
-        return setState((prev) => ({ ...prev, tempValueStrAndroid: null }));
-      }
-
-      const { shouldGoToNextSection, shouldPublish, values, sections } = commitParams;
-
+    newSectionValue,
+    shouldGoToNextSection,
+  }: UpdateSectionValueParams<TSection>) => {
+    const commit = ({
+      shouldPublish,
+      values,
+      sections,
+    }: {
+      shouldPublish: boolean;
+      values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
+      sections?: TSection[];
+    }) => {
       if (
         shouldGoToNextSection &&
         selectedSectionIndexes &&
@@ -317,35 +298,7 @@ export const useFieldState = <
     };
 
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
-    if (activeDateManager.activeDate != null && utils.isValid(activeDateManager.activeDate)) {
-      const validDateResponse = setSectionValueOnDate(
-        activeDateManager.activeDate,
-        sectionsValueBoundaries,
-      );
-      if (validDateResponse == null) {
-        // The section was not updated
-        return commit(null);
-      }
-
-      return commit({
-        shouldGoToNextSection: validDateResponse.shouldGoToNextSection,
-        shouldPublish: true,
-        values: activeDateManager.getNewValueFromNewActiveDate(validDateResponse.date),
-      });
-    }
-
-    // The date is not valid, we have to update the section value rather than date itself.
-    const invalidDateResponse = setSectionValueOnSections(sectionsValueBoundaries);
-
-    if (invalidDateResponse == null) {
-      // The section was not updated
-      return commit(null);
-    }
-
-    const newSections = setSectionValue(
-      selectedSectionIndexes!.startIndex,
-      invalidDateResponse.sectionValue,
-    );
+    const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
     let newDate = getDateFromDateSections(utils, activeDateSections);
 
@@ -353,10 +306,8 @@ export const useFieldState = <
     // We can try to set the day to the maximum boundary.
     if (
       !utils.isValid(newDate) &&
-      activeDateSections.every(
-        (section) => section.dateSectionName === 'weekDay' || section.value !== '',
-      ) &&
-      activeDateSections.some((section) => section.dateSectionName === 'day')
+      activeDateSections.every((section) => section.type === 'weekDay' || section.value !== '') &&
+      activeDateSections.some((section) => section.type === 'day')
     ) {
       const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);
       if (cleanSections != null) {
@@ -374,21 +325,19 @@ export const useFieldState = <
       );
 
       return commit({
-        shouldGoToNextSection: invalidDateResponse.shouldGoToNextSection,
         shouldPublish: true,
         values: activeDateManager.getNewValueFromNewActiveDate(mergedDate),
       });
     }
 
     return commit({
-      shouldGoToNextSection: invalidDateResponse.shouldGoToNextSection,
       shouldPublish: false,
       values: activeDateManager.getNewValueFromNewActiveDate(newDate),
       sections: newSections,
     });
   };
 
-  const setTempAndroidValueStr = (tempValueStrAndroid: string) =>
+  const setTempAndroidValueStr = (tempValueStrAndroid: string | null) =>
     setState((prev) => ({ ...prev, tempValueStrAndroid }));
 
   React.useEffect(() => {
@@ -439,5 +388,6 @@ export const useFieldState = <
     updateValueFromValueStr,
     setTempAndroidValueStr,
     sectionOrder,
+    sectionsValueBoundaries,
   };
 };

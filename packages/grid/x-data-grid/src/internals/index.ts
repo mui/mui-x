@@ -31,6 +31,7 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export type { GridColumnGroupLookup } from '../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
