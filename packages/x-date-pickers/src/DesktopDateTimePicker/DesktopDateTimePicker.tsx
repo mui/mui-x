@@ -11,7 +11,7 @@ import { Calendar } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { renderTimeViewDigitalClock } from '../timeViewRenderers';
+import { renderDesktopTimeViewClock, renderTimeViewDigitalClock } from '../timeViewRenderers';
 
 type DesktopDateTimePickerComponent = (<TDate>(
   props: DesktopDateTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -33,9 +33,9 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     day: renderDateViewCalendar,
     month: renderDateViewCalendar,
     year: renderDateViewCalendar,
-    hours: null,
-    minutes: null,
-    seconds: null,
+    hours: renderDesktopTimeViewClock,
+    minutes: renderDesktopTimeViewClock,
+    seconds: renderDesktopTimeViewClock,
     digital: renderTimeViewDigitalClock,
     ...defaultizedProps.viewRenderers,
   };
