@@ -3,7 +3,7 @@ import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
 const componentsNames = ['DataGrid', 'DataGridPro', 'DataGridPremium'];
 const propName = 'experimentalFeatures';
-const propKeys = ['newEditingApi', 'rowPinning'];
+const propKeys = ['newEditingApi', 'rowPinning', 'aggregation'];
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
