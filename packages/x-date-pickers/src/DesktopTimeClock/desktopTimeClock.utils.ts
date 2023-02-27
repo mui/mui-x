@@ -2,6 +2,7 @@ import { MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
 import { DesktopTimeClockSectionOption } from './DesktopTimeClock.types';
 
 interface IGetHoursSectionOptions<TDate> {
+  now: TDate;
   value: TDate | null;
   utils: MuiPickersAdapter<TDate>;
   ampm: boolean;
@@ -9,6 +10,7 @@ interface IGetHoursSectionOptions<TDate> {
 }
 
 export const getHourSectionOptions = <TDate>({
+  now,
   value,
   utils,
   ampm,
@@ -37,7 +39,7 @@ export const getHourSectionOptions = <TDate>({
   };
 
   for (let hour = startHour; hour <= endHour; hour += 1) {
-    let label = hour.toString();
+    let label = utils.format(utils.setHours(now, hour), ampm ? 'hours12h' : 'hours24h');
 
     if (hour === 0) {
       label = '00';
@@ -45,12 +47,11 @@ export const getHourSectionOptions = <TDate>({
 
     label = utils.formatNumber(label);
 
-    const selected = isSelected(hour);
     result.push({
       value: hour,
       label,
-      disabled: isDisabled(hour),
-      selected,
+      isSelected,
+      isDisabled,
     });
   }
   return result;
@@ -60,6 +61,7 @@ interface IGetTimeSectionOptions {
   value: number | null;
   isDisabled: (value: number) => boolean;
   timeStep: number;
+  resolveLabel: (value: number) => string;
   hasValue?: boolean;
 }
 
@@ -67,6 +69,7 @@ export const getTimeSectionOptions = ({
   value,
   isDisabled,
   timeStep,
+  resolveLabel,
   hasValue = true,
 }: IGetTimeSectionOptions): DesktopTimeClockSectionOption<number>[] => {
   const isSelected = (timeValue: number) => {
@@ -82,9 +85,9 @@ export const getTimeSectionOptions = ({
       const timeValue = timeStep * index;
       return {
         value: timeValue,
-        label: timeValue.toString(),
-        disabled: isDisabled(timeValue),
-        selected: isSelected(timeValue),
+        label: resolveLabel(timeValue),
+        isDisabled,
+        isSelected,
       };
     }),
   ];

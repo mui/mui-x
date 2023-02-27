@@ -84,8 +84,8 @@ export const DesktopTimeClockSection = React.forwardRef(function DesktopTimeCloc
           aria-readonly={readOnly}
           key={option.label}
           onClick={() => !readOnly && onChange(option.value)}
-          selected={option.selected}
-          disabled={disabled ?? option.disabled}
+          selected={option.isSelected(option.value)}
+          disabled={disabled ?? option.isDisabled?.(option.value)}
           disableRipple={readOnly}
         >
           {option.label}

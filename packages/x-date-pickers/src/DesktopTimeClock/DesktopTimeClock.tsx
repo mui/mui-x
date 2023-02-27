@@ -228,11 +228,11 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     (viewToBuild: ClockTimeView): DesktopTimeClockSectionViewProps<number> => {
       switch (viewToBuild) {
         case 'hours': {
-          const handleHoursChange = (hourValue: number | MeridiemEnum) => {
-            if (typeof hourValue !== 'number') {
+          const handleHoursChange = (hours: number | MeridiemEnum) => {
+            if (typeof hours !== 'number') {
               return;
             }
-            const valueWithMeridiem = convertValueToMeridiem(hourValue, meridiemMode, ampm);
+            const valueWithMeridiem = convertValueToMeridiem(hours, meridiemMode, ampm);
             setValueAndGoToNextView(
               utils.setHours(selectedTimeOrMidnight, valueWithMeridiem),
               'finish',
@@ -241,31 +241,30 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
           return {
             onChange: handleHoursChange,
             items: getHourSectionOptions({
+              now,
               value,
               ampm,
               utils,
-              isDisabled: (hourValue) => disabled || isTimeDisabled(hourValue, 'hours'),
+              isDisabled: (hours) => disabled || isTimeDisabled(hours, 'hours'),
             }),
           };
         }
 
         case 'minutes': {
           const minutesValue = utils.getMinutes(selectedTimeOrMidnight);
-          const handleMinutesChange = (minuteValue: number | MeridiemEnum) => {
-            if (typeof minuteValue !== 'number') {
+          const handleMinutesChange = (minutes: number | MeridiemEnum) => {
+            if (typeof minutes !== 'number') {
               return;
             }
-            setValueAndGoToNextView(
-              utils.setMinutes(selectedTimeOrMidnight, minuteValue),
-              'finish',
-            );
+            setValueAndGoToNextView(utils.setMinutes(selectedTimeOrMidnight, minutes), 'finish');
           };
 
           return {
             onChange: handleMinutesChange,
             items: getTimeSectionOptions({
               value: minutesValue,
-              isDisabled: (minuteValue) => disabled || isTimeDisabled(minuteValue, 'minutes'),
+              isDisabled: (minutes) => disabled || isTimeDisabled(minutes, 'minutes'),
+              resolveLabel: (minutes) => utils.format(utils.setMinutes(now, minutes), 'minutes'),
               timeStep,
               hasValue: !!value,
             }),
@@ -274,21 +273,19 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
 
         case 'seconds': {
           const secondsValue = utils.getSeconds(selectedTimeOrMidnight);
-          const handleSecondsChange = (secondValue: number | MeridiemEnum) => {
-            if (typeof secondValue !== 'number') {
+          const handleSecondsChange = (seconds: number | MeridiemEnum) => {
+            if (typeof seconds !== 'number') {
               return;
             }
-            setValueAndGoToNextView(
-              utils.setSeconds(selectedTimeOrMidnight, secondValue),
-              'finish',
-            );
+            setValueAndGoToNextView(utils.setSeconds(selectedTimeOrMidnight, seconds), 'finish');
           };
 
           return {
             onChange: handleSecondsChange,
             items: getTimeSectionOptions({
               value: secondsValue,
-              isDisabled: (secondValue) => disabled || isTimeDisabled(secondValue, 'seconds'),
+              isDisabled: (seconds) => disabled || isTimeDisabled(seconds, 'seconds'),
+              resolveLabel: (seconds) => utils.format(utils.setSeconds(now, seconds), 'seconds'),
               timeStep,
             }),
           };
@@ -299,6 +296,7 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
       }
     },
     [
+      now,
       value,
       ampm,
       utils,
@@ -321,8 +319,8 @@ export const DesktopTimeClock = React.forwardRef(function DesktopTimeClock<TDate
     () => ({
       onChange: handleMeridiemChange,
       items: [
-        { value: 'am', label: 'AM', selected: meridiemMode === 'am' },
-        { value: 'pm', label: 'PM', selected: meridiemMode === 'pm' },
+        { value: 'am', label: 'AM', isSelected: () => meridiemMode === 'am' },
+        { value: 'pm', label: 'PM', isSelected: () => meridiemMode === 'pm' },
       ],
     }),
     [handleMeridiemChange, meridiemMode],

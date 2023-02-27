@@ -5,8 +5,8 @@ import { ClockTimeView } from '../internals/models';
 import { DesktopTimeClockSectionProps } from './DesktopTimeClockSection';
 
 export interface DesktopTimeClockSectionOption<TValue> {
-  disabled?: boolean;
-  selected?: boolean;
+  isDisabled?: (value: TValue) => boolean;
+  isSelected: (value: TValue) => boolean;
   label: string;
   value: TValue;
 }
