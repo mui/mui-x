@@ -19,6 +19,7 @@ function App() {
           newEditingApi: true,
           rowPinning: true,
           columnGrouping: true,
+          aggregation: true,
         }} />
     </React.Fragment>
   );
