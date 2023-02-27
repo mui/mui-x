@@ -11,6 +11,7 @@ export interface GridSlotsComponentsProps {
   baseIconButton?: any;
   basePopper?: any;
   baseTooltip?: any;
+  baseSelectOption?: any;
   cell?: any;
   columnHeaderFilterIconButton?: any;
   columnMenu?: any;

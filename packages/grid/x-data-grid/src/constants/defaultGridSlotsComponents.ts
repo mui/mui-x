@@ -50,6 +50,7 @@ import {
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
+import SelectOption from '../components/SelectOption';
 
 const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -98,6 +99,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
+  BaseSelectOption: SelectOption,
   Cell: GridCell,
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
