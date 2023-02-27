@@ -128,7 +128,7 @@ export type {
 export type { BaseToolbarProps, ExportedBaseToolbarProps } from './models/props/toolbar';
 export type { MuiPickersAdapter } from './models/muiPickersAdapter';
 export type { DefaultizedProps, MakeOptional } from './models/helpers';
-export type { DateOrTimeView, DateView, TimeView } from './models/views';
+export type { DateOrTimeView, DateView, TimeView, ClockTimeView } from './models/views';
 export type { WrapperVariant } from './models/common';
 
 export { applyDefaultDate, replaceInvalidDateByNull } from './utils/date-utils';

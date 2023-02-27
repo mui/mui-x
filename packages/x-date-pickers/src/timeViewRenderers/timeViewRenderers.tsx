@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { TimeClock, TimeClockProps } from '../TimeClock';
-import { DateOrTimeView, TimeView } from '../internals';
+import { ClockTimeView, TimeView } from '../internals';
 import { DigitalClock, DigitalClockProps } from '../DigitalClock';
 import { BaseClockProps } from '../internals/models/props/clock';
+import { DesktopTimeClock, DesktopTimeClockProps } from '../DesktopTimeClock';
 
-const isTimePickerView = (view: unknown): view is TimeView =>
-  view === 'hours' || view === 'minutes' || view === 'seconds' || view === 'digital';
+const isTimePickerView = (view: TimeView): boolean =>
+  view === 'hours' || view === 'minutes' || view === 'seconds';
 
 export type TimeViewRendererProps<
-  TView extends DateOrTimeView,
-  TComponentProps extends BaseClockProps<any>,
+  TView extends unknown,
+  TComponentProps extends BaseClockProps<any, TView>,
 > = Omit<TComponentProps, 'views' | 'openTo' | 'view' | 'onViewChange'> & {
   view: TView;
   onViewChange?: (view: TView) => void;
@@ -44,9 +45,9 @@ export const renderTimeViewClock = <TDate extends unknown>({
   autoFocus,
   showViewSwitcher,
   disableIgnoringDatePartForTimeValidation,
-}: TimeViewRendererProps<any, TimeClockProps<TDate>>) => (
+}: TimeViewRendererProps<TimeView, TimeClockProps<TDate>>) => (
   <TimeClock<TDate>
-    view={view as TimeView}
+    view={view}
     onViewChange={onViewChange}
     views={views.filter(isTimePickerView)}
     value={value}
@@ -102,11 +103,11 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
   sx,
   disableIgnoringDatePartForTimeValidation,
   timeStep,
-}: TimeViewRendererProps<any, DigitalClockProps<TDate>>) => (
+}: TimeViewRendererProps<TimeView, DigitalClockProps<TDate>>) => (
   <DigitalClock<TDate>
-    view={view as TimeView}
+    view={view}
     onViewChange={onViewChange}
-    views={views.filter(isTimePickerView)}
+    views={views.filter((v) => v === 'digital')}
     value={value}
     defaultValue={defaultValue}
     onChange={onChange}
@@ -130,5 +131,61 @@ export const renderTimeViewDigitalClock = <TDate extends unknown>({
     autoFocus
     disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
     timeStep={timeStep}
+  />
+);
+
+export const renderDesktopTimeViewClock = <TDate extends unknown>({
+  view,
+  onViewChange,
+  views,
+  value,
+  defaultValue,
+  onChange,
+  className,
+  classes,
+  disableFuture,
+  disablePast,
+  minTime,
+  maxTime,
+  shouldDisableTime,
+  shouldDisableClock,
+  minutesStep,
+  ampm,
+  components,
+  componentsProps,
+  slots,
+  slotProps,
+  readOnly,
+  disabled,
+  sx,
+  autoFocus,
+  disableIgnoringDatePartForTimeValidation,
+}: TimeViewRendererProps<ClockTimeView, DesktopTimeClockProps<TDate>>) => (
+  <DesktopTimeClock<TDate>
+    view={view}
+    onViewChange={onViewChange}
+    views={views.filter(isTimePickerView)}
+    value={value}
+    defaultValue={defaultValue}
+    onChange={onChange}
+    className={className}
+    classes={classes}
+    disableFuture={disableFuture}
+    disablePast={disablePast}
+    minTime={minTime}
+    maxTime={maxTime}
+    shouldDisableTime={shouldDisableTime}
+    shouldDisableClock={shouldDisableClock}
+    minutesStep={minutesStep}
+    ampm={ampm}
+    components={components}
+    componentsProps={componentsProps}
+    slots={slots}
+    slotProps={slotProps}
+    readOnly={readOnly}
+    disabled={disabled}
+    sx={sx}
+    autoFocus={autoFocus}
+    disableIgnoringDatePartForTimeValidation={disableIgnoringDatePartForTimeValidation}
   />
 );

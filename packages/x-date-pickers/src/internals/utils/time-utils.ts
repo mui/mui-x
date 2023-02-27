@@ -1,6 +1,7 @@
 import { MuiPickersAdapter } from '../models';
 
-type Meridiem = 'am' | 'pm' | null;
+export type MeridiemEnum = 'am' | 'pm';
+type Meridiem = MeridiemEnum | null;
 
 export const getMeridiem = <TDate>(
   date: TDate | null,

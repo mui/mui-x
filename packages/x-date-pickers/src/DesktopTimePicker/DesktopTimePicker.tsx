@@ -10,7 +10,7 @@ import { Clock } from '../internals/components/icons';
 import { useDesktopPicker } from '../internals/hooks/useDesktopPicker';
 import { extractValidationProps } from '../internals/utils/validation';
 import { PickerViewRendererLookup } from '../internals/hooks/usePicker/usePickerViews';
-import { renderTimeViewDigitalClock } from '../timeViewRenderers';
+import { renderDesktopTimeViewClock, renderTimeViewDigitalClock } from '../timeViewRenderers';
 
 type DesktopTimePickerComponent = (<TDate>(
   props: DesktopTimePickerProps<TDate> & React.RefAttributes<HTMLDivElement>,
@@ -30,9 +30,9 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
   );
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
-    hours: null,
-    minutes: null,
-    seconds: null,
+    hours: renderDesktopTimeViewClock,
+    minutes: renderDesktopTimeViewClock,
+    seconds: renderDesktopTimeViewClock,
     digital: renderTimeViewDigitalClock,
     ...defaultizedProps.viewRenderers,
   };

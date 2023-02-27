@@ -15,7 +15,7 @@ export interface ExportedBaseClockProps<TDate>
   ampm?: boolean;
 }
 
-export interface BaseClockProps<TDate> {
+export interface BaseClockProps<TDate, TView extends unknown = TimeView> {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -45,22 +45,22 @@ export interface BaseClockProps<TDate> {
   /**
    * Controlled open view.
    */
-  view?: TimeView;
+  view?: TView;
   /**
    * Views displaying digital clock time sections.
    * @default ['hours', 'minutes']
    */
-  views?: readonly TimeView[];
+  views?: readonly TView[];
   /**
    * Callback fired on view change.
-   * @param {TimeView} view The new view.
+   * @param {TView} view The new view.
    */
-  onViewChange?: (view: TimeView) => void;
+  onViewChange?: (view: TView) => void;
   /**
    * Initially open view.
    * @default 'hours'
    */
-  openTo?: TimeView;
+  openTo?: TView;
   /**
    * If `true`, the picker and text field are disabled.
    * @default false
