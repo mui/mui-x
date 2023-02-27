@@ -58,7 +58,15 @@ export const useStaticPicker = <
           {...slotProps?.layout}
           slots={slots}
           slotProps={slotProps}
-          sx={sx}
+          sx={[
+            ...(Array.isArray(sx) ? sx : [sx]),
+            // eslint-disable-next-line no-nested-ternary
+            ...(slotProps?.layout?.sx === undefined
+              ? []
+              : Array.isArray(slotProps.layout.sx)
+              ? slotProps.layout.sx
+              : [slotProps.layout.sx]),
+          ]}
           className={clsx(className, slotProps?.layout?.className)}
           ref={ref}
         >
