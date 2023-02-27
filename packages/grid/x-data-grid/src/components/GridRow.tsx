@@ -218,6 +218,10 @@ const GridRow = React.forwardRef<
 
   const publishClick = React.useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
+      // See https://github.com/mui/mui-x/issues/8042
+      if (!apiRef.current.rootElementRef?.current?.contains(event.target as HTMLElement)) {
+        return;
+      }
       const cell = findParentElementFromClassName(event.target as HTMLDivElement, gridClasses.cell);
       const field = cell?.getAttribute('data-field');
 
