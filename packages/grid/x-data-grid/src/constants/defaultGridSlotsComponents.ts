@@ -122,26 +122,3 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Panel: GridPanel,
   Row: GridRow,
 };
-
-/**
- * @internal
- * The default props to use for Material UI components.
- */
-export const DATA_GRID_DEFAULT_SLOT_PROPS: Partial<
-  Record<keyof GridSlotsComponent, (ownerState?: { module: string } & Record<string, any>) => any>
-> = {
-  BaseBadge: () => ({
-    color: 'default',
-  }),
-  BaseMenuList: (ownerState) => {
-    if (ownerState?.module === 'toolbar') {
-      return {
-        autoFocusItem: ownerState.open,
-      };
-    }
-    return {
-      variant: 'menu',
-      autoFocusItem: true,
-    };
-  },
-};

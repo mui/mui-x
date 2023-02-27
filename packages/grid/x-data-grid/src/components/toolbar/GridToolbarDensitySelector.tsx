@@ -125,7 +125,7 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
             onKeyDown={handleListKeyDown}
-            {...rootProps.slotDefaultProps.baseMenuList?.({ module: 'toolbar', open })}
+            {...rootProps.slotDefaultProps.baseMenuList({ module: 'toolbar', open })}
           >
             {densityElements}
           </rootProps.slots.baseMenuList>
