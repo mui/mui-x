@@ -270,6 +270,17 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot.
+  You can use the new `focusedCell` and `tabbableCell` props instead.
+  For the editing state, use the API methods.
+  ```diff
+  const CustomRow = (props) => {
+  -  const focusedField = props.cellFocus.field;
+  +  const focusedField = props.focusedCell;
+  -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
+  }
+  ```
 
 ### Pagination
 
@@ -458,9 +469,3 @@ npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
 Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.
-
-### Misc
-
-- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot.
-  You can use the new `focusedCell` and `tabbableCell` props instead.
-  For the editing state, use the API methods.
