@@ -87,7 +87,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       <GridIconButtonContainer>
         {counter > 1 && (
           <rootProps.slots.baseBadge
-            {...rootProps.slotDefaultProps?.baseBadge?.()}
+            {...rootProps.slotDefaultProps.baseBadge?.()}
             {...rootProps.slotProps?.baseBadge}
             badgeContent={counter}
           >

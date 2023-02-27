@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -75,12 +74,12 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
           onClickAway={handleMenuClickAway}
           position="bottom-start"
         >
-          <MenuList
+          <rootProps.slots.baseMenuList
             id={menuId}
             className={gridClasses.menuList}
             aria-labelledby={buttonId}
             onKeyDown={handleListKeyDown}
-            autoFocusItem={open}
+            {...rootProps.slotDefaultProps.baseMenuList?.({ module: 'toolbar', open })}
           >
             {React.Children.map(children, (child) => {
               if (!React.isValidElement(child)) {
@@ -88,7 +87,7 @@ export const GridToolbarExportContainer = React.forwardRef<HTMLButtonElement, Bu
               }
               return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
             })}
-          </MenuList>
+          </rootProps.slots.baseMenuList>
         </GridMenu>
       </React.Fragment>
     );
