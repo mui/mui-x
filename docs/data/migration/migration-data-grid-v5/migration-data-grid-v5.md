@@ -380,7 +380,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - ✅ The aggregation and row pinning are no longer experimental features. The flags `experimentalFeatures.aggregation` and `experimentalFeatures.rowPinning` can be removed now.
   ```diff
    <DataGridPremium
-  -  experimentalFeatures={{ 
+  -  experimentalFeatures={{
   -   aggregation: true,
   -   rowPinning: true,
   -  }}
