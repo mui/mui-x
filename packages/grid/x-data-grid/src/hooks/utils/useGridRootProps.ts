@@ -12,6 +12,11 @@ export const useGridRootProps = () => {
   }
 
   return contextValue as DataGridProcessedProps & {
-    slotDefaultProps: Partial<Record<keyof DataGridProcessedProps['slots'], any>>;
+    slotDefaultProps: Partial<
+      Record<
+        keyof DataGridProcessedProps['slots'],
+        (ownerState?: { module: string } & Record<string, any>) => any
+      >
+    >;
   };
 };
