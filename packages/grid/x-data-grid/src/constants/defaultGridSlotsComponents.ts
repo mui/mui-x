@@ -5,6 +5,7 @@ import MUIFormControl from '@mui/material/FormControl';
 import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
+import MUIMenuList from '@mui/material/MenuList';
 import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
@@ -97,6 +98,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseSelect: MUISelect,
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
+  BaseMenuList: MUIMenuList,
   BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
@@ -119,9 +121,23 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
 
 /**
  * @internal
+ * The default props to use for a design system package.
  */
-export const DATA_GRID_DEFAULT_SLOT_PROPS: Partial<Record<keyof GridSlotsComponent, any>> = {
-  BaseBadge: {
+export const DATA_GRID_DEFAULT_SLOT_PROPS: Partial<
+  Record<keyof GridSlotsComponent, (ownerState?: { module: string } & Record<string, any>) => any>
+> = {
+  BaseBadge: () => ({
     color: 'default',
+  }),
+  BaseMenuList: (ownerState) => {
+    if (ownerState?.module === 'toolbar') {
+      return {
+        autoFocusItem: ownerState.open,
+      };
+    }
+    return {
+      variant: 'menu',
+      autoFocusItem: true,
+    };
   },
 };
