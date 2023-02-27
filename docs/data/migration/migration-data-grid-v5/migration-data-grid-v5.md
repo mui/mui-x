@@ -274,12 +274,12 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   You can use the new `focusedCell` and `tabbableCell` props instead.
   For the editing state, use the API methods.
   ```diff
-  const CustomRow = (props) => {
+   const CustomRow = (props) => {
   -  const focusedField = props.cellFocus.field;
   +  const focusedField = props.focusedCell;
   -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
   +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
-  }
+   }
   ```
 
 ### Pagination
