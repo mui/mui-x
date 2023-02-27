@@ -95,9 +95,10 @@ export const GridRootStyles = styled('div', {
   ],
 })<{ ownerState: OwnerState }>(({ theme }) => {
   const borderColor = getBorderColor(theme);
+  const radius = theme.shape.borderRadius;
 
   const gridStyle: CSSInterpolation = {
-    '--DataGrid-radius': theme.shape.borderRadius,
+    '--DataGrid-radius': typeof radius === 'number' ? `${radius}px` : radius,
     '--DataGrid-headWeight': theme.typography.fontWeightMedium,
     '--DataGrid-overlayBackground': theme.vars
       ? `rgba(${theme.vars.palette.background.defaultChannel} / ${theme.vars.palette.action.disabledOpacity})`
