@@ -10,7 +10,7 @@ describe('<DateTimeField /> - TimeZone', () => {
       const { setProps } = render(<DateTimeField />);
       const input = screen.getByRole('textbox');
 
-      const date = adapter.date(new Date(2020, 5, 18, 16, 30, 10)).setZone('UTC');
+      const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
       setProps({ value: date });
 
       expectInputValue(input, '6 / 18 / 2020 02:30 PM');
