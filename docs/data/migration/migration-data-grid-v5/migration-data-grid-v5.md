@@ -270,6 +270,17 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the `Row` slot anymore.
+  Use the `focusedCell` and `tabbableCell` props instead.
+  For the editing state, use the API methods.
+  ```diff
+   const CustomRow = (props) => {
+  -  const focusedField = props.cellFocus.field;
+  +  const focusedField = props.focusedCell;
+  -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
+   }
+  ```
 
 ### Pagination
 
@@ -448,12 +459,6 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
-
-<!--
-### Virtualization
-
-TBD
--->
 
 ### Removals from the public API
 
