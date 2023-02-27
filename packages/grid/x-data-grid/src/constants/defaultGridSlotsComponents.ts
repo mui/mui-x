@@ -6,6 +6,8 @@ import MUISelect from '@mui/material/Select';
 import MUISwitch from '@mui/material/Switch';
 import MUIButton from '@mui/material/Button';
 import MUIMenuList from '@mui/material/MenuList';
+import MUIMenuItem from '@mui/material/MenuItem';
+import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
@@ -99,6 +101,8 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
   BaseMenuList: MUIMenuList,
+  BaseMenuItem: MUIMenuItem,
+  BaseListItemIcon: MUIListItemIcon,
   BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,

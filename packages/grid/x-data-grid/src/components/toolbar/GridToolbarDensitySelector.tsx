@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { unstable_useId as useId, unstable_useForkRef as useForkRef } from '@mui/utils';
-import MenuList from '@mui/material/MenuList';
 import { ButtonProps } from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
@@ -90,14 +87,14 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
     }
 
     const densityElements = densityOptions.map<React.ReactElement>((option, index) => (
-      <MenuItem
+      <rootProps.slots.baseMenuItem
         key={index}
         onClick={() => handleDensityUpdate(option.value)}
         selected={option.value === densityValue}
       >
-        <ListItemIcon>{option.icon}</ListItemIcon>
+        <rootProps.slots.baseListItemIcon>{option.icon}</rootProps.slots.baseListItemIcon>
         {option.label}
-      </MenuItem>
+      </rootProps.slots.baseMenuItem>
     ));
 
     return (
@@ -123,15 +120,15 @@ export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, Bu
           onClickAway={handleDensitySelectorClickAway}
           position="bottom-start"
         >
-          <MenuList
+          <rootProps.slots.baseMenuList
             id={densityMenuId}
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
             onKeyDown={handleListKeyDown}
-            autoFocusItem={open}
+            {...rootProps.slotDefaultProps.baseMenuList?.({ module: 'toolbar', open })}
           >
             {densityElements}
-          </MenuList>
+          </rootProps.slots.baseMenuList>
         </GridMenu>
       </React.Fragment>
     );
