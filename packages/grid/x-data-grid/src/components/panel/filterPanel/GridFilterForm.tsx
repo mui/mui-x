@@ -7,7 +7,6 @@ import {
 } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
@@ -142,7 +141,7 @@ const GridFilterFormRoot = styled('div', {
   padding: theme.spacing(1),
 }));
 
-const FilterFormDeleteIcon = styled(FormControl, {
+const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
@@ -153,7 +152,7 @@ const FilterFormDeleteIcon = styled(FormControl, {
   marginBottom: theme.spacing(0.2),
 }));
 
-const FilterFormLogicOperatorInput = styled(FormControl, {
+const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
@@ -163,19 +162,19 @@ const FilterFormLogicOperatorInput = styled(FormControl, {
   justifyContent: 'end',
 });
 
-const FilterFormColumnInput = styled(FormControl, {
+const FilterFormColumnInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormColumnInput',
   overridesResolver: (_, styles) => styles.filterFormColumnInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
-const FilterFormOperatorInput = styled(FormControl, {
+const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormOperatorInput,
 })<{ ownerState: OwnerState }>({ width: 120 });
 
-const FilterFormValueInput = styled(FormControl, {
+const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
   overridesResolver: (_, styles) => styles.filterFormValueInput,
