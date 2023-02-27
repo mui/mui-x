@@ -7,10 +7,8 @@ import {
   DataGridPropsWithDefaultValues,
 } from '../models/props/DataGridProps';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
-import {
-  DATA_GRID_DEFAULT_SLOTS_COMPONENTS,
-  DATA_GRID_DEFAULT_SLOT_PROPS,
-} from '../constants/defaultGridSlotsComponents';
+import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
+import { DATA_GRID_DEFAULT_SLOT_PROPS } from '../constants/defaultGridSlotProps';
 import { GridEditModes, GridSlotsComponent, GridValidRowModel } from '../models';
 import { computeSlots, uncapitalizeObjectKeys, UncapitalizeObjectKeys } from '../internals/utils';
 
@@ -77,7 +75,6 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
 };
 
 const defaultSlots = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOTS_COMPONENTS)!;
-const defaultSlotProps = uncapitalizeObjectKeys(DATA_GRID_DEFAULT_SLOT_PROPS)!;
 
 export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridProps<R>) => {
   const { components, componentsProps, ...themedProps } = useThemeProps({
@@ -106,7 +103,7 @@ export const useDataGridProps = <R extends GridValidRowModel>(inProps: DataGridP
       ...themedProps,
       localeText,
       slots,
-      slotDefaultProps: defaultSlotProps,
+      slotDefaultProps: DATA_GRID_DEFAULT_SLOT_PROPS,
       slotProps: themedProps.slotProps ?? componentsProps,
       ...DATA_GRID_FORCED_PROPS,
     }),
