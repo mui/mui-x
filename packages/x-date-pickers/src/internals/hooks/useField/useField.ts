@@ -407,7 +407,7 @@ export const useField = <
 
   return {
     ...otherForwardedProps,
-    placeholder: !state.value ? valueStr : undefined,
+    placeholder: state.placeholder,
     value: state.value || inputHasFocus ? valueStr : '',
     autoComplete: 'off',
     inputMode,

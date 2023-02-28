@@ -81,6 +81,18 @@ export const useFieldState = <
     setSectionOrder(fieldValueManager.getSectionOrder(utils, localeText, format, isRTL));
   }, [fieldValueManager, format, isRTL, localeText, utils]);
 
+  const emptySections = React.useMemo(
+    () =>
+      fieldValueManager.getSectionsFromValue(
+        utils,
+        localeText,
+        null,
+        valueManager.emptyValue,
+        format,
+      ),
+    [fieldValueManager, format, localeText, utils, valueManager.emptyValue],
+  );
+
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(
       utils,
@@ -94,6 +106,7 @@ export const useFieldState = <
     return {
       sections,
       value: valueFromTheOutside,
+      placeholder: fieldValueManager.getValueStrFromSections(emptySections),
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
         valueFromTheOutside,
@@ -375,8 +388,9 @@ export const useFieldState = <
     setState((prevState) => ({
       ...prevState,
       sections,
+      placeholder: fieldValueManager.getValueStrFromSections(emptySections),
     }));
-  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale, emptySections]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,
