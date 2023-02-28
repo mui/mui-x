@@ -6,7 +6,6 @@ import {
   unstable_capitalize as capitalize,
 } from '@mui/utils';
 import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
@@ -238,6 +237,8 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const isBaseSelectNative = baseSelectProps.native ?? true;
     const OptionComponent = isBaseSelectNative ? 'option' : MenuItem;
 
+    const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
+
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
 
     const filteredColumns = React.useMemo(() => {
@@ -445,9 +446,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
+          <rootProps.slots.baseInputLabel
+            {...baseInputLabelProps}
+            htmlFor={columnSelectId}
+            id={columnSelectLabelId}
+          >
             {apiRef.current.getLocaleText('filterPanelColumns')}
-          </InputLabel>
+          </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
             labelId={columnSelectLabelId}
             id={columnSelectId}
@@ -476,9 +481,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
+          <rootProps.slots.baseInputLabel
+            {...baseInputLabelProps}
+            htmlFor={operatorSelectId}
+            id={operatorSelectLabelId}
+          >
             {apiRef.current.getLocaleText('filterPanelOperator')}
-          </InputLabel>
+          </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
             labelId={operatorSelectLabelId}
             label={apiRef.current.getLocaleText('filterPanelOperator')}
