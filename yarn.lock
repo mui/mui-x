@@ -1780,9 +1780,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/LukasTy/material-ui.git#fix-alternate-calendar-adapters-deps-resolving":
-  version "5.11.10"
-  resolved "https://github.com/LukasTy/material-ui.git#0f819b3ad8d1a33e1229d8400e5f5cecde2f6d69"
+"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+  version "5.11.11"
+  resolved "https://github.com/mui/material-ui.git#3ca7a1b042038448ab6a3f69fe4cb3c1532e93b6"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
