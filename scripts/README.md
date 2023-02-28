@@ -46,8 +46,10 @@ The documentation must be updated on the `docs-vX` branch (`docs-v4` for `v4.X` 
 
 - [ ] Push the working branch on the documentation release branch to deploy the documentation with the latest changes.
 
+<!-- #default-branch-switch -->
+
 ```sh
-git push upstream next:docs-next -f
+git push upstream master:docs-v6 -f
 ```
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v5)

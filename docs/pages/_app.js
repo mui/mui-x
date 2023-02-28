@@ -24,7 +24,7 @@ LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUI_LICENSE);
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {
     // #default-branch-switch with latest for the master branch
-    return 'next';
+    return 'master';
   }
   const shortSha = commitRef.slice(0, 8);
   return `https://pkg.csb.dev/mui/mui-x/commit/${shortSha}/@mui/${packageName}`;
