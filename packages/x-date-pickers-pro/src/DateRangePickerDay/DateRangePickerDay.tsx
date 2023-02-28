@@ -51,7 +51,13 @@ export interface DateRangePickerDayProps<TDate>
   isVisuallySelected?: boolean;
 }
 
-type OwnerState = DateRangePickerDayProps<any> & { isEndOfMonth: boolean; isStartOfMonth: boolean };
+type OwnerState = DateRangePickerDayProps<any> & {
+  isEndOfMonth: boolean;
+  isStartOfMonth: boolean;
+  isFirstVisibleCell: boolean;
+  isLastVisibleCell: boolean;
+  isHiddenDayFiller: boolean;
+};
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const {
@@ -64,6 +70,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     isPreviewing,
     isStartOfPreviewing,
     isEndOfPreviewing,
+    isFirstVisibleCell,
+    isLastVisibleCell,
+    isHiddenDayFiller,
     selected,
     classes,
   } = ownerState;
@@ -71,13 +80,19 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: [
       'root',
-      isHighlighting && !outsideCurrentMonth && 'rangeIntervalDayHighlight',
-      (isStartOfHighlighting || isStartOfMonth) && 'rangeIntervalDayHighlightStart',
-      (isEndOfHighlighting || isEndOfMonth) && 'rangeIntervalDayHighlightEnd',
+      isHighlighting && 'rangeIntervalDayHighlight',
+      isStartOfHighlighting && 'rangeIntervalDayHighlightStart',
+      isEndOfHighlighting && 'rangeIntervalDayHighlightEnd',
+      outsideCurrentMonth && 'rangeIntervalOutsideCurrentMonth',
+      isStartOfMonth && 'rangeIntervalStartOfMonth',
+      isEndOfMonth && 'rangeIntervalEndOfMonth',
+      isFirstVisibleCell && 'rangeIntervalFirstVisibleCell',
+      isLastVisibleCell && 'rangeIntervalLastVisibleCell',
+      isHiddenDayFiller && 'rangeIntervalHiddenDayFiller',
     ],
     rangeIntervalPreview: [
       'rangeIntervalPreview',
-      isPreviewing && !outsideCurrentMonth && 'rangeIntervalDayPreview',
+      isPreviewing && 'rangeIntervalDayPreview',
       (isStartOfPreviewing || isStartOfMonth) && 'rangeIntervalDayPreviewStart',
       (isEndOfPreviewing || isEndOfMonth) && 'rangeIntervalDayPreviewEnd',
     ],
@@ -120,34 +135,37 @@ const DateRangePickerDayRoot = styled('div', {
     },
     styles.root,
   ],
-})<{ ownerState: OwnerState }>(({ theme, ownerState }) => ({
-  [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-    ...startBorderStyle,
-    borderLeftColor: (theme.vars || theme).palette.divider,
-  },
-  [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
-    ...endBorderStyle,
-    borderRightColor: (theme.vars || theme).palette.divider,
-  },
-  ...(ownerState.isHighlighting &&
-    !ownerState.outsideCurrentMonth && {
-      borderRadius: 0,
-      color: (theme.vars || theme).palette.primary.contrastText,
-      backgroundColor: theme.vars
-        ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
-        : alpha(theme.palette.primary.light, 0.6),
-      '&:first-of-type': startBorderStyle,
-      '&:last-of-type': endBorderStyle,
-    }),
-  ...((ownerState.isStartOfHighlighting || ownerState.isStartOfMonth) && {
-    ...startBorderStyle,
-    paddingLeft: 0,
-  }),
-  ...((ownerState.isEndOfHighlighting || ownerState.isEndOfMonth) && {
-    ...endBorderStyle,
-    paddingRight: 0,
-  }),
-}));
+})<{ ownerState: OwnerState }>(({ theme, ownerState }) =>
+  ownerState.isHiddenDayFiller
+    ? {}
+    : {
+        [`&:first-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
+          ...startBorderStyle,
+          borderLeftColor: (theme.vars || theme).palette.divider,
+        },
+        [`&:last-of-type .${dateRangePickerDayClasses.rangeIntervalDayPreview}`]: {
+          ...endBorderStyle,
+          borderRightColor: (theme.vars || theme).palette.divider,
+        },
+        ...(ownerState.isHighlighting && {
+          borderRadius: 0,
+          color: (theme.vars || theme).palette.primary.contrastText,
+          backgroundColor: theme.vars
+            ? `rgba(${theme.vars.palette.primary.lightChannel} / 0.6)`
+            : alpha(theme.palette.primary.light, 0.6),
+          '&:first-of-type': startBorderStyle,
+          '&:last-of-type': endBorderStyle,
+        }),
+        ...((ownerState.isStartOfHighlighting || ownerState.isFirstVisibleCell) && {
+          ...startBorderStyle,
+          paddingLeft: 0,
+        }),
+        ...((ownerState.isEndOfHighlighting || ownerState.isLastVisibleCell) && {
+          ...endBorderStyle,
+          paddingRight: 0,
+        }),
+      },
+);
 
 DateRangePickerDayRoot.propTypes = {
   // ----------------------------- Warning --------------------------------
@@ -176,16 +194,16 @@ const DateRangePickerDayRangeIntervalPreview = styled('div', {
   // replace default day component margin with transparent border to avoid jumping on preview
   border: '2px solid transparent',
   ...(ownerState.isPreviewing &&
-    !ownerState.outsideCurrentMonth && {
+    !ownerState.isHiddenDayFiller && {
       borderRadius: 0,
       border: `2px dashed ${(theme.vars || theme).palette.divider}`,
       borderLeftColor: 'transparent',
       borderRightColor: 'transparent',
-      ...((ownerState.isStartOfPreviewing || ownerState.isStartOfMonth) && {
+      ...((ownerState.isStartOfPreviewing || ownerState.isFirstVisibleCell) && {
         borderLeftColor: (theme.vars || theme).palette.divider,
         ...startBorderStyle,
       }),
-      ...((ownerState.isEndOfPreviewing || ownerState.isEndOfMonth) && {
+      ...((ownerState.isEndOfPreviewing || ownerState.isLastVisibleCell) && {
         borderRightColor: (theme.vars || theme).palette.divider,
         ...endBorderStyle,
       }),
@@ -222,7 +240,14 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+      [`&.${dateRangePickerDayClasses.rangeIntervalOutsideCurrentMonth} .${dateRangePickerDayClasses.day}`]:
+        {
+          color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.1)),
+        },
+      [`&:not(.${dateRangePickerDayClasses.rangeIntervalOutsideCurrentMonth}) .${dateRangePickerDayClasses.day}`]:
+        {
+          color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+        },
     }),
   ...(ownerState.draggable && {
     cursor: 'grab',
@@ -257,6 +282,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isVisuallySelected,
     sx,
     draggable,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
 
@@ -275,6 +302,9 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
     isStartOfMonth,
     isEndOfMonth,
     draggable,
+    isFirstVisibleCell,
+    isLastVisibleCell,
+    isHiddenDayFiller: outsideCurrentMonth && !other.showDaysOutsideCurrentMonth,
   };
 
   const classes = useUtilityClasses(ownerState);
@@ -302,6 +332,8 @@ const DateRangePickerDayRaw = React.forwardRef(function DateRangePickerDay<TDate
           className={classes.day}
           ownerState={ownerState}
           draggable={draggable}
+          isFirstVisibleCell={isFirstVisibleCell}
+          isLastVisibleCell={isLastVisibleCell}
         />
       </DateRangePickerDayRangeIntervalPreview>
     </DateRangePickerDayRoot>

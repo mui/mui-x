@@ -6,7 +6,7 @@ import {
 export interface DateRangePickerDayClasses {
   /** Styles applied to the root element. */
   root: string;
-  /** Styles applied to the root element if `isHighlighting=true` and `outsideCurrentMonth=false`. */
+  /** Styles applied to the root element if `isHighlighting=true`. */
   rangeIntervalDayHighlight: string;
   /** Styles applied to the root element if `isStartOfHighlighting=true`. */
   rangeIntervalDayHighlightStart: string;
@@ -14,12 +14,24 @@ export interface DateRangePickerDayClasses {
   rangeIntervalDayHighlightEnd: string;
   /** Styles applied to the preview element. */
   rangeIntervalPreview: string;
-  /** Styles applied to the root element if `isPreviewing=true` and `outsideCurrentMonth=false`. */
+  /** Styles applied to the root element if `isPreviewing=true`. */
   rangeIntervalDayPreview: string;
-  /** Styles applied to the root element if `isStartOfPreviewing=true` or `day` is the start of the month. */
+  /** Styles applied to the root element if `isStartOfPreviewing=true`. */
   rangeIntervalDayPreviewStart: string;
-  /** Styles applied to the root element if `isEndOfPreviewing=true` or `day` is the end of the month. */
+  /** Styles applied to the root element if `isEndOfPreviewing=true`. */
   rangeIntervalDayPreviewEnd: string;
+  /** Styles applied to the root element if `outsideCurrentMonth=true` */
+  rangeIntervalOutsideCurrentMonth: string;
+  /** Styles applied to the root element if `day` is the start of the month. */
+  rangeIntervalStartOfMonth: string;
+  /** Styles applied to the root element if `day` is the end of the month. */
+  rangeIntervalEndOfMonth: string;
+  /** Styles applied to the root element if `day` is the first visible cell of the month. */
+  rangeIntervalFirstVisibleCell;
+  /** Styles applied to the root element if `day` is the last visible cell of the month. */
+  rangeIntervalLastVisibleCell;
+  /** Styles applied to the root element if itis an empty cell used to fill the week. */
+  rangeIntervalHiddenDayFiller;
   /** Styles applied to the day element. */
   day: string;
   /** Styles applied to the day element if `isHighlighting=false`. */
@@ -47,6 +59,12 @@ export const dateRangePickerDayClasses: DateRangePickerDayClasses = generateUtil
     'rangeIntervalDayPreview',
     'rangeIntervalDayPreviewStart',
     'rangeIntervalDayPreviewEnd',
+    'rangeIntervalOutsideCurrentMonth',
+    'rangeIntervalStartOfMonth',
+    'rangeIntervalEndOfMonth',
+    'rangeIntervalFirstVisibleCell',
+    'rangeIntervalLastVisibleCell',
+    'rangeIntervalHiddenDayFiller',
     'day',
     'dayOutsideRangeInterval',
     'dayInsideRangeInterval',
