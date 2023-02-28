@@ -1,4 +1,3 @@
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 import * as React from 'react';
 import { expect } from 'chai';
@@ -45,10 +44,10 @@ describe('<DataGridPremium /> - Row pinning', () => {
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--top']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--bottom']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
