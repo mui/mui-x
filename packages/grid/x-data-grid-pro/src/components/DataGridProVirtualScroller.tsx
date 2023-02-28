@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled, alpha, Theme } from '@mui/material/styles';
+import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import {
   useGridSelector,
@@ -37,6 +37,7 @@ import { gridPinnedRowsSelector } from '../hooks/features/rowPinning/gridRowPinn
 export const filterColumns = (
   pinnedColumns: GridPinnedColumns,
   columns: string[],
+  invert?: boolean,
 ): [string[], string[]] => {
   if (!Array.isArray(pinnedColumns.left) && !Array.isArray(pinnedColumns.right)) {
     return [[], []];
@@ -59,6 +60,9 @@ export const filterColumns = (
     (field) => !leftPinnedColumns.includes(field),
   );
   const rightPinnedColumns = filter(pinnedColumns.right, columnsWithoutLeftPinnedColumns);
+  if (invert) {
+    return [rightPinnedColumns, leftPinnedColumns];
+  }
   return [leftPinnedColumns, rightPinnedColumns];
 };
 
@@ -209,6 +213,7 @@ const DataGridProVirtualScroller = React.forwardRef<
   const rightColumns = React.useRef<HTMLDivElement>(null);
   const topPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
   const bottomPinnedRowsRenderZoneRef = React.useRef<HTMLDivElement>(null);
+  const theme = useTheme();
 
   const handleRenderZonePositioning = React.useCallback(
     ({ top, left }: { top: number; left: number }) => {
@@ -237,7 +242,11 @@ const DataGridProVirtualScroller = React.forwardRef<
   };
 
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
-  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(pinnedColumns, visibleColumnFields);
+  const [leftPinnedColumns, rightPinnedColumns] = filterColumns(
+    pinnedColumns,
+    visibleColumnFields,
+    theme.direction === 'rtl',
+  );
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
   const topPinnedRowsData = React.useMemo(() => pinnedRows?.top || [], [pinnedRows?.top]);

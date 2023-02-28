@@ -2,6 +2,11 @@ import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
 
 const pages: MuiPage[] = [
   {
+    pathname: '/x/whats-new',
+    title: "✨ What's new in v6? ✨",
+    icon: 'VisibilityIcon',
+  },
+  {
     pathname: '/x/introduction-group',
     title: 'Introduction',
     icon: 'DescriptionIcon',
@@ -394,6 +399,19 @@ const pages: MuiPage[] = [
       },
     ],
   },
+  {
+    pathname: '/x/react-charts-group',
+    title: 'Charts 🚧',
+    icon: 'ChartIcon',
+    children: [
+      { pathname: '/x/react-charts', title: '🚧 Overview' },
+      { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
+      { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+      { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
+      { pathname: '/x/react-charts/pie', title: '🚧 Pie' },
+    ],
+  },
+  
 ];
 
 export default pages;
