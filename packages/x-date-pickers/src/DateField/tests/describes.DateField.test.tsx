@@ -10,6 +10,7 @@ import {
   adapterToUse,
   expectInputValue,
   buildFieldInteractions,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Describes', () => {
@@ -49,9 +50,15 @@ describe('<DateField /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = screen.getByRole('textbox');
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+        true,
+      );
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);

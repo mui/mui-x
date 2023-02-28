@@ -5,6 +5,7 @@ import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import {
   adapterToUse,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
   openPicker,
 } from 'test/utils/pickers-utils';
@@ -41,10 +42,12 @@ describe('<MobileDateRangePicker /> - Describes', () => {
       // `getAllByRole('textbox')` does not work here, because inputs are `readonly`
       const textBoxes = [screen.getByLabelText('Start'), screen.getByLabelText('End')];
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
+        const input = textBoxes[index];
         // TODO: Support single range input
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {

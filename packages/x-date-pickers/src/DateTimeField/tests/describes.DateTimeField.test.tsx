@@ -5,6 +5,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
@@ -29,17 +30,18 @@ describe('<DateTimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
-        );
+      const input = screen.getByRole('textbox');
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
       }
+      const expectedValueStr = expectedValue
+        ? adapterToUse.format(
+            expectedValue,
+            hasMeridiem ? 'keyboardDateTime12h' : 'keyboardDateTime24h',
+          )
+        : '';
 
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr, true);
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);

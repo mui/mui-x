@@ -8,6 +8,7 @@ import {
   expectInputValue,
   buildFieldInteractions,
   wrapPickerMount,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
@@ -54,16 +55,17 @@ describe('<DesktopTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      let expectedValueStr: string;
-      if (expectedValue == null) {
-        expectedValueStr = hasMeridiem ? 'hh:mm aa' : 'hh:mm';
-      } else {
-        expectedValueStr = adapterToUse.format(
-          expectedValue,
-          hasMeridiem ? 'fullTime12h' : 'fullTime24h',
-        );
+      const input = screen.getByRole('textbox');
+      if (!expectedValue) {
+        expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(
+        input,
+        expectedValue
+          ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
+          : '',
+        true,
+      );
     },
     setNewValue: (value, { isOpened } = {}) => {
       const newValue = adapterToUse.addHours(value, 1);
