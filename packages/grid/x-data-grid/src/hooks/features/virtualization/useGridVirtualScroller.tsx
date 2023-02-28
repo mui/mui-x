@@ -17,7 +17,6 @@ import {
 import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 import { useGridVisibleRows } from '../../utils/useGridVisibleRows';
 import { GridEventListener } from '../../../models/events';
-import { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 import { useGridApiEventHandler } from '../../utils/useGridApiEventHandler';
 import { clamp } from '../../../utils/utils';
 import { GridRenderContext, GridRowEntry } from '../../../models';
@@ -143,7 +142,7 @@ export const useGridVirtualScroller = (props: UseGridVirtualScrollerProps) => {
 
   const rowStyleCache = React.useRef<Record<GridRowId, any>>({});
   const prevGetRowProps = React.useRef<UseGridVirtualScrollerProps['getRowProps']>();
-  const prevRootRowStyle = React.useRef<GridSlotsComponentsProps['row']>();
+  const prevRootRowStyle = React.useRef<GridRowProps['style']>();
 
   const getRenderedColumnsRef = React.useRef(
     defaultMemoize(
