@@ -404,12 +404,15 @@ export const useField = <
   }, [selectedSectionIndexes, state.sections]);
 
   const inputHasFocus = inputRef.current && inputRef.current === document.activeElement;
+  const shouldShowPlaceholder =
+    !inputHasFocus &&
+    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
 
   return {
-    ...otherForwardedProps,
     placeholder: state.placeholder,
-    value: state.value || inputHasFocus ? valueStr : '',
     autoComplete: 'off',
+    ...otherForwardedProps,
+    value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
     readOnly,
     onClick: handleInputClick,
