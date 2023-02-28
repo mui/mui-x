@@ -60,8 +60,8 @@ export const useStaticPicker = <
           slotProps={slotProps}
           sx={[
             ...(Array.isArray(sx) ? sx : [sx]),
-            ...(slotProps?.layout?.sx && Array.isArray(slotProps?.layout?.sx)
-              ? slotProps.layout.sx
+            ...(Array.isArray(slotProps?.layout?.sx)
+              ? slotProps!.layout!.sx
               : [slotProps?.layout?.sx]),
           ]}
           className={clsx(className, slotProps?.layout?.className)}
