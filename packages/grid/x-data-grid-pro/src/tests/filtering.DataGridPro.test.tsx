@@ -14,7 +14,6 @@ import {
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
@@ -168,7 +167,9 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
 
-    const selectListOfColumns = document.querySelectorAll('.MuiDataGrid-filterFormColumnInput')[0];
+    const selectListOfColumns = document.querySelectorAll<HTMLElement>(
+      '.MuiDataGrid-filterFormColumnInput',
+    )[0];
     const availableColumns = within(selectListOfColumns).getAllByRole('option');
     expect(availableColumns.length).to.equal(1);
   });
@@ -461,7 +462,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), { target: { value: '' } });
+    fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
     clock.tick(500);
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
@@ -513,7 +514,7 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     expect(onFilterModelChange.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(onFilterModelChange.callCount).to.equal(1);
     expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -529,7 +530,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     apiRef.current.subscribeEvent('filterModelChange', listener);
     expect(listener.callCount).to.equal(0);
-    fireEvent.click(screen.queryByRole('button', { name: 'Add filter' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(listener.callCount).to.equal(1);
     expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
   });
@@ -546,7 +547,7 @@ describe('<DataGridPro /> - Filter', () => {
       logicOperator: GridLogicOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
-    const checkAllCell = getColumnHeaderCell(0).querySelector('input');
+    const checkAllCell = getColumnHeaderCell(0).querySelector('input')!;
     fireEvent.click(checkAllCell);
     expect(apiRef.current.state.rowSelection).to.deep.equal([1]);
   });

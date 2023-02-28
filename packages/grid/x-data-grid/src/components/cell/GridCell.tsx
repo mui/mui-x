@@ -20,7 +20,7 @@ import { GridAlignment } from '../../models/colDef/gridColDef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridFocusCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { FocusElement } from '../../models/params/gridCellParams';
 
 export interface GridCellProps<V = any, F = V> {
@@ -49,7 +49,7 @@ export interface GridCellProps<V = any, F = V> {
   onKeyDown?: React.KeyboardEventHandler<HTMLDivElement>;
   onDragEnter?: React.DragEventHandler<HTMLDivElement>;
   onDragOver?: React.DragEventHandler<HTMLDivElement>;
-  [x: string]: any; // TODO it should not accept unspecified props
+  [x: string]: any;
 }
 
 // Based on https://stackoverflow.com/a/59518678

@@ -21,8 +21,8 @@ import {
   openPicker,
 } from 'test/utils/pickers-utils';
 
-const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+const getPickerDay = (name: string, picker = 'January 2018'): HTMLButtonElement =>
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -31,7 +31,8 @@ describe('<DesktopDateRangePicker />', () => {
   });
 
   describeConformance(<DesktopDateRangePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiDesktopDateRangePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,

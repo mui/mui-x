@@ -9,14 +9,7 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  userEvent,
-  // @ts-expect-error Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -36,10 +29,10 @@ describe('<DataGridPro /> - Row pinning', () => {
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--top']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--bottom']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {

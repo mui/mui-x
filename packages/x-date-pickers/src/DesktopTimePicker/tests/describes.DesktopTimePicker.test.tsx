@@ -8,6 +8,7 @@ import {
   expectInputValue,
   buildFieldInteractions,
   wrapPickerMount,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
@@ -24,7 +25,8 @@ describe('<DesktopTimePicker /> - Describes', () => {
   }));
 
   describeConformance(<DesktopTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiDesktopTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
@@ -72,7 +74,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         throw new Error("Can't test UI views on DesktopTimePicker");
       }
 
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 
