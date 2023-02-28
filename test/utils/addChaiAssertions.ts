@@ -20,10 +20,12 @@ chai.use((chaiAPI, utils) => {
     // Luxon dates don't have a `toISOString` function, we need to convert to the JS date first
     const cleanActualDate =
       typeof actualDate.toJSDate === 'function' ? actualDate.toJSDate() : actualDate;
+    const cleanExpectedDate =
+      typeof expectedDate.toJSDate === 'function' ? expectedDate.toJSDate() : expectedDate;
 
     const assertion = new chai.Assertion(cleanActualDate.toISOString(), message);
     // TODO: Investigate if `as any` can be removed after https://github.com/DefinitelyTyped/DefinitelyTyped/issues/48634 is resolved.
     utils.transferFlags(this as any, assertion, false);
-    assertion.to.equal(expectedDate.toISOString());
+    assertion.to.equal(cleanExpectedDate.toISOString());
   });
 });

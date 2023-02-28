@@ -6,9 +6,6 @@ export interface RangeFieldSection extends FieldSection {
   dateName: 'start' | 'end';
 }
 
-export interface RangeFieldSectionWithoutPosition
-  extends Omit<RangeFieldSection, 'start' | 'end' | 'startInInput' | 'endInInput'> {}
-
 /**
  * Props the `textField` slot of the multi input field can receive when used inside a picker.
  */

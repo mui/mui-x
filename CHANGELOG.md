@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0-beta.5
+
+_Feb 23, 2023_
+
+We'd like to offer a big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️ Add web worker support for Excel export (#7770) @m4theushw
+- 🎁 Add a button to remove all filters on the data grid filter panel (#7326) @MBilalShafi
+- ⚙️ Allow to customize options label and value in the data grid `singleSelect` column (#7684) @m4theushw
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0-beta.5` / `@mui/x-data-grid-pro@v6.0.0-beta.5` / `@mui/x-data-grid-premium@v6.0.0-beta.5`
+
+#### Changes
+
+- [DataGrid] Allow to customize label and value for `singleSelect` (#7684) @m4theushw
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7964) @lolaignatova
+- [DataGrid] Introduce `slots` and deprecate `components` (#7882) @MBilalShafi
+- [DataGridPro] Add `Remove All` option in filter panel (#7326) @MBilalShafi
+- [DataGridPremium] Add web worker support for Excel export (#7770) @m4theushw
+
+### `@mui/x-date-pickers@v6.0.0-beta.5` / `@mui/x-date-pickers-pro@v6.0.0-beta.5`
+
+#### Breaking changes
+
+- The `MuiDateSectionName` type was renamed to `FieldSectionType`
+
+#### Changes
+
+- [fields] Fix multi input range fields validation when uncontrolled (#8002) @LukasTy
+- [fields] Fix single input time range fields slot props (#7988) @LukasTy
+- [fields] Make the `ArrowUp` / `ArrowDown` edition only impact the active section (#7993) @flaviendelangle
+- [fields] Fix single input range fields clearing (#7995) @flaviendelangle
+- [fields] Clean the section object (#8009) @flaviendelangle
+- [pickers] Fix `textField` slot `error` prop propagation (#7987) @LukasTy
+
+### `@mui/x-codemod@v6.0.0-beta.5`
+
+#### Changes
+
+- [codemod] Add `apiRef.current.getRowIndex` to `DataGrid` renaming codemod (#8001) @MBilalShafi
+
+### Docs
+
+- [docs] Fine tune range fields demos (#7992) @LukasTy
+- [docs] Fix a few scroll issues on mobile (#7900) @oliviertassinari
+- [docs] Fix inconsistency in the data grid migration guide (#7963) @MBilalShafi
+
+### Core
+
+- [core] Fix `moment` locale on adapter tests (#8020) @flaviendelangle
+- [test] Support all adapters on the field tests about the formats (#7996) @flaviendelangle
+
 ## 6.0.0-beta.4
 
 _Feb 16, 2023_
@@ -2178,6 +2232,26 @@ You can find more information about the new api, including how to set those tran
 - [test] Hide the date on the print regression test (#6120) @flaviendelangle
 - [test] Skip tests for column pinning and dynamic row height (#5997) @m4theushw
 - [website] Improve security header @oliviertassinari
+
+## 5.17.25
+
+_Feb 23, 2023_
+
+We'd like to offer a big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.25` / `@mui/x-data-grid-pro@v5.17.25` / `@mui/x-data-grid-premium@v5.17.25`
+
+#### Changes
+
+- [DataGrid] Fix `ownerState` being `undefined` in theme style overrides (#7757) @lolaignatova
+
+### `@mui/x-date-pickers@v5.0.20` / `@mui/x-date-pickers-pro@v5.0.20`
+
+#### Changes
+
+- [DateTimePicker] Ensure toolbar `viewType` is correctly updated (#7942) @LukasTy
 
 ## 5.17.24
 

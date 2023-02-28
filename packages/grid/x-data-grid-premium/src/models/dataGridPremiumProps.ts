@@ -161,4 +161,9 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
     cellSelectionModel: GridCellSelectionModel,
     details: GridCallbackDetails,
   ) => void;
+  /**
+   * Callback fired when the state of the Excel export changes.
+   * @param {string} inProgress Indicates if the task is in progress.
+   */
+  onExcelExportStateChange?: (inProgress: 'pending' | 'finished') => void;
 }

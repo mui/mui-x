@@ -18,7 +18,7 @@ import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 

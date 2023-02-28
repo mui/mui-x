@@ -9,11 +9,10 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  useGridSelector,
+  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import {
-  DataGridProVirtualScroller,
-  DataGridProColumnHeaders,
-} from '@mui/x-data-grid-pro/internals';
+import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
@@ -30,13 +29,15 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
+  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
         <GridBody
-          ColumnHeadersComponent={DataGridProColumnHeaders}
           VirtualScrollerComponent={DataGridProVirtualScroller}
+          ColumnHeadersProps={{ pinnedColumns }}
         >
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
         </GridBody>
@@ -270,7 +271,6 @@ DataGridPremiumRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -585,6 +585,11 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
+  /**
+   * Callback fired when the state of the Excel export changes.
+   * @param {string} inProgress Indicates if the task is in progress.
+   */
+  onExcelExportStateChange: PropTypes.func,
   /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].

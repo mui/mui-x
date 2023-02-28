@@ -41,7 +41,7 @@ export * from './PickersLayout';
 export * from './PickersActionBar';
 export * from './PickersShortcuts';
 
-export type { MuiDateSectionName } from './internals/models/muiPickersAdapter';
+export type { FieldSectionType } from './internals/models/muiPickersAdapter';
 export type { DateValidationError } from './internals/hooks/validation/useDateValidation';
 export type { TimeValidationError } from './internals/hooks/validation/useTimeValidation';
 export type { DateTimeValidationError } from './internals/hooks/validation/useDateTimeValidation';

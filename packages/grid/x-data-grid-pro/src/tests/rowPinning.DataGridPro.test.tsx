@@ -66,7 +66,6 @@ describe('<DataGridPro /> - Row pinning', () => {
             top: [pinnedRow0],
             bottom: [pinnedRow1],
           }}
-          experimentalFeatures={{ rowPinning: true }}
           {...props}
         />
       </div>
@@ -98,12 +97,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       return (
         <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            autoHeight
-            pinnedRows={pinnedRows}
-            experimentalFeatures={{ rowPinning: true }}
-          />
+          <DataGridPro {...data} autoHeight pinnedRows={pinnedRows} />
         </div>
       );
     }
@@ -274,7 +268,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               bottom: [pinnedRow1],
             }}
             getRowId={getRowId}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );
@@ -361,7 +354,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 top: [pinnedRow1, pinnedRow0],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -404,7 +396,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 bottom: [pinnedRow0, pinnedRow1],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -456,7 +447,6 @@ describe('<DataGridPro /> - Row pinning', () => {
                   right: ['price2M'],
                 },
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -696,7 +686,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               top: [pinnedRow0],
               bottom: [pinnedRow1],
             }}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );

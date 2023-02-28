@@ -1,17 +1,17 @@
 /* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 type Moment = defaultMoment.Moment;
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   // Month
   jM: 'month',
   jMM: 'month',
-  jMMM: { sectionName: 'month', contentType: 'letter' },
-  jMMMM: { sectionName: 'month', contentType: 'letter' },
+  jMMM: { sectionType: 'month', contentType: 'letter' },
+  jMMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of Month
   jD: 'day',

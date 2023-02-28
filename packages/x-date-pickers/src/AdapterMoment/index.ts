@@ -1,15 +1,15 @@
 /* eslint-disable class-methods-use-this */
 import defaultMoment, { LongDateFormatKey } from 'moment';
 import BaseAdapterMoment from '@date-io/moment';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
   // Month
   M: 'month',
   MM: 'month',
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
 
   // Day of the month
   D: 'day',
@@ -19,9 +19,9 @@ const formatTokenMap: MuiFormatTokenMap = {
   E: 'weekDay',
   e: 'weekDay',
   d: 'weekDay',
-  dd: { sectionName: 'weekDay', contentType: 'letter' },
-  ddd: { sectionName: 'weekDay', contentType: 'letter' },
-  dddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dd: { sectionType: 'weekDay', contentType: 'letter' },
+  ddd: { sectionType: 'weekDay', contentType: 'letter' },
+  dddd: { sectionType: 'weekDay', contentType: 'letter' },
 
   // Year
   Y: 'year',
@@ -72,7 +72,7 @@ export class AdapterMoment
       .map((token) => {
         const firstCharacter = token[0];
         if (firstCharacter === 'L' || firstCharacter === ';') {
-          return this.moment
+          return defaultMoment
             .localeData(this.getCurrentLocaleCode())
             .longDateFormat(token as LongDateFormatKey);
         }
@@ -82,6 +82,10 @@ export class AdapterMoment
       .join('');
   };
 
+  public getCurrentLocaleCode = () => {
+    return this.locale || defaultMoment.locale();
+  };
+
   // Redefined here just to show how it can be written using expandFormat
   public getFormatHelperText = (format: string) => {
     return this.expandFormat(format).replace(/a/gi, '(a|p)m').toLocaleLowerCase();
@@ -89,5 +93,13 @@ export class AdapterMoment
 
   public getWeekNumber = (date: defaultMoment.Moment) => {
     return date.week();
+  };
+
+  public getWeekdays = () => {
+    return defaultMoment.weekdaysShort(true);
+  };
+
+  public is12HourCycleInCurrentLocale = () => {
+    return /A|a/.test(defaultMoment.localeData(this.getCurrentLocaleCode()).longDateFormat('LT'));
   };
 }

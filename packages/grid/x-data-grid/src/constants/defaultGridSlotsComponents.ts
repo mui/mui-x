@@ -44,7 +44,10 @@ import {
   GridVisibilityOffIcon,
   GridViewColumnIcon,
   GridClearIcon,
+  GridDeleteIcon,
+  GridDeleteForeverIcon,
 } from '../components';
+import { GridColumnHeaders } from '../components/GridColumnHeaders';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridNoResultsOverlay } from '../components/GridNoResultsOverlay';
@@ -54,7 +57,9 @@ const DEFAULT_GRID_ICON_SLOTS_COMPONENTS: GridIconSlotsComponent = {
   BooleanCellFalseIcon: GridCloseIcon,
   ColumnMenuIcon: GridTripleDotsVerticalIcon,
   OpenFilterButtonIcon: GridFilterListIcon,
-  FilterPanelDeleteIcon: GridCloseIcon,
+  FilterPanelAddIcon: GridAddIcon,
+  FilterPanelDeleteIcon: GridDeleteIcon,
+  FilterPanelRemoveAllIcon: GridDeleteForeverIcon,
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
   ColumnUnsortedIcon: GridColumnUnsortedIcon,
@@ -98,6 +103,7 @@ export const DATA_GRID_DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   SkeletonCell: GridSkeletonCell,
   ColumnHeaderFilterIconButton: GridColumnHeaderFilterIconButton,
   ColumnMenu: GridColumnMenu,
+  ColumnHeaders: GridColumnHeaders,
   Footer: GridFooter,
   Toolbar: null,
   PreferencesPanel: GridPreferencesPanel,

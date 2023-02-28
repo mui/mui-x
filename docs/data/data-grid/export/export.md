@@ -300,6 +300,94 @@ In the following demo, both methods are used to set a custom header and a custom
 
 {{"demo": "ExcelCustomExport.js", "bg": "inline", "defaultCodeOpen": false}}
 
+### Using a web worker
+
+:::warning
+This feature only works with `@mui/styled-engine` v5.11.8 or newer.
+Make sure that the MUI Core version you are using is also installing the correct version for this dependency.
+:::
+
+Instead of generating the Excel file in the main thread, you can delegate the task to a web worker.
+This method reduces the amount of time that the main thread remains frozen, allowing to interact with the grid while the data is exported in background.
+To start using web workers for the Excel export, first you need to create a file with the content below.
+This file will be later used as the worker script, so it must be accessible by a direct URL.
+
+```tsx
+// in file ./worker.ts
+import { setupExcelExportWebWorker } from '@mui/x-data-grid-premium';
+
+setupExcelExportWebWorker();
+```
+
+The final step is to pass the path to the file created to `GridToolbarExport` or the API method:
+
+```tsx
+<GridToolbarExport
+  excelOptions={{
+    worker: () => new Worker('/worker.ts'),
+  }}
+/>;
+
+// or
+
+apiRef.current.exportDataAsExcel({
+  worker: () => new Worker('/worker.ts'),
+});
+```
+
+:::info
+If you are using Next.js or Webpack 5, use the following syntax instead.
+Make sure to pass the **relative path**, considering the current file, to the worker script.
+
+```tsx
+<GridToolbarExport
+  excelOptions={{
+    worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+  }}
+/>;
+
+// or
+
+apiRef.current.exportDataAsExcel({
+  worker: () => new Worker(new URL('./worker.ts', import.meta.url)),
+});
+```
+
+It is not necessary to make the script public because [Webpack](https://webpack.js.org/guides/web-workers/) will handle that automatically for you.
+:::
+
+Since the main thread is not locked while the data is exported, it is important to give feedback for users that something is in progress.
+You can pass a callback to the `onExcelExportStateChange` prop and display a message or loader.
+The following demo contains an example using a [Snackbar](/material-ui/react-snackbar/):
+
+{{"demo": "ExcelExportWithWebWorker.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+When opening the demo above in CodeSandbox or StackBlitz you need to manually create the `worker.ts` script.
+:::
+
+:::warning
+If you want to use the `exceljsPreProcess` and `exceljsPostProcess` options to customize the final spreadsheet, as shown in the [Customization](/x/react-data-grid/export/#customization) section above, you have to pass them to `setupExcelExportWebWorker` instead.
+This is necessary because [functions](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm#things_that_dont_work_with_structured_clone) cannot be passed to the web worker.
+
+```tsx
+// Instead of
+<GridToolbarExport
+  excelOptions={{
+    exceljsPreProcess,
+    exceljsPostProcess,
+  }}
+/>;
+
+// Do the following in the ./worker.ts file
+setupExcelExportWebWorker({
+  exceljsPreProcess,
+  exceljsPostProcess,
+});
+```
+
+:::
+
 ## 🚧 Clipboard [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
 :::warning
