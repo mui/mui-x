@@ -6,7 +6,7 @@ function useTicks(options) {
   return React.useMemo(() => {
     // band scale
     if (scale.bandwidth) {
-      return scale.domain().map((d) => ({ value: d, offset: scale(d) }));
+      return scale.domain().map((d) => ({ value: d, offset: scale(d) + scale.bandwidth() / 2 }));
     }
 
     const numberOfTicksTarget = Math.min(

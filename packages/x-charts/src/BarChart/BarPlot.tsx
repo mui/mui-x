@@ -25,12 +25,13 @@ function BarPlot() {
 
         const bandWidth = xScale.bandwidth();
         const barWidth = (0.9 * bandWidth) / plottedSeries.length;
+        const offset = 0.05 * bandWidth;
 
         return plottedSeries.flatMap(({ data, yAxisKey }, seriesIndex) => {
           const yScale = yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale;
           return data.map((value, dataIndex) => (
             <rect
-              x={xScale(xAxis[xAxisKey].data[dataIndex]) + seriesIndex * barWidth}
+              x={xScale(xAxis[xAxisKey].data[dataIndex]) + seriesIndex * barWidth + offset}
               y={yScale(value)}
               height={Math.abs(yScale(0) - yScale(value))}
               width={barWidth}
