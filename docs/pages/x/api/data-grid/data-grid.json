@@ -214,6 +214,7 @@
       "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
+    "columnReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "columnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
     "columnSelectorIcon": { "default": "GridColumnIcon", "type": { "name": "elementType" } },
     "columnSortedAscendingIcon": {
@@ -254,6 +255,7 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
+    "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "moreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "noResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },
