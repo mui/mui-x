@@ -868,17 +868,6 @@ Component name changes are also reflected in `themeAugmentation`:
  });
 ```
 
-## Stop using `WrapperVariantContext`
-
-The `WrapperVariantContext` context has been removed in favor of more explicit props or correct default values provided by respective picker components.
-This context was only available through internal import, but in case you were using it in your codebase, make sure those cases are updated.
-
-You can find more information about specific changes in [this umbrella issue](https://github.com/mui/mui-x/issues/7372).
-
-```diff
--import { WrapperVariantContext } from '@mui/x-date-pickers/internals';
-```
-
 ## Rename `components` to `slots` (optional)
 
 The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
