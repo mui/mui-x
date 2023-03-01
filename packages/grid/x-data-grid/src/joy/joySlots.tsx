@@ -21,24 +21,24 @@ const Checkbox = React.forwardRef<
   );
 });
 
-// TODO: fix types
-const TextField = React.forwardRef<HTMLDivElement, any>(
-  ({ onChange, label, placeholder, value, inputRef, type }, ref) => {
-    return (
-      <JoyFormControl ref={ref}>
-        <JoyFormLabel sx={{ fontSize: 12 }}>{label}</JoyFormLabel>
-        <JoyInput
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          size="sm"
-          slotProps={{ input: { ref: inputRef } }}
-        />
-      </JoyFormControl>
-    );
-  },
-);
+const TextField = React.forwardRef<
+  HTMLDivElement,
+  NonNullable<GridSlotsComponentsProps['baseTextField']>
+>(({ onChange, label, placeholder, value, inputRef, type }, ref) => {
+  return (
+    <JoyFormControl ref={ref}>
+      <JoyFormLabel sx={{ fontSize: 12 }}>{label}</JoyFormLabel>
+      <JoyInput
+        type={type}
+        value={value as any}
+        onChange={onChange}
+        placeholder={placeholder}
+        size="sm"
+        slotProps={{ input: { ref: inputRef } }}
+      />
+    </JoyFormControl>
+  );
+});
 
 const joySlots: UncapitalizeObjectKeys<Partial<GridSlotsComponent>> = {
   baseCheckbox: Checkbox,
