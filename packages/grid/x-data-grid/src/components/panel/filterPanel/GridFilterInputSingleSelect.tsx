@@ -59,12 +59,10 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   } = props;
   const [filterValueState, setFilterValueState] = React.useState(item.value ?? '');
   const id = useId();
+  const labelId = useId();
   const rootProps = useGridRootProps();
 
-  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? true;
-
-  const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
+  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? true;
 
   let resolvedColumn: GridSingleSelectColDef | null = null;
   if (item.field) {
@@ -127,36 +125,34 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   }
 
   return (
-    <rootProps.slots.baseTextField
-      // TODO: use baseSelect slot
-      id={id}
-      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
-      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
-      value={filterValueState}
-      onChange={onFilterChange}
-      variant="standard"
-      type={type || 'text'}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      inputRef={focusElementRef}
-      select
-      SelectProps={{
-        native: isSelectNative,
-        ...rootProps.slotProps?.baseSelect,
-      }}
-      {...others}
-      {...rootProps.slotProps?.baseTextField}
-    >
-      {renderSingleSelectOptions({
-        column: resolvedColumn,
-        OptionComponent: rootProps.slots.baseSelectOption,
-        getOptionLabel,
-        getOptionValue,
-        isSelectNative,
-        baseSelectOptionProps,
-      })}
-    </rootProps.slots.baseTextField>
+    <rootProps.slots.baseFormControl {...rootProps.slotProps?.baseFormControl} variant="standard">
+      <rootProps.slots.baseInputLabel {...rootProps.slotProps?.baseInputLabel} id={labelId} shrink>
+        {apiRef.current.getLocaleText('filterPanelInputLabel')}
+      </rootProps.slots.baseInputLabel>
+      <rootProps.slots.baseSelect
+        id={id}
+        labelId={labelId}
+        value={filterValueState}
+        onChange={onFilterChange}
+        type={type || 'text'}
+        inputProps={{
+          ref: focusElementRef,
+          placeholder: apiRef.current.getLocaleText('filterPanelInputPlaceholder'),
+        }}
+        native={isSelectNative}
+        {...others}
+        {...rootProps.slotProps?.baseSelect}
+      >
+        {renderSingleSelectOptions({
+          column: resolvedColumn,
+          OptionComponent: rootProps.slots.baseSelectOption,
+          getOptionLabel,
+          getOptionValue,
+          isSelectNative,
+          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+        })}
+      </rootProps.slots.baseSelect>
+    </rootProps.slots.baseFormControl>
   );
 }
 
