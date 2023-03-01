@@ -677,6 +677,7 @@
     "baseCheckbox": "The custom Checkbox component used in the grid for both header and cells.",
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
+    "baseInputLabel": "The custom InputLabel component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",

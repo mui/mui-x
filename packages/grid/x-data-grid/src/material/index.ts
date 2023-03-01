@@ -7,6 +7,7 @@ import MUIButton from '@mui/material/Button';
 import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
+import MUIInputLabel from '@mui/material/InputLabel';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -86,6 +87,7 @@ const materialSlots = {
   BaseIconButton: MUIIconButton,
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
+  BaseInputLabel: MUIInputLabel,
 };
 
 export default materialSlots;
