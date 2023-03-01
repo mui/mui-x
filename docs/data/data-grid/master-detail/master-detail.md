@@ -100,9 +100,9 @@ To change the icon used for the toggle, you can provide a different component fo
 
 ```tsx
 <DataGridPro
-  components={{
-    DetailPanelExpandIcon: CustomExpandIcon,
-    DetailPanelCollapseIcon: CustomCollapseIcon,
+  slots={{
+    detailPanelExpandIcon: CustomExpandIcon,
+    detailPanelCollapseIcon: CustomCollapseIcon,
   }}
 />
 ```

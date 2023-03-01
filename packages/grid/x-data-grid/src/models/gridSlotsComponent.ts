@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { UncapitalizeObjectKeys } from '../internals/utils';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
 /**
  * Grid components React prop interface containing all the overridable components.
- * TODO: Differentiate community and pro interface
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
@@ -72,6 +72,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   ColumnMenu: React.JSXElementConstructor<any>;
   /**
+   * Component responsible for rendering the column headers.
+   * @default DataGridColumnHeaders
+   */
+  ColumnHeaders: React.JSXElementConstructor<any>;
+  /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter
    */
@@ -127,3 +132,6 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Row: React.JSXElementConstructor<any>;
 }
+
+export interface UncapitalizedGridSlotsComponent
+  extends UncapitalizeObjectKeys<GridSlotsComponent> {}

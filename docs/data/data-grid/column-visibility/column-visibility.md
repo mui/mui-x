@@ -54,7 +54,7 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 ## Column visibility panel
 
 The column visibility panel can be opened through the grid toolbar.
-To enable it, you need to add `Toolbar: GridToolbar` to the grid `components` prop.
+To enable it, you need to add `toolbar: GridToolbar` to the grid `slots` prop.
 
 The user can then choose which columns are visible using the _Columns_ button.
 
@@ -62,14 +62,14 @@ The user can then choose which columns are visible using the _Columns_ button.
 
 ### Disable action buttons
 
-To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `componentsProps.columnsPanel`.
+To disable `Hide all` or `Show all` buttons in the column visibility panel, pass `disableHideAllButton` or `disableShowAllButton` to `slotProps.columnsPanel`.
 
 ```tsx
 <DataGrid
-  components={{
-    Toolbar: GridToolbar,
+  slots={{
+    toolbar: GridToolbar,
   }}
-  componentsProps={{
+  slotProps={{
     columnsPanel: {
       disableHideAllButton: true,
       disableShowAllButton: true,

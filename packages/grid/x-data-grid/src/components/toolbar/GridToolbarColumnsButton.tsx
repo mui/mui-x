@@ -29,17 +29,17 @@ export const GridToolbarColumnsButton = React.forwardRef<HTMLButtonElement, Butt
     }
 
     return (
-      <rootProps.components.BaseButton
+      <rootProps.slots.baseButton
         ref={ref}
         size="small"
         aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
-        startIcon={<rootProps.components.ColumnSelectorIcon />}
+        startIcon={<rootProps.slots.columnSelectorIcon />}
         {...other}
         onClick={showColumns}
-        {...rootProps.componentsProps?.baseButton}
+        {...rootProps.slotProps?.baseButton}
       >
         {apiRef.current.getLocaleText('toolbarColumns')}
-      </rootProps.components.BaseButton>
+      </rootProps.slots.baseButton>
     );
   },
 );

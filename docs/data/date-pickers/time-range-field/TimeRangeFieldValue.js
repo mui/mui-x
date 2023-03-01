@@ -1,6 +1,6 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -17,17 +17,15 @@ export default function TimeRangeFieldValue() {
       <DemoContainer
         components={['SingleInputTimeRangeField', 'SingleInputTimeRangeField']}
       >
-        <DemoItem label="Uncontrolled field">
-          <SingleInputTimeRangeField
-            defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
-          />
-        </DemoItem>
-        <DemoItem label="Controlled field">
-          <SingleInputTimeRangeField
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-          />
-        </DemoItem>
+        <SingleInputTimeRangeField
+          label="Uncontrolled field"
+          defaultValue={[dayjs('2022-04-07T15:30'), dayjs('2022-04-07T18:30')]}
+        />
+        <SingleInputTimeRangeField
+          label="Controlled field"
+          value={value}
+          onChange={(newValue) => setValue(newValue)}
+        />
       </DemoContainer>
     </LocalizationProvider>
   );

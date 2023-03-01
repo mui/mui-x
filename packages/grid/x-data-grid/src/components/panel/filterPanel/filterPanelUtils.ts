@@ -8,22 +8,19 @@ export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridS
   return colDef?.type === 'singleSelect';
 }
 
-export function getValueFromOption(option: any | undefined) {
-  if (typeof option === 'object' && option !== null) {
-    return option.value;
-  }
-  return option;
-}
-
-export function getValueFromValueOptions(value: string, valueOptions?: any[]) {
+export function getValueFromValueOptions(
+  value: string,
+  valueOptions: any[] | undefined,
+  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>,
+) {
   if (valueOptions === undefined) {
     return undefined;
   }
   const result = valueOptions.find((option) => {
-    const optionValue = getValueFromOption(option);
+    const optionValue = getOptionValue(option);
     return String(optionValue) === String(value);
   });
-  return getValueFromOption(result);
+  return getOptionValue(result);
 }
 
 export const getLabelFromValueOption = (valueOption: ValueOptions) => {

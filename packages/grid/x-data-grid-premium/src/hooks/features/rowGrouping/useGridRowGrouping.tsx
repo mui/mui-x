@@ -61,8 +61,8 @@ export const useGridRowGrouping = (
     | 'groupingColDef'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
-    | 'componentsProps'
-    | 'components'
+    | 'slotProps'
+    | 'slots'
   >,
 ) => {
   apiRef.current.registerControlState({

@@ -19,7 +19,7 @@ const useGridSelector = (apiRef, selector) => {};
 const apiRef = {};
 
 function App () {
-  useGridApiEventHandler('rowSelectionChange', handleEvent);
+  useGridApiEventHandler(apiRef, 'rowSelectionChange', handleEvent);
   apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
   const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
   const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);

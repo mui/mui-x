@@ -137,7 +137,7 @@ You can find full typing details on the [GridAggregationFunction API page](/x/ap
 The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover the basic use cases:
 
 | Name   | Behavior                                                   | Supported column types       |
-| ------ | ---------------------------------------------------------- | ---------------------------- |
+| :----- | :--------------------------------------------------------- | :--------------------------- |
 | `sum`  | Returns the sum of all values in the group                 | `number`                     |
 | `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
 | `min`  | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |

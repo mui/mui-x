@@ -39,7 +39,7 @@ function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
     return (
       <MenuItem onClick={ungroupColumn}>
         <ListItemIcon>
-          <rootProps.components.ColumnMenuUngroupIcon fontSize="small" />
+          <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
       </MenuItem>
@@ -49,7 +49,7 @@ function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem onClick={groupColumn}>
       <ListItemIcon>
-        <rootProps.components.ColumnMenuGroupIcon fontSize="small" />
+        <rootProps.slots.columnMenuGroupIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('groupColumn')(name)}</ListItemText>
     </MenuItem>
