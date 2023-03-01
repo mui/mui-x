@@ -38,10 +38,10 @@ export interface BaseTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, TimeView, TimeValidationError>,
     ExportedTimeClockProps<TDate> {
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
    * Overrideable components.
    * @default {}
