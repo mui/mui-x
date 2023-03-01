@@ -6,6 +6,7 @@ import {
   adapterToUse,
   expectInputValue,
   buildFieldInteractions,
+  getTextbox,
   expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -31,7 +32,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       if (!expectedValue) {
         expectInputPlaceholder(input, 'MM/DD/YYYY');
       }
@@ -46,10 +47,10 @@ describe('<DesktopDatePicker /> - Describes', () => {
 
       if (isOpened) {
         userEvent.mousePress(
-          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }),
+          screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue).toString() }),
         );
       } else {
-        const input = screen.getByRole('textbox');
+        const input = getTextbox();
         clickOnInput(input, 10); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

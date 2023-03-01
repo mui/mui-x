@@ -19,7 +19,8 @@ describe('<MobileDateRangePicker />', () => {
   });
 
   describeConformance(<MobileDateRangePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiMobileDateRangePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,

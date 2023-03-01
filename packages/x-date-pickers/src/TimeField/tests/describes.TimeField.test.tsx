@@ -6,6 +6,7 @@ import {
   createPickerRenderer,
   expectInputPlaceholder,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
@@ -42,7 +43,7 @@ describe('<TimeField /> - Describes', () => {
     setNewValue: (value) => {
       const newValue = adapterToUse.addHours(value, 1);
 
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 

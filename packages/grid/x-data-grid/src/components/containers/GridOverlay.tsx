@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme, alpha, styled } from '@mui/material/styles';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;

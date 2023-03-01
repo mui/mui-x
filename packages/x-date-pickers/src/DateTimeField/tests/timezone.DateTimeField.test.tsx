@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
-import { screen } from '@mui/monorepo/test/utils';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
+import { createPickerRenderer, expectInputValue, getTextbox } from 'test/utils/pickers-utils';
 
 describe('<DateTimeField /> - TimeZone', () => {
   describe('Value time-zone modification - Luxon', () => {
     const { render, adapter } = createPickerRenderer({ clock: 'fake', adapterName: 'luxon' });
     it('should update the field when time zone changes (timestamp remains the same)', () => {
       const { setProps } = render(<DateTimeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
 
       const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
       setProps({ value: date });

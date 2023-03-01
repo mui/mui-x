@@ -29,7 +29,8 @@ describe('<MobileTimePicker /> - Describes', () => {
   }));
 
   describeConformance(<MobileTimePicker />, () => ({
-    classes: {},
+    classes: {} as any,
+    render,
     muiName: 'MuiMobileTimePicker',
     wrapMount: wrapPickerMount,
     refInstanceof: window.HTMLDivElement,
