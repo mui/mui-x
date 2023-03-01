@@ -4,16 +4,22 @@ import JoyInput from '@mui/joy/Input';
 import JoyFormControl from '@mui/joy/FormControl';
 import JoyFormLabel from '@mui/joy/FormLabel';
 import type { UncapitalizeObjectKeys } from '../internals/utils';
-import type { GridSlotsComponent } from '../models';
+import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 
-// TODO: fix types
-const Checkbox = React.forwardRef<HTMLDivElement, any>(
-  ({ touchRippleRef, inputProps, ...props }, ref) => {
-    return (
-      <JoyCheckbox {...props} variant="outlined" slotProps={{ input: inputProps }} ref={ref} />
-    );
-  },
-);
+const Checkbox = React.forwardRef<
+  HTMLElement,
+  NonNullable<GridSlotsComponentsProps['baseCheckbox']>
+>(({ touchRippleRef, inputProps, onChange, color, size, checked, sx, value, ...props }, ref) => {
+  return (
+    <JoyCheckbox
+      {...props}
+      slotProps={{ input: inputProps as any }}
+      ref={ref}
+      checked={checked}
+      onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+    />
+  );
+});
 
 // TODO: fix types
 const TextField = React.forwardRef<HTMLDivElement, any>(

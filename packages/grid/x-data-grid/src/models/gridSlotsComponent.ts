@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { UncapitalizeObjectKeys } from '../internals/utils';
-import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { UncapitalizeObjectKeys } from '../internals/utils';
+import type { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import type { GridSlotsComponentsProps } from './gridSlotsComponentsProps';
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -10,7 +11,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * The custom Checkbox component used in the grid for both header and cells.
    * @default Checkbox
    */
-  BaseCheckbox: React.JSXElementConstructor<any>;
+  BaseCheckbox: React.JSXElementConstructor<NonNullable<GridSlotsComponentsProps['baseCheckbox']>>;
   /**
    * The custom TextField component used in the grid.
    * @default TextField
