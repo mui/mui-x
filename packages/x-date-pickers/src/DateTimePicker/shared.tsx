@@ -70,10 +70,10 @@ export interface BaseDateTimePickerProps<TDate>
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true on desktop, false on mobile
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
