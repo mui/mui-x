@@ -47,7 +47,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           expectInputValue(input, 'MMMM YYYY – MMMM YYYY');
         });
 
-        it('should only call `onChange` when clearing the last section of each date', () => {
+        it('should call `onChange` when clearing the each section of each date', () => {
           const handleChange = spy();
 
           render(
@@ -63,10 +63,10 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
           // Start date
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(0);
+          expect(handleChange.callCount).to.equal(1);
           userEvent.keyPress(input, { key: 'ArrowRight' });
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.callCount).to.equal(2);
           expect(handleChange.lastCall.firstArg[0]).to.equal(null);
           expect(handleChange.lastCall.firstArg[1]).toEqualDateTime(
             adapter.addYears(adapter.date(), 1),
@@ -75,12 +75,33 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           // End date
           userEvent.keyPress(input, { key: 'ArrowRight' });
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.callCount).to.equal(3);
           userEvent.keyPress(input, { key: 'ArrowRight' });
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(2);
+          expect(handleChange.callCount).to.equal(4);
           expect(handleChange.lastCall.firstArg[0]).to.equal(null);
           expect(handleChange.lastCall.firstArg[1]).to.equal(null);
+        });
+
+        it('should not call `onChange` if the section is already empty', () => {
+          const handleChange = spy();
+
+          render(
+            <SingleInputDateRangeField
+              format={adapter.formats.monthAndYear}
+              defaultValue={[adapter.date(), adapter.addYears(adapter.date(), 1)]}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = screen.getByRole('textbox');
+          selectSection(input, 0);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
         });
       },
     );

@@ -275,7 +275,7 @@ describe('<DateField /> - Editing', () => {
           });
         });
 
-        it('should only call `onChange` when clearing the last section', () => {
+        it('should call `onChange` when clearing each section', () => {
           const handleChange = spy();
 
           render(
@@ -290,13 +290,34 @@ describe('<DateField /> - Editing', () => {
           selectSection(input, 0);
 
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(0);
+          expect(handleChange.callCount).to.equal(1);
 
           userEvent.keyPress(input, { key: 'ArrowRight' });
 
           userEvent.keyPress(input, { key: keyToClearValue });
-          expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.callCount).to.equal(2);
           expect(handleChange.lastCall.firstArg).to.equal(null);
+        });
+
+        it('should not call `onChange` if the section is already empty', () => {
+          const handleChange = spy();
+
+          render(
+            <DateField
+              format={adapter.formats.monthAndYear}
+              defaultValue={adapter.date()}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = screen.getByRole('textbox');
+          selectSection(input, 0);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(1);
         });
       },
     );
@@ -679,7 +700,7 @@ describe('<DateField /> - Editing', () => {
       expectInputValue(input, 'MM / DD / YYYY');
       firePasteEvent(input, '12');
 
-      expect(onChange.callCount).to.equal(0);
+      expect(onChange.callCount).to.equal(1);
       expectInputValue(input, '12 / DD / YYYY');
     });
 

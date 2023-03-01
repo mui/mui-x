@@ -200,10 +200,15 @@ export const useFieldState = <
 
   const clearActiveSection = () => {
     if (selectedSectionIndexes == null) {
-      return undefined;
+      return;
     }
 
     const activeSection = state.sections[selectedSectionIndexes.startIndex];
+
+    if (activeSection.value === '') {
+      return;
+    }
+
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const activeDateSections = fieldValueManager.getActiveDateSections(
       state.sections,
@@ -219,18 +224,10 @@ export const useFieldState = <
     });
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
-    const newValue = activeDateManager.getNewValueFromNewActiveDate(null);
+    const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date('Invalid date'));
+    const newValue = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
 
-    if (isTheOnlyNonEmptySection) {
-      return publishValue(newValue, newSections);
-    }
-
-    return setState((prevState) => ({
-      ...prevState,
-      sections: newSections,
-      tempValueStrAndroid: null,
-      ...newValue,
-    }));
+    publishValue(newValue, newSections);
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
@@ -264,11 +261,9 @@ export const useFieldState = <
     shouldGoToNextSection,
   }: UpdateSectionValueParams<TSection>) => {
     const commit = ({
-      shouldPublish,
       values,
       sections,
     }: {
-      shouldPublish: boolean;
       values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
       sections?: TSection[];
     }) => {
@@ -285,16 +280,7 @@ export const useFieldState = <
         setSelectedSections(selectedSectionIndexes.startIndex);
       }
 
-      if (shouldPublish) {
-        return publishValue(values);
-      }
-
-      return setState((prev) => ({
-        ...prev,
-        tempValueStrAndroid: null,
-        ...values,
-        sections: sections ?? prev.sections,
-      }));
+      return publishValue(values, sections);
     };
 
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
@@ -325,13 +311,11 @@ export const useFieldState = <
       );
 
       return commit({
-        shouldPublish: true,
         values: activeDateManager.getNewValueFromNewActiveDate(mergedDate),
       });
     }
 
     return commit({
-      shouldPublish: false,
       values: activeDateManager.getNewValueFromNewActiveDate(newDate),
       sections: newSections,
     });
@@ -367,7 +351,7 @@ export const useFieldState = <
     const sections = fieldValueManager.getSectionsFromValue(
       utils,
       localeText,
-      state.sections,
+      null,
       state.value,
       format,
     );
