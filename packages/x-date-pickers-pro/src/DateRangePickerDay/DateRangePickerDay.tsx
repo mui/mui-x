@@ -424,9 +424,19 @@ DateRangePickerDayRaw.propTypes = {
    */
   isEndOfPreviewing: PropTypes.bool.isRequired,
   /**
+   * If `true`, day is the first visible cell of the month.
+   * Either first day of month or first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
+  /**
    * Set to `true` if the `day` is in a highlighted date range.
    */
   isHighlighting: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either last day of month or last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
   /**
    * Set to `true` if the `day` is in a preview date range.
    */
