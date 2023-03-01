@@ -1,5 +1,5 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
   buildFieldInteractions,
@@ -31,14 +31,14 @@ describe('<TimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       if (!expectedValue) {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }
       const expectedValueStr = expectedValue
         ? adapterToUse.format(expectedValue, hasMeridiem ? 'fullTime12h' : 'fullTime24h')
         : '';
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      expectInputValue(input, expectedValueStr, true);
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addHours(value, 1);

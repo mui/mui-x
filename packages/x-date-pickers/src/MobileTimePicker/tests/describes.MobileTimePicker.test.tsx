@@ -15,6 +15,7 @@ import {
   wrapPickerMount,
   getClockTouchEvent,
   expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
@@ -63,7 +64,7 @@ describe('<MobileTimePicker /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       if (!expectedValue) {
         expectInputPlaceholder(input, hasMeridiem ? 'hh:mm aa' : 'hh:mm');
       }

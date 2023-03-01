@@ -1,5 +1,5 @@
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui/monorepo/test/utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import {
   adapterToUse,
@@ -31,7 +31,7 @@ describe('<DateTimeField /> - Describes', () => {
     clock,
     assertRenderedValue: (expectedValue: any) => {
       const hasMeridiem = adapterToUse.is12HourCycleInCurrentLocale();
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       if (!expectedValue) {
         expectInputPlaceholder(input, hasMeridiem ? 'MM/DD/YYYY hh:mm aa' : 'MM/DD/YYYY hh:mm');
       }
