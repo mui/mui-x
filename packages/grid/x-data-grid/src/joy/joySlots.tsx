@@ -9,17 +9,22 @@ import type { GridSlotsComponent, GridSlotsComponentsProps } from '../models';
 const Checkbox = React.forwardRef<
   HTMLElement,
   NonNullable<GridSlotsComponentsProps['baseCheckbox']>
->(({ touchRippleRef, inputProps, onChange, color, size, checked, sx, value, ...props }, ref) => {
-  return (
-    <JoyCheckbox
-      {...props}
-      slotProps={{ input: inputProps as any }}
-      ref={ref}
-      checked={checked}
-      onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
-    />
-  );
-});
+>(
+  (
+    { touchRippleRef, inputProps, onChange, color, size, checked, sx, value, inputRef, ...props },
+    ref,
+  ) => {
+    return (
+      <JoyCheckbox
+        {...props}
+        slotProps={{ input: { ...(inputProps as any), ref: inputRef } }}
+        ref={ref}
+        checked={checked}
+        onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
+      />
+    );
+  },
+);
 
 const TextField = React.forwardRef<
   HTMLDivElement,

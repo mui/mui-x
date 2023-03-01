@@ -174,7 +174,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
 
   React.useEffect(() => {
     if (autoFocusSearchField) {
-      searchInputRef.current!.focus();
+      searchInputRef.current?.focus();
     } else if (firstSwitchRef.current && typeof firstSwitchRef.current.focus === 'function') {
       firstSwitchRef.current.focus();
     }
