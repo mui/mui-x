@@ -31,7 +31,7 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
-import CellSelectionGrid from '../cell-selection/CellSelectionGrid';
+import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 
 export const featuresSet = [
