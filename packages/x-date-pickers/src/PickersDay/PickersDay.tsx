@@ -251,6 +251,8 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
   const ownerState = {
