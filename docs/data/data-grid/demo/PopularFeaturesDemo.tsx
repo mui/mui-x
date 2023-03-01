@@ -35,7 +35,7 @@ import FullFeaturedDemo from './FullFeaturedDemo';
 import LazyLoadingGrid from '../row-updates/LazyLoadingGrid';
 import BasicGroupingDemo from '../column-groups/BasicGroupingDemo';
 import EditingWithDatePickers from '../recipes-editing/EditingWithDatePickers';
-import CellSelectionGrid from '../cell-selection/CellSelectionGrid';
+import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import AddNewColumnMenuGrid from '../column-menu/AddNewColumnMenuGrid';
 
 type Row = {
@@ -77,7 +77,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 4,
-    name: 'Lazy Loading',
+    name: 'Lazy loading',
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
@@ -94,7 +94,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 6,
-    name: 'Row Grouping',
+    name: 'Row grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
     detailPage: '/row-grouping/',
@@ -135,7 +135,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 11,
-    name: 'Row Pinning',
+    name: 'Row pinning',
     description: 'Pin your rows up or down',
     plan: 'Pro',
     detailPage: '/row-pinning/',
@@ -151,7 +151,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 13,
-    name: 'Column Visibility',
+    name: 'Column visibility',
     description:
       'Display different columns in different use cases by defining which columns are visible',
     plan: 'Community',
@@ -160,7 +160,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 14,
-    name: 'Column Virtualization',
+    name: 'Column virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
@@ -168,7 +168,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 15,
-    name: 'Row Virtualization',
+    name: 'Row virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
@@ -184,7 +184,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 17,
-    name: 'Cell Range Selection',
+    name: 'Cell Selection',
     description:
       'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
@@ -194,7 +194,7 @@ export const featuresSet: Row[] = [
   },
   {
     id: 18,
-    name: 'Column Menu',
+    name: 'Column menu',
     description: 'More customization and improved design on v6',
     plan: 'Community',
     detailPage: '/column-menu/',

@@ -63,7 +63,7 @@ export const featuresSet = [
   },
   {
     id: 4,
-    name: 'Lazy Loading',
+    name: 'Lazy loading',
     description: 'Easily paginate your rows and only fetch what you need',
     plan: 'Pro',
     detailPage: '/pagination/',
@@ -80,7 +80,7 @@ export const featuresSet = [
   },
   {
     id: 6,
-    name: 'Row Grouping',
+    name: 'Row grouping',
     description: 'Group rows with repeating column values',
     plan: 'Premium',
     detailPage: '/row-grouping/',
@@ -121,7 +121,7 @@ export const featuresSet = [
   },
   {
     id: 11,
-    name: 'Row Pinning',
+    name: 'Row pinning',
     description: 'Pin your rows up or down',
     plan: 'Pro',
     detailPage: '/row-pinning/',
@@ -137,7 +137,7 @@ export const featuresSet = [
   },
   {
     id: 13,
-    name: 'Column Visibility',
+    name: 'Column visibility',
     description:
       'Display different columns in different use cases by defining which columns are visible',
     plan: 'Community',
@@ -146,7 +146,7 @@ export const featuresSet = [
   },
   {
     id: 14,
-    name: 'Column Virtualization',
+    name: 'Column virtualization',
     description: 'High performance support for thousands of columns',
     plan: 'Community',
     detailPage: '/virtualization/#column-virtualization',
@@ -154,7 +154,7 @@ export const featuresSet = [
   },
   {
     id: 15,
-    name: 'Row Virtualization',
+    name: 'Row virtualization',
     description: 'High performance support for vast volume of data',
     plan: 'Pro',
     detailPage: '/virtualization/#row-virtualization',
@@ -170,7 +170,7 @@ export const featuresSet = [
   },
   {
     id: 17,
-    name: 'Cell selection',
+    name: 'Cell Selection',
     description:
       'Allow users to select individual and multiple cells with mouse dragging and/or keyboard (using shift key)',
     plan: 'Premium',
@@ -180,7 +180,7 @@ export const featuresSet = [
   },
   {
     id: 18,
-    name: 'Column Menu',
+    name: 'Column menu',
     description: 'More customization and improved design on v6',
     plan: 'Community',
     detailPage: '/column-menu/',
