@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import joySlots from '@mui/x-data-grid/joy';
+import { unstable_joySlots } from '@mui/x-data-grid/joy';
 
 import {
   extendTheme as extendJoyTheme,
@@ -114,7 +114,7 @@ export default function JoyUISlots() {
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGridPro
           pagination
-          slots={joySlots}
+          slots={unstable_joySlots}
           {...data}
           checkboxSelection
           disableRowSelectionOnClick
