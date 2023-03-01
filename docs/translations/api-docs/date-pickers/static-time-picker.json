@@ -36,7 +36,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "NextIconButton": "Button allowing to switch to the right view.",
