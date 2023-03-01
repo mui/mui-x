@@ -41,7 +41,7 @@ DateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true on desktop, false on mobile
+   * @default true
    */
   ampmInClock: PropTypes.bool,
   /**
