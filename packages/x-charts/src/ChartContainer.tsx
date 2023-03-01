@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { extent } from 'd3-array';
 
-import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
+import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
 import Surface from './internals/components/Surface';
 import { AxisConfig, Scales } from './models/axis';
 import { LayoutConfig } from './models/layout';
-import { AllSeriesType, CartesianSeriesType, ScatterSeriesType } from './models/seriesType';
+import { AllSeriesType, CartesianSeriesType } from './models/seriesType';
 import { CoordinateContext } from './context/CoordinateContext';
 import { SeriesContext } from './context/SeriesContext';
 import { getScale } from './hooks/useScale';
+import useChartDimensions from './hooks/useChartDimensions';
 
 const getXSeriesDomain = (series: CartesianSeriesType[]) => {
   // Work only for scatter plot now
@@ -115,26 +116,7 @@ export interface ChartContainerProps extends LayoutConfig {
 function ChartContainer(props: ChartContainerProps) {
   const { xAxis, yAxis, series, width, height, margin, children } = props;
 
-  const defaultizedMargin = {
-    ...DEFAULT_MARGINS,
-    ...margin,
-  };
-  const drawingArea = React.useMemo(
-    () => ({
-      left: defaultizedMargin.left,
-      top: defaultizedMargin.top,
-      width: Math.max(0, width - defaultizedMargin.left - defaultizedMargin.right),
-      height: Math.max(0, height - defaultizedMargin.top - defaultizedMargin.bottom),
-    }),
-    [
-      width,
-      height,
-      defaultizedMargin.top,
-      defaultizedMargin.bottom,
-      defaultizedMargin.left,
-      defaultizedMargin.right,
-    ],
-  );
+  const drawingArea = useChartDimensions(width, height, margin);
 
   const xAxisParams = React.useMemo(() => getAxisParams(xAxis ?? [], series, 'x'), [xAxis, series]);
   const yAxisParams = React.useMemo(() => getAxisParams(yAxis ?? [], series, 'y'), [yAxis, series]);

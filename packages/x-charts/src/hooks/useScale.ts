@@ -30,9 +30,3 @@ export function getScale(scaleType: Scales | undefined) {
       return scaleLinear();
   }
 }
-
-// function useScale(scaleType, domain, range) {
-//   return getScale(scaleType).domain(domain).range(range);
-// }
-
-// export default useScale;
