@@ -20,7 +20,7 @@ export interface ExportedTimeClockProps<TDate>
   ampm?: boolean;
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock?: boolean;
 }

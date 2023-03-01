@@ -32,10 +32,12 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
     seconds: renderTimeViewClock,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? false;
 
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
+    ampmInClock,
     viewRenderers,
     slots: {
       field: TimeField,
@@ -51,6 +53,7 @@ const MobileTimePicker = React.forwardRef(function MobileTimePicker<TDate>(
       }),
       toolbar: {
         hidden: false,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },

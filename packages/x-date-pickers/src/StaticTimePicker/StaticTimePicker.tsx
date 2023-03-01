@@ -23,6 +23,7 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
   );
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+  const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, TimeView, any, {}> = {
     hours: renderTimeViewClock,
@@ -36,10 +37,12 @@ const StaticTimePicker = React.forwardRef(function StaticTimePicker<TDate>(
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    ampmInClock,
     slotProps: {
       ...defaultizedProps.slotProps,
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
