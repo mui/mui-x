@@ -102,7 +102,7 @@ export default function JoyUISlots() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
-    maxColumns: 6,
+    maxColumns: 20,
     editable: true,
   });
 
