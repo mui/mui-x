@@ -8,7 +8,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 export default function DateRangePickerValue() {
   const [value, setValue] = React.useState<DateRange<Dayjs>>([
-    dayjs('2022-04-07'),
+    dayjs('2022-04-21'),
     dayjs('2022-04-10'),
   ]);
 
@@ -17,7 +17,7 @@ export default function DateRangePickerValue() {
       <DemoContainer components={['DateRangePicker', 'DateRangePicker']}>
         <DemoItem label="Uncontrolled picker" component="DateRangePicker">
           <DateRangePicker
-            defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            defaultValue={[dayjs('2022-04-21'), dayjs('2022-04-10')]}
           />
         </DemoItem>
         <DemoItem label="Controlled picker" component="DateRangePicker">

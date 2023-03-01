@@ -31,8 +31,8 @@ export default function LocalizationDayjs() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <DateField label="Date" defaultValue={dayjs('2022-04-07')} />
-        <TimeField label="Time" defaultValue={dayjs('2022-04-07T18:30')} />
+        <DateField label="Date" defaultValue={dayjs('2022-04-21')} />
+        <TimeField label="Time" defaultValue={dayjs('2022-04-21T18:30')} />
       </Stack>
     </LocalizationProvider>
   );

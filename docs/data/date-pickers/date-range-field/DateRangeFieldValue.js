@@ -8,7 +8,7 @@ import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDa
 
 export default function DateRangeFieldValue() {
   const [value, setValue] = React.useState(() => [
-    dayjs('2022-04-07'),
+    dayjs('2022-04-21'),
     dayjs('2022-04-13'),
   ]);
 
@@ -19,7 +19,7 @@ export default function DateRangeFieldValue() {
       >
         <SingleInputDateRangeField
           label="Uncontrolled field"
-          defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-13')]}
+          defaultValue={[dayjs('2022-04-21'), dayjs('2022-04-13')]}
         />
         <SingleInputDateRangeField
           label="Controlled field"

@@ -10,7 +10,7 @@ import { MultiInputTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputTime
 import { MultiInputDateTimeRangeField } from '@mui/x-date-pickers-pro/MultiInputDateTimeRangeField';
 import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
 
-const date1 = dayjs('2022-04-07T14:30:22');
+const date1 = dayjs('2022-04-21T14:30:22');
 const date2 = dayjs('2022-04-12T18:25:14');
 
 export default function DateRangeFieldExamples() {

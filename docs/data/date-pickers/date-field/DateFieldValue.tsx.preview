@@ -1,4 +1,4 @@
-<DateField label="Uncontrolled field" defaultValue={dayjs('2022-04-07')} />
+<DateField label="Uncontrolled field" defaultValue={dayjs('2022-04-21')} />
 <DateField
   label="Controlled field"
   value={value}
