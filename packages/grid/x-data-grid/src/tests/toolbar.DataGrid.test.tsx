@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import {
@@ -17,7 +17,7 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -46,7 +46,7 @@ describe('<DataGrid /> - Toolbar', () => {
   };
 
   describe('density selector', () => {
-    it('should increase grid density when selecting compact density', () => {
+    it('should increase grid density when selecting compact density', async () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -61,19 +61,19 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       fireEvent.click(getByText('Density'));
-      clock.tick(100);
       fireEvent.click(getByText('Compact'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+      await waitFor(() => {
+        expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+          maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        });
+        expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
+          maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+        });
       });
     });
 
-    it('should decrease grid density when selecting comfortable density', () => {
+    it('should decrease grid density when selecting comfortable density', async () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -90,12 +90,13 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('Comfortable'));
 
-      expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
-
-      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+      await waitFor(() => {
+        expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+          maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        });
+        expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
+          maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+        });
       });
     });
 
