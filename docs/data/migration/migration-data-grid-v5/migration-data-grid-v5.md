@@ -1,5 +1,7 @@
 # Migration from v5 to v6
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
 ## Start using the alpha release
@@ -29,7 +31,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
