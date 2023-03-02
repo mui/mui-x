@@ -6,14 +6,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function DateTimePickerValue() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07T15:30'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
         <DateTimePicker
           label="Uncontrolled picker"
-          defaultValue={dayjs('2022-04-07T15:30')}
+          defaultValue={dayjs('2022-04-17T15:30')}
         />
         <DateTimePicker
           label="Controlled picker"

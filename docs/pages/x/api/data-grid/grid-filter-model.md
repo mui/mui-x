@@ -2,6 +2,15 @@
 
 <p class="description">Model describing the filters to apply to the grid.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-grid)
+
+:::
+
 ## Import
 
 ```js

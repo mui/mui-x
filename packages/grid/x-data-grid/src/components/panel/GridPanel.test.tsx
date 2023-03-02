@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, describeConformance } from '@mui/monorepo/test/utils';
 import {
   GridPanel,
@@ -31,11 +30,12 @@ describe('<GridPanel />', () => {
   }
 
   describeConformance(<GridPanel disablePortal open />, () => ({
-    classes,
+    classes: classes as any,
     inheritComponent: Popper,
-    render: (node: React.ReactNode) => render(<Wrapper>{node}</Wrapper>),
+    muiName: 'MuiGridPanel',
+    render: (node: React.ReactElement) => render(<Wrapper>{node}</Wrapper>),
     wrapMount:
-      (baseMount: (node: React.ReactNode) => import('enzyme').ReactWrapper) =>
+      (baseMount: (node: React.ReactElement) => import('enzyme').ReactWrapper) =>
       (node: React.ReactNode) => {
         const wrapper = baseMount(
           <Wrapper>

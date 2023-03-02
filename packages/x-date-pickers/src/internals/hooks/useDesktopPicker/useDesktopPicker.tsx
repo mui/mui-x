@@ -10,7 +10,6 @@ import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicke
 import { useUtils } from '../useUtils';
 import { usePicker } from '../usePicker';
 import { LocalizationProvider } from '../../../LocalizationProvider';
-import { WrapperVariantContext } from '../../components/wrappers/WrapperVariantContext';
 import { BaseSingleInputFieldProps } from '../../models/fields';
 import { PickersLayout } from '../../../PickersLayout';
 import { InferError } from '../validation/useValidation';
@@ -161,28 +160,26 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="desktop">
-        <Field
-          {...fieldProps}
-          slots={slotsForField}
-          slotProps={slotProps}
-          inputRef={handleInputRef}
-        />
-        <PickersPopper
-          role="dialog"
-          placement="bottom-start"
-          anchorEl={containerRef.current}
-          {...actions}
-          open={open}
-          slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
-        >
-          <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </WrapperVariantContext.Provider>
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotProps}
+        inputRef={handleInputRef}
+      />
+      <PickersPopper
+        role="dialog"
+        placement="bottom-start"
+        anchorEl={containerRef.current}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+      >
+        <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </LocalizationProvider>
   );
 
