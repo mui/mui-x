@@ -69,16 +69,9 @@ export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
-  // TODO: Change default to be false on mobile, when `DateTimePickerToolbar` will support `ampm` buttons
-  // https://github.com/mui/mui-x/issues/7279
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true
-   */
-  ampmInClock?: boolean;
-  /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true
+   * @default true on desktop, false on mobile
    */
   ampmInClock?: boolean;
   /**

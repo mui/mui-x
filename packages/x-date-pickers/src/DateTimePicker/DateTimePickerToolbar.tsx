@@ -145,8 +145,8 @@ const DateTimePickerToolbarSeparator = styled(PickersToolbarText, {
 });
 
 // Taken from TimePickerToolbar
-const TimePickerToolbarAmPmSelection = styled('div', {
-  name: 'MuiTimePickerToolbar',
+const DateTimePickerToolbarAmPmSelection = styled('div', {
+  name: 'MuiDateTimePickerToolbar',
   slot: 'AmPmSelection',
   overridesResolver: (props, styles) => [
     { [`.${dateTimePickerToolbarClasses.ampmLabel}`]: styles.ampmLabel },
@@ -293,11 +293,13 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
           )}
         </DateTimePickerToolbarTimeDigitsContainer>
         {showAmPmControl && (
-          <TimePickerToolbarAmPmSelection className={classes.ampmSelection} ownerState={ownerState}>
+          <DateTimePickerToolbarAmPmSelection
+            className={classes.ampmSelection}
+            ownerState={ownerState}
+          >
             <PickersToolbarButton
               disableRipple
               variant="subtitle2"
-              data-mui-test="toolbar-am-btn"
               selected={meridiemMode === 'am'}
               typographyClassName={classes.ampmLabel}
               value={utils.getMeridiemText('am')}
@@ -307,14 +309,13 @@ function DateTimePickerToolbar<TDate extends unknown>(inProps: DateTimePickerToo
             <PickersToolbarButton
               disableRipple
               variant="subtitle2"
-              data-mui-test="toolbar-pm-btn"
               selected={meridiemMode === 'pm'}
               typographyClassName={classes.ampmLabel}
               value={utils.getMeridiemText('pm')}
               onClick={readOnly ? undefined : () => handleMeridiemChange('pm')}
               disabled={disabled}
             />
-          </TimePickerToolbarAmPmSelection>
+          </DateTimePickerToolbarAmPmSelection>
         )}
       </DateTimePickerToolbarTimeContainer>
     </DateTimePickerToolbarRoot>
