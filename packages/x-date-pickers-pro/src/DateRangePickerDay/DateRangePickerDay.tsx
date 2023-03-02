@@ -83,12 +83,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
       isHighlighting && 'rangeIntervalDayHighlight',
       isStartOfHighlighting && 'rangeIntervalDayHighlightStart',
       isEndOfHighlighting && 'rangeIntervalDayHighlightEnd',
-      outsideCurrentMonth && 'rangeIntervalOutsideCurrentMonth',
-      isStartOfMonth && 'rangeIntervalStartOfMonth',
-      isEndOfMonth && 'rangeIntervalEndOfMonth',
-      isFirstVisibleCell && 'rangeIntervalFirstVisibleCell',
-      isLastVisibleCell && 'rangeIntervalLastVisibleCell',
-      isHiddenDayFiller && 'rangeIntervalHiddenDayFiller',
+      outsideCurrentMonth && 'outsideCurrentMonth',
+      isStartOfMonth && 'startOfMonth',
+      isEndOfMonth && 'endOfMonth',
+      isFirstVisibleCell && 'firstVisibleCell',
+      isLastVisibleCell && 'lastVisibleCell',
+      isHiddenDayFiller && 'hiddenDayFiller',
     ],
     rangeIntervalPreview: [
       'rangeIntervalPreview',
@@ -134,16 +134,22 @@ const DateRangePickerDayRoot = styled('div', {
         styles.rangeIntervalDayHighlightEnd,
     },
     {
-      [`&.${dateRangePickerDayClasses.rangeIntervalFirstVisibleCell}`]:
-        styles.rangeIntervalFirstVisibleCell,
+      [`&.${dateRangePickerDayClasses.firstVisibleCell}`]: styles.firstVisibleCell,
     },
     {
-      [`&.${dateRangePickerDayClasses.rangeIntervalLastVisibleCell}`]:
-        styles.rangeIntervalLastVisibleCell,
+      [`&.${dateRangePickerDayClasses.lastVisibleCell}`]: styles.lastVisibleCell,
     },
     {
-      [`&.${dateRangePickerDayClasses.rangeIntervalHiddenDayFiller}`]:
-        styles.rangeIntervalHiddenDayFiller,
+      [`&.${dateRangePickerDayClasses.startOfMonth}`]: styles.startOfMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.endOfMonth}`]: styles.endOfMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.outsideCurrentMonth}`]: styles.outsideCurrentMonth,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.hiddenDayFiller}`]: styles.hiddenDayFiller,
     },
     styles.root,
   ],
@@ -252,11 +258,10 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      [`&.${dateRangePickerDayClasses.rangeIntervalOutsideCurrentMonth} .${dateRangePickerDayClasses.day}`]:
-        {
-          color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.1)),
-        },
-      [`&:not(.${dateRangePickerDayClasses.rangeIntervalOutsideCurrentMonth}) .${dateRangePickerDayClasses.day}`]:
+      [`&.${dateRangePickerDayClasses.outsideCurrentMonth} .${dateRangePickerDayClasses.day}`]: {
+        color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.1)),
+      },
+      [`&:not(.${dateRangePickerDayClasses.outsideCurrentMonth}) .${dateRangePickerDayClasses.day}`]:
         {
           color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
         },

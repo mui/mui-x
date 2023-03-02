@@ -21,17 +21,17 @@ export interface DateRangePickerDayClasses {
   /** Styles applied to the root element if `isEndOfPreviewing=true`. */
   rangeIntervalDayPreviewEnd: string;
   /** Styles applied to the root element if `outsideCurrentMonth=true` */
-  rangeIntervalOutsideCurrentMonth: string;
+  outsideCurrentMonth: string;
   /** Styles applied to the root element if `day` is the start of the month. */
-  rangeIntervalStartOfMonth: string;
+  startOfMonth: string;
   /** Styles applied to the root element if `day` is the end of the month. */
-  rangeIntervalEndOfMonth: string;
+  endOfMonth: string;
   /** Styles applied to the root element if `day` is the first visible cell of the month. */
-  rangeIntervalFirstVisibleCell: string;
+  firstVisibleCell: string;
   /** Styles applied to the root element if `day` is the last visible cell of the month. */
-  rangeIntervalLastVisibleCell: string;
+  lastVisibleCell: string;
   /** Styles applied to the root element if it is an empty cell used to fill the week. */
-  rangeIntervalHiddenDayFiller: string;
+  hiddenDayFiller: string;
   /** Styles applied to the day element. */
   day: string;
   /** Styles applied to the day element if `isHighlighting=false`. */
@@ -59,12 +59,12 @@ export const dateRangePickerDayClasses: DateRangePickerDayClasses = generateUtil
     'rangeIntervalDayPreview',
     'rangeIntervalDayPreviewStart',
     'rangeIntervalDayPreviewEnd',
-    'rangeIntervalOutsideCurrentMonth',
-    'rangeIntervalStartOfMonth',
-    'rangeIntervalEndOfMonth',
-    'rangeIntervalFirstVisibleCell',
-    'rangeIntervalLastVisibleCell',
-    'rangeIntervalHiddenDayFiller',
+    'outsideCurrentMonth',
+    'startOfMonth',
+    'endOfMonth',
+    'firstVisibleCell',
+    'lastVisibleCell',
+    'hiddenDayFiller',
     'day',
     'dayOutsideRangeInterval',
     'dayInsideRangeInterval',
