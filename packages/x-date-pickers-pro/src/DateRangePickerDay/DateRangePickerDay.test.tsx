@@ -21,6 +21,8 @@ describe('<DateRangePickerDay />', () => {
       isEndOfPreviewing
       isStartOfHighlighting
       isEndOfHighlighting
+      isFirstVisibleCell
+      isLastVisibleCell={false}
     />,
     () => ({
       classes,
