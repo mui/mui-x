@@ -413,7 +413,7 @@ PickersDayRaw.propTypes = {
   isAnimating: PropTypes.bool,
   /**
    * If `true`, day is the first visible cell of the month.
-   * Either first day of month or first day of the week depending on `showDaysOutsideCurrentMonth`.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isFirstVisibleCell: PropTypes.bool.isRequired,
   /**

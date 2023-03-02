@@ -14,7 +14,7 @@
     "focusVisibleClassName": "This prop can help identify which element has keyboard focus. The class name will be applied when the element gains the focus through keyboard interaction. It&#39;s a polyfill for the <a href=\"https://drafts.csswg.org/selectors-4/#the-focus-visible-pseudo\">CSS :focus-visible selector</a>. The rationale for using this feature <a href=\"https://github.com/WICG/focus-visible/blob/HEAD/explainer.md\">is explained here</a>. A <a href=\"https://github.com/WICG/focus-visible\">polyfill can be used</a> to apply a <code>focus-visible</code> class to other components if needed.",
     "isEndOfHighlighting": "Set to <code>true</code> if the <code>day</code> is the end of a highlighted date range.",
     "isEndOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range.",
-    "isFirstVisibleCell": "If <code>true</code>, day is the first visible cell of the month. Either first day of month or first day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
+    "isFirstVisibleCell": "If <code>true</code>, day is the first visible cell of the month. Either the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isHighlighting": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range.",
     "isLastVisibleCell": "If <code>true</code>, day is the last visible cell of the month. Either last day of month or last day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isPreviewing": "Set to <code>true</code> if the <code>day</code> is in a preview date range.",
@@ -92,7 +92,7 @@
     "rangeIntervalHiddenDayFiller": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
-      "conditions": "itis an empty cell used to fill the week"
+      "conditions": "it is an empty cell used to fill the week"
     },
     "day": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the day element" },
     "dayOutsideRangeInterval": {
