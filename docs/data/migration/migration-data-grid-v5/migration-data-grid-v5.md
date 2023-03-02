@@ -258,7 +258,7 @@ To know more about the supported events and their signatures, check the [events 
 :::warning
 Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
-- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
 - If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
   :::
 
