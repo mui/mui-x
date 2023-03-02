@@ -1,8 +1,11 @@
 import * as React from 'react';
 import MUIMenuItem from '@mui/material/MenuItem';
+import type { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 
-// TODO: type props as soon as we type slotProps
-export default function MUISelectOption({ native, ...props }: any) {
+export default function MUISelectOption({
+  native,
+  ...props
+}: NonNullable<GridSlotsComponentsProps['baseSelectOption']>) {
   if (native) {
     return <option {...props} />;
   }
