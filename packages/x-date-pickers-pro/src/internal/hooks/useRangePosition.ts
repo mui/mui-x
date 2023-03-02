@@ -40,7 +40,9 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
     default: props.defaultRangePosition ?? 'start',
   });
 
-  const syncRangePositionWithField = (newRangePosition: 'start' | 'end') => {
+  // When using a single input field,
+  // we want to select the 1st section of the edited date when updating the range position.
+  const syncRangePositionWithSingleInputField = (newRangePosition: RangePosition) => {
     if (singleInputFieldRef.current == null) {
       return;
     }
@@ -59,7 +61,7 @@ export const useRangePosition = (props: UseRangePositionProps): UseRangePosition
   const handleRangePositionChange = useEventCallback((newRangePosition: RangePosition) => {
     setRangePosition(newRangePosition);
     props.onRangePositionChange?.(newRangePosition);
-    syncRangePositionWithField(newRangePosition);
+    syncRangePositionWithSingleInputField(newRangePosition);
   });
 
   return { rangePosition, onRangePositionChange: handleRangePositionChange, singleInputFieldRef };
