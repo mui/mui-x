@@ -47,7 +47,7 @@ export interface PanelPropsOverrides {}
 export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
-type SlotProps<Props, Overrides> = Partial<Props> & Overrides;
+type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
 
 /**
  * Overrideable components props dynamically passed to the component at rendering.
