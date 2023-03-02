@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/monorepo/test/utils';
 import {
   DataGridPro,
   DataGridProProps,
@@ -22,7 +22,7 @@ const rows: GridRowsProp = [{ id: 1 }];
 const columns: GridColDef[] = [{ field: 'id' }, { field: 'idBis' }];
 
 describe('<DataGridPro /> - Columns Visibility', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -120,7 +120,7 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     });
   });
 
-  it('should not hide column when resizing a column after hiding it and showing it again', () => {
+  it('should not hide column when resizing a column after hiding it and showing it again', async () => {
     const { getByText } = render(
       <TestDataGridPro
         initialState={{
@@ -131,15 +131,19 @@ describe('<DataGridPro /> - Columns Visibility', () => {
     );
 
     fireEvent.click(getByText('Hide all'));
-    expect(getColumnHeadersTextContent()).to.deep.equal([]);
+    await waitFor(() => expect(getColumnHeadersTextContent()).to.deep.equal([]));
     fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]')!);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    await waitFor(() => expect(getColumnHeadersTextContent()).to.deep.equal(['id']));
 
     const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
-    fireEvent.mouseDown(separator, { clientX: 100 });
-    fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
-    fireEvent.mouseUp(separator);
+    act(() => {
+      fireEvent.mouseDown(separator, { clientX: 100 });
+      fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
+      fireEvent.mouseUp(separator);
+    });
 
-    expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    await waitFor(() => {
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
+    });
   });
 });
