@@ -189,7 +189,11 @@ export const useFieldState = <
     return addPositionPropertiesToSections<TSection>(newSections);
   };
 
-  const clearValue = () =>
+  const clearValue = () => {
+    if (valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue)) {
+      return;
+    }
+
     publishValue(
       {
         value: valueManager.emptyValue,
@@ -197,6 +201,7 @@ export const useFieldState = <
       },
       null,
     );
+  };
 
   const clearActiveSection = () => {
     if (selectedSectionIndexes == null) {
@@ -224,7 +229,7 @@ export const useFieldState = <
     });
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
-    const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date('Invalid date'));
+    const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date(''));
     const newValue = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
 
     publishValue(newValue, newSections);

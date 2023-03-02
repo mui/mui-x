@@ -8,7 +8,7 @@ describe('<DateTimeField /> - TimeZone', () => {
     const { render, adapter } = createPickerRenderer({ clock: 'fake', adapterName: 'luxon' });
     it('should update the field when time zone changes (timestamp remains the same)', () => {
       const { setProps } = render(<DateTimeField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
 
       const date = adapter.date(new Date('2020-06-18T14:30:10.000Z')).setZone('UTC');
       setProps({ value: date });

@@ -26,7 +26,7 @@ describe('<DatePicker />', () => {
   describe('rendering', () => {
     it('should handle controlled `onChange` in desktop mode', () => {
       render(<DatePicker />);
-      const input: HTMLInputElement = screen.getByRole('textbox');
+      const input: HTMLInputElement = screen.getByRole<HTMLInputElement>('textbox');
 
       fireEvent.change(input, { target: { value: '02/22/2022' } });
       expectInputValue(input, '02 / 22 / 2022');

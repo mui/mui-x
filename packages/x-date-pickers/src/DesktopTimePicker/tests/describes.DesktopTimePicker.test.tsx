@@ -72,7 +72,7 @@ describe('<DesktopTimePicker /> - Describes', () => {
         throw new Error("Can't test UI views on DesktopTimePicker");
       }
 
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 

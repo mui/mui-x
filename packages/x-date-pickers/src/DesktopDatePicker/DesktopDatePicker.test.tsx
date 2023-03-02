@@ -66,7 +66,7 @@ describe('<DesktopDatePicker />', () => {
     const handleChange = spy();
 
     render(<DesktopDatePicker onChange={handleChange} />);
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
 
     fireEvent.change(input, {
       target: {

@@ -19,7 +19,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
               defaultValue={[adapter.date(), adapter.addYears(adapter.date(), 1)]}
             />,
           );
-          const input = screen.getByRole('textbox');
+          const input = screen.getByRole<HTMLInputElement>('textbox');
           clickOnInput(input, 1);
 
           // Select all sections
@@ -31,7 +31,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
 
         it('should clear all the sections when all sections are selected and not all sections are completed', () => {
           render(<SingleInputDateRangeField format={adapter.formats.monthAndYear} />);
-          const input = screen.getByRole('textbox');
+          const input = screen.getByRole<HTMLInputElement>('textbox');
           clickOnInput(input, 1);
 
           // Set a value for the "month" section
@@ -47,6 +47,27 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
           expectInputValue(input, 'MMMM YYYY – MMMM YYYY');
         });
 
+        it('should not call `onChange` when clearing all sections and both dates are already empty', () => {
+          const handleChange = spy();
+
+          render(
+            <SingleInputDateRangeField
+              format={adapter.formats.monthAndYear}
+              defaultValue={[null, null]}
+              onChange={handleChange}
+            />,
+          );
+
+          const input = screen.getByRole<HTMLInputElement>('textbox');
+          clickOnInput(input, 1);
+
+          // Select all sections
+          userEvent.keyPress(input, { key: 'a', ctrlKey: true });
+
+          userEvent.keyPress(input, { key: keyToClearValue });
+          expect(handleChange.callCount).to.equal(0);
+        });
+
         it('should call `onChange` when clearing the each section of each date', () => {
           const handleChange = spy();
 
@@ -58,7 +79,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
             />,
           );
 
-          const input = screen.getByRole('textbox');
+          const input = screen.getByRole<HTMLInputElement>('textbox');
           selectSection(input, 0);
 
           // Start date
@@ -94,7 +115,7 @@ describe('<SingleInputDateRangeField /> - Editing', () => {
             />,
           );
 
-          const input = screen.getByRole('textbox');
+          const input = screen.getByRole<HTMLInputElement>('textbox');
           selectSection(input, 0);
 
           userEvent.keyPress(input, { key: keyToClearValue });

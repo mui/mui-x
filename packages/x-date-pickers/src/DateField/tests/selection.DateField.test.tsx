@@ -35,7 +35,7 @@ describe('<DateField /> - Selection', () => {
   describe('Focus', () => {
     it('should select all on mount focus (`autoFocus = true`)', () => {
       render(<DateField autoFocus />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
 
       expectInputValue(input, 'MM / DD / YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
@@ -43,7 +43,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select all on mount focus (`autoFocus = true`) with start separator', () => {
       render(<DateField autoFocus format={`- ${adapterToUse.formats.year}`} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
 
       expectInputValue(input, '- YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
@@ -51,7 +51,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select all on <Tab> focus', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
@@ -64,7 +64,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select all on <Tab> focus with start separator', () => {
       render(<DateField format={`- ${adapterToUse.formats.year}`} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
@@ -77,7 +77,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select day on mobile', () => {
       render(<DateField />);
-      const input: HTMLInputElement = screen.getByRole('textbox');
+      const input: HTMLInputElement = screen.getByRole<HTMLInputElement>('textbox');
       // Simulate a touch focus interaction on mobile
       act(() => {
         input.focus();
@@ -92,7 +92,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select day on desktop', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'DD');
 
       expectInputValue(input, 'MM / DD / YYYY');
@@ -103,7 +103,7 @@ describe('<DateField /> - Selection', () => {
   describe('Click', () => {
     it('should select the clicked selection when the input is already focused', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
 
@@ -113,7 +113,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should not change the selection when clicking on the only already selected section', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
 
@@ -125,7 +125,7 @@ describe('<DateField /> - Selection', () => {
   describe('key: Ctrl + A', () => {
     it('should select all sections', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1);
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
@@ -134,7 +134,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select all sections with start separator', () => {
       render(<DateField format={`- ${adapterToUse.formats.year}`} />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1);
 
       userEvent.keyPress(input, { key: 'a', ctrlKey: true });
@@ -145,7 +145,7 @@ describe('<DateField /> - Selection', () => {
   describe('key: ArrowRight', () => {
     it('should move selection to the next section when one section is selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -154,7 +154,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should stay on the current section when the last section is selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
       userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -163,7 +163,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select the last section when all the sections are selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1);
 
       // Select all sections
@@ -178,7 +178,7 @@ describe('<DateField /> - Selection', () => {
   describe('key: ArrowLeft', () => {
     it('should move selection to the previous section when one section is selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -187,7 +187,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should stay on the current section when the first section is selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1);
       expect(getCleanedSelectedContent(input)).to.equal('MM');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -196,7 +196,7 @@ describe('<DateField /> - Selection', () => {
 
     it('should select the first section when all the sections are selected', () => {
       render(<DateField />);
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, 1);
 
       // Select all sections

@@ -42,7 +42,7 @@ describe('<DesktopDatePicker /> - Describes', () => {
           screen.getByRole('gridcell', { name: adapterToUse.getDate(newValue) }),
         );
       } else {
-        const input = screen.getByRole('textbox');
+        const input = screen.getByRole<HTMLInputElement>('textbox');
         clickOnInput(input, 10); // Update the day
         userEvent.keyPress(input, { key: 'ArrowUp' });
       }

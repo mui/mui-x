@@ -11,7 +11,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const { setProps } = render(
       <DateField format={`${startChar}Escaped${endChar} ${adapter.formats.year}`} />,
     );
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     expectInputValue(input, 'Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
@@ -26,7 +26,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     expectInputValue(input, 'MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
@@ -47,7 +47,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     expectInputValue(input, 'MMMM Escaped [ YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
@@ -63,7 +63,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     expectInputValue(input, 'Escaped MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });

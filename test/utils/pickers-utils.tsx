@@ -395,7 +395,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
       throw new Error(
@@ -413,7 +413,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole<HTMLInputElement>('textbox');
     clickOnInput(input, cursorPosition);
 
     keyStrokes.forEach((keyStroke) => {
