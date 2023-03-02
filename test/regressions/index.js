@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@mui/x-license-pro';
 import TestViewer from 'test/regressions/TestViewer';
@@ -169,5 +169,5 @@ function App() {
 }
 
 const container = document.getElementById('react-root');
-const root = createRoot(container);
+const root = ReactDOM.createRoot(container);
 root.render(<App />);
