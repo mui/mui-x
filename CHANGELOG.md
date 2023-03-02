@@ -1518,7 +1518,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
   The renamed props are the following:
 
   | Old name                   | New name                      |
-  | -------------------------- | ----------------------------- |
+  | :------------------------- | :---------------------------- |
   | `selectionModel`           | `rowSelectionModel`           |
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
@@ -2105,7 +2105,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   You can now use the `localText` prop available on all picker components:
 
   | Removed prop                 | Property in the new `localText` prop                                              |
-  | ---------------------------- | --------------------------------------------------------------------------------- |
+  | :--------------------------- | :-------------------------------------------------------------------------------- |
   | `endText`                    | `end`                                                                             |
   | `getClockLabelText`          | `clockLabelText`                                                                  |
   | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -4190,7 +4190,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
   Here are the new names and the modifications needed to get the same information with the new selectors.
 
   | Old name                        | New name                                  |
-  | ------------------------------- | ----------------------------------------- |
+  | :------------------------------ | :---------------------------------------- |
   | `allGridColumnsFieldsSelector`  | `gridColumnFieldsSelector`                |
   | `allGridColumnsSelector`        | `gridColumnDefinitionsSelector`           |
   | `visibleGridColumnsSelector`    | `gridVisibleColumnDefinitionsSelector`    |

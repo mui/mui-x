@@ -2,6 +2,8 @@
 
 <p class="description">The data grid has built-in support for cell and row editing.</p>
 
+## New test section
+
 ## Making a column editable
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/):

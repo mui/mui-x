@@ -326,6 +326,7 @@ SingleInputDateTimeRangeField.propTypes = {
       current: PropTypes.shape({
         getActiveSectionIndex: PropTypes.func.isRequired,
         getSections: PropTypes.func.isRequired,
+        setSelectedSections: PropTypes.func.isRequired,
       }),
     }),
   ]),

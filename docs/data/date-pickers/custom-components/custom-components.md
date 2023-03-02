@@ -13,6 +13,8 @@ The components that can be customized are listed under `slots` section in Date a
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
 
+## New test section
+
 ## Overriding components
 
 You can override the internal elements of the component (known as "slots") using the `slots` prop.

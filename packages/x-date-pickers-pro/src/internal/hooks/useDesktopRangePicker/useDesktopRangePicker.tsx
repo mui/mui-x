@@ -11,7 +11,6 @@ import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  WrapperVariantContext,
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
@@ -158,29 +157,27 @@ export const useDesktopRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="desktop">
-        <Field {...enrichedFieldProps} />
-        <PickersPopper
-          role="tooltip"
-          containerRef={popperRef}
-          anchorEl={fieldContainerRef.current}
-          onBlur={handleBlur}
-          {...actions}
-          open={open}
+      <Field {...enrichedFieldProps} />
+      <PickersPopper
+        role="tooltip"
+        containerRef={popperRef}
+        anchorEl={fieldContainerRef.current}
+        onBlur={handleBlur}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+      >
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
           slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
+          slotProps={slotPropsForLayout}
         >
-          <Layout
-            {...layoutProps}
-            {...slotProps?.layout}
-            slots={slots}
-            slotProps={slotPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </WrapperVariantContext.Provider>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </LocalizationProvider>
   );
 

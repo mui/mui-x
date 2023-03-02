@@ -94,8 +94,10 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   adapterName?: AdapterName;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
@@ -159,7 +161,7 @@ export type OpenPickerParams =
 export const openPicker = (params: OpenPickerParams) => {
   if (params.type === 'date-range') {
     if (params.isSingleInput) {
-      const target = screen.getByRole('textbox');
+      const target = screen.getByRole<HTMLInputElement>('textbox');
       userEvent.mousePress(target);
       const cursorPosition = params.initialFocus === 'start' ? 0 : target.value.length - 1;
 
@@ -306,7 +308,7 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
@@ -354,6 +356,8 @@ export interface BuildFieldInteractionsResponse<P extends {}> {
     },
   ) => void;
 }
+
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
 
 export const buildFieldInteractions = <P extends {}>({
   clock,
@@ -406,7 +410,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
       throw new Error(
@@ -424,7 +428,7 @@ export const buildFieldInteractions = <P extends {}>({
     ...props
   }) => {
     render(<Component {...(props as any as P)} />);
-    const input = screen.getByRole('textbox');
+    const input = getTextbox();
     clickOnInput(input, cursorPosition);
 
     keyStrokes.forEach((keyStroke) => {

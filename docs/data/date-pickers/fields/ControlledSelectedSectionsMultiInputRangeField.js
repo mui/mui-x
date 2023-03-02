@@ -41,11 +41,7 @@ export default function ControlledSelectedSectionsMultiInputRangeField() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={2}>
-        <Stack
-          direction={{ xs: 'column', l: 'row' }}
-          spacing={2}
-          justifyContent="space-between"
-        >
+        <Stack spacing={2} justifyContent="space-between">
           {renderDateHeader('start')}
           {renderDateHeader('end')}
         </Stack>

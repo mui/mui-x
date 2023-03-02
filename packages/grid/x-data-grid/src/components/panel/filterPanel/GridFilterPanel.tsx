@@ -27,9 +27,9 @@ export interface GridFilterPanelProps
   /**
    * Function that returns the next filter item to be picked as default filter.
    * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
-   * @returns {GridColDef['field']} The field to be used for the next filter.
+   * @returns {GridColDef['field']} The field to be used for the next filter or `null` to prevent adding a filter.
    */
-  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'];
+  getColumnForNewFilter?: (args: GetColumnForNewFilterArgs) => GridColDef['field'] | null;
   /**
    * Props passed to each filter form.
    */
@@ -41,6 +41,7 @@ export interface GridFilterPanelProps
     | 'operatorInputProps'
     | 'columnInputProps'
     | 'valueInputProps'
+    | 'filterColumns'
   >;
 
   /*
@@ -108,6 +109,10 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
           columns: filterableColumns,
         });
 
+        if (nextFieldName === null) {
+          return null;
+        }
+
         nextColumnWithOperator = filterableColumns.find(({ field }) => field === nextFieldName);
       } else {
         nextColumnWithOperator = filterableColumns.find((colDef) => colDef.filterOperators?.length);
@@ -134,6 +139,10 @@ const GridFilterPanel = React.forwardRef<HTMLDivElement, GridFilterPanelProps>(
         currentFilters: currentFilters as GridFilterItem[],
         columns: filterableColumns,
       });
+
+      if (nextColumnFieldName === null) {
+        return null;
+      }
 
       const nextColumnWithOperator = filterableColumns.find(
         ({ field }) => field === nextColumnFieldName,
@@ -277,6 +286,7 @@ GridFilterPanel.propTypes = {
     columnInputProps: PropTypes.any,
     columnsSort: PropTypes.oneOf(['asc', 'desc']),
     deleteIconProps: PropTypes.any,
+    filterColumns: PropTypes.func,
     logicOperatorInputProps: PropTypes.any,
     operatorInputProps: PropTypes.any,
     valueInputProps: PropTypes.any,
@@ -284,7 +294,7 @@ GridFilterPanel.propTypes = {
   /**
    * Function that returns the next filter item to be picked as default filter.
    * @param {GetColumnForNewFilterArgs} args Currently configured filters and columns.
-   * @returns {GridColDef['field']} The field to be used for the next filter.
+   * @returns {GridColDef['field']} The field to be used for the next filter or `null` to prevent adding a filter.
    */
   getColumnForNewFilter: PropTypes.func,
   /**

@@ -1781,8 +1781,8 @@
     react-transition-group "^4.4.5"
 
 "@mui/monorepo@https://github.com/mui/material-ui.git#master":
-  version "5.11.8"
-  resolved "https://github.com/mui/material-ui.git#f800c835562da9cc8fa3f7615b32a8e6cc8b31d8"
+  version "5.11.11"
+  resolved "https://github.com/mui/material-ui.git#3ca7a1b042038448ab6a3f69fe4cb3c1532e93b6"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
@@ -2963,6 +2963,13 @@
   integrity sha512-HzOyJb+wFmyEhyfp4D4NYrumi+LQgQL/68HvJO+q6XtuHSDvw6Aqov7sCAhjbNq3bUPgPqbdvjXC5HeB2oEAPg==
   dependencies:
     "@types/history" "*"
+    "@types/react" "*"
+
+"@types/react-test-renderer@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-test-renderer/-/react-test-renderer-18.0.0.tgz#7b7f69ca98821ea5501b21ba24ea7b6139da2243"
+  integrity sha512-C7/5FBJ3g3sqUahguGi03O79b8afNeSD6T8/GU50oQrJCU0bVCCGQHaGKUbg2Ce8VQEEqTw8/HiS6lXHHdgkdQ==
+  dependencies:
     "@types/react" "*"
 
 "@types/react-transition-group@^4.2.0", "@types/react-transition-group@^4.4.5":

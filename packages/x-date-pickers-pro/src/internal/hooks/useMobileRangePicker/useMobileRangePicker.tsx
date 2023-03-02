@@ -9,7 +9,6 @@ import {
 import {
   DateOrTimeView,
   usePicker,
-  WrapperVariantContext,
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
@@ -171,19 +170,17 @@ export const useMobileRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="mobile">
-        <Field {...enrichedFieldProps} />
-        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-          <Layout
-            {...layoutProps}
-            {...slotProps?.layout}
-            slots={slots}
-            slotProps={slotPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </WrapperVariantContext.Provider>
+      <Field {...enrichedFieldProps} />
+      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotPropsForLayout}
+        >
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </LocalizationProvider>
   );
 
