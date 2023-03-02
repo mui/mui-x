@@ -25,7 +25,7 @@ export default function CustomInputs() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateRangePicker
-        defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+        defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
         slots={{
           textField: BrowserInput,
         }}

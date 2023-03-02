@@ -10,7 +10,6 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridLoadIcon } from '../icons/index';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = DataGridProcessedProps;
@@ -133,7 +132,7 @@ const GridEditInputCell = React.forwardRef<HTMLInputElement, GridEditInputCellPr
         type={colDef.type === 'number' ? colDef.type : 'text'}
         value={valueState ?? ''}
         onChange={handleChange}
-        endAdornment={isProcessingProps ? <GridLoadIcon /> : undefined}
+        endAdornment={isProcessingProps ? <rootProps.slots.loadIcon /> : undefined}
         {...other}
       />
     );

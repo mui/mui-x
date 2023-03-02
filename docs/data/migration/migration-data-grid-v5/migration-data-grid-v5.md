@@ -270,6 +270,17 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the `Row` slot anymore.
+  Use the `focusedCell` and `tabbableCell` props instead.
+  For the editing state, use the API methods.
+  ```diff
+   const CustomRow = (props) => {
+  -  const focusedField = props.cellFocus.field;
+  +  const focusedField = props.focusedCell;
+  -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
+   }
+  ```
 
 ### Pagination
 
@@ -377,6 +388,15 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   -  experimentalFeatures={{ newEditingApi: true }}
    />
   ```
+- ✅ The aggregation and row pinning are no longer experimental features. The flags `experimentalFeatures.aggregation` and `experimentalFeatures.rowPinning` can be removed now.
+  ```diff
+   <DataGridPremium
+  -  experimentalFeatures={{
+  -   aggregation: true,
+  -   rowPinning: true,
+  -  }}
+   />
+  ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
 - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
 - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
@@ -439,12 +459,6 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
-
-<!--
-### Virtualization
-
-TBD
--->
 
 ### Removals from the public API
 

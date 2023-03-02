@@ -86,7 +86,7 @@ adapterToTest.forEach((adapterName) => {
       cursorPosition?: number;
     }) => {
       render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
+      const input = screen.getByRole<HTMLInputElement>('textbox');
       clickOnInput(input, cursorPosition);
       userEvent.keyPress(input, { key });
 

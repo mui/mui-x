@@ -30,7 +30,7 @@ export default function DisableMultiFiltersDataGridPro() {
         (colDef) => colDef.filterable && !filteredFields.includes(colDef.field),
       )
       .find((colDef) => colDef.filterOperators?.length);
-    return columnForNewFilter?.field;
+    return columnForNewFilter?.field ?? null;
   };
 
   return (

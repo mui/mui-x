@@ -2,6 +2,15 @@
 
 <p class="description">The options to apply on the Excel export.</p>
 
+## Demos
+
+:::info
+For examples and details on the usage, check the following pages:
+
+- [Excel export](/x/react-data-grid/export/#excel-export)
+
+:::
+
 ## Import
 
 ```js

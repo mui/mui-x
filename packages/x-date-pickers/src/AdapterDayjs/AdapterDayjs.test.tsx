@@ -83,7 +83,7 @@ describe('<AdapterDayjs />', () => {
 
     it('should not create UTC dates when no instance passed', () => {
       const onChange = spy();
-      render(<DateCalendar defaultValue={dayjs('2022-04-10')} onChange={onChange} />);
+      render(<DateCalendar defaultValue={dayjs('2022-04-17')} onChange={onChange} />);
 
       userEvent.mousePress(screen.getByRole('gridcell', { name: '1' }));
 
@@ -96,7 +96,7 @@ describe('<AdapterDayjs />', () => {
       const onChange = spy();
       render(
         <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
-          <DateCalendar defaultValue={dayjs.utc('2022-04-10')} onChange={onChange} />
+          <DateCalendar defaultValue={dayjs.utc('2022-04-17')} onChange={onChange} />
         </LocalizationProvider>,
       );
 
@@ -116,7 +116,7 @@ describe('<AdapterDayjs />', () => {
       const { executeDateDrag } = buildPickerDragInteractions(() => dataTransfer);
 
       const onChange = spy();
-      const initialValue: [any, any] = [dayjs.utc('2022-04-10'), dayjs.utc('2022-04-12')];
+      const initialValue: [any, any] = [dayjs.utc('2022-04-17'), dayjs.utc('2022-04-21')];
       render(
         <LocalizationProvider dateAdapter={AdapterDayjs} dateLibInstance={dayjs.utc}>
           <DateRangeCalendar onChange={onChange} defaultValue={initialValue} calendars={1} />
@@ -124,9 +124,9 @@ describe('<AdapterDayjs />', () => {
       );
 
       executeDateDrag(
-        screen.getByRole('gridcell', { name: '12', selected: true }),
-        screen.getByRole('gridcell', { name: '13' }),
-        screen.getByRole('gridcell', { name: '14' }),
+        screen.getByRole('gridcell', { name: '21', selected: true }),
+        screen.getByRole('gridcell', { name: '22' }),
+        screen.getByRole('gridcell', { name: '23' }),
       );
 
       expect(onChange.callCount).to.equal(1);

@@ -7,12 +7,9 @@ function App() {
   return (
     <React.Fragment>
       <DataGrid />
-      <DataGridPro experimentalFeatures={{
-        rowPinning: true,
-      }} />
+      <DataGridPro />
       <DataGridPremium
         experimentalFeatures={{
-          rowPinning: true,
           columnGrouping: true,
         }} />
     </React.Fragment>
