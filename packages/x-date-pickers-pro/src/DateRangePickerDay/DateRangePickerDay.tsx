@@ -258,11 +258,9 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      [`&.${pickersDayClasses.dayOutsideMonth}.${dateRangePickerDayClasses.day}`]: {
+      color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+      [`&.${pickersDayClasses.dayOutsideMonth}`]: {
         color: alpha(theme.palette.getContrastText(theme.palette.primary.light), 0.6),
-      },
-      [`&:not(.${pickersDayClasses.dayOutsideMonth}).${dateRangePickerDayClasses.day}`]: {
-        color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
       },
     }),
   ...(ownerState.draggable && {
