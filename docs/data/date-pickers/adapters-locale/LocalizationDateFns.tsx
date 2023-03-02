@@ -35,8 +35,8 @@ export default function LocalizationDateFns() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <DateField label="Date" defaultValue={new Date('2022-04-21')} />
-        <TimeField label="Time" defaultValue={new Date('2022-04-21T18:30')} />
+        <DateField label="Date" defaultValue={new Date('2022-04-17')} />
+        <TimeField label="Time" defaultValue={new Date('2022-04-17T18:30')} />
       </Stack>
     </LocalizationProvider>
   );

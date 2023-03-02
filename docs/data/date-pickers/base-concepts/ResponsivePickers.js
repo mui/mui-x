@@ -14,13 +14,13 @@ export default function ResponsivePickers() {
         components={['DatePicker', 'DesktopDatePicker', 'MobileDatePicker']}
       >
         <DemoItem label="Responsive variant">
-          <DatePicker defaultValue={dayjs('2022-04-21')} />
+          <DatePicker defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
         <DemoItem label="Desktop variant">
-          <DesktopDatePicker defaultValue={dayjs('2022-04-21')} />
+          <DesktopDatePicker defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
         <DemoItem label="Mobile variant">
-          <MobileDatePicker defaultValue={dayjs('2022-04-21')} />
+          <MobileDatePicker defaultValue={dayjs('2022-04-17')} />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>
