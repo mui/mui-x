@@ -13,5 +13,5 @@ swap:
   date range picker: Date Range Picker
   time range picker: Time Range Picker
   date time range picker: Date Time Range Picker
-  # use data grid instead of grid
-  the grid: the data grid
+  # use Data Grid instead of grid
+  the grid: the Data Grid
