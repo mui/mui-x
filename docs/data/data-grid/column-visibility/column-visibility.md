@@ -53,8 +53,8 @@ You can use the `onColumnVisibilityModelChange` prop to listen to the changes to
 
 ## Column visibility panel
 
-The column visibility panel can be opened through the grid toolbar.
-To enable it, you need to add `toolbar: GridToolbar` to the grid `slots` prop.
+The column visibility panel can be opened through the Data Grid toolbar.
+To enable it, you need to add `toolbar: GridToolbar` to the Data Grid `slots` prop.
 
 The user can then choose which columns are visible using the _Columns_ button.
 
