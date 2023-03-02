@@ -2,16 +2,18 @@
 
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
-## Start using the alpha release
+## Start using the new release
 
-In `package.json`, change the version of the data grid package to `next`.
+In `package.json`, change the version of the data grid package to `latest` or `^6.0.0`.
 
 ```diff
--"@mui/x-data-grid": "latest",
-+"@mui/x-data-grid": "next",
+-"@mui/x-data-grid": "5.X.X",
++"@mui/x-data-grid": "^6.0.0",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
+Since v6 is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from v5 to v6.
 
 ## Run codemods
 
