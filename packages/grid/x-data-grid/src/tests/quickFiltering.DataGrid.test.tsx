@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -14,7 +14,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Quick Filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -45,19 +45,20 @@ describe('<DataGrid /> - Quick Filter', () => {
   }
 
   describe('component', () => {
-    it('should apply filter', () => {
+    it('should apply filter', async () => {
       render(<TestCase />);
 
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'a' },
       });
-      clock.runToLast();
 
-      expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
+      });
     });
 
-    it('should allows to customize input splitting', () => {
+    it('should allows to customize input splitting', async () => {
       const onFilterModelChange = spy();
 
       render(
@@ -77,12 +78,14 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid, nik' },
       });
-      clock.runToLast();
-      expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
-        items: [],
-        logicOperator: 'and',
-        quickFilterValues: ['adid', 'nik'],
-        quickFilterLogicOperator: 'and',
+
+      await waitFor(() => {
+        expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
+          items: [],
+          logicOperator: 'and',
+          quickFilterValues: ['adid', 'nik'],
+          quickFilterLogicOperator: 'and',
+        });
       });
     });
 
@@ -92,7 +95,6 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adidas   nike' },
       });
-      clock.runToLast();
 
       expect(screen.getByRole<HTMLInputElement>('searchbox').value).to.equal('adidas   nike');
     });
@@ -142,23 +144,25 @@ describe('<DataGrid /> - Quick Filter', () => {
   });
 
   describe('quick filter logic', () => {
-    it('should return rows that match all values by default', () => {
+    it('should return rows that match all values by default', async () => {
       render(<TestCase />);
 
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
 
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid nik' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal([]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal([]);
+      });
     });
 
-    it('should return rows that match some values if quickFilterLogicOperator="or"', () => {
+    it('should return rows that match some values if quickFilterLogicOperator="or"', async () => {
       render(
         <TestCase
           initialState={{
@@ -170,14 +174,16 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Adidas']);
+      });
 
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid nik' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
+      });
     });
   });
 
