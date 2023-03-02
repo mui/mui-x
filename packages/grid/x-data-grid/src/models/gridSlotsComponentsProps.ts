@@ -7,6 +7,7 @@ import { SwitchProps } from '@mui/material/Switch';
 import { ButtonProps } from '@mui/material/Button';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { TooltipProps } from '@mui/material/Tooltip';
+import type { InputLabelProps } from '@mui/material/InputLabel';
 import { PopperProps } from '@mui/material/Popper';
 import { TablePaginationProps } from '@mui/material/TablePagination';
 import { GridToolbarProps } from '../components/toolbar/GridToolbar';
@@ -30,6 +31,7 @@ export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
+export interface BaseInputLabelPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -45,7 +47,7 @@ export interface PanelPropsOverrides {}
 export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
-type SlotProps<Props, Overrides> = Partial<Props> & Overrides;
+type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
 
 /**
  * Overrideable components props dynamically passed to the component at rendering.
@@ -60,6 +62,7 @@ export interface GridSlotsComponentsProps {
   baseIconButton?: SlotProps<IconButtonProps, BaseIconButtonPropsOverrides>;
   basePopper?: SlotProps<PopperProps, BasePopperPropsOverrides>;
   baseTooltip?: SlotProps<TooltipProps, BaseTooltipPropsOverrides>;
+  baseInputLabel?: SlotProps<InputLabelProps, BaseInputLabelPropsOverrides>;
   cell?: SlotProps<GridCellProps, CellPropsOverrides>;
   columnHeaderFilterIconButton?: SlotProps<
     ColumnHeaderFilterIconButtonProps,

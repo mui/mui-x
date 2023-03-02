@@ -2,10 +2,10 @@
 
 <p class="description">Easily filter your rows based on one or several criteria.</p>
 
-The filters can be modified through the grid interface in several ways:
+The filters can be modified through the data grid interface in several ways:
 
 - By opening the column menu and clicking the _Filter_ menu item.
-- By clicking the _Filters_ button in the grid toolbar (if enabled).
+- By clicking the _Filters_ button in the data grid toolbar (if enabled).
 
 Each column type has its own filter operators.
 The demo below lets you explore all the operators for each built-in column type.
@@ -47,7 +47,7 @@ To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` o
 
 {{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass filters to the grid
+## Pass filters to the Data Grid
 
 ### Structure of the model
 
@@ -70,7 +70,7 @@ Some operators do not need any value (for instance the `isEmpty` operator of the
 
 #### The `logicOperator` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-The `logicOperator` tells the grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
+The `logicOperator` tells the data grid if a row should satisfy all (`AND`) filter items or at least one (`OR`) in order to be considered valid.
 
 ```ts
 // Example 1: get rows with rating > 4 OR isAdmin = true
@@ -92,7 +92,7 @@ const filterModel: GridFilterModel = {
 };
 ```
 
-If no `logicOperator` is provided, the grid will use `GridLogicOperator.Or` by default.
+If no `logicOperator` is provided, the data grid will use `GridLogicOperator.Or` by default.
 
 ### Initialize the filters
 
@@ -180,7 +180,7 @@ A custom operator is defined by creating a `GridFilterOperator` object.
 This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
 The main part of an operator is the `getApplyFilterFn` function.
-When applying the filters, the grid will call this function with the filter item and the column on which the item must be applied.
+When applying the filters, the data grid will call this function with the filter item and the column on which the item must be applied.
 This function must return another function that takes the cell value as an input and return `true` if it satisfies the operator condition.
 
 ```ts
@@ -281,7 +281,7 @@ In the demo below, the `rating` column reuses the numeric operators but the rati
 
 ### Custom column types
 
-When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the grid will reuse the operators from the type that was extended.
+When defining a [custom column type](/x/react-data-grid/column-definition/#custom-column-types), by default the data grid will reuse the operators from the type that was extended.
 The filter operators can then be edited just like on a regular column.
 
 ```ts
@@ -420,7 +420,7 @@ In the following demo, the quick filter value `"Saint Martin, Saint Lucia"` will
 ## apiRef
 
 :::warning
-Only use this API as the last option. Give preference to the props to control the grid.
+Only use this API as the last option. Give preference to the props to control the data grid.
 :::
 
 {{"demo": "FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}

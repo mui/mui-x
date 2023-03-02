@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
 
 export default function CustomTimeFormat() {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-07T15:30'));
+  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T15:30'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

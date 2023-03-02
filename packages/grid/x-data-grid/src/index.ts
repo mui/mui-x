@@ -33,6 +33,8 @@ export {
 
 /**
  * The full grid API.
+ * @demos
+ *   - [API object](/x/react-data-grid/api-object/)
  */
 export type GridApi = GridApiCommunity;
 

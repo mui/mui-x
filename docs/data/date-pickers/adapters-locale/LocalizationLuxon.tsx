@@ -30,10 +30,10 @@ export default function LocalizationLuxon() {
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
-        <DateField label="Date" defaultValue={DateTime.fromISO('2022-04-07')} />
+        <DateField label="Date" defaultValue={DateTime.fromISO('2022-04-17')} />
         <TimeField
           label="Time"
-          defaultValue={DateTime.fromISO('2022-04-07T18:30')}
+          defaultValue={DateTime.fromISO('2022-04-17T18:30')}
         />
       </Stack>
     </LocalizationProvider>

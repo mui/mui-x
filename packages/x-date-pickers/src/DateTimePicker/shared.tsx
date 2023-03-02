@@ -69,11 +69,13 @@ export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
+  // TODO: Change default to be false on mobile, when `DateTimePickerToolbar` will support `ampm` buttons
+  // https://github.com/mui/mui-x/issues/7279
   /**
-   * 12h/24h view for hour selection clock.
-   * @default `utils.is12HourCycleInCurrentLocale()`
+   * Display ampm controls under the clock (instead of in the toolbar).
+   * @default true
    */
-  ampm?: boolean;
+  ampmInClock?: boolean;
   /**
    * Minimal selectable moment of time with binding to date, to set min time in each day use `minTime`.
    */
