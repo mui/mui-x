@@ -21,6 +21,8 @@ export interface ColumnsStylesInterface {
 
 /**
  * The options to apply on the Excel export.
+ * @demos
+ *   - [Excel export](/x/react-data-grid/export/#excel-export)
  */
 export interface GridExcelExportOptions extends GridFileExportOptions {
   /**

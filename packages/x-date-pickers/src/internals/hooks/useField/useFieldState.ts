@@ -74,12 +74,10 @@ export const useFieldState = <
 
   const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
 
-  const [sectionOrder, setSectionOrder] = React.useState(() =>
-    fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
+  const sectionOrder = React.useMemo(
+    () => fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
+    [fieldValueManager, format, isRTL, localeText, utils],
   );
-  React.useEffect(() => {
-    setSectionOrder(fieldValueManager.getSectionOrder(utils, localeText, format, isRTL));
-  }, [fieldValueManager, format, isRTL, localeText, utils]);
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(

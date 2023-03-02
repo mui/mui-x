@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
@@ -373,7 +372,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
       act(() => apiRef.current.showColumnMenu('id'));
       clock.runToLast();
-      userEvent.mousePress(screen.queryByLabelText('Aggregation'));
+      userEvent.mousePress(screen.getByLabelText('Aggregation'));
       userEvent.mousePress(
         within(
           screen.getByRole('listbox', {

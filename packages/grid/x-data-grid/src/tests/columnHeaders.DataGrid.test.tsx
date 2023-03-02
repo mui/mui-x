@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, within } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@mui/x-data-grid';
@@ -129,7 +128,7 @@ describe('<DataGrid /> - Column Headers', () => {
       </div>,
     );
     const columnCell = getColumnHeaderCell(0);
-    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]');
+    const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
     fireEvent.click(menuIconButton);
     clock.runToLast();
 
