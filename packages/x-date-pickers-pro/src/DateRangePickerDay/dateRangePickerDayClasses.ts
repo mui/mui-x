@@ -30,7 +30,7 @@ export interface DateRangePickerDayClasses {
   rangeIntervalFirstVisibleCell: string;
   /** Styles applied to the root element if `day` is the last visible cell of the month. */
   rangeIntervalLastVisibleCell: string;
-  /** Styles applied to the root element if itis an empty cell used to fill the week. */
+  /** Styles applied to the root element if it is an empty cell used to fill the week. */
   rangeIntervalHiddenDayFiller: string;
   /** Styles applied to the day element. */
   day: string;
