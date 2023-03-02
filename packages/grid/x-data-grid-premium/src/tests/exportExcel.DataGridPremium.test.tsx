@@ -8,7 +8,7 @@ import {
   DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, screen, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, act, waitFor } from '@mui/monorepo/test/utils';
 import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import Excel from 'exceljs';
@@ -16,7 +16,7 @@ import Excel from 'exceljs';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPremium /> - Export Excel', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -56,12 +56,15 @@ describe('<DataGridPremium /> - Export Excel', () => {
       expect(await act(() => apiRef.current.getDataAsExcel())).not.to.equal(null);
     });
 
-    it('should display export option', () => {
+    it('should display export option', async () => {
       render(<TestCaseExcelExport components={{ Toolbar: GridToolbar }} />);
 
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      expect(screen.queryByRole('menu')).not.to.equal(null);
-      expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'Download as Excel' })).not.to.equal(null);
+      });
     });
   });
 
