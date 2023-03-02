@@ -218,19 +218,28 @@ export const useFieldState = <
       activeSection,
     );
 
-    const isTheOnlyNonEmptySection = activeDateSections.every((section) => {
-      if (section.startInInput === activeSection.startInInput) {
-        return true;
-      }
-
-      return section.value === '';
-    });
+    const nonEmptySectionCountBefore = activeDateSections.filter(
+      (section) => section.value !== '',
+    ).length;
+    const isTheOnlyNonEmptySection = nonEmptySectionCountBefore === 1;
 
     const newSections = setSectionValue(selectedSectionIndexes.startIndex, '');
     const newActiveDate = isTheOnlyNonEmptySection ? null : utils.date(new Date(''));
     const newValue = activeDateManager.getNewValueFromNewActiveDate(newActiveDate);
 
-    publishValue(newValue, newSections);
+    if (
+      (newActiveDate != null && !utils.isValid(newActiveDate)) !==
+      (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate))
+    ) {
+      publishValue(newValue, newSections);
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        ...newValue,
+        sections: newSections,
+        tempValueStrAndroid: null,
+      }));
+    }
   };
 
   const updateValueFromValueStr = (valueStr: string) => {
@@ -266,9 +275,11 @@ export const useFieldState = <
     const commit = ({
       values,
       sections,
+      shouldPublish,
     }: {
       values: Pick<UseFieldState<TValue, TSection>, 'value' | 'referenceValue'>;
       sections?: TSection[];
+      shouldPublish: boolean;
     }) => {
       if (
         shouldGoToNextSection &&
@@ -283,31 +294,40 @@ export const useFieldState = <
         setSelectedSections(selectedSectionIndexes.startIndex);
       }
 
-      return publishValue(values, sections);
+      if (shouldPublish) {
+        publishValue(values, sections);
+      } else {
+        setState((prevState) => ({
+          ...prevState,
+          ...values,
+          sections: sections ?? state.sections,
+          tempValueStrAndroid: null,
+        }));
+      }
     };
 
     const activeDateManager = fieldValueManager.getActiveDateManager(utils, state, activeSection);
     const newSections = setSectionValue(selectedSectionIndexes!.startIndex, newSectionValue);
     const activeDateSections = fieldValueManager.getActiveDateSections(newSections, activeSection);
-    let newDate = getDateFromDateSections(utils, activeDateSections);
+    let newActiveDate = getDateFromDateSections(utils, activeDateSections);
 
     // When all the sections are filled but the date is invalid, it can be because the month has fewer days than asked.
     // We can try to set the day to the maximum boundary.
     if (
-      !utils.isValid(newDate) &&
+      !utils.isValid(newActiveDate) &&
       activeDateSections.every((section) => section.type === 'weekDay' || section.value !== '') &&
       activeDateSections.some((section) => section.type === 'day')
     ) {
       const cleanSections = clampDaySection(utils, activeDateSections, sectionsValueBoundaries);
       if (cleanSections != null) {
-        newDate = getDateFromDateSections(utils, cleanSections);
+        newActiveDate = getDateFromDateSections(utils, cleanSections);
       }
     }
 
-    if (newDate != null && utils.isValid(newDate)) {
+    if (newActiveDate != null && utils.isValid(newActiveDate)) {
       const mergedDate = mergeDateIntoReferenceDate(
         utils,
-        newDate,
+        newActiveDate,
         activeDateSections,
         activeDateManager.referenceActiveDate,
         true,
@@ -315,12 +335,16 @@ export const useFieldState = <
 
       return commit({
         values: activeDateManager.getNewValueFromNewActiveDate(mergedDate),
+        shouldPublish: true,
       });
     }
 
     return commit({
-      values: activeDateManager.getNewValueFromNewActiveDate(newDate),
+      values: activeDateManager.getNewValueFromNewActiveDate(newActiveDate),
       sections: newSections,
+      shouldPublish:
+        (newActiveDate != null && !utils.isValid(newActiveDate)) !==
+        (activeDateManager.activeDate != null && !utils.isValid(activeDateManager.activeDate)),
     });
   };
 

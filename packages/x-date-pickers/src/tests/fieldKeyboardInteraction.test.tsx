@@ -1,7 +1,7 @@
 import * as React from 'react';
 import moment from 'moment/moment';
 import jMoment from 'moment-jalaali';
-import { screen, userEvent } from '@mui/monorepo/test/utils';
+import { userEvent } from '@mui/monorepo/test/utils';
 import {
   buildFieldInteractions,
   createPickerRenderer,
