@@ -80,7 +80,7 @@ export interface PickersDayProps<TDate>
   isFirstVisibleCell: boolean;
   /**
    * If `true`, day is the last visible cell of the month.
-   * Either last day of month or last day of the week depending on `showDaysOutsideCurrentMonth`.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
    */
   isLastVisibleCell: boolean;
   /**
