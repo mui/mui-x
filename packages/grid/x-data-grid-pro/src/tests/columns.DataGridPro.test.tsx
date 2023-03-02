@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -17,7 +17,7 @@ import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Columns', () => {
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -54,17 +54,19 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       act(() => apiRef.current.showColumnMenu('brand'));
-      expect(screen.queryByRole('menu')).not.to.equal(null);
+      await waitFor(() => expect(screen.queryByRole('menu')).not.to.equal(null));
     });
 
     it('should set the correct id and aria-labelledby', async () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       act(() => apiRef.current.showColumnMenu('brand'));
-      clock.runToLast();
-      const menu = screen.getByRole('menu');
-      expect(menu.id).to.match(/:r[0-9a-z]+:/);
-      expect(menu.getAttribute('aria-labelledby')).to.match(/:r[0-9a-z]+:/);
+
+      await waitFor(() => {
+        const menu = screen.getByRole('menu');
+        expect(menu.id).to.match(/:r[0-9a-z]+:/);
+        expect(menu.getAttribute('aria-labelledby')).to.match(/:r[0-9a-z]+:/);
+      });
     });
   });
 
@@ -73,11 +75,13 @@ describe('<DataGridPro /> - Columns', () => {
       render(<Test />);
       expect(screen.queryByRole('menu')).to.equal(null);
       act(() => apiRef.current.toggleColumnMenu('brand'));
-      clock.runToLast();
+
       expect(screen.queryByRole('menu')).not.to.equal(null);
       act(() => apiRef.current.toggleColumnMenu('brand'));
-      clock.runToLast();
-      expect(screen.queryByRole('menu')).to.equal(null);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('menu')).to.equal(null);
+      });
     });
   });
 
@@ -135,7 +139,7 @@ describe('<DataGridPro /> - Columns', () => {
       expect(onColumnResize.args[1][0].width).to.equal(120);
     });
 
-    it('should call onColumnWidthChange after resizing', () => {
+    it('should call onColumnWidthChange after resizing', async () => {
       const onColumnWidthChange = spy();
       render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
@@ -144,9 +148,11 @@ describe('<DataGridPro /> - Columns', () => {
       fireEvent.mouseMove(separator, { clientX: 120, buttons: 1 });
       expect(onColumnWidthChange.callCount).to.equal(0);
       fireEvent.mouseUp(separator);
-      clock.tick(0);
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+
+      await waitFor(() => {
+        expect(onColumnWidthChange.callCount).to.equal(1);
+        expect(onColumnWidthChange.args[0][0].width).to.equal(120);
+      });
     });
 
     describe('flex resizing', () => {
