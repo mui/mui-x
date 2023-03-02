@@ -335,7 +335,9 @@ export async function getDataForValueOptionsSheet(
   api: GridPrivateApiPremium,
 ): Promise<ValueOptionsData> {
   const candidateColumns = columns.filter(
-    (column) => (isSingleSelectColDef(column) || isMultipleSelectColDef(column)) && Array.isArray(column.valueOptions),
+    (column) =>
+      (isSingleSelectColDef(column) || isMultipleSelectColDef(column)) &&
+      Array.isArray(column.valueOptions),
   );
 
   // Creates a temp worksheet to obtain the column letters

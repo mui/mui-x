@@ -15,7 +15,6 @@ import {
 } from '../panel/filterPanel/filterPanelUtils';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-
 export interface GridEditMultipleSelectCellProps
   extends GridRenderEditCellParams,
     Omit<SelectProps, 'id' | 'tabIndex' | 'value'>,
@@ -101,7 +100,7 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     }
 
     setOpen(false);
-    const target = event.target as HTMLInputElement & {value: string[]};
+    const target = event.target as HTMLInputElement & { value: string[] };
     // NativeSelect casts the value to an array of strings.
     const formattedTargetValue = getValuesFromValueOptions(
       target.value,
@@ -146,7 +145,7 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
       multiple
       value={valueProp}
       onChange={handleChange}
-      input={<Input/>}
+      input={<Input />}
       open={open}
       onOpen={handleOpen}
       MenuProps={{

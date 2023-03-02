@@ -7,7 +7,11 @@ import {
   GridGroupingColDefOverride,
   GridGroupNode,
 } from '@mui/x-data-grid-pro';
-import { GridColumnRawLookup, isSingleSelectColDef, isMultipleSelectColDef } from '@mui/x-data-grid-pro/internals';
+import {
+  GridColumnRawLookup,
+  isSingleSelectColDef,
+  isMultipleSelectColDef,
+} from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
@@ -66,7 +70,10 @@ const getLeafProperties = (leafColDef: GridColDef): Partial<GridColDef> => ({
   headerName: leafColDef.headerName ?? leafColDef.field,
   sortable: leafColDef.sortable,
   filterable: leafColDef.filterable,
-  valueOptions: (isSingleSelectColDef(leafColDef) || isMultipleSelectColDef(leafColDef)) ? leafColDef.valueOptions : undefined,
+  valueOptions:
+    isSingleSelectColDef(leafColDef) || isMultipleSelectColDef(leafColDef)
+      ? leafColDef.valueOptions
+      : undefined,
   filterOperators: leafColDef.filterOperators?.map((operator) => ({
     ...operator,
     getApplyFilterFn: (filterItem, column) => {
@@ -94,7 +101,10 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
-    valueOptions: (isSingleSelectColDef(groupedByColDef) || isMultipleSelectColDef(groupedByColDef)) ? groupedByColDef.valueOptions : undefined,
+    valueOptions:
+      isSingleSelectColDef(groupedByColDef) || isMultipleSelectColDef(groupedByColDef)
+        ? groupedByColDef.valueOptions
+        : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
       if (

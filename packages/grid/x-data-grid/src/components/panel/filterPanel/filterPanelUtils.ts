@@ -9,7 +9,9 @@ export function isSingleSelectColDef(colDef: GridColDef | null): colDef is GridS
   return colDef?.type === 'singleSelect';
 }
 
-export function isMultipleSelectColDef(colDef: GridColDef | null): colDef is GridMultipleSelectColDef {
+export function isMultipleSelectColDef(
+  colDef: GridColDef | null,
+): colDef is GridMultipleSelectColDef {
   return colDef?.type === 'multipleSelect';
 }
 

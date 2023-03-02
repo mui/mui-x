@@ -17,9 +17,10 @@ export const getGridMultipleSelectOperators = (): GridFilterOperator[] => [
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
-      return ({ value }): boolean => Array.isArray(value)
-        ? value.includes(parseObjectValue(filterItem.value))
-        : parseObjectValue(value) === parseObjectValue(filterItem.value);
+      return ({ value }): boolean =>
+        Array.isArray(value)
+          ? value.includes(parseObjectValue(filterItem.value))
+          : parseObjectValue(value) === parseObjectValue(filterItem.value);
     },
     InputComponent: GridFilterInputMultipleSelect,
   },
@@ -29,9 +30,10 @@ export const getGridMultipleSelectOperators = (): GridFilterOperator[] => [
       if (filterItem.value == null || filterItem.value === '') {
         return null;
       }
-      return ({ value }): boolean => Array.isArray(value)
-        ? !value.includes(parseObjectValue(filterItem.value))
-        : parseObjectValue(value) !== parseObjectValue(filterItem.value);
+      return ({ value }): boolean =>
+        Array.isArray(value)
+          ? !value.includes(parseObjectValue(filterItem.value))
+          : parseObjectValue(value) !== parseObjectValue(filterItem.value);
     },
     InputComponent: GridFilterInputMultipleSelect,
   },
@@ -42,9 +44,10 @@ export const getGridMultipleSelectOperators = (): GridFilterOperator[] => [
         return null;
       }
       const filterItemValues = filterItem.value.map(parseObjectValue);
-      return ({ value }): boolean => Array.isArray(value)
-        ? filterItemValues.some(r=> value.includes(r))
-        : filterItemValues.includes(parseObjectValue(value));
+      return ({ value }): boolean =>
+        Array.isArray(value)
+          ? filterItemValues.some((r) => value.includes(r))
+          : filterItemValues.includes(parseObjectValue(value));
     },
     InputComponent: GridFilterInputMultipleMultipleSelect,
   },

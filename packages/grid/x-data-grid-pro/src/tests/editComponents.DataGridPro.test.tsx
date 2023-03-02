@@ -604,7 +604,12 @@ describe('<DataGridPro /> - Edit Components', () => {
     beforeEach(() => {
       defaultData.rows = [{ id: 0, brand: 'Nike' }];
       defaultData.columns = [
-        { field: 'brand', type: 'multipleSelect', valueOptions: ['Nike', 'Adidas'], editable: true },
+        {
+          field: 'brand',
+          type: 'multipleSelect',
+          valueOptions: ['Nike', 'Adidas'],
+          editable: true,
+        },
       ];
     });
 
@@ -696,7 +701,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
 
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal(['Nike']); // We use .replace to remove &ZeroWidthSpace;
-      await act(() => apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: ['Adidas'] }));
+      await act(() =>
+        apiRef.current.setEditCellValue({ id: 0, field: 'brand', value: ['Adidas'] }),
+      );
       expect(cell.textContent!.replace(/[\W]+/, '')).to.equal(['Adidas']);
     });
 
