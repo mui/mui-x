@@ -34,7 +34,7 @@ const GridOverlayRoot = styled('div', {
   alignSelf: 'center',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--DataGrid-overlayBackground)',
+  backgroundColor: 'var(--unstable_DataGrid-overlayBackground)',
 });
 
 const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
