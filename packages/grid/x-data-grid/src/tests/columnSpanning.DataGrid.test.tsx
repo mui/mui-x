@@ -7,7 +7,7 @@ import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Column Spanning', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     rows: [
@@ -583,7 +583,6 @@ describe('<DataGrid /> - Column Spanning', () => {
     // hide `category` column
     fireEvent.click(within(getColumnHeaderCell(1)).getByLabelText('Menu'));
     fireEvent.click(screen.getByRole('menuitem', { name: 'Hide column' }));
-    clock.runToLast();
 
     // Nike row
     expect(() => getCell(0, 0)).to.not.throw();
