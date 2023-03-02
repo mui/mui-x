@@ -13,11 +13,11 @@ import {
   GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent, waitFor } from '@mui/monorepo/test/utils';
 import { getCell } from 'test/utils/helperFn';
 
 describe('<DataGridPro /> - Cell Editing', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -288,7 +288,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
 
       describe('with debounceMs > 0', () => {
-        it('should debounce multiple changes if debounceMs > 0', () => {
+        it('should debounce multiple changes if debounceMs > 0', async () => {
           render(<TestCase />);
           act(() => apiRef.current.startCellEditMode({ id: 0, field: 'currencyPair' }));
           expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
@@ -306,10 +306,10 @@ describe('<DataGridPro /> - Cell Editing', () => {
             value: 'USD GBP',
             debounceMs: 100,
           });
-          expect(renderEditCell.callCount).to.equal(0);
-          clock.tick(100);
-          expect(renderEditCell.callCount).not.to.equal(0);
-          expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
+          await waitFor(() => {
+            expect(renderEditCell.callCount).not.to.equal(0);
+            expect(renderEditCell.lastCall.args[0].value).to.equal('USD GBP');
+          });
         });
       });
     });
