@@ -11,14 +11,13 @@ import {
 } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridDragIcon } from '../icons';
 import { GridPanelContent } from './GridPanelContent';
 import { GridPanelFooter } from './GridPanelFooter';
 import { GridPanelHeader } from './GridPanelHeader';
 import { GridPanelWrapper, GridPanelWrapperProps } from './GridPanelWrapper';
 import { GRID_EXPERIMENTAL_ENABLED } from '../../constants/envConstants';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
@@ -234,7 +233,7 @@ function GridColumnsPanel(props: GridColumnsPanelProps) {
                   size="small"
                   disabled
                 >
-                  <GridDragIcon />
+                  <rootProps.slots.columnReorderIcon />
                 </GridIconButtonRoot>
               )}
             </GridColumnsPanelRowRoot>

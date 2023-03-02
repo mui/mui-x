@@ -52,6 +52,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BasePopper: React.JSXElementConstructor<any>;
   /**
+   * The custom InputLabel component used in the grid.
+   * @default InputLabel
+   */
+  BaseInputLabel: React.JSXElementConstructor<any>;
+  /**
    * The custom SelectOption component used in the grid.
    * @default MenuItem
    */
@@ -76,6 +81,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * @default GridColumnMenu
    */
   ColumnMenu: React.JSXElementConstructor<any>;
+  /**
+   * Component responsible for rendering the column headers.
+   * @default DataGridColumnHeaders
+   */
+  ColumnHeaders: React.JSXElementConstructor<any>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    * @default GridFooter

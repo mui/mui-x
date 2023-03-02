@@ -180,6 +180,7 @@
     "baseCheckbox": { "default": "Checkbox", "type": { "name": "elementType" } },
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
+    "baseInputLabel": { "default": "InputLabel", "type": { "name": "elementType" } },
     "basePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "baseSelect": { "default": "Select", "type": { "name": "elementType" } },
     "baseSelectOption": { "default": "MenuItem", "type": { "name": "elementType" } },
@@ -194,6 +195,7 @@
       "default": "GridColumnHeaderFilterIconButton",
       "type": { "name": "elementType" }
     },
+    "columnHeaders": { "default": "DataGridColumnHeaders", "type": { "name": "elementType" } },
     "columnMenu": { "default": "GridColumnMenu", "type": { "name": "elementType" } },
     "columnMenuClearIcon": { "default": "GridClearIcon", "type": { "name": "elementType" } },
     "columnMenuFilterIcon": { "default": "GridFilterAltIcon", "type": { "name": "elementType" } },
@@ -214,6 +216,7 @@
       "default": "GridArrowDownwardIcon",
       "type": { "name": "elementType" }
     },
+    "columnReorderIcon": { "default": "GridDragIcon", "type": { "name": "elementType" } },
     "columnResizeIcon": { "default": "GridSeparatorIcon", "type": { "name": "elementType" } },
     "columnSelectorIcon": { "default": "GridColumnIcon", "type": { "name": "elementType" } },
     "columnSortedAscendingIcon": {
@@ -254,6 +257,7 @@
       "default": "GridKeyboardArrowRight",
       "type": { "name": "elementType" }
     },
+    "loadIcon": { "default": "GridLoadIcon", "type": { "name": "elementType" } },
     "loadingOverlay": { "default": "GridLoadingOverlay", "type": { "name": "elementType" } },
     "moreActionsIcon": { "default": "GridMoreVertIcon", "type": { "name": "elementType" } },
     "noResultsOverlay": { "default": "GridNoResultsOverlay", "type": { "name": "elementType" } },

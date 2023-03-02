@@ -41,11 +41,13 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
     seconds: renderTimeViewClock,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? false;
 
   // Props with the default values specific to the mobile variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
+    ampmInClock,
     slots: {
       field: DateTimeField,
       ...defaultizedProps.slots,
@@ -60,6 +62,7 @@ const MobileDateTimePicker = React.forwardRef(function MobileDateTimePicker<TDat
       }),
       toolbar: {
         hidden: false,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
@@ -91,7 +94,7 @@ MobileDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true
    */
   ampmInClock: PropTypes.bool,
   /**

@@ -5,7 +5,6 @@ import {
   unstable_useId as useId,
   unstable_capitalize as capitalize,
 } from '@mui/utils';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
@@ -16,7 +15,7 @@ import { useGridSelector } from '../../../hooks/utils/useGridSelector';
 import { GridFilterItem, GridLogicOperator } from '../../../models/gridFilterItem';
 import { useGridApiContext } from '../../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../../constants/gridClasses';
 import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 
@@ -141,7 +140,7 @@ const GridFilterFormRoot = styled('div', {
   padding: theme.spacing(1),
 }));
 
-const FilterFormDeleteIcon = styled(FormControl, {
+const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
   overridesResolver: (_, styles) => styles.filterFormDeleteIcon,
@@ -152,7 +151,7 @@ const FilterFormDeleteIcon = styled(FormControl, {
   marginBottom: theme.spacing(0.2),
 }));
 
-const FilterFormLogicOperatorInput = styled(FormControl, {
+const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormLogicOperatorInput,
@@ -162,19 +161,19 @@ const FilterFormLogicOperatorInput = styled(FormControl, {
   justifyContent: 'end',
 });
 
-const FilterFormColumnInput = styled(FormControl, {
+const FilterFormColumnInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormColumnInput',
   overridesResolver: (_, styles) => styles.filterFormColumnInput,
 })<{ ownerState: OwnerState }>({ width: 150 });
 
-const FilterFormOperatorInput = styled(FormControl, {
+const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
   overridesResolver: (_, styles) => styles.filterFormOperatorInput,
 })<{ ownerState: OwnerState }>({ width: 120 });
 
-const FilterFormValueInput = styled(FormControl, {
+const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
   overridesResolver: (_, styles) => styles.filterFormValueInput,
@@ -237,6 +236,7 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
     const baseSelectProps = rootProps.slotProps?.baseSelect || {};
     const isBaseSelectNative = baseSelectProps.native ?? true;
 
+    const baseInputLabelProps = rootProps.slotProps?.baseInputLabel || {};
     const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
     const { InputComponentProps, ...valueInputPropsOther } = valueInputProps;
@@ -451,9 +451,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
+          <rootProps.slots.baseInputLabel
+            {...baseInputLabelProps}
+            htmlFor={columnSelectId}
+            id={columnSelectLabelId}
+          >
             {apiRef.current.getLocaleText('filterPanelColumns')}
-          </InputLabel>
+          </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
             labelId={columnSelectLabelId}
             id={columnSelectId}
@@ -487,9 +491,13 @@ const GridFilterForm = React.forwardRef<HTMLDivElement, GridFilterFormProps>(
           )}
           ownerState={rootProps}
         >
-          <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
+          <rootProps.slots.baseInputLabel
+            {...baseInputLabelProps}
+            htmlFor={operatorSelectId}
+            id={operatorSelectLabelId}
+          >
             {apiRef.current.getLocaleText('filterPanelOperator')}
-          </InputLabel>
+          </rootProps.slots.baseInputLabel>
           <rootProps.slots.baseSelect
             labelId={operatorSelectLabelId}
             label={apiRef.current.getLocaleText('filterPanelOperator')}

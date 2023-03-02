@@ -10,7 +10,7 @@ import { DateRange } from '@mui/x-date-pickers-pro';
 
 export default function LifeCycleDateRangeField() {
   const [value, setValue] = React.useState<DateRange<Dayjs | null>>([
-    dayjs('2022-04-07'),
+    dayjs('2022-04-17'),
     null,
   ]);
 
