@@ -290,17 +290,17 @@ We encourage you to try out this version, packed with improvements, bug fixes, a
 
 **Data Grid**
 
-- [Access to the API Object in the community version](https://next.mui.com/x/react-data-grid/api-object/)
-- [Improved column menu](https://next.mui.com/x/react-data-grid/column-menu/)
-- [Cell selection range](https://next.mui.com/x/react-data-grid/cell-selection/) (Premium)
+- [Access to the API Object in the community version](https://mui.com/x/react-data-grid/api-object/)
+- [Improved column menu](https://mui.com/x/react-data-grid/column-menu/)
+- [Cell selection range](https://mui.com/x/react-data-grid/cell-selection/) (Premium)
 
 **Date and Time pickers**
 
-- [Fields: the new default input for pickers](https://next.mui.com/x/react-date-pickers/fields/).
-- [Improved layout customization](https://next.mui.com/x/react-date-pickers/custom-layout/)
-- [Edit date ranges with drag and drop](https://next.mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
+- [Fields: the new default input for pickers](https://mui.com/x/react-date-pickers/fields/).
+- [Improved layout customization](https://mui.com/x/react-date-pickers/custom-layout/)
+- [Edit date ranges with drag and drop](https://mui.com/x/react-date-pickers/date-range-calendar/) (Pro)
 
-You can check the migration guides for the [Data Grid](https://next.mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://next.mui.com/x/migration/migration-pickers-v5/) in the documentation.
+You can check the migration guides for the [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/) and [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/) in the documentation.
 
 We'd like to offer a big thanks to the 10 contributors who made this release possible.
 
@@ -447,7 +447,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
    // Same for all the other pickers with an `Unstable_` prefix
   ```
 
-  If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://next.mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
+  If you were still using the legacy picker (`DatePicker`, `DesktopDatePicker`, ...), please take a look at our [migration guide](https://mui.com/x/migration/migration-pickers-v5/#picker-components) for detailed explanations on how to start using the new ones.
 
 - The fields components are no longer unstable
 
@@ -878,7 +878,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   return <DataGrid apiRef={apiRef} {...other} />;
   ```
 
-  See [the documentation](https://next.mui.com/x/react-data-grid/api-object/) for more information.
+  See [the documentation](https://mui.com/x/react-data-grid/api-object/) for more information.
 
 - 🎁 The `DataGridPremium` now supports cell selection:
 
@@ -886,7 +886,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   <DataGridPremium unstable_cellSelection />
   ```
 
-  See [the documentation](https://next.mui.com/x/react-data-grid/selection/#cell-selection) for more information
+  See [the documentation](https://mui.com/x/react-data-grid/selection/#cell-selection) for more information
 
 - 🌍 Support the Right To Left orientation on the fields components
 - 📚 Documentation improvements
@@ -1147,7 +1147,7 @@ _Nov 24, 2022_
 
 We'd like to offer a big thanks to the 14 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 Introduce the v6 pickers, built on top of the field components [DatePicker](https://next.mui.com/x/react-date-pickers/date-picker/), [TimePicker](https://next.mui.com/x/react-date-pickers/time-picker/), [DateTimePicker](https://next.mui.com/x/react-date-pickers/date-time-picker/), [DateRangePicker](https://next.mui.com/x/react-date-pickers/date-range-picker/).
+- 🎁 Introduce the v6 pickers, built on top of the field components [DatePicker](https://mui.com/x/react-date-pickers/date-picker/), [TimePicker](https://mui.com/x/react-date-pickers/time-picker/), [DateTimePicker](https://mui.com/x/react-date-pickers/date-time-picker/), [DateRangePicker](https://mui.com/x/react-date-pickers/date-range-picker/).
 
   The old (legacy) components will be removed at the end of the v6 beta.
 
@@ -1637,20 +1637,20 @@ _Oct 13, 2022_
 We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - ⌚️ New components to edit date and time with <kbd>keyboard</kbd>—without using any modal or dropdown UI.
-  Please check out our [documentation](https://next.mui.com/x/react-date-pickers/fields/) to discover those new components.
+  Please check out our [documentation](https://mui.com/x/react-date-pickers/fields/) to discover those new components.
 
-  - [`DateField`](https://next.mui.com/x/react-date-pickers/date-field/) to edit date
-  - [`TimeField`](https://next.mui.com/x/react-date-pickers/time-field/) to edit time
-  - [`DateTimeField`](https://next.mui.com/x/react-date-pickers/date-time-field/) to edit date and time
-  - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://next.mui.com/x/react-date-pickers/date-range-field/) to edit date range
-  - [`MultiInputTimeRangeField`](https://next.mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
-  - [`MultiInputDateTimeRangeField`](https://next.mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
+  - [`DateField`](https://mui.com/x/react-date-pickers/date-field/) to edit date
+  - [`TimeField`](https://mui.com/x/react-date-pickers/time-field/) to edit time
+  - [`DateTimeField`](https://mui.com/x/react-date-pickers/date-time-field/) to edit date and time
+  - [`MultiInputDateRangeField` / `SingleInputDateRangeField`](https://mui.com/x/react-date-pickers/date-range-field/) to edit date range
+  - [`MultiInputTimeRangeField`](https://mui.com/x/react-date-pickers/time-range-field/) to edit time range with two inputs
+  - [`MultiInputDateTimeRangeField`](https://mui.com/x/react-date-pickers/date-time-range-field/) to edit date and time range with two inputs
 
   ⚠️ These components are unstable.
   They might receive breaking changes on their props to have the best components possible by the time of the stable release.
 
 - 📝 Allow to limit to one filter per column for `DataGridPro` and `DataGridPremium` (#6333) @MBilalShafi
-- 📚 New [page describing the validation props on each picker](https://next.mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
+- 📚 New [page describing the validation props on each picker](https://mui.com/x/react-date-pickers/validation/) (#6064) @flaviendelangle
 - 📚 Documentation improvements
 - 🐞 Bugfixes
 
@@ -1671,14 +1671,14 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
   For users that didn't migrate to the new editing API in v5, additional work may be needed because the new API is not equivalent to the legacy API. Although, some migration steps are available to help in this task.
 
   - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
-  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://next.mui.com/x/react-data-grid/editing/#persistence) section about the topic.
-  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
+  - The `cellEditCommit` event was removed and the `processRowUpdate` prop can be used in place. More information, check the [docs](https://mui.com/x/react-data-grid/editing/#persistence) section about the topic.
+  - The `editRowsModel` and `onEditRowsModelChange` props were removed. The [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props can be used to achieve the same goal.
   - The following API methods were removed:
     - Use `apiRef.current.stopCellEditMode` to replace `apiRef.current.commitCellChange`
     - Use `apiRef.current.startCellEditMode` to replace `apiRef.current.setCellMode(id, field, 'edit')`
     - Use `apiRef.current.stopRowEditMode` to replace `apiRef.current.commitRowChange`
     - Use `apiRef.current.startRowMode` to replace `apiRef.current.setRowMode(id, 'edit')`
-    - Use the [`cellModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://next.mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
+    - Use the [`cellModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) or [`rowModesModel`](https://mui.com/x/react-data-grid/editing/#controlled-mode) props to replace `apiRef.current.setEditRowsModel`
 
 #### Changes
 
@@ -2079,7 +2079,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
    />
   ```
 
-  You can find more information about this new API on our [documentation](https://next.mui.com/x/react-data-grid/column-visibility/).
+  You can find more information about this new API on our [documentation](https://mui.com/x/react-data-grid/column-visibility/).
 
 - The `GridEvents` enum is now a TypeScript type.
 
@@ -2129,7 +2129,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
    />
   ```
 
-You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://next.mui.com/x/react-date-pickers/localization/)
+You can find more information about the new api, including how to set those translations on all your components at once in the [documentation](https://mui.com/x/react-date-pickers/localization/)
 
 - The deprecated `locale` prop of the `LocalizationProvider` component have been renamed `adapterLocale`:
 

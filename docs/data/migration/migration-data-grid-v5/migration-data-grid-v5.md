@@ -1,5 +1,7 @@
 # Migration from v5 to v6
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
 ## Start using the new release
@@ -31,7 +33,7 @@ Apart from the removed methods and exports that require manual intervention, aro
 :::
 
 :::info
-If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
 :::
 
 Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
@@ -156,7 +158,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 
 - ✅ The `selectionChange` event was renamed to `rowSelectionChange`.
 - ✅ The `rowsScroll` event was renamed to `scrollPositionChange`.
-- The `columnVisibilityChange` event was removed. Use [`columnVisibilityModelChange`](https://next.mui.com/x/react-data-grid/events/#catalog-of-events) instead.
+- The `columnVisibilityChange` event was removed. Use [`columnVisibilityModelChange`](https://mui.com/x/react-data-grid/events/#catalog-of-events) instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
 - The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
@@ -181,12 +183,12 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
 
 :::info
-To know more about the supported events and their signatures, check the [events catalog](https://next.mui.com/x/react-data-grid/events/#catalog-of-events) page.
+To know more about the supported events and their signatures, check the [events catalog](https://mui.com/x/react-data-grid/events/#catalog-of-events) page.
 :::
 
 ### Columns
 
-- The `GridColDef['hide']` property was removed. Use [`columnVisibilityModel`](https://next.mui.com/x/react-data-grid/column-visibility/#initialize-the-visible-columns) instead.
+- The `GridColDef['hide']` property was removed. Use [`columnVisibilityModel`](https://mui.com/x/react-data-grid/column-visibility/#initialize-the-visible-columns) instead.
 - Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. To fall back to the default formatted value, return `undefined` instead of `null`.
 
   ```diff
