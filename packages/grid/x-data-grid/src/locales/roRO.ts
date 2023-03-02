@@ -64,6 +64,7 @@ const roROGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'se termină cu',
   filterOperatorIs: 'este',
   filterOperatorNot: 'nu este',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'este după',
   filterOperatorOnOrAfter: 'este la sau după',
   filterOperatorBefore: 'este înainte de',
@@ -71,6 +72,7 @@ const roROGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'este gol',
   filterOperatorIsNotEmpty: 'nu este gol',
   filterOperatorIsAnyOf: 'este una din valori',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'Aleatoriu',

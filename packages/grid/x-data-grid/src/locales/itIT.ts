@@ -64,6 +64,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
   filterOperatorNot: 'diversa da',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'dopo il',
   filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorBefore: 'prima del',
@@ -71,6 +72,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'è vuoto',
   filterOperatorIsNotEmpty: 'non è vuoto',
   filterOperatorIsAnyOf: 'è uno tra',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'qualunque',

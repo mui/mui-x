@@ -64,6 +64,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina com',
   filterOperatorIs: 'é',
   filterOperatorNot: 'não é',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'após',
   filterOperatorOnOrAfter: 'em ou após',
   filterOperatorBefore: 'antes de',
@@ -71,6 +72,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'está vazio',
   filterOperatorIsNotEmpty: 'não está vazio',
   filterOperatorIsAnyOf: 'é qualquer um dos',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'qualquer',

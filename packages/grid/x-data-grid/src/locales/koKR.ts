@@ -63,6 +63,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: '끝나는',
   filterOperatorIs: '~인',
   filterOperatorNot: '~아닌',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: '더 이후',
   filterOperatorOnOrAfter: '이후',
   filterOperatorBefore: '더 이전',
@@ -70,6 +71,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '값이 없는',
   filterOperatorIsNotEmpty: '값이 있는',
   filterOperatorIsAnyOf: '값 중 하나인',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: '아무값',

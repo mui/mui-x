@@ -64,6 +64,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'slutar med',
   filterOperatorIs: 'är',
   filterOperatorNot: 'är inte',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'är efter',
   filterOperatorOnOrAfter: 'är på eller efter',
   filterOperatorBefore: 'är innan',
@@ -71,6 +72,7 @@ const svSEGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'är tom',
   filterOperatorIsNotEmpty: 'är inte tom',
   filterOperatorIsAnyOf: 'är någon av',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'något',

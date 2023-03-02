@@ -64,6 +64,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'se termine par',
   filterOperatorIs: 'est',
   filterOperatorNot: "n'est pas",
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'postérieur',
   filterOperatorOnOrAfter: 'égal ou postérieur',
   filterOperatorBefore: 'antérieur',
@@ -71,6 +72,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
   filterOperatorIsAnyOf: 'fait partie de',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'tous',

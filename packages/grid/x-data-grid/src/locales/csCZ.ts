@@ -71,6 +71,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'není',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'je po',
   filterOperatorOnOrAfter: 'je na nebo po',
   filterOperatorBefore: 'je před',
@@ -78,6 +79,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'je prázdný',
   filterOperatorIsNotEmpty: 'není prázdný',
   // filterOperatorIsAnyOf: 'is any of',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'jakýkoliv',

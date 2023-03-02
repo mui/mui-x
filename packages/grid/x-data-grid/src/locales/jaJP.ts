@@ -63,6 +63,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: '...で終わる',
   filterOperatorIs: '...である',
   filterOperatorNot: '...でない',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: '...より後ろ',
   filterOperatorOnOrAfter: '...以降',
   filterOperatorBefore: '...より前',
@@ -70,6 +71,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '...空である',
   filterOperatorIsNotEmpty: '...空でない',
   filterOperatorIsAnyOf: '...のいずれか',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'いずれか',

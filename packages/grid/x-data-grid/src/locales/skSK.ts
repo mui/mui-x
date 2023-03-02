@@ -71,6 +71,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'končí na',
   filterOperatorIs: 'je',
   filterOperatorNot: 'nie je',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'je po',
   filterOperatorOnOrAfter: 'je na alebo po',
   filterOperatorBefore: 'je pred',
@@ -78,6 +79,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'je prázdny',
   filterOperatorIsNotEmpty: 'nie je prázdny',
   filterOperatorIsAnyOf: 'je jeden z',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'akýkoľvek',

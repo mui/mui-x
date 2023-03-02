@@ -64,6 +64,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'eindigt met',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is niet',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'is na',
   filterOperatorOnOrAfter: 'is gelijk of er na',
   filterOperatorBefore: 'is voor',
@@ -71,6 +72,7 @@ const nlNLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'is leeg',
   filterOperatorIsNotEmpty: 'is niet leeg',
   filterOperatorIsAnyOf: 'is een van',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'alles',

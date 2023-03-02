@@ -64,6 +64,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
   filterOperatorNot: 'ei ole',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'on jälkeen',
   filterOperatorOnOrAfter: 'on sama tai jälkeen',
   filterOperatorBefore: 'on ennen',
@@ -71,6 +72,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'on tyhjä',
   filterOperatorIsNotEmpty: 'ei ole tyhjä',
   filterOperatorIsAnyOf: 'mikä tahansa seuraavista',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'mikä tahansa',

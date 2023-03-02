@@ -87,6 +87,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'скончваецца на',
   filterOperatorIs: 'роўны',
   filterOperatorNot: 'не роўны',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'больш чым',
   filterOperatorOnOrAfter: 'больш ці роўны',
   filterOperatorBefore: 'меньш чым',
@@ -94,6 +95,7 @@ const beBYGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'пусты',
   filterOperatorIsNotEmpty: 'не пусты',
   filterOperatorIsAnyOf: 'усякі з',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'усякі',

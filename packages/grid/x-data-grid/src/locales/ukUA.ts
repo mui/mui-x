@@ -87,6 +87,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'закінчується на',
   filterOperatorIs: 'дорівнює',
   filterOperatorNot: 'не дорівнює',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'більше ніж',
   filterOperatorOnOrAfter: 'більше або дорівнює',
   filterOperatorBefore: 'менше ніж',
@@ -94,6 +95,7 @@ const ukUAGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'порожній',
   filterOperatorIsNotEmpty: 'не порожній',
   filterOperatorIsAnyOf: 'будь-що із',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'будь-який',

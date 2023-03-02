@@ -64,6 +64,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'termina con',
   filterOperatorIs: 'es',
   filterOperatorNot: 'no es',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'es posterior',
   filterOperatorOnOrAfter: 'es en o posterior',
   filterOperatorBefore: 'es anterior',
@@ -71,6 +72,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'está vacío',
   filterOperatorIsNotEmpty: 'no esta vacío',
   filterOperatorIsAnyOf: 'es cualquiera de',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'cualquiera',

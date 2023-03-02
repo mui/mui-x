@@ -63,6 +63,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
   filterOperatorNot: 'не е',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'е след',
   filterOperatorOnOrAfter: 'е на или след',
   filterOperatorBefore: 'е преди',
@@ -70,6 +71,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'е празен',
   filterOperatorIsNotEmpty: 'не е празен',
   filterOperatorIsAnyOf: 'е някой от',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'всякакви',

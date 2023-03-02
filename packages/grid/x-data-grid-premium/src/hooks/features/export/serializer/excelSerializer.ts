@@ -350,7 +350,6 @@ export async function getDataForValueOptionsSheet(
   return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
     (acc, column) => {
       const singleSelectColumn = column as GridSingleSelectColDef;
-      const multipleSelectColumn = column as GridMultipleSelectColDef;
       const formattedValueOptions = getFormattedValueOptions(
         singleSelectColumn,
         singleSelectColumn.valueOptions as Array<ValueOptions>,

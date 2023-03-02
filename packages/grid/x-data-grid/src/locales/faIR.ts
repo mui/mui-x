@@ -64,6 +64,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'پایان با',
   filterOperatorIs: 'هست',
   filterOperatorNot: 'نیست',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'بعد از',
   filterOperatorOnOrAfter: 'معادل یا بعدش',
   filterOperatorBefore: 'قبلش',
@@ -71,6 +72,7 @@ const faIRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالی است',
   filterOperatorIsNotEmpty: 'خالی نیست',
   filterOperatorIsAnyOf: 'هر یک از',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'هرچیزی',

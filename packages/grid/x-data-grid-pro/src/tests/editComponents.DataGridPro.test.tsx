@@ -746,13 +746,14 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
+      fireEvent.doubleClick(cell);
+      userEvent.mousePress(screen.queryAllByRole('option')[0]);
       clock.runToLast();
       expect(screen.queryByRole('listbox')).to.equal(null);
-      // TODO: Determine correct behavior to test against
-      //fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.queryByRole('button', { name: 'Adidas' }), { key: 'Enter' });
       expect(screen.queryByRole('listbox')).to.equal(null);
 
-      //resolveCallback!();
+      resolveCallback!();
       await act(() => Promise.resolve());
     });
   });

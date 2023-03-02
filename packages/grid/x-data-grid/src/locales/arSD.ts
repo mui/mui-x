@@ -64,6 +64,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'ينتهي بـ',
   filterOperatorIs: 'يكون',
   filterOperatorNot: 'ليس',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'بعد',
   filterOperatorOnOrAfter: 'عند أو بعد',
   filterOperatorBefore: 'قبل',
@@ -71,6 +72,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالي',
   filterOperatorIsNotEmpty: 'غير خالي',
   filterOperatorIsAnyOf: 'أي من',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'أي',

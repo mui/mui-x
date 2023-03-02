@@ -72,6 +72,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'заканчивается на',
   filterOperatorIs: 'равен',
   filterOperatorNot: 'не равен',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'больше чем',
   filterOperatorOnOrAfter: 'больше или равно',
   filterOperatorBefore: 'меньше чем',
@@ -79,6 +80,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'пустой',
   filterOperatorIsNotEmpty: 'не пустой',
   filterOperatorIsAnyOf: 'любой из',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'любой',

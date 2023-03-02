@@ -63,6 +63,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'ile biter',
   filterOperatorIs: 'eşittir',
   filterOperatorNot: 'eşit değildir',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'büyük',
   filterOperatorOnOrAfter: 'büyük eşit',
   filterOperatorBefore: 'küçük',
@@ -70,6 +71,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'boş',
   filterOperatorIsNotEmpty: 'dolu',
   filterOperatorIsAnyOf: 'herhangi biri',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'herhangi',

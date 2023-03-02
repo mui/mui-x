@@ -63,6 +63,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: '结束于',
   filterOperatorIs: '是',
   filterOperatorNot: '不是',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: '在后面',
   filterOperatorOnOrAfter: '正在后面',
   filterOperatorBefore: '在前面',
@@ -70,6 +71,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '为空',
   filterOperatorIsNotEmpty: '不为空',
   filterOperatorIsAnyOf: '属于',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: '任何',

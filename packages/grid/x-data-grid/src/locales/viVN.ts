@@ -64,6 +64,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'Kết thúc bằng',
   filterOperatorIs: 'Là',
   filterOperatorNot: 'Không là',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'Trước',
   filterOperatorOnOrAfter: 'bằng hoặc sau',
   filterOperatorBefore: 'Sau',
@@ -71,6 +72,7 @@ const viVNGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'Rỗng',
   filterOperatorIsNotEmpty: 'Khác rỗng',
   // filterOperatorIsAnyOf: 'is any of',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'bất kỳ giá trị nào',

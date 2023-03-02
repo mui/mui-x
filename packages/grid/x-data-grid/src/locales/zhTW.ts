@@ -63,6 +63,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: '以...結束',
   filterOperatorIs: '為',
   filterOperatorNot: '不為',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: '...之後',
   filterOperatorOnOrAfter: '...(含)之後',
   filterOperatorBefore: '...之前',
@@ -70,6 +71,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: '為空',
   filterOperatorIsNotEmpty: '不為空',
   filterOperatorIsAnyOf: '是其中之一',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: '任何值',

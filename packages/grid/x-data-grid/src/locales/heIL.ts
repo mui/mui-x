@@ -64,6 +64,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'נגמר ב-',
   filterOperatorIs: 'הינו',
   filterOperatorNot: 'אינו',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'אחרי',
   filterOperatorOnOrAfter: 'ב- או אחרי',
   filterOperatorBefore: 'לפני',
@@ -71,6 +72,7 @@ const heILGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ריק',
   filterOperatorIsNotEmpty: 'אינו ריק',
   filterOperatorIsAnyOf: 'הוא אחד מ-',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'כל ערך',

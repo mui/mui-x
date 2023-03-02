@@ -64,6 +64,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'slutter med',
   filterOperatorIs: 'er',
   filterOperatorNot: 'er ikke',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'er etter',
   filterOperatorOnOrAfter: 'er på eller etter',
   filterOperatorBefore: 'er før',
@@ -71,6 +72,7 @@ const nbNOGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'er tom',
   filterOperatorIsNotEmpty: 'er ikke tom',
   filterOperatorIsAnyOf: 'er en av',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'noen',

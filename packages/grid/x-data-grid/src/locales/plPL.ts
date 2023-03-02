@@ -63,6 +63,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'kończy się na',
   filterOperatorIs: 'równa się',
   filterOperatorNot: 'różne',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'większe niż',
   filterOperatorOnOrAfter: 'większe lub równe',
   filterOperatorBefore: 'mniejsze niż',
@@ -70,6 +71,7 @@ const plPLGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'jest pusty',
   filterOperatorIsNotEmpty: 'nie jest pusty',
   filterOperatorIsAnyOf: 'jest jednym z',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'dowolny',

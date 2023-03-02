@@ -64,6 +64,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'ختم ہوتا ہے',
   filterOperatorIs: 'ہے',
   filterOperatorNot: 'نہیں',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'بعد میں ہے',
   filterOperatorOnOrAfter: 'پر یا بعد میں ہے',
   filterOperatorBefore: 'پہلے ہے',
@@ -71,6 +72,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'خالی ہے',
   filterOperatorIsNotEmpty: 'خالی نہیں ہے',
   filterOperatorIsAnyOf: 'ان میں سے کوئی ہے',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'کوئی بھی',

@@ -64,6 +64,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'endet mit',
   filterOperatorIs: 'ist',
   filterOperatorNot: 'ist nicht',
+  // filterOperatorNotContains: "doesn't contain",
   filterOperatorAfter: 'ist nach',
   filterOperatorOnOrAfter: 'ist am oder nach',
   filterOperatorBefore: 'ist vor',
@@ -71,6 +72,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorIsEmpty: 'ist leer',
   filterOperatorIsNotEmpty: 'ist nicht leer',
   filterOperatorIsAnyOf: 'ist einer der Werte',
+  // filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'Beliebig',
