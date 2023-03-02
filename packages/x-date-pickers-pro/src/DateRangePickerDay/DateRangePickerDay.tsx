@@ -5,7 +5,7 @@ import { useLicenseVerifier } from '@mui/x-license-pro';
 import { alpha, styled, useThemeProps } from '@mui/material/styles';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { useUtils } from '@mui/x-date-pickers/internals';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickersDay, pickersDayClasses, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import {
   DateRangePickerDayClasses,
   getDateRangePickerDayUtilityClass,
@@ -258,13 +258,12 @@ const DateRangePickerDayDay = styled(PickersDay, {
   }),
   ...(!ownerState.selected &&
     ownerState.isHighlighting && {
-      [`&.${dateRangePickerDayClasses.outsideCurrentMonth} .${dateRangePickerDayClasses.day}`]: {
-        color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.1)),
+      [`&.${pickersDayClasses.dayOutsideMonth}.${dateRangePickerDayClasses.day}`]: {
+        color: alpha(theme.palette.getContrastText(theme.palette.primary.light), 0.6),
       },
-      [`&:not(.${dateRangePickerDayClasses.outsideCurrentMonth}) .${dateRangePickerDayClasses.day}`]:
-        {
-          color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
-        },
+      [`&:not(.${pickersDayClasses.dayOutsideMonth}).${dateRangePickerDayClasses.day}`]: {
+        color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
+      },
     }),
   ...(ownerState.draggable && {
     cursor: 'grab',

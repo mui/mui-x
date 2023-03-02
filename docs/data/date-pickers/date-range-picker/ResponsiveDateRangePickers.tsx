@@ -37,6 +37,7 @@ export default function ResponsiveDateRangePickers() {
         </DemoItem>
         <DemoItem label="Static variant" component="StaticDateRangePicker">
           <StaticDateRangePicker
+            showDaysOutsideCurrentMonth
             defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
             sx={{
               [`.${pickersLayoutClasses.contentWrapper}`]: {
