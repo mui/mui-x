@@ -29,9 +29,9 @@ export default function MultiFilteringPanelSnap() {
           filter: {
             filterModel: {
               items: [
-                { field: 'name', operator: 'contains', value: 'Del' },
-                { field: 'rating', operator: '>=', value: 3 },
-                { field: 'country', operator: 'is', value: 'LA' },
+                { id: 'name', field: 'name', operator: 'contains', value: 'Del' },
+                { id: 'rating', field: 'rating', operator: '>=', value: 3 },
+                { id: 'country', field: 'country', operator: 'is', value: 'LA' },
               ],
               logicOperator: GridLogicOperator.And,
             },
