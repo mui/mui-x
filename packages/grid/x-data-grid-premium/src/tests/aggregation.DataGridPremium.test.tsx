@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, userEvent, within, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, userEvent, within, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { SinonSpy, spy } from 'sinon';
@@ -42,7 +42,7 @@ const baselineProps: DataGridPremiumProps = {
 };
 
 describe('<DataGridPremium /> - Aggregation', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -356,22 +356,22 @@ describe('<DataGridPremium /> - Aggregation', () => {
   });
 
   describe('Column Menu', () => {
-    it('should render select on aggregable column', () => {
+    it('should render select on aggregable column', async () => {
       render(<Test />);
 
       act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
 
-      expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByLabelText('Aggregation')).not.to.equal(null);
+      });
     });
 
-    it('should update the aggregation when changing "Aggregation" select value', () => {
+    it('should update the aggregation when changing "Aggregation" select value', async () => {
       render(<Test />);
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
 
       act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
       userEvent.mousePress(screen.getByLabelText('Aggregation'));
       userEvent.mousePress(
         within(
@@ -381,7 +381,9 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ).getByText('max'),
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5' /* Agg */]);
+      });
     });
   });
 
@@ -493,7 +495,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5']);
     });
 
-    it('should not render column menu select if colDef.aggregable = false', () => {
+    it('should not render column menu select if colDef.aggregable = false', async () => {
       render(
         <Test
           initialState={{ aggregation: { model: { id: 'max' } } }}
@@ -508,9 +510,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
       );
 
       act(() => apiRef.current.showColumnMenu('id'));
-      clock.runToLast();
 
-      expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
+      await waitFor(() => {
+        expect(screen.queryAllByLabelText('Aggregation')).to.have.length(0);
+      });
     });
   });
 
