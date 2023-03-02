@@ -420,6 +420,7 @@ export const useField = <
             );
       return nextSectionIndex === -1 ? state.sections.length - 1 : nextSectionIndex - 1;
     },
+    setSelectedSections: (activeSectionIndex) => setSelectedSections(activeSectionIndex),
   }));
 
   return {

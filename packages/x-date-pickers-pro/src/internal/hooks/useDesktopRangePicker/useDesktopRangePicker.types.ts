@@ -72,7 +72,8 @@ export interface UseDesktopRangePickerProps<
   slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps extends UseRangePositionResponse {}
+export interface DesktopRangePickerAdditionalViewProps
+  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseDesktopRangePickerParams<
   TDate,

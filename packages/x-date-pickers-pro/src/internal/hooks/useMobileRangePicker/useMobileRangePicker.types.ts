@@ -67,7 +67,8 @@ export interface UseMobileRangePickerProps<
   slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-export interface MobileRangePickerAdditionalViewProps extends UseRangePositionResponse {}
+export interface MobileRangePickerAdditionalViewProps
+  extends Pick<UseRangePositionResponse, 'rangePosition' | 'onRangePositionChange'> {}
 
 export interface UseMobileRangePickerParams<
   TDate,

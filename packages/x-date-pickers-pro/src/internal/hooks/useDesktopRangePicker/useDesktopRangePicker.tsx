@@ -59,7 +59,7 @@ export const useDesktopRangePicker = <
   const fieldContainerRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
 
-  const { rangePosition, onRangePositionChange } = useRangePosition(props);
+  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
 
   const {
     open,
@@ -140,6 +140,7 @@ export const useDesktopRangePicker = <
     onBlur: handleBlur,
     rangePosition,
     onRangePositionChange,
+    singleInputFieldRef,
     pickerSlotProps: slotProps,
     pickerSlots: slots,
     fieldProps,

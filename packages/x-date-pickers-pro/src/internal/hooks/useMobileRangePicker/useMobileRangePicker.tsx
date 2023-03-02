@@ -54,7 +54,7 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const { rangePosition, onRangePositionChange } = useRangePosition(props);
+  const { rangePosition, onRangePositionChange, singleInputFieldRef } = useRangePosition(props);
   const labelId = useId();
   const contextLocaleText = useLocaleText();
 
@@ -123,6 +123,7 @@ export const useMobileRangePicker = <
     localeText,
     rangePosition,
     onRangePositionChange,
+    singleInputFieldRef,
     pickerSlots: slots,
     pickerSlotProps: innerSlotProps,
     fieldProps,

@@ -82,6 +82,7 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
 export interface FieldRef<TSection extends FieldSection> {
   getSections: () => TSection[];
   getActiveSectionIndex: () => number | null;
+  setSelectedSections: (selectedSections: FieldSelectedSections) => void;
 }
 
 export interface UseFieldForwardedProps {
