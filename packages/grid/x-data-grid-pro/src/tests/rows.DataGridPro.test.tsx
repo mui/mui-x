@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, act, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, userEvent, waitFor } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -25,7 +25,7 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 describe('<DataGridPro /> - Rows', () => {
   let baselineProps: DataGridProProps;
 
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   describe('getRowId', () => {
     beforeEach(() => {
@@ -173,14 +173,15 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
     });
 
-    it('should allow to enable throttle', () => {
+    it('should allow to enable throttle', async () => {
       render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       act(() => apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]));
-      clock.tick(50);
+
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      clock.tick(50);
-      expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Nike', 'Fila', 'Puma']);
+      });
     });
 
     it('should allow to update row data', () => {
@@ -359,7 +360,7 @@ describe('<DataGridPro /> - Rows', () => {
       expect(getColumnValues(0)).to.deep.equal(['Asics']);
     });
 
-    it('should allow to enable throttle', () => {
+    it('should allow to enable throttle', async () => {
       render(<TestCase throttleRowsMs={100} />);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       const newRows = [
@@ -370,10 +371,10 @@ describe('<DataGridPro /> - Rows', () => {
       ];
       act(() => apiRef.current.setRows(newRows));
 
-      clock.tick(50);
       expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      clock.tick(50);
-      expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Asics']);
+      });
     });
 
     it('should work with `loading` prop change', () => {
@@ -424,9 +425,8 @@ describe('<DataGridPro /> - Rows', () => {
       setProps({
         height: 220,
       });
-      await act(() => Promise.resolve());
-      clock.runToLast();
-      expect(getRows()).to.have.length(4);
+
+      await waitFor(() => expect(getRows()).to.have.length(4));
     });
 
     it('should render last row when scrolling to the bottom', () => {
