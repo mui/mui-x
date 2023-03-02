@@ -6,6 +6,7 @@ import {
   buildFieldInteractions,
   createPickerRenderer,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField/DateTimeField';
 import { FieldSectionType, MuiPickersAdapter } from '../internals/models/muiPickersAdapter';
@@ -86,7 +87,7 @@ adapterToTest.forEach((adapterName) => {
       cursorPosition?: number;
     }) => {
       render(<DateTimeField defaultValue={initialValue} format={format} />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
+      const input = getTextbox();
       clickOnInput(input, cursorPosition);
       userEvent.keyPress(input, { key });
 

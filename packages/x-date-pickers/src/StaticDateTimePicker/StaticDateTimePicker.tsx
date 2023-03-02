@@ -24,6 +24,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
   >(inProps, 'MuiStaticDateTimePicker');
 
   const displayStaticWrapperAs = defaultizedProps.displayStaticWrapperAs ?? 'mobile';
+  const ampmInClock = defaultizedProps.ampmInClock ?? displayStaticWrapperAs === 'desktop';
 
   const viewRenderers: PickerViewRendererLookup<TDate | null, DateOrTimeView, any, {}> = {
     day: renderDateViewCalendar,
@@ -40,6 +41,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
     ...defaultizedProps,
     viewRenderers,
     displayStaticWrapperAs,
+    ampmInClock,
     yearsPerRow: defaultizedProps.yearsPerRow ?? (displayStaticWrapperAs === 'mobile' ? 3 : 4),
     slotProps: {
       ...defaultizedProps.slotProps,
@@ -49,6 +51,7 @@ const StaticDateTimePicker = React.forwardRef(function StaticDateTimePicker<TDat
       },
       toolbar: {
         hidden: displayStaticWrapperAs === 'desktop',
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -76,7 +79,7 @@ StaticDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true
    */
   ampmInClock: PropTypes.bool,
   /**

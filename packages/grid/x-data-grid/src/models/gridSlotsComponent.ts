@@ -52,6 +52,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BasePopper: React.JSXElementConstructor<any>;
   /**
+   * The custom InputLabel component used in the grid.
+   * @default InputLabel
+   */
+  BaseInputLabel: React.JSXElementConstructor<any>;
+  /**
    * Component rendered for each cell.
    * @default GridCell
    */

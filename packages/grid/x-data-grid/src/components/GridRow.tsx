@@ -11,7 +11,7 @@ import { GridEditModes, GridRowModes, GridCellModes } from '../models/gridEditRo
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { GridStateColDef } from '../models/colDef/gridColDef';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/utils/useGridSelector';
@@ -26,10 +26,10 @@ import { gridSortModelSelector } from '../hooks/features/sorting/gridSortingSele
 import { gridRowMaximumTreeDepthSelector } from '../hooks/features/rows/gridRowsSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../hooks/features/columnGrouping/gridColumnGroupsSelector';
 import { randomNumberBetween } from '../utils/utils';
-import { GridCellProps } from './cell/GridCell';
+import type { GridCellProps } from './cell/GridCell';
 import { gridEditRowsStateSelector } from '../hooks/features/editing/gridEditingSelectors';
 
-export interface GridRowProps {
+export interface GridRowProps extends React.HTMLAttributes<HTMLDivElement> {
   rowId: GridRowId;
   selected: boolean;
   /**
@@ -60,6 +60,7 @@ export interface GridRowProps {
   onDoubleClick?: React.MouseEventHandler<HTMLDivElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
+  [x: string]: any; // Allow custom attributes like data-* and aria-*
 }
 
 type OwnerState = Pick<GridRowProps, 'selected'> & {
@@ -96,10 +97,7 @@ function EmptyCell({ width }: { width: number }) {
   return <div className="MuiDataGrid-cell MuiDataGrid-withBorderColor" style={style} />; // TODO change to .MuiDataGrid-emptyCell or .MuiDataGrid-rowFiller
 }
 
-const GridRow = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & GridRowProps
->(function GridRow(props, refProp) {
+const GridRow = React.forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props, refProp) {
   const {
     selected,
     rowId,
@@ -523,8 +521,8 @@ GridRow.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  containerWidth: PropTypes.number.isRequired,
-  firstColumnToRender: PropTypes.number.isRequired,
+  containerWidth: PropTypes.number,
+  firstColumnToRender: PropTypes.number,
   /**
    * Determines which cell has focus.
    * If `null`, no cell in this row has focus.
@@ -534,21 +532,25 @@ GridRow.propTypes = {
    * Index of the row in the whole sorted and filtered dataset.
    * If some rows above have expanded children, this index also take those children into account.
    */
-  index: PropTypes.number.isRequired,
+  index: PropTypes.number,
   isLastVisible: PropTypes.bool,
-  lastColumnToRender: PropTypes.number.isRequired,
-  position: PropTypes.oneOf(['center', 'left', 'right']).isRequired,
-  renderedColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  lastColumnToRender: PropTypes.number,
+  onClick: PropTypes.func,
+  onDoubleClick: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  position: PropTypes.oneOf(['center', 'left', 'right']),
+  renderedColumns: PropTypes.arrayOf(PropTypes.object),
   row: PropTypes.object,
-  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
-  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  selected: PropTypes.bool.isRequired,
+  rowHeight: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]),
+  rowId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  selected: PropTypes.bool,
   /**
    * Determines which cell should be tabbable by having tabIndex=0.
    * If `null`, no cell in this row is in the tab sequence.
    */
   tabbableCell: PropTypes.string,
-  visibleColumns: PropTypes.arrayOf(PropTypes.object).isRequired,
+  visibleColumns: PropTypes.arrayOf(PropTypes.object),
 } as any;
 
 export { GridRow };
