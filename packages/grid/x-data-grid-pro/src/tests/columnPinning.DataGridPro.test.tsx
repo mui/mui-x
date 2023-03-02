@@ -17,6 +17,7 @@ import {
   createEvent,
   act,
   userEvent,
+  waitFor,
 } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
@@ -35,7 +36,7 @@ function createDragOverEvent(target: ChildNode) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Column pinning', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -157,7 +158,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     fireEvent.mouseDown(separator, { clientX: 100 });
     fireEvent.mouseMove(separator, { clientX: 110, buttons: 1 });
     fireEvent.mouseUp(separator);
-    clock.runToLast();
+
     expect(renderZone).toHaveInlineStyle({ transform: 'translate3d(110px, 0px, 0px)' });
   });
 
@@ -310,18 +311,21 @@ describe('<DataGridPro /> - Column pinning', () => {
       }
 
       render(<Test bioHeight={100} />);
-      await act(() => Promise.resolve());
-      clock.runToLast();
-      const leftRow = document.querySelector(`.${gridClasses['pinnedColumns--left']} [role="row"]`);
-      expect(leftRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
-      const centerRow = document.querySelector(
-        `.${gridClasses.virtualScrollerRenderZone} [role="row"]`,
-      );
-      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
-      const rightRow = document.querySelector(
-        `.${gridClasses['pinnedColumns--right']} [role="row"]`,
-      );
-      expect(rightRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+
+      await waitFor(() => {
+        const leftRow = document.querySelector(
+          `.${gridClasses['pinnedColumns--left']} [role="row"]`,
+        );
+        expect(leftRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+        const centerRow = document.querySelector(
+          `.${gridClasses.virtualScrollerRenderZone} [role="row"]`,
+        );
+        expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+        const rightRow = document.querySelector(
+          `.${gridClasses['pinnedColumns--right']} [role="row"]`,
+        );
+        expect(rightRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+      });
     });
 
     it('should react to content height changes', async function test() {
@@ -348,29 +352,34 @@ describe('<DataGridPro /> - Column pinning', () => {
       }
 
       const { setProps } = render(<Test bioHeight={100} />);
-      await act(() => Promise.resolve());
-      clock.runToLast();
+
       const centerRow = document.querySelector(
         `.${gridClasses.virtualScrollerRenderZone} [role="row"]`,
       );
-      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+
+      await waitFor(() => {
+        expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+      });
 
       setProps({ bioHeight: 200 });
-      await act(() => Promise.resolve());
-      clock.runToLast();
-      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+
+      await waitFor(() => {
+        expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+      });
 
       setProps({ bioHeight: 100 });
-      await act(() => Promise.resolve());
-      clock.runToLast();
-      // If the new height is smaller than the current one, it won't be reflected unless
-      // apiRef.current.resetRowHeights() is called
-      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+
+      await waitFor(() => {
+        // If the new height is smaller than the current one, it won't be reflected unless
+        // apiRef.current.resetRowHeights() is called
+        expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '201px' });
+      });
 
       act(() => apiRef.current.resetRowHeights());
-      await act(() => Promise.resolve());
-      clock.runToLast();
-      expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+
+      await waitFor(() => {
+        expect(centerRow).toHaveInlineStyle({ maxHeight: 'none', minHeight: '101px' });
+      });
     });
   });
 
@@ -469,13 +478,15 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   describe('prop: disableColumnPinning', () => {
-    it('should not add any button to the column menu', () => {
+    it('should not add any button to the column menu', async () => {
       render(<TestCase disableColumnPinning />);
       const columnCell = document.querySelector('[role="columnheader"][data-field="id"]')!;
       const menuIconButton = columnCell.querySelector('button[aria-label="Menu"]')!;
       fireEvent.click(menuIconButton);
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
-      expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'Pin to right' })).to.equal(null);
+      });
     });
 
     it('should throw an error when calling `apiRef.current.pinColumn`', () => {
@@ -689,7 +700,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       ).to.equal(null);
     });
 
-    it('should not render menu items if the column has `pinnable` equals to false', () => {
+    it('should not render menu items if the column has `pinnable` equals to false', async () => {
       render(
         <TestCase
           columns={[
@@ -705,13 +716,16 @@ describe('<DataGridPro /> - Column pinning', () => {
       expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).not.to.equal(null);
       fireEvent.keyDown(screen.getByRole('menu'), { key: 'Escape' });
 
-      clock.runToLast();
-      // Ensure that the first menu was closed
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+      await waitFor(() => {
+        // Ensure that the first menu was closed
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+      });
 
       const yearHeader = document.querySelector('[role="columnheader"][data-field="year"]')!;
       fireEvent.click(yearHeader.querySelector('button[aria-label="Menu"]')!);
-      expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByRole('menuitem', { name: 'Pin to left' })).to.equal(null);
+      });
     });
   });
 
