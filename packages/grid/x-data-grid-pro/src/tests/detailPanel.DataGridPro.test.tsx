@@ -24,7 +24,7 @@ import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Detail panel', () => {
-  const { render, clock } = createRenderer();
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -503,22 +503,20 @@ describe('<DataGridPro /> - Detail panel', () => {
     expect(getRow(0)).toHaveComputedStyle({ marginBottom: '502px' }); // 500px + 2px spacing
   });
 
-  describe('-', () => {
-    clock.withFakeTimers();
-
-    it('should not reuse detail panel components', () => {
-      function DetailPanel() {
-        const [today] = React.useState(() => new Date());
-        return <div>Date is {today.toISOString()}</div>;
-      }
-      const { setProps } = render(
-        <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
-      );
-      expect(screen.queryByText('Date is 1970-01-01T00:00:00.000Z')).not.to.equal(null);
-      clock.tick(100);
+  it('should not reuse detail panel components', () => {
+    let counter = 0;
+    function DetailPanel() {
+      const [number] = React.useState((counter += 1));
+      return <div data-testid="detail-panel-content">{number}</div>;
+    }
+    const { setProps } = render(
+      <TestCase getDetailPanelContent={() => <DetailPanel />} detailPanelExpandedRowIds={[0]} />,
+    );
+    expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
+    act(() => {
       setProps({ detailPanelExpandedRowIds: [1] });
-      expect(screen.queryByText('Date is 1970-01-01T00:00:00.100Z')).not.to.equal(null);
     });
+    expect(screen.getByTestId(`detail-panel-content`).textContent).to.equal(`${counter}`);
   });
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
