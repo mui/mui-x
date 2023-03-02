@@ -32,7 +32,7 @@ export default function RenderErrorUnderField() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box width={300}>
         <DatePicker
-          defaultValue={dayjs('2022-07-12T00:00:00.000')}
+          defaultValue={dayjs('2022-07-17')}
           onError={(newError) => setError(newError)}
           slotProps={{
             textField: {
