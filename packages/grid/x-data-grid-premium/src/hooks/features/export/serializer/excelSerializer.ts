@@ -36,7 +36,7 @@ const warnInvalidFormattedValue = buildWarning([
 ]);
 
 const getFormattedValueOptions = (
-  colDef: GridSingleSelectColDef,
+  colDef: GridSingleSelectColDef | GridMultipleSelectColDef,
   valueOptions: ValueOptions[],
   api: GridApi,
 ) => {
