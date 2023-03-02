@@ -8,7 +8,7 @@ import {
   GridFilterInputValueProps,
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 function setColumnValue(columnValue: string) {
@@ -48,7 +48,7 @@ function CustomInputValue(props: GridFilterInputValueProps) {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter panel', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps: DataGridProps = {
     autoHeight: isJSDOM,
@@ -482,12 +482,14 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
 
     deleteFilterForm();
-    clock.tick(100);
-    expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+
+    await waitFor(() => {
+      expect(screen.queryAllByRole('tooltip').length).to.deep.equal(0);
+    });
   });
 
   // See https://github.com/mui/mui-x/issues/5402
-  it('should not remove `isEmpty` filter from model when filter panel is opened through column menu', () => {
+  it('should not remove `isEmpty` filter from model when filter panel is opened through column menu', async () => {
     render(
       <TestCase
         initialState={{
@@ -506,12 +508,14 @@ describe('<DataGrid /> - Filter panel', () => {
     fireEvent.click(menuIconButton);
     fireEvent.click(screen.getByRole('menuitem', { name: 'Filter' }));
 
-    // check that the filter is still in the model
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
-      'brand',
-    );
-    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
-      'isEmpty',
-    );
+    await waitFor(() => {
+      // check that the filter is still in the model
+      expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Columns' }).value).to.equal(
+        'brand',
+      );
+      expect(screen.getByRole<HTMLSelectElement>('combobox', { name: 'Operator' }).value).to.equal(
+        'isEmpty',
+      );
+    });
   });
 });
