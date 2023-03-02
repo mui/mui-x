@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   DataGrid,
@@ -15,7 +15,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -188,7 +188,7 @@ describe('<DataGrid /> - Filter', () => {
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
     });
 
-    it('should allow to update the filters when initialized with initialState', () => {
+    it('should allow to update the filters when initialized with initialState', async () => {
       render(
         <TestCase
           initialState={{
@@ -209,8 +209,9 @@ describe('<DataGrid /> - Filter', () => {
       fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['Puma']);
+      });
     });
   });
 
@@ -1106,7 +1107,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('custom `filterOperators`', () => {
-    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', () => {
+    it('should allow to cutomize filter tooltip using `filterOperator.getValueAsString`', async () => {
       render(
         <div style={{ width: '100%', height: '400px' }}>
           <DataGrid
@@ -1158,12 +1159,15 @@ describe('<DataGrid /> - Filter', () => {
       expect(screen.queryByRole('tooltip')).to.equal(null);
 
       fireEvent.mouseOver(filterButton);
-      clock.tick(1000); // tooltip display delay
 
-      const tooltip = screen.getByRole('tooltip');
-
-      expect(tooltip).toBeVisible();
-      expect(tooltip.textContent).to.contain('"John" text string');
+      await waitFor(
+        () => {
+          const tooltip = screen.getByRole('tooltip');
+          expect(tooltip).toBeVisible();
+          expect(tooltip.textContent).to.contain('"John" text string');
+        },
+        { timeout: 2000 },
+      );
     });
   });
 
