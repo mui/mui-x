@@ -133,6 +133,18 @@ const DateRangePickerDayRoot = styled('div', {
       [`&.${dateRangePickerDayClasses.rangeIntervalDayHighlightEnd}`]:
         styles.rangeIntervalDayHighlightEnd,
     },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalFirstVisibleCell}`]:
+        styles.rangeIntervalFirstVisibleCell,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalLastVisibleCell}`]:
+        styles.rangeIntervalLastVisibleCell,
+    },
+    {
+      [`&.${dateRangePickerDayClasses.rangeIntervalHiddenDayFiller}`]:
+        styles.rangeIntervalHiddenDayFiller,
+    },
     styles.root,
   ],
 })<{ ownerState: OwnerState }>(({ theme, ownerState }) =>
