@@ -260,7 +260,7 @@ const DateRangePickerDayDay = styled(PickersDay, {
     ownerState.isHighlighting && {
       color: theme.palette.getContrastText(alpha(theme.palette.primary.light, 0.6)),
       [`&.${pickersDayClasses.dayOutsideMonth}`]: {
-        color: alpha(theme.palette.getContrastText(theme.palette.primary.light), 0.6),
+        color: alpha(theme.palette.getContrastText(theme.palette.primary.light), 0.4),
       },
     }),
   ...(ownerState.draggable && {
