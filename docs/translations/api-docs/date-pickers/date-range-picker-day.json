@@ -16,7 +16,7 @@
     "isEndOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the start of a previewing date range.",
     "isFirstVisibleCell": "If <code>true</code>, day is the first visible cell of the month. Either the first day of the month or the first day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isHighlighting": "Set to <code>true</code> if the <code>day</code> is in a highlighted date range.",
-    "isLastVisibleCell": "If <code>true</code>, day is the last visible cell of the month. Either last day of month or last day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
+    "isLastVisibleCell": "If <code>true</code>, day is the last visible cell of the month. Either the last day of the month or the last day of the week depending on <code>showDaysOutsideCurrentMonth</code>.",
     "isPreviewing": "Set to <code>true</code> if the <code>day</code> is in a preview date range.",
     "isStartOfHighlighting": "Set to <code>true</code> if the <code>day</code> is the start of a highlighted date range.",
     "isStartOfPreviewing": "Set to <code>true</code> if the <code>day</code> is the end of a previewing date range.",
@@ -66,30 +66,30 @@
       "nodeName": "the root element",
       "conditions": "<code>isEndOfPreviewing=true</code>"
     },
-    "rangeIntervalOutsideCurrentMonth": {
+    "outsideCurrentMonth": {
       "description": "Styles applied to the root element if `outsideCurrentMonth=true`"
     },
-    "rangeIntervalStartOfMonth": {
+    "startOfMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>day</code> is the start of the month"
     },
-    "rangeIntervalEndOfMonth": {
+    "endOfMonth": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>day</code> is the end of the month"
     },
-    "rangeIntervalFirstVisibleCell": {
+    "firstVisibleCell": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>day</code> is the first visible cell of the month"
     },
-    "rangeIntervalLastVisibleCell": {
+    "lastVisibleCell": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "<code>day</code> is the last visible cell of the month"
     },
-    "rangeIntervalHiddenDayFiller": {
+    "hiddenDayFiller": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the root element",
       "conditions": "it is an empty cell used to fill the week"
