@@ -7,6 +7,7 @@ export type {
   GridColTypeDef,
   GridColumnsMeta,
   GridSingleSelectColDef,
+  GridMultipleSelectColDef,
   GridActionsColDef,
 } from './gridColDef';
 

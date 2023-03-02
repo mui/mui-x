@@ -195,6 +195,7 @@ The following are the native column types:
 - `'dateTime'`
 - `'boolean'`
 - `'singleSelect'`
+- `'multipleSelect'`
 - `'actions'`
 
 ### Converting types
@@ -216,7 +217,7 @@ If for any reason, your data type is not the correct one, you can use `valueGett
 To use most of the column types, you only need to define the `type` property in your column definition.
 However, some types require additional properties to be set to make them work correctly:
 
-- If the column type is `'singleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
+- If the column type is `'singleSelect'` or  `'multipleSelect'`, you also need to set the `valueOptions` property in the respective column definition. These values are options used for filtering and editing.
 
   ```tsx
   {

@@ -162,14 +162,15 @@ The candidate value used by the operator is the one corresponding to the `field`
 Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
-| Column type    | Function                         |
-| :------------- | :------------------------------- |
-| `string`       | `getGridStringOperators()`       |
-| `number`       | `getGridNumericOperators()`      |
-| `boolean`      | `getGridBooleanOperators()`      |
-| `date`         | `getGridDateOperators()`         |
-| `dateTime`     | `getGridDateOperators(true)`     |
-| `singleSelect` | `getGridSingleSelectOperators()` |
+| Column type      | Function                           |
+|:-----------------|:-----------------------------------|
+| `string`         | `getGridStringOperators()`         |
+| `number`         | `getGridNumericOperators()`        |
+| `boolean`        | `getGridBooleanOperators()`        |
+| `date`           | `getGridDateOperators()`           |
+| `dateTime`       | `getGridDateOperators(true)`       |
+| `singleSelect`   | `getGridSingleSelectOperators()`   |
+| `multipleSelect` | `getGridMultipleSelectOperators()` |
 
 You can find more information about the supported column types in the [columns section](/x/react-data-grid/column-definition/#column-types).
 
@@ -349,7 +350,7 @@ By default, the quick filter considers the input as a list of values separated b
 ### Custom filtering logic
 
 The logic used for quick filter can be switched to filter rows that contain _at least_ one of the values specified instead of testing if it contains all of them.
-To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follow:
+To do so, set `quickFilterLogicOperator` to `GridLogicOperator.Or` as follows:
 
 ```js
 initialState={{
@@ -362,9 +363,9 @@ initialState={{
 }}
 ```
 
-With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, and `'singleSelect'`.
+With the default settings, quick filter will only consider columns with types `'string'`,`'number'`, `'singleSelect'`, and `'multipleSelect'`.
 
-- For `'string'` and `'singleSelect'` columns, the cell's formatted value must **contain** the value
+- For `'string'`, `'multipleSelect'`, and `'singleSelect'` columns, the cell's formatted value must **contain** the value
 - For `'number'` columns, the cell's formatted value must **equal** the value
 
 To modify or add the quick filter operators, add the property `getApplyQuickFilterFn` to the column definition.

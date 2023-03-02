@@ -12,8 +12,10 @@ import {
   buildWarning,
   GridStateColDef,
   GridSingleSelectColDef,
+  GridMultipleSelectColDef,
   isObject,
   GridColumnGroupLookup,
+  isMultipleSelectColDef,
   isSingleSelectColDef,
 } from '@mui/x-data-grid/internals';
 import {
@@ -103,6 +105,50 @@ export const serializeRow = (
     switch (cellParams.colDef.type) {
       case 'singleSelect': {
         const castColumn = cellParams.colDef as GridSingleSelectColDef;
+        if (typeof castColumn.valueOptions === 'function') {
+          // If value option depends on the row, set specific options to the cell
+          // This dataValidation is buggy with LibreOffice and does not allow to have coma
+          const valueOptions = castColumn.valueOptions({
+            id,
+            row,
+            field: cellParams.field,
+          });
+          const formattedValueOptions = getFormattedValueOptions(castColumn, valueOptions, api);
+          dataValidation[castColumn.field] = {
+            type: 'list',
+            allowBlank: true,
+            formulae: [
+              `"${formattedValueOptions
+                .map((x) => x.toString().replaceAll(',', 'CHAR(44)'))
+                .join(',')}"`,
+            ],
+          };
+        } else {
+          const address = defaultValueOptionsFormulae[column.field].address;
+
+          // If value option is defined for the column, refer to another sheet
+          dataValidation[castColumn.field] = {
+            type: 'list',
+            allowBlank: true,
+            formulae: [address],
+          };
+        }
+
+        const formattedValue = api.getCellParams(id, castColumn.field).formattedValue;
+        if (process.env.NODE_ENV !== 'production') {
+          if (String(cellParams.formattedValue) === '[object Object]') {
+            warnInvalidFormattedValue();
+          }
+        }
+        if (isObject<{ label: any }>(formattedValue)) {
+          row[castColumn.field] = formattedValue?.label;
+        } else {
+          row[castColumn.field] = formattedValue as any;
+        }
+        break;
+      }
+      case 'multipleSelect': {
+        const castColumn = cellParams.colDef as GridMultipleSelectColDef;
         if (typeof castColumn.valueOptions === 'function') {
           // If value option depends on the row, set specific options to the cell
           // This dataValidation is buggy with LibreOffice and does not allow to have coma
@@ -289,7 +335,7 @@ export async function getDataForValueOptionsSheet(
   api: GridPrivateApiPremium,
 ): Promise<ValueOptionsData> {
   const candidateColumns = columns.filter(
-    (column) => isSingleSelectColDef(column) && Array.isArray(column.valueOptions),
+    (column) => (isSingleSelectColDef(column) || isMultipleSelectColDef(column)) && Array.isArray(column.valueOptions),
   );
 
   // Creates a temp worksheet to obtain the column letters
@@ -302,6 +348,7 @@ export async function getDataForValueOptionsSheet(
   return candidateColumns.reduce<Record<string, { values: (string | number)[]; address: string }>>(
     (acc, column) => {
       const singleSelectColumn = column as GridSingleSelectColDef;
+      const multipleSelectColumn = column as GridMultipleSelectColDef;
       const formattedValueOptions = getFormattedValueOptions(
         singleSelectColumn,
         singleSelectColumn.valueOptions as Array<ValueOptions>,

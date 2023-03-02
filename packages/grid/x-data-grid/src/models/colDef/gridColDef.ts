@@ -285,12 +285,41 @@ export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = a
 }
 
 /**
+ * Column Definition interface used for columns with the `multipleSelect` type.
+ */
+export interface GridMultipleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
+  extends GridBaseColDef<R, V, F> {
+  /**
+   * Type allows to merge this object with a default definition [[GridColDef]].
+   * @default 'multipleSelect'
+   */
+  type: 'multipleSelect';
+  /**
+   * To be used in combination with `type: 'multipleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
+   */
+  valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
+  /**
+   * Used to determine the label displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel?: (value: ValueOptions) => string;
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue?: (value: ValueOptions) => any;
+}
+
+/**
  * Column Definition interface.
  */
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>
-  | GridSingleSelectColDef<R, V, F>;
+  | GridSingleSelectColDef<R, V, F>
+  | GridMultipleSelectColDef<R, V, F>;
 
 export type GridColTypeDef<V = any, F = V> = Omit<GridBaseColDef<any, V, F>, 'field'> & {
   extendType?: GridNativeColTypes;

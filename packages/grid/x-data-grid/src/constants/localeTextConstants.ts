@@ -62,6 +62,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorEndsWith: 'ends with',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is not',
+  filterOperatorNotContains: 'doesn\'t contain',
   filterOperatorAfter: 'is after',
   filterOperatorOnOrAfter: 'is on or after',
   filterOperatorBefore: 'is before',
@@ -69,6 +70,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorIsEmpty: 'is empty',
   filterOperatorIsNotEmpty: 'is not empty',
   filterOperatorIsAnyOf: 'is any of',
+  filterOperatorContainsAnyOf: 'contains any of',
 
   // Filter values text
   filterValueAny: 'any',
