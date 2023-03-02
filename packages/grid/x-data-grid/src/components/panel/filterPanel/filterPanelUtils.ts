@@ -43,7 +43,6 @@ export function getValuesFromValueOptions(
     const optionValue = getOptionValue(option);
     return valuesStrings.includes(String(optionValue));
   });
-  console.log('getValuesFromValueOptions result', result);
   return result.map((option) => getOptionValue(option));
 }
 
