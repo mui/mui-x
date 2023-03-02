@@ -13,9 +13,9 @@ In `package.json`, change the version of the data grid package to `latest` or `^
 
 Using `latest` ensures that it will always use the latest v6 release, but you can also use a fixed version, like `6.0.0`.
 
-Since v6 is a major release, it contains some changes that affect the public API.
+Since v6 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
-Below are described the steps you need to take to migrate from v5 to v6.
+Described below are the steps needed to migrate from v5 to v6.
 
 ## Run codemods
 
