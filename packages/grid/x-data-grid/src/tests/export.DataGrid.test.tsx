@@ -6,7 +6,7 @@ import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 
 describe('<DataGrid /> - Export', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function TestCase(props: Omit<DataGridProps, 'rows' | 'columns'>) {
     const basicData = useBasicDemoData(3, 2);
@@ -39,7 +39,6 @@ describe('<DataGrid /> - Export', () => {
     it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: GridToolbar }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -55,7 +54,6 @@ describe('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -71,7 +69,6 @@ describe('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
@@ -81,7 +78,6 @@ describe('<DataGrid /> - Export', () => {
     it('should export with the default csvOptions', async () => {
       render(<TestCase components={{ Toolbar: () => <GridToolbarExport /> }} />);
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -96,7 +92,6 @@ describe('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
       expect(spyCreateObjectURL.callCount).to.equal(1);
@@ -113,7 +108,6 @@ describe('<DataGrid /> - Export', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
-      clock.runToLast();
       expect(screen.queryByRole('menu')).not.to.equal(null);
       expect(screen.queryByRole('menuitem', { name: 'Download as CSV' })).to.equal(null);
     });
