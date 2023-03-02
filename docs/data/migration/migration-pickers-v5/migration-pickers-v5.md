@@ -8,10 +8,8 @@ In `package.json`, change the version of the date pickers package to `latest` or
 
 ```diff
 -"@mui/x-date-pickers": "5.X.X",
-+"@mui/x-date-pickers": "latest",
++"@mui/x-date-pickers": "^6.0.0",
 ```
-
-Using `latest` ensures that it will always use the latest v6 release, but you can also use a fixed version, like `6.0.1`.
 
 Since v6 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.

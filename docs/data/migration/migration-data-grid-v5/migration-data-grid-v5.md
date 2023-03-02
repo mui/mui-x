@@ -8,10 +8,8 @@ In `package.json`, change the version of the data grid package to `latest` or `^
 
 ```diff
 -"@mui/x-data-grid": "5.X.X",
-+"@mui/x-data-grid": "latest",
++"@mui/x-data-grid": "^6.0.0",
 ```
-
-Using `latest` ensures that it will always use the latest v6 release, but you can also use a fixed version, like `6.0.0`.
 
 Since v6 is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
