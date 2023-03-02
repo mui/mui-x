@@ -72,6 +72,7 @@ export interface PickerPopperProps extends UsePickerValueActions {
   role: 'tooltip' | 'dialog';
   anchorEl: MuiPopperProps['anchorEl'];
   open: MuiPopperProps['open'];
+  placement?: MuiPopperProps['placement'];
   containerRef?: React.Ref<HTMLDivElement>;
   children?: React.ReactNode;
   onBlur?: () => void;
@@ -271,6 +272,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
     onDismiss,
     open,
     role,
+    placement,
     components,
     componentsProps,
     slots: innerSlots,
@@ -360,6 +362,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
       role,
       open,
       anchorEl,
+      placement,
       onKeyDown: handleKeyDown,
     },
     className: classes.root,
@@ -368,7 +371,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
 
   return (
     <Popper {...popperProps}>
-      {({ TransitionProps, placement }) => (
+      {({ TransitionProps, placement: popperPlacement }) => (
         <TrapFocus
           open={open}
           disableAutoFocus
@@ -391,7 +394,7 @@ export function PickersPopper(inProps: PickerPopperProps) {
                 onPaperTouchStart(event);
                 paperProps.onTouchStart?.(event);
               }}
-              ownerState={{ ...ownerState, placement }}
+              ownerState={{ ...ownerState, placement: popperPlacement }}
             >
               {children}
             </Paper>

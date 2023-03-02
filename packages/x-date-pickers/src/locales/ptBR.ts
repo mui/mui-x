@@ -25,10 +25,10 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: 'Hoje',
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Selecione a data',
+  dateTimePickerToolbarTitle: 'Selecione data e hora',
+  timePickerToolbarTitle: 'Selecione a hora',
+  dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>
@@ -65,6 +65,7 @@ const ptBRPickers: Partial<PickersLocaleText<any>> = {
   // fieldYearPlaceholder: params => 'Y'.repeat(params.digitAmount),
   // fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
   // fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   // fieldHoursPlaceholder: () => 'hh',
   // fieldMinutesPlaceholder: () => 'mm',
   // fieldSecondsPlaceholder: () => 'ss',

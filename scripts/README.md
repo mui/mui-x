@@ -26,7 +26,7 @@ The following steps must be proposed as a pull request.
 
 - [ ] Clean the generated changelog, to match the format of [https://github.com/mui/mui-x/releases](https://github.com/mui/mui-x/releases).
 - [ ] Update the root `package.json`'s version
-- [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version`.
+- [ ] Update the versions of the other `package.json` files and of the dependencies with `yarn release:version` (`yarn release:version prerelease` for alpha / beta releases).
 - [ ] Manually fix any package version if it should not be bumped (i.e. `benchmark`, `eslint-plugin-material-ui`).
 - [ ] Open PR with changes and wait for review and green CI.
 - [ ] Merge PR once CI is green, and it has been approved.

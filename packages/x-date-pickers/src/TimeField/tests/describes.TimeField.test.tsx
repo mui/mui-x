@@ -5,6 +5,7 @@ import {
   buildFieldInteractions,
   createPickerRenderer,
   expectInputValue,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
 import { TimeField } from '@mui/x-date-pickers/TimeField';
@@ -12,7 +13,7 @@ import { TimeField } from '@mui/x-date-pickers/TimeField';
 describe('<TimeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
-  const { clickOnInput } = buildFieldInteractions({ clock });
+  const { clickOnInput } = buildFieldInteractions({ clock, render, Component: TimeField });
 
   describeValidation(TimeField, () => ({
     render,
@@ -43,7 +44,7 @@ describe('<TimeField /> - Describes', () => {
     setNewValue: (value) => {
       const newValue = adapterToUse.addHours(value, 1);
 
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 1); // Update the hour
       userEvent.keyPress(input, { key: 'ArrowUp' });
 

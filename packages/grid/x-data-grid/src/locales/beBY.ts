@@ -1,4 +1,4 @@
-import { beBY as beBYCore } from '@mui/material/locale';
+import { beBYCore } from './coreLocales';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
@@ -70,6 +70,7 @@ const beBYGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Дадаць фільтр',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Выдаліць',
   filterPanelLogicOperator: 'Лагічныя аператары',
   filterPanelOperator: 'Аператары',

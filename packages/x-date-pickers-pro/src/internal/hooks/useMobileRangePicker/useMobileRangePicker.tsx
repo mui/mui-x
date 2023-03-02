@@ -9,7 +9,6 @@ import {
 import {
   DateOrTimeView,
   usePicker,
-  WrapperVariantContext,
   PickersModalDialog,
   InferError,
   ExportedBaseToolbarProps,
@@ -23,8 +22,9 @@ import {
 } from './useMobileRangePicker.types';
 import { useRangePickerInputProps } from '../useRangePickerInputProps';
 import { getReleaseInfo } from '../../utils/releaseInfo';
-import { DateRange, RangePosition } from '../../models/range';
+import { DateRange } from '../../models/range';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { useRangePosition } from '../useRangePosition';
 
 const releaseInfo = getReleaseInfo();
 
@@ -51,7 +51,7 @@ export const useMobileRangePicker = <
     localeText,
   } = props;
 
-  const [rangePosition, setRangePosition] = React.useState<RangePosition>('start');
+  const { rangePosition, onRangePositionChange } = useRangePosition(props);
   const labelId = useId();
   const contextLocaleText = useLocaleText();
 
@@ -75,7 +75,7 @@ export const useMobileRangePicker = <
     autoFocusView: true,
     additionalViewProps: {
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     },
   });
 
@@ -88,7 +88,7 @@ export const useMobileRangePicker = <
     disableOpenPicker,
     localeText,
     rangePosition,
-    onRangePositionChange: setRangePosition,
+    onRangePositionChange,
   });
 
   const Field = slots.field;
@@ -116,52 +116,26 @@ export const useMobileRangePicker = <
 
   const isToolbarHidden = innerSlotProps?.toolbar?.hidden ?? false;
 
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
     ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
-
       return {
         ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
         ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
+        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
       };
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(innerSlotProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(fieldProps.slotProps?.root, ownerState);
       return {
         ...externalRootProps,
-        ...rootPropsPassedByField,
         ...fieldSlotProps.root,
       };
     },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(
-        innerSlotProps?.fieldSeparator,
-        ownerState,
-      );
-      const separatorPropsPassedByField = resolveComponentProps(
-        fieldProps.slotProps?.separator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
-        ...fieldSlotProps.root,
-      };
-    },
+    separator: innerSlotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -170,7 +144,7 @@ export const useMobileRangePicker = <
       ...innerSlotProps?.toolbar,
       titleId: labelId,
       rangePosition,
-      onRangePositionChange: setRangePosition,
+      onRangePositionChange,
     } as ExportedBaseToolbarProps,
   };
 
@@ -201,19 +175,17 @@ export const useMobileRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="mobile">
-        <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
-        <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
-          <Layout
-            {...layoutProps}
-            {...slotProps?.layout}
-            slots={slots}
-            slotProps={slotPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </WrapperVariantContext.Provider>
+      <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
+      <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
+          slots={slots}
+          slotProps={slotPropsForLayout}
+        >
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </LocalizationProvider>
   );
 

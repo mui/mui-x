@@ -20,8 +20,9 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps } from '../../models';
+import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 
 export interface UseMobileRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends PickersModalDialogSlotsComponent,
@@ -54,7 +55,8 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
 export interface MobileRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
-    UsePickerViewsNonStaticProps {}
+    UsePickerViewsNonStaticProps,
+    UseRangePositionProps {}
 
 export interface UseMobileRangePickerProps<
   TDate,
@@ -82,7 +84,7 @@ export interface UseMobileRangePickerProps<
   slotProps?: UseMobileRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-export interface MobileRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface MobileRangePickerAdditionalViewProps extends UseRangePositionResponse {}
 
 export interface UseMobileRangePickerParams<
   TDate,

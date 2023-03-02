@@ -20,8 +20,9 @@ import {
   UsePickerValueNonStaticProps,
   UsePickerViewsNonStaticProps,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePositionProps } from '../../models';
+import { DateRange } from '../../models';
 import { BaseMultiInputFieldProps } from '../../models/fields';
+import { UseRangePositionProps, UseRangePositionResponse } from '../useRangePosition';
 
 export interface UseDesktopRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   // TODO v6: Remove `Pick` once `PickerPoppers` does not handle the layouting parts
@@ -59,7 +60,8 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
 export interface DesktopRangeOnlyPickerProps<TDate>
   extends BaseNonStaticPickerProps,
     UsePickerValueNonStaticProps<TDate | null>,
-    UsePickerViewsNonStaticProps {
+    UsePickerViewsNonStaticProps,
+    UseRangePositionProps {
   /**
    * If `true`, the start `input` element is focused during the first mount.
    */
@@ -81,18 +83,6 @@ export interface UseDesktopRangePickerProps<
       DesktopRangePickerAdditionalViewProps
     > {
   /**
-   * Overrideable components.
-   * @default {}
-   * @deprecated Please use `slots`.
-   */
-  components?: UseDesktopRangePickerSlotsComponent<TDate, TView>;
-  /**
-   * The props used for each component slot.
-   * @default {}
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
-  /**
    * Overrideable component slots.
    * @default {}
    */
@@ -104,7 +94,7 @@ export interface UseDesktopRangePickerProps<
   slotProps?: UseDesktopRangePickerSlotsComponentsProps<TDate, TView>;
 }
 
-export interface DesktopRangePickerAdditionalViewProps extends RangePositionProps {}
+export interface DesktopRangePickerAdditionalViewProps extends UseRangePositionResponse {}
 
 export interface UseDesktopRangePickerParams<
   TDate,

@@ -1,6 +1,0 @@
-<DatePicker
-    label="Field using the browser input"
-    slots={{
-        textField: BrowserInput,
-    }}
-/>

@@ -1,7 +1,7 @@
 {
   "props": {
     "ampm": { "type": { "name": "bool" }, "default": "`utils.is12HourCycleInCurrentLocale()`" },
-    "ampmInClock": { "type": { "name": "bool" } },
+    "ampmInClock": { "type": { "name": "bool" }, "default": "true on desktop, false on mobile" },
     "autoFocus": { "type": { "name": "bool" } },
     "className": { "type": { "name": "string" } },
     "closeOnSelect": {
@@ -55,7 +55,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableClock": {

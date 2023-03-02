@@ -65,7 +65,7 @@ export default function RowPinningWithActions() {
     };
   }, [pinnedRowsIds]);
 
-  const columns = React.useMemo<GridColDef<typeof data[number]>[]>(
+  const columns = React.useMemo<GridColDef<(typeof data)[number]>[]>(
     () => [
       {
         field: 'actions',
@@ -138,12 +138,7 @@ export default function RowPinningWithActions() {
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGridPro
-        columns={columns}
-        pinnedRows={pinnedRows}
-        rows={rows}
-        experimentalFeatures={{ rowPinning: true }}
-      />
+      <DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />
     </div>
   );
 }

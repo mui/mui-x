@@ -14,7 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 function ProLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack direction="row" spacing={0.5} component="span">
       <Tooltip title="Included in Pro package">
         <a href="/x/introduction/licensing/#pro-plan">
           <span className="plan-pro" />

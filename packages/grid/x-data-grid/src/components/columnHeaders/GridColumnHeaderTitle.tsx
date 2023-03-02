@@ -8,7 +8,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -24,7 +24,7 @@ const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderTitle',
   overridesResolver: (props, styles) => styles.columnHeaderTitle,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
@@ -37,11 +37,15 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   return (
-    <GridColumnHeaderTitleRoot ref={ref} className={clsx(classes.root, className)} {...other} />
+    <GridColumnHeaderTitleRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
   );
 });
 
@@ -70,12 +74,12 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <rootProps.components.BaseTooltip
+    <rootProps.slots.baseTooltip
       title={description || tooltip}
-      {...rootProps.componentsProps?.baseTooltip}
+      {...rootProps.slotProps?.baseTooltip}
     >
       <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
-    </rootProps.components.BaseTooltip>
+    </rootProps.slots.baseTooltip>
   );
 }
 

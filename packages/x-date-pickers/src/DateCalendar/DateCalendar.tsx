@@ -493,10 +493,9 @@ DateCalendar.propTypes = {
    */
   onFocusedViewChange: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
@@ -506,7 +505,7 @@ DateCalendar.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */

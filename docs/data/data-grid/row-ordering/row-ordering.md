@@ -48,8 +48,8 @@ To change the icon used for the row reordering, you can provide a different comp
 
 ```tsx
 <DataGridPro
-  components={{
-    RowReorderIcon: CustomMoveIcon,
+  slots={{
+    rowReorderIcon: CustomMoveIcon,
   }}
 />
 ```

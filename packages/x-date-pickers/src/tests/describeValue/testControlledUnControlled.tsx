@@ -2,6 +2,7 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { screen, act, userEvent } from '@mui/monorepo/test/utils';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import { DescribeValueOptions, DescribeValueTestSuite } from './describeValue.types';
 
 export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
@@ -193,6 +194,21 @@ export const testControlledUnControlled: DescribeValueTestSuite<any, any> = (
         </div>,
       );
       expect(screen.getByLabelText('external label')).to.have.attribute('role', 'dialog');
+    });
+
+    describe('slots: textField', () => {
+      it('should respect provided `error="true"` prop', () => {
+        if (!['field', 'picker'].includes(componentFamily)) {
+          return;
+        }
+        render(<ElementToTest slotProps={{ textField: { error: true } }} />);
+
+        const textBoxes = screen.getAllByRole('textbox');
+        textBoxes.forEach((textbox) => {
+          expect(textbox.parentElement).to.have.class(inputBaseClasses.error);
+          expect(textbox).to.have.attribute('aria-invalid', 'true');
+        });
+      });
     });
   });
 };

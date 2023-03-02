@@ -12,6 +12,7 @@ import {
   UncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import { DateRange } from '../../models/range';
+import { UseRangePositionProps } from '../useRangePosition';
 
 export interface UseStaticRangePickerSlotsComponent<TDate, TView extends DateOrTimeView>
   extends ExportedPickersLayoutSlotsComponent<DateRange<TDate>, TDate, TView> {}
@@ -21,7 +22,7 @@ export interface UseStaticRangePickerSlotsComponentsProps<TDate, TView extends D
   toolbar?: ExportedBaseToolbarProps;
 }
 
-export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps {}
+export interface StaticRangeOnlyPickerProps extends StaticOnlyPickerProps, UseRangePositionProps {}
 
 export interface UseStaticRangePickerProps<
   TDate,

@@ -30,7 +30,7 @@ The following demo lets you filter the rows according to several criteria at the
 
 ### One filter per column [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `componentsProps.filterPanel`.
+You can also limit to only one filter per column while still allowing to filter other columns. For this, use the [`filterColumns`](/x/api/data-grid/grid-filter-form/) and [`getColumnForNewFilter`](/x/api/data-grid/grid-filter-panel/) props available in `slotProps.filterPanel`.
 
 #### Use cases
 
@@ -41,7 +41,13 @@ This demo implements a basic use case to prevent showing multiple filters for on
 
 {{"demo": "DisableMultiFiltersDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Pass filters to the data grid
+### Disable action buttons [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+To disable `Add filter` or `Remove all` buttons, pass `disableAddFilterButton` or `disableRemoveAllButton` to `componentsProps.filterPanel`.
+
+{{"demo": "DisableActionButtonsDataGridPro.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Pass filters to the Data Grid
 
 ### Structure of the model
 
@@ -157,7 +163,7 @@ Each column type comes with a default array of operators.
 You can get them by importing the following functions:
 
 | Column type    | Function                         |
-| -------------- | -------------------------------- |
+| :------------- | :------------------------------- |
 | `string`       | `getGridStringOperators()`       |
 | `number`       | `getGridNumericOperators()`      |
 | `boolean`      | `getGridBooleanOperators()`      |
@@ -201,6 +207,10 @@ The [`valueFormatter`](/x/react-data-grid/column-definition/#value-formatter) is
 
 :::info
 If the column has a [`valueGetter`](/x/react-data-grid/column-definition/#value-getter), then `params.value` will be the resolved value.
+:::
+
+:::info
+The filter button displays a tooltip on hover if there are active filters. Pass [`getValueAsString`](/x/api/data-grid/grid-filter-operator/) in the filter operator to customize or convert the value to a more human-readable form.
 :::
 
 In the demo below, you can see how to create a completely new operator for the Rating column.

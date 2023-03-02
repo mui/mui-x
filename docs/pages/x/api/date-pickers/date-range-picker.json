@@ -27,6 +27,10 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultRangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'start'"
+    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "desktopModeMediaQuery": {
       "type": { "name": "string" },
@@ -52,8 +56,10 @@
     "onError": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
     "onOpen": { "type": { "name": "func" } },
+    "onRangePositionChange": { "type": { "name": "func" } },
     "onSelectedSectionsChange": { "type": { "name": "func" } },
     "open": { "type": { "name": "bool" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "reduceAnimations": {
       "type": { "name": "bool" },
       "default": "typeof navigator !== 'undefined' && /(android)/i.test(navigator.userAgent)"
@@ -62,7 +68,7 @@
     "selectedSections": {
       "type": {
         "name": "union",
-        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
+        "description": "'all'<br>&#124;&nbsp;'day'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'meridiem'<br>&#124;&nbsp;'minutes'<br>&#124;&nbsp;'month'<br>&#124;&nbsp;'seconds'<br>&#124;&nbsp;'weekDay'<br>&#124;&nbsp;'year'<br>&#124;&nbsp;number<br>&#124;&nbsp;{ endIndex: number, startIndex: number }"
       }
     },
     "shouldDisableDate": { "type": { "name": "func" } },

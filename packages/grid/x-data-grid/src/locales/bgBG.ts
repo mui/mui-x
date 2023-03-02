@@ -46,6 +46,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Добави Филтър',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Изтрий',
   // filterPanelLogicOperator: 'Logic operator',
   filterPanelOperator: 'Оператори',

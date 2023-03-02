@@ -12,7 +12,7 @@ const workspaceRoot = path.join(__dirname, '../');
 
 module.exports = withDocsInfra({
   // Avoid conflicts with the other Next.js apps hosted under https://mui.com/
-  assetPrefix: process.env.DEPLOY_ENV === 'development' ? '' : '/x',
+  assetPrefix: process.env.DEPLOY_ENV === 'development' ? undefined : '/x',
   env: {
     ENABLE_AD: process.env.ENABLE_AD,
     LIB_VERSION: pkg.version,

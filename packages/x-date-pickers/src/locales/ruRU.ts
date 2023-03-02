@@ -8,7 +8,7 @@ const timeViews = {
   seconds: 'секунды',
 };
 
-const ruRUPickers: PickersLocaleText<any> = {
+const ruRUPickers: Partial<PickersLocaleText<any>> = {
   // Calendar navigation
   previousMonth: 'Предыдущий месяц',
   nextMonth: 'Следующий месяц',
@@ -70,6 +70,7 @@ const ruRUPickers: PickersLocaleText<any> = {
   fieldYearPlaceholder: (params) => 'Г'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'ММММ' : 'ММ'),
   fieldDayPlaceholder: () => 'ДД',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'чч',
   fieldMinutesPlaceholder: () => 'мм',
   fieldSecondsPlaceholder: () => 'сс',

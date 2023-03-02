@@ -4,15 +4,15 @@ import clsx from 'clsx';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
 import { SxProps } from '@mui/system';
 import { Theme, alpha, styled } from '@mui/material/styles';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = DataGridProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -28,7 +28,7 @@ const GridOverlayRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'Overlay',
   overridesResolver: (_, styles) => styles.overlay,
-})(({ theme }) => ({
+})<{ ownerState: OwnerState }>(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -46,10 +46,16 @@ const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function 
 ) {
   const { className, ...other } = props;
   const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
-  return <GridOverlayRoot ref={ref} className={clsx(classes.root, className)} {...other} />;
+  return (
+    <GridOverlayRoot
+      ref={ref}
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 });
 
 GridOverlay.propTypes = {

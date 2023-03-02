@@ -22,6 +22,10 @@
       "default": "(day) => day.charAt(0).toUpperCase()"
     },
     "defaultCalendarMonth": { "type": { "name": "any" } },
+    "defaultRangePosition": {
+      "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" },
+      "default": "'start'"
+    },
     "defaultValue": { "type": { "name": "arrayOf", "description": "Array&lt;any&gt;" } },
     "disableAutoMonthSwitching": { "type": { "name": "bool" } },
     "disabled": { "type": { "name": "bool" } },
@@ -36,6 +40,8 @@
     "minDate": { "type": { "name": "any" } },
     "onChange": { "type": { "name": "func" } },
     "onMonthChange": { "type": { "name": "func" } },
+    "onRangePositionChange": { "type": { "name": "func" } },
+    "rangePosition": { "type": { "name": "enum", "description": "'end'<br>&#124;&nbsp;'start'" } },
     "readOnly": { "type": { "name": "bool" } },
     "reduceAnimations": {
       "type": { "name": "bool" },

@@ -136,7 +136,11 @@ const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function 
   return (
     <div
       ref={handleRef}
-      style={{ flex: disableHeight ? 0 : '1 1 0px', overflow: 'auto', ...style }}
+      style={{
+        flex: disableHeight ? 0 : '1 1 0px',
+        overflow: disableHeight ? 'visible' : 'auto',
+        ...style,
+      }}
       {...other}
     >
       {state.height === null && state.width === null ? null : children}

@@ -1,5 +1,7 @@
 /**
  * Filter item definition interface.
+ * @demos
+ *   - [Custom filter operator](/x/react-data-grid/filtering/#create-a-custom-operator)
  */
 export interface GridFilterItem {
   /**

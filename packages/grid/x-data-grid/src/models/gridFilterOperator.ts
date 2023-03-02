@@ -6,6 +6,8 @@ import type { GridValidRowModel } from './gridRows';
 
 /**
  * Filter operator definition interface.
+ * @demos
+ *   - [Custom filter operator](/x/react-data-grid/filtering/#create-a-custom-operator)
  */
 export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, F = V> {
   /**
@@ -36,6 +38,12 @@ export interface GridFilterOperator<R extends GridValidRowModel = any, V = any, 
    * The props to pass to the input component in the filter panel for this filter operator.
    */
   InputComponentProps?: Record<string, any>;
+  /**
+   * Converts the value of a filter item to a human-readable form.
+   * @param {GridFilterItem['value']} value The filter item value.
+   * @returns {string} The value formatted to be displayed in the UI of filter button tooltip.
+   */
+  getValueAsString?: (value: GridFilterItem['value']) => string;
   /**
    * If `false`, filter operator doesn't require user-entered value to work.
    * Usually should be set to `false` for filter operators that don't have `InputComponent` (for example `isEmpty`)

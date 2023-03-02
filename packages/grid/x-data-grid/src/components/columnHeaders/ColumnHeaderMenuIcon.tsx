@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { unstable_composeClasses as composeClasses } from '@mui/utils';
-import IconButton from '@mui/material/IconButton';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
@@ -48,7 +47,7 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
 
   return (
     <div className={classes.root}>
-      <IconButton
+      <rootProps.slots.baseIconButton
         ref={iconButtonRef}
         tabIndex={-1}
         className={classes.button}
@@ -60,9 +59,10 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
         aria-haspopup="true"
         aria-controls={columnMenuId}
         id={columnMenuButtonId}
+        {...rootProps.slotProps?.baseIconButton}
       >
-        <rootProps.components.ColumnMenuIcon fontSize="small" />
-      </IconButton>
+        <rootProps.slots.columnMenuIcon fontSize="small" />
+      </rootProps.slots.baseIconButton>
     </div>
   );
 });

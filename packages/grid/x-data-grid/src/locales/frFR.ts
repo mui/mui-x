@@ -47,6 +47,7 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Ajouter un filtre',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Supprimer',
   filterPanelLogicOperator: 'Opérateur logique',
   filterPanelOperator: 'Opérateur',
@@ -69,7 +70,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'égal ou antérieur',
   filterOperatorIsEmpty: 'est vide',
   filterOperatorIsNotEmpty: "n'est pas vide",
-  filterOperatorIsAnyOf: 'fait parti de',
+  filterOperatorIsAnyOf: 'fait partie de',
 
   // Filter values text
   filterValueAny: 'tous',

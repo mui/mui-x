@@ -14,6 +14,7 @@
   "include": [
     "pages/**/*.ts*",
     "data/**/*",
+    "src/modules/components/**/*",
     "../node_modules/@mui/material/themeCssVarsAugmentation"
   ],
   "exclude": ["docs/.next", "docs/export"]

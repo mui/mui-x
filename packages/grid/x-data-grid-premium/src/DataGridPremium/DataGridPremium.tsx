@@ -9,11 +9,10 @@ import {
   GridRoot,
   GridContextProvider,
   GridValidRowModel,
+  useGridSelector,
+  gridPinnedColumnsSelector,
 } from '@mui/x-data-grid-pro';
-import {
-  DataGridProVirtualScroller,
-  DataGridProColumnHeaders,
-} from '@mui/x-data-grid-pro/internals';
+import { DataGridProVirtualScroller } from '@mui/x-data-grid-pro/internals';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
 import { DataGridPremiumProps } from '../models/dataGridPremiumProps';
 import { useDataGridPremiumProps } from './useDataGridPremiumProps';
@@ -30,13 +29,15 @@ const DataGridPremiumRaw = React.forwardRef(function DataGridPremium<R extends G
 
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
+  const pinnedColumns = useGridSelector(privateApiRef, gridPinnedColumnsSelector);
+
   return (
     <GridContextProvider privateApiRef={privateApiRef} props={props}>
       <GridRoot className={props.className} style={props.style} sx={props.sx} ref={ref}>
         <GridHeader />
         <GridBody
-          ColumnHeadersComponent={DataGridProColumnHeaders}
           VirtualScrollerComponent={DataGridProVirtualScroller}
+          ColumnHeadersProps={{ pinnedColumns }}
         >
           <Watermark packageName="x-data-grid-premium" releaseInfo={releaseInfo} />
         </GridBody>
@@ -153,10 +154,12 @@ DataGridPremiumRaw.propTypes = {
   columnVisibilityModel: PropTypes.object,
   /**
    * Overrideable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components: PropTypes.object,
   /**
    * Overrideable components props dynamically passed to the component at rendering.
+   * @deprecated Use the `slotProps` prop instead.
    */
   componentsProps: PropTypes.object,
   /**
@@ -268,7 +271,6 @@ DataGridPremiumRaw.propTypes = {
   experimentalFeatures: PropTypes.shape({
     columnGrouping: PropTypes.bool,
     lazyLoading: PropTypes.bool,
-    rowPinning: PropTypes.bool,
     warnIfFocusStateIsNotSynced: PropTypes.bool,
   }),
   /**
@@ -584,6 +586,11 @@ DataGridPremiumRaw.propTypes = {
    */
   onDetailPanelExpandedRowIdsChange: PropTypes.func,
   /**
+   * Callback fired when the state of the Excel export changes.
+   * @param {string} inProgress Indicates if the task is in progress.
+   */
+  onExcelExportStateChange: PropTypes.func,
+  /**
    * Callback fired when rowCount is set and the next batch of virtualized rows is rendered.
    * @param {GridFetchRowsParams} params With all properties from [[GridFetchRowsParams]].
    * @param {MuiEvent<{}>} event The event object.
@@ -860,6 +867,14 @@ DataGridPremiumRaw.propTypes = {
    * @default false
    */
   showColumnVerticalBorder: PropTypes.bool,
+  /**
+   * Overrideable components props dynamically passed to the component at rendering.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Overrideable components.
+   */
+  slots: PropTypes.object,
   /**
    * Sorting can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle sorting on the client-side.

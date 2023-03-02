@@ -72,6 +72,7 @@ const jaJPPickers: Partial<PickersLocaleText<any>> = {
   fieldYearPlaceholder: (params) => 'Y'.repeat(params.digitAmount),
   fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'DD',
+  // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'hh',
   fieldMinutesPlaceholder: () => 'mm',
   fieldSecondsPlaceholder: () => 'ss',
