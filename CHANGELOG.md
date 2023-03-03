@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.0
+
+_Mar 3, 2023_
+
+We're happy to announce the first v6 stable release! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
+
+Migration guides are available with a complete list of the breaking changes:
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
+- [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/)
+
+We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 The row pinning is no longer experimental (#8055) @MBilalShafi
+
+  You can now use the row pinning without the `experimentalFeatures.rowPinning` flag enabled.
+
+  ```diff
+   <DataGridPro
+  -  experimentalFeatures={{ rowPinning: true }}
+   />
+  ```
+- ⚡️ Improved grid performance by rows and cells memoization (#7846) @m4theushw
+- ✨ Fields have a distinct visual state when empty (#8069) @LukasTy
+- 🌍 Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
+- 🌍 Improve Arabic (ar-SD) locale (#8100) @atf98
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.0` / `@mui/x-data-grid-pro@v6.0.0` / `@mui/x-data-grid-premium@v6.0.0`
+
+#### Breaking changes
+
+- The `componentsProps` and `slotProps` props are now typed for better DX
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot. You can use the new `focusedCell` and `tabbableCell` props instead. For the editing state, use the API methods.
+  The flag `experimentalFeatures.rowPinning` is no longer needed.
+
+#### Changes
+
+- [DataGrid] Add typing for `componentsProps` (#7968) @MBilalShafi
+- [DataGrid] Allow multiple modules' augmentation (#8098) @MBilalShafi
+- [DataGrid] Extract `BaseInputLabel` slot (#8068) @cherniavskii
+- [DataGrid] Extract `BaseSelectOption` slot (#8072) @cherniavskii
+- [DataGrid] Make possible to memoize rows and cells (#7846) @m4theushw
+- [DataGrid] Register `getLocaleText` synchronously (#8029) @m4theushw
+- [DataGrid] Start extracting material slots to a separate directory (#8004) @cherniavskii
+- [DataGrid] Use `styled` from system (#8032) @siriwatknp
+- [DataGridPro] Improve typing for `getColumnForNewFilter` method (#8043) @MBilalShafi
+- [DataGridPro] Remove row pinning from experimental features (#8055) @MBilalShafi
+- [l10n] Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
+- [l10n] Improve Arabic (ar-SD) locale (#8100) @atf98
+
+### `@mui/x-date-pickers@v6.0.0` / `@mui/x-date-pickers-pro@v6.0.0`
+
+#### Breaking changes
+
+On desktop, `DateTimePicker` shows the am/pm controls in the toolbar instead of the clock by default.
+It can be overridden by specifying `ampmInClock` prop.
+
+#### Changes
+
+- [DateRangePicker] Generalize the highlight between months (#8079) @alexfauquette
+- [fields] Clean the order of the tokens in the `formatTokenMap` of each adapter (#8112) @flaviendelangle
+- [fields] Implement empty visual state (#8069) @LukasTy
+- [fields] Replace `sectionOrder` state with a memoized variable (#8090) @flaviendelangle
+- [pickers] Add support for UTC on `moment` adapter (#8031) @flaviendelangle
+- [pickers] Document and deprecate `onClose` callback on static pickers (#8021) @LukasTy
+- [pickers] Fix am/pm buttons position and responsiveness (#5149) @alexfauquette
+- [pickers] Fix layout `sx` propagation (#8064) @alexfauquette
+- [pickers] Increase `moment` peer dependency minimum version (#8046) @oliviertassinari
+- [pickers] Remove `WrapperVariantContext` (#8088) @LukasTy
+- [pickers] Stop using `WrapperVariantContext` in `Clock` (#8083) @LukasTy
+
+### Docs
+
+- [docs] Add `aggregation` experimental flag removal to the migration guide (#8056) @MBilalShafi
+- [docs] Add expansion state behavioral change to v6 migration guide (#8108) @MBilalShafi
+- [docs] Change default date from 4th of April to 17th of April for readability (#8089) @flaviendelangle
+- [docs] Clarify the MIT license restriction for grid pagination (#8045) @arunkp
+- [docs] Fix typo replacing "bellow" by "below" (#8080) @TheBox193
+- [docs] Link `API object` in the `apiRef` sections (#8106) @MBilalShafi
+- [docs] Link to demonstrations in the interfaces API docs (#8028) @cherniavskii
+- [docs] Remove the `@next` tag from installation instructions (#8102) @cherniavskii
+- [docs] Start enforcing consistency in documentation vocabulary (#6871) @alexfauquette
+- [docs] Update accessibility guidelines (#7970) @oliviertassinari
+- [docs] Update the DataGrid demo to leverage the latest features (#7863) @joserodolfofreitas
+- [docs] Update migration guide for stable release (#8092) @joserodolfofreitas
+
+### Core
+
+- [core] Add modified docs page links in the PR (#7848) @alexfauquette
+- [core] Add test on value timezone (#7867) @alexfauquette
+- [core] Bump monorepo (#8006) @LukasTy
+- [core] Change default branch back to `master` (#8081) @m4theushw
+- [core] Upgrade monorepo (#8115) @MBilalShafi
+- [core] Mention the use of Support key as an alternative to the OrderID (#6968) @joserodolfofreitas
+- [test] Fix flaky tests (#8097) @cherniavskii
+
 ## 6.0.0-beta.5
 
 _Feb 23, 2023_
