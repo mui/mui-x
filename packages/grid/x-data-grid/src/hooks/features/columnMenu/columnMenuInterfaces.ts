@@ -19,12 +19,12 @@ export interface GridColumnMenuComponentProps {
 
 export interface GridColumnMenuRootProps {
   /**
-   * Initial `components` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `components` - it is internal, to be overridden by Pro or Premium packages
    * @ignore - do not document.
    */
   defaultComponents: { [key: string]: React.JSXElementConstructor<any> };
   /**
-   * Initial `componentsProps` - it is internal, to be overrriden by Pro or Premium packages
+   * Initial `componentsProps` - it is internal, to be overridden by Pro or Premium packages
    * @ignore - do not document.
    */
   defaultComponentsProps: { [key: string]: GridColumnMenuComponentProps };

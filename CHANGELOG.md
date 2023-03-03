@@ -3184,7 +3184,7 @@ We'd like to offer a big thanks to the 9 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when commiting value (#5756) @m4theushw
+- [DataGrid] Fix <kbd>Enter</kbd> causing Select to re-open when committing value (#5756) @m4theushw
 - [DataGrid] Fix `GridOverlays` bypassing pointer events (#5674) @philjones88
 
 ### `@mui/x-date-pickers@v5.0.0-beta.6` / `@mui/x-date-picker-pro@v5.0.0-beta.6`
@@ -3228,7 +3228,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Catch errors if rows freezing is not supported (#5711) @cherniavskii
-- [DataGrid] Preserve cell mode when entering edit mode while commiting (#5686) @m4theushw
+- [DataGrid] Preserve cell mode when entering edit mode while committing (#5686) @m4theushw
 - [DataGridPremium] Let quick filter search in row grouping children (#5701) @alexfauquette
 
 ### `@mui/x-date-pickers@v5.0.0-beta.5` / `@mui/x-date-picker-pro@5.0.0-beta.5`
@@ -4155,7 +4155,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 - [core] Remove dead code (#4283) @oliviertassinari
 - [core] Rename the "pre-processing" concept "pipe-processing" (#4261) @flaviendelangle
 - [core] Reuse previous state when updating the columns prop (#4229) @m4theushw
-- [core] Fix Argos flakyness for pickers tests (#4312) @flaviendelangle
+- [core] Fix Argos flakiness for pickers tests (#4312) @flaviendelangle
 
 ## 5.7.0
 
@@ -5705,7 +5705,7 @@ A big thanks to the 5 contributors who made this release possible. Here are some
 
 - [docs] Add section for controlled selection and server-side pagination (#2602) @DanailH
 - [docs] Fix Algolia search (#2655) @oliviertassinari
-- [docs] Improve the seach results relevance (#2656) @oliviertassinari
+- [docs] Improve the search results relevance (#2656) @oliviertassinari
 - [docs] Update installation instructions (#2663) @m4theushw
 
 ### Core
@@ -7069,7 +7069,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
    }
   ```
 
-- [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
+- [DataGrid] Upgrade minimum supported version of React to 17.0.0 (#1410) @m4theushw
 
 #### Changes
 
@@ -7199,7 +7199,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [docs] Add demo page (#1147) @DanailH
 - [docs] Fix typo in localization.md (#1155) @michael-martin-al
-- [docs] Improve the desciption of the individual packages (#1139) @oliviertassinari
+- [docs] Improve the description of the individual packages (#1139) @oliviertassinari
 - [docs] Fix rendering docs to solve custom pagination issue (#1159) @consDev
 
 ### Core
@@ -7376,7 +7376,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix footer visual regression (#932) @dtassone
 - [DataGrid] Fix strict mode issue with apiRef (#933) @dtassone
 - [DataGrid] Work on the accessibility of the column menu (#900) @zj9495
-- [DataGrid] Fix timing guarentee (#981) @oliviertassinari
+- [DataGrid] Fix timing guarantee (#981) @oliviertassinari
 - [DataGrid] Fix unstable footer height (#937) @oliviertassinari
 - [DataGrid] Fix usage of the prop-types API (#955) @oliviertassinari
 - [DataGrid] Fix duplicate aria-label (#953) @oliviertassinari

@@ -74,7 +74,7 @@ LayoutWithKeyboardView.propTypes = {
       classes: PropTypes.object,
       className: PropTypes.string,
       /**
-       * Overrideable components.
+       * Overridable components.
        * @default {}
        * @deprecated Please use `slots`.
        */
@@ -133,7 +133,7 @@ LayoutWithKeyboardView.propTypes = {
        */
       slotProps: PropTypes.object,
       /**
-       * Overrideable component slots.
+       * Overridable component slots.
        * @default {}
        */
       slots: PropTypes.any,

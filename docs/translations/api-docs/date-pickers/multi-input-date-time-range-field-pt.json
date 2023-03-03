@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "ampm": "12h/24h view for hour selection clock.",
-    "components": "Overrideable components.",
+    "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "defaultValue": "The default value. Use when the component is not controlled.",
     "direction": "Defines the <code>flex-direction</code> style property. It is applied for all screen sizes.",

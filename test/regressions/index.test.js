@@ -45,7 +45,7 @@ async function main() {
   });
 
   // Wait for all requests to finish.
-  // This should load shared ressources such as fonts.
+  // This should load shared resources such as fonts.
   await page.goto(`${baseUrl}#no-dev`, { waitUntil: 'networkidle0' });
 
   // Simulate portrait mode for date pickers.

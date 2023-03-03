@@ -32,7 +32,7 @@ export interface UseStaticRangePickerProps<
 > extends BasePickerProps<DateRange<TDate>, TDate, TView, TError, TExternalProps, {}>,
     StaticRangeOnlyPickerProps {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<UseStaticRangePickerSlotsComponent<TDate, TView>>;
