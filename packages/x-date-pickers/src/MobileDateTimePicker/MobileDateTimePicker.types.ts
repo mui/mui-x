@@ -24,11 +24,6 @@ export interface MobileDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
     MobileOnlyPickerProps<TDate> {
   /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
-   */
-  ampmInClock?: boolean;
-  /**
    * Overrideable components.
    * @default {}
    * @deprecated Please use `slots`.

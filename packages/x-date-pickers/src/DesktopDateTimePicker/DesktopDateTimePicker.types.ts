@@ -27,11 +27,6 @@ export interface DesktopDateTimePickerProps<TDate>
   extends BaseDateTimePickerProps<TDate>,
     DesktopOnlyPickerProps<TDate> {
   /**
-   * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true
-   */
-  ampmInClock?: boolean;
-  /**
    * Years rendered per row.
    * @default 4
    */
