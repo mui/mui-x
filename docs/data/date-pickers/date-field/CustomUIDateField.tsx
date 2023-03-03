@@ -27,7 +27,7 @@ const UnstyledDateField = (props: UnstyledDateFieldProps) => {
   return (
     <InputUnstyled
       {...(inputProps as InputUnstyledProps)}
-      componentsProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
+      slotProps={{ input: { ref: inputRef, style: { width: '100%' } } }}
     />
   );
 };
