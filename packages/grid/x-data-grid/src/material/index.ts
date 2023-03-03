@@ -37,6 +37,7 @@ import {
   GridDeleteForeverIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
+import MUISelectOption from './components/MUISelectOption';
 
 const iconSlots: GridIconSlotsComponent = {
   BooleanCellTrueIcon: GridCheckIcon,
@@ -88,6 +89,7 @@ const materialSlots = {
   BaseTooltip: MUITooltip,
   BasePopper: MUIPopper,
   BaseInputLabel: MUIInputLabel,
+  BaseSelectOption: MUISelectOption,
 };
 
 export default materialSlots;

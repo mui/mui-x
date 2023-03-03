@@ -43,7 +43,7 @@ export default function CustomDateRangePickerDay() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateRangeCalendar']}>
         <DateRangeCalendar
-          defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+          defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
           slots={{ day: DateRangePickerDay }}
         />
       </DemoContainer>

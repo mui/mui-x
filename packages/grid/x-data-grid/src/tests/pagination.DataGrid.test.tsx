@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub, SinonSpy } from 'sinon';
 import { expect } from 'chai';
-import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,
@@ -17,7 +17,7 @@ import { getCell, getColumnValues, getRows } from 'test/utils/helperFn';
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Pagination', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function BaselineTestCase(props: Omit<DataGridProps, 'rows' | 'columns'> & { height?: number }) {
     const { height = 300, ...other } = props;
@@ -488,11 +488,12 @@ describe('<DataGrid /> - Pagination', () => {
       expect(rows.length).to.equal(expectedViewportRowsLengthBefore);
 
       setProps({ height: heightAfter });
-      await act(() => Promise.resolve());
 
-      expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
-        `1–${expectedViewportRowsLengthAfter} of ${nbRows}`, // "–" is not a hyphen, it's an "en dash"
-      );
+      await waitFor(() => {
+        expect(document.querySelector('.MuiTablePagination-displayedRows')!.innerHTML).to.equal(
+          `1–${expectedViewportRowsLengthAfter} of ${nbRows}`, // "–" is not a hyphen, it's an "en dash"
+        );
+      });
 
       rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);

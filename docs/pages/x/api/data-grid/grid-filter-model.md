@@ -7,7 +7,7 @@
 :::info
 For examples and details on the usage, check the following pages:
 
-- [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-grid)
+- [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-data-grid)
 
 :::
 

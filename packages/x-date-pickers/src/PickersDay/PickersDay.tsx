@@ -74,6 +74,16 @@ export interface PickersDayProps<TDate>
    */
   outsideCurrentMonth: boolean;
   /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: boolean;
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: boolean;
+  /**
    * If `true`, renders as selected.
    * @default false
    */
@@ -241,6 +251,8 @@ const PickersDayRaw = React.forwardRef(function PickersDay<TDate>(
     showDaysOutsideCurrentMonth = false,
     children,
     today: isToday = false,
+    isFirstVisibleCell,
+    isLastVisibleCell,
     ...other
   } = props;
   const ownerState = {
@@ -399,6 +411,16 @@ PickersDayRaw.propTypes = {
    */
   focusVisibleClassName: PropTypes.string,
   isAnimating: PropTypes.bool,
+  /**
+   * If `true`, day is the first visible cell of the month.
+   * Either the first day of the month or the first day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isFirstVisibleCell: PropTypes.bool.isRequired,
+  /**
+   * If `true`, day is the last visible cell of the month.
+   * Either the last day of the month or the last day of the week depending on `showDaysOutsideCurrentMonth`.
+   */
+  isLastVisibleCell: PropTypes.bool.isRequired,
   onBlur: PropTypes.func,
   onDaySelect: PropTypes.func.isRequired,
   onFocus: PropTypes.func,
