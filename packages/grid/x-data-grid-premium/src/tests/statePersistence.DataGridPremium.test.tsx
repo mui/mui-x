@@ -8,7 +8,6 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getColumnValues } from '../../../../../test/utils/helperFn';

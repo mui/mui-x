@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import axe from 'axe-core';
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer } from '@mui/monorepo/test/utils';
 
 function logViolations(violations: any) {

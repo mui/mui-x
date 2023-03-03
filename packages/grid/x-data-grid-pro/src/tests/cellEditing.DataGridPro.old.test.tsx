@@ -8,7 +8,6 @@ import {
   waitFor,
   act,
   userEvent,
-  // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -463,7 +462,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
     clock.tick(500);
     expect(cell.querySelector('input')!.value).to.equal('1970');
     const columnHeader = getColumnHeaderCell(0);
-    fireEvent.dragStart(columnHeader.firstChild);
+    fireEvent.dragStart(columnHeader.firstChild!);
 
     await waitFor(() => {
       expect(cell).not.to.have.class('MuiDataGrid-cell--editing');

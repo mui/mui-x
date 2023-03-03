@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, screen, fireEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
@@ -95,13 +94,13 @@ describe('<DataGrid /> - Quick Filter', () => {
       });
       clock.runToLast();
 
-      expect(screen.getByRole('searchbox').value).to.equal('adidas   nike');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('adidas   nike');
     });
 
     it('should update input when the state is modified', () => {
       const { setProps } = render(<TestCase />);
 
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('');
 
       setProps({
         filterModel: {
@@ -109,7 +108,7 @@ describe('<DataGrid /> - Quick Filter', () => {
           quickFilterValues: ['adidas', 'nike'],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('adidas nike');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('adidas nike');
 
       setProps({
         filterModel: {
@@ -117,7 +116,7 @@ describe('<DataGrid /> - Quick Filter', () => {
           quickFilterValues: [],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('');
     });
 
     it('should allow to customize input formatting', () => {
@@ -131,14 +130,14 @@ describe('<DataGrid /> - Quick Filter', () => {
         />,
       );
 
-      expect(screen.getByRole('searchbox').value).to.equal('');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('');
       setProps({
         filterModel: {
           items: [],
           quickFilterValues: ['adidas', 'nike'],
         },
       });
-      expect(screen.getByRole('searchbox').value).to.equal('adidas, nike');
+      expect((screen.getByRole('searchbox') as HTMLInputElement).value).to.equal('adidas, nike');
     });
   });
 

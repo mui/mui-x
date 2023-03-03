@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
@@ -250,7 +249,7 @@ describe('<DataGrid /> - Filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['Adidas']);
-      fireEvent.change(screen.queryByRole('textbox', { name: 'Value' }), {
+      fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), {
         target: { value: 'Puma' },
       });
       clock.runToLast();
