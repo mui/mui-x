@@ -3,7 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 
 const testDate = new Date(2018, 4, 15, 9, 35);
 const localizedTexts = {
@@ -35,7 +39,7 @@ describe('<AdapterLuxon />', () => {
       it('should have correct placeholder', () => {
         render(<DateTimePicker />);
 
-        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
+        expectInputPlaceholder(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder);
       });
 
       it('should have well formatted value', () => {

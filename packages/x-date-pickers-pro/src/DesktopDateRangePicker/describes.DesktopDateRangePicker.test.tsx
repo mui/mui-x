@@ -6,6 +6,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
@@ -46,9 +47,11 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const textBoxes: HTMLInputElement[] = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        const input = textBoxes[index];
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
@@ -99,9 +102,16 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const input = screen.getByRole<HTMLInputElement>('textbox');
       const expectedValueStr = expectedValues
-        .map((value) => (value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate')))
-        .join(' – ');
-      expectInputValue(input, expectedValueStr, true);
+          .map((value) => (value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate')))
+          .join(' – ');
+
+      const isEmpty = expectedValues[0] == null && expectedValues[1] == null;
+
+      if (isEmpty) {
+        expectInputPlaceholder(input, expectedValueStr);
+      }
+
+      expectInputValue(input, isEmpty ? '' : expectedValueStr, true);
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
       let newValue: any[];

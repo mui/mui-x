@@ -32,6 +32,7 @@ export interface BaseIconButtonPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
+export interface BaseSelectOptionPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -63,6 +64,10 @@ export interface GridSlotsComponentsProps {
   basePopper?: SlotProps<PopperProps, BasePopperPropsOverrides>;
   baseTooltip?: SlotProps<TooltipProps, BaseTooltipPropsOverrides>;
   baseInputLabel?: SlotProps<InputLabelProps, BaseInputLabelPropsOverrides>;
+  baseSelectOption?: SlotProps<
+    { native: boolean; value: any; children?: React.ReactNode },
+    BaseSelectOptionPropsOverrides
+  >;
   cell?: SlotProps<GridCellProps, CellPropsOverrides>;
   columnHeaderFilterIconButton?: SlotProps<
     ColumnHeaderFilterIconButtonProps,

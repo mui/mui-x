@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { describeConformance, screen, userEvent } from '@mui/monorepo/test/utils';
+import { describeConformance, userEvent } from '@mui/monorepo/test/utils';
 import TextField from '@mui/material/TextField';
 import { describeValidation } from '@mui/x-date-pickers/tests/describeValidation';
 import { describeValue } from '@mui/x-date-pickers/tests/describeValue';
@@ -11,6 +11,7 @@ import {
   expectInputValue,
   buildFieldInteractions,
   getTextbox,
+  expectInputPlaceholder,
 } from 'test/utils/pickers-utils';
 
 describe('<DateField /> - Describes', () => {
@@ -50,9 +51,15 @@ describe('<DateField /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+        true,
+      );
     },
     setNewValue: (value) => {
       const newValue = adapterToUse.addDays(value, 1);

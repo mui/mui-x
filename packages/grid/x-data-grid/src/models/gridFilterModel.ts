@@ -3,7 +3,7 @@ import { GridFilterItem, GridLogicOperator } from './gridFilterItem';
 /**
  * Model describing the filters to apply to the grid.
  * @demos
- *   - [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-grid)
+ *   - [Pass filters to the grid](/x/react-data-grid/filtering/#pass-filters-to-the-data-grid)
  */
 export interface GridFilterModel {
   /**

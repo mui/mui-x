@@ -14,6 +14,14 @@ describe('<DateField /> - Selection', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   const clickOnInput = (input: HTMLInputElement, position: number | string) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+    });
+    clock.runToLast();
     const clickPosition = typeof position === 'string' ? input.value.indexOf(position) : position;
     if (clickPosition === -1) {
       throw new Error(
@@ -21,11 +29,6 @@ describe('<DateField /> - Selection', () => {
       );
     }
     act(() => {
-      fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
-      fireEvent.mouseUp(input);
       input.setSelectionRange(clickPosition, clickPosition);
       fireEvent.click(input);
 
@@ -56,8 +59,9 @@ describe('<DateField /> - Selection', () => {
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
-        input.select();
       });
+      clock.runToLast();
+      input.select();
 
       expectInputValue(input, 'MM / DD / YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY');
@@ -69,8 +73,9 @@ describe('<DateField /> - Selection', () => {
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
-        input.select();
       });
+      clock.runToLast();
+      input.select();
 
       expectInputValue(input, '- YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('- YYYY');
@@ -82,11 +87,12 @@ describe('<DateField /> - Selection', () => {
       // Simulate a touch focus interaction on mobile
       act(() => {
         input.focus();
-        input.setSelectionRange(9, 10);
-        clock.runToLast();
       });
-
+      clock.runToLast();
       expectInputValue(input, 'MM / DD / YYYY');
+
+      input.setSelectionRange(9, 11);
+
       expect(input.selectionStart).to.equal(9);
       expect(input.selectionEnd).to.equal(11);
     });

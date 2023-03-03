@@ -4,7 +4,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterMomentJalaali } from '@mui/x-date-pickers/AdapterMomentJalaali';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 import 'moment/locale/fa';
 import moment from 'moment';
 
@@ -38,7 +42,7 @@ describe('<AdapterMomentJalaali />', () => {
       it('should have correct placeholder', () => {
         render(<DateTimePicker />);
 
-        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
+        expectInputPlaceholder(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder);
       });
 
       it('should have well formatted value', () => {
