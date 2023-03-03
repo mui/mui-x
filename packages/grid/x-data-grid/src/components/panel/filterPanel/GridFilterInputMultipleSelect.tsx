@@ -2,18 +2,27 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { TextFieldProps } from '@mui/material/TextField';
 import { unstable_useId as useId } from '@mui/utils';
-import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { GridMultipleSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions, isMultipleSelectColDef } from './filterPanelUtils';
+import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
-const renderMultipleSelectOptions = (
-  { valueOptions, field }: GridMultipleSelectColDef,
-  OptionComponent: React.ElementType,
-  getOptionLabel: NonNullable<GridMultipleSelectColDef['getOptionLabel']>,
-  getOptionValue: NonNullable<GridMultipleSelectColDef['getOptionValue']>,
-) => {
+const renderMultipleSelectOptions = ({
+  column: { valueOptions, field },
+  OptionComponent,
+  getOptionLabel,
+  getOptionValue,
+  isSelectNative,
+  baseSelectOptionProps,
+}: {
+  column: GridMultipleSelectColDef;
+  OptionComponent: React.ElementType;
+  getOptionLabel: NonNullable<GridMultipleSelectColDef['getOptionLabel']>;
+  getOptionValue: NonNullable<GridMultipleSelectColDef['getOptionValue']>;
+  isSelectNative: boolean;
+  baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
+}) => {
   const iterableColumnValues =
     typeof valueOptions === 'function'
       ? ['', ...valueOptions({ field })]
@@ -24,7 +33,7 @@ const renderMultipleSelectOptions = (
     const label = getOptionLabel(option);
 
     return (
-      <OptionComponent key={value} value={value}>
+      <OptionComponent {...baseSelectOptionProps} native={isSelectNative} key={value} value={value}>
         {label}
       </OptionComponent>
     );
@@ -54,6 +63,8 @@ function GridFilterInputMultipleSelect(props: GridFilterInputMultipleSelectProps
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
+
+  const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
   let resolvedColumn: GridMultipleSelectColDef | null = null;
   if (item.field) {
@@ -117,6 +128,7 @@ function GridFilterInputMultipleSelect(props: GridFilterInputMultipleSelectProps
 
   return (
     <rootProps.slots.baseTextField
+      // TODO: use baseSelect slot
       id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -136,12 +148,14 @@ function GridFilterInputMultipleSelect(props: GridFilterInputMultipleSelectProps
       {...others}
       {...rootProps.slotProps?.baseTextField}
     >
-      {renderMultipleSelectOptions(
-        resolvedColumn,
-        isSelectNative ? 'option' : MenuItem,
+      {renderMultipleSelectOptions({
+        column: resolvedColumn,
+        OptionComponent: rootProps.slots.baseSelectOption,
         getOptionLabel,
         getOptionValue,
-      )}
+        isSelectNative,
+        baseSelectOptionProps,
+      })}
     </rootProps.slots.baseTextField>
   );
 }
