@@ -7,6 +7,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 3, 2023_
 
+
+The v6 stable release is now available 🎉
+Support and bug fixes will now be made on v6. 
+Only critical fixes will be added to the v5.
+
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
 - 🌍 Improve Czech, Arabic, and Spanish locales
