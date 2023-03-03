@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/system';
+import MenuList from '@mui/material/MenuList';
+import { useTheme } from '@mui/material/styles';
 import { unstable_useId as useId } from '@mui/utils';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
@@ -221,15 +222,16 @@ function GridActionsCell(props: GridActionsCellProps) {
           target={buttonRef.current}
           position={position}
         >
-          <rootProps.slots.baseMenuList
+          <MenuList
             id={menuId}
             className={gridClasses.menuList}
             onKeyDown={handleListKeyDown}
             aria-labelledby={buttonId}
-            {...rootProps.slotDefaultProps.baseMenuList?.()}
+            variant="menu"
+            autoFocusItem
           >
             {menuButtons.map((button, index) => React.cloneElement(button, { key: index }))}
-          </rootProps.slots.baseMenuList>
+          </MenuList>
         </GridMenu>
       )}
     </div>

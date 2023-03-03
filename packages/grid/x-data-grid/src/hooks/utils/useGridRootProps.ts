@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { DATA_GRID_DEFAULT_SLOT_PROPS } from '../../constants/defaultGridSlotProps';
 
 export const useGridRootProps = () => {
   const contextValue = React.useContext(GridRootPropsContext);
@@ -12,7 +11,5 @@ export const useGridRootProps = () => {
     );
   }
 
-  return contextValue as DataGridProcessedProps & {
-    slotDefaultProps: typeof DATA_GRID_DEFAULT_SLOT_PROPS;
-  };
+  return contextValue as DataGridProcessedProps;
 };
