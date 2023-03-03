@@ -80,7 +80,7 @@ LayoutWithKeyboardView.propTypes = {
        */
       components: PropTypes.shape({
         /**
-         * Custom component for the action bar, it is placed bellow the picker views.
+         * Custom component for the action bar, it is placed below the picker views.
          * @default PickersActionBar
          */
         ActionBar: PropTypes.elementType,

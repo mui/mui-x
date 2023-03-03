@@ -125,7 +125,7 @@ You can manage column visibility with `columnVisibilityModel`, `initialState`, o
 To do so, pass them to the hook parameters.
 :::
 
-Bellow are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
+Below are two examples about how to use `columnVisibilityModel` or `initialState` with `useKeepGroupedColumnsHidden` hook.
 You can mix the two examples to support both at the same time.
 
 ```tsx

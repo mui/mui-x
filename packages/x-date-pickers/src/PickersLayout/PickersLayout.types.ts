@@ -13,7 +13,7 @@ import { PickersShortcutsProps } from '../PickersShortcuts';
 
 export interface ExportedPickersLayoutSlotsComponent<TValue, TDate, TView extends DateOrTimeView> {
   /**
-   * Custom component for the action bar, it is placed bellow the picker views.
+   * Custom component for the action bar, it is placed below the picker views.
    * @default PickersActionBar
    */
   ActionBar?: React.ElementType<PickersActionBarProps>;
