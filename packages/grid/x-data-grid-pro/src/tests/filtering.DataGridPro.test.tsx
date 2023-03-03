@@ -14,16 +14,16 @@ import {
   GridToolbar,
   gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, screen, act, within } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, within, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import * as React from 'react';
 import { spy } from 'sinon';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Filter', () => {
-  const { clock, render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -315,7 +315,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+  it('should work as expected with "Add filter" and "Remove all" buttons ', async () => {
     render(
       <TestCase
         initialState={{
@@ -336,8 +336,9 @@ describe('<DataGridPro /> - Filter', () => {
     expect(apiRef.current.state.filter.filterModel.items).to.have.length(0);
     // clicking on `remove all` should close the panel when no filters
     fireEvent.click(removeButton);
-    clock.tick(100);
-    expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
+    });
   });
 
   it('should hide `Add filter` in filter panel when `disableAddFilterButton` is `true`', () => {
@@ -441,7 +442,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal([]);
   });
 
-  it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', () => {
+  it('should call onFilterModelChange with reason=upsertFilterItem when the value is emptied', async () => {
     const onFilterModelChange = spy();
     render(
       <TestCase
@@ -463,9 +464,11 @@ describe('<DataGridPro /> - Filter', () => {
     );
     expect(onFilterModelChange.callCount).to.equal(0);
     fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
-    clock.tick(500);
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
+
+    await waitFor(() => {
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
+    });
   });
 
   it('should call onFilterModelChange with reason=deleteFilterItem when a filter is removed', () => {
@@ -568,7 +571,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should show the latest expandedRows', () => {
+  it('should show the latest expandedRows', async () => {
     render(
       <TestCase
         initialState={{
@@ -582,7 +585,8 @@ describe('<DataGridPro /> - Filter', () => {
 
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
-    clock.tick(SUBMIT_FILTER_STROKE_TIME);
+    await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
+
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
 
     expect(gridExpandedSortedRowEntriesSelector(apiRef).length).to.equal(1);
@@ -626,7 +630,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(window.scrollY).to.equal(initialScrollPosition);
   });
 
-  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', function test() {
+  it('should not scroll the page when opening the filter panel and the operator=isAnyOf', async function test() {
     if (isJSDOM) {
       this.skip(); // Needs layout
     }
@@ -656,9 +660,10 @@ describe('<DataGridPro /> - Filter', () => {
     const initialScrollPosition = window.scrollY;
     expect(initialScrollPosition).not.to.equal(0);
     act(() => apiRef.current.hidePreferences());
-    clock.tick(100);
     act(() => apiRef.current.showPreferences(GridPreferencePanelsValue.filters));
-    expect(window.scrollY).to.equal(initialScrollPosition);
+    await waitFor(() => {
+      expect(window.scrollY).to.equal(initialScrollPosition);
+    });
   });
 
   describe('Server', () => {
