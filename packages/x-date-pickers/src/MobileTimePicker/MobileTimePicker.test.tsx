@@ -34,7 +34,8 @@ describe('<MobileTimePicker />', () => {
       value={null}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiMobileTimePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLDivElement,

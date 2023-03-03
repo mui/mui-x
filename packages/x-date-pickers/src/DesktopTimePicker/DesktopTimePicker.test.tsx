@@ -30,7 +30,8 @@ describe('<DesktopTimePicker />', () => {
       value={null}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiDesktopTimePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLDivElement,

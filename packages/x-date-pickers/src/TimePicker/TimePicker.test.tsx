@@ -22,6 +22,9 @@ describe('<TimePicker />', () => {
     );
   };
 
+  const { render } = createPickerRenderer();
+
+
   describeConformance(
     <TimePicker
       onChange={() => {}}
@@ -29,7 +32,8 @@ describe('<TimePicker />', () => {
       value={null}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiTimePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLDivElement,
@@ -46,8 +50,6 @@ describe('<TimePicker />', () => {
       ],
     }),
   );
-
-  const { render } = createPickerRenderer();
 
   it('should handle controlled `onChange` in desktop mode', () => {
     render(<ControlledTimePicker />);

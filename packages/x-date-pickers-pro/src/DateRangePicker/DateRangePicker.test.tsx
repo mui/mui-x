@@ -20,7 +20,8 @@ describe('<DateRangePicker />', () => {
       value={[null, null]}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiDateRangePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLDivElement,
