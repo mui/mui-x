@@ -13,8 +13,9 @@ This is now the officially supported major version, where we'll keep rolling out
 Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
 
 Migration guides are available with a complete list of the breaking changes:
-- [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/) 
-- [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/), 
+
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/)
+- [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/)
 
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
@@ -41,6 +42,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - The `componentsProps` and `slotProps` props are now typed for better DX
 - The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot. You can use the new `focusedCell` and `tabbableCell` props instead. For the editing state, use the API methods.
   The flag `experimentalFeatures.rowPinning` is no longer needed.
+
 #### Changes
 
 - [DataGrid] Add typing for `componentsProps` (#7968) @MBilalShafi
