@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer, screen, fireEvent, waitFor } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, fireEvent, waitFor, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import {
@@ -8,8 +8,9 @@ import {
   GridFilterModel,
   GridLogicOperator,
   GridToolbarQuickFilter,
+  SUBMIT_FILTER_STROKE_TIME,
 } from '@mui/x-data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, sleep } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -52,6 +53,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'a' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
 
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Puma']);
@@ -78,6 +80,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid, nik' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
 
       await waitFor(() => {
         expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
@@ -150,6 +153,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       });
@@ -157,6 +161,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid nik' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal([]);
       });
@@ -174,6 +179,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Adidas']);
       });
@@ -181,6 +187,7 @@ describe('<DataGrid /> - Quick Filter', () => {
       fireEvent.change(screen.getByRole('searchbox'), {
         target: { value: 'adid nik' },
       });
+      await act(() => sleep(SUBMIT_FILTER_STROKE_TIME));
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas']);
       });
