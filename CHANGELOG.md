@@ -8,9 +8,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 _Mar 3, 2023_
 
 
-The v6 stable release is now available 🎉
-Support and bug fixes will now be made on v6. 
-Only critical fixes will be added to the v5.
+We're happy to announce the [v6 stable](https://github.com/mui/mui-x/releases/tag/v6.0.0) is finally available! 🎉
+Support, new features, and bug fixes will be shipped with v6.
+v5 is now officially in **long-term support**. This means it's the last v5 weekly release, and new versions will only be released for critical fixes; to provide security updates and support for regressions.
 
 We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
