@@ -89,6 +89,8 @@ The demo below contains an example of both features enabled:
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 {{"demo": "ColumnPinningApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API

@@ -336,6 +336,8 @@ See [Row grouping recipes](/x/react-data-grid/recipes-row-grouping/) for more ad
 
 ## apiRef
 
+The grid exposes a set of methods that enables all of these features using the imperative `apiRef`. To know more about how to use it, check the [API Object](/x/react-data-grid/api-object/) section.
+
 {{"demo": "RowGroupingApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
