@@ -93,12 +93,13 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
+  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
     readOnly: boolean;
+    autoComplete: 'off';
   };
 
 export interface FieldSection {
@@ -343,6 +344,10 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
   referenceValue: TValue;
+  /**
+   * A localized format string built from sections.
+   */
+  placeholder: string;
   sections: TSection[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.

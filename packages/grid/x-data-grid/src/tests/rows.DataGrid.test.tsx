@@ -6,6 +6,7 @@ import {
   act,
   userEvent,
   ErrorBoundary,
+  waitFor,
 } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
@@ -29,7 +30,7 @@ import { COMPACT_DENSITY_FACTOR } from '../hooks/features/density/useGridDensity
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   const baselineProps = {
     autoHeight: isJSDOM,
@@ -229,7 +230,9 @@ describe('<DataGrid /> - Rows', () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
       expect(screen.queryByText('print')).to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(screen.queryByText('print')).not.to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByText('print')).not.to.equal(null);
+      });
     });
 
     it('should not select the row when clicking in an action', () => {
@@ -249,19 +252,26 @@ describe('<DataGrid /> - Rows', () => {
       );
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(screen.queryByText('print')).not.to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByText('print')).not.to.equal(null);
+      });
+
       fireEvent.click(screen.getByText('print'));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+      await waitFor(() => {
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
     });
 
-    it('should not select the row when opening the menu', () => {
+    it('should not select the row when opening the menu', async () => {
       render(<TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />);
       expect(getRow(0)).not.to.have.class('Mui-selected');
       fireEvent.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
+      await waitFor(() => {
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
     });
 
-    it('should close other menus before opening a new one', () => {
+    it('should close other menus before opening a new one', async () => {
       render(
         <TestCase
           rows={[{ id: 1 }, { id: 2 }]}
@@ -273,14 +283,16 @@ describe('<DataGrid /> - Rows', () => {
       const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
       fireEvent.mouseDown(more1);
       fireEvent.click(more1);
-      clock.runToLast();
-      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      await waitFor(() => {
+        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      });
 
       const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
       fireEvent.mouseDown(more2);
       fireEvent.click(more2);
-      clock.runToLast();
-      expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      await waitFor(() => {
+        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+      });
     });
 
     it('should allow to move focus to another cell with the arrow keys', () => {
@@ -299,7 +311,7 @@ describe('<DataGrid /> - Rows', () => {
       expect(getActiveCell()).to.equal('0-0');
     });
 
-    it('should focus the first item when opening the menu', () => {
+    it('should focus the first item when opening the menu', async () => {
       render(
         <TestCase
           getActions={() => [
@@ -311,8 +323,10 @@ describe('<DataGrid /> - Rows', () => {
       const moreButton = screen.getByRole('menuitem', { name: 'more' });
       userEvent.mousePress(moreButton);
 
-      const printButton = screen.queryByRole('menuitem', { name: 'print' });
-      expect(printButton).toHaveFocus();
+      await waitFor(() => {
+        const printButton = screen.queryByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+      });
     });
 
     it('should allow to navigate between actions using the arrow keys', () => {
@@ -576,12 +590,11 @@ describe('<DataGrid /> - Rows', () => {
           '.MuiDataGrid-virtualScrollerContent',
         );
         const expectedHeight = baselineProps.rows.length * (contentHeight + border);
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -606,12 +619,11 @@ describe('<DataGrid /> - Rows', () => {
           measuredRowHeight +
           border + // Measured rows also include the border
           (baselineProps.rows.length - 1) * defaultRowHeight;
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -636,12 +648,11 @@ describe('<DataGrid /> - Rows', () => {
         const firstRowHeight = measuredRowHeight + border; // Measured rows also include the border
         const expectedHeight =
           firstRowHeight + (baselineProps.rows.length - 1) * estimatedRowHeight;
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${expectedHeight}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${expectedHeight}px`,
+          });
         });
       });
 
@@ -657,20 +668,18 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         );
-        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '101px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '101px',
+          });
         });
         setProps({ rows: [{ clientId: 'c1', expanded: true }] });
-        await act(() => Promise.resolve()); // Wait for ResizeObserver to send dimensions
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: '201px',
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: '201px',
+          });
         });
       });
 
@@ -715,22 +724,14 @@ describe('<DataGrid /> - Rows', () => {
           />,
         );
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52);
+        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 52 + 52));
         virtualScroller.scrollTop = 101; // Scroll to measure the 2nd cell
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52);
+
+        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 52));
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101); // Ensure that all rows before the last were measured
+        await waitFor(() => expect(virtualScroller.scrollHeight).to.equal(101 + 101 + 101));
       });
 
       it('should allow to mix rows with dynamic row height and default row height', async () => {
@@ -754,12 +755,11 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScrollerContent = document.querySelector(
           '.MuiDataGrid-virtualScrollerContent',
         )!;
-        await act(() => Promise.resolve());
-        clock.runToLast(); // Run timers in the mocked ResizeObserver
-        clock.runToLast(); // Run the debounce timeout that triggers the rerender
-        expect(virtualScrollerContent).toHaveInlineStyle({
-          width: 'auto',
-          height: `${Math.floor(expectedHeight)}px`,
+        await waitFor(() => {
+          expect(virtualScrollerContent).toHaveInlineStyle({
+            width: 'auto',
+            height: `${Math.floor(expectedHeight)}px`,
+          });
         });
       });
 
@@ -786,16 +786,16 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await act(() => Promise.resolve());
-        clock.runToLast();
+
         const virtualScrollerRenderZone = document.querySelector(
           '.MuiDataGrid-virtualScrollerRenderZone',
         )!;
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-        await act(() => Promise.resolve());
-        clock.runToLast();
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
+
+        await waitFor(() => {
+          expect(virtualScrollerRenderZone).toHaveInlineStyle({
+            transform: 'translate3d(0px, 0px, 0px)',
+          });
         });
       });
 
@@ -866,15 +866,14 @@ describe('<DataGrid /> - Rows', () => {
         const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller')!;
         virtualScroller.scrollTop = 10e6; // Scroll to measure all cells
         virtualScroller.dispatchEvent(new Event('scroll'));
-        await act(() => Promise.resolve());
-        clock.runToLast();
 
         setProps({ pageSize: 10 });
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-        await act(() => Promise.resolve());
-        clock.runToLast();
-        expect(virtualScrollerRenderZone).toHaveInlineStyle({
-          transform: 'translate3d(0px, 0px, 0px)',
+
+        await waitFor(() => {
+          expect(virtualScrollerRenderZone).toHaveInlineStyle({
+            transform: 'translate3d(0px, 0px, 0px)',
+          });
         });
       });
     });

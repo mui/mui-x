@@ -6,9 +6,9 @@ title: Data Grid - Aggregation
 
 <p class="description">Add aggregation functions to the Data Grid so users can combine row values.</p>
 
-You can aggregate rows through the grid interface by opening the column menu and selecting from the items under **Aggregation**.
+You can aggregate rows through the data grid interface by opening the column menu and selecting from the items under **Aggregation**.
 
-The aggregated values are rendered in a footer row at the bottom of the grid.
+The aggregated values are rendered in a footer row at the bottom of the data grid.
 
 {{"demo": "AggregationInitialState.js", "bg": "inline", "defaultCodeOpen": false}}
 

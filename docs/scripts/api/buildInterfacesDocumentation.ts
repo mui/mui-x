@@ -256,11 +256,23 @@ function generateMarkdown(
   projects: Projects,
   documentedInterfaces: DocumentedInterfaces,
 ) {
+  const demos = object.tags.demos;
   const description = linkify(object.description, documentedInterfaces, 'html');
   const imports = generateImportStatement([object], projects);
 
   let text = `# ${object.name} Interface\n`;
   text += `<p class="description">${description}</p>\n\n`;
+
+  if (demos && demos.text && demos.text.length > 0) {
+    text += '## Demos\n\n';
+    text += ':::info\n';
+    text += 'For examples and details on the usage, check the following pages:\n\n';
+    demos.text.forEach((demoLink) => {
+      text += demoLink.text;
+    });
+    text += '\n\n:::\n\n';
+  }
+
   text += '## Import\n\n';
   text += `${imports}\n\n`;
   text += '## Properties\n\n';

@@ -34,9 +34,12 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
     ...defaultizedProps.viewRenderers,
   };
 
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
+
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
+    ampmInClock,
     viewRenderers,
     slots: {
       field: TimeField,
@@ -53,6 +56,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<TDate>(
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
     },
@@ -80,7 +84,7 @@ DesktopTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
