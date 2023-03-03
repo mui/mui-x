@@ -6875,7 +6875,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [XGrid] Fix event typo (#1574) @DanailH
 
   ```diff
-  -import { GRID_COLUMN_RESIZE_COMMITTED } from '@material-ui/x-grid';
+  -import { GRID_COLUMN_RESIZE_COMMITED } from '@material-ui/x-grid';
   +import { GRID_COLUMN_RESIZE_COMMITTED } from '@material-ui/x-grid';
   ```
 
