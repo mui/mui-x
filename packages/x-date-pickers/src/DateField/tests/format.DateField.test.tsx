@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { expectInputValue, getTextbox } from 'test/utils/pickers-utils';
+import { expectInputPlaceholder, expectInputValue, getTextbox } from 'test/utils/pickers-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
@@ -11,7 +11,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
       <DateField format={`${startChar}Escaped${endChar} ${adapter.formats.year}`} />,
     );
     const input = getTextbox();
-    expectInputValue(input, 'Escaped YYYY');
+    expectInputPlaceholder(input, 'Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped 2019');
@@ -26,7 +26,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
       />,
     );
     const input = getTextbox();
-    expectInputValue(input, 'MMMM Escaped YYYY');
+    expectInputPlaceholder(input, 'MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'January Escaped 2019');
@@ -47,7 +47,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
       />,
     );
     const input = getTextbox();
-    expectInputValue(input, 'MMMM Escaped [ YYYY');
+    expectInputPlaceholder(input, 'MMMM Escaped [ YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'January Escaped [ 2019');
@@ -63,7 +63,7 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
       />,
     );
     const input = getTextbox();
-    expectInputValue(input, 'Escaped MMMM Escaped YYYY');
+    expectInputPlaceholder(input, 'Escaped MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped January Escaped 2019');

@@ -6,6 +6,7 @@ import {
   adapterToUse,
   buildFieldInteractions,
   createPickerRenderer,
+  expectInputPlaceholder,
   expectInputValue,
 } from 'test/utils/pickers-utils';
 
@@ -45,10 +46,12 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const textBoxes: HTMLInputElement[] = screen.getAllByRole('textbox');
       expectedValues.forEach((value, index) => {
-        const expectedValueStr =
-          value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate');
+        const input = textBoxes[index];
         // TODO: Support single range input
-        expectInputValue(textBoxes[index], expectedValueStr, true);
+        if (!value) {
+          expectInputPlaceholder(input, 'MM/DD/YYYY');
+        }
+        expectInputValue(input, value ? adapterToUse.format(value, 'keyboardDate') : '', true);
       });
     },
     setNewValue: (value, { isOpened, applySameValue, setEndDate = false } = {}) => {
