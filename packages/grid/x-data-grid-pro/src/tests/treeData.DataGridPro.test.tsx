@@ -1,4 +1,11 @@
-import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
+import {
+  createRenderer,
+  fireEvent,
+  screen,
+  act,
+  userEvent,
+  waitFor,
+} from '@mui/monorepo/test/utils';
 import {
   getCell,
   getColumnHeaderCell,
@@ -57,7 +64,7 @@ const baselineProps: DataGridProProps = {
 };
 
 describe('<DataGridPro /> - Tree Data', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -166,14 +173,14 @@ describe('<DataGridPro /> - Tree Data', () => {
       expect(getColumnValues(1)).to.deep.equal(['1', '2']);
     });
 
-    it('should keep children expansion when changing some of the rows', () => {
+    it('should keep children expansion when changing some of the rows', async () => {
       render(<Test disableVirtualization rows={[{ name: 'A' }, { name: 'A.A' }]} />);
       expect(getColumnValues(1)).to.deep.equal(['A']);
       act(() => apiRef.current.setRowChildrenExpansion('A', true));
-      clock.runToLast();
-      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']);
+      await waitFor(() => expect(getColumnValues(1)).to.deep.equal(['A', 'A.A']));
+
       act(() => apiRef.current.updateRows([{ name: 'B' }]));
-      expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']);
+      await waitFor(() => expect(getColumnValues(1)).to.deep.equal(['A', 'A.A', 'B']));
     });
   });
 
