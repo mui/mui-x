@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { TextFieldProps } from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
@@ -11,7 +10,8 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? true;
-  const OptionComponent = isSelectNative ? 'option' : MenuItem;
+
+  const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +28,7 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
 
   return (
     <rootProps.slots.baseTextField
+      // TODO: use baseSelect slot
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       value={filterValueState}
       onChange={onFilterChange}
@@ -45,13 +46,23 @@ export function GridFilterInputBoolean(props: GridFilterInputValueProps & TextFi
       {...others}
       {...rootProps.slotProps?.baseTextField}
     >
-      <OptionComponent value="">{apiRef.current.getLocaleText('filterValueAny')}</OptionComponent>
-      <OptionComponent value="true">
+      <rootProps.slots.baseSelectOption {...baseSelectOptionProps} native={isSelectNative} value="">
+        {apiRef.current.getLocaleText('filterValueAny')}
+      </rootProps.slots.baseSelectOption>
+      <rootProps.slots.baseSelectOption
+        {...baseSelectOptionProps}
+        native={isSelectNative}
+        value="true"
+      >
         {apiRef.current.getLocaleText('filterValueTrue')}
-      </OptionComponent>
-      <OptionComponent value="false">
+      </rootProps.slots.baseSelectOption>
+      <rootProps.slots.baseSelectOption
+        {...baseSelectOptionProps}
+        native={isSelectNative}
+        value="false"
+      >
         {apiRef.current.getLocaleText('filterValueFalse')}
-      </OptionComponent>
+      </rootProps.slots.baseSelectOption>
     </rootProps.slots.baseTextField>
   );
 }

@@ -153,5 +153,5 @@ const cleanText = (string) =>
   string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
 // Example of a test using the helper
-expect(cleanText(input.value)).to.equal('10-11-2021');
+expect(cleanText(input.value)).to.equal('04-17-2022');
 ```

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { expect } from 'chai';
 import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
-import { screen, act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
+import { act, userEvent, fireEvent } from '@mui/monorepo/test/utils';
 import {
   adapterToUse,
   createPickerRenderer,
   expectInputValue,
   getCleanedSelectedContent,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 
 describe('<SingleInputDateRangeField /> - Selection', () => {
@@ -42,7 +43,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('Focus', () => {
     it('should select all on mount focus (`autoFocus = true`)', () => {
       render(<SingleInputDateRangeField autoFocus />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
 
       expectInputValue(input, 'MM / DD / YYYY – MM / DD / YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY – MM / DD / YYYY');
@@ -50,7 +51,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should select all on <Tab> focus', () => {
       render(<SingleInputDateRangeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
@@ -67,7 +68,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       render(
         <SingleInputDateRangeField value={[null, adapterToUse.date(new Date(2022, 1, 24))]} />,
       );
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       // Start date
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
@@ -87,7 +88,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       render(
         <SingleInputDateRangeField value={[null, adapterToUse.date(new Date(2022, 1, 24))]} />,
       );
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       // Start date
       clickOnInput(input, 'DD');
       expect(getCleanedSelectedContent(input)).to.equal('DD');
@@ -107,7 +108,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('key: ArrowRight', () => {
     it('should allows to move from left to right with ArrowRight', () => {
       render(<SingleInputDateRangeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 'MM');
       expect(getCleanedSelectedContent(input)).to.equal('MM');
 
@@ -129,7 +130,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should stay on the current section when the last section is selected', () => {
       render(<SingleInputDateRangeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 'YYYY', true);
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
       userEvent.keyPress(input, { key: 'ArrowRight' });
@@ -140,7 +141,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
   describe('key: ArrowLeft', () => {
     it('should allows to move from right to left with ArrowLeft', () => {
       render(<SingleInputDateRangeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 'YYYY', true);
       expect(getCleanedSelectedContent(input)).to.equal('YYYY');
       userEvent.keyPress(input, { key: 'ArrowLeft' });
@@ -161,7 +162,7 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
 
     it('should stay on the current section when the first section is selected', () => {
       render(<SingleInputDateRangeField />);
-      const input = screen.getByRole('textbox');
+      const input = getTextbox();
       clickOnInput(input, 'MM');
       expect(getCleanedSelectedContent(input)).to.equal('MM');
       userEvent.keyPress(input, { key: 'ArrowLeft' });

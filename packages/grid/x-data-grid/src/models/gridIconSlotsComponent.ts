@@ -170,4 +170,14 @@ export interface GridIconSlotsComponent {
    * @default GridClearIcon
    */
   ColumnMenuClearIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the input while processing.
+   * @default GridLoadIcon
+   */
+  LoadIcon: React.JSXElementConstructor<any>;
+  /**
+   * Icon displayed on the column reorder button.
+   * @default GridDragIcon
+   */
+  ColumnReorderIcon: React.JSXElementConstructor<any>;
 }

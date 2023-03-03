@@ -7,7 +7,7 @@ describe('<MultiInputDateTimeRangeField />', () => {
   const { render } = createPickerRenderer();
 
   describeConformance(<MultiInputDateTimeRangeField />, () => ({
-    classes: {},
+    classes: {} as any,
     inheritComponent: 'div',
     render,
     muiName: 'MuiMultiInputDateTimeRangeField',

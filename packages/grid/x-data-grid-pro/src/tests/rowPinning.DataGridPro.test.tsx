@@ -9,14 +9,7 @@ import {
   DataGridProProps,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  userEvent,
-  // @ts-expect-error Remove once the test utils are typed
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -29,17 +22,17 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Row pinning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function getRowById(id: number | string) {
     return document.querySelector(`[data-id="${id}"]`);
   }
 
   function getTopPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--top']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--top']}`);
   }
   function getBottomPinnedRowsContainer() {
-    return document.querySelector(`.${gridClasses['pinnedRows--bottom']}`) as HTMLElement;
+    return document.querySelector<HTMLElement>(`.${gridClasses['pinnedRows--bottom']}`);
   }
 
   function isRowPinned(row: Element | null, section: 'top' | 'bottom') {
@@ -73,7 +66,6 @@ describe('<DataGridPro /> - Row pinning', () => {
             top: [pinnedRow0],
             bottom: [pinnedRow1],
           }}
-          experimentalFeatures={{ rowPinning: true }}
           {...props}
         />
       </div>
@@ -105,12 +97,7 @@ describe('<DataGridPro /> - Row pinning', () => {
 
       return (
         <div style={{ width: 302, height: 300 }}>
-          <DataGridPro
-            {...data}
-            autoHeight
-            pinnedRows={pinnedRows}
-            experimentalFeatures={{ rowPinning: true }}
-          />
+          <DataGridPro {...data} autoHeight pinnedRows={pinnedRows} />
         </div>
       );
     }
@@ -281,7 +268,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               bottom: [pinnedRow1],
             }}
             getRowId={getRowId}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );
@@ -368,7 +354,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 top: [pinnedRow1, pinnedRow0],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -411,7 +396,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               pinnedRows={{
                 bottom: [pinnedRow0, pinnedRow1],
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -463,7 +447,6 @@ describe('<DataGridPro /> - Row pinning', () => {
                   right: ['price2M'],
                 },
               }}
-              experimentalFeatures={{ rowPinning: true }}
             />
           </div>
         );
@@ -703,7 +686,6 @@ describe('<DataGridPro /> - Row pinning', () => {
               top: [pinnedRow0],
               bottom: [pinnedRow1],
             }}
-            experimentalFeatures={{ rowPinning: true }}
           />
         </div>
       );

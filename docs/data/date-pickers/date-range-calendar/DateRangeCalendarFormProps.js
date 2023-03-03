@@ -11,13 +11,13 @@ export default function DateRangeCalendarFormProps() {
       <DemoContainer components={['DateRangeCalendar', 'DateRangeCalendar']}>
         <DemoItem label="disabled">
           <DateRangeCalendar
-            defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
             disabled
           />
         </DemoItem>
         <DemoItem label="readOnly">
           <DateRangeCalendar
-            defaultValue={[dayjs('2022-04-07'), dayjs('2022-04-10')]}
+            defaultValue={[dayjs('2022-04-17'), dayjs('2022-04-21')]}
             readOnly
           />
         </DemoItem>
