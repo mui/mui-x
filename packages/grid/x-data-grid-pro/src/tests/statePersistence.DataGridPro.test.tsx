@@ -10,7 +10,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, screen, act } from '@mui/monorepo/test/utils';
+import { createRenderer, screen, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import {
   getColumnHeaderCell,
@@ -78,7 +78,7 @@ const FULL_INITIAL_STATE: GridInitialState = {
 };
 
 describe('<DataGridPro /> - State Persistence', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -256,7 +256,7 @@ describe('<DataGridPro /> - State Persistence', () => {
       expect(getColumnValues(0)).to.deep.equal(['2', '3']);
     });
 
-    it('should restore controlled sub-state', () => {
+    it('should restore controlled sub-state', async () => {
       function ControlledTest() {
         const [paginationModel, setPaginationModel] = React.useState({ page: 0, pageSize: 5 });
 
@@ -277,8 +277,10 @@ describe('<DataGridPro /> - State Persistence', () => {
           },
         }),
       );
-      clock.runToLast();
-      expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['2', '3']);
+      });
     });
   });
 });
