@@ -11,6 +11,4 @@ export * from './gridNumericOperators';
 export * from './gridSingleSelectOperators';
 export * from './gridStringOperators';
 export * from './gridDefaultColumnTypes';
-export { defaultGetOptionLabel } from '@mui/x-data-grid/colDef/gridSelectColDefUtils';
-export { defaultGetOptionValue } from '@mui/x-data-grid/colDef/gridSelectColDefUtils';
-export { isArrayOfObjects } from '@mui/x-data-grid/colDef/gridSelectColDefUtils';
+export * from './gridSelectColDefUtils';
