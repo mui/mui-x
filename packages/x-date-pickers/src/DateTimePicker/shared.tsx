@@ -129,7 +129,6 @@ type UseDateTimePickerDefaultizedProps<
     | 'views'
     | 'openTo'
     | 'orientation'
-    | 'ampmInClock'
     | 'ampm'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
@@ -163,7 +162,6 @@ export function useDateTimePickerDefaultizedProps<
     };
   }, [themeProps.localeText]);
 
-  const ampmInClock = themeProps.ampmInClock ?? true;
   const slots = themeProps.slots ?? uncapitalizeObjectKeys(themeProps.components);
   const slotProps = themeProps.slotProps ?? themeProps.componentsProps;
   return {
@@ -177,7 +175,6 @@ export function useDateTimePickerDefaultizedProps<
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    ampmInClock,
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
@@ -205,7 +202,6 @@ export function useDateTimePickerDefaultizedProps<
       ...slotProps,
       toolbar: {
         ampm,
-        ampmInClock,
         ...slotProps?.toolbar,
       },
     },
