@@ -15,7 +15,6 @@ import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 import MarkdownElement from 'docs/src/modules/components/MarkdownElement';
 import AppLayoutDocs from 'docs/src/modules/components/AppLayoutDocs';
 import Ad from 'docs/src/modules/components/Ad';
-import AppBanner from '../../components/AppBanner';
 
 const Asterisk = styled('abbr')(({ theme }) => ({ color: theme.palette.error.main }));
 
@@ -317,7 +316,6 @@ export default function ApiPage(props) {
       location={apiSourceLocation}
       title={`${componentName} API`}
       toc={toc}
-      BannerComponent={AppBanner}
     >
       <MarkdownElement>
         <h1>{componentName} API</h1>
