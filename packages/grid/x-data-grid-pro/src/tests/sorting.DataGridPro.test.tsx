@@ -7,7 +7,7 @@ import {
   useGridApiRef,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, act } from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, act, waitFor } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
@@ -37,7 +37,7 @@ describe('<DataGridPro /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
   };
 
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -134,13 +134,18 @@ describe('<DataGridPro /> - Sorting', () => {
     });
 
     ['metaKey', 'ctrlKey'].forEach((key) => {
-      it(`should do nothing when pressing Enter while ${key} is pressed`, () => {
+      it(`should do nothing when pressing Enter while ${key} is pressed`, async () => {
         render(<TestCase />);
         act(() => apiRef.current.setSortModel([{ field: 'year', sort: 'desc' }]));
-        expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        });
+
         act(() => getColumnHeaderCell(1).focus());
         fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', [key]: true });
-        expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        await waitFor(() => {
+          expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        });
       });
     });
 
