@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 5.17.26
+
+_Mar 3, 2023_
+
+We're happy to announce the [v6 stable](https://github.com/mui/mui-x/releases/tag/v6.0.0) is finally available! 🎉
+Support, new features, and non-critical bug fixes will only be shipped in v6.
+v5 is now officially in **long-term support**. This means it's the last v5 weekly release, and new versions will only be released for critical fixes; to provide security updates and support for regressions.
+
+We'd like to offer a big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve Czech, Arabic, and Spanish locales
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v5.17.26` / `@mui/x-data-grid-pro@v5.17.26` / `@mui/x-data-grid-premium@v5.17.26`
+
+#### Changes
+
+- [DataGrid] Register `getLocaleText` synchronously (#8073) @m4theushw
+- [l10n] Import Czech (cs-CZ) locale (#8114) @BlastyCZ
+- [l10n] Improve Arabic (ar-SD) locale for `DataGrid` (#8094) @atf98
+- [l10n] Improve Spanish (es-ES) locale (#8030) @RadamesRamirez0
+
 ## 5.17.25
 
 _Feb 23, 2023_
