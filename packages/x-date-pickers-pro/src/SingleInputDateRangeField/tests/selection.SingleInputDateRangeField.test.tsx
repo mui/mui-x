@@ -18,6 +18,14 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
     position: number | string,
     isSecondItem?: boolean,
   ) => {
+    act(() => {
+      fireEvent.mouseDown(input);
+      if (document.activeElement !== input) {
+        input.focus();
+      }
+      fireEvent.mouseUp(input);
+    });
+    clock.runToLast();
     const clickPosition =
       typeof position === 'string'
         ? input.value.indexOf(position, isSecondItem ? input.value.indexOf(position) + 1 : 0)
@@ -28,11 +36,6 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       );
     }
     act(() => {
-      fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
-      fireEvent.mouseUp(input);
       input.setSelectionRange(clickPosition, clickPosition);
       fireEvent.click(input);
 
@@ -55,8 +58,9 @@ describe('<SingleInputDateRangeField /> - Selection', () => {
       // Simulate a <Tab> focus interaction on desktop
       act(() => {
         input.focus();
-        input.select();
       });
+      clock.runToLast();
+      input.select();
 
       expectInputValue(input, 'MM / DD / YYYY – MM / DD / YYYY');
       expect(getCleanedSelectedContent(input)).to.equal('MM / DD / YYYY – MM / DD / YYYY');
