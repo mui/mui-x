@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { BadgeProps } from '@mui/material/Badge';
 import { CheckboxProps } from '@mui/material/Checkbox';
 import { TextFieldProps } from '@mui/material/TextField';
 import { FormControlProps } from '@mui/material/FormControl';
@@ -8,7 +7,6 @@ import { SwitchProps } from '@mui/material/Switch';
 import { ButtonProps } from '@mui/material/Button';
 import { IconButtonProps } from '@mui/material/IconButton';
 import { ListItemIconProps } from '@mui/material/ListItemIcon';
-import { MenuListProps } from '@mui/material/MenuList';
 import { MenuItemProps } from '@mui/material/MenuItem';
 import { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
@@ -26,7 +24,6 @@ import type { GridRowProps } from '../components/GridRow';
 import type { GridCellProps } from '../components/cell/GridCell';
 
 // Overrides for module augmentation
-export interface BaseBadgePropsOverrides {}
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
@@ -35,7 +32,6 @@ export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
 export interface BaseListItemIconPropsOverrides {}
-export interface BaseMenuListPropsOverrides {}
 export interface BaseMenuItemPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
@@ -62,7 +58,6 @@ type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
  * Overrideable components props dynamically passed to the component at rendering.
  */
 export interface GridSlotsComponentsProps {
-  baseBadge?: SlotProps<BadgeProps, BaseBadgePropsOverrides>;
   baseCheckbox?: SlotProps<CheckboxProps, BaseCheckboxPropsOverrides>;
   baseTextField?: SlotProps<TextFieldProps, BaseTextFieldPropsOverrides>;
   baseFormControl?: SlotProps<FormControlProps, BaseFormControlPropsOverrides>;
@@ -71,7 +66,6 @@ export interface GridSlotsComponentsProps {
   baseButton?: SlotProps<ButtonProps, BaseButtonPropsOverrides>;
   baseIconButton?: SlotProps<IconButtonProps, BaseIconButtonPropsOverrides>;
   baseListItemIcon?: SlotProps<ListItemIconProps, BaseListItemIconPropsOverrides>;
-  baseMenuList?: SlotProps<MenuListProps, BaseMenuListPropsOverrides>;
   baseMenuItem?: SlotProps<MenuItemProps, BaseMenuItemPropsOverrides>;
   basePopper?: SlotProps<PopperProps, BasePopperPropsOverrides>;
   baseTooltip?: SlotProps<TooltipProps, BaseTooltipPropsOverrides>;
