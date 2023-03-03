@@ -10,7 +10,14 @@ import {
   renderEditInputCell,
   renderEditSingleSelectCell,
 } from '@mui/x-data-grid-pro';
-import { act, createRenderer, fireEvent, screen, userEvent } from '@mui/monorepo/test/utils';
+import {
+  act,
+  createRenderer,
+  fireEvent,
+  screen,
+  userEvent,
+  waitFor,
+} from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
 import { spy, SinonSpy } from 'sinon';
@@ -38,7 +45,7 @@ const generateDate = (
 };
 
 describe('<DataGridPro /> - Edit Components', () => {
-  const { render, clock } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   let apiRef: React.MutableRefObject<GridApi>;
 
@@ -79,7 +86,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should pass the value prop to the input', () => {
+    it('should pass the value prop to the input', async () => {
       defaultData.columns[0].valueParser = (value) => (value as string).toUpperCase();
       render(<TestCase />);
 
@@ -92,8 +99,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: 'Puma' } });
       expect(input.value).to.equal('PUMA');
 
-      clock.tick(200);
-      expect(input.value).to.equal('PUMA');
+      await waitFor(() => expect(input.value).to.equal('PUMA'));
     });
 
     it('should display a indicator while processing the props', async () => {
@@ -111,12 +117,8 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       fireEvent.change(input, { target: { value: 'Puma' } });
-      act(() => clock.tick(200));
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
-
-      clock.tick(500);
-      await act(() => Promise.resolve());
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+      await waitFor(() => expect(screen.queryByTestId('LoadIcon')).not.to.equal(null));
+      await waitFor(() => expect(screen.queryByTestId('LoadIcon')).to.equal(null));
     });
 
     it('should call onValueChange if defined', async () => {
@@ -132,10 +134,11 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.change(input, { target: { value: 'Puma' } });
-      await act(() => Promise.resolve());
 
-      expect(onValueChange.callCount).to.equal(1);
-      expect(onValueChange.lastCall.args[1]).to.equal('Puma');
+      await waitFor(() => {
+        expect(onValueChange.callCount).to.equal(1);
+        expect(onValueChange.lastCall.args[1]).to.equal('Puma');
+      });
     });
   });
 
@@ -165,7 +168,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should the value prop to the input', () => {
+    it('should the value prop to the input', async () => {
       render(<TestCase />);
 
       const cell = getCell(0, 0);
@@ -177,8 +180,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.change(input, { target: { value: '110' } });
       expect(input.value).to.equal('110');
 
-      clock.tick(200);
-      expect(input.value).to.equal('110');
+      await waitFor(() => {
+        expect(input.value).to.equal('110');
+      });
     });
 
     it('should keep values as numbers', async () => {
@@ -193,9 +197,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       expect(input.value).to.equal('100');
 
       fireEvent.change(input, { target: { value: '110' } });
-      act(() => clock.tick(200));
-      expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110);
-      await act(() => Promise.resolve()); // To avoid mutating the state after unmount
+
+      await waitFor(() => {
+        expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110);
+      });
     });
 
     it('should display a indicator while processing the props', async () => {
@@ -213,12 +218,14 @@ describe('<DataGridPro /> - Edit Components', () => {
 
       expect(screen.queryByTestId('LoadIcon')).to.equal(null);
       fireEvent.change(input, { target: { value: 110 } });
-      clock.tick(200);
-      expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
 
-      clock.tick(500);
-      await act(() => Promise.resolve());
-      expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByTestId('LoadIcon')).not.to.equal(null);
+      });
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('LoadIcon')).to.equal(null);
+      });
     });
   });
 
@@ -531,7 +538,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       });
     });
 
-    it('should apply getOptionLabel to the options provided', () => {
+    it('should apply getOptionLabel to the options provided', async () => {
       defaultData.columns[0].renderEditCell = (params) => {
         return renderEditSingleSelectCell({
           ...params,
@@ -543,8 +550,10 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
 
-      expect(screen.queryAllByRole('option')[0]).to.have.text('nike');
-      expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
+      await waitFor(() => {
+        expect(screen.queryAllByRole('option')[0]).to.have.text('nike');
+        expect(screen.queryAllByRole('option')[1]).to.have.text('adidas');
+      });
     });
 
     it('should pass the value prop to the select', async () => {
@@ -569,10 +578,11 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      await Promise.resolve();
 
-      expect(onValueChange.callCount).to.equal(1);
-      expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+      await waitFor(() => {
+        expect(onValueChange.callCount).to.equal(1);
+        expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+      });
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -589,10 +599,14 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
-      clock.runToLast();
-      expect(screen.queryByRole('listbox')).to.equal(null);
+
+      await waitFor(() => {
+        expect(screen.queryByRole('listbox')).to.equal(null);
+      });
       fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
-      expect(screen.queryByRole('listbox')).to.equal(null);
+      await waitFor(() => {
+        expect(screen.queryByRole('listbox')).to.equal(null);
+      });
 
       resolveCallback!();
       await act(() => Promise.resolve());
