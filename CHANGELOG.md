@@ -40,7 +40,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 
 - The `componentsProps` and `slotProps` props are now typed for better DX
 - The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot. You can use the new `focusedCell` and `tabbableCell` props instead. For the editing state, use the API methods.
-
+  The flag `experimentalFeatures.rowPinning` is no longer needed.
 #### Changes
 
 - [DataGrid] Add typing for `componentsProps` (#7968) @MBilalShafi
