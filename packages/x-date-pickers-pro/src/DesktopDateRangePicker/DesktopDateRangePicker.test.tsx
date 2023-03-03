@@ -262,7 +262,7 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(handleChange.callCount).to.equal(1);
 
-    expect((screen.getAllByRole<HTMLInputElement>('textbox')[0]).value).to.equal('0');
+    expect(screen.getAllByRole<HTMLInputElement>('textbox')[0].value).to.equal('0');
 
     const firstChangeValues = handleChange.args[0][0];
     expect(adapterToUse.isValid(firstChangeValues[0])).to.equal(false);
@@ -291,7 +291,7 @@ describe('<DesktopDateRangePicker />', () => {
     clock.runToLast();
 
     expect(handleChange.callCount).to.equal(1);
-    expect((screen.getAllByRole<HTMLInputElement>('textbox')[0]).value).to.equal('01/01/19');
+    expect(screen.getAllByRole<HTMLInputElement>('textbox')[0].value).to.equal('01/01/19');
   });
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {

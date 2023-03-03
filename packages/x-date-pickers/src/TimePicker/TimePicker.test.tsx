@@ -24,7 +24,6 @@ describe('<TimePicker />', () => {
 
   const { render } = createPickerRenderer();
 
-
   describeConformance(
     <TimePicker
       onChange={() => {}}
