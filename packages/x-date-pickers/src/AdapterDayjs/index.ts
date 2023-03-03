@@ -14,28 +14,43 @@ const localeNotFoundWarning = buildWarning([
 ]);
 
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   YY: 'year',
   YYYY: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   D: 'day',
   DD: 'day',
+
+  // Day of the week
   d: 'weekDay',
   dd: { sectionType: 'weekDay', contentType: 'letter' },
   ddd: { sectionType: 'weekDay', contentType: 'letter' },
   dddd: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  A: 'meridiem',
+  a: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
+
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
-  A: 'meridiem',
-  a: 'meridiem',
 };
 
 interface Opts {
