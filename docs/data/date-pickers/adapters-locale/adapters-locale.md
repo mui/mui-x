@@ -173,7 +173,7 @@ The default formatter only keeps the first letter and capitalises it.
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
-The example bellow adds a dot at the end of each day in the calendar header:
+The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
 

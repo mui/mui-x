@@ -44,7 +44,7 @@
   },
   "classDescriptions": {},
   "slotDescriptions": {
-    "ActionBar": "Custom component for the action bar, it is placed bellow the picker views.",
+    "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
     "Dialog": "Custom component for the dialog inside which the views are rendered on mobile.",
     "Field": "Component used to enter the date with the keyboard.",
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",

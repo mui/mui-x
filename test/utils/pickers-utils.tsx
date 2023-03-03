@@ -306,7 +306,7 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
+  shouldRemoveDashSpaces = false,
 ) => {
   let value = cleanText(input.value);
   if (shouldRemoveDashSpaces) {
@@ -314,6 +314,11 @@ export const expectInputValue = (
   }
 
   return expect(value).to.equal(expectedValue);
+};
+
+export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
+  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  return expect(cleanPlaceholder).to.equal(placeholder);
 };
 
 interface BuildFieldInteractionsParams<P extends {}> {
@@ -358,11 +363,14 @@ export const buildFieldInteractions = <P extends {}>({
     cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -400,6 +408,14 @@ export const buildFieldInteractions = <P extends {}>({
   }) => {
     render(<Component {...(props as any as P)} />);
     const input = getTextbox();
+
+    // focus input to trigger setting placeholder as value if no value is present
+    act(() => {
+      input.focus();
+    });
+    // make sure the value of the input is rendered before proceeding
+    clock.runToLast();
+
     const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
     if (clickPosition === -1) {
       throw new Error(
