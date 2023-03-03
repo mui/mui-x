@@ -3,7 +3,7 @@
   "propDescriptions": {
     "autoFocus": "If <code>true</code>, the <code>input</code> element is focused during the first mount.",
     "color": "The color of the component. It supports both default and custom theme colors, which can be added as shown in the <a href=\"https://mui.com/material-ui/customization/palette/#adding-new-colors\">palette customization guide</a>.",
-    "components": "Overrideable components.",
+    "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "defaultValue": "The default value. Use when the component is not controlled.",
     "disabled": "If <code>true</code>, the component is disabled.",
@@ -36,7 +36,7 @@
     "shouldDisableYear": "Disable specific year.<br><br><strong>Signature:</strong><br><code>function(year: TDate) =&gt; boolean</code><br><em>year:</em> The year to test.<br> <em>returns</em> (boolean): If <code>true</code>, the year will be disabled.",
     "size": "The size of the component.",
     "slotProps": "The props used for each component slot.",
-    "slots": "Overrideable component slots.",
+    "slots": "Overridable component slots.",
     "sx": "The system prop that allows defining system overrides as well as additional CSS styles. See the <a href=\"/system/getting-started/the-sx-prop/\">`sx` page</a> for more details.",
     "value": "The selected value. Used when the component is controlled.",
     "variant": "The variant to use."

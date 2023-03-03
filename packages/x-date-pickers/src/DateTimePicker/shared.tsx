@@ -83,7 +83,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   maxDateTime?: TDate;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -95,7 +95,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;

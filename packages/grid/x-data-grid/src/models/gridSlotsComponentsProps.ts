@@ -51,7 +51,7 @@ export interface RowPropsOverrides {}
 type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
 
 /**
- * Overrideable components props dynamically passed to the component at rendering.
+ * Overridable components props dynamically passed to the component at rendering.
  */
 export interface GridSlotsComponentsProps {
   baseCheckbox?: SlotProps<CheckboxProps, BaseCheckboxPropsOverrides>;

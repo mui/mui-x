@@ -24,7 +24,7 @@ export interface MobileTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
     MobileOnlyPickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -36,7 +36,7 @@ export interface MobileTimePickerProps<TDate>
    */
   componentsProps?: MobileTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MobileTimePickerSlotsComponent<TDate>>;
