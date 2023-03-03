@@ -1,21 +1,13 @@
+import {
+  defaultGetOptionLabel,
+  defaultGetOptionValue,
+  isArrayOfObjects,
+} from './gridSelectColDefUtils';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GridSingleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditSingleSelectCell } from '../components/cell/GridEditSingleSelectCell';
 import { getGridSingleSelectOperators } from './gridSingleSelectOperators';
 import { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
-import { isObject } from '../utils/utils';
-
-const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
-  return typeof options[0] === 'object';
-};
-
-const defaultGetOptionValue = (value: ValueOptions) => {
-  return isObject(value) ? value.value : value;
-};
-
-const defaultGetOptionLabel = (value: ValueOptions) => {
-  return isObject(value) ? value.label : String(value);
-};
 
 export const GRID_SINGLE_SELECT_COL_DEF: Omit<GridSingleSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,

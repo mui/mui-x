@@ -1,21 +1,13 @@
+import {
+  defaultGetOptionLabel,
+  defaultGetOptionValue,
+  isArrayOfObjects,
+} from './gridSelectColDefUtils';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
 import { GridMultipleSelectColDef, ValueOptions } from '../models/colDef/gridColDef';
 import { renderEditMultipleSelectCell } from '../components/cell/GridEditMultipleSelectCell';
 import { getGridMultipleSelectOperators } from './gridMultipleSelectOperators';
 import { isMultipleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
-import { isObject } from '../utils/utils';
-
-const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
-  return typeof options[0] === 'object';
-};
-
-const defaultGetOptionValue = (value: ValueOptions) => {
-  return isObject(value) ? value.value : value;
-};
-
-const defaultGetOptionLabel = (value: ValueOptions) => {
-  return isObject(value) ? value.label : String(value);
-};
 
 export const GRID_MULTIPLE_SELECT_COL_DEF: Omit<GridMultipleSelectColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
