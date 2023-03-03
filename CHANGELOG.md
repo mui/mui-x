@@ -43,7 +43,7 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
 - [DataGrid] Use `styled` from system (#8032) @siriwatknp
 - [DataGridPro] Improve typing for `getColumnForNewFilter` method (#8043) @MBilalShafi
 - [DataGridPro] Remove row pinning from experimental features (#8055) @MBilalShafi
-- [l10n] Import Czech (cs-CZ) locale (#8113) @BlastyCZ
+- [l10n] Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
 - [l10n] Improve Arabic (ar-SD) locale (#8100) @atf98
 
 ### `@mui/x-date-pickers@v6.0.0` / `@mui/x-date-pickers-pro@v6.0.0`
@@ -63,7 +63,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [pickers] Document and deprecate `onClose` callback on static pickers (#8021) @LukasTy
 - [pickers] Fix am/pm buttons position and responsiveness (#5149) @alexfauquette
 - [pickers] Fix layout `sx` propagation (#8064) @alexfauquette
-- [pickers] Increase min `moment` peer dependency version (#8046) @oliviertassinari
+- [pickers] Increase `moment` peer dependency minimum version (#8046) @oliviertassinari
 - [pickers] Remove `WrapperVariantContext` (#8088) @LukasTy
 - [pickers] Stop using `WrapperVariantContext` in `Clock` (#8083) @LukasTy
 
@@ -78,7 +78,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [docs] Link to demonstrations in the interfaces API docs (#8028) @cherniavskii
 - [docs] Remove the `@next` tag from installation instructions (#8102) @cherniavskii
 - [docs] Start enforcing consistency in documentation vocabulary (#6871) @alexfauquette
-- [docs] Update Accessibility to be more up to date (#7970) @oliviertassinari
+- [docs] Update accessibility guidelines (#7970) @oliviertassinari
 - [docs] Update Data Grid demo to v6-beta (#7863) @joserodolfofreitas
 - [docs] Update migration guide for stable release (#8092) @joserodolfofreitas
 
