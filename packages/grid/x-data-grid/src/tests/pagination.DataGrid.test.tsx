@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { spy, stub, SinonStub } from 'sinon';
 import { expect } from 'chai';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  waitFor,
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/monorepo/test/utils';
 import {
   DataGrid,
   DataGridProps,

@@ -110,8 +110,8 @@ describe('<DataGridPro/> - Components', () => {
         expect(eventHandler.callCount).to.equal(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
-        match.slice(2).toLowerCase(),
-      ) as EventType; // e.g. onDoubleClick -> doubleClick
+          match.slice(2).toLowerCase(),
+        ) as EventType; // e.g. onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
         expect(propHandler.callCount).to.equal(1);

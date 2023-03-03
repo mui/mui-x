@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createRenderer,
-  fireEvent,
-  screen,
-  act,
-  userEvent,
-} from '@mui/monorepo/test/utils';
+import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import clsx from 'clsx';
 import { expect } from 'chai';
 import { spy, stub } from 'sinon';

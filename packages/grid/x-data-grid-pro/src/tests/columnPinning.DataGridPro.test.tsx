@@ -16,7 +16,7 @@ import {
   screen,
   createEvent,
   act,
-  userEvent, 
+  userEvent,
 } from '@mui/monorepo/test/utils';
 import { getCell, getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
 
