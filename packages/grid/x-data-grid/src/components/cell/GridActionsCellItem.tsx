@@ -1,11 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { IconButtonProps } from '@mui/material/IconButton';
-import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-export type GridActionsCellItemProps = {
+export type GridActionsCellItemProps<IconButtonProps, MenuItemProps> = {
   label: string;
   icon?: React.ReactElement;
 } & (
@@ -13,42 +10,46 @@ export type GridActionsCellItemProps = {
   | ({ showInMenu: true } & MenuItemProps)
 );
 
-const GridActionsCellItem = React.forwardRef<HTMLButtonElement, GridActionsCellItemProps>(
-  (props, ref) => {
-    const { label, icon, showInMenu, onClick, ...other } = props;
+const GridActionsCellItem = React.forwardRef<
+  HTMLButtonElement,
+  GridActionsCellItemProps<
+    JSX.IntrinsicElements['button'],
+    React.DetailedHTMLProps<React.HTMLAttributes<unknown>, unknown>
+  >
+>((props, ref) => {
+  const { label, icon, showInMenu, onClick, ...other } = props;
 
-    const rootProps = useGridRootProps();
+  const rootProps = useGridRootProps();
 
-    const handleClick = (event: any) => {
-      if (onClick) {
-        onClick(event);
-      }
-    };
-
-    if (!showInMenu) {
-      return (
-        <rootProps.slots.baseIconButton
-          ref={ref}
-          size="small"
-          role="menuitem"
-          aria-label={label}
-          {...(other as any)}
-          onClick={handleClick}
-          {...rootProps.slotProps?.baseIconButton}
-        >
-          {React.cloneElement(icon!, { fontSize: 'small' })}
-        </rootProps.slots.baseIconButton>
-      );
+  const handleClick = (event: any) => {
+    if (onClick) {
+      onClick(event);
     }
+  };
 
+  if (!showInMenu) {
     return (
-      <MenuItem ref={ref} {...(other as any)} onClick={onClick}>
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
-        {label}
-      </MenuItem>
+      <rootProps.slots.baseIconButton
+        ref={ref}
+        size="small"
+        role="menuitem"
+        aria-label={label}
+        {...(other as any)}
+        onClick={handleClick}
+        {...rootProps.slotProps?.baseIconButton}
+      >
+        {React.cloneElement(icon!, { fontSize: 'small' })}
+      </rootProps.slots.baseIconButton>
     );
-  },
-);
+  }
+
+  return (
+    <rootProps.slots.baseMenuItem ref={ref} {...(other as any)} onClick={onClick}>
+      {icon && <rootProps.slots.baseListItemIcon>{icon}</rootProps.slots.baseListItemIcon>}
+      {label}
+    </rootProps.slots.baseMenuItem>
+  );
+});
 
 GridActionsCellItem.propTypes = {
   // ----------------------------- Warning --------------------------------
