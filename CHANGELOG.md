@@ -7,9 +7,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Mar 3, 2023_
 
+We're happy to announce the first v6 stable release! 🎉🚀
+
+This is now the officially supported major version, where we'll keep rolling out new features, bug fixes, and improvements.
+Head over to the [what's new](https://mui.com/x/whats-new/) page to check the highlighted new features.
+
+Migration guides are available with a complete list of the breaking changes:
+- [Data Grid](https://mui.com/x/migration/migration-data-grid-v5/) 
+- [Date Pickers](https://mui.com/x/migration/migration-pickers-v5/), 
+
 We'd like to offer a big thanks to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🎁 The row pinning is no longer experimental. (#8055) @MBilalShafi
+- 🎁 The row pinning is no longer experimental (#8055) @MBilalShafi
 
   You can now use the row pinning without the `experimentalFeatures.rowPinning` flag enabled.
 
@@ -18,17 +27,18 @@ We'd like to offer a big thanks to the 12 contributors who made this release pos
   -  experimentalFeatures={{ rowPinning: true }}
    />
   ```
-- ⚡️ You can now memoize rows and cells. (#7846) @m4theushw
+- ⚡️ Improved grid performance by rows and cells memoization (#7846) @m4theushw
 - ✨ Fields have a distinct visual state when empty (#8069) @LukasTy
-- 🌍 Import Czech (cs-CZ) locale (#8113) @BlastyCZ
+- 🌍 Improve Czech (cs-CZ) locale (#8113) @BlastyCZ
 - 🌍 Improve Arabic (ar-SD) locale (#8100) @atf98
+- 📚 Documentation improvements
+- 🐞 Bugfixes
 
 ### `@mui/x-data-grid@v6.0.0` / `@mui/x-data-grid-pro@v6.0.0` / `@mui/x-data-grid-premium@v6.0.0`
 
 #### Breaking changes
 
-- Add typing for `componentsProps` and `slotProps` props
-- Allow extending the `componentsProps/slotProps` slots using module augmentation.
+- The `componentsProps` and `slotProps` props are now typed for better DX
 - The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the component used in the row slot. You can use the new `focusedCell` and `tabbableCell` props instead. For the editing state, use the API methods.
 
 #### Changes
@@ -59,7 +69,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [fields] Clean the order of the tokens in the `formatTokenMap` of each adapter (#8112) @flaviendelangle
 - [fields] Implement empty visual state (#8069) @LukasTy
 - [fields] Replace `sectionOrder` state with a memoized variable (#8090) @flaviendelangle
-- [pickers] Add support for UTC on moment adapter (#8031) @flaviendelangle
+- [pickers] Add support for UTC on `moment` adapter (#8031) @flaviendelangle
 - [pickers] Document and deprecate `onClose` callback on static pickers (#8021) @LukasTy
 - [pickers] Fix am/pm buttons position and responsiveness (#5149) @alexfauquette
 - [pickers] Fix layout `sx` propagation (#8064) @alexfauquette
@@ -79,7 +89,7 @@ It can be overridden by specifying `ampmInClock` prop.
 - [docs] Remove the `@next` tag from installation instructions (#8102) @cherniavskii
 - [docs] Start enforcing consistency in documentation vocabulary (#6871) @alexfauquette
 - [docs] Update accessibility guidelines (#7970) @oliviertassinari
-- [docs] Update Data Grid demo to v6-beta (#7863) @joserodolfofreitas
+- [docs] Update the DataGrid demo to leverage the latest features (#7863) @joserodolfofreitas
 - [docs] Update migration guide for stable release (#8092) @joserodolfofreitas
 
 ### Core
