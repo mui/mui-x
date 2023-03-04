@@ -26,7 +26,8 @@ describe('<StaticTimePicker />', () => {
       value={null}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiStaticTimePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: undefined,

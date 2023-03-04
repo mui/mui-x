@@ -18,7 +18,6 @@ import {
   waitFor,
   act,
   userEvent,
-  // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import { getRow, getCell, getColumnValues } from 'test/utils/helperFn';
 
@@ -481,8 +480,8 @@ describe('<DataGridPro /> - Detail panel', () => {
         columns={[{ field: 'id', width: 400 }]}
       />,
     );
-    fireEvent.click(getCell(1, 0).querySelector('button'));
-    expect(screen.queryByText('Detail').offsetWidth).to.equal(50 + 400);
+    fireEvent.click(getCell(1, 0).querySelector('button')!);
+    expect(screen.queryByText('Detail')!.offsetWidth).to.equal(50 + 400);
   });
 
   it('should add an accessible name to the toggle column', () => {

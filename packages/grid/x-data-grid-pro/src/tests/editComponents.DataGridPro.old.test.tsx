@@ -14,7 +14,6 @@ import {
   waitFor,
   act,
   userEvent,
-  // @ts-ignore Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell } from 'test/utils/helperFn';
@@ -348,8 +347,8 @@ describe('<DataGridPro /> - Edit Components', () => {
       userEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'Enter' });
-      fireEvent.keyDown(screen.queryByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
-      fireEvent.keyDown(screen.queryByRole('option', { name: 'Adidas' }), { key: 'Enter' });
+      fireEvent.keyDown(screen.getByRole('option', { name: 'Nike' }), { key: 'ArrowDown' });
+      fireEvent.keyDown(screen.getByRole('option', { name: 'Adidas' }), { key: 'Enter' });
 
       await act(() => Promise.resolve());
 
@@ -436,7 +435,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       );
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
-      const option = screen.queryByRole('option', { name: 'Adidas' });
+      const option = screen.queryByRole('option', { name: 'Adidas' })!;
       userEvent.mousePress(option);
 
       clock.tick(500);

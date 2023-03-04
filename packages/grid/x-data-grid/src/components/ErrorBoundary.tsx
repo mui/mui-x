@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ErrorInfo } from 'react';
 import { GridApiCommunity } from '../models/api/gridApiCommunity';
 import { Logger } from '../models/logger';
 
@@ -17,7 +16,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (this.props.api.current) {
       this.logError(error);
 
@@ -26,7 +25,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {
     }
   }
 
-  logError(error: Error, errorInfo?: ErrorInfo) {
+  logError(error: Error, errorInfo?: React.ErrorInfo) {
     this.props.logger.error(
       `An unexpected error occurred. Error: ${error && error.message}. `,
       error,

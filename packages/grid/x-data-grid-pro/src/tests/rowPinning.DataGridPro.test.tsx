@@ -16,7 +16,6 @@ import {
   screen,
   act,
   userEvent,
-  // @ts-expect-error Remove once the test utils are typed
 } from '@mui/monorepo/test/utils';
 import {
   getActiveCell,

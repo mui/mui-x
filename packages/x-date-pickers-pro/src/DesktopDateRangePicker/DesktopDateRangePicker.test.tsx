@@ -34,7 +34,7 @@ const WrappedDesktopDateRangePicker = withPickerControls(DesktopDateRangePicker)
 });
 
 const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 describe('<DesktopDateRangePicker />', () => {
   const { render, clock } = createPickerRenderer({
@@ -49,7 +49,8 @@ describe('<DesktopDateRangePicker />', () => {
       value={[null, null]}
     />,
     () => ({
-      classes: {},
+      classes: {} as any,
+      render,
       muiName: 'MuiDesktopDateRangePicker',
       wrapMount: wrapPickerMount,
       refInstanceof: window.HTMLDivElement,
@@ -261,7 +262,7 @@ describe('<DesktopDateRangePicker />', () => {
 
     expect(handleChange.callCount).to.equal(1);
 
-    expect(screen.getAllByRole('textbox')[0].value).to.equal('0');
+    expect(screen.getAllByRole<HTMLInputElement>('textbox')[0].value).to.equal('0');
 
     const firstChangeValues = handleChange.args[0][0];
     expect(adapterToUse.isValid(firstChangeValues[0])).to.equal(false);
@@ -290,7 +291,7 @@ describe('<DesktopDateRangePicker />', () => {
     clock.runToLast();
 
     expect(handleChange.callCount).to.equal(1);
-    expect(screen.getAllByRole('textbox')[0].value).to.equal('01/01/19');
+    expect(screen.getAllByRole<HTMLInputElement>('textbox')[0].value).to.equal('01/01/19');
   });
 
   it('should scroll current month to the active selection when focusing appropriate field', () => {

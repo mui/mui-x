@@ -6,7 +6,6 @@ import {
   DataGridPro,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, waitFor, act, userEvent } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { getCell, getRow } from 'test/utils/helperFn';
@@ -103,7 +102,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input');
+    const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'n' } });
     clock.tick(500);
     expect(input!.value).to.equal('n');
@@ -115,7 +114,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input');
+    const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
@@ -129,7 +128,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input');
+    const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     expect(input!.value).to.equal('ADIDAS');
     fireEvent.keyDown(input, { key: 'Enter' });
@@ -141,7 +140,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     render(<TestCase editMode="row" />);
     const cell = getCell(1, 0);
     fireEvent.doubleClick(cell);
-    const input = cell.querySelector('input');
+    const input = cell.querySelector('input')!;
     fireEvent.change(input, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     expect(input!.value).to.equal('ADIDAS');
@@ -222,7 +221,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const secondCell = getCell(1, 1);
     fireEvent.doubleClick(firstCell);
     const secondInput = secondCell.querySelector('input');
-    const firstInput = firstCell.querySelector('input');
+    const firstInput = firstCell.querySelector('input')!;
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
     clock.tick(500);
     await waitFor(() => {
@@ -246,7 +245,7 @@ describe('<DataGridPro /> - Row Editing', () => {
     const firstCell = getCell(1, 0);
     const secondCell = getCell(1, 1);
     fireEvent.doubleClick(firstCell);
-    const firstInput = firstCell.querySelector('input');
+    const firstInput = firstCell.querySelector('input')!;
     const secondInput = secondCell.querySelector('input');
     fireEvent.change(firstInput, { target: { value: 'ADIDAS' } });
     clock.tick(500);

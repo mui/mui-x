@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
-import { createRenderer, fireEvent, userEvent } from '@mui/monorepo/test/utils';
+import { createRenderer, EventType, fireEvent, userEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import {
@@ -61,7 +60,9 @@ describe('<DataGridPro/> - Components', () => {
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);
 
-        const eventToFire = prop.replace(/^on([A-Z])/, (match) => match.slice(2).toLowerCase()); // e.g. onDoubleClick -> doubleClick
+        const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
+          match.slice(2).toLowerCase(),
+        ) as EventType; // e.g. onDoubleClick -> doubleClick
         const cell = getCell(0, 0);
 
         if (event !== 'cellMouseUp') {
@@ -108,7 +109,9 @@ describe('<DataGridPro/> - Components', () => {
         expect(propHandler.callCount).to.equal(0);
         expect(eventHandler.callCount).to.equal(0);
 
-        const eventToFire = prop.replace(/^on([A-Z])/, (match) => match.slice(2).toLowerCase()); // e.g. onDoubleClick -> doubleClick
+        const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
+          match.slice(2).toLowerCase(),
+        ) as EventType; // e.g. onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
         expect(propHandler.callCount).to.equal(1);
