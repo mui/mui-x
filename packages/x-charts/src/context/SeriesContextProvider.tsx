@@ -1,4 +1,5 @@
 import * as React from 'react';
+import barSeriesFormatter from '../BarChart/formatter';
 import { AllSeriesType } from '../models/seriesType';
 
 type SeriesContextProviderProps = {
@@ -6,32 +7,45 @@ type SeriesContextProviderProps = {
   children: React.ReactNode;
 };
 
-type FormattedSeries = {
-  [type in AllSeriesType['type']]?: { [id: string]: AllSeriesType['type'] };
+export type FormattedSeries = {
+  [serriesType in AllSeriesType['type']]?: {
+    series: { [id: string]: AllSeriesType };
+    seriesOrder: string[];
+
+    /**
+     * Only for stackable series (bars, lines)
+     */
+    stackingGroups?: string[][];
+  };
 };
 
-const SeriesContext = React.createContext<FormattedSeries>({});
+export const SeriesContext = React.createContext<FormattedSeries>({});
 
 const seriesTypeFormatter: { [type in AllSeriesType['type']]?: (series: any) => any } = {
-  bar: (x) => x,
+  bar: barSeriesFormatter,
 };
 
 const formatSeries = (series: AllSeriesType[]) => {
+  // Group series by type
   const formattedSeries = {};
   series.forEach(({ id, type, ...other }) => {
     if (formattedSeries[type] === undefined) {
-      formattedSeries[type] = {};
+      formattedSeries[type] = { series: {}, seriesOrder: [] };
     }
     if (formatSeries[type]?.[id] !== undefined) {
       throw new Error(`MUI: series' id "${id}" is not unique`);
     }
-    formattedSeries[type][id] = { id, type, ...other };
+    formattedSeries[type].series[id] = { id, type, ...other };
+    formattedSeries[type].seriesOrder.push(id);
   });
 
-  Object.keys(formatSeries).forEach((type) => {
+  // Apply formater on a type group
+  Object.keys(seriesTypeFormatter).forEach((type) => {
     formattedSeries[type] =
       seriesTypeFormatter[type]?.(formattedSeries[type]) ?? formattedSeries[type];
   });
+
+  console.log(formattedSeries);
   return formattedSeries;
 };
 

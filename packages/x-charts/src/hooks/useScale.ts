@@ -8,9 +8,25 @@ import {
   scaleUtc,
   scaleLinear,
 } from 'd3-scale';
+import type {
+  ScaleBand,
+  ScaleLogarithmic,
+  ScalePoint,
+  ScalePower,
+  ScaleTime,
+  ScaleLinear,
+} from 'd3-scale';
 import { Scales } from '../models/axis';
 
-export function getScale(scaleType: Scales | undefined) {
+export type D3Scale =
+  | ScaleBand<any>
+  | ScaleLogarithmic<any, any>
+  | ScalePoint<any>
+  | ScalePower<any, any>
+  | ScaleTime<any, any>
+  | ScaleLinear<any, any>;
+
+export function getScale(scaleType: Scales | undefined): D3Scale {
   switch (scaleType) {
     case 'band':
       return scaleBand();
