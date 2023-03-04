@@ -620,6 +620,13 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'brand',
+        value: ['Nike', 'Adidas'],
+      });
+
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[0]);
 
@@ -649,6 +656,13 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'brand',
+        value: [0, 1],
+      });
+
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[0]);
 
@@ -674,6 +688,13 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+
+      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+        id: 0,
+        field: 'brand',
+        value: ['Nike', 'Adidas'],
+      });
+
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[0]);
 
@@ -724,6 +745,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
+      await Promise.resolve();
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[0]);
       await Promise.resolve();
@@ -746,6 +768,7 @@ describe('<DataGridPro /> - Edit Components', () => {
       const cell = getCell(0, 0);
       fireEvent.doubleClick(cell);
       userEvent.mousePress(screen.queryAllByRole('option')[1]);
+      await Promise.resolve();
       fireEvent.doubleClick(cell);
       userEvent.mousePress(screen.queryAllByRole('option')[0]);
       clock.runToLast();
