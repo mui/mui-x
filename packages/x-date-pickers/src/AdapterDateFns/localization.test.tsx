@@ -3,7 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { screen } from '@mui/monorepo/test/utils/createRenderer';
 import { expect } from 'chai';
-import { createPickerRenderer, expectInputValue } from 'test/utils/pickers-utils';
+import {
+  createPickerRenderer,
+  expectInputPlaceholder,
+  expectInputValue,
+} from 'test/utils/pickers-utils';
 import fr from 'date-fns/locale/fr';
 import de from 'date-fns/locale/de';
 
@@ -37,7 +41,7 @@ describe('<AdapterDateFns />', () => {
       it('should have correct placeholder', () => {
         render(<DateTimePicker />);
 
-        expectInputValue(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder, true);
+        expectInputPlaceholder(screen.getByRole('textbox'), localizedTexts[localeKey].placeholder);
       });
 
       it('should have well formatted value', () => {

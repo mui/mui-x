@@ -6,7 +6,7 @@
     "autoFocus": "If <code>true</code>, the main element is focused during the first mount. This main element is: - the element chosen by the visible view if any (i.e: the selected day on the <code>day</code> view). - the <code>input</code> element if there is a field rendered.",
     "className": "Class name applied to the root element.",
     "closeOnSelect": "If <code>true</code> the popup or dialog will close after submitting full date.",
-    "components": "Overrideable components.",
+    "components": "Overridable components.",
     "componentsProps": "The props used for each component slot.",
     "dayOfWeekFormatter": "Formats the day of week displayed in the calendar header.<br><br><strong>Signature:</strong><br><code>function(day: string) =&gt; string</code><br><em>day:</em> The day of week provided by the adapter&#39;s method <code>getWeekdays</code>.<br> <em>returns</em> (string): The name to display.",
     "defaultCalendarMonth": "Default calendar month displayed when <code>value={null}</code>.",
@@ -80,7 +80,7 @@
     "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "Popper": "Custom component for the popper inside which the views are rendered on desktop.",
     "Shortcuts": "Custom component for the shortcuts.",
-    "Layout": "Custom component for wrapping the layout.\nIt wrapps the toolbar, views, and action bar",
+    "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, and action bar",
     "Field": "Component used to enter the date with the keyboard.",
     "OpenPickerIcon": "Icon displayed in the open picker button on desktop."
   }

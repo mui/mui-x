@@ -27,7 +27,7 @@ export interface MobileDateRangePickerProps<TDate>
    */
   calendars?: 1 | 2 | 3;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -39,7 +39,7 @@ export interface MobileDateRangePickerProps<TDate>
    */
   componentsProps?: MobileDateRangePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MobileDateRangePickerSlotsComponent<TDate>>;
