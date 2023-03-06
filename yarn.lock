@@ -1782,7 +1782,7 @@
 
 "@mui/monorepo@https://github.com/alexfauquette/material-ui#add-plot-icon":
   version "5.11.11"
-  resolved "https://github.com/alexfauquette/material-ui#579cfcb4ac0273fbcb70202666ed6e721b949857"
+  resolved "https://github.com/alexfauquette/material-ui#21c067f5846475914aebca06d41e1842e47201f6"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"
