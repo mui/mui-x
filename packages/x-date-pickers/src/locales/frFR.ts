@@ -31,10 +31,10 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   todayButtonLabel: "Aujourd'hui",
 
   // Toolbar titles
-  // datePickerToolbarTitle: 'Select date',
-  // dateTimePickerToolbarTitle: 'Select date & time',
-  // timePickerToolbarTitle: 'Select time',
-  // dateRangePickerToolbarTitle: 'Select date range',
+  datePickerToolbarTitle: 'Choisir une date',
+  dateTimePickerToolbarTitle: "Choisir la date et l'heure",
+  timePickerToolbarTitle: "Choisir l'heure",
+  dateRangePickerToolbarTitle: 'Choisir la plage de dates',
 
   // Clock labels
   clockLabelText: (view, time, adapter) =>

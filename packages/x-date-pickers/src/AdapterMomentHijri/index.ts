@@ -6,26 +6,26 @@ import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
+  iY: 'year',
+  iYY: 'year',
+  iYYYY: 'year',
+
   // Month
   iM: 'month',
   iMM: 'month',
   iMMM: { sectionType: 'month', contentType: 'letter' },
   iMMMM: { sectionType: 'month', contentType: 'letter' },
 
-  // Day of Month
+  // Day of the month
   iD: 'day',
   iDD: 'day',
 
-  // Year
-  iY: 'year',
-  iYY: 'year',
-  iYYYY: 'year',
-
-  // AM / PM
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
@@ -33,11 +33,11 @@ const formatTokenMap: FieldFormatTokenMap = {
   k: 'hours',
   kk: 'hours',
 
-  // Minute
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
 
-  // Second
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
 };

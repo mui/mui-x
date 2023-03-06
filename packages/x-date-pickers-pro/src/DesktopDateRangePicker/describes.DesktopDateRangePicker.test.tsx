@@ -102,8 +102,8 @@ describe('<DesktopDateRangePicker /> - Describes', () => {
     assertRenderedValue: (expectedValues: any[]) => {
       const input = screen.getByRole<HTMLInputElement>('textbox');
       const expectedValueStr = expectedValues
-          .map((value) => (value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate')))
-          .join(' – ');
+        .map((value) => (value == null ? 'MM/DD/YYYY' : adapterToUse.format(value, 'keyboardDate')))
+        .join(' – ');
 
       const isEmpty = expectedValues[0] == null && expectedValues[1] == null;
 

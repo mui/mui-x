@@ -34,7 +34,7 @@ export interface MultiInputDateRangeFieldProps<TDate>
    */
   autoFocus?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -46,7 +46,7 @@ export interface MultiInputDateRangeFieldProps<TDate>
    */
   componentsProps?: MultiInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MultiInputDateRangeFieldSlotsComponent>;

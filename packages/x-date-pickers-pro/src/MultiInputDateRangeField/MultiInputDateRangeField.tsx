@@ -178,7 +178,7 @@ MultiInputDateRangeField.propTypes = {
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -302,7 +302,7 @@ MultiInputDateRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

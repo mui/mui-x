@@ -69,11 +69,9 @@ export interface BaseDateTimePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateOrTimeView, DateTimeValidationError>,
     Omit<ExportedDateCalendarProps<TDate>, 'onViewChange'>,
     ExportedTimeClockProps<TDate> {
-  // TODO: Change default to be false on mobile, when `DateTimePickerToolbar` will support `ampm` buttons
-  // https://github.com/mui/mui-x/issues/7279
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default true
+   * @default true on desktop, false on mobile
    */
   ampmInClock?: boolean;
   /**
@@ -85,7 +83,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   maxDateTime?: TDate;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -97,7 +95,7 @@ export interface BaseDateTimePickerProps<TDate>
    */
   componentsProps?: BaseDateTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDateTimePickerSlotsComponent<TDate>>;
@@ -131,7 +129,6 @@ type UseDateTimePickerDefaultizedProps<
     | 'views'
     | 'openTo'
     | 'orientation'
-    | 'ampmInClock'
     | 'ampm'
     | keyof BaseDateValidationProps<TDate>
     | keyof BaseTimeValidationProps
@@ -178,7 +175,6 @@ export function useDateTimePickerDefaultizedProps<
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',
-    ampmInClock: themeProps.ampmInClock ?? true,
     // TODO: Remove from public API
     disableIgnoringDatePartForTimeValidation:
       themeProps.disableIgnoringDatePartForTimeValidation ??
@@ -206,7 +202,6 @@ export function useDateTimePickerDefaultizedProps<
       ...slotProps,
       toolbar: {
         ampm,
-        ampmInClock: themeProps.ampmInClock,
         ...slotProps?.toolbar,
       },
     },

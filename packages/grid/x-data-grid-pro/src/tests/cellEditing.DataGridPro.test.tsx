@@ -1127,7 +1127,7 @@ describe('<DataGridPro /> - Cell Editing', () => {
       });
     });
 
-    describe('mode=edit to mode=vew', () => {
+    describe('mode=edit to mode=view', () => {
       it('should stop edit mode', () => {
         const { setProps } = render(
           <TestCase cellModesModel={{ 0: { currencyPair: { mode: GridCellModes.Edit } } }} />,

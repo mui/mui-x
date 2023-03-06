@@ -42,7 +42,7 @@ export interface UseStaticPickerProps<
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     StaticOnlyPickerProps {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -54,7 +54,7 @@ export interface UseStaticPickerProps<
    */
   componentsProps?: UseStaticPickerSlotsComponentsProps<TDate, TView>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<UseStaticPickerSlotsComponent<TDate | null, TView>>;
