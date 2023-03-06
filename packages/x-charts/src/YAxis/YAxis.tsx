@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { DEFAULT_Y_AXIS_KEY } from '../const';
+import { CartesianContext } from '../context/CartesianContextProvider';
 import { CoordinateContext } from '../context/CoordinateContext';
+import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 
 export interface YAxisProps {
@@ -86,6 +88,78 @@ const YAxis = React.forwardRef(function Grid(props: YAxisProps, ref: React.Ref<S
     <g transform={`translate(${position === 'right' ? left + width : left}, 0)`} ref={ref}>
       {!disableLine && (
         <line y1={yScale(min)} y2={yScale(max)} stroke={stroke} shapeRendering="crispEdges" />
+      )}
+      {yTicks.map(({ value, offset }, index) => (
+        <g key={index} transform={`translate(0, ${offset})`}>
+          {!disableTicks && (
+            <line x2={positionSigne * tickSize} stroke={stroke} shapeRendering="crispEdges" />
+          )}
+          <text
+            fill={fill}
+            transform={`translate(${positionSigne * (fontSize + tickSize + 2)}, 0)`}
+            textAnchor="middle"
+            fontSize={fontSize}
+          >
+            {value}
+          </text>
+        </g>
+      ))}
+      {label && (
+        <text
+          fill={fill}
+          style={{}}
+          transform={`translate(${positionSigne * (fontSize + tickSize + 20)}, ${
+            top + height / 2
+          }) rotate(${positionSigne * 90})`}
+          fontSize={labelFontSize}
+          textAnchor="middle"
+        >
+          {label}
+        </text>
+      )}
+    </g>
+  );
+}) as YAxisComponent;
+
+export const YAxis2 = React.forwardRef(function Grid(
+  props: YAxisProps,
+  ref: React.Ref<SVGSVGElement>,
+) {
+  const {
+    position = 'left',
+    axisId = DEFAULT_Y_AXIS_KEY,
+    disableLine = false,
+    disableTicks = false,
+    fill = 'currentColor',
+    fontSize = 10,
+    label,
+    labelFontSize = 14,
+    stroke = 'currentColor',
+    tickSize: tickSizeProp = 6,
+  } = props;
+
+  const {
+    yAxis: {
+      [axisId]: { scale: yScale },
+    },
+  } = React.useContext(CartesianContext) as any;
+
+  const { left, top, width, height } = React.useContext(DrawingContext);
+
+  const tickSize = disableTicks ? 4 : tickSizeProp;
+
+  const yTicks = useTicks({ scale: yScale });
+
+  const positionSigne = position === 'right' ? 1 : -1;
+  return (
+    <g transform={`translate(${position === 'right' ? left + width : left}, 0)`} ref={ref}>
+      {!disableLine && (
+        <line
+          y1={yScale.range()[0]}
+          y2={yScale.range()[1]}
+          stroke={stroke}
+          shapeRendering="crispEdges"
+        />
       )}
       {yTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(0, ${offset})`}>

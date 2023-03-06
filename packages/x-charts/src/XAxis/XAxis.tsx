@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../const';
 import { CoordinateContext } from '../context/CoordinateContext';
+import { CartesianContext } from '../context/CartesianContextProvider';
+import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 
 export interface XAxisProps {
@@ -139,19 +141,25 @@ export const XAxis2 = React.forwardRef(function Grid(
     xAxis: {
       [axisId]: { scale: xScale },
     },
-    drawingArea: { left, top, width, height },
-  } = React.useContext(CoordinateContext) as any;
+  } = React.useContext(CartesianContext) as any;
 
-  const [min, max] = xScale.domain();
+  const { left, top, width, height } = React.useContext(DrawingContext);
+
   const tickSize = disableTicks ? 4 : tickSizeProp;
 
   const xTicks = useTicks({ scale: xScale });
 
   const positionSigne = position === 'bottom' ? 1 : -1;
+
   return (
     <g transform={`translate(0, ${position === 'bottom' ? top + height : top})`} ref={ref}>
       {!disableLine && (
-        <line x1={xScale(min)} x2={xScale(max)} stroke={stroke} shapeRendering="crispEdges" />
+        <line
+          x1={xScale.range()[0]}
+          x2={xScale.range()[1]}
+          stroke={stroke}
+          shapeRendering="crispEdges"
+        />
       )}
       {xTicks.map(({ value, offset }, index) => (
         <g key={index} transform={`translate(${offset}, 0)`}>
