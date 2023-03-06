@@ -1780,9 +1780,9 @@
     react-is "^18.2.0"
     react-transition-group "^4.4.5"
 
-"@mui/monorepo@https://github.com/mui/material-ui.git#master":
+"@mui/monorepo@https://github.com/alexfauquette/material-ui#add-plot-icon":
   version "5.11.11"
-  resolved "https://github.com/mui/material-ui.git#3d4409b5ad782c70102b5283a9e75c3af29b8142"
+  resolved "https://github.com/alexfauquette/material-ui#579cfcb4ac0273fbcb70202666ed6e721b949857"
 
 "@mui/private-theming@^5.11.7", "@mui/private-theming@^5.11.9":
   version "5.11.9"

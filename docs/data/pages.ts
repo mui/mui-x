@@ -1,4 +1,6 @@
 import type { MuiPage } from '@mui/monorepo/docs/src/MuiPage';
+import { SvgIconComponent } from '@material-ui/icons';
+import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 
 const pages: MuiPage[] = [
   {
@@ -425,6 +427,23 @@ const pages: MuiPage[] = [
           },
         ],
       },
+    ],
+  },
+  {
+    pathname: '/x/react-charts-group',
+    title: 'Charts 🚧',
+    icon: BarChartRoundedIcon as SvgIconComponent,
+    children: [
+      { pathname: '/x/react-charts', title: '🚧 Overview' },
+      { pathname: '/x/react-charts/bars', title: '🚧 Bars' },
+      { pathname: '/x/react-charts/lines', title: '🚧 Lines' },
+      { pathname: '/x/react-charts/areas', title: '🚧 Areas' },
+      { pathname: '/x/react-charts/scatter', title: '🚧 Scatter' },
+      { pathname: '/x/react-charts/heat-map', title: '🚧 Heat map' },
+      { pathname: '/x/react-charts/funnel', title: '🚧 Funnel' },
+      { pathname: '/x/react-charts/radar', title: '🚧 Radar' },
+      { pathname: '/x/react-charts/sankey', title: '🚧 Sankey' },
+      { pathname: '/x/react-charts/tree-map', title: '🚧 Tree map' },
     ],
   },
 ];
