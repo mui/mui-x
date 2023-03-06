@@ -1,11 +1,13 @@
 import * as React from 'react';
+import { getExtremumX, getExtremumY } from '../BarChart/extremums';
 import { D3Scale, getScale } from '../hooks/useScale';
-import { AxisConfig } from '../models/axis';
+import { AxisConfig, Scales } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
+import { SeriesContext } from './SeriesContextProvider';
 
 type CartesianContextProviderProps = {
-  xAxis: AxisConfig;
-  yAxis: AxisConfig;
+  xAxis: AxisConfig[];
+  yAxis: AxisConfig[];
   children: React.ReactNode;
 };
 
@@ -30,37 +32,37 @@ export function CartesianContextProvider({
   yAxis,
   children,
 }: CartesianContextProviderProps) {
-  // const formattedSeries = React.useContext(SeriesContext);
+  const formattedSeries = React.useContext(SeriesContext);
   const drawingArea = React.useContext(DrawingContext);
-
-  // TODO remove and compute from series
-  const xScale = 'band';
-  const yScale = 'linear';
 
   const value = React.useMemo(() => {
     const completedXAxis = {};
     const completedYAxis = {};
 
     xAxis.forEach((axis) => {
+      const [minData, maxData] = getExtremumX({ series: formattedSeries.bar?.series, xAxis: axis });
+      const scale = axis.scale ?? ('linea' as Scales);
       completedXAxis[axis.id] = {
         ...axis,
-        scale: getScale(xScale)
-          .domain(xScale === 'band' ? axis.data : [-5, 20])
+        scale: getScale(scale)
+          .domain(scale === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           .range([drawingArea.left, drawingArea.left + drawingArea.width]),
       };
     });
 
     yAxis.forEach((axis) => {
+      const [minData, maxData] = getExtremumY({ series: formattedSeries.bar?.series, yAxis: axis });
+      const scale = axis.scale ?? ('linea' as Scales);
       completedYAxis[axis.id] = {
         ...axis,
-        scale: getScale(yScale)
-          .domain(yScale === 'band' ? yAxis.data : [-5, 20])
+        scale: getScale(scale)
+          .domain(scale === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
           .range([drawingArea.top + drawingArea.height, drawingArea.top]),
       };
     });
 
     return { xAxis: completedXAxis, yAxis: completedYAxis };
-  }, [drawingArea, xAxis, yAxis]);
+  }, [drawingArea, formattedSeries.bar?.series, xAxis, yAxis]);
 
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }

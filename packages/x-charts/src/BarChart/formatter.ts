@@ -5,13 +5,13 @@ import {
 } from 'd3-shape';
 import { BarSeriesType } from '../models/seriesType';
 
-type FormatterParams = { series: { [id: string]: BarSeriesType }; seriesOrder: string[] };
+export type FormatterParams = { series: { [id: string]: BarSeriesType }; seriesOrder: string[] };
 
-interface StackedBarSeriesType extends BarSeriesType {
+export interface StackedBarSeriesType extends BarSeriesType {
   stackedData: [number, number][];
 }
 
-type FormatterResult = {
+export type FormatterResult = {
   series: { [id: string]: StackedBarSeriesType };
   seriesOrder: string[];
   stackingGroups: string[][];
