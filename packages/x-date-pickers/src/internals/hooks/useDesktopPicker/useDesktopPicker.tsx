@@ -69,7 +69,7 @@ export const useDesktopPicker = <
   });
 
   const InputAdornment = slots.inputAdornment ?? MuiInputAdornment;
-  const inputAdornmentProps = useSlotProps({
+  const { ownerState: inputAdornmentOwnerState, ...inputAdornmentProps } = useSlotProps({
     elementType: InputAdornment,
     externalSlotProps: innerSlotProps?.inputAdornment,
     additionalProps: {
