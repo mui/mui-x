@@ -44,6 +44,7 @@ export const GRID_MULTIPLE_SELECT_COL_DEF: Omit<GridMultipleSelectColDef, 'field
     const valueOption = valueOptions.find((option) => colDef.getOptionValue!(option) === value);
     return valueOption ? colDef.getOptionLabel!(valueOption) : '';
   },
+  renderCell: (params) => (Array.isArray(params.value) ? params.value.join(', ') : params.value),
   renderEditCell: renderEditMultipleSelectCell,
   filterOperators: getGridMultipleSelectOperators(),
 };
