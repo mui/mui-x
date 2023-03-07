@@ -98,7 +98,6 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
       return;
     }
 
-    setOpen(false);
     const target = event.target as HTMLInputElement & { value: string[] };
     // NativeSelect casts the value to an array of strings.
     const formattedTargetValue = getValuesFromValueOptions(
