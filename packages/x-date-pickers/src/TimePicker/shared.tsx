@@ -43,7 +43,7 @@ export interface BaseTimePickerProps<TDate>
    */
   ampmInClock?: boolean;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -55,7 +55,7 @@ export interface BaseTimePickerProps<TDate>
    */
   componentsProps?: BaseTimePickerSlotsComponentsProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseTimePickerSlotsComponent<TDate>>;

@@ -182,7 +182,7 @@ MultiInputTimeRangeField.propTypes = {
   ampm: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -325,7 +325,7 @@ MultiInputTimeRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable slots.
+   * Overridable slots.
    * @default {}
    */
   slots: PropTypes.object,

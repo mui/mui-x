@@ -32,6 +32,7 @@ export interface BaseIconButtonPropsOverrides {}
 export interface BaseTooltipPropsOverrides {}
 export interface BasePopperPropsOverrides {}
 export interface BaseInputLabelPropsOverrides {}
+export interface BaseSelectOptionPropsOverrides {}
 export interface CellPropsOverrides {}
 export interface ToolbarPropsOverrides {}
 export interface ColumnHeaderFilterIconButtonPropsOverrides {}
@@ -47,10 +48,10 @@ export interface PanelPropsOverrides {}
 export interface PreferencesPanelPropsOverrides {}
 export interface RowPropsOverrides {}
 
-type SlotProps<Props, Overrides> = Partial<Props> & Overrides;
+type SlotProps<Props, Overrides> = Partial<Props & Overrides>;
 
 /**
- * Overrideable components props dynamically passed to the component at rendering.
+ * Overridable components props dynamically passed to the component at rendering.
  */
 export interface GridSlotsComponentsProps {
   baseCheckbox?: SlotProps<CheckboxProps, BaseCheckboxPropsOverrides>;
@@ -63,6 +64,10 @@ export interface GridSlotsComponentsProps {
   basePopper?: SlotProps<PopperProps, BasePopperPropsOverrides>;
   baseTooltip?: SlotProps<TooltipProps, BaseTooltipPropsOverrides>;
   baseInputLabel?: SlotProps<InputLabelProps, BaseInputLabelPropsOverrides>;
+  baseSelectOption?: SlotProps<
+    { native: boolean; value: any; children?: React.ReactNode },
+    BaseSelectOptionPropsOverrides
+  >;
   cell?: SlotProps<GridCellProps, CellPropsOverrides>;
   columnHeaderFilterIconButton?: SlotProps<
     ColumnHeaderFilterIconButtonProps,

@@ -201,7 +201,7 @@ If you were always using the same text value in all your components, consider mo
  </LocalizationProvider>
 ```
 
-You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
+You can find more details about Date and Time breaking changes in [the migration guide](https://mui.com/x/migration/migration-pickers-v5/).
 
 #### `replace-tabs-props`
 
@@ -699,4 +699,4 @@ This change only affects data grid components.
 npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
 ```
 
-You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
+You can find more details about Data Grid breaking change in [the migration guide](https://mui.com/x/migration/migration-data-grid-v5/).

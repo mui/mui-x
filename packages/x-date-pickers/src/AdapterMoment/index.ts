@@ -5,6 +5,11 @@ import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
+  Y: 'year',
+  YY: 'year',
+  YYYY: 'year',
+
   // Month
   M: 'month',
   MM: 'month',
@@ -23,16 +28,11 @@ const formatTokenMap: FieldFormatTokenMap = {
   ddd: { sectionType: 'weekDay', contentType: 'letter' },
   dddd: { sectionType: 'weekDay', contentType: 'letter' },
 
-  // Year
-  Y: 'year',
-  YY: 'year',
-  YYYY: 'year',
-
-  // AM / PM
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
@@ -40,11 +40,11 @@ const formatTokenMap: FieldFormatTokenMap = {
   k: 'hours',
   kk: 'hours',
 
-  // Minute
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
 
-  // Second
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
 };

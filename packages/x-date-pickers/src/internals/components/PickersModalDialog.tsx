@@ -44,7 +44,7 @@ export interface PickersModalDialogSlotsComponentsProps {
 
 export interface PickersModalDialogProps extends UsePickerValueActions {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -56,7 +56,7 @@ export interface PickersModalDialogProps extends UsePickerValueActions {
    */
   componentsProps?: PickersModalDialogSlotsComponentsProps;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersModalDialogSlotsComponent>;
