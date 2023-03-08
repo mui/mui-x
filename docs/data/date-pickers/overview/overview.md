@@ -55,12 +55,12 @@ If you don't have your own requirements or don't manipulate dates outside of MUI
 
 Here is the weight added to your gzipped bundle size by each of these libraries when used inside the Date and Time Pickers:
 
-| **Library**       | **Gzipped size** |
-| ----------------- | ---------------- |
-| `dayjs@1.11.5`    | 6.77kb           |
-| `date-fns@2.29.3` | 19.39kb          |
-| `luxon@3.0.4`     | 23.26kb          |
-| `moment@2.29.4`   | 20.78kb          |
+| Library           | Gzipped size |
+| :---------------- | -----------: |
+| `dayjs@1.11.5`    |       6.77kB |
+| `date-fns@2.29.3` |      19.39kB |
+| `luxon@3.0.4`     |      23.26kB |
+| `moment@2.29.4`   |      20.78kB |
 
 :::info
 The results above were obtained in October 2022 with the latest version of each library.

@@ -23,25 +23,26 @@ import {
   GridGroupingColDefOverrideParams,
 } from './gridGroupingColDefOverride';
 import { GridInitialStatePro } from './gridStatePro';
-import { GridProSlotsComponent } from './gridProSlotsComponent';
+import { GridProSlotsComponent, UncapitalizedGridProSlotsComponent } from './gridProSlotsComponent';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
   /**
    * Enables the data grid to lazy load rows while scrolling.
    */
   lazyLoading: boolean;
-  /**
-   * Enables the ability for rows to be pinned in data grid.
-   */
-  rowPinning: boolean;
 }
 
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
-   * Overrideable components.
+   * Overridable components.
+   * @deprecated Use the `slots` prop instead.
    */
   components?: Partial<GridProSlotsComponent>;
+  /**
+   * Overridable components.
+   */
+  slots?: Partial<UncapitalizedGridProSlotsComponent>;
 }
 
 /**
@@ -56,8 +57,8 @@ export interface DataGridProProps<R extends GridValidRowModel = any>
   > {}
 
 interface DataGridProPropsWithComplexDefaultValueAfterProcessing
-  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'components'> {
-  components: GridProSlotsComponent;
+  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'slots'> {
+  slots: UncapitalizedGridProSlotsComponent;
 }
 
 /**
@@ -66,7 +67,7 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
   extends DataGridProPropsWithDefaultValue,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
-    DataGridProPropsWithoutDefaultValue<R> {}
+    Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
 export type DataGridProForcedPropsKey = 'signature';
 

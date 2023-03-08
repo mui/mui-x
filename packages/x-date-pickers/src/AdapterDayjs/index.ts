@@ -3,7 +3,7 @@ import defaultDayjs, { Dayjs } from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import BaseAdapterDayjs from '@date-io/dayjs';
 import { DateIOFormats } from '@date-io/core/IUtils';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 import { buildWarning } from '../internals/utils/warning';
 
 const localeNotFoundWarning = buildWarning([
@@ -13,29 +13,44 @@ const localeNotFoundWarning = buildWarning([
   'fallback on English locale',
 ]);
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   YY: 'year',
   YYYY: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  MMMM: { sectionName: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   D: 'day',
   DD: 'day',
+
+  // Day of the week
   d: 'weekDay',
-  dd: { sectionName: 'weekDay', contentType: 'letter' },
-  ddd: { sectionName: 'weekDay', contentType: 'letter' },
-  dddd: { sectionName: 'weekDay', contentType: 'letter' },
+  dd: { sectionType: 'weekDay', contentType: 'letter' },
+  ddd: { sectionType: 'weekDay', contentType: 'letter' },
+  dddd: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  A: 'meridiem',
+  a: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
+
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
-  A: 'meridiem',
-  a: 'meridiem',
 };
 
 interface Opts {

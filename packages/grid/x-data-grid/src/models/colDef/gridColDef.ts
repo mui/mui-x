@@ -25,7 +25,7 @@ import { GridApiCommunity } from '../api/gridApiCommunity';
  */
 export type GridAlignment = 'left' | 'right' | 'center';
 
-export type ValueOptions = string | number | { value: any; label: string };
+export type ValueOptions = string | number | { value: any; label: string } | Record<string, any>;
 
 /**
  * Value that can be used as a key for grouping rows
@@ -247,6 +247,8 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
 
 /**
  * Column Definition interface used for columns with the `actions` type.
+ * @demos
+ *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
 export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
@@ -265,6 +267,8 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
 
 /**
  * Column Definition interface used for columns with the `singleSelect` type.
+ * @demos
+ *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
 export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
   extends GridBaseColDef<R, V, F> {
@@ -277,10 +281,24 @@ export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = a
    * To be used in combination with `type: 'singleSelect'`. This is an array (or a function returning an array) of the possible cell values and labels.
    */
   valueOptions?: Array<ValueOptions> | ((params: GridValueOptionsParams<R>) => Array<ValueOptions>);
+  /**
+   * Used to determine the label displayed for a given value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The text to be displayed.
+   */
+  getOptionLabel?: (value: ValueOptions) => string;
+  /**
+   * Used to determine the value used for a value option.
+   * @param {ValueOptions} value The current value option.
+   * @returns {string} The value to be used.
+   */
+  getOptionValue?: (value: ValueOptions) => any;
 }
 
 /**
  * Column Definition interface.
+ * @demos
+ *   - [Column definition](/x/react-data-grid/column-definition/)
  */
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>

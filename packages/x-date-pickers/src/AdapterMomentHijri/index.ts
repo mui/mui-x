@@ -2,33 +2,30 @@
 import BaseAdapterMomentHijri from '@date-io/hijri';
 // @ts-ignore
 import defaultMoment, { LongDateFormatKey } from 'moment-hijri';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
-  // Month
-  iM: 'month',
-  iMo: 'month',
-  iMM: 'month',
-  iMMM: { sectionName: 'month', contentType: 'letter' },
-  iMMMM: { sectionName: 'month', contentType: 'letter' },
-
-  // Day of Month
-  iD: 'day',
-  iDo: 'day',
-  iDD: 'day',
-
+const formatTokenMap: FieldFormatTokenMap = {
   // Year
   iY: 'year',
   iYY: 'year',
   iYYYY: 'year',
-  iYYYYYY: 'year',
 
-  // AM / PM
+  // Month
+  iM: 'month',
+  iMM: 'month',
+  iMMM: { sectionType: 'month', contentType: 'letter' },
+  iMMMM: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
+  iD: 'day',
+  iDD: 'day',
+
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
@@ -36,11 +33,11 @@ const formatTokenMap: MuiFormatTokenMap = {
   k: 'hours',
   kk: 'hours',
 
-  // Minute
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
 
-  // Second
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
 };

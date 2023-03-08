@@ -33,7 +33,7 @@ export interface DatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -45,7 +45,7 @@ export interface DatePickerProps<TDate>
    */
   componentsProps?: DatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DatePickerSlotsComponents<TDate>>;

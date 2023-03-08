@@ -4,4 +4,8 @@
   rowHeight={38}
   checkboxSelection
   disableRowSelectionOnClick
+  components={{
+    Row: MemoizedRow,
+    ColumnHeaders: MemoizedColumnHeaders,
+  }}
 />

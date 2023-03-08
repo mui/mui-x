@@ -6,12 +6,14 @@ components: DateTimePickerTabs
 
 # Custom components
 
-<p class="description">The date picker lets you customize sub-components.</p>
+<p class="description">The date picker lets you customize subcomponents.</p>
 
 :::info
 The components that can be customized are listed under `slots` section in Date and Time Pickers [API Reference](/x/api/date-pickers/).
 For example, available Date Picker slots can be found [here](/x/api/date-pickers/date-picker/#slots).
 :::
+
+## New test section
 
 ## Overriding components
 
@@ -69,7 +71,7 @@ In the example below, the action bar contains only one button, which resets the 
 The built-in `ActionBar` component supports four different actions:
 
 | Action   | Behavior                                                               |
-| -------- | ---------------------------------------------------------------------- |
+| :------- | :--------------------------------------------------------------------- |
 | `accept` | Accept the current value and close the picker view                     |
 | `cancel` | Reset to the last accepted date and close the picker view              |
 | `clear`  | Reset to the empty value and close the picker view                     |

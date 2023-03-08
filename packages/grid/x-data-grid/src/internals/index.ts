@@ -6,7 +6,7 @@ export type {
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';
 export { GridVirtualScrollerRenderZone } from '../components/virtualization/GridVirtualScrollerRenderZone';
-export { GridColumnHeaders } from '../components/columnHeaders/GridColumnHeaders';
+export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { GridColumnHeadersInner } from '../components/columnHeaders/GridColumnHeadersInner';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 
@@ -21,6 +21,7 @@ export { useGridInitialization } from '../hooks/core/useGridInitialization';
 
 export { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 export { useGridColumnHeaders } from '../hooks/features/columnHeaders/useGridColumnHeaders';
+export type { UseGridColumnHeadersProps } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 export {
   useGridColumnMenu,
   columnMenuStateInitializer,
@@ -31,6 +32,7 @@ export {
   useGridColumnGrouping,
   columnGroupsStateInitializer,
 } from '../hooks/features/columnGrouping/useGridColumnGrouping';
+export type { GridColumnGroupLookup } from '../hooks/features/columnGrouping/gridColumnGroupsInterfaces';
 export type {
   GridColumnRawLookup,
   GridColumnsRawState,
@@ -118,3 +120,5 @@ export { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContex
 
 export type { GridApiCommunity } from '../models/api/gridApiCommunity';
 export type { GridApiCaches } from '../models/gridApiCaches';
+
+export * from './utils';

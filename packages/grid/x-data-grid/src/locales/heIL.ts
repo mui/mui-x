@@ -47,6 +47,7 @@ const heILGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'הוסף מסנן',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'מחק',
   filterPanelLogicOperator: 'אופרטור לוגי',
   filterPanelOperator: 'אופרטור',

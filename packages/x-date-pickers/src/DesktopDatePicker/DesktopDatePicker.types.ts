@@ -29,7 +29,7 @@ export interface DesktopDatePickerProps<TDate>
    */
   yearsPerRow?: 3 | 4;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -41,7 +41,7 @@ export interface DesktopDatePickerProps<TDate>
    */
   componentsProps?: DesktopDatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DesktopDatePickerSlotsComponent<TDate>>;
