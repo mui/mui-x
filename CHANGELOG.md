@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## v6.0.1
+## 6.0.1
 
 _Mar 9, 2023_
 
@@ -17,7 +17,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 
 #### Changes
 
-- [DataGrid] Fix `MenuProps.onClose` being overriden for single select edit component (#8174) @rohitnatesh
+- [DataGrid] Fix `MenuProps.onClose` being overridden for single select edit component (#8174) @rohitnatesh
 - [DataGrid] Simplify `buildPrintWindow` (#8142) @oliviertassinari
 - [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
 
@@ -33,7 +33,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 - [docs] Fix a typo in the migration guide (#8152) @flaviendelangle
 - [docs] Fix package version used in CodeSandbox demos (#8125) @cherniavskii
 - [docs] Fix typos across codebase (#8126) @stavares843
-- [docs] Improve data grid quick filter documentation (#8109) @MBilalShafi
+- [docs] Improve Data Grid quick filter documentation (#8109) @MBilalShafi
 - [docs] Improve link from npm to docs (#8141) @oliviertassinari
 - [docs] Remove test sections (#8177) @m4theushw
 
