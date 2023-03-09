@@ -35,12 +35,12 @@ export interface GridExperimentalProFeatures extends GridExperimentalFeatures {
 interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
   extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @deprecated Use the `slots` prop instead.
    */
   components?: Partial<GridProSlotsComponent>;
   /**
-   * Overrideable components.
+   * Overridable components.
    */
   slots?: Partial<UncapitalizedGridProSlotsComponent>;
 }

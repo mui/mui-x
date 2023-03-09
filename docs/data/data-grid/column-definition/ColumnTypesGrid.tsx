@@ -43,7 +43,7 @@ const initialRows = [
   },
 ];
 
-type Row = typeof initialRows[number];
+type Row = (typeof initialRows)[number];
 
 export default function ColumnTypesGrid() {
   const [rows, setRows] = React.useState<Row[]>(initialRows);

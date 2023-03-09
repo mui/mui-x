@@ -14,20 +14,20 @@ type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['gro
 const recurrentUnwrapGroupingColumnModel = (
   columnGroupNode: GridColumnNode,
   parents: GridColumnGroup['groupId'][],
-  unwrappedGroupingModelToComplet: UnwrappedGroupingModel,
+  unwrappedGroupingModelToComplete: UnwrappedGroupingModel,
 ): void => {
   if (isLeaf(columnGroupNode)) {
-    if (unwrappedGroupingModelToComplet[columnGroupNode.field] !== undefined) {
+    if (unwrappedGroupingModelToComplete[columnGroupNode.field] !== undefined) {
       throw new Error(
         [
           `MUI: columnGroupingModel contains duplicated field`,
-          `column field ${columnGroupNode.field} occurrs two times in the grouping model:`,
-          `- ${unwrappedGroupingModelToComplet[columnGroupNode.field].join(' > ')}`,
+          `column field ${columnGroupNode.field} occurs two times in the grouping model:`,
+          `- ${unwrappedGroupingModelToComplete[columnGroupNode.field].join(' > ')}`,
           `- ${parents.join(' > ')}`,
         ].join('\n'),
       );
     }
-    unwrappedGroupingModelToComplet[columnGroupNode.field] = parents;
+    unwrappedGroupingModelToComplete[columnGroupNode.field] = parents;
     return;
   }
 
@@ -36,7 +36,7 @@ const recurrentUnwrapGroupingColumnModel = (
     recurrentUnwrapGroupingColumnModel(
       child,
       [...parents, groupId],
-      unwrappedGroupingModelToComplet,
+      unwrappedGroupingModelToComplete,
     );
   });
 };

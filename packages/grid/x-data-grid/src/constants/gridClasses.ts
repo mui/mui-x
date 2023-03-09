@@ -277,7 +277,7 @@ export interface GridClasses {
    */
   filterFormDeleteIcon: string;
   /**
-   * Styles applied to the link operator inout of the filter form component.
+   * Styles applied to the link operator input of the filter form component.
    */
   filterFormLogicOperatorInput: string;
   /**

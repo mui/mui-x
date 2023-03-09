@@ -22,7 +22,7 @@ import {
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGridPro /> - Row pinning', () => {
-  const { render } = createRenderer({ clock: 'fake' });
+  const { render } = createRenderer();
 
   function getRowById(id: number | string) {
     return document.querySelector(`[data-id="${id}"]`);

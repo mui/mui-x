@@ -6,6 +6,8 @@ import {
   adapterToUse,
   expectInputValue,
   openPicker,
+  expectInputPlaceholder,
+  getTextbox,
 } from 'test/utils/pickers-utils';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
@@ -28,9 +30,15 @@ describe('<MobileDatePicker /> - Describes', () => {
     emptyValue: null,
     clock,
     assertRenderedValue: (expectedValue: any) => {
-      const expectedValueStr =
-        expectedValue == null ? 'MM/DD/YYYY' : adapterToUse.format(expectedValue, 'keyboardDate');
-      expectInputValue(screen.getByRole('textbox'), expectedValueStr, true);
+      const input = getTextbox();
+      if (!expectedValue) {
+        expectInputPlaceholder(input, 'MM/DD/YYYY');
+      }
+      expectInputValue(
+        input,
+        expectedValue ? adapterToUse.format(expectedValue, 'keyboardDate') : '',
+        true,
+      );
     },
     setNewValue: (value, { isOpened, applySameValue } = {}) => {
       if (!isOpened) {

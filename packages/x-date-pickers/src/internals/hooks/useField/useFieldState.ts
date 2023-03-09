@@ -74,12 +74,24 @@ export const useFieldState = <
 
   const sectionsValueBoundaries = React.useMemo(() => getSectionsBoundaries<TDate>(utils), [utils]);
 
-  const [sectionOrder, setSectionOrder] = React.useState(() =>
-    fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
+  const sectionOrder = React.useMemo(
+    () => fieldValueManager.getSectionOrder(utils, localeText, format, isRTL),
+    [fieldValueManager, format, isRTL, localeText, utils],
   );
-  React.useEffect(() => {
-    setSectionOrder(fieldValueManager.getSectionOrder(utils, localeText, format, isRTL));
-  }, [fieldValueManager, format, isRTL, localeText, utils]);
+
+  const placeholder = React.useMemo(
+    () =>
+      fieldValueManager.getValueStrFromSections(
+        fieldValueManager.getSectionsFromValue(
+          utils,
+          localeText,
+          null,
+          valueManager.emptyValue,
+          format,
+        ),
+      ),
+    [fieldValueManager, format, localeText, utils, valueManager.emptyValue],
+  );
 
   const [state, setState] = React.useState<UseFieldState<TValue, TSection>>(() => {
     const sections = fieldValueManager.getSectionsFromValue(
@@ -94,6 +106,7 @@ export const useFieldState = <
     return {
       sections,
       value: valueFromTheOutside,
+      placeholder,
       referenceValue: fieldValueManager.updateReferenceValue(
         utils,
         valueFromTheOutside,
@@ -375,8 +388,9 @@ export const useFieldState = <
     setState((prevState) => ({
       ...prevState,
       sections,
+      placeholder,
     }));
-  }, [format, utils.locale]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [format, utils.locale, placeholder]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     state,

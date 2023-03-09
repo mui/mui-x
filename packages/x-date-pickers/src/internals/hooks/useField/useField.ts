@@ -100,7 +100,7 @@ export const useField = <
 
   const handleInputFocus = useEventCallback((...args) => {
     onFocus?.(...(args as []));
-    // The ref is guaranteed to be resolved that this point.
+    // The ref is guaranteed to be resolved at this point.
     const input = inputRef.current;
 
     clearTimeout(focusTimeoutRef.current);
@@ -114,7 +114,11 @@ export const useField = <
         return;
       }
 
-      if (Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length) {
+      if (
+        // avoid selecting all sections when focusing empty field without value
+        input.value.length &&
+        Number(input.selectionEnd) - Number(input.selectionStart) === input.value.length
+      ) {
         setSelectedSections('all');
       } else {
         syncSelectionFromDOM();
@@ -403,9 +407,16 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
+  const inputHasFocus = inputRef.current && inputRef.current === document.activeElement;
+  const shouldShowPlaceholder =
+    !inputHasFocus &&
+    (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
+
   return {
+    placeholder: state.placeholder,
+    autoComplete: 'off',
     ...otherForwardedProps,
-    value: valueStr,
+    value: shouldShowPlaceholder ? '' : valueStr,
     inputMode,
     readOnly,
     onClick: handleInputClick,
