@@ -2,6 +2,9 @@
 
 <p class="description">Discover the new features on the latest major version.</p>
 
+:::info
+For more details about each new feature, please head over to the [official announcement blog post](https://mui.com/blog/mui-x-v6/). 
+:::
 ## Data Grid
 
 - [ApiRef available in the community version](/x/react-data-grid/api-object/)
