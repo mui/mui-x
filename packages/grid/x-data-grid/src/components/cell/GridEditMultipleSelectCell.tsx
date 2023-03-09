@@ -1,8 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/utils';
-import { SelectProps, SelectChangeEvent } from '@mui/material/Select';
-import Input from '@mui/material/Input';
+import Chip from '@mui/material/Chip';
+import { SelectChangeEvent } from '@mui/material/Select';
+import {
+  AutocompleteProps,
+  AutocompleteRenderGetTagProps,
+  AutocompleteRenderInputParams,
+  createFilterOptions,
+} from '@mui/material/Autocomplete';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { isEscapeKey } from '../../utils/keyboardUtils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -16,7 +22,20 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 export interface GridEditMultipleSelectCellProps
   extends GridRenderEditCellParams,
-    Omit<SelectProps, 'id' | 'tabIndex' | 'value'>,
+    Omit<
+      AutocompleteProps<ValueOptions, true, false, true>,
+      | 'options'
+      | 'renderInput'
+      | 'onChange'
+      | 'value'
+      | 'id'
+      | 'filterOptions'
+      | 'isOptionEqualToValue'
+      | 'multiple'
+      | 'color'
+      | 'getOptionLabel'
+      | 'tabIndex'
+    >,
     Pick<GridMultipleSelectColDef, 'getOptionLabel' | 'getOptionValue'> {
   /**
    * Callback called when the value is changed by the user.
@@ -35,6 +54,8 @@ function isKeyboardEvent(event: any): event is React.KeyboardEvent {
   return !!event.key;
 }
 
+const filter = createFilterOptions<any>();
+
 function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
   const rootProps = useGridRootProps();
   const {
@@ -42,6 +63,12 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     value: valueProp,
     formattedValue,
     api,
+    focusElementRef,
+    color,
+    error,
+    helperText,
+    size,
+    variant = 'standard',
     field,
     row,
     rowNode,
@@ -53,21 +80,24 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     hasFocus,
     isValidating,
     isProcessingProps,
-    error,
     onValueChange,
     initialOpen = rootProps.editMode === GridEditModes.Cell,
     getOptionLabel: getOptionLabelProp,
     getOptionValue: getOptionValueProp,
     ...other
   } = props;
+  const TextFieldProps = {
+    color,
+    error,
+    helperText,
+    size,
+    variant,
+  };
 
   const apiRef = useGridApiContext();
   const ref = React.useRef<any>();
   const inputRef = React.useRef<any>();
   const [open, setOpen] = React.useState(initialOpen);
-
-  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
-  const isSelectNative = baseSelectProps.native ?? false;
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -75,99 +105,152 @@ function GridEditMultipleSelectCell(props: GridEditMultipleSelectCellProps) {
     }
   }, [hasFocus]);
 
+  let resolvedColumn: GridMultipleSelectColDef | null = null;
+  if (isMultipleSelectColDef(colDef)) {
+    resolvedColumn = colDef;
+  }
+
+  const getOptionValue = getOptionValueProp || resolvedColumn?.getOptionValue!;
+  const getOptionLabel = getOptionLabelProp || resolvedColumn?.getOptionLabel!;
+
+  const isOptionEqualToValue = React.useCallback(
+    (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
+    [getOptionValue],
+  );
+
+  const resolvedValueOptions = React.useMemo(() => {
+    if (!resolvedColumn?.valueOptions) {
+      return [];
+    }
+
+    if (typeof resolvedColumn.valueOptions === 'function') {
+      return resolvedColumn.valueOptions({ id, row, field });
+    }
+
+    return resolvedColumn.valueOptions;
+  }, [resolvedColumn, id, row, field]);
+
+  const resolvedFormattedValueOptions = React.useMemo(() => {
+    return resolvedValueOptions?.map(getOptionValue);
+  }, [resolvedValueOptions, getOptionValue]);
+
+  // The value is computed from the item.value and used directly
+  // If it was done by a useEffect/useState, the Autocomplete could receive incoherent value and options
+  const filteredValues = React.useMemo(() => {
+    if (!Array.isArray(valueProp)) {
+      return [];
+    }
+    if (resolvedValueOptions !== undefined) {
+      const itemValueIndexes = valueProp.map((element) => {
+        // Gets the index matching between values and valueOptions
+        return resolvedFormattedValueOptions?.findIndex(
+          (formattedOption) => formattedOption === element,
+        );
+      });
+
+      return itemValueIndexes
+        .filter((index) => index >= 0)
+        .map((index: number) => resolvedValueOptions[index]);
+    }
+    return valueProp;
+  }, [valueProp, resolvedValueOptions, resolvedFormattedValueOptions]);
+
+  const handleChange = React.useCallback<
+    NonNullable<AutocompleteProps<ValueOptions, true, false, true>['onChange']>
+  >(
+    async (event, value: ValueOptions | ValueOptions[] | null) => {
+      if (!resolvedValueOptions) {
+        return;
+      }
+      if (value == null) {
+        return;
+      }
+      if (!Array.isArray(value)) {
+        return;
+      }
+
+      const formattedTargetValue = getValuesFromValueOptions(
+        value.map(getOptionValue),
+        resolvedValueOptions,
+        getOptionValue,
+      );
+
+      if (onValueChange) {
+        await onValueChange(event.nativeEvent as SelectChangeEvent, formattedTargetValue);
+      }
+
+      await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
+    },
+    [resolvedValueOptions, getOptionValue, apiRef, id, field, onValueChange],
+  );
+
   if (!isMultipleSelectColDef(colDef)) {
     return null;
   }
 
-  let valueOptions: Array<ValueOptions> | undefined;
-  if (typeof colDef?.valueOptions === 'function') {
-    valueOptions = colDef?.valueOptions({ id, row, field });
-  } else {
-    valueOptions = colDef?.valueOptions;
-  }
-
-  if (!valueOptions) {
+  if (!resolvedValueOptions) {
     return null;
   }
 
-  const getOptionValue = getOptionValueProp || colDef.getOptionValue!;
-  const getOptionLabel = getOptionLabelProp || colDef.getOptionLabel!;
+  const handleClose = (event: React.SyntheticEvent, reason: string) => {
+    setOpen(false);
 
-  const handleChange: SelectProps['onChange'] = async (event) => {
-    if (!isMultipleSelectColDef(colDef) || !valueOptions) {
-      return;
-    }
-
-    const target = event.target as HTMLInputElement & { value: string[] };
-    // NativeSelect casts the value to an array of strings.
-    const formattedTargetValue = getValuesFromValueOptions(
-      target.value,
-      valueOptions,
-      getOptionValue,
-    );
-
-    if (onValueChange) {
-      await onValueChange(event, formattedTargetValue);
-    }
-
-    await apiRef.current.setEditCellValue({ id, field, value: formattedTargetValue }, event);
-  };
-
-  const handleClose = (event: React.KeyboardEvent, reason: string) => {
     if (rootProps.editMode === GridEditModes.Row) {
-      setOpen(false);
       return;
     }
-    if (reason === 'backdropClick' || isEscapeKey(event.key)) {
+    if (reason === 'backdropClick' || (isKeyboardEvent(event) && isEscapeKey(event.key))) {
       apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
     }
   };
 
-  const handleOpen: SelectProps['onOpen'] = (event) => {
+  const handleOpen = (event: React.SyntheticEvent) => {
     if (isKeyboardEvent(event) && event.key === 'Enter') {
       return;
     }
     setOpen(true);
   };
 
-  if (!valueOptions || !colDef) {
-    return null;
-  }
-
   return (
-    <rootProps.slots.baseSelect
-      ref={ref}
-      inputRef={inputRef}
+    <rootProps.slots.baseMultipleSelect
       multiple
-      value={valueProp}
+      ref={ref}
+      options={resolvedValueOptions}
+      isOptionEqualToValue={isOptionEqualToValue}
+      filterOptions={filter}
+      value={filteredValues}
       onChange={handleChange}
-      input={<Input />}
+      getOptionLabel={getOptionLabel}
+      renderTags={(value: ValueOptions[], getTagProps: AutocompleteRenderGetTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            variant="outlined"
+            size="small"
+            label={getOptionLabel(option)}
+            {...getTagProps({ index })}
+          />
+        ))
+      }
+      renderInput={(params: AutocompleteRenderInputParams) => (
+        <rootProps.slots.baseTextField
+          {...params}
+          InputLabelProps={{
+            ...params.InputLabelProps,
+            shrink: true,
+          }}
+          inputRef={focusElementRef}
+          type="multipleSelect"
+          {...TextFieldProps}
+          {...rootProps.slotProps?.baseTextField}
+        />
+      )}
+      size="small"
       open={open}
       onOpen={handleOpen}
-      MenuProps={{
-        onClose: handleClose,
-      }}
-      error={error}
-      native={isSelectNative}
-      fullWidth
+      onClose={handleClose}
+      disableCloseOnSelect
       {...other}
-      {...rootProps.slotProps?.baseSelect}
-    >
-      {valueOptions.map((valueOption) => {
-        const value = getOptionValue(valueOption);
-
-        return (
-          <rootProps.slots.baseSelectOption
-            {...(rootProps.slotProps?.baseSelectOption || {})}
-            native={isSelectNative}
-            key={value}
-            value={value}
-          >
-            {getOptionLabel(valueOption)}
-          </rootProps.slots.baseSelectOption>
-        );
-      })}
-    </rootProps.slots.baseSelect>
+      {...rootProps.slotProps?.baseMultipleSelect}
+    />
   );
 }
 

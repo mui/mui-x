@@ -27,6 +27,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   BaseSelect: React.JSXElementConstructor<any>;
   /**
+   * The custom MultipleSelect component used in the grid.
+   * @default Autocomplete
+   */
+  BaseMultipleSelect: React.JSXElementConstructor<any>;
+  /**
    * The custom Switch component used in the grid.
    * @default Switch
    */

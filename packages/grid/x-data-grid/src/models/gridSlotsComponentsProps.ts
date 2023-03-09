@@ -10,6 +10,7 @@ import { TooltipProps } from '@mui/material/Tooltip';
 import type { InputLabelProps } from '@mui/material/InputLabel';
 import { PopperProps } from '@mui/material/Popper';
 import { TablePaginationProps } from '@mui/material/TablePagination';
+import { AutocompleteProps } from '@mui/material/Autocomplete';
 import { GridToolbarProps } from '../components/toolbar/GridToolbar';
 import { ColumnHeaderFilterIconButtonProps } from '../components/columnHeaders/GridColumnHeaderFilterIconButton';
 import { GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenuProps';
@@ -20,12 +21,14 @@ import { GridOverlayProps } from '../components/containers/GridOverlay';
 import { GridPanelProps } from '../components/panel/GridPanel';
 import type { GridRowProps } from '../components/GridRow';
 import type { GridCellProps } from '../components/cell/GridCell';
+import { ValueOptions } from './colDef';
 
 // Overrides for module augmentation
 export interface BaseCheckboxPropsOverrides {}
 export interface BaseTextFieldPropsOverrides {}
 export interface BaseFormControlPropsOverrides {}
 export interface BaseSelectPropsOverrides {}
+export interface BaseMultipleSelectPropsOverrides {}
 export interface BaseSwitchPropsOverrides {}
 export interface BaseButtonPropsOverrides {}
 export interface BaseIconButtonPropsOverrides {}
@@ -58,6 +61,10 @@ export interface GridSlotsComponentsProps {
   baseTextField?: SlotProps<TextFieldProps, BaseTextFieldPropsOverrides>;
   baseFormControl?: SlotProps<FormControlProps, BaseFormControlPropsOverrides>;
   baseSelect?: SlotProps<SelectProps, BaseSelectPropsOverrides>;
+  baseMultipleSelect?: SlotProps<
+    AutocompleteProps<ValueOptions, true, false, true>,
+    BaseMultipleSelectPropsOverrides
+  >;
   baseSwitch?: SlotProps<SwitchProps, BaseSwitchPropsOverrides>;
   baseButton?: SlotProps<ButtonProps, BaseButtonPropsOverrides>;
   baseIconButton?: SlotProps<IconButtonProps, BaseIconButtonPropsOverrides>;

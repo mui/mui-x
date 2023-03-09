@@ -746,38 +746,9 @@ describe('<DataGridPro /> - Edit Components', () => {
       fireEvent.doubleClick(cell);
       fireEvent.click(screen.queryAllByRole('option')[1]);
       await Promise.resolve();
-      fireEvent.doubleClick(cell);
-      fireEvent.click(screen.queryAllByRole('option')[0]);
-      await Promise.resolve();
 
-      expect(onValueChange.callCount).to.equal(2);
-      expect(onValueChange.lastCall.args[1]).to.deep.equal([]);
-    });
-
-    it('should not open the suggestions when Enter is pressed', async () => {
-      let resolveCallback: () => void;
-      const processRowUpdate = (newRow: any) =>
-        new Promise((resolve) => {
-          resolveCallback = () => resolve(newRow);
-        });
-
-      defaultData.columns[0].renderEditCell = (params) => renderEditMultipleSelectCell(params);
-
-      render(<TestCase processRowUpdate={processRowUpdate} />);
-
-      const cell = getCell(0, 0);
-      fireEvent.doubleClick(cell);
-      userEvent.mousePress(screen.queryAllByRole('option')[1]);
-      await Promise.resolve();
-      fireEvent.doubleClick(cell);
-      userEvent.mousePress(screen.queryAllByRole('option')[0]);
-      clock.runToLast();
-      expect(screen.queryByRole('listbox')).to.equal(null);
-      fireEvent.keyDown(screen.getByRole('button', { name: 'Adidas' }), { key: 'Enter' });
-      expect(screen.queryByRole('listbox')).to.equal(null);
-
-      resolveCallback!();
-      await act(() => Promise.resolve());
+      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.lastCall.args[1]).to.deep.equal(['Nike', 'Adidas']);
     });
   });
 

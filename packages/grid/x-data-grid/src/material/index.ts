@@ -8,6 +8,7 @@ import MUIIconButton from '@mui/material/IconButton';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPopper from '@mui/material/Popper';
 import MUIInputLabel from '@mui/material/InputLabel';
+import MUIAutocomplete from '@mui/material/Autocomplete';
 import { GridColumnUnsortedIcon } from './icons/GridColumnUnsortedIcon';
 import {
   GridAddIcon,
@@ -83,6 +84,7 @@ const materialSlots = {
   BaseTextField: MUITextField,
   BaseFormControl: MUIFormControl,
   BaseSelect: MUISelect,
+  BaseMultipleSelect: MUIAutocomplete,
   BaseSwitch: MUISwitch,
   BaseButton: MUIButton,
   BaseIconButton: MUIIconButton,

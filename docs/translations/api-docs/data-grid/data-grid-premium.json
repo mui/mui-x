@@ -692,6 +692,7 @@
     "baseFormControl": "The custom FormControl component used in the grid.",
     "baseIconButton": "The custom IconButton component used in the grid.",
     "baseInputLabel": "The custom InputLabel component used in the grid.",
+    "baseMultipleSelect": "The custom MultipleSelect component used in the grid.",
     "basePopper": "The custom Popper component used in the grid.",
     "baseSelect": "The custom Select component used in the grid.",
     "baseSelectOption": "The custom SelectOption component used in the grid.",

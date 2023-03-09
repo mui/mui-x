@@ -236,6 +236,7 @@
     "baseFormControl": { "default": "FormControl", "type": { "name": "elementType" } },
     "baseIconButton": { "default": "IconButton", "type": { "name": "elementType" } },
     "baseInputLabel": { "default": "InputLabel", "type": { "name": "elementType" } },
+    "baseMultipleSelect": { "default": "Autocomplete", "type": { "name": "elementType" } },
     "basePopper": { "default": "Popper", "type": { "name": "elementType" } },
     "baseSelect": { "default": "Select", "type": { "name": "elementType" } },
     "baseSelectOption": { "default": "MenuItem", "type": { "name": "elementType" } },
