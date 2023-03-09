@@ -32,7 +32,9 @@ export const usePicker = <
   InferError<TExternalProps>
 > => {
   if (process.env.NODE_ENV !== 'production') {
-    renderInputWarning();
+    if ((props as any).renderInput != null) {
+      renderInputWarning();
+    }
   }
 
   const pickerValueResponse = usePickerValue({
