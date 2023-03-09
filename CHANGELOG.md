@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 6.0.1
+
+_Mar 9, 2023_
+
+We'd like to offer a big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌍 Improve French (fr-FR) locale (#8122) @MaherSamiGMC
+- 📚 Documentation improvements
+- 🐞 Bugfixes
+
+### `@mui/x-data-grid@v6.0.1` / `@mui/x-data-grid-pro@v6.0.1` / `@mui/x-data-grid-premium@v6.0.1`
+
+#### Changes
+
+- [DataGrid] Fix `MenuProps.onClose` being overridden for single select edit component (#8174) @rohitnatesh
+- [DataGrid] Simplify `buildPrintWindow` (#8142) @oliviertassinari
+- [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
+
+### `@mui/x-date-pickers@v6.0.1` / `@mui/x-date-pickers-pro@v6.0.1`
+
+#### Changes
+
+- [pickers] Add a runtime warning when a `renderInput` prop is passed to a picker (#8183) @flaviendelangle
+- [pickers] Don't pass `ownerState` to the `inputAdornment` slot (#8165) @flaviendelangle
+
+### Docs
+
+- [docs] Fix a typo in the migration guide (#8152) @flaviendelangle
+- [docs] Fix package version used in CodeSandbox demos (#8125) @cherniavskii
+- [docs] Fix typos across codebase (#8126) @stavares843
+- [docs] Improve Data Grid quick filter documentation (#8109) @MBilalShafi
+- [docs] Improve link from npm to docs (#8141) @oliviertassinari
+- [docs] Remove test sections (#8177) @m4theushw
+
+### Core
+
+- [core] Upgrade monorepo (#8162) @m4theushw
+
 ## 6.0.0
 
 _Mar 3, 2023_
