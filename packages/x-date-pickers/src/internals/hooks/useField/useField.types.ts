@@ -178,13 +178,16 @@ export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSec
   'start' | 'end' | 'startInInput' | 'endInInput'
 >;
 
-export type FieldSectionsValueBoundaries<TDate> = Record<
-  FieldSectionType,
-  (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
+export type FieldSectionsValueBoundaries<TDate> = {
+  [key in FieldSectionType]: (params: {
+    currentDate: TDate | null;
+    format: string;
+    contentType: 'digit' | 'letter';
+  }) => {
     minimum: number;
     maximum: number;
-  }
->;
+  } & (key extends 'day' ? { longestMonth: TDate } : {});
+};
 
 export type FieldChangeHandler<TValue, TError> = (
   value: TValue,

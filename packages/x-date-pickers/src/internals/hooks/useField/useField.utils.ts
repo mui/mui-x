@@ -130,21 +130,32 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
 
   const shouldSetAbsolute = section.value === '' || isStart || isEnd;
 
-  const cleanDigitSectionValue = (value: number) => {
-    const valueStr = value.toString();
-    if (section.hasLeadingZeros) {
-      return cleanLeadingZerosInNumericSectionValue(utils, section.format, valueStr);
-    }
-
-    return valueStr;
-  };
-
   const adjustDigitSection = () => {
     const sectionBoundaries = sectionsValueBoundaries[section.type]({
       currentDate: activeDate,
       format: section.format,
       contentType: section.contentType,
     });
+
+    const cleanDigitSectionValue = (value: number) => {
+      const hasLetter = Number.isNaN(Number(section.value));
+
+      const valueStr = value.toString();
+
+      if (hasLetter && section.type === 'day') {
+        type BoundariesType = ReturnType<FieldSectionsValueBoundaries<TDate>['day']>;
+        return utils.formatByString(
+          utils.setDate((sectionBoundaries as BoundariesType).longestMonth, value),
+          section.format,
+        );
+      }
+
+      if (section.hasLeadingZeros) {
+        return cleanLeadingZerosInNumericSectionValue(utils, section.format, valueStr);
+      }
+
+      return valueStr;
+    };
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
@@ -158,7 +169,7 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
       return cleanDigitSectionValue(sectionBoundaries.maximum);
     }
 
-    const currentSectionValue = Number(section.value);
+    const currentSectionValue = parseInt(section.value);
     const newSectionValueNumber = currentSectionValue + delta;
 
     if (newSectionValueNumber > sectionBoundaries.maximum) {
@@ -562,10 +573,18 @@ export const getSectionsBoundaries = <TDate>(
 
   const endOfYear = utils.endOfYear(today);
 
-  const maxDaysInMonth = utils.getMonthArray(today).reduce((acc, month) => {
-    const daysInMonth = utils.getDaysInMonth(month);
-    return Math.max(acc, daysInMonth);
-  }, 0);
+  const { maxDaysInMonth, longestMonth } = utils.getMonthArray(today).reduce(
+    (acc, month) => {
+      const daysInMonth = utils.getDaysInMonth(month);
+
+      if (daysInMonth > acc.maxDaysInMonth) {
+        return { maxDaysInMonth: daysInMonth, longestMonth: month };
+      }
+
+      return acc;
+    },
+    { maxDaysInMonth: 0, longestMonth: null as TDate | null },
+  );
 
   return {
     year: ({ format }) => ({
@@ -583,6 +602,7 @@ export const getSectionsBoundaries = <TDate>(
         currentDate != null && utils.isValid(currentDate)
           ? utils.getDaysInMonth(currentDate)
           : maxDaysInMonth,
+      longestMonth: longestMonth!,
     }),
     weekDay: ({ format, contentType }) => {
       if (contentType === 'digit') {
