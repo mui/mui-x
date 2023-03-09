@@ -18,7 +18,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Fix `MenuProps.onClose` being overriden for single select edit component (#8174) @rohitnatesh
-- [l10n] Import French (fr-FR) locale (#8122) @MaherSamiGMC
+- [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
 
 ### `@mui/x-date-pickers@v6.0.1` / `@mui/x-date-pickers-pro@v6.0.1`
 
@@ -30,7 +30,7 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 ### Docs
 
 - [docs] Fix a typo in the migration guide (#8152) @flaviendelangle
-- [docs] Fix package version used in Codesandbox demos (#8125) @cherniavskii
+- [docs] Fix package version used in CodeSandbox demos (#8125) @cherniavskii
 - [docs] Fix typos across codebase (#8126) @stavares843
 - [docs] Improve data grid quick filter documentation (#8109) @MBilalShafi
 - [docs] Improve link from npm to docs (#8141) @oliviertassinari
