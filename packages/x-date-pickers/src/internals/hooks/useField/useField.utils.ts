@@ -6,6 +6,7 @@ import {
   SectionOrdering,
   FieldValueType,
   FieldSectionWithoutPosition,
+  FieldSectionValueBoundaries,
 } from './useField.types';
 import { MuiPickersAdapter, FieldSectionType } from '../../models';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -69,25 +70,6 @@ export const getDaysInWeekStr = <TDate>(utils: MuiPickersAdapter<TDate>, format:
   return elements.map((weekDay) => utils.formatByString(weekDay, format));
 };
 
-export const cleanLeadingZerosInNumericSectionValue = <TDate>(
-  utils: MuiPickersAdapter<TDate>,
-  format: string,
-  value: string,
-) => {
-  const size = utils.formatByString(utils.date()!, format).length;
-  let cleanValue = value;
-
-  // We remove the leading zeros
-  cleanValue = Number(cleanValue).toString();
-
-  // We add enough leading zeros to fill the section
-  while (cleanValue.length < size) {
-    cleanValue = `0${cleanValue}`;
-  }
-
-  return cleanValue;
-};
-
 export const getLetterEditingOptions = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   sectionType: FieldSectionType,
@@ -117,6 +99,51 @@ export const getLetterEditingOptions = <TDate>(
   }
 };
 
+export const cleanDigitSectionValue = <TDate>(
+  utils: MuiPickersAdapter<TDate>,
+  value: number,
+  sectionType: FieldSectionType,
+  format: string,
+  hasLeadingZeros: boolean,
+  sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
+) => {
+  let hasLetterPrefix = false;
+  if (sectionType === 'day') {
+    const startOfMonth = utils.startOfMonth(utils.date()!);
+    const startOfMonthStr = utils.formatByString(startOfMonth, format);
+
+    hasLetterPrefix = Number.isNaN(Number(startOfMonthStr));
+  }
+
+  if (hasLetterPrefix) {
+    const date = utils.setDate(
+      (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
+      value,
+    );
+    return utils.formatByString(date, format);
+  }
+
+  // queryValue without leading `0` (`01` => `1`)
+  const valueStr = value.toString();
+
+  if (hasLeadingZeros) {
+    const size = utils.formatByString(utils.date()!, format).length;
+    let cleanValueStr = valueStr;
+
+    // We remove the leading zeros
+    cleanValueStr = Number(cleanValueStr).toString();
+
+    // We add enough leading zeros to fill the section
+    while (cleanValueStr.length < size) {
+      cleanValueStr = `0${cleanValueStr}`;
+    }
+
+    return cleanValueStr;
+  }
+
+  return valueStr;
+};
+
 export const adjustSectionValue = <TDate, TSection extends FieldSection>(
   utils: MuiPickersAdapter<TDate>,
   section: TSection,
@@ -137,25 +164,15 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
       contentType: section.contentType,
     });
 
-    const cleanDigitSectionValue = (value: number) => {
-      const hasLetter = Number.isNaN(Number(section.value));
-
-      const valueStr = value.toString();
-
-      if (hasLetter && section.type === 'day') {
-        type BoundariesType = ReturnType<FieldSectionsValueBoundaries<TDate>['day']>;
-        return utils.formatByString(
-          utils.setDate((sectionBoundaries as BoundariesType).longestMonth, value),
-          section.format,
-        );
-      }
-
-      if (section.hasLeadingZeros) {
-        return cleanLeadingZerosInNumericSectionValue(utils, section.format, valueStr);
-      }
-
-      return valueStr;
-    };
+    const getCleanValue = (value: number) =>
+      cleanDigitSectionValue(
+        utils,
+        value,
+        section.type,
+        section.format,
+        section.hasLeadingZeros,
+        sectionBoundaries,
+      );
 
     if (shouldSetAbsolute) {
       if (section.type === 'year' && !isEnd && !isStart) {
@@ -163,24 +180,24 @@ export const adjustSectionValue = <TDate, TSection extends FieldSection>(
       }
 
       if (delta > 0 || isStart) {
-        return cleanDigitSectionValue(sectionBoundaries.minimum);
+        return getCleanValue(sectionBoundaries.minimum);
       }
 
-      return cleanDigitSectionValue(sectionBoundaries.maximum);
+      return getCleanValue(sectionBoundaries.maximum);
     }
 
-    const currentSectionValue = parseInt(section.value);
+    const currentSectionValue = parseInt(section.value, 10);
     const newSectionValueNumber = currentSectionValue + delta;
 
     if (newSectionValueNumber > sectionBoundaries.maximum) {
-      return cleanDigitSectionValue(sectionBoundaries.minimum);
+      return getCleanValue(sectionBoundaries.minimum);
     }
 
     if (newSectionValueNumber < sectionBoundaries.minimum) {
-      return cleanDigitSectionValue(sectionBoundaries.maximum);
+      return getCleanValue(sectionBoundaries.maximum);
     }
 
-    return cleanDigitSectionValue(newSectionValueNumber);
+    return getCleanValue(newSectionValueNumber);
   };
 
   const adjustLetterSection = () => {
@@ -346,7 +363,7 @@ export const changeSectionValueFormat = <TDate>(
 const isFourDigitYearFormat = <TDate>(utils: MuiPickersAdapter<TDate>, format: string) =>
   utils.formatByString(utils.date()!, format).length === 4;
 
-export const doesSectionHaveTrailingZeros = <TDate>(
+export const doesSectionHaveLeadingZeros = <TDate>(
   utils: MuiPickersAdapter<TDate>,
   contentType: 'digit' | 'letter',
   sectionType: FieldSectionType,
@@ -434,7 +451,7 @@ export const splitFormatIntoSections = <TDate>(
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
     const sectionValue = date == null ? '' : utils.formatByString(date, token);
 
-    const hasTrailingZeroes = doesSectionHaveTrailingZeros(
+    const hasLeadingZeros = doesSectionHaveLeadingZeros(
       utils,
       sectionConfig.contentType,
       sectionConfig.type,
@@ -446,7 +463,7 @@ export const splitFormatIntoSections = <TDate>(
       format: token,
       value: sectionValue,
       placeholder: getSectionPlaceholder(utils, localeText, sectionConfig, token),
-      hasLeadingZeros: hasTrailingZeroes,
+      hasLeadingZeros,
       startSeparator: sections.length === 0 ? startSeparator : '',
       endSeparator: '',
       modified: false,
@@ -779,13 +796,14 @@ export const clampDaySection = <TDate, TSection extends FieldSection>(
 
     return {
       ...section,
-      value: section.hasLeadingZeros
-        ? cleanLeadingZerosInNumericSectionValue(
-            utils,
-            section.format,
-            dayBoundaries.minimum.toString(),
-          )
-        : dayBoundaries.minimum.toString(),
+      value: cleanDigitSectionValue(
+        utils,
+        dayBoundaries.minimum,
+        section.type,
+        section.format,
+        section.hasLeadingZeros,
+        dayBoundaries,
+      ),
     };
   });
 
