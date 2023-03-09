@@ -18,8 +18,8 @@ We'd like to offer a big thanks to the 8 contributors who made this release poss
 #### Changes
 
 - [DataGrid] Fix `MenuProps.onClose` being overriden for single select edit component (#8174) @rohitnatesh
-- [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
 - [DataGrid] Simplify `buildPrintWindow` (#8142) @oliviertassinari
+- [l10n] Improve French (fr-FR) locale (#8122) @MaherSamiGMC
 
 ### `@mui/x-date-pickers@v6.0.1` / `@mui/x-date-pickers-pro@v6.0.1`
 
