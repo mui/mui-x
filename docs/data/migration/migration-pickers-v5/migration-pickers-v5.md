@@ -426,7 +426,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' }}
    />
 
    <DateRangePicker
@@ -437,7 +437,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' }}
    />
   ```
 
