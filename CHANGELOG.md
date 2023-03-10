@@ -1025,7 +1025,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
   <DataGridPremium unstable_cellSelection />
   ```
 
-  See [the documentation](https://mui.com/x/react-data-grid/selection/#cell-selection) for more information
+  See [the documentation](https://mui.com/x/react-data-grid/cell-selection/) for more information
 
 - 🌍 Support the Right To Left orientation on the fields components
 - 📚 Documentation improvements
@@ -6781,7 +6781,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - 💅 Add `columnHeader`, `row` and `cell` to the `classes` prop (#1660) @DanailH
 - ✅ Add the `isRowSelectable` prop to disable selection on certain rows (#1659) @m4theushw
 
-  See the documentation for [more details](https://mui.com/x/react-data-grid/selection/#disable-selection-on-certain-rows).
+  See the documentation for [more details](https://v4.mui.com/components/data-grid/selection/#disable-selection-on-certain-rows).
 
 - ⚡️ Add new icon slot to be displayed when the column is unsorted (#1415) @m4theushw
 - ⚙ Improve consistency of the API to prepare for the first beta release
@@ -7309,7 +7309,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - 📍 Add support for default locales (#983) @DanailH
   We have built the infrastructure to support around 100 [default locales](https://mui.com/x/react-data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
-  The prop can be used to control the selected rows in the data grid. [See the docs](https://mui.com/x/react-data-grid/selection/#controlled-selection).
+  The prop can be used to control the selected rows in the data grid. [See the docs](https://v4.mui.com/components/data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
 - 🙌 Fix scrollbar size on windows (#1061) @dtassone
 - 🐛 Polish existing features, fix 9 issues.
