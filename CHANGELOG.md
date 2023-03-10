@@ -3082,7 +3082,7 @@ _Sep 2, 2022_
 
 🎉 We are excited to finally introduce a stable release (v5.0.0) for the `@mui/x-date-pickers` and `@mui/x-date-pickers-pro` packages!
 
-If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+If you are still using picker components from the `lab`, take a look at the [migration guide](https://mui.com/x/migration/migration-pickers-lab/).
 
 We'd like to offer a big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
@@ -4133,7 +4133,7 @@ We'd like to offer a big thanks to the 7 contributors who made this release poss
 
   Date and time picker components have been moved to the MUI X repository.
   They are now accessible in their own packages: `@mui/x-date-pickers` and `@mui/x-date-pickers-pro`.
-  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/react-date-pickers/migration-lab/).
+  For more information, you can read the [blog article](https://mui.com/blog/lab-date-pickers-to-mui-x/) and the [migration guide](https://mui.com/x/migration/migration-pickers-lab/).
 
 - 📝 Add `onProcessRowUpdateError` prop to simplify error management in edit mode (#4267) @m4theushw
 - ✨ Add generic typing to `GridColDef` and derived interfaces (#4064) @flaviendelangle
