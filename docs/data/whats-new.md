@@ -3,14 +3,14 @@
 <p class="description">Discover the new features on the latest major version.</p>
 
 :::info
-🔥 Head over to the [v6 announcement blog post](https://mui.com/blog/mui-x-v6/) for a detailed overview of each new feature.
+🔥 Head over to the [v6 announcement blog post](/blog/mui-x-v6/) for a detailed overview of the release.
 :::
 
 ## Data Grid
 
-- [ApiRef available in the community version](/x/react-data-grid/api-object/)
+- [ApiRef moved to the MIT open source version](/x/react-data-grid/api-object/)
 
-  Manage pagination, scrolling, state, and other attributes through the Data Grid's API object—previously available only in commercial plans, now accessible to all.
+  Manage pagination, scrolling, state, and other attributes through the Data Grid's API object— previously only in commercial plans, now available for all.
 
 - [Improved column menu](/x/react-data-grid/column-menu/)
 
@@ -22,6 +22,14 @@
   Select a cell or group of cells like in an Excel sheet.
   Cell selection is a powerful and flexible way to select data in the Data Grid.
   It's also the base for bulk editing and clipboard importing (coming soon).
+
+- [Use web workers to export data to excel files](/x/react-data-grid/export/#using-a-web-worker). [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+
+  Instead of generating the Excel file in the main thread, you can use a web worker in the background to allow interactions with the grid while the data is exported.
+
+- Stable [Aggregation](/x/react-data-grid/aggregation/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan) and [Row pinning](/x/react-data-grid/row-pinning/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+  These two features have been previously released in a minor v5 version under the `experimentalFeatures` flag. Now they are officially stable.
 
 ## Date and Time pickers
 
