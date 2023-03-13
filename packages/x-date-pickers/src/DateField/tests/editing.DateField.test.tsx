@@ -422,7 +422,7 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
-    it.only('should support day with letter suffix', function test() {
+    it('should support day with letter suffix', function test() {
       if (!['date-fns', 'dayjs'].includes(adapterName)) {
         this.skip();
       }
