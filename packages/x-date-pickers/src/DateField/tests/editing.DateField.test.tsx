@@ -296,7 +296,7 @@ describe('<DateField /> - Editing', () => {
           expect(handleChange.callCount).to.equal(0);
         });
 
-        it('should call `onChange` when clearing each section', () => {
+        it('should call `onChange` when clearing the first and last section', () => {
           const handleChange = spy();
 
           render(
@@ -312,12 +312,14 @@ describe('<DateField /> - Editing', () => {
 
           userEvent.keyPress(input, { key: keyToClearValue });
           expect(handleChange.callCount).to.equal(1);
+          expect(handleChange.lastCall.args[1].validationError).to.equal('invalidDate');
 
           userEvent.keyPress(input, { key: 'ArrowRight' });
 
           userEvent.keyPress(input, { key: keyToClearValue });
           expect(handleChange.callCount).to.equal(2);
           expect(handleChange.lastCall.firstArg).to.equal(null);
+          expect(handleChange.lastCall.args[1].validationError).to.equal(null);
         });
 
         it('should not call `onChange` if the section is already empty', () => {
