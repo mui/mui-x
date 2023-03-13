@@ -1,70 +1,10 @@
 import * as React from 'react';
-import { CoordinateContext } from '../context/CoordinateContext';
-import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
-import { SeriesContext } from '../context/SeriesContext';
-import { SeriesContext as SeriesContext2 } from '../context/SeriesContextProvider';
-import stackSeries from '../internals/stackSeries';
+import { SeriesContext } from '../context/SeriesContextProvider';
 import { BarSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-function BarPlot() {
-  const series = React.useContext(SeriesContext);
-  const { xAxis, yAxis } = React.useContext(CoordinateContext);
-
-  const seriesPerAxis: { [key: string]: BarSeriesType[] } = {};
-
-  series
-    .filter((s) => s.type === 'bar')
-    .forEach((s) => {
-      if (seriesPerAxis[s.xAxisKey] === undefined) {
-        seriesPerAxis[s.xAxisKey] = [s];
-      } else {
-        seriesPerAxis[s.xAxisKey].push(s);
-      }
-    });
-
-  return (
-    <React.Fragment>
-      {Object.entries(seriesPerAxis).flatMap(([xAxisKey, plottedSeries]) => {
-        const [stackedSeries, groupedIndexes] = stackSeries(plottedSeries);
-        const xScale = xAxis[xAxisKey].scale;
-
-        const bandWidth = xScale.bandwidth();
-        const barWidth = (0.9 * bandWidth) / groupedIndexes.length;
-        const offset = 0.05 * bandWidth;
-
-        return groupedIndexes.flatMap((groupIndexes, groupIndex) => {
-          return groupIndexes.flatMap((seriesIndex) => {
-            const { data, yAxisKey } = plottedSeries[seriesIndex];
-            const yScale = yAxis[yAxisKey ?? DEFAULT_Y_AXIS_KEY].scale;
-
-            return data.map((_, dataIndex: number) => {
-              const seriesId = series[seriesIndex].id;
-              // console.log({ value, seriesId, dataIndex });
-              // console.log(stackedSeries[seriesId]);
-              // console.log(stackedSeries[seriesId][dataIndex]);
-              const baseline = stackedSeries[seriesId][dataIndex][0];
-              const value = stackedSeries[seriesId][dataIndex][1];
-
-              return (
-                <rect
-                  x={xScale(xAxis[xAxisKey].data[dataIndex]) + groupIndex * barWidth + offset}
-                  y={yScale(value)}
-                  height={yScale(baseline) - yScale(value)}
-                  width={barWidth}
-                  rx="5px"
-                />
-              );
-            });
-          });
-        });
-      })}
-    </React.Fragment>
-  );
-}
-
-export function BarPlot2() {
-  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext2).bar;
+export function BarPlot() {
+  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).bar;
   const { xAxis, yAxis } = React.useContext(CartesianContext);
 
   const seriesPerAxis: { [key: string]: BarSeriesType[] } = {};
@@ -98,7 +38,7 @@ export function BarPlot2() {
         return stackingGroups.flatMap((groupIds, groupIndex) => {
           return groupIds.flatMap((seriesId) => {
             const { stackedData } = series[seriesId];
-            console.log({ seriesId, stackedData });
+
             return stackedData.map(([baseline, value], dataIndex: number) => {
               return (
                 <rect

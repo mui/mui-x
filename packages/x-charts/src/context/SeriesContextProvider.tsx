@@ -45,7 +45,6 @@ const formatSeries = (series: AllSeriesType[]) => {
       seriesTypeFormatter[type]?.(formattedSeries[type]) ?? formattedSeries[type];
   });
 
-  console.log(formattedSeries);
   return formattedSeries;
 };
 

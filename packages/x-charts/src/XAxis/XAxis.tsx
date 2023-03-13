@@ -55,75 +55,7 @@ export interface XAxisProps {
   tickSize?: number;
 }
 
-type XAxisComponent = (props: XAxisProps & React.RefAttributes<SVGSVGElement>) => JSX.Element;
-
-const XAxis = React.forwardRef(function Grid(props: XAxisProps, ref: React.Ref<SVGSVGElement>) {
-  const {
-    position = 'bottom',
-    axisId = DEFAULT_X_AXIS_KEY,
-    disableLine = false,
-    disableTicks = false,
-    fill = 'currentColor',
-    fontSize = 10,
-    label,
-    labelFontSize = 14,
-    stroke = 'currentColor',
-    tickSize: tickSizeProp = 6,
-  } = props;
-
-  const {
-    xAxis: {
-      [axisId]: { scale: xScale },
-    },
-    drawingArea: { left, top, width, height },
-  } = React.useContext(CoordinateContext) as any;
-
-  const [min, max] = xScale.domain();
-  const tickSize = disableTicks ? 4 : tickSizeProp;
-
-  const xTicks = useTicks({ scale: xScale });
-
-  const positionSigne = position === 'bottom' ? 1 : -1;
-  return (
-    <g transform={`translate(0, ${position === 'bottom' ? top + height : top})`} ref={ref}>
-      {!disableLine && (
-        <line x1={xScale(min)} x2={xScale(max)} stroke={stroke} shapeRendering="crispEdges" />
-      )}
-      {xTicks.map(({ value, offset }, index) => (
-        <g key={index} transform={`translate(${offset}, 0)`}>
-          {!disableTicks && (
-            <line y2={positionSigne * tickSize} stroke={stroke} shapeRendering="crispEdges" />
-          )}
-          <text
-            fill={fill}
-            transform={`translate(0, ${positionSigne * (fontSize + tickSize + 2)})`}
-            textAnchor="middle"
-            fontSize={fontSize}
-          >
-            {value}
-          </text>
-        </g>
-      ))}
-      {label && (
-        <text
-          fill={fill}
-          transform={`translate(${left + width / 2}, ${
-            positionSigne * (fontSize + tickSize + 20)
-          })`}
-          fontSize={labelFontSize}
-          textAnchor="middle"
-        >
-          {label}
-        </text>
-      )}
-    </g>
-  );
-}) as XAxisComponent;
-
-export const XAxis2 = React.forwardRef(function Grid(
-  props: XAxisProps,
-  ref: React.Ref<SVGSVGElement>,
-) {
+export function XAxis(props: XAxisProps) {
   const {
     position = 'bottom',
     axisId = DEFAULT_X_AXIS_KEY,
@@ -190,6 +122,6 @@ export const XAxis2 = React.forwardRef(function Grid(
       )}
     </g>
   );
-}) as XAxisComponent;
+}
 
 export default XAxis;
