@@ -107,15 +107,25 @@ export const cleanDigitSectionValue = <TDate>(
   hasLeadingZeros: boolean,
   sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
 ) => {
-  let hasLetterPrefix = false;
-  if (sectionType === 'day') {
-    const startOfMonth = utils.startOfMonth(utils.date()!);
-    const startOfMonthStr = utils.formatByString(startOfMonth, format);
+  const hasLetterPrefix = () => {
+    const startOfYear = utils.startOfYear(utils.date()!);
+    const startOfYearStr = utils.formatByString(startOfYear, format);
 
-    hasLetterPrefix = Number.isNaN(Number(startOfMonthStr));
+    return Number.isNaN(Number(startOfYearStr));
+  };
+
+  if (process.env.NODE_ENV !== 'production') {
+    if (sectionType !== 'day' && hasLetterPrefix()) {
+      throw new Error(
+        [
+          `MUI: The token "${format}" is a digit format with a letter prefix.'
+             This type of format is only supported for 'day' sections`,
+        ].join('\n'),
+      );
+    }
   }
 
-  if (hasLetterPrefix) {
+  if (sectionType === 'day' && hasLetterPrefix()) {
     const date = utils.setDate(
       (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
       value,
