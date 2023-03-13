@@ -25,7 +25,7 @@ export type UseSingleInputDateRangeFieldComponentProps<TDate, TChildProps extend
 export interface SingleInputDateRangeFieldProps<TDate>
   extends UseSingleInputDateRangeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -37,7 +37,7 @@ export interface SingleInputDateRangeFieldProps<TDate>
    */
   componentsProps?: SingleInputDateRangeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<SingleInputDateRangeFieldSlotsComponent>;

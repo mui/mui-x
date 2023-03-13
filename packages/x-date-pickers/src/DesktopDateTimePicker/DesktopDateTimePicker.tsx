@@ -37,12 +37,14 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     seconds: null,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
+    ampmInClock,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
@@ -58,6 +60,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
@@ -89,7 +92,7 @@ DesktopDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -109,7 +112,7 @@ DesktopDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -405,7 +408,7 @@ DesktopDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { screen } from '@mui/monorepo/test/utils';
-import { expectInputValue } from 'test/utils/pickers-utils';
+import { expectInputPlaceholder, expectInputValue, getTextbox } from 'test/utils/pickers-utils';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { describeAdapters } from '@mui/x-date-pickers/tests/describeAdapters';
 
@@ -11,8 +10,8 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
     const { setProps } = render(
       <DateField format={`${startChar}Escaped${endChar} ${adapter.formats.year}`} />,
     );
-    const input = screen.getByRole('textbox');
-    expectInputValue(input, 'Escaped YYYY');
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped 2019');
@@ -26,8 +25,8 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
-    expectInputValue(input, 'MMMM Escaped YYYY');
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'January Escaped 2019');
@@ -47,8 +46,8 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${adapter.formats.month} ${startChar}Escaped ${startChar}${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
-    expectInputValue(input, 'MMMM Escaped [ YYYY');
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'MMMM Escaped [ YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'January Escaped [ 2019');
@@ -63,8 +62,8 @@ describeAdapters('<DateField /> - Format', DateField, ({ render, adapter }) => {
         format={`${startChar}Escaped${endChar} ${adapter.formats.month} ${startChar}Escaped${endChar} ${adapter.formats.year}`}
       />,
     );
-    const input = screen.getByRole('textbox');
-    expectInputValue(input, 'Escaped MMMM Escaped YYYY');
+    const input = getTextbox();
+    expectInputPlaceholder(input, 'Escaped MMMM Escaped YYYY');
 
     setProps({ value: adapter.date(new Date(2019, 0, 1)) });
     expectInputValue(input, 'Escaped January Escaped 2019');

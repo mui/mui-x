@@ -53,7 +53,11 @@ export interface UseDesktopRangePickerSlotsComponentsProps<TDate, TView extends 
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    { position?: 'start' | 'end' } & Record<string, any>
+  >;
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -83,7 +87,7 @@ export interface UseDesktopRangePickerProps<
       DesktopRangePickerAdditionalViewProps
     > {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: UncapitalizeObjectKeys<UseDesktopRangePickerSlotsComponent<TDate, TView>>;
