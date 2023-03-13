@@ -127,6 +127,40 @@ In the example below, the tabs are using different icons and have an additional 
 
 {{"demo": "Tabs.js"}}
 
+## Toolbar
+
+The toolbar is available on all date time picker components.
+It displays the current values and allows to switch between different views.
+
+### Component props
+
+You can customize how the toolbar display the current value with `toolbarFormat`.
+By default empty values are replaced by `__`.
+This can be modified by using `toolbarPlaceholder` props
+
+By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
+This behavior can be overridden by setting the `hidden` prop:
+
+```jsx
+<DatePicker
+  slotProps={{
+    toolbar: {
+      // Customize value display
+      toolbarFormat: 'YYYY',
+      toolbarPlaceholder: '??',
+      // Hidde the toolbar
+      hidden: false,
+    },
+  }}
+/>
+```
+
+### Component
+
+Each component comes with its own toolbar (`DatePickerToolbar`, `DatePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
+
+{{"demo": "ToolbarComponent.js"}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
