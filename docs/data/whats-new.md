@@ -3,7 +3,7 @@
 <p class="description">Discover the new features on the latest major version.</p>
 
 :::info
-For more details about each new feature, please head over to the [official announcement blog post](https://mui.com/blog/mui-x-v6/). 
+Head over to the [v6 announcement blog post](https://mui.com/blog/mui-x-v6/) for a detailed overview of each new feature.
 :::
 ## Data Grid
 
