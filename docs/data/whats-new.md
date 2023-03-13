@@ -8,15 +8,39 @@
 ## Data Grid
 
 - [ApiRef available in the community version](/x/react-data-grid/api-object/)
+
+  Manage pagination, scrolling, state, and other attributes through the Data Grid's API object—previously available only in commercial plans, now accessible to all.
+
 - [Improved column menu](/x/react-data-grid/column-menu/)
+
+  The v6 column menu now provides support for icons, menu groups, custom items and actions, and more.
+  We've redesigned this sub-component to make it as extensible as possible.
+
 - [Cell range selection](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
+
+  Select a cell or group of cells like in an Excel sheet.
+  Cell selection is a powerful and flexible way to select data in the Data Grid.
+  It's also the base for bulk editing and clipboard importing (coming soon).
+
 
 ## Date and Time pickers
 
 - [Fields: the new default input for pickers](/x/react-date-pickers/fields/).
+
+  These rich text fields are specialized for date and time logic and offer quick navigation and isolated interaction within each section of a date value.
+
 - [Improved layout customization](/x/react-date-pickers/custom-layout/)
+
+  Combining the slots concept with the grid layout, you can now rearrange, extend, and customize most of the sub-components used in the Pickers UI.
+
 - [Shortcuts for picking specific dates in a calendar](/x/react-date-pickers/shortcuts/)
+
+  Add quick and customizable shortcuts for your users. Particularly useful for date ranges.
+  Display them on the left, right, bottom, or top.
+
 - [Edit date ranges with drag and drop](/x/react-date-pickers/date-range-calendar/) [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+  Editing a date range is even easier now with the new drag-and-drop interface. Change `start` and `end` dates at will.
 
 ## Installation instructions
 
