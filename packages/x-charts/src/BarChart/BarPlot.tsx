@@ -3,7 +3,7 @@ import { SeriesContext } from '../context/SeriesContextProvider';
 import { BarSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
-export function BarPlot() {
+export default function BarPlot() {
   const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).bar;
   const { xAxis, yAxis } = React.useContext(CartesianContext);
 
@@ -21,7 +21,7 @@ export function BarPlot() {
       seriesPerAxis[key].push(series[seriesId]);
     }
   });
-  // return null;
+
   return (
     <React.Fragment>
       {Object.keys(seriesPerAxis).flatMap((key) => {
@@ -57,5 +57,3 @@ export function BarPlot() {
     </React.Fragment>
   );
 }
-
-export default BarPlot;

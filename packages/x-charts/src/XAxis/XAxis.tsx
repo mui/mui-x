@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DEFAULT_X_AXIS_KEY } from '../const';
-import { CoordinateContext } from '../context/CoordinateContext';
 import { CartesianContext } from '../context/CartesianContextProvider';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
@@ -55,7 +54,7 @@ export interface XAxisProps {
   tickSize?: number;
 }
 
-export function XAxis(props: XAxisProps) {
+function XAxis(props: XAxisProps) {
   const {
     position = 'bottom',
     axisId = DEFAULT_X_AXIS_KEY,
@@ -68,7 +67,6 @@ export function XAxis(props: XAxisProps) {
     stroke = 'currentColor',
     tickSize: tickSizeProp = 6,
   } = props;
-
   const {
     xAxis: {
       [axisId]: { scale: xScale },
@@ -84,7 +82,7 @@ export function XAxis(props: XAxisProps) {
   const positionSigne = position === 'bottom' ? 1 : -1;
 
   return (
-    <g transform={`translate(0, ${position === 'bottom' ? top + height : top})`} ref={ref}>
+    <g transform={`translate(0, ${position === 'bottom' ? top + height : top})`}>
       {!disableLine && (
         <line
           x1={xScale.range()[0]}

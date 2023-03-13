@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { DEFAULT_Y_AXIS_KEY } from '../const';
 import { CartesianContext } from '../context/CartesianContextProvider';
-import { CoordinateContext } from '../context/CoordinateContext';
 import { DrawingContext } from '../context/DrawingProvider';
 import useTicks from '../hooks/useTicks';
 
@@ -55,7 +54,7 @@ export interface YAxisProps {
   tickSize?: number;
 }
 
-export function YAxis(props: YAxisProps) {
+function YAxis(props: YAxisProps) {
   const {
     position = 'left',
     axisId = DEFAULT_Y_AXIS_KEY,
@@ -83,7 +82,7 @@ export function YAxis(props: YAxisProps) {
 
   const positionSigne = position === 'right' ? 1 : -1;
   return (
-    <g transform={`translate(${position === 'right' ? left + width : left}, 0)`} ref={ref}>
+    <g transform={`translate(${position === 'right' ? left + width : left}, 0)`}>
       {!disableLine && (
         <line
           y1={yScale.range()[0]}

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { extent } from 'd3-array';
 
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from './const';
-import Surface from './internals/components/Surface';
+import Surface from './Surface';
 import { AxisConfig, Scales } from './models/axis';
 import { LayoutConfig } from './models/layout';
 import { AllSeriesType, CartesianSeriesType } from './models/seriesType';

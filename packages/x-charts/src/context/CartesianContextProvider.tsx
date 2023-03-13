@@ -1,13 +1,20 @@
 import * as React from 'react';
-import { getExtremumX, getExtremumY } from '../BarChart/extremums';
+import {
+  getExtremumX as getBarExtremumX,
+  getExtremumY as getBarExtremumY,
+} from '../BarChart/extremums';
+import {
+  getExtremumX as getScatterExtremumX,
+  getExtremumY as getScatterExtremumY,
+} from '../ScatterChart/extremums';
 import { D3Scale, getScale } from '../hooks/useScale';
 import { AxisConfig, Scales } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 
 type CartesianContextProviderProps = {
-  xAxis: AxisConfig[];
-  yAxis: AxisConfig[];
+  xAxis?: AxisConfig[];
+  yAxis?: AxisConfig[];
   children: React.ReactNode;
 };
 
@@ -15,14 +22,26 @@ interface CompoutedAxisConfig extends Omit<AxisConfig, 'scale'> {
   scale: D3Scale;
 }
 
+// TODO: those migt be better placed in a distinc file
+const getExtremumX = {
+  bar: getBarExtremumX,
+  scatter: getScatterExtremumX,
+};
+const getExtremumY = {
+  bar: getBarExtremumY,
+  scatter: getScatterExtremumY,
+};
+
 export const CartesianContext = React.createContext<{
   /**
    * Mapping from axis key to scalling function
    */
   xAxis: {
+    DEFAULT_X_AXIS_KEY: CompoutedAxisConfig;
     [axisKey: string]: CompoutedAxisConfig;
   };
   yAxis: {
+    DEFAULT_X_AXIS_KEY: CompoutedAxisConfig;
     [axisKey: string]: CompoutedAxisConfig;
   };
 }>({ xAxis: {}, yAxis: {} });
@@ -39,8 +58,30 @@ export function CartesianContextProvider({
     const completedXAxis = {};
     const completedYAxis = {};
 
-    xAxis.forEach((axis) => {
-      const [minData, maxData] = getExtremumX({ series: formattedSeries.bar?.series, xAxis: axis });
+    [
+      ...(xAxis ?? []),
+      {
+        id: 'DEFAULT_X_AXIS_KEY',
+        scale: 'linear',
+      },
+    ].forEach((axis) => {
+      const [minData, maxData] = Object.keys(getExtremumX).reduce(
+        ([currentMinData, currentMaxData], chartType) => {
+          if (formattedSeries[chartType]?.series === undefined) {
+            return [currentMinData, currentMaxData];
+          }
+          const [minChartTypeData, maxChartTypeData] = getExtremumX[chartType]({
+            series: formattedSeries[chartType]?.series,
+            xAxis: axis,
+          });
+          return [
+            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, minData),
+            currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
+          ];
+        },
+        [null, null],
+      );
+
       const scale = axis.scale ?? ('linea' as Scales);
       completedXAxis[axis.id] = {
         ...axis,
@@ -50,8 +91,30 @@ export function CartesianContextProvider({
       };
     });
 
-    yAxis.forEach((axis) => {
-      const [minData, maxData] = getExtremumY({ series: formattedSeries.bar?.series, yAxis: axis });
+    [
+      ...(yAxis ?? []),
+      {
+        id: 'DEFAULT_Y_AXIS_KEY',
+        scale: 'linear',
+      },
+    ].forEach((axis) => {
+      const [minData, maxData] = Object.keys(getExtremumY).reduce(
+        ([currentMinData, currentMaxData], chartType) => {
+          if (formattedSeries[chartType]?.series === undefined) {
+            return [currentMinData, currentMaxData];
+          }
+          const [minChartTypeData, maxChartTypeData] = getExtremumY[chartType]({
+            series: formattedSeries[chartType]?.series,
+            yAxis: axis,
+          });
+          return [
+            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, minData),
+            currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
+          ];
+        },
+        [null, null],
+      );
+
       const scale = axis.scale ?? ('linea' as Scales);
       completedYAxis[axis.id] = {
         ...axis,
@@ -62,7 +125,15 @@ export function CartesianContextProvider({
     });
 
     return { xAxis: completedXAxis, yAxis: completedYAxis };
-  }, [drawingArea, formattedSeries.bar?.series, xAxis, yAxis]);
+  }, [
+    drawingArea.height,
+    drawingArea.left,
+    drawingArea.top,
+    drawingArea.width,
+    formattedSeries,
+    xAxis,
+    yAxis,
+  ]);
 
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }

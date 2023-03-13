@@ -1,5 +1,7 @@
 import * as React from 'react';
 import barSeriesFormatter from '../BarChart/formatter';
+import scatterSeriesFormatter from '../ScatterChart/formatter';
+
 import { AllSeriesType } from '../models/seriesType';
 
 type SeriesContextProviderProps = {
@@ -11,7 +13,6 @@ export type FormattedSeries = {
   [serriesType in AllSeriesType['type']]?: {
     series: { [id: string]: AllSeriesType };
     seriesOrder: string[];
-
     /**
      * Only for stackable series (bars, lines)
      */
@@ -23,6 +24,7 @@ export const SeriesContext = React.createContext<FormattedSeries>({});
 
 const seriesTypeFormatter: { [type in AllSeriesType['type']]?: (series: any) => any } = {
   bar: barSeriesFormatter,
+  scatter: scatterSeriesFormatter,
 };
 
 const formatSeries = (series: AllSeriesType[]) => {
@@ -41,8 +43,10 @@ const formatSeries = (series: AllSeriesType[]) => {
 
   // Apply formater on a type group
   Object.keys(seriesTypeFormatter).forEach((type) => {
-    formattedSeries[type] =
-      seriesTypeFormatter[type]?.(formattedSeries[type]) ?? formattedSeries[type];
+    if (formattedSeries[type] !== undefined) {
+      formattedSeries[type] =
+        seriesTypeFormatter[type]?.(formattedSeries[type]) ?? formattedSeries[type];
+    }
   });
 
   return formattedSeries;
