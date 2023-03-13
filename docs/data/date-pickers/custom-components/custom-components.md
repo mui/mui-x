@@ -134,9 +134,9 @@ It displays the current values and allows to switch between different views.
 
 ### Component props
 
-You can customize how the toolbar display the current value with `toolbarFormat`.
+You can customize how the toolbar displays the current value with `toolbarFormat`.
 By default empty values are replaced by `__`.
-This can be modified by using `toolbarPlaceholder` props
+This can be modified by using `toolbarPlaceholder` props.
 
 By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
 This behavior can be overridden by setting the `hidden` prop:
@@ -147,8 +147,9 @@ This behavior can be overridden by setting the `hidden` prop:
     toolbar: {
       // Customize value display
       toolbarFormat: 'YYYY',
+      // Change what is displayed given an empty value
       toolbarPlaceholder: '??',
-      // Hidde the toolbar
+      // Show the toolbar
       hidden: false,
     },
   }}
@@ -157,7 +158,7 @@ This behavior can be overridden by setting the `hidden` prop:
 
 ### Component
 
-Each component comes with its own toolbar (`DatePickerToolbar`, `DatePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
+Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
 
 {{"demo": "ToolbarComponent.js"}}
 
