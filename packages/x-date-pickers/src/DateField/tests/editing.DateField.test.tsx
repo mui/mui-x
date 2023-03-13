@@ -422,6 +422,21 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it.only('should support day with letter suffix', function test() {
+      if (!['date-fns', 'dayjs'].includes(adapterName)) {
+        this.skip();
+      }
+
+      testFieldChange({
+        format: adapterName === 'date-fns' ? 'do' : 'Do',
+        keyStrokes: [
+          { value: '1', expected: '1st' },
+          { value: '2', expected: '12th' },
+          { value: '2', expected: '2nd' },
+        ],
+      });
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.year,
