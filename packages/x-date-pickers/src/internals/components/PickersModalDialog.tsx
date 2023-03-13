@@ -21,7 +21,7 @@ export interface PickersModalDialogSlotsComponent {
    */
   MobilePaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
-   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions).
+   * Custom component for the mobile dialog [Transition](https://mui.com/material-ui/transitions/).
    * @default Fade from @mui/material
    */
   MobileTransition?: React.JSXElementConstructor<MuiTransitionProps>;
@@ -37,7 +37,7 @@ export interface PickersModalDialogSlotsComponentsProps {
    */
   mobilePaper?: Partial<MuiPaperProps>;
   /**
-   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions) component.
+   * Props passed down to the mobile [Transition](https://mui.com/material-ui/transitions/) component.
    */
   mobileTransition?: Partial<MuiTransitionProps>;
 }
