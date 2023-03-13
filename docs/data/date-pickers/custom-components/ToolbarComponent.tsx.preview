@@ -1,0 +1,15 @@
+<StaticDatePicker
+  defaultValue={dayjs('2022-04-17')}
+  slots={{
+    toolbar: CustomToolbar,
+  }}
+  slotProps={{
+    toolbar: {
+      toolbarFormat: 'YYYY',
+      toolbarPlaceholder: '??',
+    },
+    actionBar: {
+      actions: ['clear'],
+    },
+  }}
+/>
