@@ -423,7 +423,8 @@ describe('<DateField /> - Editing', () => {
     });
 
     it('should support day with letter suffix', function test() {
-      if (!['date-fns', 'dayjs'].includes(adapterName)) {
+      // Luxon don't have any day format with a letter suffix
+      if (adapterName === 'luxon') {
         this.skip();
       }
 
