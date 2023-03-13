@@ -48,7 +48,11 @@ export interface UseMobileRangePickerSlotsComponentsProps<TDate, TView extends D
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, unknown>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, unknown>;
-  textField?: SlotComponentProps<typeof TextField, {}, unknown>;
+  textField?: SlotComponentProps<
+    typeof TextField,
+    {},
+    { position?: 'start' | 'end' } & Record<string, any>
+  >;
   toolbar?: ExportedBaseToolbarProps;
 }
 
