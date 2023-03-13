@@ -5,6 +5,7 @@
 :::info
 🔥 Head over to the [v6 announcement blog post](https://mui.com/blog/mui-x-v6/) for a detailed overview of each new feature.
 :::
+
 ## Data Grid
 
 - [ApiRef available in the community version](/x/react-data-grid/api-object/)
@@ -21,7 +22,6 @@
   Select a cell or group of cells like in an Excel sheet.
   Cell selection is a powerful and flexible way to select data in the Data Grid.
   It's also the base for bulk editing and clipboard importing (coming soon).
-
 
 ## Date and Time pickers
 
