@@ -41,7 +41,7 @@ It will only call the `onChange` callback when:
 
 - all the sections of the modified date are now filled
 - all the sections of the modified date are now empty (will return `null` for the modified date)
-- all the sections of the modified date were filled, and the user cleaned the content of one section
+- all the sections of the modified date were filled, and the user cleaned the content of one section (will return `Invalid date` for modified date)
 
 #### On single element fields
 
