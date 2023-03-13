@@ -39,7 +39,7 @@ The field components have an internal state to update the visible value.
 
 It will only call the `onChange` callback when:
 
-- all the sections of the modified date are now filled
+- all the sections of the modified date are filled
 - all the sections of the modified date are empty (will return `null` for the modified date)
 - all the sections of the modified date were filled, and the user cleaned the content of one section (will return `Invalid date` for modified date)
 
