@@ -124,8 +124,8 @@ export const useMobileRangePicker = <
       const externalInputProps = resolveComponentProps(innerSlotProps?.textField, ownerState);
       return {
         ...(isToolbarHidden && { id: `${labelId}-${ownerState.position}` }),
-        ...externalInputProps,
         ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
+        ...externalInputProps,
       };
     },
     root: (ownerState) => {
