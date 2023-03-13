@@ -15,7 +15,7 @@
 - [Improved column menu](/x/react-data-grid/column-menu/)
 
   The v6 column menu now provides support for icons, menu groups, custom items and actions, and more.
-  We've redesigned this sub-component to make it as extensible as possible.
+  This subcomponent was redesigned to be as extensible as possible.
 
 - [Cell range selection](/x/react-data-grid/cell-selection/) [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan)
 
@@ -39,7 +39,7 @@
 
 - [Improved layout customization](/x/react-date-pickers/custom-layout/)
 
-  Combining the slots concept with the grid layout, you can now rearrange, extend, and customize most of the sub-components used in the Pickers UI.
+  Combining the slots concept with the grid layout, you can now rearrange, extend, and customize most of the subcomponents used in the Pickers UI.
 
 - [Shortcuts for picking specific dates in a calendar](/x/react-date-pickers/shortcuts/)
 
