@@ -35,12 +35,13 @@ As an example, you could override the `ActionBar` and pass additional props to t
 />
 ```
 
+To modify components position, have a look at the [custom layout](/x/react-date-pickers/custom-layout/) docs page.
+
 ## Action bar
 
 ### Component props
 
 The action bar is available on all picker components.
-It is located at the bottom of the picker's views.
 By default, it contains no action on desktop, and the actions **Cancel** and **Accept** on mobile.
 
 You can override the actions displayed by passing the `actions` prop to the `actionBar` within `slotProps`, as shown here:
@@ -87,6 +88,7 @@ In the example below, the actions are the same as in the section above, but they
 ## Tabs
 
 The tabs are available on all date time picker components.
+It allows to switch between date and time interfaces.
 
 ### Component props
 
@@ -125,6 +127,41 @@ In the example below, the tabs are using different icons and have an additional 
 
 {{"demo": "Tabs.js"}}
 
+## Toolbar
+
+The toolbar is available on all date time picker components.
+It displays the current values and allows to switch between different views.
+
+### Component props
+
+You can customize how the toolbar displays the current value with `toolbarFormat`.
+By default empty values are replaced by `__`.
+This can be modified by using `toolbarPlaceholder` props.
+
+By default, the toolbar is `hidden` on desktop, and `visible` on mobile.
+This behavior can be overridden by setting the `hidden` prop:
+
+```jsx
+<DatePicker
+  slotProps={{
+    toolbar: {
+      // Customize value display
+      toolbarFormat: 'YYYY',
+      // Change what is displayed given an empty value
+      toolbarPlaceholder: '??',
+      // Show the toolbar
+      hidden: false,
+    },
+  }}
+/>
+```
+
+### Component
+
+Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolbar`, and `DateTimePickerToolbar`) that you can reuse and customize.
+
+{{"demo": "ToolbarComponent.js"}}
+
 ## Arrow switcher
 
 The following slots let you customize how to render the buttons and icons for an arrow switcher component—the component
@@ -141,3 +178,8 @@ You can pass props to the icons and buttons as shown below:
 You can pass custom components—to replace the icons, for example—as shown below:
 
 {{"demo": "ArrowSwitcherComponent.js", "defaultCodeOpen": false}}
+
+## Shortcuts
+
+You can add shortcuts to every pickers.
+For more information, check the [dedicated page](/x/react-date-pickers/shortcuts/)

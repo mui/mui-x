@@ -41,7 +41,7 @@ function addDeployPreviewUrls() {
    * e.g. ['docs/data/data-grid/editing/editing.md']
    */
   function formatFileToLink(docsPath) {
-    const url = docsPath.replace('docs/data', 'x/').replace(/\/[^/]+\.md$/, '/');
+    const url = docsPath.replace('docs/data', 'x').replace(/\/[^/]+\.md$/, '/');
 
     return url
       .replace('data-grid/', 'react-data-grid/')
