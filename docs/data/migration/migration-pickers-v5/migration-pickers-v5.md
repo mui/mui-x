@@ -130,7 +130,7 @@ const theme = createTheme({
 ```
 
 :::success
-If you are using TypeScript, please make sure you added the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
 :::
 
 ### Remove the keyboard view
