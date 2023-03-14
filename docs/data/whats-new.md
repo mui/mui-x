@@ -8,9 +8,9 @@
 
 ## Data Grid
 
-- [ApiRef moved to the MIT open source version](/x/react-data-grid/api-object/)
+- [ApiRef moved to the MIT (Community) version](/x/react-data-grid/api-object/)
 
-  Manage pagination, scrolling, state, and other attributes through the Data Grid's API object— previously only in commercial plans, now available for all.
+  Manage pagination, scrolling, state, and other attributes through the Data Grid's API object— previously only in commercial plans, now available for all users.
 
 - [Improved column menu](/x/react-data-grid/column-menu/)
 
