@@ -50,8 +50,8 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   // Calendar labels
   calendarWeekNumberHeaderLabel: 'Semaine',
   calendarWeekNumberHeaderText: '#',
-  calendarWeekNumberAriaLabelText: weekNumber => `Semaine ${weekNumber}`,
-  calendarWeekNumberText: weekNumber => `${weekNumber}`,
+  calendarWeekNumberAriaLabelText: (weekNumber) => `Semaine ${weekNumber}`,
+  calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open picker labels
   openDatePickerDialogue: (value, utils) =>
@@ -68,8 +68,8 @@ const frFRPickers: Partial<PickersLocaleText<any>> = {
   dateTableLabel: 'choix de la date',
 
   // Field section placeholders
-  fieldYearPlaceholder: params => 'A'.repeat(params.digitAmount),
-  fieldMonthPlaceholder: params => params.contentType === 'letter' ? 'MMMM' : 'MM',
+  fieldYearPlaceholder: (params) => 'A'.repeat(params.digitAmount),
+  fieldMonthPlaceholder: (params) => (params.contentType === 'letter' ? 'MMMM' : 'MM'),
   fieldDayPlaceholder: () => 'JJ',
   // fieldWeekDayPlaceholder: params => params.contentType === 'letter' ? 'EEEE' : 'EE',
   fieldHoursPlaceholder: () => 'hh',
