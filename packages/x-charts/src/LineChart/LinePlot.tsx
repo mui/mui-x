@@ -5,7 +5,7 @@ import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
 function LinePlot() {
-  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).bar;
+  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).line;
   const { xAxis, yAxis } = React.useContext(CartesianContext);
 
   const seriesPerAxis: { [key: string]: LineSeriesType[] } = {};
@@ -47,6 +47,9 @@ function LinePlot() {
           return groupIds.flatMap((seriesId) => {
             const { stackedData } = series[seriesId];
             const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
+            console.log(d3Data?.map((d) => d.y[1]));
+            console.log(d3Data?.map((d) => yScale(d.y[1])));
+            
             return (
               <React.Fragment key={seriesId}>
                 {!!series[seriesId].area && (

@@ -37,7 +37,7 @@ export default function BarPlot() {
 
         return stackingGroups.flatMap((groupIds, groupIndex) => {
           return groupIds.flatMap((seriesId) => {
-            const { stackedData } = series[seriesId];
+            const { stackedData, color } = series[seriesId];
 
             return stackedData.map(([baseline, value], dataIndex: number) => {
               return (
@@ -47,6 +47,7 @@ export default function BarPlot() {
                   y={yScale(value)}
                   height={yScale(baseline) - yScale(value)}
                   width={barWidth}
+                  fill={color}
                   rx="5px"
                 />
               );

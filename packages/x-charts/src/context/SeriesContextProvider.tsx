@@ -1,6 +1,7 @@
 import * as React from 'react';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
+import lineSeriesFormatter from '../LineChart/formatter';
 
 import { AllSeriesType } from '../models/seriesType';
 
@@ -25,6 +26,7 @@ export const SeriesContext = React.createContext<FormattedSeries>({});
 const seriesTypeFormatter: { [type in AllSeriesType['type']]?: (series: any) => any } = {
   bar: barSeriesFormatter,
   scatter: scatterSeriesFormatter,
+  line: lineSeriesFormatter,
 };
 
 const formatSeries = (series: AllSeriesType[]) => {

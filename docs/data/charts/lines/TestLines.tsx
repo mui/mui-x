@@ -6,39 +6,38 @@ export default function TestLines() {
     <LineChart
       xAxis={[
         {
-          id: 'barCategories',
+          id: 'lineCategories',
           data: [2, 5, 20, 23, 25],
-          scale: 'band',
         },
       ]}
       yAxis={[
         {
-          id: 'barCategoriesY',
+          id: 'lineCategoriesY',
           scale: 'linear',
         },
       ]}
       series={[
         {
-          type: 'bar',
+          type: 'line',
           id: 's1',
           stack: '1',
           area: { color: 'red' },
-          xAxisKey: 'barCategories',
-          yAxisKey: 'barCategoriesY',
+          xAxisKey: 'lineCategories',
+          yAxisKey: 'lineCategoriesY',
           data: [2, 5, 3, 4, 1],
         },
         {
-          type: 'bar',
+          type: 'line',
           id: 's2',
-          xAxisKey: 'barCategories',
-          yAxisKey: 'barCategoriesY',
+          xAxisKey: 'lineCategories',
+          yAxisKey: 'lineCategoriesY',
           data: [10, 3, 1, 2, 10],
         },
         {
-          type: 'bar',
+          type: 'line',
           id: 's3',
-          xAxisKey: 'barCategories',
-          yAxisKey: 'barCategoriesY',
+          xAxisKey: 'lineCategories',
+          yAxisKey: 'lineCategoriesY',
           stack: '1',
           area: { color: 'blue' },
           data: [10, 3, 1, 2, 10],

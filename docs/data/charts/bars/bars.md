@@ -15,3 +15,4 @@ title: Charts - Bars
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.
 
 {{"demo": "TestBars.js", "bg": "inline"}}
+{{"demo": "Composition.js", "bg": "inline"}}

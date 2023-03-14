@@ -7,6 +7,10 @@ import {
   getExtremumX as getScatterExtremumX,
   getExtremumY as getScatterExtremumY,
 } from '../ScatterChart/extremums';
+import {
+  getExtremumX as getLineExtremumX,
+  getExtremumY as getLineExtremumY,
+} from '../LineChart/extremums';
 import { D3Scale, getScale } from '../hooks/useScale';
 import { AxisConfig, Scales } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
@@ -26,10 +30,12 @@ interface CompoutedAxisConfig extends Omit<AxisConfig, 'scale'> {
 const getExtremumX = {
   bar: getBarExtremumX,
   scatter: getScatterExtremumX,
+  line: getLineExtremumX,
 };
 const getExtremumY = {
   bar: getBarExtremumY,
   scatter: getScatterExtremumY,
+  line: getLineExtremumY,
 };
 
 export const CartesianContext = React.createContext<{
@@ -75,7 +81,7 @@ export function CartesianContextProvider({
             xAxis: axis,
           });
           return [
-            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, minData),
+            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, currentMinData),
             currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
           ];
         },
@@ -103,18 +109,21 @@ export function CartesianContextProvider({
           if (formattedSeries[chartType]?.series === undefined) {
             return [currentMinData, currentMaxData];
           }
+          console.log(chartType);
+          console.log(formattedSeries[chartType]?.series);
           const [minChartTypeData, maxChartTypeData] = getExtremumY[chartType]({
             series: formattedSeries[chartType]?.series,
             yAxis: axis,
           });
           return [
-            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, minData),
+            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, currentMinData),
             currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
           ];
         },
         [null, null],
       );
 
+      console.log({ axis: axis.id, minData, maxData });
       const scale = axis.scale ?? ('linea' as Scales);
       completedYAxis[axis.id] = {
         ...axis,

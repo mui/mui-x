@@ -39,5 +39,5 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
       [null, null],
     );
 
-  return [minY || 0, maxY || 0];
+  return [minY, maxY];
 };

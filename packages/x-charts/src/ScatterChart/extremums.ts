@@ -10,9 +10,8 @@ type GetExtremumParamsY = {
   yAxis: AxisConfig;
 };
 
-type GetExtremumResult = [number, number];
-
 type NUllableExtremum = [number, number] | [null, null];
+type GetExtremumResult = NUllableExtremum;
 
 export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
   const { series, xAxis } = params;
@@ -41,7 +40,7 @@ export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
       [null, null],
     );
 
-  return [minX || 0, maxX || 0];
+  return [minX, maxX];
 };
 
 export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
@@ -71,5 +70,5 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
       [null, null],
     );
 
-  return [minY || 0, maxY || 0];
+  return [minY, maxY];
 };
