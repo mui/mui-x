@@ -284,6 +284,16 @@ DateField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  unstableFieldRef: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({
+      current: PropTypes.shape({
+        getActiveSectionIndex: PropTypes.func.isRequired,
+        getSections: PropTypes.func.isRequired,
+        setSelectedSections: PropTypes.func.isRequired,
+      }),
+    }),
+  ]),
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -86,7 +86,21 @@ You need to make sure the input is focused before imperatively updating the sele
 
 {{"demo": "ControlledSelectedSections.js", "defaultCodeOpen": false }}
 
+#### Usage with multi input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+For multi input range fields, you just have to make sure that the right input is focused before updating the selected section(s).
+Otherwise, the section(s) might be selected on the wrong input.
+
+{{"demo": "ControlledSelectedSectionsMultiInputRangeField.js", "defaultCodeOpen": false }}
+
+#### Usage with single input range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+For single input range fields, you won't be able to use the section name to select a single section because each section is present both in the start and in the end date.
+Instead, you can pass the index of the section using the `unstableFieldRef` prop to access the full list of sections:
+
 :::warning
-For range fields, you can't use the string format since each section is present twice.
-We will add new apis in the future to better support this use case.
+The `unstableFieldRef` is not stable yet. More specifically, the shape of the `section` object might be modified in the near future.
+We advise you to use it only if needed.
 :::
+
+{{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}
