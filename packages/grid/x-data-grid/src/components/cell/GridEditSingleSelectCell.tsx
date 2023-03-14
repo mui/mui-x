@@ -67,6 +67,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
 
   const baseSelectProps = rootProps.slotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
+  const { MenuProps, ...otherBaseSelectProps } = rootProps.slotProps?.baseSelect || {};
 
   useEnhancedEffect(() => {
     if (hasFocus) {
@@ -144,12 +145,13 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       onOpen={handleOpen}
       MenuProps={{
         onClose: handleClose,
+        ...MenuProps,
       }}
       error={error}
       native={isSelectNative}
       fullWidth
       {...other}
-      {...rootProps.slotProps?.baseSelect}
+      {...otherBaseSelectProps}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);

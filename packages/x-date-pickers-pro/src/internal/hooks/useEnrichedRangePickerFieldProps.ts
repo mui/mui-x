@@ -60,6 +60,7 @@ export interface RangePickerFieldSlotsComponentsProps<TDate> {
   >;
   fieldRoot?: SlotComponentProps<typeof Stack, {}, Record<string, any>>;
   fieldSeparator?: SlotComponentProps<typeof Typography, {}, Record<string, any>>;
+
   textField?: SlotComponentProps<
     typeof TextField,
     {},
@@ -206,8 +207,8 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
 
       return {
         ...(labelId != null && { id: `${labelId}-${ownerState.position!}` }),
-        ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
         ...inputProps,
+        ...resolveComponentProps(pickerSlotProps?.textField, ownerState),
       };
     },
     root: (ownerState) => {
@@ -216,8 +217,8 @@ const useMultiInputFieldSlotProps = <TDate, TView extends DateOrTimeView, TError
       };
 
       return {
-        ...resolveComponentProps(pickerSlotProps?.fieldRoot, ownerState),
         ...rootProps,
+        ...resolveComponentProps(pickerSlotProps?.fieldRoot, ownerState),
       };
     },
     separator: pickerSlotProps?.fieldSeparator,

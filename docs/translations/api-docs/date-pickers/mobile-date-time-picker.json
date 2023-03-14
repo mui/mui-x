@@ -71,7 +71,7 @@
     "Layout": "Custom component for wrapping the layout.\nIt wraps the toolbar, views, action bar, and shortcuts.",
     "LeftArrowIcon": "Icon displayed in the left view switch button.",
     "MobilePaper": "Custom component for the paper rendered inside the mobile picker&#39;s Dialog.",
-    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "MobileTransition": "Custom component for the mobile dialog <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "NextIconButton": "Button allowing to switch to the right view.",
     "PreviousIconButton": "Button allowing to switch to the left view.",
     "RightArrowIcon": "Icon displayed in the right view switch button.",

@@ -21,4 +21,5 @@ export * from './ukUA';
 export * from './urPK';
 export * from './beBY';
 export * from './ruRU';
+export * from './heIL';
 export * from './utils/pickersLocaleTextApi';
