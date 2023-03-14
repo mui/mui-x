@@ -1,12 +1,12 @@
 import { AxisConfig } from '../models/axis';
-import { StackedBarSeriesType } from './formatter';
+import { StackedLineSeriesType } from './formatter';
 
 type GetExtremumParamsX = {
-  series: { [id: string]: StackedBarSeriesType };
+  series: { [id: string]: StackedLineSeriesType };
   xAxis: AxisConfig;
 };
 type GetExtremumParamsY = {
-  series: { [id: string]: StackedBarSeriesType };
+  series: { [id: string]: StackedLineSeriesType };
   yAxis: AxisConfig;
 };
 

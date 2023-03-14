@@ -3,7 +3,37 @@ import {
   stackOrderNone as d3StackOrderNone,
   stackOffsetNone as d3StackOffsetNone,
 } from 'd3-shape';
-import { StackableSeriesType } from '../models/seriesType';
+import { BarSeriesType, LineSeriesType, StackableSeriesType } from '../models/seriesType';
+
+type StackableSeries = { [id: string]: BarSeriesType } | { [id: string]: LineSeriesType };
+
+type FormatterParams = { series: StackableSeries; seriesOrder: string[] };
+
+/**
+ * Takes a set of series and group their ids
+ * @param series the object of all bars series
+ * @returns an array of array of ids grouped by stacking groups
+ */
+export const getStackingGroups = (params: FormatterParams) => {
+  const { series, seriesOrder } = params;
+
+  const stackingGroups: string[][] = [];
+  const stackIndex = {};
+
+  seriesOrder.forEach((id) => {
+    const stack = series[id].stack;
+    if (stack === undefined) {
+      stackingGroups.push([id]);
+    } else if (stackIndex[stack] === undefined) {
+      stackIndex[stack] = stackingGroups.length;
+      stackingGroups.push([id]);
+    } else {
+      stackingGroups[stackIndex[stack]].push(id);
+    }
+  });
+
+  return stackingGroups;
+};
 
 const stackSeries = <SeriesT extends StackableSeriesType>(
   series: SeriesT[],

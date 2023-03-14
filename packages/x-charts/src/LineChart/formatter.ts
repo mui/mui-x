@@ -4,20 +4,21 @@ import {
   stackOffsetNone as d3StackOffsetNone,
 } from 'd3-shape';
 import { getStackingGroups } from '../internals/stackSeries';
-import { BarSeriesType } from '../models/seriesType';
+import { LineSeriesType } from '../models/seriesType';
 
-export type FormatterParams = { series: { [id: string]: BarSeriesType }; seriesOrder: string[] };
+export type FormatterParams = { series: { [id: string]: LineSeriesType }; seriesOrder: string[] };
 
-export interface StackedBarSeriesType extends BarSeriesType {
+export interface StackedLineSeriesType extends LineSeriesType {
   stackedData: [number, number][];
 }
 
 export type FormatterResult = {
-  series: { [id: string]: StackedBarSeriesType };
+  series: { [id: string]: StackedLineSeriesType };
   seriesOrder: string[];
   stackingGroups: string[][];
 };
 
+// For now it's a copy past of bar charts formatter, but maybe will deverge latter
 const formatter = (params: FormatterParams): FormatterResult => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
