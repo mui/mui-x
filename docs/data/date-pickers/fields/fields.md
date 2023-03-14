@@ -43,9 +43,9 @@ It will only call the `onChange` callback when:
 - all the sections of the modified date are empty (will return `null` for the modified date)
 - all the sections of the modified date were filled, and the user cleaned the content of one section (will return `Invalid date` for modified date)
 
-#### On single element fields
+#### On simple fields
 
-On a single item field (`DateField` / `DateTimeField` / `TimeField`),
+On simple fields (`DateField` / `DateTimeField` / `TimeField`),
 `onChange` will be called if the date matches one of the condition above.
 
 In the example below, `onChange` will be called once when filling the first section and once when filling the last one:
@@ -54,7 +54,7 @@ In the example below, `onChange` will be called once when filling the first sect
 
 #### On range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
 
-On a range field (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
+On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
 `onChange` will be called if the date you are modifying is matching one of the condition above,
 even if the other date does not.
 
