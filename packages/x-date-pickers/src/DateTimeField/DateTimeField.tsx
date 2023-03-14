@@ -276,6 +276,11 @@ DateTimeField.propTypes = {
     }),
   ]),
   /**
+   * Control whether the input selection is controlled by field.
+   * @default true
+   */
+  shouldControlSelection: PropTypes.bool,
+  /**
    * Disable specific clock time.
    * @param {number} clockValue The value to check.
    * @param {TimeView} view The clock type of the timeValue.
