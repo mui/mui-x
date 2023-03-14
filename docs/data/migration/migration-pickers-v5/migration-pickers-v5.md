@@ -129,6 +129,10 @@ const theme = createTheme({
 });
 ```
 
+:::success
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+:::
+
 ### Remove the keyboard view
 
 The picker components no longer have a keyboard view to render the input inside the modal on mobile.
