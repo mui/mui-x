@@ -73,6 +73,7 @@ export const useField = <
 
   const syncSelectionFromDOM = () => {
     if (!shouldControlSelection) {
+      setSelectedSections(null);
       return;
     }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
@@ -333,6 +334,10 @@ export const useField = <
 
   useEnhancedEffect(() => {
     if (selectedSectionIndexes == null) {
+      if (inputRef.current!.selectionStart !== 0 || inputRef.current!.selectionEnd !== 0) {
+        // Ensure input selection range is in sync with component selection indexes
+        inputRef.current!.setSelectionRange(0, 0);
+      }
       return;
     }
 
