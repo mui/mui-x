@@ -107,7 +107,7 @@ export const cleanDigitSectionValue = <TDate>(
   hasLeadingZeros: boolean,
   sectionBoundaries: FieldSectionValueBoundaries<TDate, any>,
 ) => {
-  const hasLetterPrefix = () => {
+  const hasLetter = () => {
     const startOfYear = utils.startOfYear(utils.date()!);
     const startOfYearStr = utils.formatByString(startOfYear, format);
 
@@ -115,17 +115,17 @@ export const cleanDigitSectionValue = <TDate>(
   };
 
   if (process.env.NODE_ENV !== 'production') {
-    if (sectionType !== 'day' && hasLetterPrefix()) {
+    if (sectionType !== 'day' && hasLetter()) {
       throw new Error(
         [
-          `MUI: The token "${format}" is a digit format with a letter prefix.'
+          `MUI: The token "${format}" is a digit format with letter in it.'
              This type of format is only supported for 'day' sections`,
         ].join('\n'),
       );
     }
   }
 
-  if (sectionType === 'day' && hasLetterPrefix()) {
+  if (sectionType === 'day' && hasLetter()) {
     const date = utils.setDate(
       (sectionBoundaries as FieldSectionValueBoundaries<TDate, 'day'>).longestMonth,
       value,
@@ -140,10 +140,10 @@ export const cleanDigitSectionValue = <TDate>(
     const size = utils.formatByString(utils.date()!, format).length;
     let cleanValueStr = valueStr;
 
-    // We remove the leading zeros
+    // Remove the leading zeros
     cleanValueStr = Number(cleanValueStr).toString();
 
-    // We add enough leading zeros to fill the section
+    // Add enough leading zeros to fill the section
     while (cleanValueStr.length < size) {
       cleanValueStr = `0${cleanValueStr}`;
     }
