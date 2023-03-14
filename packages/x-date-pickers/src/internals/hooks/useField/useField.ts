@@ -64,6 +64,7 @@ export const useField = <
     fieldValueManager,
     valueManager,
     validator,
+    shouldControlSelection = true,
   } = params;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -71,6 +72,9 @@ export const useField = <
   const focusTimeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
 
   const syncSelectionFromDOM = () => {
+    if (!shouldControlSelection) {
+      return;
+    }
     const browserStartIndex = inputRef.current!.selectionStart ?? 0;
     const nextSectionIndex =
       browserStartIndex <= state.sections[0].startInInput
@@ -107,7 +111,7 @@ export const useField = <
         return;
       }
 
-      if (selectedSectionIndexes != null) {
+      if (selectedSectionIndexes != null || !shouldControlSelection) {
         return;
       }
 

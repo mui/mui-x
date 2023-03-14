@@ -67,6 +67,7 @@ export const useFieldState = <
       selectedSections: selectedSectionsProp,
       onSelectedSectionsChange,
     },
+    shouldControlSelection,
   } = params;
 
   const firstDefaultValue = React.useRef(defaultValue);
@@ -124,6 +125,9 @@ export const useFieldState = <
   });
 
   const setSelectedSections = (newSelectedSections: FieldSelectedSections) => {
+    if (!shouldControlSelection) {
+      return;
+    }
     innerSetSelectedSections(newSelectedSections);
     onSelectedSectionsChange?.(newSelectedSections);
 

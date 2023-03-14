@@ -37,6 +37,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
   const adapter = useLocalizationContext<TDate>();
 
   const { value: valueProp, defaultValue, format, onChange, disabled, readOnly } = sharedProps;
+  const { shouldControlSelection, ...otherSharedProps } = sharedProps;
 
   const firstDefaultValue = React.useRef(defaultValue);
   const [value, setValue] = useControlled<DateRange<TDate>>({
@@ -61,7 +62,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
         validationError: validateDateRange({
           adapter,
           value: newDateRange,
-          props: { ...sharedProps, value: newDateRange },
+          props: { ...otherSharedProps, value: newDateRange },
         }),
       };
 
@@ -78,7 +79,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     DateRangeValidationError,
     DateRangeComponentValidationProps<TDate>
   >(
-    { ...sharedProps, value },
+    { ...otherSharedProps, value },
     validateDateRange,
     rangeValueManager.isSameError,
     rangeValueManager.defaultErrorState,
@@ -93,6 +94,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     value: valueProp === undefined ? undefined : valueProp[0],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[0],
     onChange: handleStartDateChange,
+    shouldControlSelection,
   };
 
   const endInputProps: UseDateFieldComponentProps<TDate, TChildProps> = {
@@ -104,6 +106,7 @@ export const useMultiInputDateRangeField = <TDate, TChildProps extends {}>({
     value: valueProp === undefined ? undefined : valueProp[1],
     defaultValue: defaultValue === undefined ? undefined : defaultValue[1],
     onChange: handleEndDateChange,
+    shouldControlSelection,
   };
 
   const startDateResponse = useDateField<TDate, TChildProps>({

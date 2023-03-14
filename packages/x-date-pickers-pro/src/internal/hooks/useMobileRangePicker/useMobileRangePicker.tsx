@@ -175,7 +175,12 @@ export const useMobileRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
+      <Field
+        {...fieldProps}
+        slots={slotsForField}
+        slotProps={slotPropsForField}
+        shouldControlSelection={false}
+      />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout
           {...layoutProps}

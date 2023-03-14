@@ -65,6 +65,7 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     selectedSections,
     onSelectedSectionsChange,
     ampm,
+    shouldControlSelection,
     ...other
   } = useDefaultizedDateTimeField<TDate, TChildProps>(props);
 
@@ -99,5 +100,6 @@ export const useDateTimeField = <TDate, TChildProps extends {}>({
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDateTime,
     valueType: 'date-time',
+    shouldControlSelection,
   });
 };

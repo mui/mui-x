@@ -21,6 +21,11 @@ export interface UseTimeFieldProps<TDate>
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm?: boolean;
+  /**
+   * Control whether the input selection is controlled by field.
+   * @default true
+   */
+  shouldControlSelection?: boolean;
 }
 
 export type UseTimeFieldDefaultizedProps<TDate> = DefaultizedProps<
