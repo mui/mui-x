@@ -31,7 +31,7 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
 export interface MultiInputDateTimeRangeFieldProps<TDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -43,7 +43,7 @@ export interface MultiInputDateTimeRangeFieldProps<TDate>
    */
   componentsProps?: MultiInputDateTimeRangeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<MultiInputDateTimeRangeFieldSlotsComponent>;

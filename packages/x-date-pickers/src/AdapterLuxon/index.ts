@@ -4,31 +4,12 @@ import BaseAdapterLuxon from '@date-io/luxon';
 import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: FieldFormatTokenMap = {
-  s: 'seconds',
-  ss: 'seconds',
+  // Year
+  y: 'year',
+  yy: 'year',
+  yyyy: 'year',
 
-  m: 'minutes',
-  mm: 'minutes',
-
-  H: 'hours',
-  HH: 'hours',
-  h: 'hours',
-  hh: 'hours',
-
-  a: 'meridiem',
-
-  d: 'day',
-  dd: 'day',
-
-  c: 'weekDay',
-  ccc: { sectionType: 'weekDay', contentType: 'letter' },
-  cccc: { sectionType: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  E: 'weekDay',
-  EEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
-
+  // Month
   L: 'month',
   LL: 'month',
   LLL: { sectionType: 'month', contentType: 'letter' },
@@ -38,9 +19,36 @@ const formatTokenMap: FieldFormatTokenMap = {
   MMM: { sectionType: 'month', contentType: 'letter' },
   MMMM: { sectionType: 'month', contentType: 'letter' },
 
-  y: 'year',
-  yy: 'year',
-  yyyy: 'year',
+  // Day of the month
+  d: 'day',
+  dd: 'day',
+
+  // Day of the week
+  c: 'weekDay',
+  ccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
+  E: 'weekDay',
+  EEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  a: 'meridiem',
+
+  // Hours
+  H: 'hours',
+  HH: 'hours',
+  h: 'hours',
+  hh: 'hours',
+
+  // Minutes
+  m: 'minutes',
+  mm: 'minutes',
+
+  // Seconds
+  s: 'seconds',
+  ss: 'seconds',
 };
 
 export class AdapterLuxon extends BaseAdapterLuxon implements MuiPickersAdapter<DateTime> {

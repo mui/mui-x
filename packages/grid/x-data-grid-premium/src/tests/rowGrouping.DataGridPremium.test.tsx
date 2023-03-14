@@ -658,7 +658,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "single"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "single"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -994,7 +994,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
     });
   });
 
-  describe('prop: groupingColDef when groupingColumMode = "multiple"', () => {
+  describe('prop: groupingColDef when groupingColumnMode = "multiple"', () => {
     it('should not allow to override the field', () => {
       render(
         <Test
@@ -2251,7 +2251,7 @@ describe('<DataGridPremium /> - Row Grouping', () => {
         expect(getColumnValues(1)).to.deep.equal(['', '0', '', '4']);
       });
 
-      it('should manage link operator OR accros group and leaf columns', () => {
+      it('should manage link operator OR across group and leaf columns', () => {
         render(
           <Test
             initialState={{

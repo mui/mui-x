@@ -48,7 +48,7 @@ export interface BaseDateRangePickerProps<TDate>
     ExportedDateRangeCalendarProps<TDate>,
     BaseDateValidationProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -60,7 +60,7 @@ export interface BaseDateRangePickerProps<TDate>
    */
   componentsProps?: BaseDateRangePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDateRangePickerSlotsComponent<TDate>>;

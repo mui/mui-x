@@ -6,16 +6,25 @@ import getWeek from 'date-fns/getWeek';
 import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
   MMMM: { sectionType: 'month', contentType: 'letter' },
   MMM: { sectionType: 'month', contentType: 'letter' },
   LLL: { sectionType: 'month', contentType: 'letter' },
   LLLL: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
+  d: 'day',
+  dd: 'day',
+
+  // Day of the week
   E: { sectionType: 'weekDay', contentType: 'letter' },
   EE: { sectionType: 'weekDay', contentType: 'letter' },
   EEE: { sectionType: 'weekDay', contentType: 'letter' },
@@ -37,17 +46,23 @@ const formatTokenMap: FieldFormatTokenMap = {
   cccc: { sectionType: 'weekDay', contentType: 'letter' },
   ccccc: { sectionType: 'weekDay', contentType: 'letter' },
   cccccc: { sectionType: 'weekDay', contentType: 'letter' },
-  d: 'day',
-  dd: 'day',
+
+  // Meridiem
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   mm: 'minutes',
+
+  // Seconds
   ss: 'seconds',
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
 };
 
 export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdapter<Date> {

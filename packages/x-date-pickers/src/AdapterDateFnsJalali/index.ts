@@ -6,27 +6,40 @@ import longFormatters from 'date-fns-jalali/_lib/format/longFormatters';
 import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
   MMMM: { sectionType: 'month', contentType: 'letter' },
   MMM: { sectionType: 'month', contentType: 'letter' },
   LLL: { sectionType: 'month', contentType: 'letter' },
   LLLL: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   d: 'day',
   dd: 'day',
+
+  // Meridiem
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   mm: 'minutes',
+
+  // Seconds
   ss: 'seconds',
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
 };
 
 export class AdapterDateFnsJalali

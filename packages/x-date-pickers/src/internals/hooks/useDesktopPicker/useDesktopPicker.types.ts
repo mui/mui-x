@@ -97,7 +97,7 @@ export interface UseDesktopPickerProps<
 > extends BasePickerProps<TDate | null, TDate, TView, TError, TExternalProps, {}>,
     DesktopOnlyPickerProps<TDate> {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: UncapitalizeObjectKeys<UseDesktopPickerSlotsComponent<TDate, TView>>;

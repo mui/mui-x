@@ -31,7 +31,7 @@ export const useGridDetailPanelPreProcessors = (
         return columnsState;
       }
 
-      // Othewise, add the toggle column at the beginning
+      // Otherwise, add the toggle column at the beginning
       columnsState.orderedFields = [GRID_DETAIL_PANEL_TOGGLE_FIELD, ...columnsState.orderedFields];
       columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] = {
         ...GRID_DETAIL_PANEL_TOGGLE_COL_DEF,

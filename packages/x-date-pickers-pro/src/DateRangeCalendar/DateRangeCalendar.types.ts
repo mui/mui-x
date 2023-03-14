@@ -122,7 +122,7 @@ export interface DateRangeCalendarProps<TDate>
    */
   sx?: SxProps<Theme>;
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -134,7 +134,7 @@ export interface DateRangeCalendarProps<TDate>
    */
   componentsProps?: DateRangeCalendarSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateRangeCalendarSlotsComponent<TDate>>;

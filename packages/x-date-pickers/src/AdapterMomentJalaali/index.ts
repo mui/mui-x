@@ -7,25 +7,25 @@ type Moment = defaultMoment.Moment;
 
 // From https://momentjs.com/docs/#/displaying/format/
 const formatTokenMap: FieldFormatTokenMap = {
+  // Year
+  jYY: 'year',
+  jYYYY: 'year',
+
   // Month
   jM: 'month',
   jMM: 'month',
   jMMM: { sectionType: 'month', contentType: 'letter' },
   jMMMM: { sectionType: 'month', contentType: 'letter' },
 
-  // Day of Month
+  // Day of the month
   jD: 'day',
   jDD: 'day',
 
-  // Year
-  jYY: 'year',
-  jYYYY: 'year',
-
-  // AM / PM
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
@@ -33,11 +33,11 @@ const formatTokenMap: FieldFormatTokenMap = {
   k: 'hours',
   kk: 'hours',
 
-  // Minute
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
 
-  // Second
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
 };
