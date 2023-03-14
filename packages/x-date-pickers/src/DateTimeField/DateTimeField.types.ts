@@ -40,11 +40,6 @@ export interface UseDateTimeFieldProps<TDate>
    * Maximal selectable moment of time with binding to date, to set max time in each day use `maxTime`.
    */
   maxDateTime?: TDate;
-  /**
-   * Control whether the input selection is controlled by field.
-   * @default true
-   */
-  shouldControlSelection?: boolean;
 }
 
 export type UseDateTimeFieldDefaultizedProps<TDate> = DefaultizedProps<

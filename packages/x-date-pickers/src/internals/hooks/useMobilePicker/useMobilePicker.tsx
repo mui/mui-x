@@ -129,7 +129,6 @@ export const useMobilePicker = <
         slots={slotsForField}
         slotProps={slotProps}
         inputRef={handleInputRef}
-        shouldControlSelection={false}
       />
       <PickersModalDialog {...actions} open={open} slots={slots} slotProps={slotProps}>
         <Layout {...layoutProps} {...slotProps?.layout} slots={slots} slotProps={slotProps}>

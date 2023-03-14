@@ -23,7 +23,6 @@ export interface UseFieldParams<
     UseFieldValidationProps<TValue, TInternalProps>
   >;
   valueType: FieldValueType;
-  shouldControlSelection?: boolean;
 }
 
 export interface UseFieldInternalProps<TValue, TError> {

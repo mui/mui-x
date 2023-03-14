@@ -23,13 +23,7 @@ export interface UseDateFieldProps<TDate>
     DayValidationProps<TDate>,
     MonthValidationProps<TDate>,
     YearValidationProps<TDate>,
-    BaseDateValidationProps<TDate> {
-  /**
-   * Control whether the input selection is controlled by field.
-   * @default true
-   */
-  shouldControlSelection?: boolean;
-}
+    BaseDateValidationProps<TDate> {}
 
 export type UseDateFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateFieldProps<TDate>,

@@ -48,7 +48,6 @@ export const useDateField = <TDate, TChildProps extends {}>({
     disablePast,
     selectedSections,
     onSelectedSectionsChange,
-    shouldControlSelection,
     ...other
   } = useDefaultizedDateField<TDate, TChildProps>(props);
 
@@ -76,6 +75,5 @@ export const useDateField = <TDate, TChildProps extends {}>({
     fieldValueManager: singleItemFieldValueManager,
     validator: validateDate,
     valueType: 'date',
-    shouldControlSelection,
   });
 };

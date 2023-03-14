@@ -36,13 +36,7 @@ export interface UseDateRangeFieldProps<TDate>
   extends MakeOptional<UseFieldInternalProps<DateRange<TDate>, DateRangeValidationError>, 'format'>,
     DayRangeValidationProps<TDate>,
     BaseDateValidationProps<TDate>,
-    BaseRangeProps {
-  /**
-   * Control whether the input selection is controlled by field.
-   * @default true
-   */
-  shouldControlSelection?: boolean;
-}
+    BaseRangeProps {}
 
 export type UseDateRangeFieldDefaultizedProps<TDate> = DefaultizedProps<
   UseDateRangeFieldProps<TDate>,

@@ -62,7 +62,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
     selectedSections,
     onSelectedSectionsChange,
     autoFocus,
-    shouldControlSelection,
     ...other
   } = themeProps;
   const slots = innerSlots ?? uncapitalizeObjectKeys(components);
@@ -132,7 +131,6 @@ const MultiInputDateRangeField = React.forwardRef(function MultiInputDateRangeFi
       disablePast,
       selectedSections,
       onSelectedSectionsChange,
-      shouldControlSelection,
     },
     startTextFieldProps,
     endTextFieldProps,

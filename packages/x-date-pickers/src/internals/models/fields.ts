@@ -26,7 +26,6 @@ export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProp
   inputProps?: {
     'aria-label'?: string;
   };
-  shouldControlSelection?: boolean;
   slots?: {};
   slotProps?: {};
 }
