@@ -286,11 +286,6 @@ MultiInputDateRangeField.propTypes = {
     }),
   ]),
   /**
-   * Control whether the input selection is controlled by field.
-   * @default true
-   */
-  shouldControlSelection: PropTypes.bool,
-  /**
    * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
