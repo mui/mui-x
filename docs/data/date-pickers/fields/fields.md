@@ -39,16 +39,12 @@ The field components have an internal state to update the visible value.
 
 It will only call the `onChange` callback when:
 
-- all the sections of the modified date are filled
-- all the sections of the modified date are empty (will return `null` for the modified date)
-- all the sections of the modified date were filled, and the user cleaned the content of one section (will return `Invalid date` for modified date)
+- all the sections of the date are filled
+- all the sections of the date are empty, its value will equal `null`
+- all the sections of the date were previously empty and the user fills a section, its value will equal `Invalid date`
+- all the sections of the date were previously filled and the user cleans a section, its value will equal `Invalid date`
 
-#### On simple fields
-
-On simple fields (`DateField` / `DateTimeField` / `TimeField`),
-`onChange` will be called if the date matches one of the condition above.
-
-In the example below, `onChange` will be called once when filling the first section and once when filling the last one:
+In the example below, `onChange` will be called when any of the conditions are triggered:
 
 {{"demo": "LifeCycleDateFieldEmpty.js", "defaultCodeOpen": false}}
 
@@ -58,8 +54,7 @@ On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... 
 `onChange` will be called if the date you are modifying is matching one of the condition above,
 even if the other date does not.
 
-In the demo below, changing the value of a start date section will call `onChange` even if the end date is empty.
-But when editing the end date, `onChange` will only be called when filling the first section and the last one:
+In the example below, changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
 
 {{"demo": "LifeCycleDateRangeField.js", "defaultCodeOpen": false}}
 
