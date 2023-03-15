@@ -38,6 +38,8 @@ async function generateProptypes(program: ttp.ts.Program, sourceFile: string) {
         'localeText',
         'columnGroupingModel',
         'unstableFieldRef',
+        'unstableStartFieldRef',
+        'unstableEndFieldRef',
       ];
       if (propsToNotResolve.includes(name)) {
         return false;
