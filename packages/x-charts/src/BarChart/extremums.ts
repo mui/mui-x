@@ -10,7 +10,7 @@ type GetExtremumParamsY = {
   yAxis: AxisConfig;
 };
 
-type GetExtremumResult = [number, number];
+type GetExtremumResult = [number, number] | [null, null];
 
 export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
   const { xAxis } = params;
@@ -23,10 +23,10 @@ export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
 export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
   const { series, yAxis } = params;
 
-  const [minY, maxY] = Object.keys(series)
+  return Object.keys(series)
     .filter((seriesId) => series[seriesId].yAxisKey === yAxis.id)
     .reduce(
-      (acc: [number, number] | [null, null], seriesId) => {
+      (acc: GetExtremumResult, seriesId) => {
         const [seriesMin, serriesMax] = series[seriesId].stackedData.reduce(
           (seriesAcc, [min, max]) => [Math.min(min, seriesAcc[0]), Math.max(max, seriesAcc[1])],
           series[seriesId].stackedData[0],
@@ -38,6 +38,4 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
       },
       [null, null],
     );
-
-  return [minY, maxY];
 };
