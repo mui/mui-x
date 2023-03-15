@@ -76,12 +76,28 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    * @param {FieldSelectedSections} newValue The new selected sections.
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
+  /**
+   * The ref object used to interact imperatively with the field.
+   */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
 }
 
 export interface FieldRef<TSection extends FieldSection> {
+  /**
+   * Returns the sections of the current value.
+   * @returns {TSection[]} The sections of the current value.
+   */
   getSections: () => TSection[];
+  /**
+   * Returns the index of the active section (the first focused section).
+   * If no section is active, returns `null`.
+   * @returns {number | null} The index of the active section.
+   */
   getActiveSectionIndex: () => number | null;
+  /**
+   * Updates the selected sections.
+   * @param {FieldSelectedSections} selectedSections The sections to select.
+   */
   setSelectedSections: (selectedSections: FieldSelectedSections) => void;
 }
 
