@@ -1,13 +1,20 @@
 import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 
-export default function TestLines() {
+export default function TestLinesTime() {
   return (
     <LineChart
       xAxis={[
         {
           id: 'lineCategories',
-          data: [2, 5, 20, 23, 25],
+          data: [
+            new Date(2012, 2, 1),
+            new Date(2012, 2, 2),
+            new Date(2012, 2, 5),
+            new Date(2012, 2, 10),
+            new Date(2012, 2, 15),
+          ],
+          scale: 'time',
         },
       ]}
       yAxis={[

@@ -15,3 +15,4 @@ title: Charts - Lines
 > If you already have a use case for this component, or if you are facing a pain-point with your current solution.
 
 {{"demo": "TestLines.js", "bg": "inline"}}
+{{"demo": "TestLinesTime.js", "bg": "inline"}}
