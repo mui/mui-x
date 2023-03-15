@@ -7,7 +7,7 @@ type AllSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSer
 type CartesianSeriesType = BarSeriesType | LineSeriesType | PieSeriesType | ScatterSeriesType;
 type StackableSeriesType = BarSeriesType | LineSeriesType;
 
-export {
+export type {
   BarSeriesType,
   LineSeriesType,
   PieSeriesType,

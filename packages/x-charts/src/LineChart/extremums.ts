@@ -26,10 +26,12 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
   return Object.keys(series)
     .filter((seriesId) => series[seriesId].yAxisKey === yAxis.id)
     .reduce(
-      (acc: [number, number] | [null, null], seriesId) => {
+      (acc: GetExtremumResult, seriesId) => {
         const isArea = series[seriesId].area !== undefined;
 
-        const getValues = isArea ? (d) => d : (d) => [d[1], d[1]]; // Id area should go from bottom to top, without area should only consider the top
+        const getValues = isArea
+          ? (d: [number, number]) => d
+          : (d: [number, number]) => [d[1], d[1]]; // Id area should go from bottom to top, without area should only consider the top
 
         const [seriesMin, serriesMax] = series[seriesId].stackedData.reduce(
           (seriesAcc, stackedValue) => {

@@ -12,8 +12,8 @@ export interface ScatterProps {
 function Scatter(props: ScatterProps) {
   const { data, xDataToSvg, yDataToSvg, markerSize } = props;
 
-  const xScale = React.useCallback((value) => xDataToSvg?.(value) ?? value, [xDataToSvg]);
-  const yScale = React.useCallback((value) => yDataToSvg?.(value) ?? value, [yDataToSvg]);
+  const xScale = React.useCallback((value: any) => xDataToSvg?.(value) ?? value, [xDataToSvg]);
+  const yScale = React.useCallback((value: any) => yDataToSvg?.(value) ?? value, [yDataToSvg]);
 
   return (
     <g>

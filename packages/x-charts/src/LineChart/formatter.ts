@@ -3,6 +3,7 @@ import {
   stackOrderNone as d3StackOrderNone,
   stackOffsetNone as d3StackOffsetNone,
 } from 'd3-shape';
+import defaultizeCartesianSeries from '../internals/defaultizeCartesianSeries';
 import { getStackingGroups } from '../internals/stackSeries';
 import { LineSeriesType } from '../models/seriesType';
 
@@ -35,7 +36,7 @@ const formatter = (params: FormatterParams): FormatterResult => {
     });
   });
 
-  const complettedSeries = {};
+  const complettedSeries: FormatterResult['series'] = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
@@ -52,7 +53,7 @@ const formatter = (params: FormatterParams): FormatterResult => {
     });
   });
 
-  return { seriesOrder, stackingGroups, series: complettedSeries };
+  return { seriesOrder, stackingGroups, series: defaultizeCartesianSeries(complettedSeries) };
 };
 
 export default formatter;

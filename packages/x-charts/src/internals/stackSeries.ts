@@ -18,7 +18,7 @@ export const getStackingGroups = (params: FormatterParams) => {
   const { series, seriesOrder } = params;
 
   const stackingGroups: string[][] = [];
-  const stackIndex = {};
+  const stackIndex: { [id: string]: number } = {};
 
   seriesOrder.forEach((id) => {
     const stack = series[id].stack;

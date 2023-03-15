@@ -13,6 +13,7 @@ export type FormattedSeries = {
   bar?: ReturnType<typeof barSeriesFormatter>;
   scatter?: ReturnType<typeof scatterSeriesFormatter>;
   line?: ReturnType<typeof lineSeriesFormatter>;
+  pie?: any;
 };
 
 export const SeriesContext = React.createContext<FormattedSeries>({});
@@ -21,16 +22,19 @@ const seriesTypeFormatter: { [type in AllSeriesType['type']]?: (series: any) => 
   bar: barSeriesFormatter,
   scatter: scatterSeriesFormatter,
   line: lineSeriesFormatter,
+  pie: (...arg) => {
+    return arg;
+  },
 };
 
 const formatSeries = (series: AllSeriesType[]) => {
   // Group series by type
-  const formattedSeries = {};
+  const formattedSeries: FormattedSeries = {};
   series.forEach(({ id, type, ...other }) => {
     if (formattedSeries[type] === undefined) {
       formattedSeries[type] = { series: {}, seriesOrder: [] };
     }
-    if (formatSeries[type]?.[id] !== undefined) {
+    if (formattedSeries[type]?.[id] !== undefined) {
       throw new Error(`MUI: series' id "${id}" is not unique`);
     }
     formattedSeries[type].series[id] = { id, type, ...other };
@@ -38,7 +42,7 @@ const formatSeries = (series: AllSeriesType[]) => {
   });
 
   // Apply formater on a type group
-  Object.keys(seriesTypeFormatter).forEach((type) => {
+  (Object.keys(seriesTypeFormatter) as AllSeriesType['type'][]).forEach((type) => {
     if (formattedSeries[type] !== undefined) {
       formattedSeries[type] =
         seriesTypeFormatter[type]?.(formattedSeries[type]) ?? formattedSeries[type];

@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { DEFAULT_MARGINS } from '../const';
+import { LayoutConfig } from '../models/layout';
 
-const useChartDimensions = (width, height, margin) => {
+const useChartDimensions = (
+  width: number,
+  height: number,
+  margin: LayoutConfig['margin'],
+) => {
   const defaultizedMargin = {
     ...DEFAULT_MARGINS,
     ...margin,

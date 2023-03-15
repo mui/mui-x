@@ -34,18 +34,20 @@ const getExtremumY = {
   line: getLineExtremumY,
 };
 
+type DefaultizedAxisConfig = {
+  [axisKey: string]: AxisDefaultized;
+};
+
 export const CartesianContext = React.createContext<{
   /**
    * Mapping from axis key to scalling function
    */
   xAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
-    [axisKey: string]: AxisDefaultized;
-  };
+  } & DefaultizedAxisConfig;
   yAxis: {
     DEFAULT_X_AXIS_KEY: AxisDefaultized;
-    [axisKey: string]: AxisDefaultized;
-  };
+  } & DefaultizedAxisConfig;
   // @ts-ignore
 }>({ xAxis: {}, yAxis: {} });
 
@@ -58,8 +60,8 @@ export function CartesianContextProvider({
   const drawingArea = React.useContext(DrawingContext);
 
   const value = React.useMemo(() => {
-    const completedXAxis = {};
-    const completedYAxis = {};
+    const completedXAxis: DefaultizedAxisConfig = {};
+    const completedYAxis: DefaultizedAxisConfig = {};
 
     [
       ...(xAxis ?? []),
@@ -68,18 +70,27 @@ export function CartesianContextProvider({
         scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {
-      const [minData, maxData] = Object.keys(getExtremumX).reduce(
-        ([currentMinData, currentMaxData], chartType) => {
+      const [minData, maxData] = (
+        Object.keys(getExtremumX) as Array<keyof typeof getExtremumX>
+      ).reduce(
+        ([currentMinData, currentMaxData]: [number | null, number | null], chartType) => {
           if (formattedSeries[chartType]?.series === undefined) {
             return [currentMinData, currentMaxData];
           }
           const [minChartTypeData, maxChartTypeData] = getExtremumX[chartType]({
-            series: formattedSeries[chartType]?.series,
+            // @ts-ignore TODO: find a way to let TS understand types are coherend because they come from the same key
+            series: formattedSeries[chartType]?.series ?? {},
             xAxis: axis,
           });
+          if (currentMinData === null || currentMaxData === null) {
+            return [minChartTypeData, maxChartTypeData];
+          }
+          if (minChartTypeData === null || maxChartTypeData === null) {
+            return [currentMinData, currentMaxData];
+          }
           return [
-            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, currentMinData),
-            currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
+            Math.min(minChartTypeData, currentMinData),
+            Math.max(maxChartTypeData, currentMaxData),
           ];
         },
         [null, null],
@@ -104,19 +115,28 @@ export function CartesianContextProvider({
         scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {
-      const [minData, maxData] = Object.keys(getExtremumY).reduce(
-        ([currentMinData, currentMaxData], chartType) => {
+      const [minData, maxData] = (
+        Object.keys(getExtremumX) as Array<keyof typeof getExtremumX>
+      ).reduce(
+        ([currentMinData, currentMaxData]: [number | null, number | null], chartType) => {
           if (formattedSeries[chartType]?.series === undefined) {
             return [currentMinData, currentMaxData];
           }
 
           const [minChartTypeData, maxChartTypeData] = getExtremumY[chartType]({
+            // @ts-ignore
             series: formattedSeries[chartType]?.series,
             yAxis: axis,
           });
+          if (currentMinData === null || currentMaxData === null) {
+            return [minChartTypeData, maxChartTypeData];
+          }
+          if (minChartTypeData === null || maxChartTypeData === null) {
+            return [currentMinData, currentMaxData];
+          }
           return [
-            currentMinData === null ? minChartTypeData : Math.min(minChartTypeData, currentMinData),
-            currentMaxData === null ? maxChartTypeData : Math.max(maxChartTypeData, currentMaxData),
+            Math.min(minChartTypeData, currentMinData),
+            Math.max(maxChartTypeData, currentMaxData),
           ];
         },
         [null, null],
