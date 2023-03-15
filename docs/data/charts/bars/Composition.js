@@ -8,25 +8,6 @@ import Surface from '@mui/x-charts/Surface';
 import XAxis from '@mui/x-charts/XAxis/XAxis';
 import YAxis from '@mui/x-charts/YAxis/YAxis';
 
-const xAxis = [
-  {
-    id: 'years',
-    data: [2010, 2011, 2012, 2013, 2014],
-    scale: 'band',
-  },
-];
-
-const yAxis = [
-  {
-    id: 'eco',
-    scale: 'linear',
-  },
-  {
-    id: 'pib',
-    scale: 'log',
-  },
-];
-
 const series = [
   {
     type: 'bar',
@@ -34,22 +15,24 @@ const series = [
     stack: '',
     xAxisKey: 'years',
     yAxisKey: 'eco',
+    color: 'red',
     data: [2, 5, 3, 4, 1],
   },
   {
     type: 'bar',
-    id: 'Eco-1',
+    id: 'Eco-2',
     stack: '',
     xAxisKey: 'years',
     yAxisKey: 'eco',
-    data: [5, 6, 2, 8],
+    color: 'blue',
+    data: [5, 6, 2, 8, 9],
   },
   {
     type: 'line',
     id: 'pib',
     xAxisKey: 'years',
     yAxisKey: 'pib',
-    data: [1000, 1500, 3000, 5000],
+    data: [1000, 1500, 3000, 5000, 10000],
   },
 ];
 
@@ -69,13 +52,30 @@ function ChartContainer({ width, height, series, margin, children }) {
 export default function Composition() {
   return (
     <ChartContainer series={series} width={500} height={500}>
-      <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+      <CartesianContextProvider
+        xAxis={[
+          {
+            id: 'years',
+            data: [2010, 2011, 2012, 2013, 2014],
+            scale: 'band',
+          },
+        ]}
+        yAxis={[
+          {
+            id: 'eco',
+            scale: 'linear',
+          },
+          {
+            id: 'pib',
+            scale: 'log',
+          },
+        ]}
+      >
         <BarPlot />
         <LinePlot />
-        <XAxis label="Bottom X axis" position="bottom" />
-        <XAxis label="Top X axis" position="top" />
-        <YAxis label="Left Y axis" position="left" axisId="leftAxis" />
-        <YAxis label="Right Y axis" position="right" />
+        <XAxis label="Years" position="bottom" axisId="years" />
+        <YAxis label="Results" position="left" axisId="eco" />
+        <YAxis label="PIB" position="right" axisId="pib" />
       </CartesianContextProvider>
     </ChartContainer>
   );
