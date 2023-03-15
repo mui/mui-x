@@ -32,9 +32,6 @@ export type UseMultiInputDateTimeRangeFieldComponentProps<TDate, TChildProps ext
 
 export interface MultiInputDateTimeRangeFieldProps<TDate>
   extends UseMultiInputDateTimeRangeFieldComponentProps<TDate, Omit<StackProps, 'position'>> {
-  /**
-   * If `true`, the start `input` element is focused during the first mount.
-   */
   autoFocus?: boolean;
   /**
    * Overridable components.

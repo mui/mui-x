@@ -1,6 +1,5 @@
 {
   "props": {
-    "autoFocus": { "type": { "name": "bool" } },
     "components": {
       "type": { "name": "object" },
       "default": "{}",

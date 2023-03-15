@@ -94,7 +94,7 @@ Instead, you can pass the index of the section using the `unstableFieldRef` prop
 
 :::warning
 The `unstableFieldRef` is not stable yet. More specifically, the shape of the `section` object might be modified in the near future.
-We advise you to use it only if needed.
+Please only use it if needed.
 :::
 
 {{"demo": "ControlledSelectedSectionsSingleInputRangeField.js", "defaultCodeOpen": false }}

@@ -172,9 +172,6 @@ MultiInputDateRangeField.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "yarn proptypes"  |
   // ----------------------------------------------------------------------
-  /**
-   * If `true`, the start `input` element is focused during the first mount.
-   */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
@@ -325,26 +322,8 @@ MultiInputDateRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  unstableEndFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-        setSelectedSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
-  unstableStartFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-        setSelectedSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
+  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.

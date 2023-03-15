@@ -195,9 +195,6 @@ MultiInputDateTimeRangeField.propTypes = {
    * @default `utils.is12HourCycleInCurrentLocale()`
    */
   ampm: PropTypes.bool,
-  /**
-   * If `true`, the start `input` element is focused during the first mount.
-   */
   autoFocus: PropTypes.bool,
   className: PropTypes.string,
   /**
@@ -391,26 +388,8 @@ MultiInputDateTimeRangeField.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
-  unstableEndFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-        setSelectedSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
-  unstableStartFieldRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        getActiveSectionIndex: PropTypes.func.isRequired,
-        getSections: PropTypes.func.isRequired,
-        setSelectedSections: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
+  unstableEndFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  unstableStartFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**
    * The selected value.
    * Used when the component is controlled.
