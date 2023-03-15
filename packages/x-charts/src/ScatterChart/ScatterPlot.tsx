@@ -6,8 +6,14 @@ import { CartesianContext } from '../context/CartesianContextProvider';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
 
 function ScatterPlot() {
-  const { series, seriesOrder } = React.useContext(SeriesContext).scatter;
-  const { xAxis, yAxis } = React.useContext(CartesianContext);
+  const seriesData = React.useContext(SeriesContext).scatter;
+  const axisData = React.useContext(CartesianContext);
+
+  if (seriesData === undefined) {
+    return null;
+  }
+  const { series, seriesOrder } = seriesData;
+  const { xAxis, yAxis } = axisData;
 
   const seriesPerAxis: { [key: string]: ScatterSeriesType[] } = {};
 

@@ -59,17 +59,17 @@ export default function Composition() {
           {
             id: 'years',
             data: [2010, 2011, 2012, 2013, 2014],
-            scale: 'band',
+            scaleName: 'band',
           },
         ]}
         yAxis={[
           {
             id: 'eco',
-            scale: 'linear',
+            scaleName: 'linear',
           },
           {
             id: 'pib',
-            scale: 'log',
+            scaleName: 'log',
           },
         ]}
       >

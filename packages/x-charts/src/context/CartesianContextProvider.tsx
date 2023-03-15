@@ -11,20 +11,16 @@ import {
   getExtremumX as getLineExtremumX,
   getExtremumY as getLineExtremumY,
 } from '../LineChart/extremums';
-import { D3Scale, getScale } from '../hooks/useScale';
-import { AxisConfig, Scales } from '../models/axis';
+import { getScale } from '../hooks/useScale';
+import { AxisConfig, AxisDefaultized, Scales } from '../models/axis';
 import { DrawingContext } from './DrawingProvider';
 import { SeriesContext } from './SeriesContextProvider';
 
-type CartesianContextProviderProps = {
+export type CartesianContextProviderProps = {
   xAxis?: AxisConfig[];
   yAxis?: AxisConfig[];
   children: React.ReactNode;
 };
-
-interface CompoutedAxisConfig extends Omit<AxisConfig, 'scale'> {
-  scale: D3Scale;
-}
 
 // TODO: those migt be better placed in a distinc file
 const getExtremumX = {
@@ -43,13 +39,14 @@ export const CartesianContext = React.createContext<{
    * Mapping from axis key to scalling function
    */
   xAxis: {
-    DEFAULT_X_AXIS_KEY: CompoutedAxisConfig;
-    [axisKey: string]: CompoutedAxisConfig;
+    DEFAULT_X_AXIS_KEY: AxisDefaultized;
+    [axisKey: string]: AxisDefaultized;
   };
   yAxis: {
-    DEFAULT_X_AXIS_KEY: CompoutedAxisConfig;
-    [axisKey: string]: CompoutedAxisConfig;
+    DEFAULT_X_AXIS_KEY: AxisDefaultized;
+    [axisKey: string]: AxisDefaultized;
   };
+  // @ts-ignore
 }>({ xAxis: {}, yAxis: {} });
 
 export function CartesianContextProvider({
@@ -68,7 +65,7 @@ export function CartesianContextProvider({
       ...(xAxis ?? []),
       {
         id: 'DEFAULT_X_AXIS_KEY',
-        scale: 'linear',
+        scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {
       const [minData, maxData] = Object.keys(getExtremumX).reduce(
@@ -88,11 +85,14 @@ export function CartesianContextProvider({
         [null, null],
       );
 
-      const scale = axis.scale ?? ('linea' as Scales);
+      const scaleName = axis.scaleName ?? ('linea' as Scales);
       completedXAxis[axis.id] = {
         ...axis,
-        scale: getScale(scale)
-          .domain(scale === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+        scaleName,
+        scale: getScale(scaleName)
+          // @ts-ignore
+          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          // @ts-ignore
           .range([drawingArea.left, drawingArea.left + drawingArea.width]),
       };
     });
@@ -101,7 +101,7 @@ export function CartesianContextProvider({
       ...(yAxis ?? []),
       {
         id: 'DEFAULT_Y_AXIS_KEY',
-        scale: 'linear',
+        scaleName: 'linear' as Scales,
       },
     ].forEach((axis) => {
       const [minData, maxData] = Object.keys(getExtremumY).reduce(
@@ -122,11 +122,14 @@ export function CartesianContextProvider({
         [null, null],
       );
 
-      const scale = axis.scale ?? ('linea' as Scales);
+      const scaleName = axis.scaleName ?? ('linea' as Scales);
       completedYAxis[axis.id] = {
         ...axis,
-        scale: getScale(scale)
-          .domain(scale === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+        scaleName,
+        scale: getScale(scaleName)
+          // @ts-ignore
+          .domain(scaleName === 'band' ? axis.data : [axis.min ?? minData, axis.max ?? maxData])
+          // @ts-ignore
           .range([drawingArea.top + drawingArea.height, drawingArea.top]),
       };
     });
@@ -142,5 +145,6 @@ export function CartesianContextProvider({
     yAxis,
   ]);
 
+  // @ts-ignore
   return <CartesianContext.Provider value={value}>{children}</CartesianContext.Provider>;
 }

@@ -62,7 +62,7 @@ export default function Composition() {
             id: 'leftAxis',
 
             max: 4,
-            scale: 'sqrt',
+            scaleName: 'sqrt',
           },
         ]}
       >

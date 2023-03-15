@@ -2,23 +2,17 @@ import * as React from 'react';
 import barSeriesFormatter from '../BarChart/formatter';
 import scatterSeriesFormatter from '../ScatterChart/formatter';
 import lineSeriesFormatter from '../LineChart/formatter';
-
 import { AllSeriesType } from '../models/seriesType';
 
-type SeriesContextProviderProps = {
+export type SeriesContextProviderProps = {
   series: AllSeriesType[];
   children: React.ReactNode;
 };
 
 export type FormattedSeries = {
-  [serriesType in AllSeriesType['type']]?: {
-    series: { [id: string]: AllSeriesType };
-    seriesOrder: string[];
-    /**
-     * Only for stackable series (bars, lines)
-     */
-    stackingGroups?: string[][];
-  };
+  bar?: ReturnType<typeof barSeriesFormatter>;
+  scatter?: ReturnType<typeof scatterSeriesFormatter>;
+  line?: ReturnType<typeof lineSeriesFormatter>;
 };
 
 export const SeriesContext = React.createContext<FormattedSeries>({});

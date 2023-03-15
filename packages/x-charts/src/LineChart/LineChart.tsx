@@ -2,14 +2,25 @@ import * as React from 'react';
 import LinePlot from './LinePlot';
 import XAxis from '../XAxis/XAxis';
 import YAxis from '../YAxis/YAxis';
-import { ChartContainerProps } from '../ChartContainer';
-import { SeriesContextProvider } from '../context/SeriesContextProvider';
+import {
+  SeriesContextProvider,
+  SeriesContextProviderProps,
+} from '../context/SeriesContextProvider';
 import { DrawingProvider } from '../context/DrawingProvider';
-import { CartesianContextProvider } from '../context/CartesianContextProvider';
+import {
+  CartesianContextProvider,
+  CartesianContextProviderProps,
+} from '../context/CartesianContextProvider';
 import Surface from '../Surface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../const';
+import { LayoutConfig } from '../models/layout';
 
-export function LineChart(props: Omit<ChartContainerProps, 'children'>) {
+export function LineChart(
+  props: Omit<
+    LayoutConfig & SeriesContextProviderProps & CartesianContextProviderProps,
+    'children'
+  >,
+) {
   const { xAxis, yAxis, series, width, height, margin } = props;
 
   return (

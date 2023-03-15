@@ -46,3 +46,7 @@ export function getScale(scaleType: Scales | undefined): D3Scale {
       return scaleLinear();
   }
 }
+
+export function isBandScale(scale: D3Scale): scale is ScaleBand<any> {
+  return (scale as ScaleBand<any>).bandwidth !== undefined;
+}

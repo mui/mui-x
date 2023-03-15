@@ -2,10 +2,17 @@ import * as React from 'react';
 import { SeriesContext } from '../context/SeriesContextProvider';
 import { BarSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
+import { isBandScale } from '../hooks/useScale';
 
 export default function BarPlot() {
-  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).bar;
-  const { xAxis, yAxis } = React.useContext(CartesianContext);
+  const seriesData = React.useContext(SeriesContext).bar;
+  const axisData = React.useContext(CartesianContext);
+
+  if (seriesData === undefined) {
+    return null;
+  }
+  const { series, seriesOrder, stackingGroups } = seriesData;
+  const { xAxis, yAxis } = axisData;
 
   const seriesPerAxis: { [key: string]: BarSeriesType[] } = {};
 
@@ -30,6 +37,16 @@ export default function BarPlot() {
         const xScale = xAxis[xAxisKey].scale;
         const yScale = yAxis[yAxisKey].scale;
 
+        if (!isBandScale(xScale)) {
+          throw new Error(
+            `Axis with id "${xAxisKey}" shoud be of type "band" to display the bar series ${stackingGroups}`,
+          );
+        }
+
+        if (xAxis[xAxisKey].data === undefined) {
+          throw new Error(`Axis with id "${xAxisKey}" shoud have data property`);
+        }
+
         // Currently assuming all bars are vertical
         const bandWidth = xScale.bandwidth();
         const barWidth = (0.9 * bandWidth) / stackingGroups.length;
@@ -37,12 +54,14 @@ export default function BarPlot() {
 
         return stackingGroups.flatMap((groupIds, groupIndex) => {
           return groupIds.flatMap((seriesId) => {
+            // @ts-ignore TODO: fix when adding a correct API for customisation
             const { stackedData, color } = series[seriesId];
 
             return stackedData.map(([baseline, value], dataIndex: number) => {
               return (
                 <rect
                   key={`${seriesId}-${dataIndex}`}
+                  // @ts-ignore I don't get why this warning
                   x={xScale(xAxis[xAxisKey].data[dataIndex]) + groupIndex * barWidth + offset}
                   y={yScale(value)}
                   height={yScale(baseline) - yScale(value)}

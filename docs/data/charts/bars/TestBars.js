@@ -8,13 +8,13 @@ export default function TestBars() {
         {
           id: 'barCategories',
           data: [2, 5, 20, 23, 25],
-          scale: 'band',
+          scaleName: 'band',
         },
       ]}
       yAxis={[
         {
           id: 'barCategoriesY',
-          scale: 'linear',
+          scaleName: 'linear',
         },
       ]}
       series={[

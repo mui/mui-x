@@ -5,8 +5,14 @@ import { LineSeriesType } from '../models/seriesType';
 import { CartesianContext } from '../context/CartesianContextProvider';
 
 function LinePlot() {
-  const { series, seriesOrder, stackingGroups } = React.useContext(SeriesContext).line;
-  const { xAxis, yAxis } = React.useContext(CartesianContext);
+  const seriesData = React.useContext(SeriesContext).line;
+  const axisData = React.useContext(CartesianContext);
+
+  if (seriesData === undefined) {
+    return null;
+  }
+  const { series, seriesOrder, stackingGroups } = seriesData;
+  const { xAxis, yAxis } = axisData;
 
   const seriesPerAxis: { [key: string]: LineSeriesType[] } = {};
 
@@ -32,34 +38,44 @@ function LinePlot() {
         const yScale = yAxis[yAxisKey].scale;
         const xData = xAxis[xAxisKey].data;
 
-        const linePath = d3Line()
-          // @ts-ignore TODO: Fix me
+        if (xData === undefined) {
+          throw new Error(
+            `Axis of id "${xAxisKey}" should have data property to be able to display a line plot`,
+          );
+        }
+
+        const linePath = d3Line<{
+          x: any;
+          y: any[];
+        }>()
           .x((d) => xScale(d.x))
           .y((d) => yScale(d.y[1]));
 
-        const areaPath = d3Area()
-          // @ts-ignore TODO: Fix me
+        const areaPath = d3Area<{
+          x: any;
+          y: any[];
+        }>()
           .x((d) => xScale(d.x))
           .y0((d) => yScale(d.y[0]))
           .y1((d) => yScale(d.y[1]));
 
         return stackingGroups.flatMap((groupIds) => {
           return groupIds.flatMap((seriesId) => {
-            const { stackedData } = series[seriesId];
+            const stackedData = series[seriesId].stackedData;
             const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
 
             return (
               <React.Fragment key={seriesId}>
                 {!!series[seriesId].area && (
                   <path
-                    d={areaPath(d3Data)}
+                    d={areaPath(d3Data) || undefined}
                     stroke="none"
                     fill={series[seriesId].area.color ?? 'red'}
                     style={{ pointerEvents: 'none' }}
                   />
                 )}
                 <path
-                  d={linePath(d3Data)}
+                  d={linePath(d3Data) || undefined}
                   stroke="black"
                   fill="none"
                   // strokeDasharray={strokeDasharray}
