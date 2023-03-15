@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
-
-import type {} from '@mui/material/themeCssVarsAugmentation';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendMuiTheme,
   shouldSkipGeneratingVar as muiShouldSkipGeneratingVar,
+  ThemeVars,
 } from '@mui/material/styles';
 import { blue, grey } from '@mui/material/colors';
 import {
@@ -42,9 +41,9 @@ import {
   DateValidationError,
 } from '@mui/x-date-pickers-pro';
 
-const { unstable_sxConfig: muiSxConfig, ...muiTheme } = extendMuiTheme();
+const muiTheme = extendMuiTheme();
 
-const { unstable_sxConfig: joySxConfig, ...joyTheme } = extendJoyTheme({
+const joyTheme = extendJoyTheme({
   cssVarPrefix: 'mui',
   colorSchemes: {
     light: {
@@ -115,13 +114,35 @@ const { unstable_sxConfig: joySxConfig, ...joyTheme } = extendJoyTheme({
   },
 });
 
-const mergedTheme = deepmerge(joyTheme, muiTheme) as unknown as ReturnType<
-  typeof extendMuiTheme
->;
+const mergedTheme = {
+  ...joyTheme,
+  ...muiTheme,
+  colorSchemes: deepmerge(joyTheme.colorSchemes, muiTheme.colorSchemes),
+  typography: {
+    ...joyTheme.typography,
+    ...muiTheme.typography,
+  },
+  zIndex: {
+    ...joyTheme.zIndex,
+    ...muiTheme.zIndex,
+  },
+} as unknown as ReturnType<typeof extendMuiTheme>;
 
+mergedTheme.shouldSkipGeneratingVar = (keys) =>
+  joyShouldSkipGeneratingVar(keys) || muiShouldSkipGeneratingVar(keys);
+mergedTheme.generateCssVars = (colorScheme) => ({
+  css: {
+    ...joyTheme.generateCssVars(colorScheme).css,
+    ...muiTheme.generateCssVars(colorScheme).css,
+  },
+  vars: deepmerge(
+    joyTheme.generateCssVars(colorScheme).vars,
+    muiTheme.generateCssVars(colorScheme).vars,
+  ) as unknown as ThemeVars,
+});
 mergedTheme.unstable_sxConfig = {
-  ...muiSxConfig,
-  ...joySxConfig,
+  ...muiTheme.unstable_sxConfig,
+  ...joyTheme.unstable_sxConfig,
 };
 
 interface JoyFieldProps extends InputProps {
@@ -293,12 +314,7 @@ function JoyDatePicker(props: DatePickerProps<Dayjs>) {
 
 export default function PickerWithJoyField() {
   return (
-    <CssVarsProvider
-      theme={mergedTheme}
-      shouldSkipGeneratingVar={(keys) =>
-        muiShouldSkipGeneratingVar(keys) || joyShouldSkipGeneratingVar(keys)
-      }
-    >
+    <CssVarsProvider theme={mergedTheme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack spacing={2} sx={{ width: 400 }}>
           <JoyDatePicker />

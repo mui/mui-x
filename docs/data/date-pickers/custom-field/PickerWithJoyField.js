@@ -26,9 +26,9 @@ import { unstable_useMultiInputDateRangeField as useMultiInputDateRangeField } f
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { unstable_useDateField as useDateField } from '@mui/x-date-pickers/DateField';
 
-const { unstable_sxConfig: muiSxConfig, ...muiTheme } = extendMuiTheme();
+const muiTheme = extendMuiTheme();
 
-const { unstable_sxConfig: joySxConfig, ...joyTheme } = extendJoyTheme({
+const joyTheme = extendJoyTheme({
   cssVarPrefix: 'mui',
   colorSchemes: {
     light: {
@@ -99,11 +99,35 @@ const { unstable_sxConfig: joySxConfig, ...joyTheme } = extendJoyTheme({
   },
 });
 
-const mergedTheme = deepmerge(joyTheme, muiTheme);
+const mergedTheme = {
+  ...joyTheme,
+  ...muiTheme,
+  colorSchemes: deepmerge(joyTheme.colorSchemes, muiTheme.colorSchemes),
+  typography: {
+    ...joyTheme.typography,
+    ...muiTheme.typography,
+  },
+  zIndex: {
+    ...joyTheme.zIndex,
+    ...muiTheme.zIndex,
+  },
+};
 
+mergedTheme.shouldSkipGeneratingVar = (keys) =>
+  joyShouldSkipGeneratingVar(keys) || muiShouldSkipGeneratingVar(keys);
+mergedTheme.generateCssVars = (colorScheme) => ({
+  css: {
+    ...joyTheme.generateCssVars(colorScheme).css,
+    ...muiTheme.generateCssVars(colorScheme).css,
+  },
+  vars: deepmerge(
+    joyTheme.generateCssVars(colorScheme).vars,
+    muiTheme.generateCssVars(colorScheme).vars,
+  ),
+});
 mergedTheme.unstable_sxConfig = {
-  ...muiSxConfig,
-  ...joySxConfig,
+  ...muiTheme.unstable_sxConfig,
+  ...joyTheme.unstable_sxConfig,
 };
 
 const JoyField = React.forwardRef((props, inputRef) => {
@@ -256,12 +280,7 @@ JoyDatePicker.propTypes = {
 
 export default function PickerWithJoyField() {
   return (
-    <CssVarsProvider
-      theme={mergedTheme}
-      shouldSkipGeneratingVar={(keys) =>
-        muiShouldSkipGeneratingVar(keys) || joyShouldSkipGeneratingVar(keys)
-      }
-    >
+    <CssVarsProvider theme={mergedTheme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Stack spacing={2} sx={{ width: 400 }}>
           <JoyDatePicker />
