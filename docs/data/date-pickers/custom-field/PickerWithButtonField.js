@@ -62,7 +62,7 @@ function ButtonDatePicker(props) {
 
 ButtonDatePicker.propTypes = {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.any,

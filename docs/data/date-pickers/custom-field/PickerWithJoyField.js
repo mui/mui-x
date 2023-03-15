@@ -248,7 +248,7 @@ function JoyDatePicker(props) {
 
 JoyDatePicker.propTypes = {
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.any,

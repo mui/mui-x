@@ -750,7 +750,7 @@ AutocompleteDatePicker.propTypes = {
     }),
   ).isRequired,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.any,
