@@ -125,6 +125,16 @@ Please refer to each library's documentation for the full format table:
 
 :::
 
+:::warning
+The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
+because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
+
+If your application is only built be a single local, the easiest solution is to manually provide a format that does not contain any macro-token
+(e.g. `M/d/yyyy` instead of `D` for the english locale).
+
+We are trying to find a solution with the Luxon team to improve the built-in support in the near future.
+:::
+
 ### Custom field format
 
 The fields have a default format that depends on the picker being used, the views enabled, and the 12h/24h format.
