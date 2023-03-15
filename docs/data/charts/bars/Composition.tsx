@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LinePlot } from '@mui/x-charts/LineChart';
-import { DrawingProvider } from '@mui/x-charts/context/DrawingProvider';
-import { SeriesContextProvider } from '@mui/x-charts/context/SeriesContextProvider';
+import { ChartContainer } from '@mui/x-charts/ChartContainer';
+import { AllSeriesType } from '@mui/x-charts/models';
 import { CartesianContextProvider } from '@mui/x-charts/context/CartesianContextProvider';
-import Surface from '@mui/x-charts/Surface';
 import XAxis from '@mui/x-charts/XAxis/XAxis';
 import YAxis from '@mui/x-charts/YAxis/YAxis';
 
@@ -34,22 +33,7 @@ const series = [
     yAxisKey: 'pib',
     data: [1000, 1500, 3000, 5000, 10000],
   },
-];
-
-// Components that could be exported
-function ChartContainer(props: any) {
-  const { width, height, series: innerSerries, margin, children } = props;
-
-  return (
-    <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={innerSerries}>
-        <Surface width={width} height={height}>
-          {children}
-        </Surface>
-      </SeriesContextProvider>
-    </DrawingProvider>
-  );
-}
+] as AllSeriesType[];
 
 export default function Composition() {
   return (
