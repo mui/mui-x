@@ -35,6 +35,7 @@ function App ({ apiRef, initialState }) {
     quickFilterLogicOperator: GridLogicOperator.Or,
   });
   apiRef.current.setFilterLogicOperator('and');
+  const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(1);
   const localeText = apiRef.current.getLocaleText('filterPanelLogicOperator');
   return (
     <React.Fragment>

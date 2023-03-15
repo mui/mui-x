@@ -14,6 +14,7 @@ import generatePropTypeDescription, {
 } from '@mui/monorepo/packages/api-docs-builder/utils/generatePropTypeDescription';
 import parseTest from '@mui/monorepo/packages/api-docs-builder/utils/parseTest';
 import kebabCase from 'lodash/kebabCase';
+import camelCase from 'lodash/camelCase';
 import { LANGUAGES } from 'docs/config';
 import findPagesMarkdownNew from '@mui/monorepo/packages/api-docs-builder/utils/findPagesMarkdown';
 import { defaultHandlers, parse as docgenParse, ReactDocgenApi } from 'react-docgen';
@@ -145,7 +146,12 @@ function extractSlots(options: {
       return;
     }
 
-    slots[name] = {
+    // Workaround to generate correct (camelCase) keys for slots in v6 `API Reference` documentation
+    // TODO v7: Remove this condition when `Grid(Pro|Premium)SlotsComponent` type is refactored to have `camelCase` names
+    // Shifting to `slots` prop instead of `components` prop strips off the `default` property due to deduced type `UncapitalizedGridSlotsComponent`
+    const slotName = project.name.includes('grid') ? camelCase(name) : name;
+
+    slots[slotName] = {
       type,
       description,
       default: defaultValue,
@@ -330,6 +336,14 @@ const buildComponentDocumentation = async (options: {
       } else if (propName === 'sx') {
         description +=
           ' See the <a href="/system/getting-started/the-sx-prop/">`sx` page</a> for more details.';
+      }
+      // Parse and generate `@see` doc with a {@link}
+      const seeTag = prop.annotation.tags.find((tag) => tag.title === 'see');
+      if (seeTag && seeTag.description) {
+        description += ` ${seeTag.description.replace(
+          /{@link ([^|| ]*)[|| ]([^}]*)}/,
+          '<a href="$1">$2</a>',
+        )}`;
       }
       componentApi.propDescriptions[propName] = linkify(description, documentedInterfaces, 'html');
 

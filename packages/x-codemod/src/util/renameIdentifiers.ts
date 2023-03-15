@@ -54,7 +54,7 @@ const findDeepASTPath = (j, currentPath, currentIdentifiers) => {
  * @param {PreRequisiteUsage} preReqs
  * @returns {boolean}
  */
-const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boolean => {
+export const checkPreRequisitesSatisfied = (j, root, preReqs: PreRequisiteUsage): boolean => {
   if (preReqs.packageRegex || preReqs.components) {
     // check if any of the components is imported from a package which satisfies `preReqs.packageRegex`
     const imports = root.find(j.ImportDeclaration);

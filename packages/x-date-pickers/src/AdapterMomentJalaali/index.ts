@@ -1,35 +1,31 @@
 /* eslint-disable class-methods-use-this */
 import BaseAdapterMomentJalaali from '@date-io/jalaali';
 import defaultMoment, { LongDateFormatKey } from 'moment-jalaali';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
 type Moment = defaultMoment.Moment;
 
 // From https://momentjs.com/docs/#/displaying/format/
-const formatTokenMap: MuiFormatTokenMap = {
-  // Month
-  jM: 'month',
-  jMo: 'month',
-  jMM: 'month',
-  jMMM: { sectionName: 'month', contentType: 'letter' },
-  jMMMM: { sectionName: 'month', contentType: 'letter' },
-
-  // Day of Month
-  jD: 'day',
-  jDo: 'day',
-  jDD: 'day',
-
+const formatTokenMap: FieldFormatTokenMap = {
   // Year
-  jY: 'year',
   jYY: 'year',
   jYYYY: 'year',
-  jYYYYYY: 'year',
 
-  // AM / PM
+  // Month
+  jM: 'month',
+  jMM: 'month',
+  jMMM: { sectionType: 'month', contentType: 'letter' },
+  jMMMM: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
+  jD: 'day',
+  jDD: 'day',
+
+  // Meridiem
   A: 'meridiem',
   a: 'meridiem',
 
-  // Hour
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
@@ -37,11 +33,11 @@ const formatTokenMap: MuiFormatTokenMap = {
   k: 'hours',
   kk: 'hours',
 
-  // Minute
+  // Minutes
   m: 'minutes',
   mm: 'minutes',
 
-  // Second
+  // Seconds
   s: 'seconds',
   ss: 'seconds',
 };
@@ -104,6 +100,10 @@ export class AdapterMomentJalaali
     return count < 0
       ? date.clone().subtract(Math.abs(count), 'jMonth')
       : date.clone().add(count, 'jMonth');
+  };
+
+  public setMonth = (date: Moment, month: number) => {
+    return date.clone().jMonth(month);
   };
 
   public isValid = (value: any) => {

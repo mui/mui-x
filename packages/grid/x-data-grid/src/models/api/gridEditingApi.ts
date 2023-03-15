@@ -44,9 +44,9 @@ export interface GridEditingSharedApi {
    * In row editing, `field` is ignored and all fields are considered.
    * @param {GridRowId} id The row id being edited.
    * @param {string} field The field being edited.
-   * @ignore - do not document.
+   * @returns {GridRowModel} The row with edited values.
    */
-  unstable_getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
+  getRowWithUpdatedValues: (id: GridRowId, field: string) => GridRowModel;
   /**
    * Gets the meta information for the edit cell.
    * @param {GridRowId} id The row id being edited.
@@ -58,7 +58,7 @@ export interface GridEditingSharedApi {
 
 export interface GridEditingSharedPrivateApi {
   /**
-   * Immediatelly updates the value of the cell, without waiting for the debounce.
+   * Immediately updates the value of the cell, without waiting for the debounce.
    * @param {GridRowId} id The row id.
    * @param {string} field The field to update. If not passed, updates all fields in the given row id.
    */

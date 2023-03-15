@@ -28,7 +28,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 export interface LocalizationProviderProps<TDate> {
   children?: React.ReactNode;
-  /** DateIO adapter class function */
+  /**
+   * Date library adapter class function.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
+   */
   dateAdapter?: new (...args: any) => MuiPickersAdapter<TDate>;
   /** Formats that are used for any child pickers */
   dateFormats?: Partial<DateIOFormats>;
@@ -99,7 +102,7 @@ export function LocalizationProvider<TDate>(inProps: LocalizationProviderProps<T
         [
           'MUI: The date adapter should be imported from `@mui/x-date-pickers` or `@mui/x-date-pickers-pro`, not from `@date-io`',
           "For example, `import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'` instead of `import AdapterDayjs from '@date-io/dayjs'`",
-          'More information on the installation documentation: https://next.mui.com/x/react-date-pickers/getting-started/#installation',
+          'More information on the installation documentation: https://mui.com/x/react-date-pickers/getting-started/#installation',
         ].join(`\n`),
       );
     }
@@ -145,7 +148,8 @@ LocalizationProvider.propTypes = {
   adapterLocale: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   children: PropTypes.node,
   /**
-   * DateIO adapter class function
+   * Date library adapter class function.
+   * @see See the localization provider {@link https://mui.com/x/react-date-pickers/getting-started/#code-setup code setup section} for more details.
    */
   dateAdapter: PropTypes.func,
   /**

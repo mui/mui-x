@@ -34,7 +34,7 @@ function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
     return (
       <MenuItem onClick={ungroupColumn} key={field}>
         <ListItemIcon>
-          <rootProps.components.ColumnMenuUngroupIcon fontSize="small" />
+          <rootProps.slots.columnMenuUngroupIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{apiRef.current.getLocaleText('unGroupColumn')(name)}</ListItemText>
       </MenuItem>

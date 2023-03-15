@@ -201,7 +201,7 @@ If you were always using the same text value in all your components, consider mo
  </LocalizationProvider>
 ```
 
-You can find more details about Date and Time breaking changes in [the migration guide](https://next.mui.com/x/migration/migration-pickers-v5/).
+You can find more details about Date and Time breaking changes in [the migration guide](https://mui.com/x/migration/migration-pickers-v5/).
 
 #### `replace-tabs-props`
 
@@ -381,7 +381,7 @@ Rename toolbar related translation keys, removing `Default` part from them to be
 npx @mui/x-codemod v6.0.0/pickers/rename-default-toolbar-title-localeText <path>
 ```
 
-#### `rename-components-to-slots`
+#### `rename-components-to-slots-pickers`
 
 Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
 
@@ -603,7 +603,7 @@ Rename selectors and events.
 
 ```diff
  function App() {
--  useGridApiEventHandler('selectionChange', handleEvent);
+-  useGridApiEventHandler(apiRef, 'selectionChange', handleEvent);
 -  apiRef.current.subscribeEvent('selectionChange', handleEvent);
 -  const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 -  const sortedRowIds = useGridSelector(apiRef, gridVisibleSortedRowIdsSelector);
@@ -611,7 +611,12 @@ Rename selectors and events.
 -  const rowCount = useGridSelector(apiRef, gridVisibleRowCountSelector);
 -  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridVisibleSortedTopLevelRowEntriesSelector);
 -  const topLevelRowCount = useGridSelector(apiRef, gridVisibleTopLevelRowCountSelector);
-+  useGridApiEventHandler('rowSelectionChange', handleEvent);
+-  const allGridColumnsFields = useGridSelector(apiRef, allGridColumnsFieldsSelector);
+-  const allGridColumns = useGridSelector(apiRef, allGridColumnsSelector);
+-  const visibleGridColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
+-  const filterableGridColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+-  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericColumnOperators);
++  useGridApiEventHandler(apiRef, 'rowSelectionChange', handleEvent);
 +  apiRef.current.subscribeEvent('rowSelectionChange', handleEvent);
 +  const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
 +  const sortedRowIds = useGridSelector(apiRef, gridExpandedSortedRowIdsSelector);
@@ -619,6 +624,11 @@ Rename selectors and events.
 +  const rowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
 +  const sortedTopLevelRowEntries = useGridSelector(apiRef, gridFilteredSortedTopLevelRowEntriesSelector);
 +  const topLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
++  const allGridColumnsFields = useGridSelector(apiRef, gridColumnFieldsSelector);
++  const allGridColumns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
++  const visibleGridColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
++  const filterableGridColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
++  const getGridNumericColumn = useGridSelector(apiRef, getGridNumericOperators);
  }
 ```
 
@@ -670,4 +680,23 @@ Replace `onCellFocusOut` prop with `componentsProps.cell.onBlur`.
 npx @mui/x-codemod v6.0.0/data-grid/replace-onCellFocusOut-prop <path>
 ```
 
-You can find more details about Data Grid breaking change in [the migration guide](https://next.mui.com/x/migration/migration-data-grid-v5/).
+#### `rename-components-to-slots-data-grid`
+
+Renames the `components` and `componentsProps` props to `slots` and `slotProps`, respectively.
+
+This change only affects data grid components.
+
+```diff
+ <DataGrid
+-  components={{ Toolbar: CustomToolbar }}
++  slots={{ toolbar: CustomToolbar }}
+-  componentsProps={{ actionBar: { actions: ['clear'] } }}
++  slotProps={{ actionBar: { actions: ['clear'] } }}
+ />;
+```
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+```
+
+You can find more details about Data Grid breaking change in [the migration guide](https://mui.com/x/migration/migration-data-grid-v5/).

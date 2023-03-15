@@ -86,7 +86,9 @@
       "default": "'outlined'"
     }
   },
-  "slots": { "Input": { "default": "TextField", "type": { "name": "elementType" } } },
+  "slots": {
+    "TextField": { "default": "TextField from '@mui/material'", "type": { "name": "elementType" } }
+  },
   "name": "SingleInputTimeRangeField",
   "styles": { "classes": ["root"], "globalClasses": {}, "name": "MuiSingleInputTimeRangeField" },
   "filename": "/packages/x-date-pickers-pro/src/SingleInputTimeRangeField/SingleInputTimeRangeField.tsx",

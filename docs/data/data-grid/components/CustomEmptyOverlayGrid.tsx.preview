@@ -1,6 +1,6 @@
 <DataGrid
-  components={{
-    NoRowsOverlay: CustomNoRowsOverlay,
+  slots={{
+    noRowsOverlay: CustomNoRowsOverlay,
   }}
   {...data}
   rows={[]}

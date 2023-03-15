@@ -28,7 +28,7 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
   return (
     <MenuItem onClick={showColumns}>
       <ListItemIcon>
-        <rootProps.components.ColumnMenuManageColumnsIcon fontSize="small" />
+        <rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />
       </ListItemIcon>
       <ListItemText>{apiRef.current.getLocaleText('columnMenuManageColumns')}</ListItemText>
     </MenuItem>

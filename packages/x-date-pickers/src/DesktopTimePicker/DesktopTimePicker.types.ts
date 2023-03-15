@@ -24,7 +24,7 @@ export interface DesktopTimePickerProps<TDate>
   extends BaseTimePickerProps<TDate>,
     DesktopOnlyPickerProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -36,7 +36,7 @@ export interface DesktopTimePickerProps<TDate>
    */
   componentsProps?: DesktopTimePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DesktopTimePickerSlotsComponent<TDate>>;

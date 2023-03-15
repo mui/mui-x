@@ -11,8 +11,14 @@ export default function BasicTimeRangeField() {
       <DemoContainer
         components={['MultiInputTimeRangeField', 'SingleInputTimeRangeField']}
       >
-        <MultiInputTimeRangeField />
-        <SingleInputTimeRangeField />
+        <MultiInputTimeRangeField
+          slotProps={{
+            textField: ({ position }) => ({
+              label: position === 'start' ? 'From' : 'To',
+            }),
+          }}
+        />
+        <SingleInputTimeRangeField label="From - To" />
       </DemoContainer>
     </LocalizationProvider>
   );

@@ -47,6 +47,7 @@ const itITGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Aggiungi un filtro',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Rimuovi',
   filterPanelLogicOperator: 'Operatore logico',
   filterPanelOperator: 'Operatori',
