@@ -16,4 +16,27 @@ title: Charts - Bars
 
 {{"demo": "TestBars.js", "bg": "inline"}}
 
+## Use composition
+
+You can mix all charts together by using composition. The basic structure should be
+
+```jsx
+// Provide data ane layout
+<ChartContainer series={series} width={500} height={500}>
+  // If plots are in cartesian coordiante, provide the axis
+  <CartesianContextProvider xAxis={xAxis} yAxis={yAxis}>
+    // Add the components to render (even your custom ones)
+    <BarPlot />
+    <LinePlot />
+    <XAxis />
+  </CartesianContextProvider>
+</ChartContainer>
+```
+
 {{"demo": "Composition.js", "bg": "inline"}}
+
+## Use responsive container
+
+If you do not want to provide `width` or `height` you can use `<ResponsiveChartContainer />`
+
+{{"demo": "CompositionResponsive.js", "bg": "inline"}}
