@@ -5,24 +5,54 @@ githubLabel: 'component: pickers'
 packageName: '@mui/x-date-pickers'
 ---
 
-# Custom layout
+# Custom field
 
 <p class="description">The Date and Time Pickers let you pass custom fields to your pickers</p>
 
-## Custom text field
+## Customize the default field
+
+### Customize the `TextField`
+
+You can use the `textField` slot to pass custom props to the `TextField`:
+
+{{"demo": "TextFieldSlotProps.js"}}
+
+### Customize the separator of multi input fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan)
+
+You can use the `fieldSeparator` slot to pass custom props to the `Typography` rendered between the two `TextField`:
+
+{{"demo": "MultiInputFieldSeparatorSlotProps.js"}}
+
+## Commonly used custom field
+
+### Using another input
+
+#### With the Joy input
 
 :::info
 This demo demonstrates how to take advantage of the field smart behaviors with any input (even third party ones).
-For Joy, we will provide an higher level solution in the coming months for an even simpler usage.
+For Joy, we will provide a higher level solution in the coming months for an even simpler usage.
 :::
 
 {{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
 
-## Autocomplete field
+#### With the browser input
+
+You can also use any other input:
+
+{{"demo": "PickerWithBrowserField.js", "defaultCodeOpen": false}}
+
+### Using an `Autocomplete`
+
+If your user can only select a value in a small list of available dates,
+you can replace the field by an `Autocomplete` which just lists the those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
-## Button field
+### Using a `Button`
+
+If you only want to allow the user to pick a value through the views,
+you can replace the field by a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 
@@ -34,10 +64,12 @@ On the examples below, you can see that the typing of the props received by a cu
 
 ```tsx
 interface JoyDateFieldProps
-  // The headless field props
-  extends UseDateFieldProps<Dayjs>,
-    // The DOM field props
-    BaseSingleInputFieldProps<Dayjs | null, DateValidationError> {}
+  extends UseDateFieldProps<Dayjs>, // The headless field props
+    BaseSingleInputFieldProps<Dayjs | null, DateTimeValidationError> {} // The DOM field props
+
+interface JoyDateTimeFieldProps
+  extends UseDateTimeFieldProps<Dayjs>, // The headless field props
+    BaseSingleInputFieldProps<Dayjs | null, DateTimeValidationError> {} // The DOM field props
 ```
 
 ### The headless field props
@@ -60,4 +92,4 @@ This interface contains the props the pickers passes to its field in order to cu
 These props are shaped to be received by our built-in fields which are using the `TextField` from `@mui/material`.
 When used with another type of input (or no input at all), you will have to manually re-attribute them to the relevant component.
 
-You can have a look at the `BaseSingleInputFieldProps` and `BaseMultiInputFieldProps` interfaces for more information.
+You can have a look at the `BaseSingleInputFieldProps` and `BaseMultiInputFieldProps` interfaces to know exactly what those interfaces contain.
