@@ -142,8 +142,8 @@ export const useDesktopRangePicker = <
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
       return {
-        ...externalInputProps,
         ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
+        ...externalInputProps,
       };
     },
     root: (ownerState) => {

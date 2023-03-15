@@ -129,6 +129,10 @@ const theme = createTheme({
 });
 ```
 
+:::success
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+:::
+
 ### Remove the keyboard view
 
 The picker components no longer have a keyboard view to render the input inside the modal on mobile.
@@ -426,7 +430,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' }}
    />
 
    <DateRangePicker
@@ -437,7 +441,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' }}
    />
   ```
 

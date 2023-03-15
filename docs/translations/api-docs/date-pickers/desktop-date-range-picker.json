@@ -51,7 +51,7 @@
     "ActionBar": "Custom component for the action bar, it is placed below the picker views.",
     "Day": "Custom component for day in range pickers.\nCheck the <a href=\"https://mui.com/x/api/date-pickers/date-range-picker-day/\">DateRangePickersDay</a> component.",
     "DesktopPaper": "Custom component for the paper rendered inside the desktop picker&#39;s Popper.",
-    "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions\">Transition</a>.",
+    "DesktopTransition": "Custom component for the desktop popper <a href=\"https://mui.com/material-ui/transitions/\">Transition</a>.",
     "DesktopTrapFocus": "Custom component for trapping the focus inside the views on desktop.",
     "Field": "",
     "FieldRoot": "",

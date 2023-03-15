@@ -422,6 +422,22 @@ describe('<DateField /> - Editing', () => {
       });
     });
 
+    it('should support day with letter suffix', function test() {
+      // Luxon don't have any day format with a letter suffix
+      if (adapterName === 'luxon') {
+        this.skip();
+      }
+
+      testFieldChange({
+        format: adapterName === 'date-fns' ? 'do' : 'Do',
+        keyStrokes: [
+          { value: '1', expected: '1st' },
+          { value: '2', expected: '12th' },
+          { value: '2', expected: '2nd' },
+        ],
+      });
+    });
+
     it('should not edit when props.readOnly = true and no value is provided', () => {
       testFieldChange({
         format: adapter.formats.year,
