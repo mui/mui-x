@@ -43,13 +43,11 @@ function LinePlot() {
           .y0((d) => yScale(d.y[0]))
           .y1((d) => yScale(d.y[1]));
 
-        return stackingGroups.flatMap((groupIds, groupIndex) => {
+        return stackingGroups.flatMap((groupIds) => {
           return groupIds.flatMap((seriesId) => {
             const { stackedData } = series[seriesId];
             const d3Data = xData?.map((x, index) => ({ x, y: stackedData[index] }));
-            console.log(d3Data?.map((d) => d.y[1]));
-            console.log(d3Data?.map((d) => yScale(d.y[1])));
-            
+
             return (
               <React.Fragment key={seriesId}>
                 {!!series[seriesId].area && (

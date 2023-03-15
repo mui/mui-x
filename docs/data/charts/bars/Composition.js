@@ -37,10 +37,12 @@ const series = [
 ];
 
 // Components that could be exported
-function ChartContainer({ width, height, series, margin, children }) {
+function ChartContainer(props) {
+  const { width, height, series: innerSerries, margin, children } = props;
+
   return (
     <DrawingProvider width={width} height={height} margin={margin}>
-      <SeriesContextProvider series={series}>
+      <SeriesContextProvider series={innerSerries}>
         <Surface width={width} height={height}>
           {children}
         </Surface>

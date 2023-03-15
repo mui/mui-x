@@ -109,8 +109,7 @@ export function CartesianContextProvider({
           if (formattedSeries[chartType]?.series === undefined) {
             return [currentMinData, currentMaxData];
           }
-          console.log(chartType);
-          console.log(formattedSeries[chartType]?.series);
+
           const [minChartTypeData, maxChartTypeData] = getExtremumY[chartType]({
             series: formattedSeries[chartType]?.series,
             yAxis: axis,
@@ -123,7 +122,6 @@ export function CartesianContextProvider({
         [null, null],
       );
 
-      console.log({ axis: axis.id, minData, maxData });
       const scale = axis.scale ?? ('linea' as Scales);
       completedYAxis[axis.id] = {
         ...axis,

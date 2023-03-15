@@ -21,7 +21,6 @@ export const getExtremumX = (params: GetExtremumParamsX): GetExtremumResult => {
 };
 
 export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
-  console.log('getExtremumY');
   const { series, yAxis } = params;
 
   const [minY, maxY] = Object.keys(series)
@@ -29,7 +28,7 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
     .reduce(
       (acc: [number, number] | [null, null], seriesId) => {
         const isArea = series[seriesId].area !== undefined;
-        console.log({ acc });
+
         const getValues = isArea ? (d) => d : (d) => [d[1], d[1]]; // Id area should go from bottom to top, without area should only consider the top
 
         const [seriesMin, serriesMax] = series[seriesId].stackedData.reduce(
@@ -39,7 +38,6 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
           },
           getValues(series[seriesId].stackedData[0]),
         );
-        console.log(seriesMin, serriesMax);
 
         if (acc[0] === null || acc[1] === null) {
           return [seriesMin, serriesMax];
@@ -48,8 +46,6 @@ export const getExtremumY = (params: GetExtremumParamsY): GetExtremumResult => {
       },
       [null, null],
     );
-
-  console.log({ minY, maxY });
 
   return [minY, maxY];
 };
