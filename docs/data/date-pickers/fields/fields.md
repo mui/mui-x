@@ -33,16 +33,27 @@ The single input range fields are not supported on the range pickers yet (you ca
 
 ## Advanced
 
+### What is a section?
+
+In the field components, the date is divided into several sections, each one responsible for the edition of a date token.
+For example, if the format passed to the field is `MM/DD/YYYY`, the field will create 3 sections:
+
+- A `month` section for the token `MM`
+- A `day` section for the token `DD`
+- A `year` section for the token `YYYY`
+
+Those sections are independent, pressing <kbd class="key">ArrowUp</kbd> while focusing the `day` section will add one day to the date, but it will never change the month or the year.
+
 ### When is `onChange` called?
 
 The field components have an internal state to update the visible value.
 
 It will only call the `onChange` callback when:
 
-- all the sections of the date are filled
-- all the sections of the date are empty, its value will equal `null`
-- all the sections of the date were previously empty and the user fills a section, its value will equal `Invalid date`
-- all the sections of the date were previously filled and the user cleans a section, its value will equal `Invalid date`
+- the user fills one section of an empty input. The value equals `Invalid date`.
+- the user completes all sections of an input. The value reflects the input.
+- the user cleans one section of a completed input. The value equals `Invalid date`.
+- the user cleans all sections of an input. The value equals `null`.
 
 In the example below, `onChange` will be called when any of the conditions are triggered:
 
