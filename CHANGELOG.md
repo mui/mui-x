@@ -21,6 +21,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 #### Changes
 
 - [DataGrid] Fix <kbd>Space</kbd> triggering edit mode (#8180) @m4theushw
+- [DataGrid] Remove warning when adding a custom column type (#8227) @m4theushw
 - [l10n] Improve Brazilian Portuguese (pt-BR) locale (#8198) @JoaoSerafim3001
 
 ### `@mui/x-date-pickers@v6.0.2` / `@mui/x-date-pickers-pro@v6.0.2`
