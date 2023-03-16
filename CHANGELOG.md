@@ -10,6 +10,7 @@ _Mar 16, 2023_
 We'd like to offer a big thanks to the 10 contributors who made this release possible. Here are some highlights ✨:
 
 - 🚀 Fire `onChange` when filling a partial date (#8082) @flaviendelangle
+- 🎁 Support format like `1st` / `2nd` (#8188) @flaviendelangle
 - 🌍 Add Hebrew (he-IL) locale (#8222) @ylarom
 - 🌍 Improve Brazilian Portuguese (pt-BR), German (de-DE), and French (fr-FR) locales
 - 📚 Documentation improvements
@@ -32,7 +33,7 @@ We'd like to offer a big thanks to the 10 contributors who made this release pos
 - [DateRangePicker] Allow overriding `slotProps.textField` (#8201) @LukasTy
 - [fields] Fire `onChange` when filling a partial date (#8082) @flaviendelangle
 - [fields] Fix editing in shadow dom (#8254) @flaviendelangle
-- [fields] Remove the warning about invalid adapter (#8187) @flaviendelangle
+- [fields] Remove the duplicated warning about invalid adapter (#8187) @flaviendelangle
 - [fields] Support format like `1st` / `2nd` (#8188) @flaviendelangle
 - [pickers] Fix to avoid selecting sections on mobile picker field (#8228) @LukasTy
 - [pickers] Inherit previous and next icons size from their parent button (#8218) @flaviendelangle
