@@ -248,7 +248,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    * @template TValue, TDate, TSection
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The localization object to generate the placeholders.
-   * @param {TSection[] | null} prevSections The last section list stored in state.
+   * @param {TSection[] | null} sections The sections to use as a fallback if a date is null or invalid.
    * @param {TValue} value The current value to generate sections from.
    * @param {string} format The date format.
    * @returns {TSection[]}  The new section list.
@@ -256,7 +256,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
   getSectionsFromValue: (
     utils: MuiPickersAdapter<TDate>,
     localeText: PickersLocaleText<TDate>,
-    prevSections: TSection[] | null,
+    sections: TSection[] | null,
     value: TValue,
     format: string,
   ) => TSection[];

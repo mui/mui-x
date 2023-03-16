@@ -459,7 +459,8 @@ export const splitFormatIntoSections = <TDate>(
     }
 
     const sectionConfig = getDateSectionConfigFromFormatToken(utils, token);
-    const sectionValue = date == null ? '' : utils.formatByString(date, token);
+    const sectionValue =
+      date == null || !utils.isValid(date) ? '' : utils.formatByString(date, token);
 
     const hasLeadingZeros = doesSectionHaveLeadingZeros(
       utils,
