@@ -6,10 +6,6 @@ import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendMuiTheme,
   shouldSkipGeneratingVar as muiShouldSkipGeneratingVar,
-  Overlays,
-  Shadows,
-  ZIndex,
-  ThemeVars,
 } from '@mui/material/styles';
 import {
   extendTheme as extendJoyTheme,
@@ -43,16 +39,6 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
 } from '@mui/x-date-pickers-pro';
-
-// extends Joy theme to include tokens from Material UI
-declare module '@mui/joy/styles' {
-  interface ThemeVars {
-    // attach to Joy UI `theme.vars`
-    shadows: Shadows;
-    overlays: Overlays;
-    zIndex: ZIndex;
-  }
-}
 
 const muiTheme = extendMuiTheme();
 
@@ -151,7 +137,7 @@ mergedTheme.generateCssVars = (colorScheme) => ({
   vars: deepmerge(
     joyTheme.generateCssVars(colorScheme).vars,
     muiTheme.generateCssVars(colorScheme).vars,
-  ) as unknown as ThemeVars,
+  ) as any,
 });
 mergedTheme.unstable_sxConfig = {
   ...muiTheme.unstable_sxConfig,

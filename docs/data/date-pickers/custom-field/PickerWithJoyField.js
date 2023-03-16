@@ -1,18 +1,18 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 
+import { deepmerge } from '@mui/utils';
+import { blue, grey } from '@mui/material/colors';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendMuiTheme,
   shouldSkipGeneratingVar as muiShouldSkipGeneratingVar,
 } from '@mui/material/styles';
-import { blue, grey } from '@mui/material/colors';
 import {
-  styled,
   extendTheme as extendJoyTheme,
   shouldSkipGeneratingVar as joyShouldSkipGeneratingVar,
+  styled,
 } from '@mui/joy/styles';
-import deepmerge from '@mui/utils/deepmerge';
 import { useSlotProps } from '@mui/base/utils';
 import Input from '@mui/joy/Input';
 import Stack from '@mui/joy/Stack';
