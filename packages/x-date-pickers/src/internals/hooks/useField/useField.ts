@@ -15,6 +15,7 @@ import {
 import { adjustSectionValue, isAndroid, cleanString } from './useField.utils';
 import { useFieldState } from './useFieldState';
 import { useFieldCharacterEditing } from './useFieldCharacterEditing';
+import { getActiveElement } from '../../utils/utils';
 
 export const useField = <
   TValue,
@@ -404,7 +405,7 @@ export const useField = <
     return 'tel';
   }, [selectedSectionIndexes, state.sections]);
 
-  const inputHasFocus = inputRef.current && inputRef.current === document.activeElement;
+  const inputHasFocus = inputRef.current && inputRef.current === getActiveElement(document);
   const shouldShowPlaceholder =
     !inputHasFocus &&
     (!state.value || valueManager.areValuesEqual(utils, state.value, valueManager.emptyValue));
