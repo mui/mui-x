@@ -10,10 +10,10 @@ export default function TimeClockFormProps() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['TimeClock', 'TimeClock']}>
         <DemoItem label="disabled">
-          <TimeClock defaultValue={dayjs('2022-04-07T15:30')} disabled />
+          <TimeClock defaultValue={dayjs('2022-04-17T15:30')} disabled />
         </DemoItem>
         <DemoItem label="readOnly">
-          <TimeClock defaultValue={dayjs('2022-04-07T15:30')} readOnly />
+          <TimeClock defaultValue={dayjs('2022-04-17T15:30')} readOnly />
         </DemoItem>
       </DemoContainer>
     </LocalizationProvider>

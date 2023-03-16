@@ -1,4 +1,4 @@
-# ✨ What's new in v6? ✨
+# ✨ What's new in MUI X v6? ✨
 
 <p class="description">Discover the new features on the latest major version.</p>
 
@@ -24,4 +24,6 @@ Install the latest v6 now to enjoy the new features and overall improvements!
 
 ## Migrating from v5?
 
-Migration guides are available for both the [Data Grid](/x/migration/migration-data-grid-v5/) and [Date Pickers](/x/migration/migration-pickers-v5/), with a complete list of the breaking changes and an expanding list of [codemods](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md) to support your migrating experience.
+<!-- #default-branch-switch -->
+
+Migration guides are available for both the [Data Grid](/x/migration/migration-data-grid-v5/) and [Date Pickers](/x/migration/migration-pickers-v5/), with a complete list of the breaking changes and an expanding list of [codemods](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md) to support your migrating experience.

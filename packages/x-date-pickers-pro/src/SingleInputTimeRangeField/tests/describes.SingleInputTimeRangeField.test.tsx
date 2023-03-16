@@ -8,7 +8,7 @@ describe('<SingleInputTimeRangeField /> - Describes', () => {
   const { render, clock } = createPickerRenderer({ clock: 'fake' });
 
   describeConformance(<SingleInputTimeRangeField />, () => ({
-    classes: {},
+    classes: {} as any,
     inheritComponent: 'div',
     render,
     muiName: 'MuiSingleInputTimeRangeField',

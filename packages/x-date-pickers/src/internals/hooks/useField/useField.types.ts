@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiDateSectionName, MuiPickersAdapter } from '../../models';
+import { FieldSectionType, MuiPickersAdapter } from '../../models';
 import type { PickerValueManager } from '../usePicker';
 import { InferError, Validator } from '../validation/useValidation';
 import { PickersLocaleText } from '../../../locales/utils/pickersLocaleTextApi';
@@ -37,14 +37,16 @@ export interface UseFieldInternalProps<TValue, TError> {
   defaultValue?: TValue;
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange?: FieldChangeHandler<TValue, TError>;
   /**
    * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error.
    * @param {TValue} value The value associated to the error.
    */
@@ -64,7 +66,7 @@ export interface UseFieldInternalProps<TValue, TError> {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -79,9 +81,11 @@ export interface UseFieldInternalProps<TValue, TError> {
 export interface UseFieldForwardedProps {
   onKeyDown?: React.KeyboardEventHandler;
   onMouseUp?: React.MouseEventHandler;
+  onPaste?: React.ClipboardEventHandler<HTMLInputElement>;
   onClick?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  error?: boolean;
 }
 
 export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = Omit<
@@ -89,15 +93,54 @@ export type UseFieldResponse<TForwardedProps extends UseFieldForwardedProps> = O
   keyof UseFieldForwardedProps
 > &
   Required<UseFieldForwardedProps> &
-  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode'> & {
+  Pick<React.HTMLAttributes<HTMLInputElement>, 'autoCorrect' | 'inputMode' | 'placeholder'> & {
     ref: React.Ref<HTMLInputElement>;
     value: string;
     onChange: React.ChangeEventHandler<HTMLInputElement>;
     error: boolean;
     readOnly: boolean;
+    autoComplete: 'off';
   };
 
 export interface FieldSection {
+  /**
+   * Value of the section, as rendered inside the input.
+   * For example, in the date `May 25, 1995`, the value of the month section is "May".
+   */
+  value: string;
+  /**
+   * Format token used to parse the value of this section from the date object.
+   * For example, in the format `MMMM D, YYYY`, the format of the month section is "MMMM".
+   */
+  format: string;
+  /**
+   * Placeholder rendered when the value of this section is empty.
+   */
+  placeholder: string;
+  /**
+   * Type of the section.
+   */
+  type: FieldSectionType;
+  /**
+   * Type of content of the section.
+   * Will determine if we should apply a digit-based editing or a letter-based editing.
+   */
+  contentType: 'digit' | 'letter';
+  /**
+   * If `true`, the value of this section is supposed to have leading zeroes.
+   * For example, the value `1` should be rendered as "01" instead of "1".
+   */
+  hasLeadingZeros: boolean;
+  /**
+   * If `true`, the section value has been modified since the last time the sections were generated from a valid date.
+   * When we can generate a valid date from the section, we don't directly pass it to `onChange`,
+   * Otherwise, we would lose all the information contained in the original date, things like:
+   * - time if the format does not contain it
+   * - timezone / UTC
+   *
+   * To avoid losing that information, we transfer the values of the modified sections from the newly generated date to the original date.
+   */
+  modified: boolean;
   /**
    * Start index of the section in the format
    */
@@ -116,8 +159,6 @@ export interface FieldSection {
    * Takes into account invisible unicode characters such as \u2069 but does not include them
    */
   endInInput: number;
-  value: string;
-  placeholder: string;
   /**
    * Separator displayed before the value of the section in the input.
    * If it contains escaped characters, then it must not have the escaping characters.
@@ -130,20 +171,25 @@ export interface FieldSection {
    * For example, on Day.js, the `year` section of the format `[year] YYYY` has a start separator equal to `[year]`
    */
   endSeparator: string;
-  dateSectionName: MuiDateSectionName;
-  contentType: 'digit' | 'letter';
-  formatValue: string;
-  edited: boolean;
-  hasTrailingZeroes: boolean;
 }
 
-export type FieldSectionsValueBoundaries<TDate> = Record<
-  MuiDateSectionName,
-  (params: { currentDate: TDate | null; format: string; contentType: 'digit' | 'letter' }) => {
-    minimum: number;
-    maximum: number;
-  }
+export type FieldSectionWithoutPosition<TSection extends FieldSection = FieldSection> = Omit<
+  TSection,
+  'start' | 'end' | 'startInInput' | 'endInInput'
 >;
+
+export type FieldSectionValueBoundaries<TDate, SectionType extends FieldSectionType> = {
+  minimum: number;
+  maximum: number;
+} & (SectionType extends 'day' ? { longestMonth: TDate } : {});
+
+export type FieldSectionsValueBoundaries<TDate> = {
+  [SectionType in FieldSectionType]: (params: {
+    currentDate: TDate | null;
+    format: string;
+    contentType: 'digit' | 'letter';
+  }) => FieldSectionValueBoundaries<TDate, SectionType>;
+};
 
 export type FieldChangeHandler<TValue, TError> = (
   value: TValue,
@@ -190,7 +236,7 @@ export type FieldSelectedSectionsIndexes = {
 
 export type FieldSelectedSections =
   | number
-  | MuiDateSectionName
+  | FieldSectionType
   | null
   | 'all'
   | { startIndex: number; endIndex: number };
@@ -280,7 +326,7 @@ export interface FieldValueManager<TValue, TDate, TSection extends FieldSection,
    */
   hasError: (error: TError) => boolean;
   /**
-   * Return a description of sections display order. This description is usefull in RTL mode.
+   * Return a description of sections display order. This description is useful in RTL mode.
    * @template TDate
    * @param {MuiPickersAdapter<TDate>} utils The utils to manipulate the date.
    * @param {PickersLocaleText<TDate>} localeText The translation object.
@@ -303,6 +349,10 @@ export interface UseFieldState<TValue, TSection extends FieldSection> {
    * It is updated whenever we have a valid date (for the range picker we update only the portion of the range that is valid).
    */
   referenceValue: TValue;
+  /**
+   * A localized format string built from sections.
+   */
+  placeholder: string;
   sections: TSection[];
   /**
    * Android `onChange` behavior when the input selection is not empty is quite different from a desktop behavior.

@@ -48,7 +48,7 @@ export interface BaseDatePickerProps<TDate>
   extends BasePickerInputProps<TDate | null, TDate, DateView, DateValidationError>,
     ExportedDateCalendarProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -60,7 +60,7 @@ export interface BaseDatePickerProps<TDate>
    */
   componentsProps?: BaseDatePickerSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<BaseDatePickerSlotsComponent<TDate>>;

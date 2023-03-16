@@ -48,7 +48,6 @@ export type {
   PickersPopperClasses,
 } from './components/pickersPopperClasses';
 export { PickersToolbarButton } from './components/PickersToolbarButton';
-export { WrapperVariantContext } from './components/wrappers/WrapperVariantContext';
 
 export { DAY_MARGIN, DIALOG_WIDTH } from './constants/dimensions';
 
@@ -64,6 +63,7 @@ export type {
   UseFieldInternalProps,
   UseFieldParams,
   UseFieldResponse,
+  UseFieldForwardedProps,
   FieldValueManager,
   FieldSection,
   FieldChangeHandler,

@@ -3,51 +3,67 @@ import defaultLocale from 'date-fns/locale/en-US';
 // @ts-ignore
 import longFormatters from 'date-fns/_lib/format/longFormatters';
 import getWeek from 'date-fns/getWeek';
-import { MuiFormatTokenMap, MuiPickersAdapter } from '../internals/models';
+import { FieldFormatTokenMap, MuiPickersAdapter } from '../internals/models';
 
-const formatTokenMap: MuiFormatTokenMap = {
+const formatTokenMap: FieldFormatTokenMap = {
+  // Year
   y: 'year',
   yy: 'year',
   yyy: 'year',
   yyyy: 'year',
+
+  // Month
   M: 'month',
   MM: 'month',
-  MMMM: { sectionName: 'month', contentType: 'letter' },
-  MMM: { sectionName: 'month', contentType: 'letter' },
-  LLL: { sectionName: 'month', contentType: 'letter' },
-  LLLL: { sectionName: 'month', contentType: 'letter' },
-  E: { sectionName: 'weekDay', contentType: 'letter' },
-  EE: { sectionName: 'weekDay', contentType: 'letter' },
-  EEE: { sectionName: 'weekDay', contentType: 'letter' },
-  EEEE: { sectionName: 'weekDay', contentType: 'letter' },
-  EEEEE: { sectionName: 'weekDay', contentType: 'letter' },
-  i: 'weekDay',
-  ii: 'weekDay',
-  iii: { sectionName: 'weekDay', contentType: 'letter' },
-  iiii: { sectionName: 'weekDay', contentType: 'letter' },
-  e: 'weekDay',
-  ee: 'weekDay',
-  eee: { sectionName: 'weekDay', contentType: 'letter' },
-  eeee: { sectionName: 'weekDay', contentType: 'letter' },
-  eeeee: { sectionName: 'weekDay', contentType: 'letter' },
-  eeeeee: { sectionName: 'weekDay', contentType: 'letter' },
-  c: 'weekDay',
-  cc: 'weekDay',
-  ccc: { sectionName: 'weekDay', contentType: 'letter' },
-  cccc: { sectionName: 'weekDay', contentType: 'letter' },
-  ccccc: { sectionName: 'weekDay', contentType: 'letter' },
-  cccccc: { sectionName: 'weekDay', contentType: 'letter' },
+  MMMM: { sectionType: 'month', contentType: 'letter' },
+  MMM: { sectionType: 'month', contentType: 'letter' },
+  LLL: { sectionType: 'month', contentType: 'letter' },
+  LLLL: { sectionType: 'month', contentType: 'letter' },
+
+  // Day of the month
   d: 'day',
   dd: 'day',
+  do: 'day',
+
+  // Day of the week
+  E: { sectionType: 'weekDay', contentType: 'letter' },
+  EE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  EEEEE: { sectionType: 'weekDay', contentType: 'letter' },
+  i: 'weekDay',
+  ii: 'weekDay',
+  iii: { sectionType: 'weekDay', contentType: 'letter' },
+  iiii: { sectionType: 'weekDay', contentType: 'letter' },
+  e: 'weekDay',
+  ee: 'weekDay',
+  eee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeeee: { sectionType: 'weekDay', contentType: 'letter' },
+  eeeeee: { sectionType: 'weekDay', contentType: 'letter' },
+  c: 'weekDay',
+  cc: 'weekDay',
+  ccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccc: { sectionType: 'weekDay', contentType: 'letter' },
+  ccccc: { sectionType: 'weekDay', contentType: 'letter' },
+  cccccc: { sectionType: 'weekDay', contentType: 'letter' },
+
+  // Meridiem
+  a: 'meridiem',
+  aa: 'meridiem',
+  aaa: 'meridiem',
+
+  // Hours
   H: 'hours',
   HH: 'hours',
   h: 'hours',
   hh: 'hours',
+
+  // Minutes
   mm: 'minutes',
+
+  // Seconds
   ss: 'seconds',
-  a: 'meridiem',
-  aa: 'meridiem',
-  aaa: 'meridiem',
 };
 
 export class AdapterDateFns extends BaseAdapterDateFns implements MuiPickersAdapter<Date> {

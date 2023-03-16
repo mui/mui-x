@@ -56,7 +56,7 @@ export type UseDateTimeFieldComponentProps<TDate, TChildProps extends {}> = Omit
 export interface DateTimeFieldProps<TDate>
   extends UseDateTimeFieldComponentProps<TDate, FieldsTextFieldProps> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -68,7 +68,7 @@ export interface DateTimeFieldProps<TDate>
    */
   componentsProps?: DateTimeFieldSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<DateTimeFieldSlotsComponent>;

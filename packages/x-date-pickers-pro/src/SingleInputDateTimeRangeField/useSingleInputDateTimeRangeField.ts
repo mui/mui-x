@@ -66,7 +66,7 @@ export const useSingleInputDateTimeRangeField = <TDate, TChildProps extends {}>(
 
   return useField({
     inputRef,
-    forwardedProps: other as unknown as TChildProps,
+    forwardedProps: other as Omit<TChildProps, keyof UseSingleInputDateTimeRangeFieldProps<TDate>>,
     internalProps: {
       value,
       defaultValue,

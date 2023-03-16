@@ -12,7 +12,7 @@ import type { DateRangeValidationError } from '../hooks/validation/useDateRangeV
  */
 export interface DayRangeValidationProps<TDate> {
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.

@@ -36,7 +36,7 @@ export default function DisableColumnPinningButtons() {
       <DataGridPro
         rows={rows}
         columns={columns}
-        components={{ ColumnMenu: CustomColumnMenu }}
+        slots={{ columnMenu: CustomColumnMenu }}
         initialState={{ pinnedColumns: { left: ['name'], right: ['actions'] } }}
       />
     </div>

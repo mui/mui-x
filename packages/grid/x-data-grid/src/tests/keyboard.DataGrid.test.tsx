@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act, userEvent } from '@mui/monorepo/test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
@@ -91,7 +90,7 @@ describe('<DataGrid /> - Keyboard', () => {
       const cell = getCell(0, 0);
       userEvent.mousePress(cell);
       expect(getActiveCell()).to.equal('0-0');
-      fireEvent.keyDown(cell.querySelector('input'), { key: 'ArrowDown' });
+      fireEvent.keyDown(cell.querySelector('input')!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-0');
       fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
       expect(getActiveCell()).to.equal('2-0');
@@ -686,13 +685,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(6);
+    expect(renderCell.callCount).to.equal(4);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(8);
+    expect(renderCell.callCount).to.equal(6);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', () => {

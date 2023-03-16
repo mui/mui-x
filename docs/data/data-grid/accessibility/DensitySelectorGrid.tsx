@@ -25,8 +25,8 @@ export default function DensitySelectorGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
-        components={{
-          Toolbar: CustomToolbar,
+        slots={{
+          toolbar: CustomToolbar,
         }}
       />
     </div>

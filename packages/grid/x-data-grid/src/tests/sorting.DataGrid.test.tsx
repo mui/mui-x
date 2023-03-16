@@ -1,5 +1,4 @@
 import * as React from 'react';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, screen, act } from '@mui/monorepo/test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridSortModel, useGridApiRef, GridApi } from '@mui/x-data-grid';
@@ -103,7 +102,7 @@ describe('<DataGrid /> - Sorting', () => {
     );
     const header = screen
       .getByRole('columnheader', { name: 'isPublished' })
-      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -279,7 +278,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
-      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -326,7 +325,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
-      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer')!;
     expect(getColumnValues(0)).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);

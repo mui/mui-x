@@ -37,12 +37,14 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
     seconds: null,
     ...defaultizedProps.viewRenderers,
   };
+  const ampmInClock = defaultizedProps.ampmInClock ?? true;
 
   // Props with the default values specific to the desktop variant
   const props = {
     ...defaultizedProps,
     viewRenderers,
     yearsPerRow: defaultizedProps.yearsPerRow ?? 4,
+    ampmInClock,
     slots: {
       field: DateTimeField,
       openPickerIcon: Calendar,
@@ -58,6 +60,7 @@ const DesktopDateTimePicker = React.forwardRef(function DesktopDateTimePicker<TD
       }),
       toolbar: {
         hidden: true,
+        ampmInClock,
         ...defaultizedProps.slotProps?.toolbar,
       },
       tabs: {
@@ -89,7 +92,7 @@ DesktopDateTimePicker.propTypes = {
   ampm: PropTypes.bool,
   /**
    * Display ampm controls under the clock (instead of in the toolbar).
-   * @default false
+   * @default true on desktop, false on mobile
    */
   ampmInClock: PropTypes.bool,
   /**
@@ -109,7 +112,7 @@ DesktopDateTimePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -243,41 +246,42 @@ DesktopDateTimePicker.propTypes = {
   monthsPerRow: PropTypes.oneOf([3, 4]),
   /**
    * Callback fired when the value is accepted.
-   * @template TValue
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
    */
   onAccept: PropTypes.func,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be closed.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onClose: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
    * If the error has a non-null value, then the `TextField` will be rendered in `error` state.
    *
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error describing why the current value is not valid.
    * @param {TValue} value The value associated to the error.
    */
   onError: PropTypes.func,
   /**
-   * Callback firing on month change @DateIOType.
+   * Callback fired on month change.
    * @template TDate
    * @param {TDate} month The new month.
-   * @returns {void|Promise} -
    */
   onMonthChange: PropTypes.func,
   /**
    * Callback fired when the popup requests to be opened.
-   * Use in controlled mode (see open).
+   * Use in controlled mode (see `open`).
    */
   onOpen: PropTypes.func,
   /**
@@ -292,7 +296,7 @@ DesktopDateTimePicker.propTypes = {
    */
   onViewChange: PropTypes.func,
   /**
-   * Callback firing on year change @DateIOType.
+   * Callback fired on year change.
    * @template TDate
    * @param {TDate} year The new year.
    */
@@ -329,7 +333,7 @@ DesktopDateTimePicker.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -404,7 +408,7 @@ DesktopDateTimePicker.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

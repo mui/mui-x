@@ -9,9 +9,9 @@ export interface ValidationCommonProps<TError, TValue> {
    * This can be used to render appropriate form error.
    *
    * [Read the guide](https://next.material-ui-pickers.dev/guides/forms) about form integration and error displaying.
-   * @DateIOType
    *
-   * @template TError, TValue
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} reason The reason why the current value is not valid.
    * @param {TValue} value The invalid value.
    */

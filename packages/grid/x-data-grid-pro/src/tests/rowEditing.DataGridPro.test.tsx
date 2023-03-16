@@ -13,7 +13,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import Portal from '@mui/material/Portal';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-// @ts-ignore Remove once the test utils are typed
 import { createRenderer, fireEvent, act, userEvent, screen } from '@mui/monorepo/test/utils';
 import { getCell, getRow } from 'test/utils/helperFn';
 
@@ -880,6 +879,16 @@ describe('<DataGridPro /> - Row Editing', () => {
         expect(listener.callCount).to.equal(1);
       });
 
+      it('should not call startRowEditMode if space is pressed', () => {
+        render(<TestCase autoHeight />);
+        const listener = spy();
+        apiRef.current.subscribeEvent('rowEditStart', listener);
+        const cell = getCell(0, 1);
+        userEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: ' ' });
+        expect(listener.callCount).to.equal(0);
+      });
+
       it(`should call startRowEditMode if ctrl+V is pressed`, () => {
         render(<TestCase />);
         const listener = spy();
@@ -992,7 +1001,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Escape' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
         expect(listener.lastCall.args[0].reason).to.equal('escapeKeyDown');
       });
 
@@ -1002,7 +1011,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Escape' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Escape' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1022,7 +1031,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(listener.lastCall.args[0].reason).to.equal('enterKeyDown');
       });
 
@@ -1032,7 +1041,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1052,7 +1061,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' });
         });
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Enter' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Enter' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
@@ -1067,7 +1076,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
         expect(listener.lastCall.args[0].reason).to.equal('tabKeyDown');
       });
 
@@ -1079,7 +1088,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         expect(listener.callCount).to.equal(0);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab', shiftKey: true });
         expect(listener.lastCall.args[0].reason).to.equal('shiftTabKeyDown');
       });
 
@@ -1089,7 +1098,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 2);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1105,7 +1114,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(0, 1);
         userEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab', shiftKey: true });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0]).to.deep.equal({
           id: 0,
@@ -1125,7 +1134,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         await act(() => {
           apiRef.current.setEditCellValue({ id: 0, field: 'price1M', value: 'USD GBP' });
         });
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
         expect(spiedStopRowEditMode.callCount).to.equal(1);
         expect(spiedStopRowEditMode.lastCall.args[0].ignoreModifications).to.equal(false);
       });
@@ -1142,7 +1151,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(2, 0);
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).toHaveFocus();
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab', shiftKey: true });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab', shiftKey: true });
         expect(getCell(2, 0)).toHaveFocus();
       });
 
@@ -1158,7 +1167,7 @@ describe('<DataGridPro /> - Row Editing', () => {
         const cell = getCell(3, 2);
         fireEvent.doubleClick(cell);
         expect(cell.querySelector('input')).toHaveFocus();
-        fireEvent.keyDown(cell.querySelector('input'), { key: 'Tab' });
+        fireEvent.keyDown(cell.querySelector('input')!, { key: 'Tab' });
         expect(getCell(3, 2)).toHaveFocus();
       });
     });
@@ -1174,7 +1183,7 @@ describe('<DataGridPro /> - Row Editing', () => {
       });
     });
 
-    describe('mode=edit to mode=vew', () => {
+    describe('mode=edit to mode=view', () => {
       it('should stop edit mode', () => {
         const { setProps } = render(
           <TestCase rowModesModel={{ 0: { mode: GridRowModes.Edit } }} />,

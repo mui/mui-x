@@ -1,24 +1,22 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { MuiDateSectionName } from '../../models/muiPickersAdapter';
+import { FieldSectionType } from '../../models/muiPickersAdapter';
 import { useUtils } from '../useUtils';
 import { FieldSectionsValueBoundaries, FieldSection } from './useField.types';
 import {
-  applyMeridiemChange,
-  applyWeekDayChange,
   changeSectionValueFormat,
-  cleanTrailingZeroInNumericSectionValue,
-  doesSectionHaveTrailingZeros,
+  cleanDigitSectionValue,
+  doesSectionHaveLeadingZeros,
   getDateSectionConfigFromFormatToken,
-  getDateSectionGetterAndSetter,
   getDaysInWeekStr,
+  getLetterEditingOptions,
 } from './useField.utils';
 import { UpdateSectionValueParams } from './useFieldState';
 
 interface CharacterEditingQuery {
   value: string;
   sectionIndex: number;
-  dateSectionName: MuiDateSectionName;
+  sectionType: FieldSectionType;
 }
 
 interface ApplyCharacterEditingParams {
@@ -28,7 +26,9 @@ interface ApplyCharacterEditingParams {
 
 interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
   sections: TSection[];
-  updateSectionValue: (params: UpdateSectionValueParams<TDate, TSection>) => void;
+  updateSectionValue: (params: UpdateSectionValueParams<TSection>) => void;
+  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>;
+  setTempAndroidValueStr: (newValue: string | null) => void;
 }
 
 /**
@@ -37,10 +37,8 @@ interface UseFieldEditingParams<TDate, TSection extends FieldSection> {
  *
  * If it returns `null`, then the section value is not updated and the focus does not move.
  */
-type CharacterEditingApplier<TDate> = (
+type CharacterEditingApplier = (
   params: ApplyCharacterEditingParams,
-  sectionsValueBoundaries: FieldSectionsValueBoundaries<TDate>,
-  activeDate: TDate | null,
 ) => { sectionValue: string; shouldGoToNextSection: boolean } | null;
 
 /**
@@ -78,20 +76,24 @@ const isQueryResponseWithoutValue = <TSection extends FieldSection>(
 export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
   sections,
   updateSectionValue,
+  sectionsValueBoundaries,
+  setTempAndroidValueStr,
 }: UseFieldEditingParams<TDate, TSection>) => {
   const utils = useUtils<TDate>();
 
   const [query, setQuery] = React.useState<CharacterEditingQuery | null>(null);
 
+  const resetQuery = useEventCallback(() => setQuery(null));
+
   React.useEffect(() => {
-    if (query != null && sections[query.sectionIndex]?.dateSectionName !== query.dateSectionName) {
-      setQuery(null);
+    if (query != null && sections[query.sectionIndex]?.type !== query.sectionType) {
+      resetQuery();
     }
-  }, [sections, query]);
+  }, [sections, query, resetQuery]);
 
   React.useEffect(() => {
     if (query != null) {
-      const timeout = setTimeout(() => setQuery(null), QUERY_LIFE_DURATION_MS);
+      const timeout = setTimeout(() => resetQuery(), QUERY_LIFE_DURATION_MS);
 
       return () => {
         window.clearTimeout(timeout);
@@ -99,13 +101,13 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     }
 
     return () => {};
-  }, [query]);
+  }, [query, resetQuery]);
 
   const applyQuery = (
     { keyPressed, sectionIndex }: ApplyCharacterEditingParams,
     getFirstSectionValueMatchingWithQuery: QueryApplier<TSection>,
     isValidQueryValue?: (queryValue: string) => boolean,
-  ): ReturnType<CharacterEditingApplier<TDate>> => {
+  ): ReturnType<CharacterEditingApplier> => {
     const cleanKeyPressed = keyPressed.toLowerCase();
     const activeSection = sections[sectionIndex];
 
@@ -126,7 +128,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         setQuery({
           sectionIndex,
           value: concatenatedQueryValue,
-          dateSectionName: activeSection.dateSectionName,
+          sectionType: activeSection.type,
         });
         return queryResponse;
       }
@@ -134,14 +136,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
     const queryResponse = getFirstSectionValueMatchingWithQuery(cleanKeyPressed, activeSection);
     if (isQueryResponseWithoutValue(queryResponse) && !queryResponse.saveQuery) {
-      setQuery(null);
+      resetQuery();
       return null;
     }
 
     setQuery({
       sectionIndex,
       value: cleanKeyPressed,
-      dateSectionName: activeSection.dateSectionName,
+      sectionType: activeSection.type,
     });
 
     if (isQueryResponseWithoutValue(queryResponse)) {
@@ -151,7 +153,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     return queryResponse;
   };
 
-  const applyLetterEditing: CharacterEditingApplier<TDate> = (params) => {
+  const applyLetterEditing: CharacterEditingApplier = (params) => {
     const findMatchingOptions = (
       format: string,
       options: string[],
@@ -174,14 +176,16 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     const testQueryOnFormatAndFallbackFormat = (
       queryValue: string,
       activeSection: TSection,
-      getOptions: (format: string) => string[],
       fallbackFormat?: string,
       formatFallbackValue?: (fallbackValue: string, fallbackOptions: string[]) => string,
     ) => {
+      const getOptions = (format: string) =>
+        getLetterEditingOptions(utils, activeSection.type, format);
+
       if (activeSection.contentType === 'letter') {
         return findMatchingOptions(
-          activeSection.formatValue,
-          getOptions(activeSection.formatValue),
+          activeSection.format,
+          getOptions(activeSection.format),
           queryValue,
         );
       }
@@ -213,52 +217,38 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       queryValue,
       activeSection,
     ) => {
-      switch (activeSection.dateSectionName) {
+      switch (activeSection.type) {
         case 'month': {
-          const getOptions = (format: string) =>
-            utils.getMonthArray(utils.date()!).map((month) => utils.formatByString(month, format!));
-
           const formatFallbackValue = (fallbackValue: string) =>
             changeSectionValueFormat(
               utils,
               fallbackValue,
               utils.formats.month,
-              activeSection.formatValue,
+              activeSection.format,
             );
 
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            getOptions,
             utils.formats.month,
             formatFallbackValue,
           );
         }
 
         case 'weekDay': {
-          const getOptions = (format: string) => getDaysInWeekStr(utils, format);
-
           const formatFallbackValue = (fallbackValue: string, fallbackOptions: string[]) =>
             fallbackOptions.indexOf(fallbackValue).toString();
 
           return testQueryOnFormatAndFallbackFormat(
             queryValue,
             activeSection,
-            getOptions,
             utils.formats.weekday,
             formatFallbackValue,
           );
         }
 
         case 'meridiem': {
-          const getOptions = (format: string) => {
-            const now = utils.date()!;
-            return [utils.endOfDay(now), utils.startOfDay(now)].map((date) =>
-              utils.formatByString(date, format),
-            );
-          };
-
-          return testQueryOnFormatAndFallbackFormat(queryValue, activeSection, getOptions);
+          return testQueryOnFormatAndFallbackFormat(queryValue, activeSection);
         }
 
         default: {
@@ -270,21 +260,17 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     return applyQuery(params, getFirstSectionValueMatchingWithQuery);
   };
 
-  const applyNumericEditing: CharacterEditingApplier<TDate> = (
-    params,
-    sectionsValueBoundaries,
-    activeDate,
-  ) => {
+  const applyNumericEditing: CharacterEditingApplier = (params) => {
     const getNewSectionValue = (
       queryValue: string,
-      dateSectionName: MuiDateSectionName,
+      sectionType: FieldSectionType,
       format: string,
-      hasTrailingZeroes: boolean,
+      hasLeadingZeros: boolean,
       contentType: 'digit' | 'letter',
     ): ReturnType<QueryApplier<TSection>> => {
       const queryValueNumber = Number(`${queryValue}`);
-      const sectionBoundaries = sectionsValueBoundaries[dateSectionName]({
-        currentDate: activeDate,
+      const sectionBoundaries = sectionsValueBoundaries[sectionType]({
+        currentDate: null,
         format,
         contentType,
       });
@@ -304,11 +290,14 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
         Number(`${queryValue}0`) > sectionBoundaries.maximum ||
         queryValue.length === sectionBoundaries.maximum.toString().length;
 
-      // queryValue without trailing `0` (`01` => `1`)
-      let newSectionValue = queryValueNumber.toString();
-      if (hasTrailingZeroes) {
-        newSectionValue = cleanTrailingZeroInNumericSectionValue(utils, format, newSectionValue);
-      }
+      const newSectionValue = cleanDigitSectionValue(
+        utils,
+        queryValueNumber,
+        sectionType,
+        format,
+        hasLeadingZeros,
+        sectionBoundaries,
+      );
 
       return { sectionValue: newSectionValue, shouldGoToNextSection };
     };
@@ -320,21 +309,21 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
       if (activeSection.contentType === 'digit') {
         return getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
-          activeSection.formatValue,
-          activeSection.hasTrailingZeroes,
+          activeSection.type,
+          activeSection.format,
+          activeSection.hasLeadingZeros,
           activeSection.contentType,
         );
       }
 
       // When editing a letter-format month and the user presses a digit,
       // We can support the numeric editing by using the digit-format month and re-formatting the result.
-      if (activeSection.dateSectionName === 'month') {
+      if (activeSection.type === 'month') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
+          activeSection.type,
           'MM',
-          doesSectionHaveTrailingZeros(utils, 'digit', 'month', 'MM'),
+          doesSectionHaveLeadingZeros(utils, 'digit', 'month', 'MM'),
           'digit',
         );
 
@@ -346,7 +335,7 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
           utils,
           response.sectionValue,
           'MM',
-          activeSection.formatValue,
+          activeSection.format,
         );
         return {
           ...response,
@@ -356,19 +345,19 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
 
       // When editing a letter-format weekDay and the user presses a digit,
       // We can support the numeric editing by returning the nth day in the week day array.
-      if (activeSection.dateSectionName === 'weekDay') {
+      if (activeSection.type === 'weekDay') {
         const response = getNewSectionValue(
           queryValue,
-          activeSection.dateSectionName,
-          activeSection.formatValue,
-          activeSection.hasTrailingZeroes,
+          activeSection.type,
+          activeSection.format,
+          activeSection.hasLeadingZeros,
           activeSection.contentType,
         );
         if (isQueryResponseWithoutValue(response)) {
           return response;
         }
 
-        const formattedValue = getDaysInWeekStr(utils, activeSection.formatValue)[
+        const formattedValue = getDaysInWeekStr(utils, activeSection.format)[
           Number(response.sectionValue) - 1
         ];
         return {
@@ -387,70 +376,23 @@ export const useFieldCharacterEditing = <TDate, TSection extends FieldSection>({
     );
   };
 
-  return useEventCallback((params: ApplyCharacterEditingParams) => {
+  const applyCharacterEditing = useEventCallback((params: ApplyCharacterEditingParams) => {
     const activeSection = sections[params.sectionIndex];
     const isNumericEditing = !Number.isNaN(Number(params.keyPressed));
-
-    const getNewSectionValue = isNumericEditing ? applyNumericEditing : applyLetterEditing;
-
-    updateSectionValue({
-      activeSection,
-      setSectionValueOnDate: (activeDate, sectionsValueBoundaries) => {
-        const response = getNewSectionValue(params, sectionsValueBoundaries, activeDate);
-        if (response == null) {
-          return null;
-        }
-
-        if (activeSection.dateSectionName === 'meridiem') {
-          const newDate = applyMeridiemChange(utils, activeDate, response.sectionValue);
-
-          return {
-            date: newDate,
-            shouldGoToNextSection: true,
-          };
-        }
-
-        if (activeSection.dateSectionName === 'weekDay') {
-          const newDate = applyWeekDayChange(
-            utils,
-            activeDate,
-            activeSection.formatValue,
-            response.sectionValue,
-          );
-
-          return {
-            date: newDate,
-            shouldGoToNextSection: response.shouldGoToNextSection,
-          };
-        }
-
-        const { getter, setter } = getDateSectionGetterAndSetter(
-          utils,
-          activeSection.dateSectionName,
-        );
-
-        let newSectionValue: number;
-        // We can't parse the day on the current date, otherwise we might try to parse `31` on a 30-days month.
-        // So we take for granted that for days, the digit rendered is always 1-indexed, just like the digit stored in the date.
-        if (activeSection.contentType === 'digit' && activeSection.dateSectionName === 'day') {
-          newSectionValue = Number(response.sectionValue);
-        } else {
-          // The month is stored as 0-indexed in the date (0 = January, 1 = February, ...).
-          // But it is often rendered as 1-indexed in the input (1 = January, 2 = February, ...).
-          // This parsing makes sure that we store the digit according to the date index and not the input index.
-          const sectionDate = utils.parse(response.sectionValue, activeSection.formatValue)!;
-          newSectionValue = getter(sectionDate);
-        }
-
-        const newDate = setter(activeDate, newSectionValue);
-
-        return {
-          date: newDate,
-          shouldGoToNextSection: response.shouldGoToNextSection,
-        };
-      },
-      setSectionValueOnSections: (sectionsValueBoundaries) =>
-        getNewSectionValue(params, sectionsValueBoundaries, null),
-    });
+    const response = isNumericEditing ? applyNumericEditing(params) : applyLetterEditing(params);
+    if (response == null) {
+      setTempAndroidValueStr(null);
+    } else {
+      updateSectionValue({
+        activeSection,
+        newSectionValue: response.sectionValue,
+        shouldGoToNextSection: response.shouldGoToNextSection,
+      });
+    }
   });
+
+  return {
+    applyCharacterEditing,
+    resetCharacterQuery: resetQuery,
+  };
 };

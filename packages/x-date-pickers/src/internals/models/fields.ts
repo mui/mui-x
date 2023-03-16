@@ -1,35 +1,33 @@
 import * as React from 'react';
-import { Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
-import { SlotComponentProps } from '@mui/base/utils';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import { TextFieldProps } from '@mui/material/TextField';
 import type { UseFieldInternalProps } from '../hooks/useField';
 
 export interface BaseFieldProps<TValue, TError>
   extends Omit<UseFieldInternalProps<TValue, TError>, 'format'> {
   className?: string;
-  sx?: SxProps<Theme>;
   format?: string;
+  disabled?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
   ref?: React.Ref<HTMLDivElement>;
-  /**
-   * @deprecated Please use `slots`.
-   */
-  components?: {
-    TextField?: React.ElementType<TextFieldProps>;
+}
+
+/**
+ * Props the single input field can receive when used inside a picker.
+ * Only contains what the MUI component are passing to the field, not what users can pass using the `props.slotProps.field`.
+ */
+export interface BaseSingleInputFieldProps<TValue, TError> extends BaseFieldProps<TValue, TError> {
+  label?: React.ReactNode;
+  id?: string;
+  InputProps?: {
+    ref?: React.Ref<any>;
+    endAdornment?: React.ReactNode;
+    startAdornment?: React.ReactNode;
   };
-  /**
-   * @deprecated Please use `slotProps`.
-   */
-  componentsProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
+  inputProps?: {
+    'aria-label'?: string;
   };
-  slots?: {
-    textField?: React.ElementType<TextFieldProps>;
-  };
-  slotProps?: {
-    textField?: SlotComponentProps<typeof TextField, {}, Record<string, any>>;
-  };
+  slots?: {};
+  slotProps?: {};
 }
 
 export interface FieldsTextFieldProps

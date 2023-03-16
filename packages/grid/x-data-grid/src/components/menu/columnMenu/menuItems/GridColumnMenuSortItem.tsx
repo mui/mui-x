@@ -47,7 +47,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
       {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
         <MenuItem onClick={onSortMenuItemClick} data-value="asc">
           <ListItemIcon>
-            <rootProps.components.ColumnMenuSortAscendingIcon fontSize="small" />
+            <rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{apiRef.current.getLocaleText('columnMenuSortAsc')}</ListItemText>
         </MenuItem>
@@ -55,7 +55,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
         <MenuItem onClick={onSortMenuItemClick} data-value="desc">
           <ListItemIcon>
-            <rootProps.components.ColumnMenuSortDescendingIcon fontSize="small" />
+            <rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{apiRef.current.getLocaleText('columnMenuSortDesc')}</ListItemText>
         </MenuItem>

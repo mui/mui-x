@@ -66,7 +66,7 @@ export interface PickersCalendarHeaderProps<TDate>
   extends ExportedPickersArrowSwitcherProps,
     DateComponentValidationProps<TDate> {
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -78,7 +78,7 @@ export interface PickersCalendarHeaderProps<TDate>
    */
   componentsProps?: PickersCalendarHeaderSlotsComponentsProps<TDate>;
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots?: UncapitalizeObjectKeys<PickersCalendarHeaderSlotsComponent>;
