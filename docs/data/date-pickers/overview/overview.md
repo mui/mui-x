@@ -46,10 +46,10 @@ The Date and Time Pickers currently support the following date libraries:
 The Date and Time Pickers are not working well with Luxon macro-token (`D`, `DD`, `T`, `TT`, ...),
 because of [how they are expanded](https://github.com/mui/mui-x/issues/7615).
 
-If your application is only built be a single local, the easiest solution is to manually [provide a format](/x/react-date-pickers/adapters-locale/#custom-formats) that does not contain any macro-token
+If your application is using only a single locale, the easiest solution is to manually [provide a format](/x/react-date-pickers/adapters-locale/#custom-formats) that does not contain any macro-token
 (e.g. `M/d/yyyy` instead of `D` for the english locale).
 
-We are trying to find a solution with the Luxon team to improve the built-in support in the near future.
+As soon as a solution is found the built-in support will be improved.
 :::
 
 :::info
