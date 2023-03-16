@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { Dayjs } from 'dayjs';
+import { deepmerge } from '@mui/utils';
+import { blue, grey } from '@mui/material/colors';
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
   experimental_extendTheme as extendMuiTheme,
   shouldSkipGeneratingVar as muiShouldSkipGeneratingVar,
+  Overlays,
+  Shadows,
+  ZIndex,
   ThemeVars,
 } from '@mui/material/styles';
-import { blue, grey } from '@mui/material/colors';
 import {
-  styled,
   extendTheme as extendJoyTheme,
   shouldSkipGeneratingVar as joyShouldSkipGeneratingVar,
+  styled,
 } from '@mui/joy/styles';
-import deepmerge from '@mui/utils/deepmerge';
 import { useSlotProps } from '@mui/base/utils';
 import Input, { InputProps } from '@mui/joy/Input';
 import Stack, { StackProps } from '@mui/joy/Stack';
@@ -40,6 +43,16 @@ import {
   BaseSingleInputFieldProps,
   DateValidationError,
 } from '@mui/x-date-pickers-pro';
+
+// extends Joy theme to include tokens from Material UI
+declare module '@mui/joy/styles' {
+  interface ThemeVars {
+    // attach to Joy UI `theme.vars`
+    shadows: Shadows;
+    overlays: Overlays;
+    zIndex: ZIndex;
+  }
+}
 
 const muiTheme = extendMuiTheme();
 
@@ -144,7 +157,6 @@ mergedTheme.unstable_sxConfig = {
   ...muiTheme.unstable_sxConfig,
   ...joyTheme.unstable_sxConfig,
 };
-
 interface JoyFieldProps extends InputProps {
   label?: React.ReactNode;
   InputProps?: {
