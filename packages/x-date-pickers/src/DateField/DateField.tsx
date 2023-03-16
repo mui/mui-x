@@ -285,7 +285,7 @@ DateField.propTypes = {
     PropTypes.object,
   ]),
   /**
-   * The ref object used to interact imperatively with the field.
+   * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   /**

@@ -77,7 +77,7 @@ export interface UseFieldInternalProps<TValue, TSection extends FieldSection, TE
    */
   onSelectedSectionsChange?: (newValue: FieldSelectedSections) => void;
   /**
-   * The ref object used to interact imperatively with the field.
+   * The ref object used to imperatively interact with the field.
    */
   unstableFieldRef?: React.Ref<FieldRef<TSection>>;
 }

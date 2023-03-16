@@ -120,11 +120,10 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
 - The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
   ```diff
-  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef)
-  +const all = gridColumnFieldsSelector(apiRef)
-  +const lookup = gridColumnLookupSelector(apiRef)
-  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef)
-   }
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef);
+  +const all = gridColumnFieldsSelector(apiRef);
+  +const lookup = gridColumnLookupSelector(apiRef);
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
   ```
 - The `filterableGridColumnsIdsSelector` selector was removed. Use `gridFilterableColumnLookupSelector` instead.
   ```diff
@@ -244,18 +243,18 @@ To know more about the supported events and their signatures, check the [events 
 - The `GridFilterItemProps` type has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
   ```diff
-  -const CustomColumnMenu = ({ column }) => {
-  +const CustomColumnMenu = ({ colDef }) => {
-  - if (column.field === 'name') {
-  + if (colDef.field === 'name') {
-      return <div>Custom column menu for name field</div>;
-    }
-    return (
-      <div>
-        <GridFilterMenuItem colDef={colDef} />
-        <GridColumnMenuColumnsItem colDef={colDef} />
-      </div>
-    )
+  -function CustomColumnMenu({ column }) {
+  -  if (column.field === 'name') {
+  +function CustomColumnMenu({ colDef }) {
+  +  if (colDef.field === 'name') {
+       return <div>Custom column menu for name field</div>;
+     }
+     return (
+       <div>
+         <GridFilterMenuItem colDef={colDef} />
+         <GridColumnMenuColumnsItem colDef={colDef} />
+       </div>
+     );
    }
   ```
 
@@ -278,12 +277,11 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   Use the `focusedCell` and `tabbableCell` props instead.
   For the editing state, use the API methods.
   ```diff
-   const CustomRow = (props) => {
+   function CustomRow(props) {
   -  const focusedField = props.cellFocus.field;
-  +  const focusedField = props.focusedCell;
   -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const focusedField = props.focusedCell;
   +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
-   }
   ```
 - Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows` will now remove the expansion state of the grid as these methods are meant to replace the rows.
   For partial row updates, use the [`apiRef.current.updateRows`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
@@ -293,8 +291,14 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
 
   ```diff
-  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
-  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+   <DataGrid
+  -  page={page}
+  -  pageSize={pageSize}
+  -  onPageChange={handlePageChange}
+  -  onPageSizeChange={handlePageSizeChange}
+  +  paginationModel={{ page, pageSize }}
+  +  onPaginationModelChange={handlePaginationModelChange}
+   />
   ```
 
 - The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
