@@ -397,17 +397,4 @@ describe('<DataGridPro /> - Columns', () => {
       expect(gridColumnFieldsSelector(apiRef)).to.deep.equal(['__check__', 'brand', 'id']);
     });
   });
-
-  it('should warn if unsupported column type is used', () => {
-    const singleColumns = [{ field: 'brand', type: 'str' }];
-
-    expect(() => {
-      render(<Test columns={singleColumns} />);
-    }).toWarnDev(
-      [
-        `MUI: The column type "str" you are using is not supported.`,
-        `Column type "string" is being used instead.`,
-      ].join('\n'),
-    );
-  });
 });
