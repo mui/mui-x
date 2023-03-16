@@ -1,5 +1,5 @@
 import * as React from 'react';
-import moment from 'moment';
+import moment from 'moment-hijri';
 import { AdapterMomentHijri } from '@mui/x-date-pickers/AdapterMomentHijri';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
