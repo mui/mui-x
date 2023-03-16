@@ -7,7 +7,7 @@ packageName: '@mui/x-date-pickers'
 
 # Custom field
 
-<p class="description">The Date and Time Pickers let you pass custom fields to your pickers</p>
+<p class="description">The Date and Time Pickers let you customize the field by passing props or custom components</p>
 
 ## Customize the default field
 
@@ -29,9 +29,10 @@ You can use the `fieldSeparator` slot to pass custom props to the `Typography` r
 
 #### With the Joy input
 
+You can use the [_Joy UI_](https://mui.com/joy-ui/getting-started/overview/) components instead of the _Material UI_ ones:
+
 :::info
-This demo demonstrates how to take advantage of the field smart behaviors with any input (even third party ones).
-For Joy, we will provide a higher level solution in the coming months for an even simpler usage.
+A higher-level solution for _Joy UI_ will be provided in the near future for even simpler usage.
 :::
 
 {{"demo": "PickerWithJoyField.js", "defaultCodeOpen": false}}
@@ -45,14 +46,14 @@ You can also use any other input:
 ### Using an `Autocomplete`
 
 If your user can only select a value in a small list of available dates,
-you can replace the field by an `Autocomplete` which just lists the those dates:
+you can replace the field with an `Autocomplete` listing those dates:
 
 {{"demo": "PickerWithAutocompleteField.js", "defaultCodeOpen": false}}
 
 ### Using a `Button`
 
 If you only want to allow the user to pick a value through the views,
-you can replace the field by a `Button`:
+you can replace the field with a `Button`:
 
 {{"demo": "PickerWithButtonField.js", "defaultCodeOpen": false}}
 
@@ -65,7 +66,7 @@ On the examples below, you can see that the typing of the props received by a cu
 ```tsx
 interface JoyDateFieldProps
   extends UseDateFieldProps<Dayjs>, // The headless field props
-    BaseSingleInputFieldProps<Dayjs | null, DateTimeValidationError> {} // The DOM field props
+    BaseSingleInputFieldProps<Dayjs | null, DateValidationError> {} // The DOM field props
 
 interface JoyDateTimeFieldProps
   extends UseDateTimeFieldProps<Dayjs>, // The headless field props
@@ -74,22 +75,22 @@ interface JoyDateTimeFieldProps
 
 ### The headless field props
 
-This interface depend on which type of field you are building (`UseDateField` for date field, `UseTimeField` for a time field, `UseDateRangeFieldProps` for a date range field, ...).
+This interface depends on which type of field you are building (`UseDateField` for date field, `UseTimeField` for a time field, `UseDateRangeFieldProps` for a date range field, etc.).
 
 It contains:
 
-- the basic props common to all the fields (`value`, `onChange`, `format`, `readOnly`, ...)
-- the validation props for this type of field (`minDate`, `maxDate`, `shouldDisableDate`, ...)
+- the basic props common to all the fields (`value`, `onChange`, `format`, `readOnly`, etc.)
+- the validation props for this type of field (`minDate`, `maxDate`, `shouldDisableDate`, etc.)
 
 :::info
-If you are building a custom field that don't have any input editing (e.g: the _Button field_), you can ignore most of those props.
+If you are building a custom field that doesn't have any input editing (e.g: the _Button field_), you can ignore most of those props.
 :::
 
 ### The DOM field props
 
-This interface contains the props the pickers passes to its field in order to customize the rendering.
+This interface contains the props the pickers pass to its field in order to customize the rendering.
 
-These props are shaped to be received by our built-in fields which are using the `TextField` from `@mui/material`.
-When used with another type of input (or no input at all), you will have to manually re-attribute them to the relevant component.
+These props are shaped to be received by the built-in fields which are using the `TextField` from `@mui/material`.
+When used with another type of input (or no input at all), you will have to manually pass them to the relevant component.
 
 You can have a look at the `BaseSingleInputFieldProps` and `BaseMultiInputFieldProps` interfaces to know exactly what those interfaces contain.
