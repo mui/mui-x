@@ -36,7 +36,12 @@ const DesktopTimeClockSectionRoot = styled(MenuList, {
   slot: 'Root',
   overridesResolver: (_, styles) => styles.root,
 })<{ ownerState: DesktopTimeClockSectionProps<any> }>({
-  overflow: 'auto',
+  paddingRight: 12,
+  width: 44,
+  overflow: 'hidden',
+  '&:focus-within, &:hover': {
+    overflowY: 'auto',
+  },
 });
 
 const DesktopTimeClockSectionItem = styled(MenuItem, {
@@ -45,6 +50,9 @@ const DesktopTimeClockSectionItem = styled(MenuItem, {
   overridesResolver: (_, styles) => styles.item,
 })({
   flexDirection: 'column',
+  padding: 8,
+  // setting item width higher than the wrapper to avoid scrollbar shifting
+  width: 50,
 });
 
 type DesktopTimeClockSectionComponent = <TValue>(

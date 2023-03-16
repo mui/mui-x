@@ -37,6 +37,7 @@ const DesktopTimeClockRoot = styled(PickerViewRoot, {
 })<{ ownerState: DesktopTimeClockProps<any> }>({
   display: 'flex',
   flexDirection: 'row',
+  width: '100%',
 });
 
 type DesktopTimeClockComponent = (<TDate>(
