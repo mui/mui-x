@@ -36,7 +36,7 @@ export type AdapterName =
   // | 'js-joda'
   | 'date-fns-jalali';
 
-const availableAdapters: { [key: string]: new (...args: any) => MuiPickersAdapter<any> } = {
+const availableAdapters: { [key in AdapterName]: new (...args: any) => MuiPickersAdapter<any> } = {
   'date-fns': AdapterDateFns,
   dayjs: AdapterDayjs,
   luxon: AdapterLuxon,
@@ -94,8 +94,10 @@ interface CreatePickerRendererOptions extends CreateRendererOptions {
   adapterName?: AdapterName;
 }
 
-export function wrapPickerMount(mount: (node: React.ReactNode) => import('enzyme').ReactWrapper) {
-  return (node: React.ReactNode) =>
+export function wrapPickerMount(
+  mount: (node: React.ReactElement) => import('enzyme').ReactWrapper,
+) {
+  return (node: React.ReactElement) =>
     mount(<LocalizationProvider dateAdapter={AdapterClassToUse}>{node}</LocalizationProvider>);
 }
 
@@ -294,7 +296,7 @@ export const stubMatchMedia = (matches = true) =>
     removeListener: () => {},
   });
 export const getPickerDay = (name: string, picker = 'January 2018') =>
-  getByRole(screen.getByText(picker)?.parentElement?.parentElement, 'gridcell', { name });
+  getByRole(screen.getByText(picker)?.parentElement?.parentElement!, 'gridcell', { name });
 
 export const cleanText = (text) => text.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
 
@@ -304,7 +306,7 @@ export const getCleanedSelectedContent = (input: HTMLInputElement) =>
 export const expectInputValue = (
   input: HTMLInputElement,
   expectedValue: string,
-  shouldRemoveDashSpaces: boolean = false,
+  shouldRemoveDashSpaces = false,
 ) => {
   let value = cleanText(input.value);
   if (shouldRemoveDashSpaces) {
@@ -314,22 +316,61 @@ export const expectInputValue = (
   return expect(value).to.equal(expectedValue);
 };
 
-export const buildFieldInteractions = ({
-  clock,
-}: {
+export const expectInputPlaceholder = (input: HTMLInputElement, placeholder: string) => {
+  const cleanPlaceholder = cleanText(input.placeholder).replace(/ \/ /g, '/');
+  return expect(cleanPlaceholder).to.equal(placeholder);
+};
+
+interface BuildFieldInteractionsParams<P extends {}> {
   // TODO: Export `Clock` from monorepo
   clock: ReturnType<typeof createRenderer>['clock'];
-}) => {
-  const clickOnInput = (
+  render: ReturnType<typeof createRenderer>['render'];
+  Component: React.FunctionComponent<P>;
+}
+
+export interface BuildFieldInteractionsResponse<P extends {}> {
+  clickOnInput: (
     input: HTMLInputElement,
     cursorStartPosition: number,
+    cursorEndPosition?: number,
+  ) => void;
+  selectSection: (input: HTMLInputElement, activeSectionIndex: number) => void;
+  testFieldKeyPress: (
+    params: P & {
+      key: string;
+      expectedValue: string;
+      cursorPosition?: number;
+      valueToSelect?: string;
+    },
+  ) => void;
+  testFieldChange: (
+    params: P & {
+      keyStrokes: { value: string; expected: string }[];
+      cursorPosition?: number;
+    },
+  ) => void;
+}
+
+export const getTextbox = (): HTMLInputElement => screen.getByRole('textbox');
+
+export const buildFieldInteractions = <P extends {}>({
+  clock,
+  render,
+  Component,
+}: BuildFieldInteractionsParams<P>): BuildFieldInteractionsResponse<P> => {
+  const clickOnInput: BuildFieldInteractionsResponse<P>['clickOnInput'] = (
+    input,
+    cursorStartPosition,
     cursorEndPosition = cursorStartPosition,
   ) => {
+    if (document.activeElement !== input) {
+      act(() => {
+        input.focus();
+      });
+      clock.runToLast();
+    }
     act(() => {
       fireEvent.mouseDown(input);
-      if (document.activeElement !== input) {
-        input.focus();
-      }
       fireEvent.mouseUp(input);
       input.setSelectionRange(cursorStartPosition, cursorEndPosition);
       fireEvent.click(input);
@@ -338,7 +379,70 @@ export const buildFieldInteractions = ({
     });
   };
 
-  return { clickOnInput };
+  const selectSection: BuildFieldInteractionsResponse<P>['selectSection'] = (
+    input,
+    activeSectionIndex,
+  ) => {
+    const value = input.value.replace(':', '/');
+
+    // TODO: Improve this logic when we will be able to access state.sections from the outside
+    let clickPosition: number;
+    if (activeSectionIndex === 0) {
+      clickPosition = 0;
+    } else {
+      clickPosition =
+        (value.split('/', activeSectionIndex - 1).join('/').length +
+          value.split('/', activeSectionIndex).join('/').length) /
+        2;
+    }
+
+    clickOnInput(input, clickPosition);
+  };
+
+  const testFieldKeyPress: BuildFieldInteractionsResponse<P>['testFieldKeyPress'] = ({
+    key,
+    expectedValue,
+    cursorPosition = 1,
+    valueToSelect,
+    ...props
+  }) => {
+    render(<Component {...(props as any as P)} />);
+    const input = getTextbox();
+
+    // focus input to trigger setting placeholder as value if no value is present
+    act(() => {
+      input.focus();
+    });
+    // make sure the value of the input is rendered before proceeding
+    clock.runToLast();
+
+    const clickPosition = valueToSelect ? input.value.indexOf(valueToSelect) : cursorPosition;
+    if (clickPosition === -1) {
+      throw new Error(
+        `Failed to find value to select "${valueToSelect}" in input value: ${input.value}`,
+      );
+    }
+    clickOnInput(input, clickPosition);
+    userEvent.keyPress(input, { key });
+    expectInputValue(input, expectedValue);
+  };
+
+  const testFieldChange: BuildFieldInteractionsResponse<P>['testFieldChange'] = ({
+    keyStrokes,
+    cursorPosition = 1,
+    ...props
+  }) => {
+    render(<Component {...(props as any as P)} />);
+    const input = getTextbox();
+    clickOnInput(input, cursorPosition);
+
+    keyStrokes.forEach((keyStroke) => {
+      fireEvent.change(input, { target: { value: keyStroke.value } });
+      expectInputValue(input, keyStroke.expected);
+    });
+  };
+
+  return { clickOnInput, selectSection, testFieldKeyPress, testFieldChange };
 };
 
 export const buildPickerDragInteractions = (getDataTransfer: () => DataTransfer | null) => {

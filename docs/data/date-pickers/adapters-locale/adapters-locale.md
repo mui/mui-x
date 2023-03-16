@@ -173,7 +173,7 @@ The default formatter only keeps the first letter and capitalises it.
 This prop is available on all components that render a day calendar, including the Date Calendar as well as all Date Pickers, Date Time Pickers, and Date Range Pickers.
 :::
 
-The example bellow adds a dot at the end of each day in the calendar header:
+The example below adds a dot at the end of each day in the calendar header:
 
 {{"demo": "CustomDayOfWeekFormat.js"}}
 
@@ -214,6 +214,33 @@ To use UTC dates with `dayjs`, you have to:
    ```
 
 {{"demo": "UTCDayjs.js", "defaultCodeOpen": false}}
+
+### With moment
+
+To use UTC dates with `moment`, you have to:
+
+1. Pass `moment.utc` to `LocalizationProvider` `dateLibInstance` prop:
+
+   ```tsx
+   <LocalizationProvider dateAdapter={AdapterMoment} dateLibInstance={moment.utc}>
+     {children}
+   </LocalizationProvider>
+   ```
+
+2. Always pass dates created with `moment.utc`:
+
+   ```tsx
+   <DateTimePicker
+     // ✅ Valid props
+     value={moment.utc()}
+     minDate={moment.utc().startOf('month')}
+     // ❌ Invalid props
+     value={moment()}
+     minDate={moment().startOf('month')}
+   />
+   ```
+
+{{"demo": "UTCMoment.js", "defaultCodeOpen": false}}
 
 ### Other libraries
 

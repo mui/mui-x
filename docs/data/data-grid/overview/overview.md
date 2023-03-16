@@ -104,11 +104,11 @@ You can find more details on, the [feature comparison](/x/react-data-grid/gettin
 
 ## Resources
 
-Here are some resources you might be interested in to learn more about the grid:
+Here are some resources you might be interested in to learn more about the data grid:
 
 <!-- #default-branch-switch -->
 
-- The [source on GitHub](https://github.com/mui/mui-x/tree/next/packages/)
+- The [source on GitHub](https://github.com/mui/mui-x/tree/master/packages/)
 - The [Material Design specification](https://m2.material.io/components/data-tables) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)
 - The Figma, Adobe XD, and Sketch [design kits](https://mui.com/design-kits/).

@@ -191,7 +191,7 @@ MultiInputDateTimeRangeField.propTypes = {
   ampm: PropTypes.bool,
   className: PropTypes.string,
   /**
-   * Overrideable components.
+   * Overridable components.
    * @default {}
    * @deprecated Please use `slots`.
    */
@@ -277,14 +277,16 @@ MultiInputDateTimeRangeField.propTypes = {
   minutesStep: PropTypes.number,
   /**
    * Callback fired when the value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
    */
   onChange: PropTypes.func,
   /**
    * Callback fired when the error associated to the current value changes.
-   * @template TValue, TError
+   * @template TValue The value type. Will be either the same type as `value` or `null`. Can be in `[start, end]` format in case of range value.
+   * @template TError The validation error type. Will be either `string` or a `null`. Can be in `[start, end]` format in case of range value.
    * @param {TError} error The new error.
    * @param {TValue} value The value associated to the error.
    */
@@ -305,7 +307,7 @@ MultiInputDateTimeRangeField.propTypes = {
    * This prop accept four formats:
    * 1. If a number is provided, the section at this index will be selected.
    * 2. If an object with a `startIndex` and `endIndex` properties are provided, the sections between those two indexes will be selected.
-   * 3. If a string of type `MuiDateSectionName` is provided, the first section with that name will be selected.
+   * 3. If a string of type `FieldSectionType` is provided, the first section with that name will be selected.
    * 4. If `null` is provided, no section will be selected
    * If not provided, the selected sections will be handled internally.
    */
@@ -336,7 +338,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   shouldDisableClock: PropTypes.func,
   /**
-   * Disable specific date. @DateIOType
+   * Disable specific date.
    * @template TDate
    * @param {TDate} day The date to test.
    * @param {string} position The date to test, 'start' or 'end'.
@@ -356,7 +358,7 @@ MultiInputDateTimeRangeField.propTypes = {
    */
   slotProps: PropTypes.object,
   /**
-   * Overrideable component slots.
+   * Overridable component slots.
    * @default {}
    */
   slots: PropTypes.object,

@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
 2. Using the `getCellClassName` prop:
 
 This prop is called for every cell in every column.
-Different from the first option, this prop is defined at the grid level, not column level.
+Different from the first option, this prop is defined at the data grid level, not column level.
 It is also called with a `GridCellParams` object.
 
 {{"demo": "StylingAllCells.js", "bg": "inline"}}

@@ -46,6 +46,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Filter panel text
   filterPanelAddFilter: 'Filtre Ekle',
+  // filterPanelRemoveAll: 'Remove all',
   filterPanelDeleteIconLabel: 'Kaldır',
   filterPanelLogicOperator: 'Mantıksal operatörler',
   filterPanelOperator: 'Operatör',

@@ -11,11 +11,9 @@ import {
   executeInTheNextEventLoopTick,
   getActiveElement,
   usePicker,
-  WrapperVariantContext,
   PickersPopper,
   InferError,
   ExportedBaseToolbarProps,
-  uncapitalizeObjectKeys,
 } from '@mui/x-date-pickers/internals';
 import {
   DesktopRangePickerAdditionalViewProps,
@@ -42,10 +40,8 @@ export const useDesktopRangePicker = <
   useLicenseVerifier('x-date-pickers-pro', releaseInfo);
 
   const {
-    slots: innerSlots,
-    slotProps: innerSlotProps,
-    components,
-    componentsProps,
+    slots,
+    slotProps,
     className,
     sx,
     format,
@@ -55,8 +51,6 @@ export const useDesktopRangePicker = <
     disableOpenPicker,
     localeText,
   } = props;
-  const slots = innerSlots ?? uncapitalizeObjectKeys(components);
-  const slotProps = innerSlotProps ?? componentsProps;
 
   const fieldRef = React.useRef<HTMLDivElement>(null);
   const popperRef = React.useRef<HTMLDivElement>(null);
@@ -138,55 +132,28 @@ export const useDesktopRangePicker = <
     textField: slots.textField,
     root: slots.fieldRoot,
     separator: slots.fieldSeparator,
-    ...(fieldProps.slots ?? uncapitalizeObjectKeys(fieldProps?.components)),
+    ...fieldProps.slots,
   };
 
-  const slotPropsFromFieldProps = fieldProps.slotProps ?? fieldProps.componentsProps;
-  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] = {
-    ...slotPropsFromFieldProps,
+  const slotPropsForField: BaseMultiInputFieldProps<DateRange<TDate>, unknown>['slotProps'] & {
+    separator: any;
+  } = {
+    ...fieldProps.slotProps,
     textField: (ownerState) => {
       const externalInputProps = resolveComponentProps(slotProps?.textField, ownerState);
-      const inputPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.textField,
-        ownerState,
-      );
-      const inputPropsPassedByPicker =
-        ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput;
-
       return {
+        ...(ownerState.position === 'start' ? fieldSlotProps.startInput : fieldSlotProps.endInput),
         ...externalInputProps,
-        ...inputPropsPassedByField,
-        ...inputPropsPassedByPicker,
-        inputProps: {
-          ...externalInputProps?.inputProps,
-          ...inputPropsPassedByField?.inputProps,
-        },
       };
     },
     root: (ownerState) => {
       const externalRootProps = resolveComponentProps(slotProps?.fieldRoot, ownerState);
-      const rootPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.root,
-        ownerState,
-      );
       return {
         ...externalRootProps,
-        ...rootPropsPassedByField,
         ...fieldSlotProps.root,
       };
     },
-    separator: (ownerState) => {
-      const externalSeparatorProps = resolveComponentProps(slotProps?.fieldSeparator, ownerState);
-      const separatorPropsPassedByField = resolveComponentProps(
-        slotPropsFromFieldProps?.separator,
-        ownerState,
-      );
-      return {
-        ...externalSeparatorProps,
-        ...separatorPropsPassedByField,
-        ...fieldSlotProps.root,
-      };
-    },
+    separator: slotProps?.fieldSeparator,
   };
 
   const slotPropsForLayout: PickersLayoutSlotsComponentsProps<DateRange<TDate>, TDate, TView> = {
@@ -201,29 +168,27 @@ export const useDesktopRangePicker = <
 
   const renderPicker = () => (
     <LocalizationProvider localeText={localeText}>
-      <WrapperVariantContext.Provider value="desktop">
-        <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
-        <PickersPopper
-          role="tooltip"
-          containerRef={popperRef}
-          anchorEl={fieldRef.current}
-          onBlur={handleBlur}
-          {...actions}
-          open={open}
+      <Field {...fieldProps} slots={slotsForField} slotProps={slotPropsForField} />
+      <PickersPopper
+        role="tooltip"
+        containerRef={popperRef}
+        anchorEl={fieldRef.current}
+        onBlur={handleBlur}
+        {...actions}
+        open={open}
+        slots={slots}
+        slotProps={slotProps}
+        shouldRestoreFocus={shouldRestoreFocus}
+      >
+        <Layout
+          {...layoutProps}
+          {...slotProps?.layout}
           slots={slots}
-          slotProps={slotProps}
-          shouldRestoreFocus={shouldRestoreFocus}
+          slotProps={slotPropsForLayout}
         >
-          <Layout
-            {...layoutProps}
-            {...slotProps?.layout}
-            slots={slots}
-            slotProps={slotPropsForLayout}
-          >
-            {renderCurrentView()}
-          </Layout>
-        </PickersPopper>
-      </WrapperVariantContext.Provider>
+          {renderCurrentView()}
+        </Layout>
+      </PickersPopper>
     </LocalizationProvider>
   );
 

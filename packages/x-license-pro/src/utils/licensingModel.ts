@@ -11,4 +11,4 @@ export const LICENSING_MODELS = [
   'subscription',
 ] as const;
 
-export type LicensingModel = typeof LICENSING_MODELS[number];
+export type LicensingModel = (typeof LICENSING_MODELS)[number];

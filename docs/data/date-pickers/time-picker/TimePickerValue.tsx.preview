@@ -1,6 +1,6 @@
 <TimePicker
   label="Uncontrolled picker"
-  defaultValue={dayjs('2022-04-07T15:30')}
+  defaultValue={dayjs('2022-04-17T15:30')}
 />
 <TimePicker
   label="Controlled picker"

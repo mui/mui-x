@@ -1,21 +1,21 @@
 # Migration from v5 to v6
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate the Date and Time Pickers from v5 to v6.</p>
 
-## Start using the prerelease
+## Start using the new release
 
-In `package.json`, change the version of the date pickers package to `next`.
+In `package.json`, change the version of the date pickers package to `latest` or `^6.0.0`.
 
 ```diff
--"@mui/x-date-pickers": "latest",
-+"@mui/x-date-pickers": "next",
+-"@mui/x-date-pickers": "5.X.X",
++"@mui/x-date-pickers": "^6.0.0",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-beta.1`.
-
-Since v6 is a major release, it contains some changes that affect the public API.
-These changes were done for consistency, improve stability and make room for new features.
-Below are described the steps you need to take to migrate from v5 to v6.
+Since v6 is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from v5 to v6.
 
 ## Run codemods
 
@@ -30,7 +30,7 @@ npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
 :::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-pickers) for more details.
+If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for pickers](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-pickers) for more details.
 :::
 
 Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen.
@@ -128,6 +128,10 @@ const theme = createTheme({
   },
 });
 ```
+
+:::success
+If you are using TypeScript, please make sure to add the [theme augmentation](/x/react-date-pickers/base-concepts/#typescript) to your project.
+:::
 
 ### Remove the keyboard view
 
@@ -370,7 +374,7 @@ Works exactly the same way for `PickersMonth`
 The props used to set the text displayed in the pickers have been replaced by keys inside the `localeText` prop:
 
 | Removed prop                 | Property in the new `localText` prop                                              |
-| ---------------------------- | --------------------------------------------------------------------------------- |
+| :--------------------------- | :-------------------------------------------------------------------------------- |
 | `endText`                    | `end`                                                                             |
 | `getClockLabelText`          | `clockLabelText`                                                                  |
 | `getHoursClockNumberText`    | `hoursClockNumberText`                                                            |
@@ -426,7 +430,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  renderInput={(inputProps) => <TextField {...props} variant="outlined" />}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' } }}
    />
 
    <DateRangePicker
@@ -437,7 +441,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} variant="outlined" />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ input: { variant: 'outlined' }}
+  +  componentsProps={{ textField: { variant: 'outlined' } }}
    />
   ```
 
@@ -452,7 +456,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -      <TextField {...endProps} />
   -    </React.Fragment>
   -  )}
-  +  componentsProps={{ fieldSeparator: { children: 'to' }}
+  +  componentsProps={{ fieldSeparator: { children: 'to' } }}
    />
   ```
 
@@ -476,8 +480,8 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   -  showToolbar
   +  componentsProps={{
   +    toolbar: {
-  +      toolbarPlaceholder: "__",
-  +      toolbarFormat: "DD / MM / YYYY",
+  +      toolbarPlaceholder: '__',
+  +      toolbarFormat: 'DD / MM / YYYY',
   +      hidden: false,
   +    }
   +  }}
@@ -489,7 +493,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  toolbarTitle="Title"
-  +  localeText={{ toolbarTitle: "Title" }}
+  +  localeText={{ toolbarTitle: 'Title' }}
    />
   ```
 
@@ -656,7 +660,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PopperProps={{ onClick: handleClick }}
-  +  componentsProps={{ popper: { onClick: handleClick }}}
+  +  componentsProps={{ popper: { onClick: handleClick } }}
    />
   ```
 
@@ -689,7 +693,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  PaperProps={{ backgroundColor: 'red' }}
-  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' }}}
+  +  componentsProps={{ desktopPaper: { backgroundColor: 'red' } }}
    />
   ```
 
@@ -700,7 +704,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  TrapFocusProps={{ isEnabled: () => false }}
-  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false }}}
+  +  componentsProps={{ desktopTrapFocus: { isEnabled: () => false } }}
    />
   ```
 
@@ -714,7 +718,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
   +import { usePickerLayout } from '@mui/x-date-pickers/PickersLayout';
 
-   function MyCustomLayout (props) {
+   function MyCustomLayout(props) {
   -  const { children } = props;
   -
   -  return (
@@ -791,7 +795,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputProps={{ color: 'primary' }}
-  +  componentsProps={{ textField: { InputProps: { color: 'primary' }}}}
+  +  componentsProps={{ textField: { InputProps: { color: 'primary' } } }}
    />
   ```
 
@@ -802,7 +806,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  InputAdornmentProps={{ position: 'start' }}
-  +  componentsProps={{ inputAdornment: { position: 'start' }}}
+  +  componentsProps={{ inputAdornment: { position: 'start' } }}
    />
   ```
 
@@ -813,7 +817,7 @@ For example, the `ToolbarComponent` has been replaced by a `Toolbar` component s
   ```diff
    <DatePicker
   -  OpenPickerButtonProps={{ ref: buttonRef }}
-  +  componentsProps={{ openPickerButton: { ref: buttonRef }}}
+  +  componentsProps={{ openPickerButton: { ref: buttonRef } }}
    />
   ```
 

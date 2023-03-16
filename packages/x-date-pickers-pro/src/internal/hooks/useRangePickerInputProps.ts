@@ -7,7 +7,12 @@ import {
   UsePickerResponse,
   WrapperVariant,
 } from '@mui/x-date-pickers/internals';
-import { DateRange, RangePosition } from '../models';
+import {
+  DateRange,
+  MultiInputFieldSlotRootProps,
+  MultiInputFieldSlotTextFieldProps,
+  RangePosition,
+} from '../models';
 
 interface UseRangePickerFieldParams<TDate, TView extends DateOrTimeView>
   extends Pick<UsePickerResponse<DateRange<TDate>, TView, any>, 'open' | 'actions'> {
@@ -83,7 +88,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
 
   const readOnlyInput = readOnly ?? wrapperVariant === 'mobile';
 
-  const startInputProps = {
+  const startInputProps: MultiInputFieldSlotTextFieldProps = {
     inputRef: startRef,
     label: inLocaleText?.start ?? localeText.start,
     onKeyDown: onSpaceOrEnter(openRangeStartSelection),
@@ -96,7 +101,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     disabled,
   };
 
-  const endInputProps = {
+  const endInputProps: MultiInputFieldSlotTextFieldProps = {
     inputRef: endRef,
     label: inLocaleText?.end ?? localeText.end,
     onKeyDown: onSpaceOrEnter(openRangeEndSelection),
@@ -109,7 +114,7 @@ export const useRangePickerInputProps = <TDate, TView extends DateOrTimeView>({
     disabled,
   };
 
-  const rootProps = {
+  const rootProps: MultiInputFieldSlotRootProps = {
     onBlur,
   };
 

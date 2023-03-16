@@ -1,22 +1,25 @@
 # Migration from v5 to v6
 
+<!-- #default-branch-switch -->
+
 <p class="description">This guide describes the changes needed to migrate the Data Grid from v5 to v6.</p>
 
-## Start using the alpha release
+## Start using the new release
 
-In `package.json`, change the version of the data grid package to `next`.
+In `package.json`, change the version of the data grid package to `latest` or `^6.0.0`.
 
 ```diff
--"@mui/x-data-grid": "latest",
-+"@mui/x-data-grid": "next",
+-"@mui/x-data-grid": "5.X.X",
++"@mui/x-data-grid": "^6.0.0",
 ```
 
-Using `next` ensures that it will always use the latest v6 alpha release, but you can also use a fixed version, like `6.0.0-alpha.0`.
+Since v6 is a major release, it contains changes that affect the public API.
+These changes were done for consistency, improved stability and to make room for new features.
+Described below are the steps needed to migrate from v5 to v6.
 
 ## Run codemods
 
 The `preset-safe` codemod will automatically adjust the bulk of your code to account for breaking changes in v6. You can run `v6.0.0/data-grid/preset-safe` targeting only Data Grid or `v6.0.0/preset-safe` to target Date and Time pickers as well.
-It should be only applied **once per folder.**
 
 ```sh
 // Data Grid specific
@@ -25,11 +28,15 @@ npx @mui/x-codemod v6.0.0/data-grid/preset-safe <path>
 npx @mui/x-codemod v6.0.0/preset-safe <path>
 ```
 
-:::info
-If you want to run the transformers one by one, check out the transformers included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/next/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::success
+Apart from the removed methods and exports that require manual intervention, around 50% of the DataGrid breaking changes are automatically handled by the `preset-safe` codemod 🎉.
 :::
 
-Breaking changes that are handled by this codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
+:::info
+If you want to run the codemods one by one, check out the codemods included in the [preset-safe codemod for data grid](https://github.com/mui/mui-x/blob/master/packages/x-codemod/README.md#preset-safe-for-data-grid) for more details.
+:::
+
+Breaking changes that are handled by `preset-safe` codemod are denoted by a ✅ emoji in the table of contents on the right side of the screen or next to the specific point that is handled by it.
 
 If you have already applied the `v6.0.0/data-grid/preset-safe` (or `v6.0.0/preset-safe`) codemod, then you should not need to take any further action on these items. If there's a specific part of the breaking change that is not part of the codemod or needs some manual work, it will be listed in the end of each section.
 
@@ -64,7 +71,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - To avoid confusion with the props that will be added for the cell selection feature, some props related to row selection were renamed to have "row" in their name. The renamed props are the following:
 
   | Old name                   | New name                      |
-  | -------------------------- | ----------------------------- |
+  | :------------------------- | :---------------------------- |
   | `selectionModel`           | `rowSelectionModel`           |
   | `onSelectionModelChange`   | `onRowSelectionModelChange`   |
   | `disableSelectionOnClick`  | `disableRowSelectionOnClick`  |
@@ -100,16 +107,41 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 ### State access
 
 - ✅ The `gridSelectionStateSelector` selector was renamed to `gridRowSelectionStateSelector`.
-- The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
-- The `allGridColumnsFieldsSelector` selector was removed. Use `gridColumnFieldsSelector` instead.
-- The `allGridColumnsSelector` selector was removed. Use `gridColumnDefinitionsSelector` instead.
-- The `visibleGridColumnsSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
-- The `filterableGridColumnsSelector` selector was removed. Use `gridFilterableColumnDefinitionsSelector` instead.
-- The `filterableGridColumnsIdsSelector` selector was removed. Use `gridFilterableColumnLookupSelector` instead.
-- The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
-- The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
-- The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
+- ✅ The `allGridColumnsFieldsSelector` selector was removed. Use `gridColumnFieldsSelector` instead.
+- ✅ The `allGridColumnsSelector` selector was removed. Use `gridColumnDefinitionsSelector` instead.
+- ✅ The `visibleGridColumnsSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
+- ✅ The `filterableGridColumnsSelector` selector was removed. Use `gridFilterableColumnDefinitionsSelector` instead.
+- ✅ The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
+- ✅ The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
+- ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
+- ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
+- ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
+- ✅ The `getGridNumericColumnOperators` selector was removed. Use `getGridNumericOperators` instead.
 - The `gridVisibleRowsSelector` selector was removed. Use `gridExpandedSortedRowIdsSelector` instead.
+- The `gridColumnsSelector` selector was removed. Use more specific grid columns selectors instead.
+  ```diff
+  -const { all, lookup, columnVisibilityModel } = gridColumnsSelector(apiRef);
+  +const all = gridColumnFieldsSelector(apiRef);
+  +const lookup = gridColumnLookupSelector(apiRef);
+  +const columnVisibilityModel = gridColumnVisibilityModelSelector(apiRef);
+  ```
+- The `filterableGridColumnsIdsSelector` selector was removed. Use `gridFilterableColumnLookupSelector` instead.
+  ```diff
+  -const filterableFields = filterableGridColumnsIdsSelector(apiRef);
+  +const lookup = gridFilterableColumnLookupSelector(apiRef);
+  +const filterableFields = gridColumnFieldsSelector(apiRef).filter(field => lookup[field]);
+  ```
+- The `visibleGridColumnsLengthSelector` selector was removed. Use `gridVisibleColumnDefinitionsSelector` instead.
+  ```diff
+  -const visibleColumnsLength = visibleGridColumnsLengthSelector(apiRef);
+  +const visibleColumnsLength = gridVisibleColumnDefinitionsSelector(apiRef).length;
+  ```
+- The `gridColumnsMetaSelector` selector was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` instead.
+  ```diff
+  -const { totalWidth, positions } = gridColumnsMetaSelector(apiRef);
+  +const totalWidth = gridColumnsTotalWidthSelector(apiRef);
+  +const positions = gridColumnPositionsSelector(apiRef);
+  ```
 - The `gridRowGroupingStateSelector` selector was removed.
 - The `gridFilterStateSelector` selector was removed.
 - The `gridRowsStateSelector` selector was removed.
@@ -120,25 +152,18 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The `gridEditRowsStateSelector` selector was removed.
 - The `apiRef.current.state.density.headerHeight` property was removed.
 - The `apiRef.current.state.density.rowHeight` property was removed.
-- ✅ The `gridVisibleSortedRowIdsSelector` selector was renamed to `gridExpandedSortedRowIdsSelector`
-- ✅ The `gridVisibleSortedRowEntriesSelector` selector was renamed to `gridExpandedSortedRowEntriesSelector`.
-- ✅ The `gridVisibleRowCountSelector` selector was renamed to `gridExpandedRowCountSelector`.
-- ✅ The `gridVisibleSortedTopLevelRowEntriesSelector` selector was renamed to `gridFilteredSortedTopLevelRowEntriesSelector`.
-- ✅ The `gridVisibleTopLevelRowCountSelector` selector was renamed to `gridFilteredTopLevelRowCountSelector`.
 
 ### Events
 
 - ✅ The `selectionChange` event was renamed to `rowSelectionChange`.
 - ✅ The `rowsScroll` event was renamed to `scrollPositionChange`.
-- The `columnVisibilityChange` event was removed. Use `columnVisibilityModelChange` instead.
+- The `columnVisibilityChange` event was removed. Use [`columnVisibilityModelChange`](https://mui.com/x/react-data-grid/events/#catalog-of-events) instead.
 - The `cellNavigationKeyDown` event was removed. Use `cellKeyDown` and check the key provided in the event argument.
 - The `columnHeaderNavigationKeyDown` event was removed. Use `columnHeaderKeyDown` and check the key provided in the event argument.
 - The `cellKeyDown` event will also be fired for keyboard events that occur inside components that use Portals.
   This affects specially custom edit components, where pressing a [shortcut key](/x/react-data-grid/editing/#stop-editing) will trigger the stop editing routine.
   For instance, pressing <kbd class="key">Enter</kbd> inside the Portal will cause the change to be saved.
   The `onCellEditStop` (or `onRowEditStop`) prop can be used to restore the old behavior.
-- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
-
   ```tsx
   <DataGrid
     onCellEditStop={(params, event) => {
@@ -152,13 +177,17 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
     }}
   />
   ```
-
+- The `componentError` event was removed. Use the [error boundary](https://reactjs.org/docs/error-boundaries.html) to catch errors thrown during rendering.
 - The `GridCallbackDetails['api']` was removed from event details. Use the `apiRef` returned by `useGridApiContext` or `useGridApiRef` instead.
 - The `cellFocusIn` and `cellFocusOut` events are internal now. Use `componentsProps.cell.onFocus` and `componentsProps.cell.onBlur` props instead.
 
+:::info
+To know more about the supported events and their signatures, check the [events catalog](https://mui.com/x/react-data-grid/events/#catalog-of-events) page.
+:::
+
 ### Columns
 
-- The `GridColDef['hide']` property was removed. Use `GridColDef['columnVisibility']` instead.
+- The `GridColDef['hide']` property was removed. Use [`columnVisibilityModel`](https://mui.com/x/react-data-grid/column-visibility/#initialize-the-visible-columns) instead.
 - Returning `null` in `column.renderCell` or `column.renderEditCell` now renders an empty cell instead of the default formatted value. To fall back to the default formatted value, return `undefined` instead of `null`.
 
   ```diff
@@ -172,8 +201,8 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   ```
 
 - The `onColumnOrderChange` prop callback now is called only when a column, that is being reordered, is dropped in another position.
-- The `singleSelect` column type now has a default value formatter that returns the `label` correspoding to the selected value when `valueOptions` is an array of objects.
-  As consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
+- The `singleSelect` column type now has a default value formatter that returns the `label` corresponding to the selected value when `valueOptions` is an array of objects.
+  As a consequence, any existing value formatter will not be applied to the individual options anymore, but only to the text of the cell.
   It is recommended to migrate `valueOptions` to an array of objects to be able to add a custom label for each value.
   To override the label used for each option when the cell is in edit mode or in the filter panel, the following components now support a `getOptionLabel` prop:
 
@@ -202,7 +231,7 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
 - The column menu components have been renamed or merged with the new design for consistency and API improvement, the new components are following:
 
   | Old name                                                            | New name                        |
-  | ------------------------------------------------------------------- | ------------------------------- |
+  | :------------------------------------------------------------------ | :------------------------------ |
   | `GridFilterMenuItem`                                                | `GridColumnMenuFilterItem`      |
   | `HideGridColMenuItem`                                               | `GridColumnMenuHideItem`        |
   | `GridColumnsMenuItem`                                               | `GridColumnMenuColumnsItem`     |
@@ -211,13 +240,28 @@ The minimum supported Node.js version has been changed from 12.0.0 to 14.0.0, si
   | `GridAggregationColumnMenuItem`                                     | `GridColumnMenuAggregationItem` |
   | `GridRowGroupingColumnMenuItems`, `GridRowGroupableColumnMenuItems` | `GridColumnMenuGroupingItem`    |
 
-- The `GridFilterItemProps` has been renamed to `GridColumnMenuItemProps`.
+- The `GridFilterItemProps` type has been renamed to `GridColumnMenuItemProps`.
 - Props `column` and `currentColumn` passed to `GridColumnMenu` and column menu items have been renamed to `colDef`
+  ```diff
+  -function CustomColumnMenu({ column }) {
+  -  if (column.field === 'name') {
+  +function CustomColumnMenu({ colDef }) {
+  +  if (colDef.field === 'name') {
+       return <div>Custom column menu for name field</div>;
+     }
+     return (
+       <div>
+         <GridFilterMenuItem colDef={colDef} />
+         <GridColumnMenuColumnsItem colDef={colDef} />
+       </div>
+     );
+   }
+  ```
 
 :::warning
 Most of this breaking change is handled by `preset-safe` codemod but some further fixes may be needed:
 
-- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better api.
+- If you are using `GridRowGroupingColumnMenuItems` or `GridRowGroupableColumnMenuItems`, replace them with `GridColumnMenuGroupingItem` which provides a better API.
 - If you are using Custom Column Menu using `components.ColumnMenu` slot, change `currentColumn` prop passed to the column menu to `colDef`.
   :::
 
@@ -229,14 +273,32 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridActionsCellProps['api']` property was removed. Use `useGridApiContext` hook instead to get `apiRef`.
 - The `GridActionsCellProps['getValue']` property was removed. Use `params.row` instead.
 - The `GridFooterCellProps['getValue']` property was removed. Use `params.row` instead.
+- The `cellFocus`, `cellTabIndex` and `editRowsState` props are not passed to the `Row` slot anymore.
+  Use the `focusedCell` and `tabbableCell` props instead.
+  For the editing state, use the API methods.
+  ```diff
+   function CustomRow(props) {
+  -  const focusedField = props.cellFocus.field;
+  -  const tabIndex = props.cellTabIndex.field && cellMode === 'view' ? 0 : 1;
+  +  const focusedField = props.focusedCell;
+  +  const tabIndex = props.tabbableCell === column.field ? 0 : 1;
+  ```
+- Updating the [`rows` prop](/x/react-data-grid/row-updates/#the-rows-prop) or calling `apiRef.current.setRows` will now remove the expansion state of the grid as these methods are meant to replace the rows.
+  For partial row updates, use the [`apiRef.current.updateRows`](/x/react-data-grid/row-updates/#the-updaterows-method) method instead.
 
 ### Pagination
 
 - The `page` and `pageSize` props and their respective event handlers `onPageChange` and `onPageSizeChange` were removed. Use `paginationModel` and `onPaginationModelChange` instead.
 
   ```diff
-  -<DataGrid page={page} pageSize={pageSize} onPageChange={handlePageChange} onPageSizeChange={handlePageSizeChange} />
-  +<DataGrid paginationModel={{ page, pageSize }} onPaginationModelChange={handlePaginationModelChange} />
+   <DataGrid
+  -  page={page}
+  -  pageSize={pageSize}
+  -  onPageChange={handlePageChange}
+  -  onPageSizeChange={handlePageSizeChange}
+  +  paginationModel={{ page, pageSize }}
+  +  onPaginationModelChange={handlePaginationModelChange}
+   />
   ```
 
 - The properties `initialState.pagination.page` and `initialState.pagination.pageSize` were also removed. Use `initialState.pagination.paginationModel` instead.
@@ -255,13 +317,22 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 
 ### `apiRef` methods
 
-- The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
-- The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
-- The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
-- The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
-- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridVisibleSortedRowEntriesSelector` selector instead.
-- The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
+- ✅ The `apiRef.current.getRowIndex` method was removed. Use `apiRef.current.getRowIndexRelativeToVisibleRows` instead.
 - ✅ The `apiRef.current.setFilterLinkOperator` method was renamed to `apiRef.current.setFilterLogicOperator`.
+- The `apiRef.current.updateColumn` method was removed. Use `apiRef.current.updateColumns` instead.
+  ```diff
+  -apiRef.current.updateColumn({ field: 'name', width: 100 });
+  +apiRef.current.updateColumns([{ field: 'name', width: 100 }]);
+  ```
+- The `apiRef.current.getColumnsMeta` method was removed. Use `gridColumnsTotalWidthSelector` or `gridColumnPositionsSelector` selectors instead.
+  ```diff
+  -const { totalWidth, positions } = apiRef.current.getColumnsMeta();
+  +const totalWidth = gridColumnsTotalWidthSelector(apiRef);
+  +const positions = gridColumnPositionsSelector(apiRef);
+  ```
+- The `apiRef.current.setDensity` signature was changed. It only accepts `density: GridDensity` as a single parameter.
+- The `apiRef.current.getVisibleRowModels` method was removed. Use `gridExpandedSortedRowEntriesSelector` selector instead.
+- The `apiRef.current.showError` method was removed. The UI for errors is no longer handled by the grid.
 - Some internal undocumented `apiRef` methods and properties were removed.
 
   If you don't use undocumented properties - you can skip the list below.
@@ -271,7 +342,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
     <summary markdown="span">List of removed undocumented methods and properties</summary>
 
   |                                                   |
-  | ------------------------------------------------- |
+  | :------------------------------------------------ |
   | `getLogger`                                       |
   | `windowRef`                                       |
   | `footerRef`                                       |
@@ -313,7 +384,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `GridFilterItem['operator']` is now required.
 - The `GridFilterInputValue` component cannot be used with `singleSelect` columns anymore. Use `GridFilterInputSingleSelect` instead.
 - ✅ The `GridLinkOperator` enum was renamed to `GridLogicOperator`.
-- The `GridFilterModel['linkOperator']` was renamed to `GridFilterModel['logicOperator']`.
+- The `GridFilterModel['linkOperator']` type was renamed to `GridFilterModel['logicOperator']`.
 - ✅ The `linkOperators` prop of `GridFilterForm` and `GridFilterPanel` components was renamed to `logicOperators`.
 - ✅ The `linkOperatorInputProps` prop of `GridFilterForm` component was renamed to `logicOperatorInputProps`.
 - ✅ The `filterFormProps.linkOperatorInputProps` prop in `GridFilterForm` component was renamed to `filterFormProps.logicOperatorInputProps`.
@@ -325,6 +396,15 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   ```diff
    <DataGrid
   -  experimentalFeatures={{ newEditingApi: true }}
+   />
+  ```
+- ✅ The aggregation and row pinning are no longer experimental features. The flags `experimentalFeatures.aggregation` and `experimentalFeatures.rowPinning` can be removed now.
+  ```diff
+   <DataGridPremium
+  -  experimentalFeatures={{
+  -   aggregation: true,
+  -   rowPinning: true,
+  -  }}
    />
   ```
 - The `editCellPropsChange` event was removed. If you still need it please file a new issue so we can propose an alternative.
@@ -364,7 +444,6 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - The `DATA_GRID_DEFAULT_SLOTS_COMPONENTS` export was removed.
 - The `useGridScrollFn` hook was removed.
 - The `GridCellParams` interface was changed. The row generic is now before the cell generic.
-- The `GridErrorOverlay` component was removed.
 
   ```diff
   -extends GridCellParams<V, R, F, N> {
@@ -378,6 +457,7 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
   +renderCell: (params: GridRenderCellParams<any, any, number>) => {
   ```
 
+- The `GridErrorOverlay` component was removed.
 - The `GridRowScrollEndParams["virtualRowsCount"]` param was renamed to `GridRowScrollEndParams["visibleRowsCount"]`.
 - The `GridCellIdentifier` type was removed. Use `GridCellCoordinates` instead.
 
@@ -386,17 +466,25 @@ Most of this breaking change is handled by `preset-safe` codemod but some furthe
 - Some CSS classes were removed or renamed
 
   | MUI X v5 classes                           | MUI X v6 classes                            | Note                                            |
-  | ------------------------------------------ | ------------------------------------------- | ----------------------------------------------- |
+  | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------- |
   | `.MuiDataGrid-withBorder`                  | `.MuiDataGrid-withBorderColor`              | The class only sets `border-color` CSS property |
   | `.MuiDataGrid-filterFormLinkOperatorInput` | `.MuiDataGrid-filterFormLogicOperatorInput` |                                                 |
-
-<!--
-### Virtualization
-
-TBD
--->
 
 ### Removals from the public API
 
 - The `getGridSingleSelectQuickFilterFn` function was removed.
   You can copy the old function and pass it to the `getApplyQuickFilterFn` property of the `singleSelect` column definition.
+
+## Rename `components` to `slots` (optional)
+
+The `components` and `componentsProps` props are being renamed to `slots` and `slotProps` props respectively.
+This is a slow and ongoing effort between the different MUI libraries.
+To smooth the transition, data grid support both the `components` props which are deprecated, and the new `slots` props.
+
+If you would like to use the new API and do not want to see deprecated prop usage, consider running `rename-components-to-slots` codemod handling the prop renaming.
+
+```sh
+npx @mui/x-codemod v6.0.0/data-grid/rename-components-to-slots <path>
+```
+
+Take a look at [the RFC](https://github.com/mui/material-ui/issues/33416) for more information.

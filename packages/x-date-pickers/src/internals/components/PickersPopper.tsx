@@ -29,7 +29,7 @@ export interface PickersPopperSlotsComponent {
    */
   DesktopPaper?: React.JSXElementConstructor<MuiPaperProps>;
   /**
-   * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions).
+   * Custom component for the desktop popper [Transition](https://mui.com/material-ui/transitions/).
    * @default Grow from @mui/material
    */
   DesktopTransition?: React.JSXElementConstructor<MuiTransitionProps>;
